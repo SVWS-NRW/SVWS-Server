@@ -61,7 +61,7 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragPruefungsordnung>;
 		const result = new Schild3KatalogEintragPruefungsordnung();
 		result.PO_Schulform = (obj.PO_Schulform === undefined) ? null : obj.PO_Schulform === null ? null : obj.PO_Schulform;
 		result.PO_Krz = (obj.PO_Krz === undefined) ? null : obj.PO_Krz === null ? null : obj.PO_Krz;
@@ -81,11 +81,11 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 		result += '"PO_Krz" : ' + ((!obj.PO_Krz) ? 'null' : JSON.stringify(obj.PO_Krz)) + ',';
 		result += '"PO_Name" : ' + ((!obj.PO_Name) ? 'null' : JSON.stringify(obj.PO_Name)) + ',';
 		result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : JSON.stringify(obj.PO_SGL)) + ',';
-		result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
-		result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
+		result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang.toString()) + ',';
+		result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang.toString()) + ',';
 		result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : JSON.stringify(obj.PO_Jahrgaenge)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -106,19 +106,19 @@ export class Schild3KatalogEintragPruefungsordnung extends JavaObject {
 			result += '"PO_SGL" : ' + ((!obj.PO_SGL) ? 'null' : JSON.stringify(obj.PO_SGL)) + ',';
 		}
 		if (obj.PO_MinJahrgang !== undefined) {
-			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang) + ',';
+			result += '"PO_MinJahrgang" : ' + ((!obj.PO_MinJahrgang) ? 'null' : obj.PO_MinJahrgang.toString()) + ',';
 		}
 		if (obj.PO_MaxJahrgang !== undefined) {
-			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang) + ',';
+			result += '"PO_MaxJahrgang" : ' + ((!obj.PO_MaxJahrgang) ? 'null' : obj.PO_MaxJahrgang.toString()) + ',';
 		}
 		if (obj.PO_Jahrgaenge !== undefined) {
 			result += '"PO_Jahrgaenge" : ' + ((!obj.PO_Jahrgaenge) ? 'null' : JSON.stringify(obj.PO_Jahrgaenge)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

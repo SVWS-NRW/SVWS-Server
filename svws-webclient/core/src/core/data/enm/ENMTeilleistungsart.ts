@@ -36,10 +36,10 @@ export class ENMTeilleistungsart extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMTeilleistungsart {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMTeilleistungsart>;
 		const result = new ENMTeilleistungsart();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
@@ -49,10 +49,10 @@ export class ENMTeilleistungsart extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMTeilleistungsart) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
-		result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung) + ',';
+		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
+		result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -61,16 +61,16 @@ export class ENMTeilleistungsart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMTeilleistungsart>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
+			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
 		}
 		if (obj.gewichtung !== undefined) {
-			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung) + ',';
+			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

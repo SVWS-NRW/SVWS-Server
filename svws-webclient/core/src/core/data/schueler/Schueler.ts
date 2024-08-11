@@ -41,33 +41,33 @@ export class Schueler extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schueler {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schueler>;
 		const result = new Schueler();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.nachname === undefined)
-			 throw new Error('invalid json format, missing attribute nachname');
+			throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
 		if (obj.vorname === undefined)
-			 throw new Error('invalid json format, missing attribute vorname');
+			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if (obj.status === undefined)
-			 throw new Error('invalid json format, missing attribute status');
+			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
 		if (obj.geschlecht === undefined)
-			 throw new Error('invalid json format, missing attribute geschlecht');
+			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Schueler) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
-		result += '"status" : ' + obj.status + ',';
-		result += '"geschlecht" : ' + obj.geschlecht + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
+		result += '"status" : ' + obj.status.toString() + ',';
+		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,19 +76,19 @@ export class Schueler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schueler>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.status !== undefined) {
-			result += '"status" : ' + obj.status + ',';
+			result += '"status" : ' + obj.status.toString() + ',';
 		}
 		if (obj.geschlecht !== undefined) {
-			result += '"geschlecht" : ' + obj.geschlecht + ',';
+			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

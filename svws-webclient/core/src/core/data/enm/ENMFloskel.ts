@@ -43,7 +43,7 @@ export class ENMFloskel extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMFloskel {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMFloskel>;
 		const result = new ENMFloskel();
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.text = (obj.text === undefined) ? null : obj.text === null ? null : obj.text;
@@ -57,9 +57,9 @@ export class ENMFloskel extends JavaObject {
 		let result = '{';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
-		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID) + ',';
-		result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau) + ',';
-		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
+		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
+		result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau.toString()) + ',';
+		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,13 +74,13 @@ export class ENMFloskel extends JavaObject {
 			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID) + ',';
+			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
 		}
 		if (obj.niveau !== undefined) {
-			result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau) + ',';
+			result += '"niveau" : ' + ((!obj.niveau) ? 'null' : obj.niveau.toString()) + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
-			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
+			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

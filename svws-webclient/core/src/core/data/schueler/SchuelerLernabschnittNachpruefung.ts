@@ -36,13 +36,13 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittNachpruefung>;
 		const result = new SchuelerLernabschnittNachpruefung();
 		if (obj.grund === undefined)
-			 throw new Error('invalid json format, missing attribute grund');
+			throw new Error('invalid json format, missing attribute grund');
 		result.grund = obj.grund;
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
@@ -51,8 +51,8 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittNachpruefung) : string {
 		let result = '{';
-		result += '"grund" : ' + JSON.stringify(obj.grund!) + ',';
-		result += '"fachID" : ' + obj.fachID + ',';
+		result += '"grund" : ' + JSON.stringify(obj.grund) + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
 		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result = result.slice(0, -1);
@@ -63,10 +63,10 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefung>) : string {
 		let result = '{';
 		if (obj.grund !== undefined) {
-			result += '"grund" : ' + JSON.stringify(obj.grund!) + ',';
+			result += '"grund" : ' + JSON.stringify(obj.grund) + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.note !== undefined) {
 			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';

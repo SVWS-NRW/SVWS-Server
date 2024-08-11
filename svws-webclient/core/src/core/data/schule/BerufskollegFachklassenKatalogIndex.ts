@@ -34,17 +34,17 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogIndex {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BerufskollegFachklassenKatalogIndex>;
 		const result = new BerufskollegFachklassenKatalogIndex();
 		if (obj.index === undefined)
-			 throw new Error('invalid json format, missing attribute index');
+			throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
 		if (obj.version === undefined)
-			 throw new Error('invalid json format, missing attribute version');
+			throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if ((obj.fachklassen !== undefined) && (obj.fachklassen !== null)) {
+		if (obj.fachklassen !== undefined) {
 			for (const elem of obj.fachklassen) {
-				result.fachklassen?.add(BerufskollegFachklassenKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachklassen.add(BerufskollegFachklassenKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -52,20 +52,16 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 
 	public static transpilerToJSON(obj : BerufskollegFachklassenKatalogIndex) : string {
 		let result = '{';
-		result += '"index" : ' + obj.index + ',';
-		result += '"version" : ' + obj.version + ',';
-		if (!obj.fachklassen) {
-			result += '"fachklassen" : []';
-		} else {
-			result += '"fachklassen" : [ ';
-			for (let i = 0; i < obj.fachklassen.size(); i++) {
-				const elem = obj.fachklassen.get(i);
-				result += BerufskollegFachklassenKatalogEintrag.transpilerToJSON(elem);
-				if (i < obj.fachklassen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"index" : ' + obj.index.toString() + ',';
+		result += '"version" : ' + obj.version.toString() + ',';
+		result += '"fachklassen" : [ ';
+		for (let i = 0; i < obj.fachklassen.size(); i++) {
+			const elem = obj.fachklassen.get(i);
+			result += BerufskollegFachklassenKatalogEintrag.transpilerToJSON(elem);
+			if (i < obj.fachklassen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,24 +70,20 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogIndex>) : string {
 		let result = '{';
 		if (obj.index !== undefined) {
-			result += '"index" : ' + obj.index + ',';
+			result += '"index" : ' + obj.index.toString() + ',';
 		}
 		if (obj.version !== undefined) {
-			result += '"version" : ' + obj.version + ',';
+			result += '"version" : ' + obj.version.toString() + ',';
 		}
 		if (obj.fachklassen !== undefined) {
-			if (!obj.fachklassen) {
-				result += '"fachklassen" : []';
-			} else {
-				result += '"fachklassen" : [ ';
-				for (let i = 0; i < obj.fachklassen.size(); i++) {
-					const elem = obj.fachklassen.get(i);
-					result += BerufskollegFachklassenKatalogEintrag.transpilerToJSON(elem);
-					if (i < obj.fachklassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"fachklassen" : [ ';
+			for (let i = 0; i < obj.fachklassen.size(); i++) {
+				const elem = obj.fachklassen.get(i);
+				result += BerufskollegFachklassenKatalogEintrag.transpilerToJSON(elem);
+				if (i < obj.fachklassen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

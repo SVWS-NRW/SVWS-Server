@@ -56,13 +56,13 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurenKalenderinformation {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurenKalenderinformation>;
 		const result = new GostKlausurenKalenderinformation();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		result.startdatum = (obj.startdatum === undefined) ? null : obj.startdatum === null ? null : obj.startdatum;
 		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
@@ -70,21 +70,21 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 		result.endzeit = (obj.endzeit === undefined) ? null : obj.endzeit === null ? null : obj.endzeit;
 		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		if (obj.istSperrtermin === undefined)
-			 throw new Error('invalid json format, missing attribute istSperrtermin');
+			throw new Error('invalid json format, missing attribute istSperrtermin');
 		result.istSperrtermin = obj.istSperrtermin;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostKlausurenKalenderinformation) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
-		result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit) + ',';
+		result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit.toString()) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
-		result += '"istSperrtermin" : ' + obj.istSperrtermin + ',';
+		result += '"istSperrtermin" : ' + obj.istSperrtermin.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -93,28 +93,28 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenKalenderinformation>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.startdatum !== undefined) {
 			result += '"startdatum" : ' + ((!obj.startdatum) ? 'null' : JSON.stringify(obj.startdatum)) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.enddatum !== undefined) {
 			result += '"enddatum" : ' + ((!obj.enddatum) ? 'null' : JSON.stringify(obj.enddatum)) + ',';
 		}
 		if (obj.endzeit !== undefined) {
-			result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit) + ',';
+			result += '"endzeit" : ' + ((!obj.endzeit) ? 'null' : obj.endzeit.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (obj.istSperrtermin !== undefined) {
-			result += '"istSperrtermin" : ' + obj.istSperrtermin + ',';
+			result += '"istSperrtermin" : ' + obj.istSperrtermin.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -157,47 +157,47 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	}
 
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchulgliederungKatalogEintrag>;
 		const result = new SchulgliederungKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.istBK === undefined)
-			 throw new Error('invalid json format, missing attribute istBK');
+			throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
-		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
+		if (obj.schulformen !== undefined) {
 			for (const elem of obj.schulformen) {
-				result.schulformen?.add(elem);
+				result.schulformen.add(elem);
 			}
 		}
 		if (obj.istAuslaufend === undefined)
-			 throw new Error('invalid json format, missing attribute istAuslaufend');
+			throw new Error('invalid json format, missing attribute istAuslaufend');
 		result.istAuslaufend = obj.istAuslaufend;
 		if (obj.istAusgelaufen === undefined)
-			 throw new Error('invalid json format, missing attribute istAusgelaufen');
+			throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		result.bkAnlage = (obj.bkAnlage === undefined) ? null : obj.bkAnlage === null ? null : obj.bkAnlage;
 		result.bkTyp = (obj.bkTyp === undefined) ? null : obj.bkTyp === null ? null : obj.bkTyp;
 		result.bkIndex = (obj.bkIndex === undefined) ? null : obj.bkIndex === null ? null : obj.bkIndex;
 		if (obj.istVZ === undefined)
-			 throw new Error('invalid json format, missing attribute istVZ');
+			throw new Error('invalid json format, missing attribute istVZ');
 		result.istVZ = obj.istVZ;
-		if ((obj.bkAbschlussBerufsbildend !== undefined) && (obj.bkAbschlussBerufsbildend !== null)) {
+		if (obj.bkAbschlussBerufsbildend !== undefined) {
 			for (const elem of obj.bkAbschlussBerufsbildend) {
-				result.bkAbschlussBerufsbildend?.add(elem);
+				result.bkAbschlussBerufsbildend.add(elem);
 			}
 		}
-		if ((obj.bkAbschlussAllgemeinbildend !== undefined) && (obj.bkAbschlussAllgemeinbildend !== null)) {
+		if (obj.bkAbschlussAllgemeinbildend !== undefined) {
 			for (const elem of obj.bkAbschlussAllgemeinbildend) {
-				result.bkAbschlussAllgemeinbildend?.add(elem);
+				result.bkAbschlussAllgemeinbildend.add(elem);
 			}
 		}
 		return result;
@@ -205,14 +205,65 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : SchulgliederungKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"istBK" : ' + obj.istBK + ',';
-		if (!obj.schulformen) {
-			result += '"schulformen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"istBK" : ' + obj.istBK.toString() + ',';
+		result += '"schulformen" : [ ';
+		for (let i = 0; i < obj.schulformen.size(); i++) {
+			const elem = obj.schulformen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.schulformen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"istAuslaufend" : ' + obj.istAuslaufend.toString() + ',';
+		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
+		result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
+		result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex.toString()) + ',';
+		result += '"istVZ" : ' + obj.istVZ.toString() + ',';
+		result += '"bkAbschlussBerufsbildend" : [ ';
+		for (let i = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
+			const elem = obj.bkAbschlussBerufsbildend.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.bkAbschlussBerufsbildend.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"bkAbschlussAllgemeinbildend" : [ ';
+		for (let i = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
+			const elem = obj.bkAbschlussAllgemeinbildend.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.bkAbschlussAllgemeinbildend.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<SchulgliederungKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.gueltigVon !== undefined) {
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		}
+		if (obj.gueltigBis !== undefined) {
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.istBK !== undefined) {
+			result += '"istBK" : ' + obj.istBK.toString() + ',';
+		}
+		if (obj.schulformen !== undefined) {
 			result += '"schulformen" : [ ';
 			for (let i = 0; i < obj.schulformen.size(); i++) {
 				const elem = obj.schulformen.get(i);
@@ -222,16 +273,28 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"istAuslaufend" : ' + obj.istAuslaufend + ',';
-		result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
-		result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
-		result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex) + ',';
-		result += '"istVZ" : ' + obj.istVZ + ',';
-		if (!obj.bkAbschlussBerufsbildend) {
-			result += '"bkAbschlussBerufsbildend" : []';
-		} else {
+		if (obj.istAuslaufend !== undefined) {
+			result += '"istAuslaufend" : ' + obj.istAuslaufend.toString() + ',';
+		}
+		if (obj.istAusgelaufen !== undefined) {
+			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
+		}
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		}
+		if (obj.bkAnlage !== undefined) {
+			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
+		}
+		if (obj.bkTyp !== undefined) {
+			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
+		}
+		if (obj.bkIndex !== undefined) {
+			result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex.toString()) + ',';
+		}
+		if (obj.istVZ !== undefined) {
+			result += '"istVZ" : ' + obj.istVZ.toString() + ',';
+		}
+		if (obj.bkAbschlussBerufsbildend !== undefined) {
 			result += '"bkAbschlussBerufsbildend" : [ ';
 			for (let i = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
 				const elem = obj.bkAbschlussBerufsbildend.get(i);
@@ -241,9 +304,7 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.bkAbschlussAllgemeinbildend) {
-			result += '"bkAbschlussAllgemeinbildend" : []';
-		} else {
+		if (obj.bkAbschlussAllgemeinbildend !== undefined) {
 			result += '"bkAbschlussAllgemeinbildend" : [ ';
 			for (let i = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
 				const elem = obj.bkAbschlussAllgemeinbildend.get(i);
@@ -252,91 +313,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<SchulgliederungKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		}
-		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.istBK !== undefined) {
-			result += '"istBK" : ' + obj.istBK + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			if (!obj.schulformen) {
-				result += '"schulformen" : []';
-			} else {
-				result += '"schulformen" : [ ';
-				for (let i = 0; i < obj.schulformen.size(); i++) {
-					const elem = obj.schulformen.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.schulformen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.istAuslaufend !== undefined) {
-			result += '"istAuslaufend" : ' + obj.istAuslaufend + ',';
-		}
-		if (obj.istAusgelaufen !== undefined) {
-			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
-		}
-		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		}
-		if (obj.bkAnlage !== undefined) {
-			result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
-		}
-		if (obj.bkTyp !== undefined) {
-			result += '"bkTyp" : ' + ((!obj.bkTyp) ? 'null' : JSON.stringify(obj.bkTyp)) + ',';
-		}
-		if (obj.bkIndex !== undefined) {
-			result += '"bkIndex" : ' + ((!obj.bkIndex) ? 'null' : obj.bkIndex) + ',';
-		}
-		if (obj.istVZ !== undefined) {
-			result += '"istVZ" : ' + obj.istVZ + ',';
-		}
-		if (obj.bkAbschlussBerufsbildend !== undefined) {
-			if (!obj.bkAbschlussBerufsbildend) {
-				result += '"bkAbschlussBerufsbildend" : []';
-			} else {
-				result += '"bkAbschlussBerufsbildend" : [ ';
-				for (let i = 0; i < obj.bkAbschlussBerufsbildend.size(); i++) {
-					const elem = obj.bkAbschlussBerufsbildend.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.bkAbschlussBerufsbildend.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.bkAbschlussAllgemeinbildend !== undefined) {
-			if (!obj.bkAbschlussAllgemeinbildend) {
-				result += '"bkAbschlussAllgemeinbildend" : []';
-			} else {
-				result += '"bkAbschlussAllgemeinbildend" : [ ';
-				for (let i = 0; i < obj.bkAbschlussAllgemeinbildend.size(); i++) {
-					const elem = obj.bkAbschlussAllgemeinbildend.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.bkAbschlussAllgemeinbildend.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

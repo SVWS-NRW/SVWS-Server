@@ -28,16 +28,16 @@ export class GostKlausurenUpdate extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurenUpdate {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurenUpdate>;
 		const result = new GostKlausurenUpdate();
-		if ((obj.listSchuelerklausurTermineRemoveIdTermin !== undefined) && (obj.listSchuelerklausurTermineRemoveIdTermin !== null)) {
+		if (obj.listSchuelerklausurTermineRemoveIdTermin !== undefined) {
 			for (const elem of obj.listSchuelerklausurTermineRemoveIdTermin) {
-				result.listSchuelerklausurTermineRemoveIdTermin?.add(elem);
+				result.listSchuelerklausurTermineRemoveIdTermin.add(elem);
 			}
 		}
-		if ((obj.listKlausurtermineNachschreiberZugelassenFalse !== undefined) && (obj.listKlausurtermineNachschreiberZugelassenFalse !== null)) {
+		if (obj.listKlausurtermineNachschreiberZugelassenFalse !== undefined) {
 			for (const elem of obj.listKlausurtermineNachschreiberZugelassenFalse) {
-				result.listKlausurtermineNachschreiberZugelassenFalse?.add(elem);
+				result.listKlausurtermineNachschreiberZugelassenFalse.add(elem);
 			}
 		}
 		return result;
@@ -45,30 +45,22 @@ export class GostKlausurenUpdate extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurenUpdate) : string {
 		let result = '{';
-		if (!obj.listSchuelerklausurTermineRemoveIdTermin) {
-			result += '"listSchuelerklausurTermineRemoveIdTermin" : []';
-		} else {
-			result += '"listSchuelerklausurTermineRemoveIdTermin" : [ ';
-			for (let i = 0; i < obj.listSchuelerklausurTermineRemoveIdTermin.size(); i++) {
-				const elem = obj.listSchuelerklausurTermineRemoveIdTermin.get(i);
-				result += elem;
-				if (i < obj.listSchuelerklausurTermineRemoveIdTermin.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"listSchuelerklausurTermineRemoveIdTermin" : [ ';
+		for (let i = 0; i < obj.listSchuelerklausurTermineRemoveIdTermin.size(); i++) {
+			const elem = obj.listSchuelerklausurTermineRemoveIdTermin.get(i);
+			result += elem.toString();
+			if (i < obj.listSchuelerklausurTermineRemoveIdTermin.size() - 1)
+				result += ',';
 		}
-		if (!obj.listKlausurtermineNachschreiberZugelassenFalse) {
-			result += '"listKlausurtermineNachschreiberZugelassenFalse" : []';
-		} else {
-			result += '"listKlausurtermineNachschreiberZugelassenFalse" : [ ';
-			for (let i = 0; i < obj.listKlausurtermineNachschreiberZugelassenFalse.size(); i++) {
-				const elem = obj.listKlausurtermineNachschreiberZugelassenFalse.get(i);
-				result += elem;
-				if (i < obj.listKlausurtermineNachschreiberZugelassenFalse.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"listKlausurtermineNachschreiberZugelassenFalse" : [ ';
+		for (let i = 0; i < obj.listKlausurtermineNachschreiberZugelassenFalse.size(); i++) {
+			const elem = obj.listKlausurtermineNachschreiberZugelassenFalse.get(i);
+			result += elem.toString();
+			if (i < obj.listKlausurtermineNachschreiberZugelassenFalse.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -77,32 +69,24 @@ export class GostKlausurenUpdate extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurenUpdate>) : string {
 		let result = '{';
 		if (obj.listSchuelerklausurTermineRemoveIdTermin !== undefined) {
-			if (!obj.listSchuelerklausurTermineRemoveIdTermin) {
-				result += '"listSchuelerklausurTermineRemoveIdTermin" : []';
-			} else {
-				result += '"listSchuelerklausurTermineRemoveIdTermin" : [ ';
-				for (let i = 0; i < obj.listSchuelerklausurTermineRemoveIdTermin.size(); i++) {
-					const elem = obj.listSchuelerklausurTermineRemoveIdTermin.get(i);
-					result += elem;
-					if (i < obj.listSchuelerklausurTermineRemoveIdTermin.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"listSchuelerklausurTermineRemoveIdTermin" : [ ';
+			for (let i = 0; i < obj.listSchuelerklausurTermineRemoveIdTermin.size(); i++) {
+				const elem = obj.listSchuelerklausurTermineRemoveIdTermin.get(i);
+				result += elem.toString();
+				if (i < obj.listSchuelerklausurTermineRemoveIdTermin.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.listKlausurtermineNachschreiberZugelassenFalse !== undefined) {
-			if (!obj.listKlausurtermineNachschreiberZugelassenFalse) {
-				result += '"listKlausurtermineNachschreiberZugelassenFalse" : []';
-			} else {
-				result += '"listKlausurtermineNachschreiberZugelassenFalse" : [ ';
-				for (let i = 0; i < obj.listKlausurtermineNachschreiberZugelassenFalse.size(); i++) {
-					const elem = obj.listKlausurtermineNachschreiberZugelassenFalse.get(i);
-					result += elem;
-					if (i < obj.listKlausurtermineNachschreiberZugelassenFalse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"listKlausurtermineNachschreiberZugelassenFalse" : [ ';
+			for (let i = 0; i < obj.listKlausurtermineNachschreiberZugelassenFalse.size(); i++) {
+				const elem = obj.listKlausurtermineNachschreiberZugelassenFalse.get(i);
+				result += elem.toString();
+				if (i < obj.listKlausurtermineNachschreiberZugelassenFalse.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

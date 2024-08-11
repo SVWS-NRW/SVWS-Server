@@ -36,29 +36,29 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanKalenderwochenzuordnung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanKalenderwochenzuordnung>;
 		const result = new StundenplanKalenderwochenzuordnung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.jahr === undefined)
-			 throw new Error('invalid json format, missing attribute jahr');
+			throw new Error('invalid json format, missing attribute jahr');
 		result.jahr = obj.jahr;
 		if (obj.kw === undefined)
-			 throw new Error('invalid json format, missing attribute kw');
+			throw new Error('invalid json format, missing attribute kw');
 		result.kw = obj.kw;
 		if (obj.wochentyp === undefined)
-			 throw new Error('invalid json format, missing attribute wochentyp');
+			throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanKalenderwochenzuordnung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"jahr" : ' + obj.jahr + ',';
-		result += '"kw" : ' + obj.kw + ',';
-		result += '"wochentyp" : ' + obj.wochentyp + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"jahr" : ' + obj.jahr.toString() + ',';
+		result += '"kw" : ' + obj.kw.toString() + ',';
+		result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKalenderwochenzuordnung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.jahr !== undefined) {
-			result += '"jahr" : ' + obj.jahr + ',';
+			result += '"jahr" : ' + obj.jahr.toString() + ',';
 		}
 		if (obj.kw !== undefined) {
-			result += '"kw" : ' + obj.kw + ',';
+			result += '"kw" : ' + obj.kw.toString() + ',';
 		}
 		if (obj.wochentyp !== undefined) {
-			result += '"wochentyp" : ' + obj.wochentyp + ',';
+			result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

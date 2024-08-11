@@ -154,83 +154,83 @@ export class BetriebStammdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BetriebStammdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BetriebStammdaten>;
 		const result = new BetriebStammdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.adressArt = (obj.adressArt === undefined) ? null : obj.adressArt === null ? null : obj.adressArt;
 		if (obj.name1 === undefined)
-			 throw new Error('invalid json format, missing attribute name1');
+			throw new Error('invalid json format, missing attribute name1');
 		result.name1 = obj.name1;
 		if (obj.name2 === undefined)
-			 throw new Error('invalid json format, missing attribute name2');
+			throw new Error('invalid json format, missing attribute name2');
 		result.name2 = obj.name2;
 		if (obj.strassenname === undefined)
-			 throw new Error('invalid json format, missing attribute strassenname');
+			throw new Error('invalid json format, missing attribute strassenname');
 		result.strassenname = obj.strassenname;
 		if (obj.hausnr === undefined)
-			 throw new Error('invalid json format, missing attribute hausnr');
+			throw new Error('invalid json format, missing attribute hausnr');
 		result.hausnr = obj.hausnr;
 		if (obj.hausnrzusatz === undefined)
-			 throw new Error('invalid json format, missing attribute hausnrzusatz');
+			throw new Error('invalid json format, missing attribute hausnrzusatz');
 		result.hausnrzusatz = obj.hausnrzusatz;
 		result.ort_id = (obj.ort_id === undefined) ? null : obj.ort_id === null ? null : obj.ort_id;
 		if (obj.telefon1 === undefined)
-			 throw new Error('invalid json format, missing attribute telefon1');
+			throw new Error('invalid json format, missing attribute telefon1');
 		result.telefon1 = obj.telefon1;
 		if (obj.telefon2 === undefined)
-			 throw new Error('invalid json format, missing attribute telefon2');
+			throw new Error('invalid json format, missing attribute telefon2');
 		result.telefon2 = obj.telefon2;
 		if (obj.fax === undefined)
-			 throw new Error('invalid json format, missing attribute fax');
+			throw new Error('invalid json format, missing attribute fax');
 		result.fax = obj.fax;
 		if (obj.email === undefined)
-			 throw new Error('invalid json format, missing attribute email');
+			throw new Error('invalid json format, missing attribute email');
 		result.email = obj.email;
 		if (obj.bemerkungen === undefined)
-			 throw new Error('invalid json format, missing attribute bemerkungen');
+			throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = obj.bemerkungen;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (obj.ausbildungsbetrieb === undefined)
-			 throw new Error('invalid json format, missing attribute ausbildungsbetrieb');
+			throw new Error('invalid json format, missing attribute ausbildungsbetrieb');
 		result.ausbildungsbetrieb = obj.ausbildungsbetrieb;
 		if (obj.bietetPraktika === undefined)
-			 throw new Error('invalid json format, missing attribute bietetPraktika');
+			throw new Error('invalid json format, missing attribute bietetPraktika');
 		result.bietetPraktika = obj.bietetPraktika;
 		if (obj.branche === undefined)
-			 throw new Error('invalid json format, missing attribute branche');
+			throw new Error('invalid json format, missing attribute branche');
 		result.branche = obj.branche;
 		if (obj.zusatz1 === undefined)
-			 throw new Error('invalid json format, missing attribute zusatz1');
+			throw new Error('invalid json format, missing attribute zusatz1');
 		result.zusatz1 = obj.zusatz1;
 		if (obj.zusatz2 === undefined)
-			 throw new Error('invalid json format, missing attribute zusatz2');
+			throw new Error('invalid json format, missing attribute zusatz2');
 		result.zusatz2 = obj.zusatz2;
 		if (obj.Sichtbar === undefined)
-			 throw new Error('invalid json format, missing attribute Sichtbar');
+			throw new Error('invalid json format, missing attribute Sichtbar');
 		result.Sichtbar = obj.Sichtbar;
 		if (obj.Aenderbar === undefined)
-			 throw new Error('invalid json format, missing attribute Aenderbar');
+			throw new Error('invalid json format, missing attribute Aenderbar');
 		result.Aenderbar = obj.Aenderbar;
 		if (obj.Massnahmentraeger === undefined)
-			 throw new Error('invalid json format, missing attribute Massnahmentraeger');
+			throw new Error('invalid json format, missing attribute Massnahmentraeger');
 		result.Massnahmentraeger = obj.Massnahmentraeger;
 		if (obj.BelehrungISG === undefined)
-			 throw new Error('invalid json format, missing attribute BelehrungISG');
+			throw new Error('invalid json format, missing attribute BelehrungISG');
 		result.BelehrungISG = obj.BelehrungISG;
 		if (obj.GU_ID === undefined)
-			 throw new Error('invalid json format, missing attribute GU_ID');
+			throw new Error('invalid json format, missing attribute GU_ID');
 		result.GU_ID = obj.GU_ID;
 		if (obj.ErwFuehrungszeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute ErwFuehrungszeugnis');
+			throw new Error('invalid json format, missing attribute ErwFuehrungszeugnis');
 		result.ErwFuehrungszeugnis = obj.ErwFuehrungszeugnis;
 		result.ExtID = (obj.ExtID === undefined) ? null : obj.ExtID === null ? null : obj.ExtID;
-		if ((obj.ansprechpartner !== undefined) && (obj.ansprechpartner !== null)) {
+		if (obj.ansprechpartner !== undefined) {
 			for (const elem of obj.ansprechpartner) {
-				result.ansprechpartner?.add(BetriebAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
+				result.ansprechpartner.add(BetriebAnsprechpartner.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -238,44 +238,40 @@ export class BetriebStammdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebStammdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
-		result += '"name1" : ' + JSON.stringify(obj.name1!) + ',';
-		result += '"name2" : ' + JSON.stringify(obj.name2!) + ',';
-		result += '"strassenname" : ' + JSON.stringify(obj.strassenname!) + ',';
-		result += '"hausnr" : ' + JSON.stringify(obj.hausnr!) + ',';
-		result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz!) + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
-		result += '"telefon1" : ' + JSON.stringify(obj.telefon1!) + ',';
-		result += '"telefon2" : ' + JSON.stringify(obj.telefon2!) + ',';
-		result += '"fax" : ' + JSON.stringify(obj.fax!) + ',';
-		result += '"email" : ' + JSON.stringify(obj.email!) + ',';
-		result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen!) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"ausbildungsbetrieb" : ' + obj.ausbildungsbetrieb + ',';
-		result += '"bietetPraktika" : ' + obj.bietetPraktika + ',';
-		result += '"branche" : ' + JSON.stringify(obj.branche!) + ',';
-		result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1!) + ',';
-		result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2!) + ',';
-		result += '"Sichtbar" : ' + obj.Sichtbar + ',';
-		result += '"Aenderbar" : ' + obj.Aenderbar + ',';
-		result += '"Massnahmentraeger" : ' + obj.Massnahmentraeger + ',';
-		result += '"BelehrungISG" : ' + obj.BelehrungISG + ',';
-		result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID!) + ',';
-		result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
+		result += '"name1" : ' + JSON.stringify(obj.name1) + ',';
+		result += '"name2" : ' + JSON.stringify(obj.name2) + ',';
+		result += '"strassenname" : ' + JSON.stringify(obj.strassenname) + ',';
+		result += '"hausnr" : ' + JSON.stringify(obj.hausnr) + ',';
+		result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz) + ',';
+		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"telefon1" : ' + JSON.stringify(obj.telefon1) + ',';
+		result += '"telefon2" : ' + JSON.stringify(obj.telefon2) + ',';
+		result += '"fax" : ' + JSON.stringify(obj.fax) + ',';
+		result += '"email" : ' + JSON.stringify(obj.email) + ',';
+		result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"ausbildungsbetrieb" : ' + obj.ausbildungsbetrieb.toString() + ',';
+		result += '"bietetPraktika" : ' + obj.bietetPraktika.toString() + ',';
+		result += '"branche" : ' + JSON.stringify(obj.branche) + ',';
+		result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1) + ',';
+		result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2) + ',';
+		result += '"Sichtbar" : ' + obj.Sichtbar.toString() + ',';
+		result += '"Aenderbar" : ' + obj.Aenderbar.toString() + ',';
+		result += '"Massnahmentraeger" : ' + obj.Massnahmentraeger.toString() + ',';
+		result += '"BelehrungISG" : ' + obj.BelehrungISG.toString() + ',';
+		result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID) + ',';
+		result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis.toString() + ',';
 		result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
-		if (!obj.ansprechpartner) {
-			result += '"ansprechpartner" : []';
-		} else {
-			result += '"ansprechpartner" : [ ';
-			for (let i = 0; i < obj.ansprechpartner.size(); i++) {
-				const elem = obj.ansprechpartner.get(i);
-				result += BetriebAnsprechpartner.transpilerToJSON(elem);
-				if (i < obj.ansprechpartner.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"ansprechpartner" : [ ';
+		for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+			const elem = obj.ansprechpartner.get(i);
+			result += BetriebAnsprechpartner.transpilerToJSON(elem);
+			if (i < obj.ansprechpartner.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -284,96 +280,92 @@ export class BetriebStammdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebStammdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.adressArt !== undefined) {
-			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
+			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
 		}
 		if (obj.name1 !== undefined) {
-			result += '"name1" : ' + JSON.stringify(obj.name1!) + ',';
+			result += '"name1" : ' + JSON.stringify(obj.name1) + ',';
 		}
 		if (obj.name2 !== undefined) {
-			result += '"name2" : ' + JSON.stringify(obj.name2!) + ',';
+			result += '"name2" : ' + JSON.stringify(obj.name2) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + JSON.stringify(obj.strassenname!) + ',';
+			result += '"strassenname" : ' + JSON.stringify(obj.strassenname) + ',';
 		}
 		if (obj.hausnr !== undefined) {
-			result += '"hausnr" : ' + JSON.stringify(obj.hausnr!) + ',';
+			result += '"hausnr" : ' + JSON.stringify(obj.hausnr) + ',';
 		}
 		if (obj.hausnrzusatz !== undefined) {
-			result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz!) + ',';
+			result += '"hausnrzusatz" : ' + JSON.stringify(obj.hausnrzusatz) + ',';
 		}
 		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
 		}
 		if (obj.telefon1 !== undefined) {
-			result += '"telefon1" : ' + JSON.stringify(obj.telefon1!) + ',';
+			result += '"telefon1" : ' + JSON.stringify(obj.telefon1) + ',';
 		}
 		if (obj.telefon2 !== undefined) {
-			result += '"telefon2" : ' + JSON.stringify(obj.telefon2!) + ',';
+			result += '"telefon2" : ' + JSON.stringify(obj.telefon2) + ',';
 		}
 		if (obj.fax !== undefined) {
-			result += '"fax" : ' + JSON.stringify(obj.fax!) + ',';
+			result += '"fax" : ' + JSON.stringify(obj.fax) + ',';
 		}
 		if (obj.email !== undefined) {
-			result += '"email" : ' + JSON.stringify(obj.email!) + ',';
+			result += '"email" : ' + JSON.stringify(obj.email) + ',';
 		}
 		if (obj.bemerkungen !== undefined) {
-			result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen!) + ',';
+			result += '"bemerkungen" : ' + JSON.stringify(obj.bemerkungen) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.ausbildungsbetrieb !== undefined) {
-			result += '"ausbildungsbetrieb" : ' + obj.ausbildungsbetrieb + ',';
+			result += '"ausbildungsbetrieb" : ' + obj.ausbildungsbetrieb.toString() + ',';
 		}
 		if (obj.bietetPraktika !== undefined) {
-			result += '"bietetPraktika" : ' + obj.bietetPraktika + ',';
+			result += '"bietetPraktika" : ' + obj.bietetPraktika.toString() + ',';
 		}
 		if (obj.branche !== undefined) {
-			result += '"branche" : ' + JSON.stringify(obj.branche!) + ',';
+			result += '"branche" : ' + JSON.stringify(obj.branche) + ',';
 		}
 		if (obj.zusatz1 !== undefined) {
-			result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1!) + ',';
+			result += '"zusatz1" : ' + JSON.stringify(obj.zusatz1) + ',';
 		}
 		if (obj.zusatz2 !== undefined) {
-			result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2!) + ',';
+			result += '"zusatz2" : ' + JSON.stringify(obj.zusatz2) + ',';
 		}
 		if (obj.Sichtbar !== undefined) {
-			result += '"Sichtbar" : ' + obj.Sichtbar + ',';
+			result += '"Sichtbar" : ' + obj.Sichtbar.toString() + ',';
 		}
 		if (obj.Aenderbar !== undefined) {
-			result += '"Aenderbar" : ' + obj.Aenderbar + ',';
+			result += '"Aenderbar" : ' + obj.Aenderbar.toString() + ',';
 		}
 		if (obj.Massnahmentraeger !== undefined) {
-			result += '"Massnahmentraeger" : ' + obj.Massnahmentraeger + ',';
+			result += '"Massnahmentraeger" : ' + obj.Massnahmentraeger.toString() + ',';
 		}
 		if (obj.BelehrungISG !== undefined) {
-			result += '"BelehrungISG" : ' + obj.BelehrungISG + ',';
+			result += '"BelehrungISG" : ' + obj.BelehrungISG.toString() + ',';
 		}
 		if (obj.GU_ID !== undefined) {
-			result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID!) + ',';
+			result += '"GU_ID" : ' + JSON.stringify(obj.GU_ID) + ',';
 		}
 		if (obj.ErwFuehrungszeugnis !== undefined) {
-			result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis + ',';
+			result += '"ErwFuehrungszeugnis" : ' + obj.ErwFuehrungszeugnis.toString() + ',';
 		}
 		if (obj.ExtID !== undefined) {
 			result += '"ExtID" : ' + ((!obj.ExtID) ? 'null' : JSON.stringify(obj.ExtID)) + ',';
 		}
 		if (obj.ansprechpartner !== undefined) {
-			if (!obj.ansprechpartner) {
-				result += '"ansprechpartner" : []';
-			} else {
-				result += '"ansprechpartner" : [ ';
-				for (let i = 0; i < obj.ansprechpartner.size(); i++) {
-					const elem = obj.ansprechpartner.get(i);
-					result += BetriebAnsprechpartner.transpilerToJSON(elem);
-					if (i < obj.ansprechpartner.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"ansprechpartner" : [ ';
+			for (let i = 0; i < obj.ansprechpartner.size(); i++) {
+				const elem = obj.ansprechpartner.get(i);
+				result += BetriebAnsprechpartner.transpilerToJSON(elem);
+				if (i < obj.ansprechpartner.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

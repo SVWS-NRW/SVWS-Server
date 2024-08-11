@@ -48,28 +48,28 @@ export class StundenplanKlasse extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanKlasse {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanKlasse>;
 		const result = new StundenplanKlasse();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.istSichtbar === undefined)
-			 throw new Error('invalid json format, missing attribute istSichtbar');
+			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(elem);
+				result.jahrgaenge.add(elem);
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(elem);
+				result.schueler.add(elem);
 			}
 		}
 		return result;
@@ -77,34 +77,26 @@ export class StundenplanKlasse extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanKlasse) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
-			result += '"jahrgaenge" : [ ';
-			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-				const elem = obj.jahrgaenge.get(i);
-				result += elem;
-				if (i < obj.jahrgaenge.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += elem.toString();
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
 		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
-			result += '"schueler" : [ ';
-			for (let i = 0; i < obj.schueler.size(); i++) {
-				const elem = obj.schueler.get(i);
-				result += elem;
-				if (i < obj.schueler.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += elem.toString();
+			if (i < obj.schueler.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -113,44 +105,36 @@ export class StundenplanKlasse extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKlasse>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += elem;
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"jahrgaenge" : [ ';
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
+				result += elem.toString();
+				if (i < obj.jahrgaenge.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += elem;
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schueler" : [ ';
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
+				result += elem.toString();
+				if (i < obj.schueler.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

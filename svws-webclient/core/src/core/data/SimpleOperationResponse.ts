@@ -33,15 +33,15 @@ export class SimpleOperationResponse extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SimpleOperationResponse {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SimpleOperationResponse>;
 		const result = new SimpleOperationResponse();
 		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.success === undefined)
-			 throw new Error('invalid json format, missing attribute success');
+			throw new Error('invalid json format, missing attribute success');
 		result.success = obj.success;
-		if ((obj.log !== undefined) && (obj.log !== null)) {
+		if (obj.log !== undefined) {
 			for (const elem of obj.log) {
-				result.log?.add(elem);
+				result.log.add(elem);
 			}
 		}
 		return result;
@@ -49,20 +49,16 @@ export class SimpleOperationResponse extends JavaObject {
 
 	public static transpilerToJSON(obj : SimpleOperationResponse) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
-		result += '"success" : ' + obj.success + ',';
-		if (!obj.log) {
-			result += '"log" : []';
-		} else {
-			result += '"log" : [ ';
-			for (let i = 0; i < obj.log.size(); i++) {
-				const elem = obj.log.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.log.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+		result += '"success" : ' + obj.success.toString() + ',';
+		result += '"log" : [ ';
+		for (let i = 0; i < obj.log.size(); i++) {
+			const elem = obj.log.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.log.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -71,24 +67,20 @@ export class SimpleOperationResponse extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SimpleOperationResponse>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.success !== undefined) {
-			result += '"success" : ' + obj.success + ',';
+			result += '"success" : ' + obj.success.toString() + ',';
 		}
 		if (obj.log !== undefined) {
-			if (!obj.log) {
-				result += '"log" : []';
-			} else {
-				result += '"log" : [ ';
-				for (let i = 0; i < obj.log.size(); i++) {
-					const elem = obj.log.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.log.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"log" : [ ';
+			for (let i = 0; i < obj.log.size(); i++) {
+				const elem = obj.log.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.log.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

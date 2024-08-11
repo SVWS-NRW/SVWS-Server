@@ -39,22 +39,22 @@ export class GostBlockungKursAufteilung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungKursAufteilung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungKursAufteilung>;
 		const result = new GostBlockungKursAufteilung();
 		if (obj.kurs1 === undefined)
-			 throw new Error('invalid json format, missing attribute kurs1');
+			throw new Error('invalid json format, missing attribute kurs1');
 		result.kurs1 = GostBlockungKurs.transpilerFromJSON(JSON.stringify(obj.kurs1));
 		if (obj.kurs2 === undefined)
-			 throw new Error('invalid json format, missing attribute kurs2');
+			throw new Error('invalid json format, missing attribute kurs2');
 		result.kurs2 = GostBlockungKurs.transpilerFromJSON(JSON.stringify(obj.kurs2));
-		if ((obj.schueler1 !== undefined) && (obj.schueler1 !== null)) {
+		if (obj.schueler1 !== undefined) {
 			for (const elem of obj.schueler1) {
-				result.schueler1?.add(elem);
+				result.schueler1.add(elem);
 			}
 		}
-		if ((obj.schueler2 !== undefined) && (obj.schueler2 !== null)) {
+		if (obj.schueler2 !== undefined) {
 			for (const elem of obj.schueler2) {
-				result.schueler2?.add(elem);
+				result.schueler2.add(elem);
 			}
 		}
 		return result;
@@ -64,30 +64,22 @@ export class GostBlockungKursAufteilung extends JavaObject {
 		let result = '{';
 		result += '"kurs1" : ' + GostBlockungKurs.transpilerToJSON(obj.kurs1) + ',';
 		result += '"kurs2" : ' + GostBlockungKurs.transpilerToJSON(obj.kurs2) + ',';
-		if (!obj.schueler1) {
-			result += '"schueler1" : []';
-		} else {
-			result += '"schueler1" : [ ';
-			for (let i = 0; i < obj.schueler1.size(); i++) {
-				const elem = obj.schueler1.get(i);
-				result += elem;
-				if (i < obj.schueler1.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"schueler1" : [ ';
+		for (let i = 0; i < obj.schueler1.size(); i++) {
+			const elem = obj.schueler1.get(i);
+			result += elem.toString();
+			if (i < obj.schueler1.size() - 1)
+				result += ',';
 		}
-		if (!obj.schueler2) {
-			result += '"schueler2" : []';
-		} else {
-			result += '"schueler2" : [ ';
-			for (let i = 0; i < obj.schueler2.size(); i++) {
-				const elem = obj.schueler2.get(i);
-				result += elem;
-				if (i < obj.schueler2.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schueler2" : [ ';
+		for (let i = 0; i < obj.schueler2.size(); i++) {
+			const elem = obj.schueler2.get(i);
+			result += elem.toString();
+			if (i < obj.schueler2.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -102,32 +94,24 @@ export class GostBlockungKursAufteilung extends JavaObject {
 			result += '"kurs2" : ' + GostBlockungKurs.transpilerToJSON(obj.kurs2) + ',';
 		}
 		if (obj.schueler1 !== undefined) {
-			if (!obj.schueler1) {
-				result += '"schueler1" : []';
-			} else {
-				result += '"schueler1" : [ ';
-				for (let i = 0; i < obj.schueler1.size(); i++) {
-					const elem = obj.schueler1.get(i);
-					result += elem;
-					if (i < obj.schueler1.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schueler1" : [ ';
+			for (let i = 0; i < obj.schueler1.size(); i++) {
+				const elem = obj.schueler1.get(i);
+				result += elem.toString();
+				if (i < obj.schueler1.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schueler2 !== undefined) {
-			if (!obj.schueler2) {
-				result += '"schueler2" : []';
-			} else {
-				result += '"schueler2" : [ ';
-				for (let i = 0; i < obj.schueler2.size(); i++) {
-					const elem = obj.schueler2.get(i);
-					result += elem;
-					if (i < obj.schueler2.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schueler2" : [ ';
+			for (let i = 0; i < obj.schueler2.size(); i++) {
+				const elem = obj.schueler2.get(i);
+				result += elem.toString();
+				if (i < obj.schueler2.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

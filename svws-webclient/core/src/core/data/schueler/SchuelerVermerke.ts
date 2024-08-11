@@ -51,18 +51,18 @@ export class SchuelerVermerke extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerVermerke {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerVermerke>;
 		const result = new SchuelerVermerke();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idSchueler === undefined)
-			 throw new Error('invalid json format, missing attribute idSchueler');
+			throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		result.idVermerkart = (obj.idVermerkart === undefined) ? null : obj.idVermerkart === null ? null : obj.idVermerkart;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
 		if (obj.bemerkung === undefined)
-			 throw new Error('invalid json format, missing attribute bemerkung');
+			throw new Error('invalid json format, missing attribute bemerkung');
 		result.bemerkung = obj.bemerkung;
 		result.angelegtVon = (obj.angelegtVon === undefined) ? null : obj.angelegtVon === null ? null : obj.angelegtVon;
 		result.geaendertVon = (obj.geaendertVon === undefined) ? null : obj.geaendertVon === null ? null : obj.geaendertVon;
@@ -71,11 +71,11 @@ export class SchuelerVermerke extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerVermerke) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart.toString()) + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
-		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung!) + ',';
+		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
 		result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';
 		result += '"geaendertVon" : ' + ((!obj.geaendertVon) ? 'null' : JSON.stringify(obj.geaendertVon)) + ',';
 		result = result.slice(0, -1);
@@ -86,19 +86,19 @@ export class SchuelerVermerke extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerVermerke>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idSchueler !== undefined) {
-			result += '"idSchueler" : ' + obj.idSchueler + ',';
+			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.idVermerkart !== undefined) {
-			result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart) + ',';
+			result += '"idVermerkart" : ' + ((!obj.idVermerkart) ? 'null' : obj.idVermerkart.toString()) + ',';
 		}
 		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung!) + ',';
+			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
 		}
 		if (obj.angelegtVon !== undefined) {
 			result += '"angelegtVon" : ' + ((!obj.angelegtVon) ? 'null' : JSON.stringify(obj.angelegtVon)) + ',';

@@ -39,14 +39,14 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitGliederung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitGliederung>;
 		const result = new SchuldateiOrganisationseinheitGliederung();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
 		result.foerderschwerpunkt = (obj.foerderschwerpunkt === undefined) ? null : obj.foerderschwerpunkt === null ? null : obj.foerderschwerpunkt;
@@ -58,7 +58,7 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		result += '"schulnummer" : ' + obj.schulnummer! + ',';
 		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		result += '"foerderschwerpunkt" : ' + ((!obj.foerderschwerpunkt) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
@@ -79,7 +79,7 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';

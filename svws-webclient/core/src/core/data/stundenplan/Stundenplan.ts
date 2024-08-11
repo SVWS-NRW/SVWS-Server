@@ -90,59 +90,59 @@ export class Stundenplan extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Stundenplan {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Stundenplan>;
 		const result = new Stundenplan();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.gueltigAb === undefined)
-			 throw new Error('invalid json format, missing attribute gueltigAb');
+			throw new Error('invalid json format, missing attribute gueltigAb');
 		result.gueltigAb = obj.gueltigAb;
 		if (obj.gueltigBis === undefined)
-			 throw new Error('invalid json format, missing attribute gueltigBis');
+			throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
 		if (obj.bezeichnungStundenplan === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
+			throw new Error('invalid json format, missing attribute bezeichnungStundenplan');
 		result.bezeichnungStundenplan = obj.bezeichnungStundenplan;
 		if (obj.wochenTypModell === undefined)
-			 throw new Error('invalid json format, missing attribute wochenTypModell');
+			throw new Error('invalid json format, missing attribute wochenTypModell');
 		result.wochenTypModell = obj.wochenTypModell;
-		if ((obj.zeitraster !== undefined) && (obj.zeitraster !== null)) {
+		if (obj.zeitraster !== undefined) {
 			for (const elem of obj.zeitraster) {
-				result.zeitraster?.add(StundenplanZeitraster.transpilerFromJSON(JSON.stringify(elem)));
+				result.zeitraster.add(StundenplanZeitraster.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+		if (obj.raeume !== undefined) {
 			for (const elem of obj.raeume) {
-				result.raeume?.add(StundenplanRaum.transpilerFromJSON(JSON.stringify(elem)));
+				result.raeume.add(StundenplanRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(StundenplanSchiene.transpilerFromJSON(JSON.stringify(elem)));
+				result.schienen.add(StundenplanSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.pausenzeiten !== undefined) && (obj.pausenzeiten !== null)) {
+		if (obj.pausenzeiten !== undefined) {
 			for (const elem of obj.pausenzeiten) {
-				result.pausenzeiten?.add(StundenplanPausenzeit.transpilerFromJSON(JSON.stringify(elem)));
+				result.pausenzeiten.add(StundenplanPausenzeit.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.aufsichtsbereiche !== undefined) && (obj.aufsichtsbereiche !== null)) {
+		if (obj.aufsichtsbereiche !== undefined) {
 			for (const elem of obj.aufsichtsbereiche) {
-				result.aufsichtsbereiche?.add(StundenplanAufsichtsbereich.transpilerFromJSON(JSON.stringify(elem)));
+				result.aufsichtsbereiche.add(StundenplanAufsichtsbereich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kalenderwochenZuordnung !== undefined) && (obj.kalenderwochenZuordnung !== null)) {
+		if (obj.kalenderwochenZuordnung !== undefined) {
 			for (const elem of obj.kalenderwochenZuordnung) {
-				result.kalenderwochenZuordnung?.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
+				result.kalenderwochenZuordnung.add(StundenplanKalenderwochenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(StundenplanJahrgang.transpilerFromJSON(JSON.stringify(elem)));
+				result.jahrgaenge.add(StundenplanJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -150,15 +150,94 @@ export class Stundenplan extends JavaObject {
 
 	public static transpilerToJSON(obj : Stundenplan) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
-		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
-		result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan!) + ',';
-		result += '"wochenTypModell" : ' + obj.wochenTypModell + ',';
-		if (!obj.zeitraster) {
-			result += '"zeitraster" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
+		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan) + ',';
+		result += '"wochenTypModell" : ' + obj.wochenTypModell.toString() + ',';
+		result += '"zeitraster" : [ ';
+		for (let i = 0; i < obj.zeitraster.size(); i++) {
+			const elem = obj.zeitraster.get(i);
+			result += StundenplanZeitraster.transpilerToJSON(elem);
+			if (i < obj.zeitraster.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"raeume" : [ ';
+		for (let i = 0; i < obj.raeume.size(); i++) {
+			const elem = obj.raeume.get(i);
+			result += StundenplanRaum.transpilerToJSON(elem);
+			if (i < obj.raeume.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += StundenplanSchiene.transpilerToJSON(elem);
+			if (i < obj.schienen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"pausenzeiten" : [ ';
+		for (let i = 0; i < obj.pausenzeiten.size(); i++) {
+			const elem = obj.pausenzeiten.get(i);
+			result += StundenplanPausenzeit.transpilerToJSON(elem);
+			if (i < obj.pausenzeiten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"aufsichtsbereiche" : [ ';
+		for (let i = 0; i < obj.aufsichtsbereiche.size(); i++) {
+			const elem = obj.aufsichtsbereiche.get(i);
+			result += StundenplanAufsichtsbereich.transpilerToJSON(elem);
+			if (i < obj.aufsichtsbereiche.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kalenderwochenZuordnung" : [ ';
+		for (let i = 0; i < obj.kalenderwochenZuordnung.size(); i++) {
+			const elem = obj.kalenderwochenZuordnung.get(i);
+			result += StundenplanKalenderwochenzuordnung.transpilerToJSON(elem);
+			if (i < obj.kalenderwochenZuordnung.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += StundenplanJahrgang.transpilerToJSON(elem);
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<Stundenplan>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		}
+		if (obj.gueltigAb !== undefined) {
+			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
+		}
+		if (obj.gueltigBis !== undefined) {
+			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
+		}
+		if (obj.bezeichnungStundenplan !== undefined) {
+			result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan) + ',';
+		}
+		if (obj.wochenTypModell !== undefined) {
+			result += '"wochenTypModell" : ' + obj.wochenTypModell.toString() + ',';
+		}
+		if (obj.zeitraster !== undefined) {
 			result += '"zeitraster" : [ ';
 			for (let i = 0; i < obj.zeitraster.size(); i++) {
 				const elem = obj.zeitraster.get(i);
@@ -168,9 +247,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.raeume) {
-			result += '"raeume" : []';
-		} else {
+		if (obj.raeume !== undefined) {
 			result += '"raeume" : [ ';
 			for (let i = 0; i < obj.raeume.size(); i++) {
 				const elem = obj.raeume.get(i);
@@ -180,9 +257,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
+		if (obj.schienen !== undefined) {
 			result += '"schienen" : [ ';
 			for (let i = 0; i < obj.schienen.size(); i++) {
 				const elem = obj.schienen.get(i);
@@ -192,9 +267,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.pausenzeiten) {
-			result += '"pausenzeiten" : []';
-		} else {
+		if (obj.pausenzeiten !== undefined) {
 			result += '"pausenzeiten" : [ ';
 			for (let i = 0; i < obj.pausenzeiten.size(); i++) {
 				const elem = obj.pausenzeiten.get(i);
@@ -204,9 +277,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.aufsichtsbereiche) {
-			result += '"aufsichtsbereiche" : []';
-		} else {
+		if (obj.aufsichtsbereiche !== undefined) {
 			result += '"aufsichtsbereiche" : [ ';
 			for (let i = 0; i < obj.aufsichtsbereiche.size(); i++) {
 				const elem = obj.aufsichtsbereiche.get(i);
@@ -216,9 +287,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kalenderwochenZuordnung) {
-			result += '"kalenderwochenZuordnung" : []';
-		} else {
+		if (obj.kalenderwochenZuordnung !== undefined) {
 			result += '"kalenderwochenZuordnung" : [ ';
 			for (let i = 0; i < obj.kalenderwochenZuordnung.size(); i++) {
 				const elem = obj.kalenderwochenZuordnung.get(i);
@@ -228,9 +297,7 @@ export class Stundenplan extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
+		if (obj.jahrgaenge !== undefined) {
 			result += '"jahrgaenge" : [ ';
 			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 				const elem = obj.jahrgaenge.get(i);
@@ -239,129 +306,6 @@ export class Stundenplan extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<Stundenplan>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		}
-		if (obj.gueltigAb !== undefined) {
-			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
-		}
-		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
-		}
-		if (obj.bezeichnungStundenplan !== undefined) {
-			result += '"bezeichnungStundenplan" : ' + JSON.stringify(obj.bezeichnungStundenplan!) + ',';
-		}
-		if (obj.wochenTypModell !== undefined) {
-			result += '"wochenTypModell" : ' + obj.wochenTypModell + ',';
-		}
-		if (obj.zeitraster !== undefined) {
-			if (!obj.zeitraster) {
-				result += '"zeitraster" : []';
-			} else {
-				result += '"zeitraster" : [ ';
-				for (let i = 0; i < obj.zeitraster.size(); i++) {
-					const elem = obj.zeitraster.get(i);
-					result += StundenplanZeitraster.transpilerToJSON(elem);
-					if (i < obj.zeitraster.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.raeume !== undefined) {
-			if (!obj.raeume) {
-				result += '"raeume" : []';
-			} else {
-				result += '"raeume" : [ ';
-				for (let i = 0; i < obj.raeume.size(); i++) {
-					const elem = obj.raeume.get(i);
-					result += StundenplanRaum.transpilerToJSON(elem);
-					if (i < obj.raeume.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += StundenplanSchiene.transpilerToJSON(elem);
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.pausenzeiten !== undefined) {
-			if (!obj.pausenzeiten) {
-				result += '"pausenzeiten" : []';
-			} else {
-				result += '"pausenzeiten" : [ ';
-				for (let i = 0; i < obj.pausenzeiten.size(); i++) {
-					const elem = obj.pausenzeiten.get(i);
-					result += StundenplanPausenzeit.transpilerToJSON(elem);
-					if (i < obj.pausenzeiten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.aufsichtsbereiche !== undefined) {
-			if (!obj.aufsichtsbereiche) {
-				result += '"aufsichtsbereiche" : []';
-			} else {
-				result += '"aufsichtsbereiche" : [ ';
-				for (let i = 0; i < obj.aufsichtsbereiche.size(); i++) {
-					const elem = obj.aufsichtsbereiche.get(i);
-					result += StundenplanAufsichtsbereich.transpilerToJSON(elem);
-					if (i < obj.aufsichtsbereiche.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kalenderwochenZuordnung !== undefined) {
-			if (!obj.kalenderwochenZuordnung) {
-				result += '"kalenderwochenZuordnung" : []';
-			} else {
-				result += '"kalenderwochenZuordnung" : [ ';
-				for (let i = 0; i < obj.kalenderwochenZuordnung.size(); i++) {
-					const elem = obj.kalenderwochenZuordnung.get(i);
-					result += StundenplanKalenderwochenzuordnung.transpilerToJSON(elem);
-					if (i < obj.kalenderwochenZuordnung.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += StundenplanJahrgang.transpilerToJSON(elem);
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

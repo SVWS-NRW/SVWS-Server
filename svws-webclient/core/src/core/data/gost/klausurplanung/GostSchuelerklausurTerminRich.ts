@@ -124,53 +124,53 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurTerminRich {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostSchuelerklausurTerminRich>;
 		const result = new GostSchuelerklausurTerminRich();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.startzeit === undefined)
-			 throw new Error('invalid json format, missing attribute startzeit');
+			throw new Error('invalid json format, missing attribute startzeit');
 		result.startzeit = obj.startzeit;
 		if (obj.idKursklausur === undefined)
-			 throw new Error('invalid json format, missing attribute idKursklausur');
+			throw new Error('invalid json format, missing attribute idKursklausur');
 		result.idKursklausur = obj.idKursklausur;
 		if (obj.idFach === undefined)
-			 throw new Error('invalid json format, missing attribute idFach');
+			throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.dauer === undefined)
-			 throw new Error('invalid json format, missing attribute dauer');
+			throw new Error('invalid json format, missing attribute dauer');
 		result.dauer = obj.dauer;
 		if (obj.auswahlzeit === undefined)
-			 throw new Error('invalid json format, missing attribute auswahlzeit');
+			throw new Error('invalid json format, missing attribute auswahlzeit');
 		result.auswahlzeit = obj.auswahlzeit;
 		if (obj.istMdlPruefung === undefined)
-			 throw new Error('invalid json format, missing attribute istMdlPruefung');
+			throw new Error('invalid json format, missing attribute istMdlPruefung');
 		result.istMdlPruefung = obj.istMdlPruefung;
 		if (obj.istAudioNotwendig === undefined)
-			 throw new Error('invalid json format, missing attribute istAudioNotwendig');
+			throw new Error('invalid json format, missing attribute istAudioNotwendig');
 		result.istAudioNotwendig = obj.istAudioNotwendig;
 		if (obj.istVideoNotwendig === undefined)
-			 throw new Error('invalid json format, missing attribute istVideoNotwendig');
+			throw new Error('invalid json format, missing attribute istVideoNotwendig');
 		result.istVideoNotwendig = obj.istVideoNotwendig;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostSchuelerklausurTerminRich) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"startzeit" : ' + obj.startzeit + ',';
-		result += '"idKursklausur" : ' + obj.idKursklausur + ',';
-		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
-		result += '"dauer" : ' + obj.dauer + ',';
-		result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
-		result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
-		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
-		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"startzeit" : ' + obj.startzeit.toString() + ',';
+		result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
+		result += '"idFach" : ' + obj.idFach.toString() + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
+		result += '"dauer" : ' + obj.dauer.toString() + ',';
+		result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
+		result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
+		result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
+		result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -179,34 +179,34 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausurTerminRich>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + obj.startzeit + ',';
+			result += '"startzeit" : ' + obj.startzeit.toString() + ',';
 		}
 		if (obj.idKursklausur !== undefined) {
-			result += '"idKursklausur" : ' + obj.idKursklausur + ',';
+			result += '"idKursklausur" : ' + obj.idKursklausur.toString() + ',';
 		}
 		if (obj.idFach !== undefined) {
-			result += '"idFach" : ' + obj.idFach + ',';
+			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
+			result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
 		}
 		if (obj.dauer !== undefined) {
-			result += '"dauer" : ' + obj.dauer + ',';
+			result += '"dauer" : ' + obj.dauer.toString() + ',';
 		}
 		if (obj.auswahlzeit !== undefined) {
-			result += '"auswahlzeit" : ' + obj.auswahlzeit + ',';
+			result += '"auswahlzeit" : ' + obj.auswahlzeit.toString() + ',';
 		}
 		if (obj.istMdlPruefung !== undefined) {
-			result += '"istMdlPruefung" : ' + obj.istMdlPruefung + ',';
+			result += '"istMdlPruefung" : ' + obj.istMdlPruefung.toString() + ',';
 		}
 		if (obj.istAudioNotwendig !== undefined) {
-			result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig + ',';
+			result += '"istAudioNotwendig" : ' + obj.istAudioNotwendig.toString() + ',';
 		}
 		if (obj.istVideoNotwendig !== undefined) {
-			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig + ',';
+			result += '"istVideoNotwendig" : ' + obj.istVideoNotwendig.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

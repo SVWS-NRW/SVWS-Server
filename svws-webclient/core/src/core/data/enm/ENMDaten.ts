@@ -138,84 +138,84 @@ export class ENMDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMDaten>;
 		const result = new ENMDaten();
 		if (obj.enmRevision === undefined)
-			 throw new Error('invalid json format, missing attribute enmRevision');
+			throw new Error('invalid json format, missing attribute enmRevision');
 		result.enmRevision = obj.enmRevision;
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		if (obj.schuljahr === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahr');
+			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
 		if (obj.anzahlAbschnitte === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlAbschnitte');
+			throw new Error('invalid json format, missing attribute anzahlAbschnitte');
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
 		if (obj.aktuellerAbschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute aktuellerAbschnitt');
+			throw new Error('invalid json format, missing attribute aktuellerAbschnitt');
 		result.aktuellerAbschnitt = obj.aktuellerAbschnitt;
 		result.publicKey = (obj.publicKey === undefined) ? null : obj.publicKey === null ? null : obj.publicKey;
 		result.lehrerID = (obj.lehrerID === undefined) ? null : obj.lehrerID === null ? null : obj.lehrerID;
 		if (obj.fehlstundenEingabe === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenEingabe');
+			throw new Error('invalid json format, missing attribute fehlstundenEingabe');
 		result.fehlstundenEingabe = obj.fehlstundenEingabe;
 		if (obj.fehlstundenSIFachbezogen === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenSIFachbezogen');
+			throw new Error('invalid json format, missing attribute fehlstundenSIFachbezogen');
 		result.fehlstundenSIFachbezogen = obj.fehlstundenSIFachbezogen;
 		if (obj.fehlstundenSIIFachbezogen === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenSIIFachbezogen');
+			throw new Error('invalid json format, missing attribute fehlstundenSIIFachbezogen');
 		result.fehlstundenSIIFachbezogen = obj.fehlstundenSIIFachbezogen;
 		result.schulform = (obj.schulform === undefined) ? null : obj.schulform === null ? null : obj.schulform;
 		result.mailadresse = (obj.mailadresse === undefined) ? null : obj.mailadresse === null ? null : obj.mailadresse;
-		if ((obj.noten !== undefined) && (obj.noten !== null)) {
+		if (obj.noten !== undefined) {
 			for (const elem of obj.noten) {
-				result.noten?.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));
+				result.noten.add(ENMNote.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.foerderschwerpunkte !== undefined) && (obj.foerderschwerpunkte !== null)) {
+		if (obj.foerderschwerpunkte !== undefined) {
 			for (const elem of obj.foerderschwerpunkte) {
-				result.foerderschwerpunkte?.add(ENMFoerderschwerpunkt.transpilerFromJSON(JSON.stringify(elem)));
+				result.foerderschwerpunkte.add(ENMFoerderschwerpunkt.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(ENMJahrgang.transpilerFromJSON(JSON.stringify(elem)));
+				result.jahrgaenge.add(ENMJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(ENMKlasse.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(ENMKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.floskelgruppen !== undefined) && (obj.floskelgruppen !== null)) {
+		if (obj.floskelgruppen !== undefined) {
 			for (const elem of obj.floskelgruppen) {
-				result.floskelgruppen?.add(ENMFloskelgruppe.transpilerFromJSON(JSON.stringify(elem)));
+				result.floskelgruppen.add(ENMFloskelgruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+		if (obj.lehrer !== undefined) {
 			for (const elem of obj.lehrer) {
-				result.lehrer?.add(ENMLehrer.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrer.add(ENMLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(ENMFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(ENMFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.teilleistungsarten !== undefined) && (obj.teilleistungsarten !== null)) {
+		if (obj.teilleistungsarten !== undefined) {
 			for (const elem of obj.teilleistungsarten) {
-				result.teilleistungsarten?.add(ENMTeilleistungsart.transpilerFromJSON(JSON.stringify(elem)));
+				result.teilleistungsarten.add(ENMTeilleistungsart.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lerngruppen !== undefined) && (obj.lerngruppen !== null)) {
+		if (obj.lerngruppen !== undefined) {
 			for (const elem of obj.lerngruppen) {
-				result.lerngruppen?.add(ENMLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
+				result.lerngruppen.add(ENMLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(ENMSchueler.transpilerFromJSON(JSON.stringify(elem)));
+				result.schueler.add(ENMSchueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -223,21 +223,142 @@ export class ENMDaten extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMDaten) : string {
 		let result = '{';
-		result += '"enmRevision" : ' + obj.enmRevision + ',';
-		result += '"schulnummer" : ' + obj.schulnummer + ',';
-		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
-		result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
+		result += '"enmRevision" : ' + obj.enmRevision.toString() + ',';
+		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
+		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
+		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte.toString() + ',';
+		result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt.toString() + ',';
 		result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
-		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
-		result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';
-		result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen + ',';
-		result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
+		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
+		result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe.toString() + ',';
+		result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen.toString() + ',';
+		result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen.toString() + ',';
 		result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
 		result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
-		if (!obj.noten) {
-			result += '"noten" : []';
-		} else {
+		result += '"noten" : [ ';
+		for (let i = 0; i < obj.noten.size(); i++) {
+			const elem = obj.noten.get(i);
+			result += ENMNote.transpilerToJSON(elem);
+			if (i < obj.noten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"foerderschwerpunkte" : [ ';
+		for (let i = 0; i < obj.foerderschwerpunkte.size(); i++) {
+			const elem = obj.foerderschwerpunkte.get(i);
+			result += ENMFoerderschwerpunkt.transpilerToJSON(elem);
+			if (i < obj.foerderschwerpunkte.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += ENMJahrgang.transpilerToJSON(elem);
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += ENMKlasse.transpilerToJSON(elem);
+			if (i < obj.klassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"floskelgruppen" : [ ';
+		for (let i = 0; i < obj.floskelgruppen.size(); i++) {
+			const elem = obj.floskelgruppen.get(i);
+			result += ENMFloskelgruppe.transpilerToJSON(elem);
+			if (i < obj.floskelgruppen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"lehrer" : [ ';
+		for (let i = 0; i < obj.lehrer.size(); i++) {
+			const elem = obj.lehrer.get(i);
+			result += ENMLehrer.transpilerToJSON(elem);
+			if (i < obj.lehrer.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += ENMFach.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"teilleistungsarten" : [ ';
+		for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
+			const elem = obj.teilleistungsarten.get(i);
+			result += ENMTeilleistungsart.transpilerToJSON(elem);
+			if (i < obj.teilleistungsarten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"lerngruppen" : [ ';
+		for (let i = 0; i < obj.lerngruppen.size(); i++) {
+			const elem = obj.lerngruppen.get(i);
+			result += ENMLerngruppe.transpilerToJSON(elem);
+			if (i < obj.lerngruppen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += ENMSchueler.transpilerToJSON(elem);
+			if (i < obj.schueler.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<ENMDaten>) : string {
+		let result = '{';
+		if (obj.enmRevision !== undefined) {
+			result += '"enmRevision" : ' + obj.enmRevision.toString() + ',';
+		}
+		if (obj.schulnummer !== undefined) {
+			result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
+		}
+		if (obj.schuljahr !== undefined) {
+			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
+		}
+		if (obj.anzahlAbschnitte !== undefined) {
+			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte.toString() + ',';
+		}
+		if (obj.aktuellerAbschnitt !== undefined) {
+			result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt.toString() + ',';
+		}
+		if (obj.publicKey !== undefined) {
+			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
+		}
+		if (obj.lehrerID !== undefined) {
+			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
+		}
+		if (obj.fehlstundenEingabe !== undefined) {
+			result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe.toString() + ',';
+		}
+		if (obj.fehlstundenSIFachbezogen !== undefined) {
+			result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen.toString() + ',';
+		}
+		if (obj.fehlstundenSIIFachbezogen !== undefined) {
+			result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen.toString() + ',';
+		}
+		if (obj.schulform !== undefined) {
+			result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
+		}
+		if (obj.mailadresse !== undefined) {
+			result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
+		}
+		if (obj.noten !== undefined) {
 			result += '"noten" : [ ';
 			for (let i = 0; i < obj.noten.size(); i++) {
 				const elem = obj.noten.get(i);
@@ -247,9 +368,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.foerderschwerpunkte) {
-			result += '"foerderschwerpunkte" : []';
-		} else {
+		if (obj.foerderschwerpunkte !== undefined) {
 			result += '"foerderschwerpunkte" : [ ';
 			for (let i = 0; i < obj.foerderschwerpunkte.size(); i++) {
 				const elem = obj.foerderschwerpunkte.get(i);
@@ -259,9 +378,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
+		if (obj.jahrgaenge !== undefined) {
 			result += '"jahrgaenge" : [ ';
 			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 				const elem = obj.jahrgaenge.get(i);
@@ -271,9 +388,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
+		if (obj.klassen !== undefined) {
 			result += '"klassen" : [ ';
 			for (let i = 0; i < obj.klassen.size(); i++) {
 				const elem = obj.klassen.get(i);
@@ -283,9 +398,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.floskelgruppen) {
-			result += '"floskelgruppen" : []';
-		} else {
+		if (obj.floskelgruppen !== undefined) {
 			result += '"floskelgruppen" : [ ';
 			for (let i = 0; i < obj.floskelgruppen.size(); i++) {
 				const elem = obj.floskelgruppen.get(i);
@@ -295,9 +408,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.lehrer) {
-			result += '"lehrer" : []';
-		} else {
+		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : [ ';
 			for (let i = 0; i < obj.lehrer.size(); i++) {
 				const elem = obj.lehrer.get(i);
@@ -307,9 +418,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
+		if (obj.faecher !== undefined) {
 			result += '"faecher" : [ ';
 			for (let i = 0; i < obj.faecher.size(); i++) {
 				const elem = obj.faecher.get(i);
@@ -319,9 +428,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.teilleistungsarten) {
-			result += '"teilleistungsarten" : []';
-		} else {
+		if (obj.teilleistungsarten !== undefined) {
 			result += '"teilleistungsarten" : [ ';
 			for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
 				const elem = obj.teilleistungsarten.get(i);
@@ -331,9 +438,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.lerngruppen) {
-			result += '"lerngruppen" : []';
-		} else {
+		if (obj.lerngruppen !== undefined) {
 			result += '"lerngruppen" : [ ';
 			for (let i = 0; i < obj.lerngruppen.size(); i++) {
 				const elem = obj.lerngruppen.get(i);
@@ -343,9 +448,7 @@ export class ENMDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
+		if (obj.schueler !== undefined) {
 			result += '"schueler" : [ ';
 			for (let i = 0; i < obj.schueler.size(); i++) {
 				const elem = obj.schueler.get(i);
@@ -354,189 +457,6 @@ export class ENMDaten extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<ENMDaten>) : string {
-		let result = '{';
-		if (obj.enmRevision !== undefined) {
-			result += '"enmRevision" : ' + obj.enmRevision + ',';
-		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
-		}
-		if (obj.schuljahr !== undefined) {
-			result += '"schuljahr" : ' + obj.schuljahr + ',';
-		}
-		if (obj.anzahlAbschnitte !== undefined) {
-			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
-		}
-		if (obj.aktuellerAbschnitt !== undefined) {
-			result += '"aktuellerAbschnitt" : ' + obj.aktuellerAbschnitt + ',';
-		}
-		if (obj.publicKey !== undefined) {
-			result += '"publicKey" : ' + ((!obj.publicKey) ? 'null' : JSON.stringify(obj.publicKey)) + ',';
-		}
-		if (obj.lehrerID !== undefined) {
-			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
-		}
-		if (obj.fehlstundenEingabe !== undefined) {
-			result += '"fehlstundenEingabe" : ' + obj.fehlstundenEingabe + ',';
-		}
-		if (obj.fehlstundenSIFachbezogen !== undefined) {
-			result += '"fehlstundenSIFachbezogen" : ' + obj.fehlstundenSIFachbezogen + ',';
-		}
-		if (obj.fehlstundenSIIFachbezogen !== undefined) {
-			result += '"fehlstundenSIIFachbezogen" : ' + obj.fehlstundenSIIFachbezogen + ',';
-		}
-		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + ((!obj.schulform) ? 'null' : JSON.stringify(obj.schulform)) + ',';
-		}
-		if (obj.mailadresse !== undefined) {
-			result += '"mailadresse" : ' + ((!obj.mailadresse) ? 'null' : JSON.stringify(obj.mailadresse)) + ',';
-		}
-		if (obj.noten !== undefined) {
-			if (!obj.noten) {
-				result += '"noten" : []';
-			} else {
-				result += '"noten" : [ ';
-				for (let i = 0; i < obj.noten.size(); i++) {
-					const elem = obj.noten.get(i);
-					result += ENMNote.transpilerToJSON(elem);
-					if (i < obj.noten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.foerderschwerpunkte !== undefined) {
-			if (!obj.foerderschwerpunkte) {
-				result += '"foerderschwerpunkte" : []';
-			} else {
-				result += '"foerderschwerpunkte" : [ ';
-				for (let i = 0; i < obj.foerderschwerpunkte.size(); i++) {
-					const elem = obj.foerderschwerpunkte.get(i);
-					result += ENMFoerderschwerpunkt.transpilerToJSON(elem);
-					if (i < obj.foerderschwerpunkte.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += ENMJahrgang.transpilerToJSON(elem);
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += ENMKlasse.transpilerToJSON(elem);
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.floskelgruppen !== undefined) {
-			if (!obj.floskelgruppen) {
-				result += '"floskelgruppen" : []';
-			} else {
-				result += '"floskelgruppen" : [ ';
-				for (let i = 0; i < obj.floskelgruppen.size(); i++) {
-					const elem = obj.floskelgruppen.get(i);
-					result += ENMFloskelgruppe.transpilerToJSON(elem);
-					if (i < obj.floskelgruppen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.lehrer !== undefined) {
-			if (!obj.lehrer) {
-				result += '"lehrer" : []';
-			} else {
-				result += '"lehrer" : [ ';
-				for (let i = 0; i < obj.lehrer.size(); i++) {
-					const elem = obj.lehrer.get(i);
-					result += ENMLehrer.transpilerToJSON(elem);
-					if (i < obj.lehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += ENMFach.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.teilleistungsarten !== undefined) {
-			if (!obj.teilleistungsarten) {
-				result += '"teilleistungsarten" : []';
-			} else {
-				result += '"teilleistungsarten" : [ ';
-				for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
-					const elem = obj.teilleistungsarten.get(i);
-					result += ENMTeilleistungsart.transpilerToJSON(elem);
-					if (i < obj.teilleistungsarten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.lerngruppen !== undefined) {
-			if (!obj.lerngruppen) {
-				result += '"lerngruppen" : []';
-			} else {
-				result += '"lerngruppen" : [ ';
-				for (let i = 0; i < obj.lerngruppen.size(); i++) {
-					const elem = obj.lerngruppen.get(i);
-					result += ENMLerngruppe.transpilerToJSON(elem);
-					if (i < obj.lerngruppen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += ENMSchueler.transpilerToJSON(elem);
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

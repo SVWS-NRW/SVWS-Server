@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 
 export class AbschlussErgebnisBerufsbildend extends JavaObject {
@@ -42,32 +43,35 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbschlussErgebnisBerufsbildend {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbschlussErgebnisBerufsbildend>;
 		const result = new AbschlussErgebnisBerufsbildend();
 		if (obj.hatBSA === undefined)
-			 throw new Error('invalid json format, missing attribute hatBSA');
+			throw new Error('invalid json format, missing attribute hatBSA');
 		result.hatBSA = obj.hatBSA;
 		if (obj.note === undefined)
-			 throw new Error('invalid json format, missing attribute note');
+			throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
 		result.hatBA = (obj.hatBA === undefined) ? null : obj.hatBA === null ? null : obj.hatBA;
 		result.abschlussAllgemeinbildend = (obj.abschlussAllgemeinbildend === undefined) ? null : obj.abschlussAllgemeinbildend === null ? null : obj.abschlussAllgemeinbildend;
 		if ((obj.log !== undefined) && (obj.log !== null)) {
+			result.log = new ArrayList();
 			for (const elem of obj.log) {
-				result.log?.add(elem);
+				result.log.add(elem);
 			}
+		} else {
+			result.log = null;
 		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AbschlussErgebnisBerufsbildend) : string {
 		let result = '{';
-		result += '"hatBSA" : ' + obj.hatBSA + ',';
-		result += '"note" : ' + obj.note + ',';
-		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
+		result += '"hatBSA" : ' + obj.hatBSA.toString() + ',';
+		result += '"note" : ' + obj.note.toString() + ',';
+		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
 		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		if (!obj.log) {
-			result += '"log" : []';
+			result += '"log" : null';
 		} else {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
@@ -86,20 +90,20 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbschlussErgebnisBerufsbildend>) : string {
 		let result = '{';
 		if (obj.hatBSA !== undefined) {
-			result += '"hatBSA" : ' + obj.hatBSA + ',';
+			result += '"hatBSA" : ' + obj.hatBSA.toString() + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + obj.note + ',';
+			result += '"note" : ' + obj.note.toString() + ',';
 		}
 		if (obj.hatBA !== undefined) {
-			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA) + ',';
+			result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
 		}
 		if (obj.abschlussAllgemeinbildend !== undefined) {
 			result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {
-				result += '"log" : []';
+				result += '"log" : null';
 			} else {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {

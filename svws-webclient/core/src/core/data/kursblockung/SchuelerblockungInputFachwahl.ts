@@ -37,29 +37,29 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungInputFachwahl {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerblockungInputFachwahl>;
 		const result = new SchuelerblockungInputFachwahl();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.fach === undefined)
-			 throw new Error('invalid json format, missing attribute fach');
+			throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.representation === undefined)
-			 throw new Error('invalid json format, missing attribute representation');
+			throw new Error('invalid json format, missing attribute representation');
 		result.representation = obj.representation;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerblockungInputFachwahl) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"fach" : ' + obj.fach + ',';
-		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"representation" : ' + JSON.stringify(obj.representation!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"fach" : ' + obj.fach.toString() + ',';
+		result += '"kursart" : ' + obj.kursart.toString() + ',';
+		result += '"representation" : ' + JSON.stringify(obj.representation) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -68,16 +68,16 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInputFachwahl>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fach !== undefined) {
-			result += '"fach" : ' + obj.fach + ',';
+			result += '"fach" : ' + obj.fach.toString() + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + obj.kursart + ',';
+			result += '"kursart" : ' + obj.kursart.toString() + ',';
 		}
 		if (obj.representation !== undefined) {
-			result += '"representation" : ' + JSON.stringify(obj.representation!) + ',';
+			result += '"representation" : ' + JSON.stringify(obj.representation) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

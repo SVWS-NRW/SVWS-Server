@@ -61,60 +61,58 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungInputKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerblockungInputKurs>;
 		const result = new SchuelerblockungInputKurs();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.fach === undefined)
-			 throw new Error('invalid json format, missing attribute fach');
+			throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.istGesperrt === undefined)
-			 throw new Error('invalid json format, missing attribute istGesperrt');
+			throw new Error('invalid json format, missing attribute istGesperrt');
 		result.istGesperrt = obj.istGesperrt;
 		if (obj.istFixiert === undefined)
-			 throw new Error('invalid json format, missing attribute istFixiert');
+			throw new Error('invalid json format, missing attribute istFixiert');
 		result.istFixiert = obj.istFixiert;
 		if (obj.anzahlSuS === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlSuS');
+			throw new Error('invalid json format, missing attribute anzahlSuS');
 		result.anzahlSuS = obj.anzahlSuS;
-		for (let i = 0; i < obj.schienen.length; i++) {
-			result.schienen[i] = obj.schienen[i];
+		if (obj.schienen !== undefined) {
+			for (let i = 0; i < obj.schienen.length; i++) {
+				result.schienen[i] = obj.schienen[i];
+			}
 		}
 		if (obj.anzahlZusammenMitWuensche === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlZusammenMitWuensche');
+			throw new Error('invalid json format, missing attribute anzahlZusammenMitWuensche');
 		result.anzahlZusammenMitWuensche = obj.anzahlZusammenMitWuensche;
 		if (obj.anzahlVerbotenMitWuensche === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlVerbotenMitWuensche');
+			throw new Error('invalid json format, missing attribute anzahlVerbotenMitWuensche');
 		result.anzahlVerbotenMitWuensche = obj.anzahlVerbotenMitWuensche;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerblockungInputKurs) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"fach" : ' + obj.fach + ',';
-		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"istGesperrt" : ' + obj.istGesperrt + ',';
-		result += '"istFixiert" : ' + obj.istFixiert + ',';
-		result += '"anzahlSuS" : ' + obj.anzahlSuS + ',';
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
-			result += '"schienen" : [ ';
-			for (let i = 0; i < obj.schienen.length; i++) {
-				const elem = obj.schienen[i];
-				result += JSON.stringify(elem);
-				if (i < obj.schienen.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"fach" : ' + obj.fach.toString() + ',';
+		result += '"kursart" : ' + obj.kursart.toString() + ',';
+		result += '"istGesperrt" : ' + obj.istGesperrt.toString() + ',';
+		result += '"istFixiert" : ' + obj.istFixiert.toString() + ',';
+		result += '"anzahlSuS" : ' + obj.anzahlSuS.toString() + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.length; i++) {
+			const elem = obj.schienen[i];
+			result += JSON.stringify(elem);
+			if (i < obj.schienen.length - 1)
+				result += ',';
 		}
-		result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche + ',';
-		result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche + ',';
+		result += ' ]' + ',';
+		result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche.toString() + ',';
+		result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -123,43 +121,39 @@ export class SchuelerblockungInputKurs extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInputKurs>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fach !== undefined) {
-			result += '"fach" : ' + obj.fach + ',';
+			result += '"fach" : ' + obj.fach.toString() + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + obj.kursart + ',';
+			result += '"kursart" : ' + obj.kursart.toString() + ',';
 		}
 		if (obj.istGesperrt !== undefined) {
-			result += '"istGesperrt" : ' + obj.istGesperrt + ',';
+			result += '"istGesperrt" : ' + obj.istGesperrt.toString() + ',';
 		}
 		if (obj.istFixiert !== undefined) {
-			result += '"istFixiert" : ' + obj.istFixiert + ',';
+			result += '"istFixiert" : ' + obj.istFixiert.toString() + ',';
 		}
 		if (obj.anzahlSuS !== undefined) {
-			result += '"anzahlSuS" : ' + obj.anzahlSuS + ',';
+			result += '"anzahlSuS" : ' + obj.anzahlSuS.toString() + ',';
 		}
 		if (obj.schienen !== undefined) {
 			const a = obj.schienen;
-			if (!a) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += JSON.stringify(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schienen" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.anzahlZusammenMitWuensche !== undefined) {
-			result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche + ',';
+			result += '"anzahlZusammenMitWuensche" : ' + obj.anzahlZusammenMitWuensche.toString() + ',';
 		}
 		if (obj.anzahlVerbotenMitWuensche !== undefined) {
-			result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche + ',';
+			result += '"anzahlVerbotenMitWuensche" : ' + obj.anzahlVerbotenMitWuensche.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

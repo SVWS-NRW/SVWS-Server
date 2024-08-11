@@ -26,10 +26,12 @@ export class GostSchuelerFachwahl extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostSchuelerFachwahl {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostSchuelerFachwahl>;
 		const result = new GostSchuelerFachwahl();
-		for (let i = 0; i < obj.halbjahre.length; i++) {
-			result.halbjahre[i] = obj.halbjahre[i] === null ? null : obj.halbjahre[i];
+		if (obj.halbjahre !== undefined) {
+			for (let i = 0; i < obj.halbjahre.length; i++) {
+				result.halbjahre[i] = obj.halbjahre[i] === null ? null : obj.halbjahre[i];
+			}
 		}
 		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
 		return result;
@@ -37,19 +39,15 @@ export class GostSchuelerFachwahl extends JavaObject {
 
 	public static transpilerToJSON(obj : GostSchuelerFachwahl) : string {
 		let result = '{';
-		if (!obj.halbjahre) {
-			result += '"halbjahre" : []';
-		} else {
-			result += '"halbjahre" : [ ';
-			for (let i = 0; i < obj.halbjahre.length; i++) {
-				const elem = obj.halbjahre[i];
-				result += (elem === null) ? null : '"' + elem + '"';
-				if (i < obj.halbjahre.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"halbjahre" : [ ';
+		for (let i = 0; i < obj.halbjahre.length; i++) {
+			const elem = obj.halbjahre[i];
+			result += (elem === null) ? null : '"' + elem + '"';
+			if (i < obj.halbjahre.length - 1)
+				result += ',';
 		}
-		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
+		result += ' ]' + ',';
+		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -59,21 +57,17 @@ export class GostSchuelerFachwahl extends JavaObject {
 		let result = '{';
 		if (obj.halbjahre !== undefined) {
 			const a = obj.halbjahre;
-			if (!a) {
-				result += '"halbjahre" : []';
-			} else {
-				result += '"halbjahre" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += (elem === null) ? null : '"' + elem + '"';
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"halbjahre" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += (elem === null) ? null : '"' + elem + '"';
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.abiturFach !== undefined) {
-			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
+			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -36,29 +36,29 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	}
 
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdatenAnrechnungsstunden {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>;
 		const result = new LehrerPersonalabschnittsdatenAnrechnungsstunden();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idAbschnittsdaten === undefined)
-			 throw new Error('invalid json format, missing attribute idAbschnittsdaten');
+			throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
 		if (obj.idGrund === undefined)
-			 throw new Error('invalid json format, missing attribute idGrund');
+			throw new Error('invalid json format, missing attribute idGrund');
 		result.idGrund = obj.idGrund;
 		if (obj.anzahl === undefined)
-			 throw new Error('invalid json format, missing attribute anzahl');
+			throw new Error('invalid json format, missing attribute anzahl');
 		result.anzahl = obj.anzahl;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : LehrerPersonalabschnittsdatenAnrechnungsstunden) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
-		result += '"idGrund" : ' + obj.idGrund + ',';
-		result += '"anzahl" : ' + obj.anzahl + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
+		result += '"idGrund" : ' + obj.idGrund.toString() + ',';
+		result += '"anzahl" : ' + obj.anzahl.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdatenAnrechnungsstunden>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idAbschnittsdaten !== undefined) {
-			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
+			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
 		}
 		if (obj.idGrund !== undefined) {
-			result += '"idGrund" : ' + obj.idGrund + ',';
+			result += '"idGrund" : ' + obj.idGrund.toString() + ',';
 		}
 		if (obj.anzahl !== undefined) {
-			result += '"anzahl" : ' + obj.anzahl + ',';
+			result += '"anzahl" : ' + obj.anzahl.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

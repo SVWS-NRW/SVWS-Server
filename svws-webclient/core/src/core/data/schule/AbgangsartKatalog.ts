@@ -29,14 +29,14 @@ export class AbgangsartKatalog extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbgangsartKatalog {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbgangsartKatalog>;
 		const result = new AbgangsartKatalog();
 		if (obj.version === undefined)
-			 throw new Error('invalid json format, missing attribute version');
+			throw new Error('invalid json format, missing attribute version');
 		result.version = obj.version;
-		if ((obj.eintraege !== undefined) && (obj.eintraege !== null)) {
+		if (obj.eintraege !== undefined) {
 			for (const elem of obj.eintraege) {
-				result.eintraege?.add(AbgangsartKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.eintraege.add(AbgangsartKatalogEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -44,19 +44,15 @@ export class AbgangsartKatalog extends JavaObject {
 
 	public static transpilerToJSON(obj : AbgangsartKatalog) : string {
 		let result = '{';
-		result += '"version" : ' + obj.version + ',';
-		if (!obj.eintraege) {
-			result += '"eintraege" : []';
-		} else {
-			result += '"eintraege" : [ ';
-			for (let i = 0; i < obj.eintraege.size(); i++) {
-				const elem = obj.eintraege.get(i);
-				result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
-				if (i < obj.eintraege.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"version" : ' + obj.version.toString() + ',';
+		result += '"eintraege" : [ ';
+		for (let i = 0; i < obj.eintraege.size(); i++) {
+			const elem = obj.eintraege.get(i);
+			result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
+			if (i < obj.eintraege.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,21 +61,17 @@ export class AbgangsartKatalog extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalog>) : string {
 		let result = '{';
 		if (obj.version !== undefined) {
-			result += '"version" : ' + obj.version + ',';
+			result += '"version" : ' + obj.version.toString() + ',';
 		}
 		if (obj.eintraege !== undefined) {
-			if (!obj.eintraege) {
-				result += '"eintraege" : []';
-			} else {
-				result += '"eintraege" : [ ';
-				for (let i = 0; i < obj.eintraege.size(); i++) {
-					const elem = obj.eintraege.get(i);
-					result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
-					if (i < obj.eintraege.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"eintraege" : [ ';
+			for (let i = 0; i < obj.eintraege.size(); i++) {
+				const elem = obj.eintraege.get(i);
+				result += AbgangsartKatalogEintrag.transpilerToJSON(elem);
+				if (i < obj.eintraege.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

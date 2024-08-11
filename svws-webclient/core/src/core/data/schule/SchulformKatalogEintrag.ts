@@ -105,49 +105,49 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	}
 
 	public static transpilerFromJSON(json : string): SchulformKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchulformKatalogEintrag>;
 		const result = new SchulformKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.nummer === undefined)
-			 throw new Error('invalid json format, missing attribute nummer');
+			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.istAllgemeinbildend === undefined)
-			 throw new Error('invalid json format, missing attribute istAllgemeinbildend');
+			throw new Error('invalid json format, missing attribute istAllgemeinbildend');
 		result.istAllgemeinbildend = obj.istAllgemeinbildend;
 		if (obj.istBerufsbildend === undefined)
-			 throw new Error('invalid json format, missing attribute istBerufsbildend');
+			throw new Error('invalid json format, missing attribute istBerufsbildend');
 		result.istBerufsbildend = obj.istBerufsbildend;
 		if (obj.istWeiterbildung === undefined)
-			 throw new Error('invalid json format, missing attribute istWeiterbildung');
+			throw new Error('invalid json format, missing attribute istWeiterbildung');
 		result.istWeiterbildung = obj.istWeiterbildung;
 		if (obj.hatGymOb === undefined)
-			 throw new Error('invalid json format, missing attribute hatGymOb');
+			throw new Error('invalid json format, missing attribute hatGymOb');
 		result.hatGymOb = obj.hatGymOb;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchulformKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend + ',';
-		result += '"istBerufsbildend" : ' + obj.istBerufsbildend + ',';
-		result += '"istWeiterbildung" : ' + obj.istWeiterbildung + ',';
-		result += '"hatGymOb" : ' + obj.hatGymOb + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend.toString() + ',';
+		result += '"istBerufsbildend" : ' + obj.istBerufsbildend.toString() + ',';
+		result += '"istWeiterbildung" : ' + obj.istWeiterbildung.toString() + ',';
+		result += '"hatGymOb" : ' + obj.hatGymOb.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -156,34 +156,34 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	public static transpilerToJSONPatch(obj : Partial<SchulformKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + JSON.stringify(obj.nummer!) + ',';
+			result += '"nummer" : ' + JSON.stringify(obj.nummer) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.istAllgemeinbildend !== undefined) {
-			result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend + ',';
+			result += '"istAllgemeinbildend" : ' + obj.istAllgemeinbildend.toString() + ',';
 		}
 		if (obj.istBerufsbildend !== undefined) {
-			result += '"istBerufsbildend" : ' + obj.istBerufsbildend + ',';
+			result += '"istBerufsbildend" : ' + obj.istBerufsbildend.toString() + ',';
 		}
 		if (obj.istWeiterbildung !== undefined) {
-			result += '"istWeiterbildung" : ' + obj.istWeiterbildung + ',';
+			result += '"istWeiterbildung" : ' + obj.istWeiterbildung.toString() + ',';
 		}
 		if (obj.hatGymOb !== undefined) {
-			result += '"hatGymOb" : ' + obj.hatGymOb + ',';
+			result += '"hatGymOb" : ' + obj.hatGymOb.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

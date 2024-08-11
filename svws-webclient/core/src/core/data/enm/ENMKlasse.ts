@@ -48,20 +48,20 @@ export class ENMKlasse extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMKlasse {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMKlasse>;
 		const result = new ENMKlasse();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.kuerzelAnzeige = (obj.kuerzelAnzeige === undefined) ? null : obj.kuerzelAnzeige === null ? null : obj.kuerzelAnzeige;
 		result.idJahrgang = (obj.idJahrgang === undefined) ? null : obj.idJahrgang === null ? null : obj.idJahrgang;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if ((obj.klassenlehrer !== undefined) && (obj.klassenlehrer !== null)) {
+		if (obj.klassenlehrer !== undefined) {
 			for (const elem of obj.klassenlehrer) {
-				result.klassenlehrer?.add(elem);
+				result.klassenlehrer.add(elem);
 			}
 		}
 		return result;
@@ -69,23 +69,19 @@ export class ENMKlasse extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMKlasse) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
-		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		if (!obj.klassenlehrer) {
-			result += '"klassenlehrer" : []';
-		} else {
-			result += '"klassenlehrer" : [ ';
-			for (let i = 0; i < obj.klassenlehrer.size(); i++) {
-				const elem = obj.klassenlehrer.get(i);
-				result += elem;
-				if (i < obj.klassenlehrer.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.toString()) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"klassenlehrer" : [ ';
+		for (let i = 0; i < obj.klassenlehrer.size(); i++) {
+			const elem = obj.klassenlehrer.get(i);
+			result += elem.toString();
+			if (i < obj.klassenlehrer.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,7 +90,7 @@ export class ENMKlasse extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMKlasse>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
@@ -103,24 +99,20 @@ export class ENMKlasse extends JavaObject {
 			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
 		if (obj.idJahrgang !== undefined) {
-			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang) + ',';
+			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.klassenlehrer !== undefined) {
-			if (!obj.klassenlehrer) {
-				result += '"klassenlehrer" : []';
-			} else {
-				result += '"klassenlehrer" : [ ';
-				for (let i = 0; i < obj.klassenlehrer.size(); i++) {
-					const elem = obj.klassenlehrer.get(i);
-					result += elem;
-					if (i < obj.klassenlehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"klassenlehrer" : [ ';
+			for (let i = 0; i < obj.klassenlehrer.size(); i++) {
+				const elem = obj.klassenlehrer.get(i);
+				result += elem.toString();
+				if (i < obj.klassenlehrer.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -40,24 +40,24 @@ export class SchuelerblockungInput extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungInput {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerblockungInput>;
 		const result = new SchuelerblockungInput();
 		if (obj.schienen === undefined)
-			 throw new Error('invalid json format, missing attribute schienen');
+			throw new Error('invalid json format, missing attribute schienen');
 		result.schienen = obj.schienen;
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(SchuelerblockungInputKurs.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse.add(SchuelerblockungInputKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.fachwahlen !== undefined) && (obj.fachwahlen !== null)) {
+		if (obj.fachwahlen !== undefined) {
 			for (const elem of obj.fachwahlen) {
-				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachwahlen.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.fachwahlenText !== undefined) && (obj.fachwahlenText !== null)) {
+		if (obj.fachwahlenText !== undefined) {
 			for (const elem of obj.fachwahlenText) {
-				result.fachwahlenText?.add(elem);
+				result.fachwahlenText.add(elem);
 			}
 		}
 		return result;
@@ -65,10 +65,42 @@ export class SchuelerblockungInput extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerblockungInput) : string {
 		let result = '{';
-		result += '"schienen" : ' + obj.schienen + ',';
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
+		result += '"schienen" : ' + obj.schienen.toString() + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += SchuelerblockungInputKurs.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"fachwahlen" : [ ';
+		for (let i = 0; i < obj.fachwahlen.size(); i++) {
+			const elem = obj.fachwahlen.get(i);
+			result += GostFachwahl.transpilerToJSON(elem);
+			if (i < obj.fachwahlen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"fachwahlenText" : [ ';
+		for (let i = 0; i < obj.fachwahlenText.size(); i++) {
+			const elem = obj.fachwahlenText.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.fachwahlenText.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInput>) : string {
+		let result = '{';
+		if (obj.schienen !== undefined) {
+			result += '"schienen" : ' + obj.schienen.toString() + ',';
+		}
+		if (obj.kurse !== undefined) {
 			result += '"kurse" : [ ';
 			for (let i = 0; i < obj.kurse.size(); i++) {
 				const elem = obj.kurse.get(i);
@@ -78,9 +110,7 @@ export class SchuelerblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.fachwahlen) {
-			result += '"fachwahlen" : []';
-		} else {
+		if (obj.fachwahlen !== undefined) {
 			result += '"fachwahlen" : [ ';
 			for (let i = 0; i < obj.fachwahlen.size(); i++) {
 				const elem = obj.fachwahlen.get(i);
@@ -90,9 +120,7 @@ export class SchuelerblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.fachwahlenText) {
-			result += '"fachwahlenText" : []';
-		} else {
+		if (obj.fachwahlenText !== undefined) {
 			result += '"fachwahlenText" : [ ';
 			for (let i = 0; i < obj.fachwahlenText.size(); i++) {
 				const elem = obj.fachwahlenText.get(i);
@@ -101,58 +129,6 @@ export class SchuelerblockungInput extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungInput>) : string {
-		let result = '{';
-		if (obj.schienen !== undefined) {
-			result += '"schienen" : ' + obj.schienen + ',';
-		}
-		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += SchuelerblockungInputKurs.transpilerToJSON(elem);
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.fachwahlen !== undefined) {
-			if (!obj.fachwahlen) {
-				result += '"fachwahlen" : []';
-			} else {
-				result += '"fachwahlen" : [ ';
-				for (let i = 0; i < obj.fachwahlen.size(); i++) {
-					const elem = obj.fachwahlen.get(i);
-					result += GostFachwahl.transpilerToJSON(elem);
-					if (i < obj.fachwahlen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.fachwahlenText !== undefined) {
-			if (!obj.fachwahlenText) {
-				result += '"fachwahlenText" : []';
-			} else {
-				result += '"fachwahlenText" : [ ';
-				for (let i = 0; i < obj.fachwahlenText.size(); i++) {
-					const elem = obj.fachwahlenText.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.fachwahlenText.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -251,19 +251,19 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittsdaten>;
 		const result = new SchuelerLernabschnittsdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schuelerID === undefined)
-			 throw new Error('invalid json format, missing attribute schuelerID');
+			throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
 		if (obj.schuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute schuljahresabschnitt');
 		result.schuljahresabschnitt = obj.schuljahresabschnitt;
 		if (obj.wechselNr === undefined)
-			 throw new Error('invalid json format, missing attribute wechselNr');
+			throw new Error('invalid json format, missing attribute wechselNr');
 		result.wechselNr = obj.wechselNr;
 		result.datumAnfang = (obj.datumAnfang === undefined) ? null : obj.datumAnfang === null ? null : obj.datumAnfang;
 		result.datumEnde = (obj.datumEnde === undefined) ? null : obj.datumEnde === null ? null : obj.datumEnde;
@@ -271,13 +271,13 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.datumZeugnis = (obj.datumZeugnis === undefined) ? null : obj.datumZeugnis === null ? null : obj.datumZeugnis;
 		result.anzahlSchulbesuchsjahre = (obj.anzahlSchulbesuchsjahre === undefined) ? null : obj.anzahlSchulbesuchsjahre === null ? null : obj.anzahlSchulbesuchsjahre;
 		if (obj.istGewertet === undefined)
-			 throw new Error('invalid json format, missing attribute istGewertet');
+			throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
 		if (obj.istWiederholung === undefined)
-			 throw new Error('invalid json format, missing attribute istWiederholung');
+			throw new Error('invalid json format, missing attribute istWiederholung');
 		result.istWiederholung = obj.istWiederholung;
 		if (obj.pruefungsOrdnung === undefined)
-			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
+			throw new Error('invalid json format, missing attribute pruefungsOrdnung');
 		result.pruefungsOrdnung = obj.pruefungsOrdnung;
 		result.klassenID = (obj.klassenID === undefined) ? null : obj.klassenID === null ? null : obj.klassenID;
 		result.tutorID = (obj.tutorID === undefined) ? null : obj.tutorID === null ? null : obj.tutorID;
@@ -289,30 +289,30 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.organisationsform = (obj.organisationsform === undefined) ? null : obj.organisationsform === null ? null : obj.organisationsform;
 		result.Klassenart = (obj.Klassenart === undefined) ? null : obj.Klassenart === null ? null : obj.Klassenart;
 		if (obj.fehlstundenGesamt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
+			throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
 		if (obj.fehlstundenUnentschuldigt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
+			throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
 		result.fehlstundenGrenzwert = (obj.fehlstundenGrenzwert === undefined) ? null : obj.fehlstundenGrenzwert === null ? null : obj.fehlstundenGrenzwert;
 		if (obj.hatSchwerbehinderungsNachweis === undefined)
-			 throw new Error('invalid json format, missing attribute hatSchwerbehinderungsNachweis');
+			throw new Error('invalid json format, missing attribute hatSchwerbehinderungsNachweis');
 		result.hatSchwerbehinderungsNachweis = obj.hatSchwerbehinderungsNachweis;
 		if (obj.hatAOSF === undefined)
-			 throw new Error('invalid json format, missing attribute hatAOSF');
+			throw new Error('invalid json format, missing attribute hatAOSF');
 		result.hatAOSF = obj.hatAOSF;
 		if (obj.hatAutismus === undefined)
-			 throw new Error('invalid json format, missing attribute hatAutismus');
+			throw new Error('invalid json format, missing attribute hatAutismus');
 		result.hatAutismus = obj.hatAutismus;
 		if (obj.hatZieldifferentenUnterricht === undefined)
-			 throw new Error('invalid json format, missing attribute hatZieldifferentenUnterricht');
+			throw new Error('invalid json format, missing attribute hatZieldifferentenUnterricht');
 		result.hatZieldifferentenUnterricht = obj.hatZieldifferentenUnterricht;
 		result.foerderschwerpunkt1ID = (obj.foerderschwerpunkt1ID === undefined) ? null : obj.foerderschwerpunkt1ID === null ? null : obj.foerderschwerpunkt1ID;
 		result.foerderschwerpunkt2ID = (obj.foerderschwerpunkt2ID === undefined) ? null : obj.foerderschwerpunkt2ID === null ? null : obj.foerderschwerpunkt2ID;
 		result.sonderpaedagogeID = (obj.sonderpaedagogeID === undefined) ? null : obj.sonderpaedagogeID === null ? null : obj.sonderpaedagogeID;
 		result.bilingualerZweig = (obj.bilingualerZweig === undefined) ? null : obj.bilingualerZweig === null ? null : obj.bilingualerZweig;
 		if (obj.istFachpraktischerAnteilAusreichend === undefined)
-			 throw new Error('invalid json format, missing attribute istFachpraktischerAnteilAusreichend');
+			throw new Error('invalid json format, missing attribute istFachpraktischerAnteilAusreichend');
 		result.istFachpraktischerAnteilAusreichend = obj.istFachpraktischerAnteilAusreichend;
 		result.versetzungsvermerk = (obj.versetzungsvermerk === undefined) ? null : obj.versetzungsvermerk === null ? null : obj.versetzungsvermerk;
 		result.noteDurchschnitt = (obj.noteDurchschnitt === undefined) ? null : obj.noteDurchschnitt === null ? null : obj.noteDurchschnitt;
@@ -320,7 +320,7 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.noteLernbereichNW = (obj.noteLernbereichNW === undefined) ? null : obj.noteLernbereichNW === null ? null : obj.noteLernbereichNW;
 		result.abschlussart = (obj.abschlussart === undefined) ? null : obj.abschlussart === null ? null : obj.abschlussart;
 		if (obj.istAbschlussPrognose === undefined)
-			 throw new Error('invalid json format, missing attribute istAbschlussPrognose');
+			throw new Error('invalid json format, missing attribute istAbschlussPrognose');
 		result.istAbschlussPrognose = obj.istAbschlussPrognose;
 		result.abschluss = (obj.abschluss === undefined) ? null : obj.abschluss === null ? null : obj.abschluss;
 		result.abschlussBerufsbildend = (obj.abschlussBerufsbildend === undefined) ? null : obj.abschlussBerufsbildend === null ? null : obj.abschlussBerufsbildend;
@@ -328,11 +328,11 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 		result.zeugnisart = (obj.zeugnisart === undefined) ? null : obj.zeugnisart === null ? null : obj.zeugnisart;
 		result.nachpruefungen = ((obj.nachpruefungen === undefined) || (obj.nachpruefungen === null)) ? null : SchuelerLernabschnittNachpruefungsdaten.transpilerFromJSON(JSON.stringify(obj.nachpruefungen));
 		if (obj.bemerkungen === undefined)
-			 throw new Error('invalid json format, missing attribute bemerkungen');
+			throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = SchuelerLernabschnittBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
-		if ((obj.leistungsdaten !== undefined) && (obj.leistungsdaten !== null)) {
+		if (obj.leistungsdaten !== undefined) {
 			for (const elem of obj.leistungsdaten) {
-				result.leistungsdaten?.add(SchuelerLeistungsdaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.leistungsdaten.add(SchuelerLeistungsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -340,63 +340,59 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schuelerID" : ' + obj.schuelerID + ',';
-		result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
-		result += '"wechselNr" : ' + obj.wechselNr + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
+		result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt.toString() + ',';
+		result += '"wechselNr" : ' + obj.wechselNr.toString() + ',';
 		result += '"datumAnfang" : ' + ((!obj.datumAnfang) ? 'null' : JSON.stringify(obj.datumAnfang)) + ',';
 		result += '"datumEnde" : ' + ((!obj.datumEnde) ? 'null' : JSON.stringify(obj.datumEnde)) + ',';
 		result += '"datumKonferenz" : ' + ((!obj.datumKonferenz) ? 'null' : JSON.stringify(obj.datumKonferenz)) + ',';
 		result += '"datumZeugnis" : ' + ((!obj.datumZeugnis) ? 'null' : JSON.stringify(obj.datumZeugnis)) + ',';
-		result += '"anzahlSchulbesuchsjahre" : ' + ((!obj.anzahlSchulbesuchsjahre) ? 'null' : obj.anzahlSchulbesuchsjahre) + ',';
-		result += '"istGewertet" : ' + obj.istGewertet + ',';
-		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
-		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
-		result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
-		result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
-		result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID) + ',';
+		result += '"anzahlSchulbesuchsjahre" : ' + ((!obj.anzahlSchulbesuchsjahre) ? 'null' : obj.anzahlSchulbesuchsjahre.toString()) + ',';
+		result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
+		result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
+		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
+		result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID.toString()) + ',';
+		result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID.toString()) + ',';
+		result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID.toString()) + ',';
 		result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
-		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
-		result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID) + ',';
-		result += '"schwerpunktID" : ' + ((!obj.schwerpunktID) ? 'null' : obj.schwerpunktID) + ',';
+		result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
+		result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID.toString()) + ',';
+		result += '"schwerpunktID" : ' + ((!obj.schwerpunktID) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		result += '"organisationsform" : ' + ((!obj.organisationsform) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
 		result += '"Klassenart" : ' + ((!obj.Klassenart) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
-		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
-		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
-		result += '"fehlstundenGrenzwert" : ' + ((!obj.fehlstundenGrenzwert) ? 'null' : obj.fehlstundenGrenzwert) + ',';
-		result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis + ',';
-		result += '"hatAOSF" : ' + obj.hatAOSF + ',';
-		result += '"hatAutismus" : ' + obj.hatAutismus + ',';
-		result += '"hatZieldifferentenUnterricht" : ' + obj.hatZieldifferentenUnterricht + ',';
-		result += '"foerderschwerpunkt1ID" : ' + ((!obj.foerderschwerpunkt1ID) ? 'null' : obj.foerderschwerpunkt1ID) + ',';
-		result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID) + ',';
-		result += '"sonderpaedagogeID" : ' + ((!obj.sonderpaedagogeID) ? 'null' : obj.sonderpaedagogeID) + ',';
+		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
+		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
+		result += '"fehlstundenGrenzwert" : ' + ((!obj.fehlstundenGrenzwert) ? 'null' : obj.fehlstundenGrenzwert.toString()) + ',';
+		result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';
+		result += '"hatAOSF" : ' + obj.hatAOSF.toString() + ',';
+		result += '"hatAutismus" : ' + obj.hatAutismus.toString() + ',';
+		result += '"hatZieldifferentenUnterricht" : ' + obj.hatZieldifferentenUnterricht.toString() + ',';
+		result += '"foerderschwerpunkt1ID" : ' + ((!obj.foerderschwerpunkt1ID) ? 'null' : obj.foerderschwerpunkt1ID.toString()) + ',';
+		result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID.toString()) + ',';
+		result += '"sonderpaedagogeID" : ' + ((!obj.sonderpaedagogeID) ? 'null' : obj.sonderpaedagogeID.toString()) + ',';
 		result += '"bilingualerZweig" : ' + ((!obj.bilingualerZweig) ? 'null' : JSON.stringify(obj.bilingualerZweig)) + ',';
-		result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend + ',';
+		result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend.toString() + ',';
 		result += '"versetzungsvermerk" : ' + ((!obj.versetzungsvermerk) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
 		result += '"noteDurchschnitt" : ' + ((!obj.noteDurchschnitt) ? 'null' : JSON.stringify(obj.noteDurchschnitt)) + ',';
-		result += '"noteLernbereichGSbzwAL" : ' + ((!obj.noteLernbereichGSbzwAL) ? 'null' : obj.noteLernbereichGSbzwAL) + ',';
-		result += '"noteLernbereichNW" : ' + ((!obj.noteLernbereichNW) ? 'null' : obj.noteLernbereichNW) + ',';
-		result += '"abschlussart" : ' + ((!obj.abschlussart) ? 'null' : obj.abschlussart) + ',';
-		result += '"istAbschlussPrognose" : ' + obj.istAbschlussPrognose + ',';
+		result += '"noteLernbereichGSbzwAL" : ' + ((!obj.noteLernbereichGSbzwAL) ? 'null' : obj.noteLernbereichGSbzwAL.toString()) + ',';
+		result += '"noteLernbereichNW" : ' + ((!obj.noteLernbereichNW) ? 'null' : obj.noteLernbereichNW.toString()) + ',';
+		result += '"abschlussart" : ' + ((!obj.abschlussart) ? 'null' : obj.abschlussart.toString()) + ',';
+		result += '"istAbschlussPrognose" : ' + obj.istAbschlussPrognose.toString() + ',';
 		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		result += '"abschlussBerufsbildend" : ' + ((!obj.abschlussBerufsbildend) ? 'null' : JSON.stringify(obj.abschlussBerufsbildend)) + ',';
 		result += '"textErgebnisPruefungsalgorithmus" : ' + ((!obj.textErgebnisPruefungsalgorithmus) ? 'null' : JSON.stringify(obj.textErgebnisPruefungsalgorithmus)) + ',';
 		result += '"zeugnisart" : ' + ((!obj.zeugnisart) ? 'null' : JSON.stringify(obj.zeugnisart)) + ',';
 		result += '"nachpruefungen" : ' + ((!obj.nachpruefungen) ? 'null' : SchuelerLernabschnittNachpruefungsdaten.transpilerToJSON(obj.nachpruefungen)) + ',';
 		result += '"bemerkungen" : ' + SchuelerLernabschnittBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
-		if (!obj.leistungsdaten) {
-			result += '"leistungsdaten" : []';
-		} else {
-			result += '"leistungsdaten" : [ ';
-			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
-				const elem = obj.leistungsdaten.get(i);
-				result += SchuelerLeistungsdaten.transpilerToJSON(elem);
-				if (i < obj.leistungsdaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"leistungsdaten" : [ ';
+		for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+			const elem = obj.leistungsdaten.get(i);
+			result += SchuelerLeistungsdaten.transpilerToJSON(elem);
+			if (i < obj.leistungsdaten.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -405,16 +401,16 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittsdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schuelerID !== undefined) {
-			result += '"schuelerID" : ' + obj.schuelerID + ',';
+			result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		}
 		if (obj.schuljahresabschnitt !== undefined) {
-			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt + ',';
+			result += '"schuljahresabschnitt" : ' + obj.schuljahresabschnitt.toString() + ',';
 		}
 		if (obj.wechselNr !== undefined) {
-			result += '"wechselNr" : ' + obj.wechselNr + ',';
+			result += '"wechselNr" : ' + obj.wechselNr.toString() + ',';
 		}
 		if (obj.datumAnfang !== undefined) {
 			result += '"datumAnfang" : ' + ((!obj.datumAnfang) ? 'null' : JSON.stringify(obj.datumAnfang)) + ',';
@@ -429,37 +425,37 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"datumZeugnis" : ' + ((!obj.datumZeugnis) ? 'null' : JSON.stringify(obj.datumZeugnis)) + ',';
 		}
 		if (obj.anzahlSchulbesuchsjahre !== undefined) {
-			result += '"anzahlSchulbesuchsjahre" : ' + ((!obj.anzahlSchulbesuchsjahre) ? 'null' : obj.anzahlSchulbesuchsjahre) + ',';
+			result += '"anzahlSchulbesuchsjahre" : ' + ((!obj.anzahlSchulbesuchsjahre) ? 'null' : obj.anzahlSchulbesuchsjahre.toString()) + ',';
 		}
 		if (obj.istGewertet !== undefined) {
-			result += '"istGewertet" : ' + obj.istGewertet + ',';
+			result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
 		}
 		if (obj.istWiederholung !== undefined) {
-			result += '"istWiederholung" : ' + obj.istWiederholung + ',';
+			result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
 		}
 		if (obj.pruefungsOrdnung !== undefined) {
-			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
+			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
 		}
 		if (obj.klassenID !== undefined) {
-			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID) + ',';
+			result += '"klassenID" : ' + ((!obj.klassenID) ? 'null' : obj.klassenID.toString()) + ',';
 		}
 		if (obj.tutorID !== undefined) {
-			result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID) + ',';
+			result += '"tutorID" : ' + ((!obj.tutorID) ? 'null' : obj.tutorID.toString()) + ',';
 		}
 		if (obj.folgeklassenID !== undefined) {
-			result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID) + ',';
+			result += '"folgeklassenID" : ' + ((!obj.folgeklassenID) ? 'null' : obj.folgeklassenID.toString()) + ',';
 		}
 		if (obj.schulgliederung !== undefined) {
 			result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
-			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID) + ',';
+			result += '"jahrgangID" : ' + ((!obj.jahrgangID) ? 'null' : obj.jahrgangID.toString()) + ',';
 		}
 		if (obj.fachklasseID !== undefined) {
-			result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID) + ',';
+			result += '"fachklasseID" : ' + ((!obj.fachklasseID) ? 'null' : obj.fachklasseID.toString()) + ',';
 		}
 		if (obj.schwerpunktID !== undefined) {
-			result += '"schwerpunktID" : ' + ((!obj.schwerpunktID) ? 'null' : obj.schwerpunktID) + ',';
+			result += '"schwerpunktID" : ' + ((!obj.schwerpunktID) ? 'null' : obj.schwerpunktID.toString()) + ',';
 		}
 		if (obj.organisationsform !== undefined) {
 			result += '"organisationsform" : ' + ((!obj.organisationsform) ? 'null' : JSON.stringify(obj.organisationsform)) + ',';
@@ -468,40 +464,40 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"Klassenart" : ' + ((!obj.Klassenart) ? 'null' : JSON.stringify(obj.Klassenart)) + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
-			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
+			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		}
 		if (obj.fehlstundenUnentschuldigt !== undefined) {
-			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
+			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		}
 		if (obj.fehlstundenGrenzwert !== undefined) {
-			result += '"fehlstundenGrenzwert" : ' + ((!obj.fehlstundenGrenzwert) ? 'null' : obj.fehlstundenGrenzwert) + ',';
+			result += '"fehlstundenGrenzwert" : ' + ((!obj.fehlstundenGrenzwert) ? 'null' : obj.fehlstundenGrenzwert.toString()) + ',';
 		}
 		if (obj.hatSchwerbehinderungsNachweis !== undefined) {
-			result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis + ',';
+			result += '"hatSchwerbehinderungsNachweis" : ' + obj.hatSchwerbehinderungsNachweis.toString() + ',';
 		}
 		if (obj.hatAOSF !== undefined) {
-			result += '"hatAOSF" : ' + obj.hatAOSF + ',';
+			result += '"hatAOSF" : ' + obj.hatAOSF.toString() + ',';
 		}
 		if (obj.hatAutismus !== undefined) {
-			result += '"hatAutismus" : ' + obj.hatAutismus + ',';
+			result += '"hatAutismus" : ' + obj.hatAutismus.toString() + ',';
 		}
 		if (obj.hatZieldifferentenUnterricht !== undefined) {
-			result += '"hatZieldifferentenUnterricht" : ' + obj.hatZieldifferentenUnterricht + ',';
+			result += '"hatZieldifferentenUnterricht" : ' + obj.hatZieldifferentenUnterricht.toString() + ',';
 		}
 		if (obj.foerderschwerpunkt1ID !== undefined) {
-			result += '"foerderschwerpunkt1ID" : ' + ((!obj.foerderschwerpunkt1ID) ? 'null' : obj.foerderschwerpunkt1ID) + ',';
+			result += '"foerderschwerpunkt1ID" : ' + ((!obj.foerderschwerpunkt1ID) ? 'null' : obj.foerderschwerpunkt1ID.toString()) + ',';
 		}
 		if (obj.foerderschwerpunkt2ID !== undefined) {
-			result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID) + ',';
+			result += '"foerderschwerpunkt2ID" : ' + ((!obj.foerderschwerpunkt2ID) ? 'null' : obj.foerderschwerpunkt2ID.toString()) + ',';
 		}
 		if (obj.sonderpaedagogeID !== undefined) {
-			result += '"sonderpaedagogeID" : ' + ((!obj.sonderpaedagogeID) ? 'null' : obj.sonderpaedagogeID) + ',';
+			result += '"sonderpaedagogeID" : ' + ((!obj.sonderpaedagogeID) ? 'null' : obj.sonderpaedagogeID.toString()) + ',';
 		}
 		if (obj.bilingualerZweig !== undefined) {
 			result += '"bilingualerZweig" : ' + ((!obj.bilingualerZweig) ? 'null' : JSON.stringify(obj.bilingualerZweig)) + ',';
 		}
 		if (obj.istFachpraktischerAnteilAusreichend !== undefined) {
-			result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend + ',';
+			result += '"istFachpraktischerAnteilAusreichend" : ' + obj.istFachpraktischerAnteilAusreichend.toString() + ',';
 		}
 		if (obj.versetzungsvermerk !== undefined) {
 			result += '"versetzungsvermerk" : ' + ((!obj.versetzungsvermerk) ? 'null' : JSON.stringify(obj.versetzungsvermerk)) + ',';
@@ -510,16 +506,16 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"noteDurchschnitt" : ' + ((!obj.noteDurchschnitt) ? 'null' : JSON.stringify(obj.noteDurchschnitt)) + ',';
 		}
 		if (obj.noteLernbereichGSbzwAL !== undefined) {
-			result += '"noteLernbereichGSbzwAL" : ' + ((!obj.noteLernbereichGSbzwAL) ? 'null' : obj.noteLernbereichGSbzwAL) + ',';
+			result += '"noteLernbereichGSbzwAL" : ' + ((!obj.noteLernbereichGSbzwAL) ? 'null' : obj.noteLernbereichGSbzwAL.toString()) + ',';
 		}
 		if (obj.noteLernbereichNW !== undefined) {
-			result += '"noteLernbereichNW" : ' + ((!obj.noteLernbereichNW) ? 'null' : obj.noteLernbereichNW) + ',';
+			result += '"noteLernbereichNW" : ' + ((!obj.noteLernbereichNW) ? 'null' : obj.noteLernbereichNW.toString()) + ',';
 		}
 		if (obj.abschlussart !== undefined) {
-			result += '"abschlussart" : ' + ((!obj.abschlussart) ? 'null' : obj.abschlussart) + ',';
+			result += '"abschlussart" : ' + ((!obj.abschlussart) ? 'null' : obj.abschlussart.toString()) + ',';
 		}
 		if (obj.istAbschlussPrognose !== undefined) {
-			result += '"istAbschlussPrognose" : ' + obj.istAbschlussPrognose + ',';
+			result += '"istAbschlussPrognose" : ' + obj.istAbschlussPrognose.toString() + ',';
 		}
 		if (obj.abschluss !== undefined) {
 			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
@@ -540,18 +536,14 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 			result += '"bemerkungen" : ' + SchuelerLernabschnittBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		}
 		if (obj.leistungsdaten !== undefined) {
-			if (!obj.leistungsdaten) {
-				result += '"leistungsdaten" : []';
-			} else {
-				result += '"leistungsdaten" : [ ';
-				for (let i = 0; i < obj.leistungsdaten.size(); i++) {
-					const elem = obj.leistungsdaten.get(i);
-					result += SchuelerLeistungsdaten.transpilerToJSON(elem);
-					if (i < obj.leistungsdaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"leistungsdaten" : [ ';
+			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+				const elem = obj.leistungsdaten.get(i);
+				result += SchuelerLeistungsdaten.transpilerToJSON(elem);
+				if (i < obj.leistungsdaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

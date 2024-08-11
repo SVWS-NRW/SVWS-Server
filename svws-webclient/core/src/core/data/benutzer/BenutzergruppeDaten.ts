@@ -38,20 +38,20 @@ export class BenutzergruppeDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzergruppeDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzergruppeDaten>;
 		const result = new BenutzergruppeDaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.istAdmin === undefined)
-			 throw new Error('invalid json format, missing attribute istAdmin');
+			throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
-		if ((obj.kompetenzen !== undefined) && (obj.kompetenzen !== null)) {
+		if (obj.kompetenzen !== undefined) {
 			for (const elem of obj.kompetenzen) {
-				result.kompetenzen?.add(elem);
+				result.kompetenzen.add(elem);
 			}
 		}
 		return result;
@@ -59,21 +59,17 @@ export class BenutzergruppeDaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BenutzergruppeDaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"istAdmin" : ' + obj.istAdmin + ',';
-		if (!obj.kompetenzen) {
-			result += '"kompetenzen" : []';
-		} else {
-			result += '"kompetenzen" : [ ';
-			for (let i = 0; i < obj.kompetenzen.size(); i++) {
-				const elem = obj.kompetenzen.get(i);
-				result += elem;
-				if (i < obj.kompetenzen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"istAdmin" : ' + obj.istAdmin.toString() + ',';
+		result += '"kompetenzen" : [ ';
+		for (let i = 0; i < obj.kompetenzen.size(); i++) {
+			const elem = obj.kompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.kompetenzen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -82,27 +78,23 @@ export class BenutzergruppeDaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzergruppeDaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.istAdmin !== undefined) {
-			result += '"istAdmin" : ' + obj.istAdmin + ',';
+			result += '"istAdmin" : ' + obj.istAdmin.toString() + ',';
 		}
 		if (obj.kompetenzen !== undefined) {
-			if (!obj.kompetenzen) {
-				result += '"kompetenzen" : []';
-			} else {
-				result += '"kompetenzen" : [ ';
-				for (let i = 0; i < obj.kompetenzen.size(); i++) {
-					const elem = obj.kompetenzen.get(i);
-					result += elem;
-					if (i < obj.kompetenzen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kompetenzen" : [ ';
+			for (let i = 0; i < obj.kompetenzen.size(); i++) {
+				const elem = obj.kompetenzen.get(i);
+				result += elem.toString();
+				if (i < obj.kompetenzen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

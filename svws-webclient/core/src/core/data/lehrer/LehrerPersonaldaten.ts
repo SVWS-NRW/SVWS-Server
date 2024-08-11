@@ -92,10 +92,10 @@ export class LehrerPersonaldaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): LehrerPersonaldaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerPersonaldaten>;
 		const result = new LehrerPersonaldaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.identNrTeil1 = (obj.identNrTeil1 === undefined) ? null : obj.identNrTeil1 === null ? null : obj.identNrTeil1;
 		result.identNrTeil2SerNr = (obj.identNrTeil2SerNr === undefined) ? null : obj.identNrTeil2SerNr === null ? null : obj.identNrTeil2SerNr;
@@ -106,24 +106,24 @@ export class LehrerPersonaldaten extends JavaObject {
 		result.zugangsgrund = (obj.zugangsgrund === undefined) ? null : obj.zugangsgrund === null ? null : obj.zugangsgrund;
 		result.abgangsdatum = (obj.abgangsdatum === undefined) ? null : obj.abgangsdatum === null ? null : obj.abgangsdatum;
 		result.abgangsgrund = (obj.abgangsgrund === undefined) ? null : obj.abgangsgrund === null ? null : obj.abgangsgrund;
-		if ((obj.abschnittsdaten !== undefined) && (obj.abschnittsdaten !== null)) {
+		if (obj.abschnittsdaten !== undefined) {
 			for (const elem of obj.abschnittsdaten) {
-				result.abschnittsdaten?.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.abschnittsdaten.add(LehrerPersonalabschnittsdaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lehraemter !== undefined) && (obj.lehraemter !== null)) {
+		if (obj.lehraemter !== undefined) {
 			for (const elem of obj.lehraemter) {
-				result.lehraemter?.add(LehrerLehramtEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehraemter.add(LehrerLehramtEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.fachrichtungen !== undefined) && (obj.fachrichtungen !== null)) {
+		if (obj.fachrichtungen !== undefined) {
 			for (const elem of obj.fachrichtungen) {
-				result.fachrichtungen?.add(LehrerFachrichtungEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachrichtungen.add(LehrerFachrichtungEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lehrbefaehigungen !== undefined) && (obj.lehrbefaehigungen !== null)) {
+		if (obj.lehrbefaehigungen !== undefined) {
 			for (const elem of obj.lehrbefaehigungen) {
-				result.lehrbefaehigungen?.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrbefaehigungen.add(LehrerLehrbefaehigungEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -131,7 +131,7 @@ export class LehrerPersonaldaten extends JavaObject {
 
 	public static transpilerToJSON(obj : LehrerPersonaldaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
 		result += '"identNrTeil2SerNr" : ' + ((!obj.identNrTeil2SerNr) ? 'null' : JSON.stringify(obj.identNrTeil2SerNr)) + ',';
 		result += '"personalaktennummer" : ' + ((!obj.personalaktennummer) ? 'null' : JSON.stringify(obj.personalaktennummer)) + ',';
@@ -141,54 +141,38 @@ export class LehrerPersonaldaten extends JavaObject {
 		result += '"zugangsgrund" : ' + ((!obj.zugangsgrund) ? 'null' : JSON.stringify(obj.zugangsgrund)) + ',';
 		result += '"abgangsdatum" : ' + ((!obj.abgangsdatum) ? 'null' : JSON.stringify(obj.abgangsdatum)) + ',';
 		result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
-		if (!obj.abschnittsdaten) {
-			result += '"abschnittsdaten" : []';
-		} else {
-			result += '"abschnittsdaten" : [ ';
-			for (let i = 0; i < obj.abschnittsdaten.size(); i++) {
-				const elem = obj.abschnittsdaten.get(i);
-				result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
-				if (i < obj.abschnittsdaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"abschnittsdaten" : [ ';
+		for (let i = 0; i < obj.abschnittsdaten.size(); i++) {
+			const elem = obj.abschnittsdaten.get(i);
+			result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
+			if (i < obj.abschnittsdaten.size() - 1)
+				result += ',';
 		}
-		if (!obj.lehraemter) {
-			result += '"lehraemter" : []';
-		} else {
-			result += '"lehraemter" : [ ';
-			for (let i = 0; i < obj.lehraemter.size(); i++) {
-				const elem = obj.lehraemter.get(i);
-				result += LehrerLehramtEintrag.transpilerToJSON(elem);
-				if (i < obj.lehraemter.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"lehraemter" : [ ';
+		for (let i = 0; i < obj.lehraemter.size(); i++) {
+			const elem = obj.lehraemter.get(i);
+			result += LehrerLehramtEintrag.transpilerToJSON(elem);
+			if (i < obj.lehraemter.size() - 1)
+				result += ',';
 		}
-		if (!obj.fachrichtungen) {
-			result += '"fachrichtungen" : []';
-		} else {
-			result += '"fachrichtungen" : [ ';
-			for (let i = 0; i < obj.fachrichtungen.size(); i++) {
-				const elem = obj.fachrichtungen.get(i);
-				result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
-				if (i < obj.fachrichtungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"fachrichtungen" : [ ';
+		for (let i = 0; i < obj.fachrichtungen.size(); i++) {
+			const elem = obj.fachrichtungen.get(i);
+			result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
+			if (i < obj.fachrichtungen.size() - 1)
+				result += ',';
 		}
-		if (!obj.lehrbefaehigungen) {
-			result += '"lehrbefaehigungen" : []';
-		} else {
-			result += '"lehrbefaehigungen" : [ ';
-			for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
-				const elem = obj.lehrbefaehigungen.get(i);
-				result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
-				if (i < obj.lehrbefaehigungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"lehrbefaehigungen" : [ ';
+		for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
+			const elem = obj.lehrbefaehigungen.get(i);
+			result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
+			if (i < obj.lehrbefaehigungen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -197,7 +181,7 @@ export class LehrerPersonaldaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonaldaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.identNrTeil1 !== undefined) {
 			result += '"identNrTeil1" : ' + ((!obj.identNrTeil1) ? 'null' : JSON.stringify(obj.identNrTeil1)) + ',';
@@ -227,60 +211,44 @@ export class LehrerPersonaldaten extends JavaObject {
 			result += '"abgangsgrund" : ' + ((!obj.abgangsgrund) ? 'null' : JSON.stringify(obj.abgangsgrund)) + ',';
 		}
 		if (obj.abschnittsdaten !== undefined) {
-			if (!obj.abschnittsdaten) {
-				result += '"abschnittsdaten" : []';
-			} else {
-				result += '"abschnittsdaten" : [ ';
-				for (let i = 0; i < obj.abschnittsdaten.size(); i++) {
-					const elem = obj.abschnittsdaten.get(i);
-					result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
-					if (i < obj.abschnittsdaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"abschnittsdaten" : [ ';
+			for (let i = 0; i < obj.abschnittsdaten.size(); i++) {
+				const elem = obj.abschnittsdaten.get(i);
+				result += LehrerPersonalabschnittsdaten.transpilerToJSON(elem);
+				if (i < obj.abschnittsdaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.lehraemter !== undefined) {
-			if (!obj.lehraemter) {
-				result += '"lehraemter" : []';
-			} else {
-				result += '"lehraemter" : [ ';
-				for (let i = 0; i < obj.lehraemter.size(); i++) {
-					const elem = obj.lehraemter.get(i);
-					result += LehrerLehramtEintrag.transpilerToJSON(elem);
-					if (i < obj.lehraemter.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"lehraemter" : [ ';
+			for (let i = 0; i < obj.lehraemter.size(); i++) {
+				const elem = obj.lehraemter.get(i);
+				result += LehrerLehramtEintrag.transpilerToJSON(elem);
+				if (i < obj.lehraemter.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.fachrichtungen !== undefined) {
-			if (!obj.fachrichtungen) {
-				result += '"fachrichtungen" : []';
-			} else {
-				result += '"fachrichtungen" : [ ';
-				for (let i = 0; i < obj.fachrichtungen.size(); i++) {
-					const elem = obj.fachrichtungen.get(i);
-					result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
-					if (i < obj.fachrichtungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"fachrichtungen" : [ ';
+			for (let i = 0; i < obj.fachrichtungen.size(); i++) {
+				const elem = obj.fachrichtungen.get(i);
+				result += LehrerFachrichtungEintrag.transpilerToJSON(elem);
+				if (i < obj.fachrichtungen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.lehrbefaehigungen !== undefined) {
-			if (!obj.lehrbefaehigungen) {
-				result += '"lehrbefaehigungen" : []';
-			} else {
-				result += '"lehrbefaehigungen" : [ ';
-				for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
-					const elem = obj.lehrbefaehigungen.get(i);
-					result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
-					if (i < obj.lehrbefaehigungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"lehrbefaehigungen" : [ ';
+			for (let i = 0; i < obj.lehrbefaehigungen.size(); i++) {
+				const elem = obj.lehrbefaehigungen.get(i);
+				result += LehrerLehrbefaehigungEintrag.transpilerToJSON(elem);
+				if (i < obj.lehrbefaehigungen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

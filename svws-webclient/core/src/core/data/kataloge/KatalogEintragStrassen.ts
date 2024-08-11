@@ -36,7 +36,7 @@ export class KatalogEintragStrassen extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KatalogEintragStrassen {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KatalogEintragStrassen>;
 		const result = new KatalogEintragStrassen();
 		result.Ort = (obj.Ort === undefined) ? null : obj.Ort === null ? null : obj.Ort;
 		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;

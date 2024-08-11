@@ -41,33 +41,33 @@ export class GostBlockungListeneintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungListeneintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungListeneintrag>;
 		const result = new GostBlockungListeneintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.gostHalbjahr === undefined)
-			 throw new Error('invalid json format, missing attribute gostHalbjahr');
+			throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
 		if (obj.istAktiv === undefined)
-			 throw new Error('invalid json format, missing attribute istAktiv');
+			throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
 		if (obj.anzahlErgebnisse === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlErgebnisse');
+			throw new Error('invalid json format, missing attribute anzahlErgebnisse');
 		result.anzahlErgebnisse = obj.anzahlErgebnisse;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungListeneintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"istAktiv" : ' + obj.istAktiv + ',';
-		result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
+		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
+		result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,19 +76,19 @@ export class GostBlockungListeneintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungListeneintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.gostHalbjahr !== undefined) {
-			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
+			result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
 		}
 		if (obj.istAktiv !== undefined) {
-			result += '"istAktiv" : ' + obj.istAktiv + ',';
+			result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		}
 		if (obj.anzahlErgebnisse !== undefined) {
-			result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse + ',';
+			result += '"anzahlErgebnisse" : ' + obj.anzahlErgebnisse.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -49,22 +49,22 @@ export class Adressbuch extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Adressbuch {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Adressbuch>;
 		const result = new Adressbuch();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.displayname = (obj.displayname === undefined) ? null : obj.displayname === null ? null : obj.displayname;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
 		if (obj.synctoken === undefined)
-			 throw new Error('invalid json format, missing attribute synctoken');
+			throw new Error('invalid json format, missing attribute synctoken');
 		result.synctoken = obj.synctoken;
 		if (obj.adressbuchTyp === undefined)
-			 throw new Error('invalid json format, missing attribute adressbuchTyp');
+			throw new Error('invalid json format, missing attribute adressbuchTyp');
 		result.adressbuchTyp = obj.adressbuchTyp;
-		if ((obj.adressbuchEintraege !== undefined) && (obj.adressbuchEintraege !== null)) {
+		if (obj.adressbuchEintraege !== undefined) {
 			for (const elem of obj.adressbuchEintraege) {
-				result.adressbuchEintraege?.add(AdressbuchEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.adressbuchEintraege.add(AdressbuchEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -72,23 +72,19 @@ export class Adressbuch extends JavaObject {
 
 	public static transpilerToJSON(obj : Adressbuch) : string {
 		let result = '{';
-		result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+		result += '"id" : ' + JSON.stringify(obj.id) + ',';
 		result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
 		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		result += '"synctoken" : ' + obj.synctoken + ',';
-		result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp!) + ',';
-		if (!obj.adressbuchEintraege) {
-			result += '"adressbuchEintraege" : []';
-		} else {
-			result += '"adressbuchEintraege" : [ ';
-			for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
-				const elem = obj.adressbuchEintraege.get(i);
-				result += AdressbuchEintrag.transpilerToJSON(elem);
-				if (i < obj.adressbuchEintraege.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"synctoken" : ' + obj.synctoken.toString() + ',';
+		result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp) + ',';
+		result += '"adressbuchEintraege" : [ ';
+		for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
+			const elem = obj.adressbuchEintraege.get(i);
+			result += AdressbuchEintrag.transpilerToJSON(elem);
+			if (i < obj.adressbuchEintraege.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,7 +93,7 @@ export class Adressbuch extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Adressbuch>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + JSON.stringify(obj.id!) + ',';
+			result += '"id" : ' + JSON.stringify(obj.id) + ',';
 		}
 		if (obj.displayname !== undefined) {
 			result += '"displayname" : ' + ((!obj.displayname) ? 'null' : JSON.stringify(obj.displayname)) + ',';
@@ -106,24 +102,20 @@ export class Adressbuch extends JavaObject {
 			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (obj.synctoken !== undefined) {
-			result += '"synctoken" : ' + obj.synctoken + ',';
+			result += '"synctoken" : ' + obj.synctoken.toString() + ',';
 		}
 		if (obj.adressbuchTyp !== undefined) {
-			result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp!) + ',';
+			result += '"adressbuchTyp" : ' + JSON.stringify(obj.adressbuchTyp) + ',';
 		}
 		if (obj.adressbuchEintraege !== undefined) {
-			if (!obj.adressbuchEintraege) {
-				result += '"adressbuchEintraege" : []';
-			} else {
-				result += '"adressbuchEintraege" : [ ';
-				for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
-					const elem = obj.adressbuchEintraege.get(i);
-					result += AdressbuchEintrag.transpilerToJSON(elem);
-					if (i < obj.adressbuchEintraege.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"adressbuchEintraege" : [ ';
+			for (let i = 0; i < obj.adressbuchEintraege.size(); i++) {
+				const elem = obj.adressbuchEintraege.get(i);
+				result += AdressbuchEintrag.transpilerToJSON(elem);
+				if (i < obj.adressbuchEintraege.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

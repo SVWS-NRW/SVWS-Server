@@ -39,14 +39,14 @@ export class ENMFloskelgruppe extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMFloskelgruppe>;
 		const result = new ENMFloskelgruppe();
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.hauptgruppe = (obj.hauptgruppe === undefined) ? null : obj.hauptgruppe === null ? null : obj.hauptgruppe;
-		if ((obj.floskeln !== undefined) && (obj.floskeln !== null)) {
+		if (obj.floskeln !== undefined) {
 			for (const elem of obj.floskeln) {
-				result.floskeln?.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
+				result.floskeln.add(ENMFloskel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -57,18 +57,14 @@ export class ENMFloskelgruppe extends JavaObject {
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
-		if (!obj.floskeln) {
-			result += '"floskeln" : []';
-		} else {
-			result += '"floskeln" : [ ';
-			for (let i = 0; i < obj.floskeln.size(); i++) {
-				const elem = obj.floskeln.get(i);
-				result += ENMFloskel.transpilerToJSON(elem);
-				if (i < obj.floskeln.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"floskeln" : [ ';
+		for (let i = 0; i < obj.floskeln.size(); i++) {
+			const elem = obj.floskeln.get(i);
+			result += ENMFloskel.transpilerToJSON(elem);
+			if (i < obj.floskeln.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -86,18 +82,14 @@ export class ENMFloskelgruppe extends JavaObject {
 			result += '"hauptgruppe" : ' + ((!obj.hauptgruppe) ? 'null' : JSON.stringify(obj.hauptgruppe)) + ',';
 		}
 		if (obj.floskeln !== undefined) {
-			if (!obj.floskeln) {
-				result += '"floskeln" : []';
-			} else {
-				result += '"floskeln" : [ ';
-				for (let i = 0; i < obj.floskeln.size(); i++) {
-					const elem = obj.floskeln.get(i);
-					result += ENMFloskel.transpilerToJSON(elem);
-					if (i < obj.floskeln.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"floskeln" : [ ';
+			for (let i = 0; i < obj.floskeln.size(); i++) {
+				const elem = obj.floskeln.get(i);
+				result += ENMFloskel.transpilerToJSON(elem);
+				if (i < obj.floskeln.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

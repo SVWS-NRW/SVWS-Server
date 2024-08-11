@@ -92,19 +92,19 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KAOAZusatzmerkmalEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KAOAZusatzmerkmalEintrag>;
 		const result = new KAOAZusatzmerkmalEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		if (obj.merkmal === undefined)
-			 throw new Error('invalid json format, missing attribute merkmal');
+			throw new Error('invalid json format, missing attribute merkmal');
 		result.merkmal = obj.merkmal;
 		result.optionsart = (obj.optionsart === undefined) ? null : obj.optionsart === null ? null : obj.optionsart;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -114,13 +114,13 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KAOAZusatzmerkmalEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"merkmal" : ' + JSON.stringify(obj.merkmal!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"merkmal" : ' + JSON.stringify(obj.merkmal) + ',';
 		result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -129,25 +129,25 @@ export class KAOAZusatzmerkmalEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KAOAZusatzmerkmalEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.merkmal !== undefined) {
-			result += '"merkmal" : ' + JSON.stringify(obj.merkmal!) + ',';
+			result += '"merkmal" : ' + JSON.stringify(obj.merkmal) + ',';
 		}
 		if (obj.optionsart !== undefined) {
 			result += '"optionsart" : ' + ((!obj.optionsart) ? 'null' : JSON.stringify(obj.optionsart)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

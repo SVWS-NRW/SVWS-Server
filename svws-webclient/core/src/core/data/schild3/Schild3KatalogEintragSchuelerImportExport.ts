@@ -66,7 +66,7 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragSchuelerImportExport {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragSchuelerImportExport>;
 		const result = new Schild3KatalogEintragSchuelerImportExport();
 		result.Tabelle = (obj.Tabelle === undefined) ? null : obj.Tabelle === null ? null : obj.Tabelle;
 		result.TabellenAnzeige = (obj.TabellenAnzeige === undefined) ? null : obj.TabellenAnzeige === null ? null : obj.TabellenAnzeige;
@@ -92,7 +92,7 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 		result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
 		result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
 		result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
-		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
+		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -128,7 +128,7 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 			result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
 		}
 		if (obj.Reihenfolge !== undefined) {
-			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
+			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

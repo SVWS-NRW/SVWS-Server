@@ -36,29 +36,29 @@ export class StundenplanPausenaufsichtBereich extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanPausenaufsichtBereich {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanPausenaufsichtBereich>;
 		const result = new StundenplanPausenaufsichtBereich();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idPausenaufsicht === undefined)
-			 throw new Error('invalid json format, missing attribute idPausenaufsicht');
+			throw new Error('invalid json format, missing attribute idPausenaufsicht');
 		result.idPausenaufsicht = obj.idPausenaufsicht;
 		if (obj.idAufsichtsbereich === undefined)
-			 throw new Error('invalid json format, missing attribute idAufsichtsbereich');
+			throw new Error('invalid json format, missing attribute idAufsichtsbereich');
 		result.idAufsichtsbereich = obj.idAufsichtsbereich;
 		if (obj.wochentyp === undefined)
-			 throw new Error('invalid json format, missing attribute wochentyp');
+			throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanPausenaufsichtBereich) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idPausenaufsicht" : ' + obj.idPausenaufsicht + ',';
-		result += '"idAufsichtsbereich" : ' + obj.idAufsichtsbereich + ',';
-		result += '"wochentyp" : ' + obj.wochentyp + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idPausenaufsicht" : ' + obj.idPausenaufsicht.toString() + ',';
+		result += '"idAufsichtsbereich" : ' + obj.idAufsichtsbereich.toString() + ',';
+		result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class StundenplanPausenaufsichtBereich extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsichtBereich>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idPausenaufsicht !== undefined) {
-			result += '"idPausenaufsicht" : ' + obj.idPausenaufsicht + ',';
+			result += '"idPausenaufsicht" : ' + obj.idPausenaufsicht.toString() + ',';
 		}
 		if (obj.idAufsichtsbereich !== undefined) {
-			result += '"idAufsichtsbereich" : ' + obj.idAufsichtsbereich + ',';
+			result += '"idAufsichtsbereich" : ' + obj.idAufsichtsbereich.toString() + ',';
 		}
 		if (obj.wochentyp !== undefined) {
-			result += '"wochentyp" : ' + obj.wochentyp + ',';
+			result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

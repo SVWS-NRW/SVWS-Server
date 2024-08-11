@@ -26,13 +26,13 @@ export class BKFachklassenSchluessel extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BKFachklassenSchluessel {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BKFachklassenSchluessel>;
 		const result = new BKFachklassenSchluessel();
 		if (obj.index === undefined)
-			 throw new Error('invalid json format, missing attribute index');
+			throw new Error('invalid json format, missing attribute index');
 		result.index = obj.index;
 		if (obj.schluessel === undefined)
-			 throw new Error('invalid json format, missing attribute schluessel');
+			throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
 		return result;
 	}
@@ -40,7 +40,7 @@ export class BKFachklassenSchluessel extends JavaObject {
 	public static transpilerToJSON(obj : BKFachklassenSchluessel) : string {
 		let result = '{';
 		result += '"index" : ' + obj.index! + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -52,7 +52,7 @@ export class BKFachklassenSchluessel extends JavaObject {
 			result += '"index" : ' + obj.index + ',';
 		}
 		if (obj.schluessel !== undefined) {
-			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -46,37 +46,37 @@ export class BenutzerEMailDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerEMailDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerEMailDaten>;
 		const result = new BenutzerEMailDaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.address === undefined)
-			 throw new Error('invalid json format, missing attribute address');
+			throw new Error('invalid json format, missing attribute address');
 		result.address = obj.address;
 		if (obj.usernameSMTP === undefined)
-			 throw new Error('invalid json format, missing attribute usernameSMTP');
+			throw new Error('invalid json format, missing attribute usernameSMTP');
 		result.usernameSMTP = obj.usernameSMTP;
 		if (obj.passwordSMTP === undefined)
-			 throw new Error('invalid json format, missing attribute passwordSMTP');
+			throw new Error('invalid json format, missing attribute passwordSMTP');
 		result.passwordSMTP = obj.passwordSMTP;
 		if (obj.signatur === undefined)
-			 throw new Error('invalid json format, missing attribute signatur');
+			throw new Error('invalid json format, missing attribute signatur');
 		result.signatur = obj.signatur;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BenutzerEMailDaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"address" : ' + JSON.stringify(obj.address!) + ',';
-		result += '"usernameSMTP" : ' + JSON.stringify(obj.usernameSMTP!) + ',';
-		result += '"passwordSMTP" : ' + JSON.stringify(obj.passwordSMTP!) + ',';
-		result += '"signatur" : ' + JSON.stringify(obj.signatur!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"address" : ' + JSON.stringify(obj.address) + ',';
+		result += '"usernameSMTP" : ' + JSON.stringify(obj.usernameSMTP) + ',';
+		result += '"passwordSMTP" : ' + JSON.stringify(obj.passwordSMTP) + ',';
+		result += '"signatur" : ' + JSON.stringify(obj.signatur) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -85,22 +85,22 @@ export class BenutzerEMailDaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerEMailDaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.address !== undefined) {
-			result += '"address" : ' + JSON.stringify(obj.address!) + ',';
+			result += '"address" : ' + JSON.stringify(obj.address) + ',';
 		}
 		if (obj.usernameSMTP !== undefined) {
-			result += '"usernameSMTP" : ' + JSON.stringify(obj.usernameSMTP!) + ',';
+			result += '"usernameSMTP" : ' + JSON.stringify(obj.usernameSMTP) + ',';
 		}
 		if (obj.passwordSMTP !== undefined) {
-			result += '"passwordSMTP" : ' + JSON.stringify(obj.passwordSMTP!) + ',';
+			result += '"passwordSMTP" : ' + JSON.stringify(obj.passwordSMTP) + ',';
 		}
 		if (obj.signatur !== undefined) {
-			result += '"signatur" : ' + JSON.stringify(obj.signatur!) + ',';
+			result += '"signatur" : ' + JSON.stringify(obj.signatur) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

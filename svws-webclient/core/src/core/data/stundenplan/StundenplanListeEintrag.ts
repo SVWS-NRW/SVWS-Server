@@ -51,41 +51,41 @@ export class StundenplanListeEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanListeEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanListeEintrag>;
 		const result = new StundenplanListeEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.schuljahr === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahr');
+			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
 		if (obj.abschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute abschnitt');
+			throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (obj.gueltigAb === undefined)
-			 throw new Error('invalid json format, missing attribute gueltigAb');
+			throw new Error('invalid json format, missing attribute gueltigAb');
 		result.gueltigAb = obj.gueltigAb;
 		if (obj.gueltigBis === undefined)
-			 throw new Error('invalid json format, missing attribute gueltigBis');
+			throw new Error('invalid json format, missing attribute gueltigBis');
 		result.gueltigBis = obj.gueltigBis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanListeEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
-		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
+		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
+		result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,25 +94,25 @@ export class StundenplanListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanListeEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.schuljahr !== undefined) {
-			result += '"schuljahr" : ' + obj.schuljahr + ',';
+			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt + ',';
+			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.gueltigAb !== undefined) {
-			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
+			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis!) + ',';
+			result += '"gueltigBis" : ' + JSON.stringify(obj.gueltigBis) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

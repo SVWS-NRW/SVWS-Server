@@ -92,47 +92,47 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheit {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheit>;
 		const result = new SchuldateiOrganisationseinheit();
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		result.bundeslandkennung = (obj.bundeslandkennung === undefined) ? null : obj.bundeslandkennung === null ? null : obj.bundeslandkennung;
 		result.xscid = (obj.xscid === undefined) ? null : obj.xscid === null ? null : obj.xscid;
 		result.oeart = (obj.oeart === undefined) ? null : obj.oeart === null ? null : obj.oeart;
 		if (obj.amtsbez === undefined)
-			 throw new Error('invalid json format, missing attribute amtsbez');
+			throw new Error('invalid json format, missing attribute amtsbez');
 		result.amtsbez = obj.amtsbez;
 		result.errichtung = (obj.errichtung === undefined) ? null : obj.errichtung === null ? null : obj.errichtung;
 		result.aufloesung = (obj.aufloesung === undefined) ? null : obj.aufloesung === null ? null : obj.aufloesung;
-		if ((obj.grunddaten !== undefined) && (obj.grunddaten !== null)) {
+		if (obj.grunddaten !== undefined) {
 			for (const elem of obj.grunddaten) {
-				result.grunddaten?.add(SchuldateiOrganisationseinheitGrunddaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.grunddaten.add(SchuldateiOrganisationseinheitGrunddaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.adressen !== undefined) && (obj.adressen !== null)) {
+		if (obj.adressen !== undefined) {
 			for (const elem of obj.adressen) {
-				result.adressen?.add(SchuldateiOrganisationseinheitAdresse.transpilerFromJSON(JSON.stringify(elem)));
+				result.adressen.add(SchuldateiOrganisationseinheitAdresse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.merkmal !== undefined) && (obj.merkmal !== null)) {
+		if (obj.merkmal !== undefined) {
 			for (const elem of obj.merkmal) {
-				result.merkmal?.add(SchuldateiOrganisationseinheitMerkmal.transpilerFromJSON(JSON.stringify(elem)));
+				result.merkmal.add(SchuldateiOrganisationseinheitMerkmal.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.erreichbarkeiten !== undefined) && (obj.erreichbarkeiten !== null)) {
+		if (obj.erreichbarkeiten !== undefined) {
 			for (const elem of obj.erreichbarkeiten) {
-				result.erreichbarkeiten?.add(SchuldateiOrganisationseinheitErreichbarkeit.transpilerFromJSON(JSON.stringify(elem)));
+				result.erreichbarkeiten.add(SchuldateiOrganisationseinheitErreichbarkeit.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.oe_eigenschaften !== undefined) && (obj.oe_eigenschaften !== null)) {
+		if (obj.oe_eigenschaften !== undefined) {
 			for (const elem of obj.oe_eigenschaften) {
-				result.oe_eigenschaften?.add(SchuldateiOrganisationseinheitEigenschaft.transpilerFromJSON(JSON.stringify(elem)));
+				result.oe_eigenschaften.add(SchuldateiOrganisationseinheitEigenschaft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.gliederung !== undefined) && (obj.gliederung !== null)) {
+		if (obj.gliederung !== undefined) {
 			for (const elem of obj.gliederung) {
-				result.gliederung?.add(SchuldateiOrganisationseinheitGliederung.transpilerFromJSON(JSON.stringify(elem)));
+				result.gliederung.add(SchuldateiOrganisationseinheitGliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -140,85 +140,61 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheit) : string {
 		let result = '{';
-		result += '"schulnummer" : ' + obj.schulnummer + ',';
+		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		result += '"bundeslandkennung" : ' + ((!obj.bundeslandkennung) ? 'null' : JSON.stringify(obj.bundeslandkennung)) + ',';
 		result += '"xscid" : ' + ((!obj.xscid) ? 'null' : JSON.stringify(obj.xscid)) + ',';
 		result += '"oeart" : ' + ((!obj.oeart) ? 'null' : JSON.stringify(obj.oeart)) + ',';
-		result += '"amtsbez" : ' + JSON.stringify(obj.amtsbez!) + ',';
+		result += '"amtsbez" : ' + JSON.stringify(obj.amtsbez) + ',';
 		result += '"errichtung" : ' + ((!obj.errichtung) ? 'null' : JSON.stringify(obj.errichtung)) + ',';
 		result += '"aufloesung" : ' + ((!obj.aufloesung) ? 'null' : JSON.stringify(obj.aufloesung)) + ',';
-		if (!obj.grunddaten) {
-			result += '"grunddaten" : []';
-		} else {
-			result += '"grunddaten" : [ ';
-			for (let i = 0; i < obj.grunddaten.size(); i++) {
-				const elem = obj.grunddaten.get(i);
-				result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
-				if (i < obj.grunddaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"grunddaten" : [ ';
+		for (let i = 0; i < obj.grunddaten.size(); i++) {
+			const elem = obj.grunddaten.get(i);
+			result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
+			if (i < obj.grunddaten.size() - 1)
+				result += ',';
 		}
-		if (!obj.adressen) {
-			result += '"adressen" : []';
-		} else {
-			result += '"adressen" : [ ';
-			for (let i = 0; i < obj.adressen.size(); i++) {
-				const elem = obj.adressen.get(i);
-				result += SchuldateiOrganisationseinheitAdresse.transpilerToJSON(elem);
-				if (i < obj.adressen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"adressen" : [ ';
+		for (let i = 0; i < obj.adressen.size(); i++) {
+			const elem = obj.adressen.get(i);
+			result += SchuldateiOrganisationseinheitAdresse.transpilerToJSON(elem);
+			if (i < obj.adressen.size() - 1)
+				result += ',';
 		}
-		if (!obj.merkmal) {
-			result += '"merkmal" : []';
-		} else {
-			result += '"merkmal" : [ ';
-			for (let i = 0; i < obj.merkmal.size(); i++) {
-				const elem = obj.merkmal.get(i);
-				result += SchuldateiOrganisationseinheitMerkmal.transpilerToJSON(elem);
-				if (i < obj.merkmal.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"merkmal" : [ ';
+		for (let i = 0; i < obj.merkmal.size(); i++) {
+			const elem = obj.merkmal.get(i);
+			result += SchuldateiOrganisationseinheitMerkmal.transpilerToJSON(elem);
+			if (i < obj.merkmal.size() - 1)
+				result += ',';
 		}
-		if (!obj.erreichbarkeiten) {
-			result += '"erreichbarkeiten" : []';
-		} else {
-			result += '"erreichbarkeiten" : [ ';
-			for (let i = 0; i < obj.erreichbarkeiten.size(); i++) {
-				const elem = obj.erreichbarkeiten.get(i);
-				result += SchuldateiOrganisationseinheitErreichbarkeit.transpilerToJSON(elem);
-				if (i < obj.erreichbarkeiten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"erreichbarkeiten" : [ ';
+		for (let i = 0; i < obj.erreichbarkeiten.size(); i++) {
+			const elem = obj.erreichbarkeiten.get(i);
+			result += SchuldateiOrganisationseinheitErreichbarkeit.transpilerToJSON(elem);
+			if (i < obj.erreichbarkeiten.size() - 1)
+				result += ',';
 		}
-		if (!obj.oe_eigenschaften) {
-			result += '"oe_eigenschaften" : []';
-		} else {
-			result += '"oe_eigenschaften" : [ ';
-			for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
-				const elem = obj.oe_eigenschaften.get(i);
-				result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
-				if (i < obj.oe_eigenschaften.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"oe_eigenschaften" : [ ';
+		for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
+			const elem = obj.oe_eigenschaften.get(i);
+			result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
+			if (i < obj.oe_eigenschaften.size() - 1)
+				result += ',';
 		}
-		if (!obj.gliederung) {
-			result += '"gliederung" : []';
-		} else {
-			result += '"gliederung" : [ ';
-			for (let i = 0; i < obj.gliederung.size(); i++) {
-				const elem = obj.gliederung.get(i);
-				result += SchuldateiOrganisationseinheitGliederung.transpilerToJSON(elem);
-				if (i < obj.gliederung.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"gliederung" : [ ';
+		for (let i = 0; i < obj.gliederung.size(); i++) {
+			const elem = obj.gliederung.get(i);
+			result += SchuldateiOrganisationseinheitGliederung.transpilerToJSON(elem);
+			if (i < obj.gliederung.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -227,7 +203,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheit>) : string {
 		let result = '{';
 		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
+			result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		}
 		if (obj.bundeslandkennung !== undefined) {
 			result += '"bundeslandkennung" : ' + ((!obj.bundeslandkennung) ? 'null' : JSON.stringify(obj.bundeslandkennung)) + ',';
@@ -239,7 +215,7 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 			result += '"oeart" : ' + ((!obj.oeart) ? 'null' : JSON.stringify(obj.oeart)) + ',';
 		}
 		if (obj.amtsbez !== undefined) {
-			result += '"amtsbez" : ' + JSON.stringify(obj.amtsbez!) + ',';
+			result += '"amtsbez" : ' + JSON.stringify(obj.amtsbez) + ',';
 		}
 		if (obj.errichtung !== undefined) {
 			result += '"errichtung" : ' + ((!obj.errichtung) ? 'null' : JSON.stringify(obj.errichtung)) + ',';
@@ -248,88 +224,64 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 			result += '"aufloesung" : ' + ((!obj.aufloesung) ? 'null' : JSON.stringify(obj.aufloesung)) + ',';
 		}
 		if (obj.grunddaten !== undefined) {
-			if (!obj.grunddaten) {
-				result += '"grunddaten" : []';
-			} else {
-				result += '"grunddaten" : [ ';
-				for (let i = 0; i < obj.grunddaten.size(); i++) {
-					const elem = obj.grunddaten.get(i);
-					result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
-					if (i < obj.grunddaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"grunddaten" : [ ';
+			for (let i = 0; i < obj.grunddaten.size(); i++) {
+				const elem = obj.grunddaten.get(i);
+				result += SchuldateiOrganisationseinheitGrunddaten.transpilerToJSON(elem);
+				if (i < obj.grunddaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.adressen !== undefined) {
-			if (!obj.adressen) {
-				result += '"adressen" : []';
-			} else {
-				result += '"adressen" : [ ';
-				for (let i = 0; i < obj.adressen.size(); i++) {
-					const elem = obj.adressen.get(i);
-					result += SchuldateiOrganisationseinheitAdresse.transpilerToJSON(elem);
-					if (i < obj.adressen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"adressen" : [ ';
+			for (let i = 0; i < obj.adressen.size(); i++) {
+				const elem = obj.adressen.get(i);
+				result += SchuldateiOrganisationseinheitAdresse.transpilerToJSON(elem);
+				if (i < obj.adressen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.merkmal !== undefined) {
-			if (!obj.merkmal) {
-				result += '"merkmal" : []';
-			} else {
-				result += '"merkmal" : [ ';
-				for (let i = 0; i < obj.merkmal.size(); i++) {
-					const elem = obj.merkmal.get(i);
-					result += SchuldateiOrganisationseinheitMerkmal.transpilerToJSON(elem);
-					if (i < obj.merkmal.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"merkmal" : [ ';
+			for (let i = 0; i < obj.merkmal.size(); i++) {
+				const elem = obj.merkmal.get(i);
+				result += SchuldateiOrganisationseinheitMerkmal.transpilerToJSON(elem);
+				if (i < obj.merkmal.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.erreichbarkeiten !== undefined) {
-			if (!obj.erreichbarkeiten) {
-				result += '"erreichbarkeiten" : []';
-			} else {
-				result += '"erreichbarkeiten" : [ ';
-				for (let i = 0; i < obj.erreichbarkeiten.size(); i++) {
-					const elem = obj.erreichbarkeiten.get(i);
-					result += SchuldateiOrganisationseinheitErreichbarkeit.transpilerToJSON(elem);
-					if (i < obj.erreichbarkeiten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"erreichbarkeiten" : [ ';
+			for (let i = 0; i < obj.erreichbarkeiten.size(); i++) {
+				const elem = obj.erreichbarkeiten.get(i);
+				result += SchuldateiOrganisationseinheitErreichbarkeit.transpilerToJSON(elem);
+				if (i < obj.erreichbarkeiten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.oe_eigenschaften !== undefined) {
-			if (!obj.oe_eigenschaften) {
-				result += '"oe_eigenschaften" : []';
-			} else {
-				result += '"oe_eigenschaften" : [ ';
-				for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
-					const elem = obj.oe_eigenschaften.get(i);
-					result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
-					if (i < obj.oe_eigenschaften.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"oe_eigenschaften" : [ ';
+			for (let i = 0; i < obj.oe_eigenschaften.size(); i++) {
+				const elem = obj.oe_eigenschaften.get(i);
+				result += SchuldateiOrganisationseinheitEigenschaft.transpilerToJSON(elem);
+				if (i < obj.oe_eigenschaften.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.gliederung !== undefined) {
-			if (!obj.gliederung) {
-				result += '"gliederung" : []';
-			} else {
-				result += '"gliederung" : [ ';
-				for (let i = 0; i < obj.gliederung.size(); i++) {
-					const elem = obj.gliederung.get(i);
-					result += SchuldateiOrganisationseinheitGliederung.transpilerToJSON(elem);
-					if (i < obj.gliederung.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"gliederung" : [ ';
+			for (let i = 0; i < obj.gliederung.size(); i++) {
+				const elem = obj.gliederung.get(i);
+				result += SchuldateiOrganisationseinheitGliederung.transpilerToJSON(elem);
+				if (i < obj.gliederung.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

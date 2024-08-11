@@ -55,53 +55,49 @@ export class GostBlockungsergebnis extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnis {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsergebnis>;
 		const result = new GostBlockungsergebnis();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.blockungID === undefined)
-			 throw new Error('invalid json format, missing attribute blockungID');
+			throw new Error('invalid json format, missing attribute blockungID');
 		result.blockungID = obj.blockungID;
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.gostHalbjahr === undefined)
-			 throw new Error('invalid json format, missing attribute gostHalbjahr');
+			throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
 		if (obj.istAktiv === undefined)
-			 throw new Error('invalid json format, missing attribute istAktiv');
+			throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
+				result.schienen.add(GostBlockungsergebnisSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.bewertung === undefined)
-			 throw new Error('invalid json format, missing attribute bewertung');
+			throw new Error('invalid json format, missing attribute bewertung');
 		result.bewertung = GostBlockungsergebnisBewertung.transpilerFromJSON(JSON.stringify(obj.bewertung));
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungsergebnis) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"blockungID" : ' + obj.blockungID + ',';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"istAktiv" : ' + obj.istAktiv + ',';
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
-			result += '"schienen" : [ ';
-			for (let i = 0; i < obj.schienen.size(); i++) {
-				const elem = obj.schienen.get(i);
-				result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
-				if (i < obj.schienen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"blockungID" : ' + obj.blockungID.toString() + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
+		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
+			if (i < obj.schienen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -111,33 +107,29 @@ export class GostBlockungsergebnis extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnis>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.blockungID !== undefined) {
-			result += '"blockungID" : ' + obj.blockungID + ',';
+			result += '"blockungID" : ' + obj.blockungID.toString() + ',';
 		}
 		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.gostHalbjahr !== undefined) {
-			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
+			result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
 		}
 		if (obj.istAktiv !== undefined) {
-			result += '"istAktiv" : ' + obj.istAktiv + ',';
+			result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
 		}
 		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += GostBlockungsergebnisSchiene.transpilerToJSON(elem);
+				if (i < obj.schienen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.bewertung !== undefined) {
 			result += '"bewertung" : ' + GostBlockungsergebnisBewertung.transpilerToJSON(obj.bewertung) + ',';

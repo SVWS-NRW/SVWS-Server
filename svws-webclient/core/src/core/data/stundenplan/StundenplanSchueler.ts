@@ -36,29 +36,29 @@ export class StundenplanSchueler extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanSchueler {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanSchueler>;
 		const result = new StundenplanSchueler();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.nachname === undefined)
-			 throw new Error('invalid json format, missing attribute nachname');
+			throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
 		if (obj.vorname === undefined)
-			 throw new Error('invalid json format, missing attribute vorname');
+			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if (obj.idKlasse === undefined)
-			 throw new Error('invalid json format, missing attribute idKlasse');
+			throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanSchueler) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
-		result += '"idKlasse" : ' + obj.idKlasse + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
+		result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class StundenplanSchueler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanSchueler>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.idKlasse !== undefined) {
-			result += '"idKlasse" : ' + obj.idKlasse + ',';
+			result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

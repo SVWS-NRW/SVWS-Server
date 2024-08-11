@@ -28,13 +28,13 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungsErgebnisse {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBelegpruefungsErgebnisse>;
 		const result = new GostBelegpruefungsErgebnisse();
 		if (obj.schueler === undefined)
-			 throw new Error('invalid json format, missing attribute schueler');
+			throw new Error('invalid json format, missing attribute schueler');
 		result.schueler = Schueler.transpilerFromJSON(JSON.stringify(obj.schueler));
 		if (obj.ergebnis === undefined)
-			 throw new Error('invalid json format, missing attribute ergebnis');
+			throw new Error('invalid json format, missing attribute ergebnis');
 		result.ergebnis = GostBelegpruefungErgebnis.transpilerFromJSON(JSON.stringify(obj.ergebnis));
 		return result;
 	}

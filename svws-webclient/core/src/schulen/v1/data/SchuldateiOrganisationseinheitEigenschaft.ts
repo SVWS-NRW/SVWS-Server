@@ -44,17 +44,17 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitEigenschaft {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitEigenschaft>;
 		const result = new SchuldateiOrganisationseinheitEigenschaft();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		if (obj.eigenschaft === undefined)
-			 throw new Error('invalid json format, missing attribute eigenschaft');
+			throw new Error('invalid json format, missing attribute eigenschaft');
 		result.eigenschaft = obj.eigenschaft;
 		result.Beschreibung = (obj.Beschreibung === undefined) ? null : obj.Beschreibung === null ? null : obj.Beschreibung;
 		result.detail = (obj.detail === undefined) ? null : obj.detail === null ? null : obj.detail;
@@ -66,9 +66,9 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		result += '"schulnummer" : ' + obj.schulnummer! + ',';
-		result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft!) + ',';
+		result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';
 		result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
 		result += '"detail" : ' + ((!obj.detail) ? 'null' : JSON.stringify(obj.detail)) + ',';
 		result = result.slice(0, -1);
@@ -88,13 +88,13 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
 		if (obj.eigenschaft !== undefined) {
-			result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft!) + ',';
+			result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';
 		}
 		if (obj.Beschreibung !== undefined) {
 			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';

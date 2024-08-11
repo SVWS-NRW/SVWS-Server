@@ -24,11 +24,11 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostJahrgangFachwahlenHalbjahr {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostJahrgangFachwahlenHalbjahr>;
 		const result = new GostJahrgangFachwahlenHalbjahr();
-		if ((obj.fachwahlen !== undefined) && (obj.fachwahlen !== null)) {
+		if (obj.fachwahlen !== undefined) {
 			for (const elem of obj.fachwahlen) {
-				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachwahlen.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -36,18 +36,14 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 
 	public static transpilerToJSON(obj : GostJahrgangFachwahlenHalbjahr) : string {
 		let result = '{';
-		if (!obj.fachwahlen) {
-			result += '"fachwahlen" : []';
-		} else {
-			result += '"fachwahlen" : [ ';
-			for (let i = 0; i < obj.fachwahlen.size(); i++) {
-				const elem = obj.fachwahlen.get(i);
-				result += GostFachwahl.transpilerToJSON(elem);
-				if (i < obj.fachwahlen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"fachwahlen" : [ ';
+		for (let i = 0; i < obj.fachwahlen.size(); i++) {
+			const elem = obj.fachwahlen.get(i);
+			result += GostFachwahl.transpilerToJSON(elem);
+			if (i < obj.fachwahlen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,18 +52,14 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachwahlenHalbjahr>) : string {
 		let result = '{';
 		if (obj.fachwahlen !== undefined) {
-			if (!obj.fachwahlen) {
-				result += '"fachwahlen" : []';
-			} else {
-				result += '"fachwahlen" : [ ';
-				for (let i = 0; i < obj.fachwahlen.size(); i++) {
-					const elem = obj.fachwahlen.get(i);
-					result += GostFachwahl.transpilerToJSON(elem);
-					if (i < obj.fachwahlen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"fachwahlen" : [ ';
+			for (let i = 0; i < obj.fachwahlen.size(); i++) {
+				const elem = obj.fachwahlen.get(i);
+				result += GostFachwahl.transpilerToJSON(elem);
+				if (i < obj.fachwahlen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -29,16 +29,16 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanPausenaufsichtBereichUpdate {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanPausenaufsichtBereichUpdate>;
 		const result = new StundenplanPausenaufsichtBereichUpdate();
-		if ((obj.listEntfernen !== undefined) && (obj.listEntfernen !== null)) {
+		if (obj.listEntfernen !== undefined) {
 			for (const elem of obj.listEntfernen) {
-				result.listEntfernen?.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(JSON.stringify(elem)));
+				result.listEntfernen.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.listHinzuzufuegen !== undefined) && (obj.listHinzuzufuegen !== null)) {
+		if (obj.listHinzuzufuegen !== undefined) {
 			for (const elem of obj.listHinzuzufuegen) {
-				result.listHinzuzufuegen?.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(JSON.stringify(elem)));
+				result.listHinzuzufuegen.add(StundenplanPausenaufsichtBereich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -46,9 +46,30 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanPausenaufsichtBereichUpdate) : string {
 		let result = '{';
-		if (!obj.listEntfernen) {
-			result += '"listEntfernen" : []';
-		} else {
+		result += '"listEntfernen" : [ ';
+		for (let i = 0; i < obj.listEntfernen.size(); i++) {
+			const elem = obj.listEntfernen.get(i);
+			result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
+			if (i < obj.listEntfernen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"listHinzuzufuegen" : [ ';
+		for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
+			const elem = obj.listHinzuzufuegen.get(i);
+			result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
+			if (i < obj.listHinzuzufuegen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsichtBereichUpdate>) : string {
+		let result = '{';
+		if (obj.listEntfernen !== undefined) {
 			result += '"listEntfernen" : [ ';
 			for (let i = 0; i < obj.listEntfernen.size(); i++) {
 				const elem = obj.listEntfernen.get(i);
@@ -58,9 +79,7 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.listHinzuzufuegen) {
-			result += '"listHinzuzufuegen" : []';
-		} else {
+		if (obj.listHinzuzufuegen !== undefined) {
 			result += '"listHinzuzufuegen" : [ ';
 			for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
 				const elem = obj.listHinzuzufuegen.get(i);
@@ -69,41 +88,6 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenaufsichtBereichUpdate>) : string {
-		let result = '{';
-		if (obj.listEntfernen !== undefined) {
-			if (!obj.listEntfernen) {
-				result += '"listEntfernen" : []';
-			} else {
-				result += '"listEntfernen" : [ ';
-				for (let i = 0; i < obj.listEntfernen.size(); i++) {
-					const elem = obj.listEntfernen.get(i);
-					result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
-					if (i < obj.listEntfernen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.listHinzuzufuegen !== undefined) {
-			if (!obj.listHinzuzufuegen) {
-				result += '"listHinzuzufuegen" : []';
-			} else {
-				result += '"listHinzuzufuegen" : [ ';
-				for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
-					const elem = obj.listHinzuzufuegen.get(i);
-					result += StundenplanPausenaufsichtBereich.transpilerToJSON(elem);
-					if (i < obj.listHinzuzufuegen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -46,19 +46,19 @@ export class Schulleitung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schulleitung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schulleitung>;
 		const result = new Schulleitung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idLeitungsfunktion === undefined)
-			 throw new Error('invalid json format, missing attribute idLeitungsfunktion');
+			throw new Error('invalid json format, missing attribute idLeitungsfunktion');
 		result.idLeitungsfunktion = obj.idLeitungsfunktion;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.idLehrer === undefined)
-			 throw new Error('invalid json format, missing attribute idLehrer');
+			throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
 		result.beginn = (obj.beginn === undefined) ? null : obj.beginn === null ? null : obj.beginn;
 		result.ende = (obj.ende === undefined) ? null : obj.ende === null ? null : obj.ende;
@@ -67,10 +67,10 @@ export class Schulleitung extends JavaObject {
 
 	public static transpilerToJSON(obj : Schulleitung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"idLehrer" : ' + obj.idLehrer + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : JSON.stringify(obj.beginn)) + ',';
 		result += '"ende" : ' + ((!obj.ende) ? 'null' : JSON.stringify(obj.ende)) + ',';
 		result = result.slice(0, -1);
@@ -81,16 +81,16 @@ export class Schulleitung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schulleitung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idLeitungsfunktion !== undefined) {
-			result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion + ',';
+			result += '"idLeitungsfunktion" : ' + obj.idLeitungsfunktion.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.idLehrer !== undefined) {
-			result += '"idLehrer" : ' + obj.idLehrer + ',';
+			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		}
 		if (obj.beginn !== undefined) {
 			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : JSON.stringify(obj.beginn)) + ',';

@@ -66,22 +66,22 @@ export class SchuelerKAoADaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerKAoADaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerKAoADaten>;
 		const result = new SchuelerKAoADaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.abschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute abschnitt');
+			throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (obj.jahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute jahrgang');
+			throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
 		if (obj.kategorie === undefined)
-			 throw new Error('invalid json format, missing attribute kategorie');
+			throw new Error('invalid json format, missing attribute kategorie');
 		result.kategorie = obj.kategorie;
 		if (obj.merkmal === undefined)
-			 throw new Error('invalid json format, missing attribute merkmal');
+			throw new Error('invalid json format, missing attribute merkmal');
 		result.merkmal = obj.merkmal;
 		result.zusatzmerkmal = (obj.zusatzmerkmal === undefined) ? null : obj.zusatzmerkmal === null ? null : obj.zusatzmerkmal;
 		result.anschlussoption = (obj.anschlussoption === undefined) ? null : obj.anschlussoption === null ? null : obj.anschlussoption;
@@ -93,15 +93,15 @@ export class SchuelerKAoADaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerKAoADaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
-		result += '"kategorie" : ' + obj.kategorie + ',';
-		result += '"merkmal" : ' + obj.merkmal + ',';
-		result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal) + ',';
-		result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption) + ',';
-		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld) + ',';
-		result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		result += '"kategorie" : ' + obj.kategorie.toString() + ',';
+		result += '"merkmal" : ' + obj.merkmal.toString() + ',';
+		result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal.toString()) + ',';
+		result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption.toString()) + ',';
+		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld.toString()) + ',';
+		result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4.toString()) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -111,31 +111,31 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerKAoADaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt + ',';
+			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		}
 		if (obj.kategorie !== undefined) {
-			result += '"kategorie" : ' + obj.kategorie + ',';
+			result += '"kategorie" : ' + obj.kategorie.toString() + ',';
 		}
 		if (obj.merkmal !== undefined) {
-			result += '"merkmal" : ' + obj.merkmal + ',';
+			result += '"merkmal" : ' + obj.merkmal.toString() + ',';
 		}
 		if (obj.zusatzmerkmal !== undefined) {
-			result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal) + ',';
+			result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal.toString()) + ',';
 		}
 		if (obj.anschlussoption !== undefined) {
-			result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption) + ',';
+			result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption.toString()) + ',';
 		}
 		if (obj.berufsfeld !== undefined) {
-			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld) + ',';
+			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld.toString()) + ',';
 		}
 		if (obj.ebene4 !== undefined) {
-			result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4) + ',';
+			result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';

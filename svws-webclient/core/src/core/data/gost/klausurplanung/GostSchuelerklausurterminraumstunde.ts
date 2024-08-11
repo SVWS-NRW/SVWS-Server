@@ -46,21 +46,21 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurterminraumstunde {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostSchuelerklausurterminraumstunde>;
 		const result = new GostSchuelerklausurterminraumstunde();
 		if (obj.idSchuelerklausurtermin === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuelerklausurtermin');
+			throw new Error('invalid json format, missing attribute idSchuelerklausurtermin');
 		result.idSchuelerklausurtermin = obj.idSchuelerklausurtermin;
 		if (obj.idRaumstunde === undefined)
-			 throw new Error('invalid json format, missing attribute idRaumstunde');
+			throw new Error('invalid json format, missing attribute idRaumstunde');
 		result.idRaumstunde = obj.idRaumstunde;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostSchuelerklausurterminraumstunde) : string {
 		let result = '{';
-		result += '"idSchuelerklausurtermin" : ' + obj.idSchuelerklausurtermin + ',';
-		result += '"idRaumstunde" : ' + obj.idRaumstunde + ',';
+		result += '"idSchuelerklausurtermin" : ' + obj.idSchuelerklausurtermin.toString() + ',';
+		result += '"idRaumstunde" : ' + obj.idRaumstunde.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,10 +69,10 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausurterminraumstunde>) : string {
 		let result = '{';
 		if (obj.idSchuelerklausurtermin !== undefined) {
-			result += '"idSchuelerklausurtermin" : ' + obj.idSchuelerklausurtermin + ',';
+			result += '"idSchuelerklausurtermin" : ' + obj.idSchuelerklausurtermin.toString() + ',';
 		}
 		if (obj.idRaumstunde !== undefined) {
-			result += '"idRaumstunde" : ' + obj.idRaumstunde + ',';
+			result += '"idRaumstunde" : ' + obj.idRaumstunde.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

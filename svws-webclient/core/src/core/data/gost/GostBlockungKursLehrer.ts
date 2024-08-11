@@ -51,41 +51,41 @@ export class GostBlockungKursLehrer extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungKursLehrer {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungKursLehrer>;
 		const result = new GostBlockungKursLehrer();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.vorname === undefined)
-			 throw new Error('invalid json format, missing attribute vorname');
+			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if (obj.nachname === undefined)
-			 throw new Error('invalid json format, missing attribute nachname');
+			throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
 		if (obj.reihenfolge === undefined)
-			 throw new Error('invalid json format, missing attribute reihenfolge');
+			throw new Error('invalid json format, missing attribute reihenfolge');
 		result.reihenfolge = obj.reihenfolge;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if (obj.istExtern === undefined)
-			 throw new Error('invalid json format, missing attribute istExtern');
+			throw new Error('invalid json format, missing attribute istExtern');
 		result.istExtern = obj.istExtern;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungKursLehrer) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
-		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"reihenfolge" : ' + obj.reihenfolge + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result += '"istExtern" : ' + obj.istExtern + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
+		result += '"reihenfolge" : ' + obj.reihenfolge.toString() + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result += '"istExtern" : ' + obj.istExtern.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,25 +94,25 @@ export class GostBlockungKursLehrer extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungKursLehrer>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		}
 		if (obj.reihenfolge !== undefined) {
-			result += '"reihenfolge" : ' + obj.reihenfolge + ',';
+			result += '"reihenfolge" : ' + obj.reihenfolge.toString() + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.istExtern !== undefined) {
-			result += '"istExtern" : ' + obj.istExtern + ',';
+			result += '"istExtern" : ' + obj.istExtern.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

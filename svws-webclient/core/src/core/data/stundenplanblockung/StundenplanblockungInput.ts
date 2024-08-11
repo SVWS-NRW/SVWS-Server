@@ -54,36 +54,36 @@ export class StundenplanblockungInput extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanblockungInput {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanblockungInput>;
 		const result = new StundenplanblockungInput();
-		if ((obj.lehrkraefte !== undefined) && (obj.lehrkraefte !== null)) {
+		if (obj.lehrkraefte !== undefined) {
 			for (const elem of obj.lehrkraefte) {
-				result.lehrkraefte?.add(StundenplanblockungLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrkraefte.add(StundenplanblockungLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(StundenplanblockungKlasse.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(StundenplanblockungKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(StundenplanblockungFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(StundenplanblockungFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+		if (obj.raeume !== undefined) {
 			for (const elem of obj.raeume) {
-				result.raeume?.add(StundenplanblockungRaum.transpilerFromJSON(JSON.stringify(elem)));
+				result.raeume.add(StundenplanblockungRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kopplungen !== undefined) && (obj.kopplungen !== null)) {
+		if (obj.kopplungen !== undefined) {
 			for (const elem of obj.kopplungen) {
-				result.kopplungen?.add(StundenplanblockungKopplung.transpilerFromJSON(JSON.stringify(elem)));
+				result.kopplungen.add(StundenplanblockungKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lerngruppen !== undefined) && (obj.lerngruppen !== null)) {
+		if (obj.lerngruppen !== undefined) {
 			for (const elem of obj.lerngruppen) {
-				result.lerngruppen?.add(StundenplanblockungLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
+				result.lerngruppen.add(StundenplanblockungLerngruppe.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -91,9 +91,62 @@ export class StundenplanblockungInput extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanblockungInput) : string {
 		let result = '{';
-		if (!obj.lehrkraefte) {
-			result += '"lehrkraefte" : []';
-		} else {
+		result += '"lehrkraefte" : [ ';
+		for (let i = 0; i < obj.lehrkraefte.size(); i++) {
+			const elem = obj.lehrkraefte.get(i);
+			result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
+			if (i < obj.lehrkraefte.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += StundenplanblockungKlasse.transpilerToJSON(elem);
+			if (i < obj.klassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += StundenplanblockungFach.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"raeume" : [ ';
+		for (let i = 0; i < obj.raeume.size(); i++) {
+			const elem = obj.raeume.get(i);
+			result += StundenplanblockungRaum.transpilerToJSON(elem);
+			if (i < obj.raeume.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kopplungen" : [ ';
+		for (let i = 0; i < obj.kopplungen.size(); i++) {
+			const elem = obj.kopplungen.get(i);
+			result += StundenplanblockungKopplung.transpilerToJSON(elem);
+			if (i < obj.kopplungen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"lerngruppen" : [ ';
+		for (let i = 0; i < obj.lerngruppen.size(); i++) {
+			const elem = obj.lerngruppen.get(i);
+			result += StundenplanblockungLerngruppe.transpilerToJSON(elem);
+			if (i < obj.lerngruppen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungInput>) : string {
+		let result = '{';
+		if (obj.lehrkraefte !== undefined) {
 			result += '"lehrkraefte" : [ ';
 			for (let i = 0; i < obj.lehrkraefte.size(); i++) {
 				const elem = obj.lehrkraefte.get(i);
@@ -103,9 +156,7 @@ export class StundenplanblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
+		if (obj.klassen !== undefined) {
 			result += '"klassen" : [ ';
 			for (let i = 0; i < obj.klassen.size(); i++) {
 				const elem = obj.klassen.get(i);
@@ -115,9 +166,7 @@ export class StundenplanblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
+		if (obj.faecher !== undefined) {
 			result += '"faecher" : [ ';
 			for (let i = 0; i < obj.faecher.size(); i++) {
 				const elem = obj.faecher.get(i);
@@ -127,9 +176,7 @@ export class StundenplanblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.raeume) {
-			result += '"raeume" : []';
-		} else {
+		if (obj.raeume !== undefined) {
 			result += '"raeume" : [ ';
 			for (let i = 0; i < obj.raeume.size(); i++) {
 				const elem = obj.raeume.get(i);
@@ -139,9 +186,7 @@ export class StundenplanblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kopplungen) {
-			result += '"kopplungen" : []';
-		} else {
+		if (obj.kopplungen !== undefined) {
 			result += '"kopplungen" : [ ';
 			for (let i = 0; i < obj.kopplungen.size(); i++) {
 				const elem = obj.kopplungen.get(i);
@@ -151,9 +196,7 @@ export class StundenplanblockungInput extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.lerngruppen) {
-			result += '"lerngruppen" : []';
-		} else {
+		if (obj.lerngruppen !== undefined) {
 			result += '"lerngruppen" : [ ';
 			for (let i = 0; i < obj.lerngruppen.size(); i++) {
 				const elem = obj.lerngruppen.get(i);
@@ -162,97 +205,6 @@ export class StundenplanblockungInput extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungInput>) : string {
-		let result = '{';
-		if (obj.lehrkraefte !== undefined) {
-			if (!obj.lehrkraefte) {
-				result += '"lehrkraefte" : []';
-			} else {
-				result += '"lehrkraefte" : [ ';
-				for (let i = 0; i < obj.lehrkraefte.size(); i++) {
-					const elem = obj.lehrkraefte.get(i);
-					result += StundenplanblockungLehrkraft.transpilerToJSON(elem);
-					if (i < obj.lehrkraefte.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += StundenplanblockungKlasse.transpilerToJSON(elem);
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += StundenplanblockungFach.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.raeume !== undefined) {
-			if (!obj.raeume) {
-				result += '"raeume" : []';
-			} else {
-				result += '"raeume" : [ ';
-				for (let i = 0; i < obj.raeume.size(); i++) {
-					const elem = obj.raeume.get(i);
-					result += StundenplanblockungRaum.transpilerToJSON(elem);
-					if (i < obj.raeume.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kopplungen !== undefined) {
-			if (!obj.kopplungen) {
-				result += '"kopplungen" : []';
-			} else {
-				result += '"kopplungen" : [ ';
-				for (let i = 0; i < obj.kopplungen.size(); i++) {
-					const elem = obj.kopplungen.get(i);
-					result += StundenplanblockungKopplung.transpilerToJSON(elem);
-					if (i < obj.kopplungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.lerngruppen !== undefined) {
-			if (!obj.lerngruppen) {
-				result += '"lerngruppen" : []';
-			} else {
-				result += '"lerngruppen" : [ ';
-				for (let i = 0; i < obj.lerngruppen.size(); i++) {
-					const elem = obj.lerngruppen.get(i);
-					result += StundenplanblockungLerngruppe.transpilerToJSON(elem);
-					if (i < obj.lerngruppen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

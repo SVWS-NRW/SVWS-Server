@@ -86,45 +86,45 @@ export class GostKlausurtermin extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurtermin {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurtermin>;
 		const result = new GostKlausurtermin();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.abijahr === undefined)
-			 throw new Error('invalid json format, missing attribute abijahr');
+			throw new Error('invalid json format, missing attribute abijahr');
 		result.abijahr = obj.abijahr;
 		if (obj.halbjahr === undefined)
-			 throw new Error('invalid json format, missing attribute halbjahr');
+			throw new Error('invalid json format, missing attribute halbjahr');
 		result.halbjahr = obj.halbjahr;
 		if (obj.quartal === undefined)
-			 throw new Error('invalid json format, missing attribute quartal');
+			throw new Error('invalid json format, missing attribute quartal');
 		result.quartal = obj.quartal;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
 		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		if (obj.istHaupttermin === undefined)
-			 throw new Error('invalid json format, missing attribute istHaupttermin');
+			throw new Error('invalid json format, missing attribute istHaupttermin');
 		result.istHaupttermin = obj.istHaupttermin;
 		if (obj.nachschreiberZugelassen === undefined)
-			 throw new Error('invalid json format, missing attribute nachschreiberZugelassen');
+			throw new Error('invalid json format, missing attribute nachschreiberZugelassen');
 		result.nachschreiberZugelassen = obj.nachschreiberZugelassen;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostKlausurtermin) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"abijahr" : ' + obj.abijahr + ',';
-		result += '"halbjahr" : ' + obj.halbjahr + ',';
-		result += '"quartal" : ' + obj.quartal + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"abijahr" : ' + obj.abijahr.toString() + ',';
+		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
+		result += '"quartal" : ' + obj.quartal.toString() + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
-		result += '"istHaupttermin" : ' + obj.istHaupttermin + ',';
-		result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen + ',';
+		result += '"istHaupttermin" : ' + obj.istHaupttermin.toString() + ',';
+		result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -133,22 +133,22 @@ export class GostKlausurtermin extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurtermin>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.abijahr !== undefined) {
-			result += '"abijahr" : ' + obj.abijahr + ',';
+			result += '"abijahr" : ' + obj.abijahr.toString() + ',';
 		}
 		if (obj.halbjahr !== undefined) {
-			result += '"halbjahr" : ' + obj.halbjahr + ',';
+			result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
 		}
 		if (obj.quartal !== undefined) {
-			result += '"quartal" : ' + obj.quartal + ',';
+			result += '"quartal" : ' + obj.quartal.toString() + ',';
 		}
 		if (obj.datum !== undefined) {
 			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
@@ -157,10 +157,10 @@ export class GostKlausurtermin extends JavaObject {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (obj.istHaupttermin !== undefined) {
-			result += '"istHaupttermin" : ' + obj.istHaupttermin + ',';
+			result += '"istHaupttermin" : ' + obj.istHaupttermin.toString() + ',';
 		}
 		if (obj.nachschreiberZugelassen !== undefined) {
-			result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen + ',';
+			result += '"nachschreiberZugelassen" : ' + obj.nachschreiberZugelassen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

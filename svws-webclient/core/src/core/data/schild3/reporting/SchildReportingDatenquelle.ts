@@ -59,24 +59,24 @@ export class SchildReportingDatenquelle extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingDatenquelle {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchildReportingDatenquelle>;
 		const result = new SchildReportingDatenquelle();
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		if (obj.datenart === undefined)
-			 throw new Error('invalid json format, missing attribute datenart');
+			throw new Error('invalid json format, missing attribute datenart');
 		result.datenart = obj.datenart;
 		result.master = (obj.master === undefined) ? null : obj.master === null ? null : obj.master;
 		result.masterattribut = (obj.masterattribut === undefined) ? null : obj.masterattribut === null ? null : obj.masterattribut;
 		result.mastertyp = (obj.mastertyp === undefined) ? null : obj.mastertyp === null ? null : obj.mastertyp;
 		result.linkattribut = (obj.linkattribut === undefined) ? null : obj.linkattribut === null ? null : obj.linkattribut;
-		if ((obj.attribute !== undefined) && (obj.attribute !== null)) {
+		if (obj.attribute !== undefined) {
 			for (const elem of obj.attribute) {
-				result.attribute?.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));
+				result.attribute.add(SchildReportingDatenquelleAttribut.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -84,25 +84,21 @@ export class SchildReportingDatenquelle extends JavaObject {
 
 	public static transpilerToJSON(obj : SchildReportingDatenquelle) : string {
 		let result = '{';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"datenart" : ' + JSON.stringify(obj.datenart!) + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"datenart" : ' + JSON.stringify(obj.datenart) + ',';
 		result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
 		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
 		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
 		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
-		if (!obj.attribute) {
-			result += '"attribute" : []';
-		} else {
-			result += '"attribute" : [ ';
-			for (let i = 0; i < obj.attribute.size(); i++) {
-				const elem = obj.attribute.get(i);
-				result += SchildReportingDatenquelleAttribut.transpilerToJSON(elem);
-				if (i < obj.attribute.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"attribute" : [ ';
+		for (let i = 0; i < obj.attribute.size(); i++) {
+			const elem = obj.attribute.get(i);
+			result += SchildReportingDatenquelleAttribut.transpilerToJSON(elem);
+			if (i < obj.attribute.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -111,13 +107,13 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingDatenquelle>) : string {
 		let result = '{';
 		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.datenart !== undefined) {
-			result += '"datenart" : ' + JSON.stringify(obj.datenart!) + ',';
+			result += '"datenart" : ' + JSON.stringify(obj.datenart) + ',';
 		}
 		if (obj.master !== undefined) {
 			result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
@@ -132,18 +128,14 @@ export class SchildReportingDatenquelle extends JavaObject {
 			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		}
 		if (obj.attribute !== undefined) {
-			if (!obj.attribute) {
-				result += '"attribute" : []';
-			} else {
-				result += '"attribute" : [ ';
-				for (let i = 0; i < obj.attribute.size(); i++) {
-					const elem = obj.attribute.get(i);
-					result += SchildReportingDatenquelleAttribut.transpilerToJSON(elem);
-					if (i < obj.attribute.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"attribute" : [ ';
+			for (let i = 0; i < obj.attribute.size(); i++) {
+				const elem = obj.attribute.get(i);
+				result += SchildReportingDatenquelleAttribut.transpilerToJSON(elem);
+				if (i < obj.attribute.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

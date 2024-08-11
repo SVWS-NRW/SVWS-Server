@@ -29,16 +29,16 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittNachpruefungsdaten>;
 		const result = new SchuelerLernabschnittNachpruefungsdaten();
-		if ((obj.moegliche !== undefined) && (obj.moegliche !== null)) {
+		if (obj.moegliche !== undefined) {
 			for (const elem of obj.moegliche) {
-				result.moegliche?.add(elem);
+				result.moegliche.add(elem);
 			}
 		}
-		if ((obj.pruefungen !== undefined) && (obj.pruefungen !== null)) {
+		if (obj.pruefungen !== undefined) {
 			for (const elem of obj.pruefungen) {
-				result.pruefungen?.add(SchuelerLernabschnittNachpruefung.transpilerFromJSON(JSON.stringify(elem)));
+				result.pruefungen.add(SchuelerLernabschnittNachpruefung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -46,9 +46,30 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerLernabschnittNachpruefungsdaten) : string {
 		let result = '{';
-		if (!obj.moegliche) {
-			result += '"moegliche" : []';
-		} else {
+		result += '"moegliche" : [ ';
+		for (let i = 0; i < obj.moegliche.size(); i++) {
+			const elem = obj.moegliche.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.moegliche.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"pruefungen" : [ ';
+		for (let i = 0; i < obj.pruefungen.size(); i++) {
+			const elem = obj.pruefungen.get(i);
+			result += SchuelerLernabschnittNachpruefung.transpilerToJSON(elem);
+			if (i < obj.pruefungen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefungsdaten>) : string {
+		let result = '{';
+		if (obj.moegliche !== undefined) {
 			result += '"moegliche" : [ ';
 			for (let i = 0; i < obj.moegliche.size(); i++) {
 				const elem = obj.moegliche.get(i);
@@ -58,9 +79,7 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.pruefungen) {
-			result += '"pruefungen" : []';
-		} else {
+		if (obj.pruefungen !== undefined) {
 			result += '"pruefungen" : [ ';
 			for (let i = 0; i < obj.pruefungen.size(); i++) {
 				const elem = obj.pruefungen.get(i);
@@ -69,41 +88,6 @@ export class SchuelerLernabschnittNachpruefungsdaten extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<SchuelerLernabschnittNachpruefungsdaten>) : string {
-		let result = '{';
-		if (obj.moegliche !== undefined) {
-			if (!obj.moegliche) {
-				result += '"moegliche" : []';
-			} else {
-				result += '"moegliche" : [ ';
-				for (let i = 0; i < obj.moegliche.size(); i++) {
-					const elem = obj.moegliche.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.moegliche.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.pruefungen !== undefined) {
-			if (!obj.pruefungen) {
-				result += '"pruefungen" : []';
-			} else {
-				result += '"pruefungen" : [ ';
-				for (let i = 0; i < obj.pruefungen.size(); i++) {
-					const elem = obj.pruefungen.get(i);
-					result += SchuelerLernabschnittNachpruefung.transpilerToJSON(elem);
-					if (i < obj.pruefungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

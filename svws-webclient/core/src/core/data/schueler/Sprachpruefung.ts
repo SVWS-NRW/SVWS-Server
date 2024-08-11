@@ -81,32 +81,32 @@ export class Sprachpruefung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Sprachpruefung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Sprachpruefung>;
 		const result = new Sprachpruefung();
 		if (obj.sprache === undefined)
-			 throw new Error('invalid json format, missing attribute sprache');
+			throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
 		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		result.anspruchsniveauId = (obj.anspruchsniveauId === undefined) ? null : obj.anspruchsniveauId === null ? null : obj.anspruchsniveauId;
 		result.pruefungsdatum = (obj.pruefungsdatum === undefined) ? null : obj.pruefungsdatum === null ? null : obj.pruefungsdatum;
 		result.ersetzteSprache = (obj.ersetzteSprache === undefined) ? null : obj.ersetzteSprache === null ? null : obj.ersetzteSprache;
 		if (obj.istHSUPruefung === undefined)
-			 throw new Error('invalid json format, missing attribute istHSUPruefung');
+			throw new Error('invalid json format, missing attribute istHSUPruefung');
 		result.istHSUPruefung = obj.istHSUPruefung;
 		if (obj.istFeststellungspruefung === undefined)
-			 throw new Error('invalid json format, missing attribute istFeststellungspruefung');
+			throw new Error('invalid json format, missing attribute istFeststellungspruefung');
 		result.istFeststellungspruefung = obj.istFeststellungspruefung;
 		if (obj.kannErstePflichtfremdspracheErsetzen === undefined)
-			 throw new Error('invalid json format, missing attribute kannErstePflichtfremdspracheErsetzen');
+			throw new Error('invalid json format, missing attribute kannErstePflichtfremdspracheErsetzen');
 		result.kannErstePflichtfremdspracheErsetzen = obj.kannErstePflichtfremdspracheErsetzen;
 		if (obj.kannZweitePflichtfremdspracheErsetzen === undefined)
-			 throw new Error('invalid json format, missing attribute kannZweitePflichtfremdspracheErsetzen');
+			throw new Error('invalid json format, missing attribute kannZweitePflichtfremdspracheErsetzen');
 		result.kannZweitePflichtfremdspracheErsetzen = obj.kannZweitePflichtfremdspracheErsetzen;
 		if (obj.kannWahlpflichtfremdspracheErsetzen === undefined)
-			 throw new Error('invalid json format, missing attribute kannWahlpflichtfremdspracheErsetzen');
+			throw new Error('invalid json format, missing attribute kannWahlpflichtfremdspracheErsetzen');
 		result.kannWahlpflichtfremdspracheErsetzen = obj.kannWahlpflichtfremdspracheErsetzen;
 		if (obj.kannBelegungAlsFortgefuehrteSpracheErlauben === undefined)
-			 throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
+			throw new Error('invalid json format, missing attribute kannBelegungAlsFortgefuehrteSpracheErlauben');
 		result.kannBelegungAlsFortgefuehrteSpracheErlauben = obj.kannBelegungAlsFortgefuehrteSpracheErlauben;
 		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
 		result.note = (obj.note === undefined) ? null : obj.note === null ? null : obj.note;
@@ -115,19 +115,19 @@ export class Sprachpruefung extends JavaObject {
 
 	public static transpilerToJSON(obj : Sprachpruefung) : string {
 		let result = '{';
-		result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
+		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
 		result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
 		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
-		result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
-		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
-		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
-		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
-		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
-		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
+		result += '"istHSUPruefung" : ' + obj.istHSUPruefung.toString() + ',';
+		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung.toString() + ',';
+		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen.toString() + ',';
+		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen.toString() + ',';
+		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen.toString() + ',';
+		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben.toString() + ',';
 		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
+		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -136,13 +136,13 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachpruefung>) : string {
 		let result = '{';
 		if (obj.sprache !== undefined) {
-			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
+			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.anspruchsniveauId !== undefined) {
-			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId) + ',';
+			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
 		}
 		if (obj.pruefungsdatum !== undefined) {
 			result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
@@ -151,28 +151,28 @@ export class Sprachpruefung extends JavaObject {
 			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
 		}
 		if (obj.istHSUPruefung !== undefined) {
-			result += '"istHSUPruefung" : ' + obj.istHSUPruefung + ',';
+			result += '"istHSUPruefung" : ' + obj.istHSUPruefung.toString() + ',';
 		}
 		if (obj.istFeststellungspruefung !== undefined) {
-			result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung + ',';
+			result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung.toString() + ',';
 		}
 		if (obj.kannErstePflichtfremdspracheErsetzen !== undefined) {
-			result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen + ',';
+			result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen.toString() + ',';
 		}
 		if (obj.kannZweitePflichtfremdspracheErsetzen !== undefined) {
-			result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen + ',';
+			result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen.toString() + ',';
 		}
 		if (obj.kannWahlpflichtfremdspracheErsetzen !== undefined) {
-			result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen + ',';
+			result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen.toString() + ',';
 		}
 		if (obj.kannBelegungAlsFortgefuehrteSpracheErlauben !== undefined) {
-			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben + ',';
+			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben.toString() + ',';
 		}
 		if (obj.referenzniveau !== undefined) {
 			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note) + ',';
+			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

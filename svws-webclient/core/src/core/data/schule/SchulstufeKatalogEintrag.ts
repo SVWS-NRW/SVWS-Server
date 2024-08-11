@@ -73,22 +73,22 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	}
 
 	public static transpilerFromJSON(json : string): SchulstufeKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchulstufeKatalogEintrag>;
 		const result = new SchulstufeKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
+		if (obj.schulformen !== undefined) {
 			for (const elem of obj.schulformen) {
-				result.schulformen?.add(elem);
+				result.schulformen.add(elem);
 			}
 		}
 		return result;
@@ -96,23 +96,19 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : SchulstufeKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		if (!obj.schulformen) {
-			result += '"schulformen" : []';
-		} else {
-			result += '"schulformen" : [ ';
-			for (let i = 0; i < obj.schulformen.size(); i++) {
-				const elem = obj.schulformen.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.schulformen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"schulformen" : [ ';
+		for (let i = 0; i < obj.schulformen.size(); i++) {
+			const elem = obj.schulformen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.schulformen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -121,33 +117,29 @@ export class SchulstufeKatalogEintrag extends CoreTypeData {
 	public static transpilerToJSONPatch(obj : Partial<SchulstufeKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.schulformen !== undefined) {
-			if (!obj.schulformen) {
-				result += '"schulformen" : []';
-			} else {
-				result += '"schulformen" : [ ';
-				for (let i = 0; i < obj.schulformen.size(); i++) {
-					const elem = obj.schulformen.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.schulformen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schulformen" : [ ';
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.schulformen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

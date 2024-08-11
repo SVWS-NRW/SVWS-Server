@@ -31,25 +31,25 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdatenLehrerfunktion {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdatenLehrerfunktion>;
 		const result = new LehrerPersonalabschnittsdatenLehrerfunktion();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idAbschnittsdaten === undefined)
-			 throw new Error('invalid json format, missing attribute idAbschnittsdaten');
+			throw new Error('invalid json format, missing attribute idAbschnittsdaten');
 		result.idAbschnittsdaten = obj.idAbschnittsdaten;
 		if (obj.idFunktion === undefined)
-			 throw new Error('invalid json format, missing attribute idFunktion');
+			throw new Error('invalid json format, missing attribute idFunktion');
 		result.idFunktion = obj.idFunktion;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : LehrerPersonalabschnittsdatenLehrerfunktion) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
-		result += '"idFunktion" : ' + obj.idFunktion + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
+		result += '"idFunktion" : ' + obj.idFunktion.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdatenLehrerfunktion>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idAbschnittsdaten !== undefined) {
-			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten + ',';
+			result += '"idAbschnittsdaten" : ' + obj.idAbschnittsdaten.toString() + ',';
 		}
 		if (obj.idFunktion !== undefined) {
-			result += '"idFunktion" : ' + obj.idFunktion + ',';
+			result += '"idFunktion" : ' + obj.idFunktion.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

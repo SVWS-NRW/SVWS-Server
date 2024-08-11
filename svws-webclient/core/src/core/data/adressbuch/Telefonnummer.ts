@@ -26,21 +26,21 @@ export class Telefonnummer extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Telefonnummer {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Telefonnummer>;
 		const result = new Telefonnummer();
 		if (obj.type === undefined)
-			 throw new Error('invalid json format, missing attribute type');
+			throw new Error('invalid json format, missing attribute type');
 		result.type = obj.type;
 		if (obj.number === undefined)
-			 throw new Error('invalid json format, missing attribute number');
+			throw new Error('invalid json format, missing attribute number');
 		result.number = obj.number;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Telefonnummer) : string {
 		let result = '{';
-		result += '"type" : ' + JSON.stringify(obj.type!) + ',';
-		result += '"number" : ' + JSON.stringify(obj.number!) + ',';
+		result += '"type" : ' + JSON.stringify(obj.type) + ',';
+		result += '"number" : ' + JSON.stringify(obj.number) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -49,10 +49,10 @@ export class Telefonnummer extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Telefonnummer>) : string {
 		let result = '{';
 		if (obj.type !== undefined) {
-			result += '"type" : ' + JSON.stringify(obj.type!) + ',';
+			result += '"type" : ' + JSON.stringify(obj.type) + ',';
 		}
 		if (obj.number !== undefined) {
-			result += '"number" : ' + JSON.stringify(obj.number!) + ',';
+			result += '"number" : ' + JSON.stringify(obj.number) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

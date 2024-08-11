@@ -146,10 +146,10 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchultraegerKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchultraegerKatalogEintrag>;
 		const result = new SchultraegerKatalogEintrag();
 		if (obj.SchulNr === undefined)
-			 throw new Error('invalid json format, missing attribute SchulNr');
+			throw new Error('invalid json format, missing attribute SchulNr');
 		result.SchulNr = obj.SchulNr;
 		result.RegSchl = (obj.RegSchl === undefined) ? null : obj.RegSchl === null ? null : obj.RegSchl;
 		result.KoRe = (obj.KoRe === undefined) ? null : obj.KoRe === null ? null : obj.KoRe;
@@ -181,7 +181,7 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchultraegerKatalogEintrag) : string {
 		let result = '{';
-		result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
+		result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr) + ',';
 		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		result += '"KoRe" : ' + ((!obj.KoRe) ? 'null' : JSON.stringify(obj.KoRe)) + ',';
 		result += '"KoHo" : ' + ((!obj.KoHo) ? 'null' : JSON.stringify(obj.KoHo)) + ',';
@@ -196,17 +196,17 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 		result += '"SF" : ' + ((!obj.SF) ? 'null' : JSON.stringify(obj.SF)) + ',';
 		result += '"OeffPri" : ' + ((!obj.OeffPri) ? 'null' : JSON.stringify(obj.OeffPri)) + ',';
 		result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
-		result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
+		result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl.toString()) + ',';
 		result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
-		result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD) + ',';
-		result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS) + ',';
+		result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
+		result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
 		result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
 		result += '"SchultraegerNr" : ' + ((!obj.SchultraegerNr) ? 'null' : JSON.stringify(obj.SchultraegerNr)) + ',';
 		result += '"Schulgliederung" : ' + ((!obj.Schulgliederung) ? 'null' : JSON.stringify(obj.Schulgliederung)) + ',';
 		result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
-		result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv.toString()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -215,7 +215,7 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchultraegerKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.SchulNr !== undefined) {
-			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr!) + ',';
+			result += '"SchulNr" : ' + JSON.stringify(obj.SchulNr) + ',';
 		}
 		if (obj.RegSchl !== undefined) {
 			result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
@@ -260,16 +260,16 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 			result += '"KurzBez" : ' + ((!obj.KurzBez) ? 'null' : JSON.stringify(obj.KurzBez)) + ',';
 		}
 		if (obj.SchBetrSchl !== undefined) {
-			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl) + ',';
+			result += '"SchBetrSchl" : ' + ((!obj.SchBetrSchl) ? 'null' : obj.SchBetrSchl.toString()) + ',';
 		}
 		if (obj.SchBetrSchlDatum !== undefined) {
 			result += '"SchBetrSchlDatum" : ' + ((!obj.SchBetrSchlDatum) ? 'null' : JSON.stringify(obj.SchBetrSchlDatum)) + ',';
 		}
 		if (obj.SchuelerZahlASD !== undefined) {
-			result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD) + ',';
+			result += '"SchuelerZahlASD" : ' + ((!obj.SchuelerZahlASD) ? 'null' : obj.SchuelerZahlASD.toString()) + ',';
 		}
 		if (obj.SchuelerZahlVS !== undefined) {
-			result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS) + ',';
+			result += '"SchuelerZahlVS" : ' + ((!obj.SchuelerZahlVS) ? 'null' : obj.SchuelerZahlVS.toString()) + ',';
 		}
 		if (obj.ArtDerTraegerschaft !== undefined) {
 			result += '"ArtDerTraegerschaft" : ' + ((!obj.ArtDerTraegerschaft) ? 'null' : JSON.stringify(obj.ArtDerTraegerschaft)) + ',';
@@ -284,13 +284,13 @@ export class SchultraegerKatalogEintrag extends JavaObject {
 			result += '"Ganztagsbetrieb" : ' + ((!obj.Ganztagsbetrieb) ? 'null' : JSON.stringify(obj.Ganztagsbetrieb)) + ',';
 		}
 		if (obj.Aktiv !== undefined) {
-			result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv) + ',';
+			result += '"Aktiv" : ' + ((!obj.Aktiv) ? 'null' : obj.Aktiv.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

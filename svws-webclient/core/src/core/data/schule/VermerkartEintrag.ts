@@ -41,33 +41,33 @@ export class VermerkartEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): VermerkartEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<VermerkartEintrag>;
 		const result = new VermerkartEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (obj.istSichtbar === undefined)
-			 throw new Error('invalid json format, missing attribute istSichtbar');
+			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		if (obj.anzahlVermerke === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlVermerke');
+			throw new Error('invalid json format, missing attribute anzahlVermerke');
 		result.anzahlVermerke = obj.anzahlVermerke;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : VermerkartEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
-		result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
+		result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,19 +76,19 @@ export class VermerkartEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<VermerkartEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.anzahlVermerke !== undefined) {
-			result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
+			result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

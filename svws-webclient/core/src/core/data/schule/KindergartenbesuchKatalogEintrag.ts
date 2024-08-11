@@ -74,16 +74,16 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KindergartenbesuchKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KindergartenbesuchKatalogEintrag>;
 		const result = new KindergartenbesuchKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -92,11 +92,11 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KindergartenbesuchKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + obj.kuerzel + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + obj.kuerzel.toString() + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -105,19 +105,19 @@ export class KindergartenbesuchKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KindergartenbesuchKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + obj.kuerzel + ',';
+			result += '"kuerzel" : ' + obj.kuerzel.toString() + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

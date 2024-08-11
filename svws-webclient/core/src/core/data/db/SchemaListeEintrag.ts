@@ -51,41 +51,41 @@ export class SchemaListeEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchemaListeEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchemaListeEintrag>;
 		const result = new SchemaListeEintrag();
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.username === undefined)
-			 throw new Error('invalid json format, missing attribute username');
+			throw new Error('invalid json format, missing attribute username');
 		result.username = obj.username;
 		if (obj.isSVWS === undefined)
-			 throw new Error('invalid json format, missing attribute isSVWS');
+			throw new Error('invalid json format, missing attribute isSVWS');
 		result.isSVWS = obj.isSVWS;
 		if (obj.revision === undefined)
-			 throw new Error('invalid json format, missing attribute revision');
+			throw new Error('invalid json format, missing attribute revision');
 		result.revision = obj.revision;
 		if (obj.isTainted === undefined)
-			 throw new Error('invalid json format, missing attribute isTainted');
+			throw new Error('invalid json format, missing attribute isTainted');
 		result.isTainted = obj.isTainted;
 		if (obj.isInConfig === undefined)
-			 throw new Error('invalid json format, missing attribute isInConfig');
+			throw new Error('invalid json format, missing attribute isInConfig');
 		result.isInConfig = obj.isInConfig;
 		if (obj.isDeactivated === undefined)
-			 throw new Error('invalid json format, missing attribute isDeactivated');
+			throw new Error('invalid json format, missing attribute isDeactivated');
 		result.isDeactivated = obj.isDeactivated;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchemaListeEintrag) : string {
 		let result = '{';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"username" : ' + JSON.stringify(obj.username!) + ',';
-		result += '"isSVWS" : ' + obj.isSVWS + ',';
-		result += '"revision" : ' + obj.revision + ',';
-		result += '"isTainted" : ' + obj.isTainted + ',';
-		result += '"isInConfig" : ' + obj.isInConfig + ',';
-		result += '"isDeactivated" : ' + obj.isDeactivated + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"username" : ' + JSON.stringify(obj.username) + ',';
+		result += '"isSVWS" : ' + obj.isSVWS.toString() + ',';
+		result += '"revision" : ' + obj.revision.toString() + ',';
+		result += '"isTainted" : ' + obj.isTainted.toString() + ',';
+		result += '"isInConfig" : ' + obj.isInConfig.toString() + ',';
+		result += '"isDeactivated" : ' + obj.isDeactivated.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,25 +94,25 @@ export class SchemaListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchemaListeEintrag>) : string {
 		let result = '{';
 		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.username !== undefined) {
-			result += '"username" : ' + JSON.stringify(obj.username!) + ',';
+			result += '"username" : ' + JSON.stringify(obj.username) + ',';
 		}
 		if (obj.isSVWS !== undefined) {
-			result += '"isSVWS" : ' + obj.isSVWS + ',';
+			result += '"isSVWS" : ' + obj.isSVWS.toString() + ',';
 		}
 		if (obj.revision !== undefined) {
-			result += '"revision" : ' + obj.revision + ',';
+			result += '"revision" : ' + obj.revision.toString() + ',';
 		}
 		if (obj.isTainted !== undefined) {
-			result += '"isTainted" : ' + obj.isTainted + ',';
+			result += '"isTainted" : ' + obj.isTainted.toString() + ',';
 		}
 		if (obj.isInConfig !== undefined) {
-			result += '"isInConfig" : ' + obj.isInConfig + ',';
+			result += '"isInConfig" : ' + obj.isInConfig.toString() + ',';
 		}
 		if (obj.isDeactivated !== undefined) {
-			result += '"isDeactivated" : ' + obj.isDeactivated + ',';
+			result += '"isDeactivated" : ' + obj.isDeactivated.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

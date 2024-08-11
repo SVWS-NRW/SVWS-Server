@@ -51,13 +51,13 @@ export class ErzieherListeEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ErzieherListeEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ErzieherListeEintrag>;
 		const result = new ErzieherListeEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idSchueler === undefined)
-			 throw new Error('invalid json format, missing attribute idSchueler');
+			throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		result.idErzieherArt = (obj.idErzieherArt === undefined) ? null : obj.idErzieherArt === null ? null : obj.idErzieherArt;
 		result.anrede = (obj.anrede === undefined) ? null : obj.anrede === null ? null : obj.anrede;
@@ -69,9 +69,9 @@ export class ErzieherListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : ErzieherListeEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.toString()) + ',';
 		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
@@ -84,13 +84,13 @@ export class ErzieherListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ErzieherListeEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idSchueler !== undefined) {
-			result += '"idSchueler" : ' + obj.idSchueler + ',';
+			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.idErzieherArt !== undefined) {
-			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
+			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.toString()) + ',';
 		}
 		if (obj.anrede !== undefined) {
 			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';

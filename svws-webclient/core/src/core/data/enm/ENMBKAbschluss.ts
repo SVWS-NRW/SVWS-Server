@@ -84,39 +84,39 @@ export class ENMBKAbschluss extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMBKAbschluss {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMBKAbschluss>;
 		const result = new ENMBKAbschluss();
 		if (obj.hatZulassung === undefined)
-			 throw new Error('invalid json format, missing attribute hatZulassung');
+			throw new Error('invalid json format, missing attribute hatZulassung');
 		result.hatZulassung = obj.hatZulassung;
 		if (obj.hatBestanden === undefined)
-			 throw new Error('invalid json format, missing attribute hatBestanden');
+			throw new Error('invalid json format, missing attribute hatBestanden');
 		result.hatBestanden = obj.hatBestanden;
 		if (obj.hatZulassungErweiterteBeruflicheKenntnisse === undefined)
-			 throw new Error('invalid json format, missing attribute hatZulassungErweiterteBeruflicheKenntnisse');
+			throw new Error('invalid json format, missing attribute hatZulassungErweiterteBeruflicheKenntnisse');
 		result.hatZulassungErweiterteBeruflicheKenntnisse = obj.hatZulassungErweiterteBeruflicheKenntnisse;
 		if (obj.hatErworbenErweiterteBeruflicheKenntnisse === undefined)
-			 throw new Error('invalid json format, missing attribute hatErworbenErweiterteBeruflicheKenntnisse');
+			throw new Error('invalid json format, missing attribute hatErworbenErweiterteBeruflicheKenntnisse');
 		result.hatErworbenErweiterteBeruflicheKenntnisse = obj.hatErworbenErweiterteBeruflicheKenntnisse;
 		result.notePraktischePruefung = (obj.notePraktischePruefung === undefined) ? null : obj.notePraktischePruefung === null ? null : obj.notePraktischePruefung;
 		result.noteKolloqium = (obj.noteKolloqium === undefined) ? null : obj.noteKolloqium === null ? null : obj.noteKolloqium;
 		if (obj.hatZulassungBerufsabschlusspruefung === undefined)
-			 throw new Error('invalid json format, missing attribute hatZulassungBerufsabschlusspruefung');
+			throw new Error('invalid json format, missing attribute hatZulassungBerufsabschlusspruefung');
 		result.hatZulassungBerufsabschlusspruefung = obj.hatZulassungBerufsabschlusspruefung;
 		if (obj.hatBestandenBerufsabschlusspruefung === undefined)
-			 throw new Error('invalid json format, missing attribute hatBestandenBerufsabschlusspruefung');
+			throw new Error('invalid json format, missing attribute hatBestandenBerufsabschlusspruefung');
 		result.hatBestandenBerufsabschlusspruefung = obj.hatBestandenBerufsabschlusspruefung;
 		result.themaAbschlussarbeit = (obj.themaAbschlussarbeit === undefined) ? null : obj.themaAbschlussarbeit === null ? null : obj.themaAbschlussarbeit;
 		if (obj.istVorhandenBerufsabschlusspruefung === undefined)
-			 throw new Error('invalid json format, missing attribute istVorhandenBerufsabschlusspruefung');
+			throw new Error('invalid json format, missing attribute istVorhandenBerufsabschlusspruefung');
 		result.istVorhandenBerufsabschlusspruefung = obj.istVorhandenBerufsabschlusspruefung;
 		result.noteFachpraxis = (obj.noteFachpraxis === undefined) ? null : obj.noteFachpraxis === null ? null : obj.noteFachpraxis;
 		if (obj.istFachpraktischerTeilAusreichend === undefined)
-			 throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
+			throw new Error('invalid json format, missing attribute istFachpraktischerTeilAusreichend');
 		result.istFachpraktischerTeilAusreichend = obj.istFachpraktischerTeilAusreichend;
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(ENMBKFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(ENMBKFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -124,30 +124,26 @@ export class ENMBKAbschluss extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMBKAbschluss) : string {
 		let result = '{';
-		result += '"hatZulassung" : ' + obj.hatZulassung + ',';
-		result += '"hatBestanden" : ' + obj.hatBestanden + ',';
-		result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse + ',';
-		result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse + ',';
+		result += '"hatZulassung" : ' + obj.hatZulassung.toString() + ',';
+		result += '"hatBestanden" : ' + obj.hatBestanden.toString() + ',';
+		result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse.toString() + ',';
+		result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse.toString() + ',';
 		result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
 		result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
-		result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung + ',';
-		result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung + ',';
+		result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung.toString() + ',';
+		result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung.toString() + ',';
 		result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
-		result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung + ',';
+		result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung.toString() + ',';
 		result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
-		result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend + ',';
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
-			result += '"faecher" : [ ';
-			for (let i = 0; i < obj.faecher.size(); i++) {
-				const elem = obj.faecher.get(i);
-				result += ENMBKFach.transpilerToJSON(elem);
-				if (i < obj.faecher.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend.toString() + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += ENMBKFach.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -156,16 +152,16 @@ export class ENMBKAbschluss extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMBKAbschluss>) : string {
 		let result = '{';
 		if (obj.hatZulassung !== undefined) {
-			result += '"hatZulassung" : ' + obj.hatZulassung + ',';
+			result += '"hatZulassung" : ' + obj.hatZulassung.toString() + ',';
 		}
 		if (obj.hatBestanden !== undefined) {
-			result += '"hatBestanden" : ' + obj.hatBestanden + ',';
+			result += '"hatBestanden" : ' + obj.hatBestanden.toString() + ',';
 		}
 		if (obj.hatZulassungErweiterteBeruflicheKenntnisse !== undefined) {
-			result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse + ',';
+			result += '"hatZulassungErweiterteBeruflicheKenntnisse" : ' + obj.hatZulassungErweiterteBeruflicheKenntnisse.toString() + ',';
 		}
 		if (obj.hatErworbenErweiterteBeruflicheKenntnisse !== undefined) {
-			result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse + ',';
+			result += '"hatErworbenErweiterteBeruflicheKenntnisse" : ' + obj.hatErworbenErweiterteBeruflicheKenntnisse.toString() + ',';
 		}
 		if (obj.notePraktischePruefung !== undefined) {
 			result += '"notePraktischePruefung" : ' + ((!obj.notePraktischePruefung) ? 'null' : JSON.stringify(obj.notePraktischePruefung)) + ',';
@@ -174,36 +170,32 @@ export class ENMBKAbschluss extends JavaObject {
 			result += '"noteKolloqium" : ' + ((!obj.noteKolloqium) ? 'null' : JSON.stringify(obj.noteKolloqium)) + ',';
 		}
 		if (obj.hatZulassungBerufsabschlusspruefung !== undefined) {
-			result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung + ',';
+			result += '"hatZulassungBerufsabschlusspruefung" : ' + obj.hatZulassungBerufsabschlusspruefung.toString() + ',';
 		}
 		if (obj.hatBestandenBerufsabschlusspruefung !== undefined) {
-			result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung + ',';
+			result += '"hatBestandenBerufsabschlusspruefung" : ' + obj.hatBestandenBerufsabschlusspruefung.toString() + ',';
 		}
 		if (obj.themaAbschlussarbeit !== undefined) {
 			result += '"themaAbschlussarbeit" : ' + ((!obj.themaAbschlussarbeit) ? 'null' : JSON.stringify(obj.themaAbschlussarbeit)) + ',';
 		}
 		if (obj.istVorhandenBerufsabschlusspruefung !== undefined) {
-			result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung + ',';
+			result += '"istVorhandenBerufsabschlusspruefung" : ' + obj.istVorhandenBerufsabschlusspruefung.toString() + ',';
 		}
 		if (obj.noteFachpraxis !== undefined) {
 			result += '"noteFachpraxis" : ' + ((!obj.noteFachpraxis) ? 'null' : JSON.stringify(obj.noteFachpraxis)) + ',';
 		}
 		if (obj.istFachpraktischerTeilAusreichend !== undefined) {
-			result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend + ',';
+			result += '"istFachpraktischerTeilAusreichend" : ' + obj.istFachpraktischerTeilAusreichend.toString() + ',';
 		}
 		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += ENMBKFach.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"faecher" : [ ';
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
+				result += ENMBKFach.transpilerToJSON(elem);
+				if (i < obj.faecher.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

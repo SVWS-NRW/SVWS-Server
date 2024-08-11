@@ -64,37 +64,37 @@ export class BenutzerDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerDaten>;
 		const result = new BenutzerDaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.typ === undefined)
-			 throw new Error('invalid json format, missing attribute typ');
+			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
 		if (obj.typID === undefined)
-			 throw new Error('invalid json format, missing attribute typID');
+			throw new Error('invalid json format, missing attribute typID');
 		result.typID = obj.typID;
 		if (obj.anzeigename === undefined)
-			 throw new Error('invalid json format, missing attribute anzeigename');
+			throw new Error('invalid json format, missing attribute anzeigename');
 		result.anzeigename = obj.anzeigename;
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.istAdmin === undefined)
-			 throw new Error('invalid json format, missing attribute istAdmin');
+			throw new Error('invalid json format, missing attribute istAdmin');
 		result.istAdmin = obj.istAdmin;
 		if (obj.idCredentials === undefined)
-			 throw new Error('invalid json format, missing attribute idCredentials');
+			throw new Error('invalid json format, missing attribute idCredentials');
 		result.idCredentials = obj.idCredentials;
-		if ((obj.gruppen !== undefined) && (obj.gruppen !== null)) {
+		if (obj.gruppen !== undefined) {
 			for (const elem of obj.gruppen) {
-				result.gruppen?.add(BenutzergruppeDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.gruppen.add(BenutzergruppeDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kompetenzen !== undefined) && (obj.kompetenzen !== null)) {
+		if (obj.kompetenzen !== undefined) {
 			for (const elem of obj.kompetenzen) {
-				result.kompetenzen?.add(elem);
+				result.kompetenzen.add(elem);
 			}
 		}
 		return result;
@@ -102,16 +102,58 @@ export class BenutzerDaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BenutzerDaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"typ" : ' + obj.typ + ',';
-		result += '"typID" : ' + obj.typID + ',';
-		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"istAdmin" : ' + obj.istAdmin + ',';
-		result += '"idCredentials" : ' + obj.idCredentials + ',';
-		if (!obj.gruppen) {
-			result += '"gruppen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"typ" : ' + obj.typ.toString() + ',';
+		result += '"typID" : ' + obj.typID.toString() + ',';
+		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename) + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"istAdmin" : ' + obj.istAdmin.toString() + ',';
+		result += '"idCredentials" : ' + obj.idCredentials.toString() + ',';
+		result += '"gruppen" : [ ';
+		for (let i = 0; i < obj.gruppen.size(); i++) {
+			const elem = obj.gruppen.get(i);
+			result += BenutzergruppeDaten.transpilerToJSON(elem);
+			if (i < obj.gruppen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kompetenzen" : [ ';
+		for (let i = 0; i < obj.kompetenzen.size(); i++) {
+			const elem = obj.kompetenzen.get(i);
+			result += elem.toString();
+			if (i < obj.kompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<BenutzerDaten>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.typ !== undefined) {
+			result += '"typ" : ' + obj.typ.toString() + ',';
+		}
+		if (obj.typID !== undefined) {
+			result += '"typID" : ' + obj.typID.toString() + ',';
+		}
+		if (obj.anzeigename !== undefined) {
+			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename) + ',';
+		}
+		if (obj.name !== undefined) {
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		}
+		if (obj.istAdmin !== undefined) {
+			result += '"istAdmin" : ' + obj.istAdmin.toString() + ',';
+		}
+		if (obj.idCredentials !== undefined) {
+			result += '"idCredentials" : ' + obj.idCredentials.toString() + ',';
+		}
+		if (obj.gruppen !== undefined) {
 			result += '"gruppen" : [ ';
 			for (let i = 0; i < obj.gruppen.size(); i++) {
 				const elem = obj.gruppen.get(i);
@@ -121,73 +163,15 @@ export class BenutzerDaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kompetenzen) {
-			result += '"kompetenzen" : []';
-		} else {
+		if (obj.kompetenzen !== undefined) {
 			result += '"kompetenzen" : [ ';
 			for (let i = 0; i < obj.kompetenzen.size(); i++) {
 				const elem = obj.kompetenzen.get(i);
-				result += elem;
+				result += elem.toString();
 				if (i < obj.kompetenzen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<BenutzerDaten>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.typ !== undefined) {
-			result += '"typ" : ' + obj.typ + ',';
-		}
-		if (obj.typID !== undefined) {
-			result += '"typID" : ' + obj.typID + ',';
-		}
-		if (obj.anzeigename !== undefined) {
-			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
-		}
-		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		}
-		if (obj.istAdmin !== undefined) {
-			result += '"istAdmin" : ' + obj.istAdmin + ',';
-		}
-		if (obj.idCredentials !== undefined) {
-			result += '"idCredentials" : ' + obj.idCredentials + ',';
-		}
-		if (obj.gruppen !== undefined) {
-			if (!obj.gruppen) {
-				result += '"gruppen" : []';
-			} else {
-				result += '"gruppen" : [ ';
-				for (let i = 0; i < obj.gruppen.size(); i++) {
-					const elem = obj.gruppen.get(i);
-					result += BenutzergruppeDaten.transpilerToJSON(elem);
-					if (i < obj.gruppen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kompetenzen !== undefined) {
-			if (!obj.kompetenzen) {
-				result += '"kompetenzen" : []';
-			} else {
-				result += '"kompetenzen" : [ ';
-				for (let i = 0; i < obj.kompetenzen.size(); i++) {
-					const elem = obj.kompetenzen.get(i);
-					result += elem;
-					if (i < obj.kompetenzen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

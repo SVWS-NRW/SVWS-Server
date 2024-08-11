@@ -58,65 +58,59 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisBewertung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisBewertung>;
 		const result = new GostBlockungsergebnisBewertung();
-		if ((obj.regelVerletzungen !== undefined) && (obj.regelVerletzungen !== null)) {
+		if (obj.regelVerletzungen !== undefined) {
 			for (const elem of obj.regelVerletzungen) {
-				result.regelVerletzungen?.add(elem);
+				result.regelVerletzungen.add(elem);
 			}
 		}
 		if (obj.anzahlKurseNichtZugeordnet === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlKurseNichtZugeordnet');
+			throw new Error('invalid json format, missing attribute anzahlKurseNichtZugeordnet');
 		result.anzahlKurseNichtZugeordnet = obj.anzahlKurseNichtZugeordnet;
 		if (obj.anzahlSchuelerNichtZugeordnet === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlSchuelerNichtZugeordnet');
+			throw new Error('invalid json format, missing attribute anzahlSchuelerNichtZugeordnet');
 		result.anzahlSchuelerNichtZugeordnet = obj.anzahlSchuelerNichtZugeordnet;
 		if (obj.anzahlSchuelerKollisionen === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlSchuelerKollisionen');
+			throw new Error('invalid json format, missing attribute anzahlSchuelerKollisionen');
 		result.anzahlSchuelerKollisionen = obj.anzahlSchuelerKollisionen;
 		if (obj.kursdifferenzMax === undefined)
-			 throw new Error('invalid json format, missing attribute kursdifferenzMax');
+			throw new Error('invalid json format, missing attribute kursdifferenzMax');
 		result.kursdifferenzMax = obj.kursdifferenzMax;
-		for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
-			result.kursdifferenzHistogramm[i] = obj.kursdifferenzHistogramm[i];
+		if (obj.kursdifferenzHistogramm !== undefined) {
+			for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+				result.kursdifferenzHistogramm[i] = obj.kursdifferenzHistogramm[i];
+			}
 		}
 		if (obj.anzahlKurseMitGleicherFachartProSchiene === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlKurseMitGleicherFachartProSchiene');
+			throw new Error('invalid json format, missing attribute anzahlKurseMitGleicherFachartProSchiene');
 		result.anzahlKurseMitGleicherFachartProSchiene = obj.anzahlKurseMitGleicherFachartProSchiene;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungsergebnisBewertung) : string {
 		let result = '{';
-		if (!obj.regelVerletzungen) {
-			result += '"regelVerletzungen" : []';
-		} else {
-			result += '"regelVerletzungen" : [ ';
-			for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
-				const elem = obj.regelVerletzungen.get(i);
-				result += elem;
-				if (i < obj.regelVerletzungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"regelVerletzungen" : [ ';
+		for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
+			const elem = obj.regelVerletzungen.get(i);
+			result += elem.toString();
+			if (i < obj.regelVerletzungen.size() - 1)
+				result += ',';
 		}
-		result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet + ',';
-		result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet + ',';
-		result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen + ',';
-		result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
-		if (!obj.kursdifferenzHistogramm) {
-			result += '"kursdifferenzHistogramm" : []';
-		} else {
-			result += '"kursdifferenzHistogramm" : [ ';
-			for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
-				const elem = obj.kursdifferenzHistogramm[i];
-				result += JSON.stringify(elem);
-				if (i < obj.kursdifferenzHistogramm.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet.toString() + ',';
+		result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet.toString() + ',';
+		result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen.toString() + ',';
+		result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax.toString() + ',';
+		result += '"kursdifferenzHistogramm" : [ ';
+		for (let i = 0; i < obj.kursdifferenzHistogramm.length; i++) {
+			const elem = obj.kursdifferenzHistogramm[i];
+			result += JSON.stringify(elem);
+			if (i < obj.kursdifferenzHistogramm.length - 1)
+				result += ',';
 		}
-		result += '"anzahlKurseMitGleicherFachartProSchiene" : ' + obj.anzahlKurseMitGleicherFachartProSchiene + ',';
+		result += ' ]' + ',';
+		result += '"anzahlKurseMitGleicherFachartProSchiene" : ' + obj.anzahlKurseMitGleicherFachartProSchiene.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -125,48 +119,40 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisBewertung>) : string {
 		let result = '{';
 		if (obj.regelVerletzungen !== undefined) {
-			if (!obj.regelVerletzungen) {
-				result += '"regelVerletzungen" : []';
-			} else {
-				result += '"regelVerletzungen" : [ ';
-				for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
-					const elem = obj.regelVerletzungen.get(i);
-					result += elem;
-					if (i < obj.regelVerletzungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"regelVerletzungen" : [ ';
+			for (let i = 0; i < obj.regelVerletzungen.size(); i++) {
+				const elem = obj.regelVerletzungen.get(i);
+				result += elem.toString();
+				if (i < obj.regelVerletzungen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.anzahlKurseNichtZugeordnet !== undefined) {
-			result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet + ',';
+			result += '"anzahlKurseNichtZugeordnet" : ' + obj.anzahlKurseNichtZugeordnet.toString() + ',';
 		}
 		if (obj.anzahlSchuelerNichtZugeordnet !== undefined) {
-			result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet + ',';
+			result += '"anzahlSchuelerNichtZugeordnet" : ' + obj.anzahlSchuelerNichtZugeordnet.toString() + ',';
 		}
 		if (obj.anzahlSchuelerKollisionen !== undefined) {
-			result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen + ',';
+			result += '"anzahlSchuelerKollisionen" : ' + obj.anzahlSchuelerKollisionen.toString() + ',';
 		}
 		if (obj.kursdifferenzMax !== undefined) {
-			result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax + ',';
+			result += '"kursdifferenzMax" : ' + obj.kursdifferenzMax.toString() + ',';
 		}
 		if (obj.kursdifferenzHistogramm !== undefined) {
 			const a = obj.kursdifferenzHistogramm;
-			if (!a) {
-				result += '"kursdifferenzHistogramm" : []';
-			} else {
-				result += '"kursdifferenzHistogramm" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += JSON.stringify(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kursdifferenzHistogramm" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.anzahlKurseMitGleicherFachartProSchiene !== undefined) {
-			result += '"anzahlKurseMitGleicherFachartProSchiene" : ' + obj.anzahlKurseMitGleicherFachartProSchiene + ',';
+			result += '"anzahlKurseMitGleicherFachartProSchiene" : ' + obj.anzahlKurseMitGleicherFachartProSchiene.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

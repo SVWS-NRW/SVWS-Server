@@ -67,10 +67,10 @@ export class ENMLernabschnitt extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMLernabschnitt {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMLernabschnitt>;
 		const result = new ENMLernabschnitt();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.fehlstundenGesamt = (obj.fehlstundenGesamt === undefined) ? null : obj.fehlstundenGesamt === null ? null : obj.fehlstundenGesamt;
 		result.tsFehlstundenGesamt = (obj.tsFehlstundenGesamt === undefined) ? null : obj.tsFehlstundenGesamt === null ? null : obj.tsFehlstundenGesamt;
@@ -86,10 +86,10 @@ export class ENMLernabschnitt extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMLernabschnitt) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
 		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
-		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
+		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
 		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
 		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
@@ -104,16 +104,16 @@ export class ENMLernabschnitt extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMLernabschnitt>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
-			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt) + ',';
+			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
 		}
 		if (obj.tsFehlstundenGesamt !== undefined) {
 			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
 		}
 		if (obj.fehlstundenGesamtUnentschuldigt !== undefined) {
-			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt) + ',';
+			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
 		}
 		if (obj.tsFehlstundenGesamtUnentschuldigt !== undefined) {
 			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';

@@ -59,25 +59,25 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftsartKatalogEintragBezeichnung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<HerkunftsartKatalogEintragBezeichnung>;
 		const result = new HerkunftsartKatalogEintragBezeichnung();
 		if (obj.schulform === undefined)
-			 throw new Error('invalid json format, missing attribute schulform');
+			throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		if (obj.kurzBezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute kurzBezeichnung');
+			throw new Error('invalid json format, missing attribute kurzBezeichnung');
 		result.kurzBezeichnung = obj.kurzBezeichnung;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : HerkunftsartKatalogEintragBezeichnung) : string {
 		let result = '{';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
-		result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
+		result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -86,13 +86,13 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<HerkunftsartKatalogEintragBezeichnung>) : string {
 		let result = '{';
 		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.kurzBezeichnung !== undefined) {
-			result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung!) + ',';
+			result += '"kurzBezeichnung" : ' + JSON.stringify(obj.kurzBezeichnung) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

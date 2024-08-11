@@ -70,10 +70,10 @@ export class GostLeistungen extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostLeistungen {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostLeistungen>;
 		const result = new GostLeistungen();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.aktuellesSchuljahr = (obj.aktuellesSchuljahr === undefined) ? null : obj.aktuellesSchuljahr === null ? null : obj.aktuellesSchuljahr;
 		result.aktuellerJahrgang = (obj.aktuellerJahrgang === undefined) ? null : obj.aktuellerJahrgang === null ? null : obj.aktuellerJahrgang;
@@ -82,12 +82,14 @@ export class GostLeistungen extends JavaObject {
 		result.projektkursThema = (obj.projektkursThema === undefined) ? null : obj.projektkursThema === null ? null : obj.projektkursThema;
 		result.projektkursLeitfach1Kuerzel = (obj.projektkursLeitfach1Kuerzel === undefined) ? null : obj.projektkursLeitfach1Kuerzel === null ? null : obj.projektkursLeitfach1Kuerzel;
 		result.projektkursLeitfach2Kuerzel = (obj.projektkursLeitfach2Kuerzel === undefined) ? null : obj.projektkursLeitfach2Kuerzel === null ? null : obj.projektkursLeitfach2Kuerzel;
-		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
-			result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
+		if (obj.bewertetesHalbjahr !== undefined) {
+			for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
+				result.bewertetesHalbjahr[i] = obj.bewertetesHalbjahr[i];
+			}
 		}
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(GostLeistungenFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(GostLeistungenFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -95,38 +97,30 @@ export class GostLeistungen extends JavaObject {
 
 	public static transpilerToJSON(obj : GostLeistungen) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
 		result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
 		result += '"sprachendaten" : ' + ((!obj.sprachendaten) ? 'null' : Sprachendaten.transpilerToJSON(obj.sprachendaten)) + ',';
 		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"projektkursThema" : ' + ((!obj.projektkursThema) ? 'null' : JSON.stringify(obj.projektkursThema)) + ',';
 		result += '"projektkursLeitfach1Kuerzel" : ' + ((!obj.projektkursLeitfach1Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach1Kuerzel)) + ',';
 		result += '"projektkursLeitfach2Kuerzel" : ' + ((!obj.projektkursLeitfach2Kuerzel) ? 'null' : JSON.stringify(obj.projektkursLeitfach2Kuerzel)) + ',';
-		if (!obj.bewertetesHalbjahr) {
-			result += '"bewertetesHalbjahr" : []';
-		} else {
-			result += '"bewertetesHalbjahr" : [ ';
-			for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
-				const elem = obj.bewertetesHalbjahr[i];
-				result += JSON.stringify(elem);
-				if (i < obj.bewertetesHalbjahr.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"bewertetesHalbjahr" : [ ';
+		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
+			const elem = obj.bewertetesHalbjahr[i];
+			result += JSON.stringify(elem);
+			if (i < obj.bewertetesHalbjahr.length - 1)
+				result += ',';
 		}
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
-			result += '"faecher" : [ ';
-			for (let i = 0; i < obj.faecher.size(); i++) {
-				const elem = obj.faecher.get(i);
-				result += GostLeistungenFachwahl.transpilerToJSON(elem);
-				if (i < obj.faecher.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += GostLeistungenFachwahl.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -135,10 +129,10 @@ export class GostLeistungen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungen>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.aktuellesSchuljahr !== undefined) {
-			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr) + ',';
+			result += '"aktuellesSchuljahr" : ' + ((!obj.aktuellesSchuljahr) ? 'null' : obj.aktuellesSchuljahr.toString()) + ',';
 		}
 		if (obj.aktuellerJahrgang !== undefined) {
 			result += '"aktuellerJahrgang" : ' + ((!obj.aktuellerJahrgang) ? 'null' : JSON.stringify(obj.aktuellerJahrgang)) + ',';
@@ -160,32 +154,24 @@ export class GostLeistungen extends JavaObject {
 		}
 		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;
-			if (!a) {
-				result += '"bewertetesHalbjahr" : []';
-			} else {
-				result += '"bewertetesHalbjahr" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += JSON.stringify(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"bewertetesHalbjahr" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += GostLeistungenFachwahl.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"faecher" : [ ';
+			for (let i = 0; i < obj.faecher.size(); i++) {
+				const elem = obj.faecher.get(i);
+				result += GostLeistungenFachwahl.transpilerToJSON(elem);
+				if (i < obj.faecher.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

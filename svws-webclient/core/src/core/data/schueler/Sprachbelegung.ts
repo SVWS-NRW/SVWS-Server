@@ -71,10 +71,10 @@ export class Sprachbelegung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Sprachbelegung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Sprachbelegung>;
 		const result = new Sprachbelegung();
 		if (obj.sprache === undefined)
-			 throw new Error('invalid json format, missing attribute sprache');
+			throw new Error('invalid json format, missing attribute sprache');
 		result.sprache = obj.sprache;
 		result.reihenfolge = (obj.reihenfolge === undefined) ? null : obj.reihenfolge === null ? null : obj.reihenfolge;
 		result.belegungVonJahrgang = (obj.belegungVonJahrgang === undefined) ? null : obj.belegungVonJahrgang === null ? null : obj.belegungVonJahrgang;
@@ -83,33 +83,33 @@ export class Sprachbelegung extends JavaObject {
 		result.belegungBisAbschnitt = (obj.belegungBisAbschnitt === undefined) ? null : obj.belegungBisAbschnitt === null ? null : obj.belegungBisAbschnitt;
 		result.referenzniveau = (obj.referenzniveau === undefined) ? null : obj.referenzniveau === null ? null : obj.referenzniveau;
 		if (obj.hatKleinesLatinum === undefined)
-			 throw new Error('invalid json format, missing attribute hatKleinesLatinum');
+			throw new Error('invalid json format, missing attribute hatKleinesLatinum');
 		result.hatKleinesLatinum = obj.hatKleinesLatinum;
 		if (obj.hatLatinum === undefined)
-			 throw new Error('invalid json format, missing attribute hatLatinum');
+			throw new Error('invalid json format, missing attribute hatLatinum');
 		result.hatLatinum = obj.hatLatinum;
 		if (obj.hatGraecum === undefined)
-			 throw new Error('invalid json format, missing attribute hatGraecum');
+			throw new Error('invalid json format, missing attribute hatGraecum');
 		result.hatGraecum = obj.hatGraecum;
 		if (obj.hatHebraicum === undefined)
-			 throw new Error('invalid json format, missing attribute hatHebraicum');
+			throw new Error('invalid json format, missing attribute hatHebraicum');
 		result.hatHebraicum = obj.hatHebraicum;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : Sprachbelegung) : string {
 		let result = '{';
-		result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
-		result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge) + ',';
+		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
+		result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge.toString()) + ',';
 		result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
-		result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt) + ',';
+		result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt.toString()) + ',';
 		result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
-		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
+		result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
 		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
-		result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum + ',';
-		result += '"hatLatinum" : ' + obj.hatLatinum + ',';
-		result += '"hatGraecum" : ' + obj.hatGraecum + ',';
-		result += '"hatHebraicum" : ' + obj.hatHebraicum + ',';
+		result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum.toString() + ',';
+		result += '"hatLatinum" : ' + obj.hatLatinum.toString() + ',';
+		result += '"hatGraecum" : ' + obj.hatGraecum.toString() + ',';
+		result += '"hatHebraicum" : ' + obj.hatHebraicum.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -118,37 +118,37 @@ export class Sprachbelegung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Sprachbelegung>) : string {
 		let result = '{';
 		if (obj.sprache !== undefined) {
-			result += '"sprache" : ' + JSON.stringify(obj.sprache!) + ',';
+			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		}
 		if (obj.reihenfolge !== undefined) {
-			result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge) + ',';
+			result += '"reihenfolge" : ' + ((!obj.reihenfolge) ? 'null' : obj.reihenfolge.toString()) + ',';
 		}
 		if (obj.belegungVonJahrgang !== undefined) {
 			result += '"belegungVonJahrgang" : ' + ((!obj.belegungVonJahrgang) ? 'null' : JSON.stringify(obj.belegungVonJahrgang)) + ',';
 		}
 		if (obj.belegungVonAbschnitt !== undefined) {
-			result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt) + ',';
+			result += '"belegungVonAbschnitt" : ' + ((!obj.belegungVonAbschnitt) ? 'null' : obj.belegungVonAbschnitt.toString()) + ',';
 		}
 		if (obj.belegungBisJahrgang !== undefined) {
 			result += '"belegungBisJahrgang" : ' + ((!obj.belegungBisJahrgang) ? 'null' : JSON.stringify(obj.belegungBisJahrgang)) + ',';
 		}
 		if (obj.belegungBisAbschnitt !== undefined) {
-			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt) + ',';
+			result += '"belegungBisAbschnitt" : ' + ((!obj.belegungBisAbschnitt) ? 'null' : obj.belegungBisAbschnitt.toString()) + ',';
 		}
 		if (obj.referenzniveau !== undefined) {
 			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (obj.hatKleinesLatinum !== undefined) {
-			result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum + ',';
+			result += '"hatKleinesLatinum" : ' + obj.hatKleinesLatinum.toString() + ',';
 		}
 		if (obj.hatLatinum !== undefined) {
-			result += '"hatLatinum" : ' + obj.hatLatinum + ',';
+			result += '"hatLatinum" : ' + obj.hatLatinum.toString() + ',';
 		}
 		if (obj.hatGraecum !== undefined) {
-			result += '"hatGraecum" : ' + obj.hatGraecum + ',';
+			result += '"hatGraecum" : ' + obj.hatGraecum.toString() + ',';
 		}
 		if (obj.hatHebraicum !== undefined) {
-			result += '"hatHebraicum" : ' + obj.hatHebraicum + ',';
+			result += '"hatHebraicum" : ' + obj.hatHebraicum.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

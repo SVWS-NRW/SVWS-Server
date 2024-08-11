@@ -99,20 +99,20 @@ export class KlassenartKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KlassenartKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KlassenartKatalogEintrag>;
 		const result = new KlassenartKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if ((obj.zulaessig !== undefined) && (obj.zulaessig !== null)) {
+		if (obj.zulaessig !== undefined) {
 			for (const elem of obj.zulaessig) {
-				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
+				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -122,12 +122,36 @@ export class KlassenartKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KlassenartKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		if (!obj.zulaessig) {
-			result += '"zulaessig" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"zulaessig" : [ ';
+		for (let i = 0; i < obj.zulaessig.size(); i++) {
+			const elem = obj.zulaessig.get(i);
+			result += SchulformSchulgliederung.transpilerToJSON(elem);
+			if (i < obj.zulaessig.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<KlassenartKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.zulaessig !== undefined) {
 			result += '"zulaessig" : [ ';
 			for (let i = 0; i < obj.zulaessig.size(); i++) {
 				const elem = obj.zulaessig.get(i);
@@ -137,43 +161,11 @@ export class KlassenartKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<KlassenartKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (obj.zulaessig !== undefined) {
-			if (!obj.zulaessig) {
-				result += '"zulaessig" : []';
-			} else {
-				result += '"zulaessig" : [ ';
-				for (let i = 0; i < obj.zulaessig.size(); i++) {
-					const elem = obj.zulaessig.get(i);
-					result += SchulformSchulgliederung.transpilerToJSON(elem);
-					if (i < obj.zulaessig.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

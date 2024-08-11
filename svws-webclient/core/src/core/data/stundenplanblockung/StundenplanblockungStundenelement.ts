@@ -31,25 +31,25 @@ export class StundenplanblockungStundenelement extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanblockungStundenelement {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanblockungStundenelement>;
 		const result = new StundenplanblockungStundenelement();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.stunden === undefined)
-			 throw new Error('invalid json format, missing attribute stunden');
+			throw new Error('invalid json format, missing attribute stunden');
 		result.stunden = obj.stunden;
 		if (obj.typ === undefined)
-			 throw new Error('invalid json format, missing attribute typ');
+			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanblockungStundenelement) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"stunden" : ' + obj.stunden + ',';
-		result += '"typ" : ' + obj.typ + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"stunden" : ' + obj.stunden.toString() + ',';
+		result += '"typ" : ' + obj.typ.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class StundenplanblockungStundenelement extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungStundenelement>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.stunden !== undefined) {
-			result += '"stunden" : ' + obj.stunden + ',';
+			result += '"stunden" : ' + obj.stunden.toString() + ',';
 		}
 		if (obj.typ !== undefined) {
-			result += '"typ" : ' + obj.typ + ',';
+			result += '"typ" : ' + obj.typ.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -36,29 +36,29 @@ export class GostBlockungSchiene extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungSchiene {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungSchiene>;
 		const result = new GostBlockungSchiene();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.nummer === undefined)
-			 throw new Error('invalid json format, missing attribute nummer');
+			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungSchiene) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nummer" : ' + obj.nummer.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class GostBlockungSchiene extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungSchiene>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + obj.nummer + ',';
+			result += '"nummer" : ' + obj.nummer.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

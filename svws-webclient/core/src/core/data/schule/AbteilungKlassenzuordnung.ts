@@ -31,25 +31,25 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbteilungKlassenzuordnung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbteilungKlassenzuordnung>;
 		const result = new AbteilungKlassenzuordnung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idAbteilung === undefined)
-			 throw new Error('invalid json format, missing attribute idAbteilung');
+			throw new Error('invalid json format, missing attribute idAbteilung');
 		result.idAbteilung = obj.idAbteilung;
 		if (obj.idKlasse === undefined)
-			 throw new Error('invalid json format, missing attribute idKlasse');
+			throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AbteilungKlassenzuordnung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idAbteilung" : ' + obj.idAbteilung + ',';
-		result += '"idKlasse" : ' + obj.idKlasse + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idAbteilung" : ' + obj.idAbteilung.toString() + ',';
+		result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbteilungKlassenzuordnung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idAbteilung !== undefined) {
-			result += '"idAbteilung" : ' + obj.idAbteilung + ',';
+			result += '"idAbteilung" : ' + obj.idAbteilung.toString() + ',';
 		}
 		if (obj.idKlasse !== undefined) {
-			result += '"idKlasse" : ' + obj.idKlasse + ',';
+			result += '"idKlasse" : ' + obj.idKlasse.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -24,11 +24,11 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungErgebnis {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungErgebnis>;
 		const result = new GostKlausurterminblockungErgebnis();
-		if ((obj.termine !== undefined) && (obj.termine !== null)) {
+		if (obj.termine !== undefined) {
 			for (const elem of obj.termine) {
-				result.termine?.add(GostKlausurterminblockungErgebnisTermin.transpilerFromJSON(JSON.stringify(elem)));
+				result.termine.add(GostKlausurterminblockungErgebnisTermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -36,18 +36,14 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurterminblockungErgebnis) : string {
 		let result = '{';
-		if (!obj.termine) {
-			result += '"termine" : []';
-		} else {
-			result += '"termine" : [ ';
-			for (let i = 0; i < obj.termine.size(); i++) {
-				const elem = obj.termine.get(i);
-				result += GostKlausurterminblockungErgebnisTermin.transpilerToJSON(elem);
-				if (i < obj.termine.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"termine" : [ ';
+		for (let i = 0; i < obj.termine.size(); i++) {
+			const elem = obj.termine.get(i);
+			result += GostKlausurterminblockungErgebnisTermin.transpilerToJSON(elem);
+			if (i < obj.termine.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,18 +52,14 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurterminblockungErgebnis>) : string {
 		let result = '{';
 		if (obj.termine !== undefined) {
-			if (!obj.termine) {
-				result += '"termine" : []';
-			} else {
-				result += '"termine" : [ ';
-				for (let i = 0; i < obj.termine.size(); i++) {
-					const elem = obj.termine.get(i);
-					result += GostKlausurterminblockungErgebnisTermin.transpilerToJSON(elem);
-					if (i < obj.termine.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"termine" : [ ';
+			for (let i = 0; i < obj.termine.size(); i++) {
+				const elem = obj.termine.get(i);
+				result += GostKlausurterminblockungErgebnisTermin.transpilerToJSON(elem);
+				if (i < obj.termine.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

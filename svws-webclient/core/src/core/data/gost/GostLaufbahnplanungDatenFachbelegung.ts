@@ -37,49 +37,45 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenFachbelegung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenFachbelegung>;
 		const result = new GostLaufbahnplanungDatenFachbelegung();
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		result.abiturFach = (obj.abiturFach === undefined) ? null : obj.abiturFach === null ? null : obj.abiturFach;
-		for (let i = 0; i < obj.kursart.length; i++) {
-			result.kursart[i] = obj.kursart[i] === null ? null : obj.kursart[i];
+		if (obj.kursart !== undefined) {
+			for (let i = 0; i < obj.kursart.length; i++) {
+				result.kursart[i] = obj.kursart[i] === null ? null : obj.kursart[i];
+			}
 		}
-		for (let i = 0; i < obj.schriftlich.length; i++) {
-			result.schriftlich[i] = obj.schriftlich[i];
+		if (obj.schriftlich !== undefined) {
+			for (let i = 0; i < obj.schriftlich.length; i++) {
+				result.schriftlich[i] = obj.schriftlich[i];
+			}
 		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostLaufbahnplanungDatenFachbelegung) : string {
 		let result = '{';
-		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
-		if (!obj.kursart) {
-			result += '"kursart" : []';
-		} else {
-			result += '"kursart" : [ ';
-			for (let i = 0; i < obj.kursart.length; i++) {
-				const elem = obj.kursart[i];
-				result += (elem === null) ? null : '"' + elem + '"';
-				if (i < obj.kursart.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
+		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
+		result += '"kursart" : [ ';
+		for (let i = 0; i < obj.kursart.length; i++) {
+			const elem = obj.kursart[i];
+			result += (elem === null) ? null : '"' + elem + '"';
+			if (i < obj.kursart.length - 1)
+				result += ',';
 		}
-		if (!obj.schriftlich) {
-			result += '"schriftlich" : []';
-		} else {
-			result += '"schriftlich" : [ ';
-			for (let i = 0; i < obj.schriftlich.length; i++) {
-				const elem = obj.schriftlich[i];
-				result += JSON.stringify(elem);
-				if (i < obj.schriftlich.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schriftlich" : [ ';
+		for (let i = 0; i < obj.schriftlich.length; i++) {
+			const elem = obj.schriftlich[i];
+			result += JSON.stringify(elem);
+			if (i < obj.schriftlich.length - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,40 +84,32 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungDatenFachbelegung>) : string {
 		let result = '{';
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.abiturFach !== undefined) {
-			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach) + ',';
+			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
 		}
 		if (obj.kursart !== undefined) {
 			const a = obj.kursart;
-			if (!a) {
-				result += '"kursart" : []';
-			} else {
-				result += '"kursart" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += (elem === null) ? null : '"' + elem + '"';
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kursart" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += (elem === null) ? null : '"' + elem + '"';
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schriftlich !== undefined) {
 			const a = obj.schriftlich;
-			if (!a) {
-				result += '"schriftlich" : []';
-			} else {
-				result += '"schriftlich" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += JSON.stringify(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schriftlich" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

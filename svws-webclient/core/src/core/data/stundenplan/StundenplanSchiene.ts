@@ -36,29 +36,29 @@ export class StundenplanSchiene extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanSchiene {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanSchiene>;
 		const result = new StundenplanSchiene();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idJahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute idJahrgang');
+			throw new Error('invalid json format, missing attribute idJahrgang');
 		result.idJahrgang = obj.idJahrgang;
 		if (obj.nummer === undefined)
-			 throw new Error('invalid json format, missing attribute nummer');
+			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanSchiene) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idJahrgang" : ' + obj.idJahrgang + ',';
-		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
+		result += '"nummer" : ' + obj.nummer.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class StundenplanSchiene extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanSchiene>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idJahrgang !== undefined) {
-			result += '"idJahrgang" : ' + obj.idJahrgang + ',';
+			result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		}
 		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + obj.nummer + ',';
+			result += '"nummer" : ' + obj.nummer.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

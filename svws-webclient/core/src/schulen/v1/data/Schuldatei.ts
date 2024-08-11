@@ -27,11 +27,11 @@ export class Schuldatei extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schuldatei {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schuldatei>;
 		const result = new Schuldatei();
-		if ((obj.organisationseinheit !== undefined) && (obj.organisationseinheit !== null)) {
+		if (obj.organisationseinheit !== undefined) {
 			for (const elem of obj.organisationseinheit) {
-				result.organisationseinheit?.add(SchuldateiOrganisationseinheit.transpilerFromJSON(JSON.stringify(elem)));
+				result.organisationseinheit.add(SchuldateiOrganisationseinheit.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -39,18 +39,14 @@ export class Schuldatei extends JavaObject {
 
 	public static transpilerToJSON(obj : Schuldatei) : string {
 		let result = '{';
-		if (!obj.organisationseinheit) {
-			result += '"organisationseinheit" : []';
-		} else {
-			result += '"organisationseinheit" : [ ';
-			for (let i = 0; i < obj.organisationseinheit.size(); i++) {
-				const elem = obj.organisationseinheit.get(i);
-				result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
-				if (i < obj.organisationseinheit.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"organisationseinheit" : [ ';
+		for (let i = 0; i < obj.organisationseinheit.size(); i++) {
+			const elem = obj.organisationseinheit.get(i);
+			result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
+			if (i < obj.organisationseinheit.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -59,18 +55,14 @@ export class Schuldatei extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schuldatei>) : string {
 		let result = '{';
 		if (obj.organisationseinheit !== undefined) {
-			if (!obj.organisationseinheit) {
-				result += '"organisationseinheit" : []';
-			} else {
-				result += '"organisationseinheit" : [ ';
-				for (let i = 0; i < obj.organisationseinheit.size(); i++) {
-					const elem = obj.organisationseinheit.get(i);
-					result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
-					if (i < obj.organisationseinheit.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"organisationseinheit" : [ ';
+			for (let i = 0; i < obj.organisationseinheit.size(); i++) {
+				const elem = obj.organisationseinheit.get(i);
+				result += SchuldateiOrganisationseinheit.transpilerToJSON(elem);
+				if (i < obj.organisationseinheit.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

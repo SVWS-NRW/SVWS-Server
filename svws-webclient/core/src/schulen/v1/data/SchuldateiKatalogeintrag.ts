@@ -39,22 +39,22 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiKatalogeintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiKatalogeintrag>;
 		const result = new SchuldateiKatalogeintrag();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		if (obj.katalog === undefined)
-			 throw new Error('invalid json format, missing attribute katalog');
+			throw new Error('invalid json format, missing attribute katalog');
 		result.katalog = obj.katalog;
 		if (obj.schluessel === undefined)
-			 throw new Error('invalid json format, missing attribute schluessel');
+			throw new Error('invalid json format, missing attribute schluessel');
 		result.schluessel = obj.schluessel;
 		if (obj.wert === undefined)
-			 throw new Error('invalid json format, missing attribute wert');
+			throw new Error('invalid json format, missing attribute wert');
 		result.wert = obj.wert;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
@@ -64,10 +64,10 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"katalog" : ' + JSON.stringify(obj.katalog!) + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
-		result += '"wert" : ' + JSON.stringify(obj.wert!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"katalog" : ' + JSON.stringify(obj.katalog) + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -85,16 +85,16 @@ export class SchuldateiKatalogeintrag extends SchuldateiEintrag {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.katalog !== undefined) {
-			result += '"katalog" : ' + JSON.stringify(obj.katalog!) + ',';
+			result += '"katalog" : ' + JSON.stringify(obj.katalog) + ',';
 		}
 		if (obj.schluessel !== undefined) {
-			result += '"schluessel" : ' + JSON.stringify(obj.schluessel!) + ',';
+			result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		}
 		if (obj.wert !== undefined) {
-			result += '"wert" : ' + JSON.stringify(obj.wert!) + ',';
+			result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -26,7 +26,7 @@ export class BenutzerKennwort extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerKennwort {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerKennwort>;
 		const result = new BenutzerKennwort();
 		result.user = (obj.user === undefined) ? null : obj.user === null ? null : obj.user;
 		result.password = (obj.password === undefined) ? null : obj.password === null ? null : obj.password;

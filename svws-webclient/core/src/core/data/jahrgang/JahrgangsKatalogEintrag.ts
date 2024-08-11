@@ -78,17 +78,17 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): JahrgangsKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<JahrgangsKatalogEintrag>;
 		const result = new JahrgangsKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if ((obj.bezeichnungen !== undefined) && (obj.bezeichnungen !== null)) {
+		if (obj.bezeichnungen !== undefined) {
 			for (const elem of obj.bezeichnungen) {
-				result.bezeichnungen?.add(JahrgangsKatalogEintragBezeichnung.transpilerFromJSON(JSON.stringify(elem)));
+				result.bezeichnungen.add(JahrgangsKatalogEintragBezeichnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -98,11 +98,32 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : JahrgangsKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		if (!obj.bezeichnungen) {
-			result += '"bezeichnungen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnungen" : [ ';
+		for (let i = 0; i < obj.bezeichnungen.size(); i++) {
+			const elem = obj.bezeichnungen.get(i);
+			result += JahrgangsKatalogEintragBezeichnung.transpilerToJSON(elem);
+			if (i < obj.bezeichnungen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<JahrgangsKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.bezeichnungen !== undefined) {
 			result += '"bezeichnungen" : [ ';
 			for (let i = 0; i < obj.bezeichnungen.size(); i++) {
 				const elem = obj.bezeichnungen.get(i);
@@ -112,40 +133,11 @@ export class JahrgangsKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<JahrgangsKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.bezeichnungen !== undefined) {
-			if (!obj.bezeichnungen) {
-				result += '"bezeichnungen" : []';
-			} else {
-				result += '"bezeichnungen" : [ ';
-				for (let i = 0; i < obj.bezeichnungen.size(); i++) {
-					const elem = obj.bezeichnungen.get(i);
-					result += JahrgangsKatalogEintragBezeichnung.transpilerToJSON(elem);
-					if (i < obj.bezeichnungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

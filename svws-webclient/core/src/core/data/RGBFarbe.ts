@@ -70,25 +70,25 @@ export class RGBFarbe extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): RGBFarbe {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<RGBFarbe>;
 		const result = new RGBFarbe();
 		if (obj.red === undefined)
-			 throw new Error('invalid json format, missing attribute red');
+			throw new Error('invalid json format, missing attribute red');
 		result.red = obj.red;
 		if (obj.green === undefined)
-			 throw new Error('invalid json format, missing attribute green');
+			throw new Error('invalid json format, missing attribute green');
 		result.green = obj.green;
 		if (obj.blue === undefined)
-			 throw new Error('invalid json format, missing attribute blue');
+			throw new Error('invalid json format, missing attribute blue');
 		result.blue = obj.blue;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : RGBFarbe) : string {
 		let result = '{';
-		result += '"red" : ' + obj.red + ',';
-		result += '"green" : ' + obj.green + ',';
-		result += '"blue" : ' + obj.blue + ',';
+		result += '"red" : ' + obj.red.toString() + ',';
+		result += '"green" : ' + obj.green.toString() + ',';
+		result += '"blue" : ' + obj.blue.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,13 +97,13 @@ export class RGBFarbe extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<RGBFarbe>) : string {
 		let result = '{';
 		if (obj.red !== undefined) {
-			result += '"red" : ' + obj.red + ',';
+			result += '"red" : ' + obj.red.toString() + ',';
 		}
 		if (obj.green !== undefined) {
-			result += '"green" : ' + obj.green + ',';
+			result += '"green" : ' + obj.green.toString() + ',';
 		}
 		if (obj.blue !== undefined) {
-			result += '"blue" : ' + obj.blue + ',';
+			result += '"blue" : ' + obj.blue.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

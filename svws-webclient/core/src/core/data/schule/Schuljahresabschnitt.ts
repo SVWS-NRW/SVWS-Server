@@ -41,16 +41,16 @@ export class Schuljahresabschnitt extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schuljahresabschnitt {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schuljahresabschnitt>;
 		const result = new Schuljahresabschnitt();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schuljahr === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahr');
+			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
 		if (obj.abschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute abschnitt');
+			throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		result.idVorigerAbschnitt = (obj.idVorigerAbschnitt === undefined) ? null : obj.idVorigerAbschnitt === null ? null : obj.idVorigerAbschnitt;
 		result.idFolgeAbschnitt = (obj.idFolgeAbschnitt === undefined) ? null : obj.idFolgeAbschnitt === null ? null : obj.idFolgeAbschnitt;
@@ -59,11 +59,11 @@ export class Schuljahresabschnitt extends JavaObject {
 
 	public static transpilerToJSON(obj : Schuljahresabschnitt) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt) + ',';
-		result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
+		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
+		result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,19 +72,19 @@ export class Schuljahresabschnitt extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schuljahresabschnitt>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schuljahr !== undefined) {
-			result += '"schuljahr" : ' + obj.schuljahr + ',';
+			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt + ',';
+			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.idVorigerAbschnitt !== undefined) {
-			result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt) + ',';
+			result += '"idVorigerAbschnitt" : ' + ((!obj.idVorigerAbschnitt) ? 'null' : obj.idVorigerAbschnitt.toString()) + ',';
 		}
 		if (obj.idFolgeAbschnitt !== undefined) {
-			result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt) + ',';
+			result += '"idFolgeAbschnitt" : ' + ((!obj.idFolgeAbschnitt) ? 'null' : obj.idFolgeAbschnitt.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

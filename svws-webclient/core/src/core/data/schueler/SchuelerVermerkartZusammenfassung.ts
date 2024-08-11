@@ -41,33 +41,33 @@ export class SchuelerVermerkartZusammenfassung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerVermerkartZusammenfassung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerVermerkartZusammenfassung>;
 		const result = new SchuelerVermerkartZusammenfassung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.nachname === undefined)
-			 throw new Error('invalid json format, missing attribute nachname');
+			throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
 		if (obj.vorname === undefined)
-			 throw new Error('invalid json format, missing attribute vorname');
+			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if (obj.vermerkart === undefined)
-			 throw new Error('invalid json format, missing attribute vermerkart');
+			throw new Error('invalid json format, missing attribute vermerkart');
 		result.vermerkart = obj.vermerkart;
 		if (obj.anzahlVermerke === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlVermerke');
+			throw new Error('invalid json format, missing attribute anzahlVermerke');
 		result.anzahlVermerke = obj.anzahlVermerke;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerVermerkartZusammenfassung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
-		result += '"vermerkart" : ' + obj.vermerkart + ',';
-		result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
+		result += '"vermerkart" : ' + obj.vermerkart.toString() + ',';
+		result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,19 +76,19 @@ export class SchuelerVermerkartZusammenfassung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerVermerkartZusammenfassung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.vermerkart !== undefined) {
-			result += '"vermerkart" : ' + obj.vermerkart + ',';
+			result += '"vermerkart" : ' + obj.vermerkart.toString() + ',';
 		}
 		if (obj.anzahlVermerke !== undefined) {
-			result += '"anzahlVermerke" : ' + obj.anzahlVermerke + ',';
+			result += '"anzahlVermerke" : ' + obj.anzahlVermerke.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

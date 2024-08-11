@@ -49,20 +49,20 @@ export class BKFBFach extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BKFBFach {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BKFBFach>;
 		const result = new BKFBFach();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if ((obj.fachklassen !== undefined) && (obj.fachklassen !== null)) {
+		if (obj.fachklassen !== undefined) {
 			for (const elem of obj.fachklassen) {
-				result.fachklassen?.add(BKFachklassenSchluessel.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachklassen.add(BKFachklassenSchluessel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -72,12 +72,36 @@ export class BKFBFach extends JavaObject {
 
 	public static transpilerToJSON(obj : BKFBFach) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		if (!obj.fachklassen) {
-			result += '"fachklassen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"fachklassen" : [ ';
+		for (let i = 0; i < obj.fachklassen.size(); i++) {
+			const elem = obj.fachklassen.get(i);
+			result += BKFachklassenSchluessel.transpilerToJSON(elem);
+			if (i < obj.fachklassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<BKFBFach>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.fachklassen !== undefined) {
 			result += '"fachklassen" : [ ';
 			for (let i = 0; i < obj.fachklassen.size(); i++) {
 				const elem = obj.fachklassen.get(i);
@@ -87,43 +111,11 @@ export class BKFBFach extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<BKFBFach>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (obj.fachklassen !== undefined) {
-			if (!obj.fachklassen) {
-				result += '"fachklassen" : []';
-			} else {
-				result += '"fachklassen" : [ ';
-				for (let i = 0; i < obj.fachklassen.size(); i++) {
-					const elem = obj.fachklassen.get(i);
-					result += BKFachklassenSchluessel.transpilerToJSON(elem);
-					if (i < obj.fachklassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

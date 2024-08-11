@@ -86,57 +86,57 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostLeistungenFachbelegung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostLeistungenFachbelegung>;
 		const result = new GostLeistungenFachbelegung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schuljahr === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahr');
+			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
 		result.halbjahrKuerzel = (obj.halbjahrKuerzel === undefined) ? null : obj.halbjahrKuerzel === null ? null : obj.halbjahrKuerzel;
 		if (obj.abschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute abschnitt');
+			throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (obj.abschnittGewertet === undefined)
-			 throw new Error('invalid json format, missing attribute abschnittGewertet');
+			throw new Error('invalid json format, missing attribute abschnittGewertet');
 		result.abschnittGewertet = obj.abschnittGewertet;
 		result.jahrgang = (obj.jahrgang === undefined) ? null : obj.jahrgang === null ? null : obj.jahrgang;
 		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
 		result.notenKuerzel = (obj.notenKuerzel === undefined) ? null : obj.notenKuerzel === null ? null : obj.notenKuerzel;
 		result.kursartKuerzel = (obj.kursartKuerzel === undefined) ? null : obj.kursartKuerzel === null ? null : obj.kursartKuerzel;
 		if (obj.istSchriftlich === undefined)
-			 throw new Error('invalid json format, missing attribute istSchriftlich');
+			throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
 		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if (obj.fehlstundenGesamt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
+			throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
 		if (obj.fehlstundenUnentschuldigt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
+			throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostLeistungenFachbelegung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schuljahr" : ' + obj.schuljahr + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
-		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
+		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"abschnittGewertet" : ' + obj.abschnittGewertet.toString() + ',';
 		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
 		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
 		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
-		result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
+		result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
-		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
+		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -145,25 +145,25 @@ export class GostLeistungenFachbelegung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungenFachbelegung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schuljahr !== undefined) {
-			result += '"schuljahr" : ' + obj.schuljahr + ',';
+			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
 		if (obj.halbjahrKuerzel !== undefined) {
 			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt + ',';
+			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.abschnittGewertet !== undefined) {
-			result += '"abschnittGewertet" : ' + obj.abschnittGewertet + ',';
+			result += '"abschnittGewertet" : ' + obj.abschnittGewertet.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
 		}
 		if (obj.notenKuerzel !== undefined) {
 			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
@@ -172,19 +172,19 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
 		if (obj.istSchriftlich !== undefined) {
-			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
+			result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
-			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
+			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		}
 		if (obj.fehlstundenUnentschuldigt !== undefined) {
-			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
+			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

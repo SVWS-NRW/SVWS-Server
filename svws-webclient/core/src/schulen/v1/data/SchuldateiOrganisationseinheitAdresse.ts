@@ -89,50 +89,50 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitAdresse {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitAdresse>;
 		const result = new SchuldateiOrganisationseinheitAdresse();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		if (obj.liegenschaft === undefined)
-			 throw new Error('invalid json format, missing attribute liegenschaft');
+			throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
 		if (obj.strasse === undefined)
-			 throw new Error('invalid json format, missing attribute strasse');
+			throw new Error('invalid json format, missing attribute strasse');
 		result.strasse = obj.strasse;
 		if (obj.postleitzahl === undefined)
-			 throw new Error('invalid json format, missing attribute postleitzahl');
+			throw new Error('invalid json format, missing attribute postleitzahl');
 		result.postleitzahl = obj.postleitzahl;
 		if (obj.ort === undefined)
-			 throw new Error('invalid json format, missing attribute ort');
+			throw new Error('invalid json format, missing attribute ort');
 		result.ort = obj.ort;
 		if (obj.regionalschluessel === undefined)
-			 throw new Error('invalid json format, missing attribute regionalschluessel');
+			throw new Error('invalid json format, missing attribute regionalschluessel');
 		result.regionalschluessel = obj.regionalschluessel;
 		if (obj.qualitaetverortung === undefined)
-			 throw new Error('invalid json format, missing attribute qualitaetverortung');
+			throw new Error('invalid json format, missing attribute qualitaetverortung');
 		result.qualitaetverortung = obj.qualitaetverortung;
 		if (obj.koordinaterechtswert === undefined)
-			 throw new Error('invalid json format, missing attribute koordinaterechtswert');
+			throw new Error('invalid json format, missing attribute koordinaterechtswert');
 		result.koordinaterechtswert = obj.koordinaterechtswert;
 		if (obj.koordinatehochwert === undefined)
-			 throw new Error('invalid json format, missing attribute koordinatehochwert');
+			throw new Error('invalid json format, missing attribute koordinatehochwert');
 		result.koordinatehochwert = obj.koordinatehochwert;
 		result.adresstypeid = (obj.adresstypeid === undefined) ? null : obj.adresstypeid === null ? null : obj.adresstypeid;
 		if (obj.standortkennzeichen === undefined)
-			 throw new Error('invalid json format, missing attribute standortkennzeichen');
+			throw new Error('invalid json format, missing attribute standortkennzeichen');
 		result.standortkennzeichen = obj.standortkennzeichen;
 		if (obj.adresskennzeichen === undefined)
-			 throw new Error('invalid json format, missing attribute adresskennzeichen');
+			throw new Error('invalid json format, missing attribute adresskennzeichen');
 		result.adresskennzeichen = obj.adresskennzeichen;
 		if (obj.hauptstandortadresse === undefined)
-			 throw new Error('invalid json format, missing attribute hauptstandortadresse');
+			throw new Error('invalid json format, missing attribute hauptstandortadresse');
 		result.hauptstandortadresse = obj.hauptstandortadresse;
 		return result;
 	}
@@ -142,20 +142,20 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schulnummer" : ' + obj.schulnummer + ',';
-		result += '"liegenschaft" : ' + obj.liegenschaft + ',';
-		result += '"strasse" : ' + JSON.stringify(obj.strasse!) + ',';
-		result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl!) + ',';
-		result += '"ort" : ' + JSON.stringify(obj.ort!) + ',';
-		result += '"regionalschluessel" : ' + JSON.stringify(obj.regionalschluessel!) + ',';
-		result += '"qualitaetverortung" : ' + obj.qualitaetverortung + ',';
-		result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert + ',';
-		result += '"koordinatehochwert" : ' + obj.koordinatehochwert + ',';
-		result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid) + ',';
-		result += '"standortkennzeichen" : ' + obj.standortkennzeichen + ',';
-		result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen!) + ',';
-		result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
+		result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
+		result += '"strasse" : ' + JSON.stringify(obj.strasse) + ',';
+		result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl) + ',';
+		result += '"ort" : ' + JSON.stringify(obj.ort) + ',';
+		result += '"regionalschluessel" : ' + JSON.stringify(obj.regionalschluessel) + ',';
+		result += '"qualitaetverortung" : ' + obj.qualitaetverortung.toString() + ',';
+		result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert.toString() + ',';
+		result += '"koordinatehochwert" : ' + obj.koordinatehochwert.toString() + ',';
+		result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid.toString()) + ',';
+		result += '"standortkennzeichen" : ' + obj.standortkennzeichen.toString() + ',';
+		result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen) + ',';
+		result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -173,46 +173,46 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
+			result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		}
 		if (obj.liegenschaft !== undefined) {
-			result += '"liegenschaft" : ' + obj.liegenschaft + ',';
+			result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
 		}
 		if (obj.strasse !== undefined) {
-			result += '"strasse" : ' + JSON.stringify(obj.strasse!) + ',';
+			result += '"strasse" : ' + JSON.stringify(obj.strasse) + ',';
 		}
 		if (obj.postleitzahl !== undefined) {
-			result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl!) + ',';
+			result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl) + ',';
 		}
 		if (obj.ort !== undefined) {
-			result += '"ort" : ' + JSON.stringify(obj.ort!) + ',';
+			result += '"ort" : ' + JSON.stringify(obj.ort) + ',';
 		}
 		if (obj.regionalschluessel !== undefined) {
-			result += '"regionalschluessel" : ' + JSON.stringify(obj.regionalschluessel!) + ',';
+			result += '"regionalschluessel" : ' + JSON.stringify(obj.regionalschluessel) + ',';
 		}
 		if (obj.qualitaetverortung !== undefined) {
-			result += '"qualitaetverortung" : ' + obj.qualitaetverortung + ',';
+			result += '"qualitaetverortung" : ' + obj.qualitaetverortung.toString() + ',';
 		}
 		if (obj.koordinaterechtswert !== undefined) {
-			result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert + ',';
+			result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert.toString() + ',';
 		}
 		if (obj.koordinatehochwert !== undefined) {
-			result += '"koordinatehochwert" : ' + obj.koordinatehochwert + ',';
+			result += '"koordinatehochwert" : ' + obj.koordinatehochwert.toString() + ',';
 		}
 		if (obj.adresstypeid !== undefined) {
-			result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid) + ',';
+			result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid.toString()) + ',';
 		}
 		if (obj.standortkennzeichen !== undefined) {
-			result += '"standortkennzeichen" : ' + obj.standortkennzeichen + ',';
+			result += '"standortkennzeichen" : ' + obj.standortkennzeichen.toString() + ',';
 		}
 		if (obj.adresskennzeichen !== undefined) {
-			result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen!) + ',';
+			result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen) + ',';
 		}
 		if (obj.hauptstandortadresse !== undefined) {
-			result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse!) + ',';
+			result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

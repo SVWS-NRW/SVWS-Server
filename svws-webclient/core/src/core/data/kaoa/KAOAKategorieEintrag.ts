@@ -87,20 +87,20 @@ export class KAOAKategorieEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KAOAKategorieEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KAOAKategorieEintrag>;
 		const result = new KAOAKategorieEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(elem);
+				result.jahrgaenge.add(elem);
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -110,12 +110,36 @@ export class KAOAKategorieEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KAOAKategorieEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<KAOAKategorieEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		}
+		if (obj.jahrgaenge !== undefined) {
 			result += '"jahrgaenge" : [ ';
 			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 				const elem = obj.jahrgaenge.get(i);
@@ -125,43 +149,11 @@ export class KAOAKategorieEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<KAOAKategorieEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		}
-		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

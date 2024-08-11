@@ -61,56 +61,54 @@ export class GostJahrgangFachkombination extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostJahrgangFachkombination {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostJahrgangFachkombination>;
 		const result = new GostJahrgangFachkombination();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.abiturjahr === undefined)
-			 throw new Error('invalid json format, missing attribute abiturjahr');
+			throw new Error('invalid json format, missing attribute abiturjahr');
 		result.abiturjahr = obj.abiturjahr;
 		if (obj.fachID1 === undefined)
-			 throw new Error('invalid json format, missing attribute fachID1');
+			throw new Error('invalid json format, missing attribute fachID1');
 		result.fachID1 = obj.fachID1;
 		result.kursart1 = (obj.kursart1 === undefined) ? null : obj.kursart1 === null ? null : obj.kursart1;
 		if (obj.fachID2 === undefined)
-			 throw new Error('invalid json format, missing attribute fachID2');
+			throw new Error('invalid json format, missing attribute fachID2');
 		result.fachID2 = obj.fachID2;
 		result.kursart2 = (obj.kursart2 === undefined) ? null : obj.kursart2 === null ? null : obj.kursart2;
-		for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
-			result.gueltigInHalbjahr[i] = obj.gueltigInHalbjahr[i];
+		if (obj.gueltigInHalbjahr !== undefined) {
+			for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
+				result.gueltigInHalbjahr[i] = obj.gueltigInHalbjahr[i];
+			}
 		}
 		if (obj.typ === undefined)
-			 throw new Error('invalid json format, missing attribute typ');
+			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
 		if (obj.hinweistext === undefined)
-			 throw new Error('invalid json format, missing attribute hinweistext');
+			throw new Error('invalid json format, missing attribute hinweistext');
 		result.hinweistext = obj.hinweistext;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostJahrgangFachkombination) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"abiturjahr" : ' + obj.abiturjahr + ',';
-		result += '"fachID1" : ' + obj.fachID1 + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
+		result += '"fachID1" : ' + obj.fachID1.toString() + ',';
 		result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : JSON.stringify(obj.kursart1)) + ',';
-		result += '"fachID2" : ' + obj.fachID2 + ',';
+		result += '"fachID2" : ' + obj.fachID2.toString() + ',';
 		result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : JSON.stringify(obj.kursart2)) + ',';
-		if (!obj.gueltigInHalbjahr) {
-			result += '"gueltigInHalbjahr" : []';
-		} else {
-			result += '"gueltigInHalbjahr" : [ ';
-			for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
-				const elem = obj.gueltigInHalbjahr[i];
-				result += JSON.stringify(elem);
-				if (i < obj.gueltigInHalbjahr.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"gueltigInHalbjahr" : [ ';
+		for (let i = 0; i < obj.gueltigInHalbjahr.length; i++) {
+			const elem = obj.gueltigInHalbjahr[i];
+			result += JSON.stringify(elem);
+			if (i < obj.gueltigInHalbjahr.length - 1)
+				result += ',';
 		}
-		result += '"typ" : ' + obj.typ + ',';
-		result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext!) + ',';
+		result += ' ]' + ',';
+		result += '"typ" : ' + obj.typ.toString() + ',';
+		result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -119,43 +117,39 @@ export class GostJahrgangFachkombination extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostJahrgangFachkombination>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.abiturjahr !== undefined) {
-			result += '"abiturjahr" : ' + obj.abiturjahr + ',';
+			result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		}
 		if (obj.fachID1 !== undefined) {
-			result += '"fachID1" : ' + obj.fachID1 + ',';
+			result += '"fachID1" : ' + obj.fachID1.toString() + ',';
 		}
 		if (obj.kursart1 !== undefined) {
 			result += '"kursart1" : ' + ((!obj.kursart1) ? 'null' : JSON.stringify(obj.kursart1)) + ',';
 		}
 		if (obj.fachID2 !== undefined) {
-			result += '"fachID2" : ' + obj.fachID2 + ',';
+			result += '"fachID2" : ' + obj.fachID2.toString() + ',';
 		}
 		if (obj.kursart2 !== undefined) {
 			result += '"kursart2" : ' + ((!obj.kursart2) ? 'null' : JSON.stringify(obj.kursart2)) + ',';
 		}
 		if (obj.gueltigInHalbjahr !== undefined) {
 			const a = obj.gueltigInHalbjahr;
-			if (!a) {
-				result += '"gueltigInHalbjahr" : []';
-			} else {
-				result += '"gueltigInHalbjahr" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += JSON.stringify(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"gueltigInHalbjahr" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.typ !== undefined) {
-			result += '"typ" : ' + obj.typ + ',';
+			result += '"typ" : ' + obj.typ.toString() + ',';
 		}
 		if (obj.hinweistext !== undefined) {
-			result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext!) + ',';
+			result += '"hinweistext" : ' + JSON.stringify(obj.hinweistext) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

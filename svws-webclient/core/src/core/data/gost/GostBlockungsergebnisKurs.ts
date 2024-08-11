@@ -48,28 +48,28 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisKurs>;
 		const result = new GostBlockungsergebnisKurs();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.anzahlSchienen === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlSchienen');
+			throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(elem);
+				result.schueler.add(elem);
 			}
 		}
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(elem);
+				result.schienen.add(elem);
 			}
 		}
 		return result;
@@ -77,34 +77,26 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBlockungsergebnisKurs) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
-			result += '"schueler" : [ ';
-			for (let i = 0; i < obj.schueler.size(); i++) {
-				const elem = obj.schueler.get(i);
-				result += elem;
-				if (i < obj.schueler.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
+		result += '"kursart" : ' + obj.kursart.toString() + ',';
+		result += '"anzahlSchienen" : ' + obj.anzahlSchienen.toString() + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += elem.toString();
+			if (i < obj.schueler.size() - 1)
+				result += ',';
 		}
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
-			result += '"schienen" : [ ';
-			for (let i = 0; i < obj.schienen.size(); i++) {
-				const elem = obj.schienen.get(i);
-				result += elem;
-				if (i < obj.schienen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += elem.toString();
+			if (i < obj.schienen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -113,44 +105,36 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisKurs>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + obj.kursart + ',';
+			result += '"kursart" : ' + obj.kursart.toString() + ',';
 		}
 		if (obj.anzahlSchienen !== undefined) {
-			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
+			result += '"anzahlSchienen" : ' + obj.anzahlSchienen.toString() + ',';
 		}
 		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += elem;
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schueler" : [ ';
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
+				result += elem.toString();
+				if (i < obj.schueler.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += elem;
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem.toString();
+				if (i < obj.schienen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

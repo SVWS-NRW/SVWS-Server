@@ -31,7 +31,7 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerstatusKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerstatusKatalogEintrag>;
 		const result = new SchuelerstatusKatalogEintrag();
 		result.StatusNr = (obj.StatusNr === undefined) ? null : obj.StatusNr === null ? null : obj.StatusNr;
 		result.Bezeichnung = (obj.Bezeichnung === undefined) ? null : obj.Bezeichnung === null ? null : obj.Bezeichnung;
@@ -41,9 +41,9 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerstatusKatalogEintrag) : string {
 		let result = '{';
-		result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr) + ',';
+		result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr.toString()) + ',';
 		result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -52,13 +52,13 @@ export class SchuelerstatusKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerstatusKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.StatusNr !== undefined) {
-			result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr) + ',';
+			result += '"StatusNr" : ' + ((!obj.StatusNr) ? 'null' : obj.StatusNr.toString()) + ',';
 		}
 		if (obj.Bezeichnung !== undefined) {
 			result += '"Bezeichnung" : ' + ((!obj.Bezeichnung) ? 'null' : JSON.stringify(obj.Bezeichnung)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

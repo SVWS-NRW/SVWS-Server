@@ -43,35 +43,56 @@ export class BKLernfeld extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BKLernfeld {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BKLernfeld>;
 		const result = new BKLernfeld();
 		if (obj.nummer === undefined)
-			 throw new Error('invalid json format, missing attribute nummer');
+			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if ((obj.buendelfaecher !== undefined) && (obj.buendelfaecher !== null)) {
+		if (obj.buendelfaecher !== undefined) {
 			for (const elem of obj.buendelfaecher) {
-				result.buendelfaecher?.add(elem);
+				result.buendelfaecher.add(elem);
 			}
 		}
 		if (obj.ausbildungsjahr === undefined)
-			 throw new Error('invalid json format, missing attribute ausbildungsjahr');
+			throw new Error('invalid json format, missing attribute ausbildungsjahr');
 		result.ausbildungsjahr = obj.ausbildungsjahr;
 		if (obj.zeitrichtwert === undefined)
-			 throw new Error('invalid json format, missing attribute zeitrichtwert');
+			throw new Error('invalid json format, missing attribute zeitrichtwert');
 		result.zeitrichtwert = obj.zeitrichtwert;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BKLernfeld) : string {
 		let result = '{';
-		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		if (!obj.buendelfaecher) {
-			result += '"buendelfaecher" : []';
-		} else {
+		result += '"nummer" : ' + obj.nummer.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"buendelfaecher" : [ ';
+		for (let i = 0; i < obj.buendelfaecher.size(); i++) {
+			const elem = obj.buendelfaecher.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.buendelfaecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"ausbildungsjahr" : ' + obj.ausbildungsjahr.toString() + ',';
+		result += '"zeitrichtwert" : ' + obj.zeitrichtwert.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<BKLernfeld>) : string {
+		let result = '{';
+		if (obj.nummer !== undefined) {
+			result += '"nummer" : ' + obj.nummer.toString() + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.buendelfaecher !== undefined) {
 			result += '"buendelfaecher" : [ ';
 			for (let i = 0; i < obj.buendelfaecher.size(); i++) {
 				const elem = obj.buendelfaecher.get(i);
@@ -81,40 +102,11 @@ export class BKLernfeld extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"ausbildungsjahr" : ' + obj.ausbildungsjahr + ',';
-		result += '"zeitrichtwert" : ' + obj.zeitrichtwert + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<BKLernfeld>) : string {
-		let result = '{';
-		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + obj.nummer + ',';
-		}
-		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (obj.buendelfaecher !== undefined) {
-			if (!obj.buendelfaecher) {
-				result += '"buendelfaecher" : []';
-			} else {
-				result += '"buendelfaecher" : [ ';
-				for (let i = 0; i < obj.buendelfaecher.size(); i++) {
-					const elem = obj.buendelfaecher.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.buendelfaecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.ausbildungsjahr !== undefined) {
-			result += '"ausbildungsjahr" : ' + obj.ausbildungsjahr + ',';
+			result += '"ausbildungsjahr" : ' + obj.ausbildungsjahr.toString() + ',';
 		}
 		if (obj.zeitrichtwert !== undefined) {
-			result += '"zeitrichtwert" : ' + obj.zeitrichtwert + ',';
+			result += '"zeitrichtwert" : ' + obj.zeitrichtwert.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -41,7 +41,7 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDQRNiveaus {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDQRNiveaus>;
 		const result = new Schild3KatalogEintragDQRNiveaus();
 		result.Gliederung = (obj.Gliederung === undefined) ? null : obj.Gliederung === null ? null : obj.Gliederung;
 		result.FKS = (obj.FKS === undefined) ? null : obj.FKS === null ? null : obj.FKS;
@@ -55,9 +55,9 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 		let result = '{';
 		result += '"Gliederung" : ' + ((!obj.Gliederung) ? 'null' : JSON.stringify(obj.Gliederung)) + ',';
 		result += '"FKS" : ' + ((!obj.FKS) ? 'null' : JSON.stringify(obj.FKS)) + ',';
-		result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau.toString()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,13 +72,13 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 			result += '"FKS" : ' + ((!obj.FKS) ? 'null' : JSON.stringify(obj.FKS)) + ',';
 		}
 		if (obj.DQR_Niveau !== undefined) {
-			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau) + ',';
+			result += '"DQR_Niveau" : ' + ((!obj.DQR_Niveau) ? 'null' : obj.DQR_Niveau.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

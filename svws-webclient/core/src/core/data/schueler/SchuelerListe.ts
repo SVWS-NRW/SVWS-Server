@@ -53,34 +53,34 @@ export class SchuelerListe extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerListe {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerListe>;
 		const result = new SchuelerListe();
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(SchuelerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.schueler.add(SchuelerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(KlassenDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(KlassenDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(JahrgangsDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.jahrgaenge.add(JahrgangsDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.jahrgaengeGost !== undefined) && (obj.jahrgaengeGost !== null)) {
+		if (obj.jahrgaengeGost !== undefined) {
 			for (const elem of obj.jahrgaengeGost) {
-				result.jahrgaengeGost?.add(GostJahrgang.transpilerFromJSON(JSON.stringify(elem)));
+				result.jahrgaengeGost.add(GostJahrgang.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -88,10 +88,58 @@ export class SchuelerListe extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerListe) : string {
 		let result = '{';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += SchuelerListeEintrag.transpilerToJSON(elem);
+			if (i < obj.schueler.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += KlassenDaten.transpilerToJSON(elem);
+			if (i < obj.klassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += KursDaten.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += JahrgangsDaten.transpilerToJSON(elem);
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"jahrgaengeGost" : [ ';
+		for (let i = 0; i < obj.jahrgaengeGost.size(); i++) {
+			const elem = obj.jahrgaengeGost.get(i);
+			result += GostJahrgang.transpilerToJSON(elem);
+			if (i < obj.jahrgaengeGost.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<SchuelerListe>) : string {
+		let result = '{';
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		}
+		if (obj.schueler !== undefined) {
 			result += '"schueler" : [ ';
 			for (let i = 0; i < obj.schueler.size(); i++) {
 				const elem = obj.schueler.get(i);
@@ -101,9 +149,7 @@ export class SchuelerListe extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
+		if (obj.klassen !== undefined) {
 			result += '"klassen" : [ ';
 			for (let i = 0; i < obj.klassen.size(); i++) {
 				const elem = obj.klassen.get(i);
@@ -113,9 +159,7 @@ export class SchuelerListe extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
+		if (obj.kurse !== undefined) {
 			result += '"kurse" : [ ';
 			for (let i = 0; i < obj.kurse.size(); i++) {
 				const elem = obj.kurse.get(i);
@@ -125,9 +169,7 @@ export class SchuelerListe extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
+		if (obj.jahrgaenge !== undefined) {
 			result += '"jahrgaenge" : [ ';
 			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 				const elem = obj.jahrgaenge.get(i);
@@ -137,9 +179,7 @@ export class SchuelerListe extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.jahrgaengeGost) {
-			result += '"jahrgaengeGost" : []';
-		} else {
+		if (obj.jahrgaengeGost !== undefined) {
 			result += '"jahrgaengeGost" : [ ';
 			for (let i = 0; i < obj.jahrgaengeGost.size(); i++) {
 				const elem = obj.jahrgaengeGost.get(i);
@@ -148,86 +188,6 @@ export class SchuelerListe extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<SchuelerListe>) : string {
-		let result = '{';
-		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		}
-		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += SchuelerListeEintrag.transpilerToJSON(elem);
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += KlassenDaten.transpilerToJSON(elem);
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += KursDaten.transpilerToJSON(elem);
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += JahrgangsDaten.transpilerToJSON(elem);
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.jahrgaengeGost !== undefined) {
-			if (!obj.jahrgaengeGost) {
-				result += '"jahrgaengeGost" : []';
-			} else {
-				result += '"jahrgaengeGost" : [ ';
-				for (let i = 0; i < obj.jahrgaengeGost.size(); i++) {
-					const elem = obj.jahrgaengeGost.get(i);
-					result += GostJahrgang.transpilerToJSON(elem);
-					if (i < obj.jahrgaengeGost.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

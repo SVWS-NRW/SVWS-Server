@@ -61,7 +61,7 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragExportCSV {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragExportCSV>;
 		const result = new Schild3KatalogEintragExportCSV();
 		result.DatenartKrz = (obj.DatenartKrz === undefined) ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
 		result.Feldname = (obj.Feldname === undefined) ? null : obj.Feldname === null ? null : obj.Feldname;

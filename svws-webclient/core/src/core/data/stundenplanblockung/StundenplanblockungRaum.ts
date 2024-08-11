@@ -26,21 +26,21 @@ export class StundenplanblockungRaum extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanblockungRaum {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanblockungRaum>;
 		const result = new StundenplanblockungRaum();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanblockungRaum) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -49,10 +49,10 @@ export class StundenplanblockungRaum extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanblockungRaum>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

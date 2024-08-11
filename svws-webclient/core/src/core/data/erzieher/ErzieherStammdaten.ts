@@ -96,13 +96,13 @@ export class ErzieherStammdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ErzieherStammdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ErzieherStammdaten>;
 		const result = new ErzieherStammdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idSchueler === undefined)
-			 throw new Error('invalid json format, missing attribute idSchueler');
+			throw new Error('invalid json format, missing attribute idSchueler');
 		result.idSchueler = obj.idSchueler;
 		result.idErzieherArt = (obj.idErzieherArt === undefined) ? null : obj.idErzieherArt === null ? null : obj.idErzieherArt;
 		result.titel = (obj.titel === undefined) ? null : obj.titel === null ? null : obj.titel;
@@ -123,9 +123,9 @@ export class ErzieherStammdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : ErzieherStammdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idSchueler" : ' + obj.idSchueler + ',';
-		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
+		result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.toString()) + ',';
 		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
@@ -133,9 +133,9 @@ export class ErzieherStammdaten extends JavaObject {
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID) + ',';
-		result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID) + ',';
-		result += '"erhaeltAnschreiben" : ' + ((!obj.erhaeltAnschreiben) ? 'null' : obj.erhaeltAnschreiben) + ',';
+		result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
+		result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
+		result += '"erhaeltAnschreiben" : ' + ((!obj.erhaeltAnschreiben) ? 'null' : obj.erhaeltAnschreiben.toString()) + ',';
 		result += '"eMail" : ' + ((!obj.eMail) ? 'null' : JSON.stringify(obj.eMail)) + ',';
 		result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
 		result += '"bemerkungen" : ' + ((!obj.bemerkungen) ? 'null' : JSON.stringify(obj.bemerkungen)) + ',';
@@ -147,13 +147,13 @@ export class ErzieherStammdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ErzieherStammdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idSchueler !== undefined) {
-			result += '"idSchueler" : ' + obj.idSchueler + ',';
+			result += '"idSchueler" : ' + obj.idSchueler.toString() + ',';
 		}
 		if (obj.idErzieherArt !== undefined) {
-			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt) + ',';
+			result += '"idErzieherArt" : ' + ((!obj.idErzieherArt) ? 'null' : obj.idErzieherArt.toString()) + ',';
 		}
 		if (obj.titel !== undefined) {
 			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
@@ -177,13 +177,13 @@ export class ErzieherStammdaten extends JavaObject {
 			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (obj.wohnortID !== undefined) {
-			result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID) + ',';
+			result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
 		}
 		if (obj.ortsteilID !== undefined) {
-			result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID) + ',';
+			result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
 		}
 		if (obj.erhaeltAnschreiben !== undefined) {
-			result += '"erhaeltAnschreiben" : ' + ((!obj.erhaeltAnschreiben) ? 'null' : obj.erhaeltAnschreiben) + ',';
+			result += '"erhaeltAnschreiben" : ' + ((!obj.erhaeltAnschreiben) ? 'null' : obj.erhaeltAnschreiben.toString()) + ',';
 		}
 		if (obj.eMail !== undefined) {
 			result += '"eMail" : ' + ((!obj.eMail) ? 'null' : JSON.stringify(obj.eMail)) + ',';

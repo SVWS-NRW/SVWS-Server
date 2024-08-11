@@ -33,17 +33,17 @@ export class GostBlockungRegel extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungRegel {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungRegel>;
 		const result = new GostBlockungRegel();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.typ === undefined)
-			 throw new Error('invalid json format, missing attribute typ');
+			throw new Error('invalid json format, missing attribute typ');
 		result.typ = obj.typ;
-		if ((obj.parameter !== undefined) && (obj.parameter !== null)) {
+		if (obj.parameter !== undefined) {
 			for (const elem of obj.parameter) {
-				result.parameter?.add(elem);
+				result.parameter.add(elem);
 			}
 		}
 		return result;
@@ -51,20 +51,16 @@ export class GostBlockungRegel extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBlockungRegel) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"typ" : ' + obj.typ + ',';
-		if (!obj.parameter) {
-			result += '"parameter" : []';
-		} else {
-			result += '"parameter" : [ ';
-			for (let i = 0; i < obj.parameter.size(); i++) {
-				const elem = obj.parameter.get(i);
-				result += elem;
-				if (i < obj.parameter.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"typ" : ' + obj.typ.toString() + ',';
+		result += '"parameter" : [ ';
+		for (let i = 0; i < obj.parameter.size(); i++) {
+			const elem = obj.parameter.get(i);
+			result += elem.toString();
+			if (i < obj.parameter.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,24 +69,20 @@ export class GostBlockungRegel extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungRegel>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.typ !== undefined) {
-			result += '"typ" : ' + obj.typ + ',';
+			result += '"typ" : ' + obj.typ.toString() + ',';
 		}
 		if (obj.parameter !== undefined) {
-			if (!obj.parameter) {
-				result += '"parameter" : []';
-			} else {
-				result += '"parameter" : [ ';
-				for (let i = 0; i < obj.parameter.size(); i++) {
-					const elem = obj.parameter.get(i);
-					result += elem;
-					if (i < obj.parameter.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"parameter" : [ ';
+			for (let i = 0; i < obj.parameter.size(); i++) {
+				const elem = obj.parameter.get(i);
+				result += elem.toString();
+				if (i < obj.parameter.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

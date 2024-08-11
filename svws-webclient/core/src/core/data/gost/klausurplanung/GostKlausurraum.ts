@@ -56,13 +56,13 @@ export class GostKlausurraum extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurraum {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurraum>;
 		const result = new GostKlausurraum();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idTermin === undefined)
-			 throw new Error('invalid json format, missing attribute idTermin');
+			throw new Error('invalid json format, missing attribute idTermin');
 		result.idTermin = obj.idTermin;
 		result.idStundenplanRaum = (obj.idStundenplanRaum === undefined) ? null : obj.idStundenplanRaum === null ? null : obj.idStundenplanRaum;
 		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
@@ -71,9 +71,9 @@ export class GostKlausurraum extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurraum) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idTermin" : ' + obj.idTermin + ',';
-		result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idTermin" : ' + obj.idTermin.toString() + ',';
+		result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -83,13 +83,13 @@ export class GostKlausurraum extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurraum>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idTermin !== undefined) {
-			result += '"idTermin" : ' + obj.idTermin + ',';
+			result += '"idTermin" : ' + obj.idTermin.toString() + ',';
 		}
 		if (obj.idStundenplanRaum !== undefined) {
-			result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum) + ',';
+			result += '"idStundenplanRaum" : ' + ((!obj.idStundenplanRaum) ? 'null' : obj.idStundenplanRaum.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';

@@ -24,11 +24,11 @@ export class SchuelerblockungOutput extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungOutput {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerblockungOutput>;
 		const result = new SchuelerblockungOutput();
-		if ((obj.fachwahlenZuKurs !== undefined) && (obj.fachwahlenZuKurs !== null)) {
+		if (obj.fachwahlenZuKurs !== undefined) {
 			for (const elem of obj.fachwahlenZuKurs) {
-				result.fachwahlenZuKurs?.add(SchuelerblockungOutputFachwahlZuKurs.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachwahlenZuKurs.add(SchuelerblockungOutputFachwahlZuKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -36,18 +36,14 @@ export class SchuelerblockungOutput extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerblockungOutput) : string {
 		let result = '{';
-		if (!obj.fachwahlenZuKurs) {
-			result += '"fachwahlenZuKurs" : []';
-		} else {
-			result += '"fachwahlenZuKurs" : [ ';
-			for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
-				const elem = obj.fachwahlenZuKurs.get(i);
-				result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
-				if (i < obj.fachwahlenZuKurs.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"fachwahlenZuKurs" : [ ';
+		for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
+			const elem = obj.fachwahlenZuKurs.get(i);
+			result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
+			if (i < obj.fachwahlenZuKurs.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,18 +52,14 @@ export class SchuelerblockungOutput extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungOutput>) : string {
 		let result = '{';
 		if (obj.fachwahlenZuKurs !== undefined) {
-			if (!obj.fachwahlenZuKurs) {
-				result += '"fachwahlenZuKurs" : []';
-			} else {
-				result += '"fachwahlenZuKurs" : [ ';
-				for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
-					const elem = obj.fachwahlenZuKurs.get(i);
-					result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
-					if (i < obj.fachwahlenZuKurs.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"fachwahlenZuKurs" : [ ';
+			for (let i = 0; i < obj.fachwahlenZuKurs.size(); i++) {
+				const elem = obj.fachwahlenZuKurs.get(i);
+				result += SchuelerblockungOutputFachwahlZuKurs.transpilerToJSON(elem);
+				if (i < obj.fachwahlenZuKurs.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

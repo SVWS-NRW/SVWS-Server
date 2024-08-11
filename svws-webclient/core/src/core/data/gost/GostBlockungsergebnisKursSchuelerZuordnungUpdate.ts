@@ -35,50 +35,42 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKursSchuelerZuordnungUpdate {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisKursSchuelerZuordnungUpdate>;
 		const result = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
-		if ((obj.listEntfernen !== undefined) && (obj.listEntfernen !== null)) {
+		if (obj.listEntfernen !== undefined) {
 			for (const elem of obj.listEntfernen) {
-				result.listEntfernen?.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
+				result.listEntfernen.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.listHinzuzufuegen !== undefined) && (obj.listHinzuzufuegen !== null)) {
+		if (obj.listHinzuzufuegen !== undefined) {
 			for (const elem of obj.listHinzuzufuegen) {
-				result.listHinzuzufuegen?.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
+				result.listHinzuzufuegen.add(GostBlockungsergebnisKursSchuelerZuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.regelUpdates === undefined)
-			 throw new Error('invalid json format, missing attribute regelUpdates');
+			throw new Error('invalid json format, missing attribute regelUpdates');
 		result.regelUpdates = GostBlockungRegelUpdate.transpilerFromJSON(JSON.stringify(obj.regelUpdates));
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : string {
 		let result = '{';
-		if (!obj.listEntfernen) {
-			result += '"listEntfernen" : []';
-		} else {
-			result += '"listEntfernen" : [ ';
-			for (let i = 0; i < obj.listEntfernen.size(); i++) {
-				const elem = obj.listEntfernen.get(i);
-				result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
-				if (i < obj.listEntfernen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"listEntfernen" : [ ';
+		for (let i = 0; i < obj.listEntfernen.size(); i++) {
+			const elem = obj.listEntfernen.get(i);
+			result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
+			if (i < obj.listEntfernen.size() - 1)
+				result += ',';
 		}
-		if (!obj.listHinzuzufuegen) {
-			result += '"listHinzuzufuegen" : []';
-		} else {
-			result += '"listHinzuzufuegen" : [ ';
-			for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
-				const elem = obj.listHinzuzufuegen.get(i);
-				result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
-				if (i < obj.listHinzuzufuegen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"listHinzuzufuegen" : [ ';
+		for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
+			const elem = obj.listHinzuzufuegen.get(i);
+			result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
+			if (i < obj.listHinzuzufuegen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result += '"regelUpdates" : ' + GostBlockungRegelUpdate.transpilerToJSON(obj.regelUpdates) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -88,32 +80,24 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisKursSchuelerZuordnungUpdate>) : string {
 		let result = '{';
 		if (obj.listEntfernen !== undefined) {
-			if (!obj.listEntfernen) {
-				result += '"listEntfernen" : []';
-			} else {
-				result += '"listEntfernen" : [ ';
-				for (let i = 0; i < obj.listEntfernen.size(); i++) {
-					const elem = obj.listEntfernen.get(i);
-					result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
-					if (i < obj.listEntfernen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"listEntfernen" : [ ';
+			for (let i = 0; i < obj.listEntfernen.size(); i++) {
+				const elem = obj.listEntfernen.get(i);
+				result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
+				if (i < obj.listEntfernen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.listHinzuzufuegen !== undefined) {
-			if (!obj.listHinzuzufuegen) {
-				result += '"listHinzuzufuegen" : []';
-			} else {
-				result += '"listHinzuzufuegen" : [ ';
-				for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
-					const elem = obj.listHinzuzufuegen.get(i);
-					result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
-					if (i < obj.listHinzuzufuegen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"listHinzuzufuegen" : [ ';
+			for (let i = 0; i < obj.listHinzuzufuegen.size(); i++) {
+				const elem = obj.listHinzuzufuegen.get(i);
+				result += GostBlockungsergebnisKursSchuelerZuordnung.transpilerToJSON(elem);
+				if (i < obj.listHinzuzufuegen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.regelUpdates !== undefined) {
 			result += '"regelUpdates" : ' + GostBlockungRegelUpdate.transpilerToJSON(obj.regelUpdates) + ',';

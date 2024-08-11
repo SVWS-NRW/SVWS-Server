@@ -76,26 +76,26 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerBetriebsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerBetriebsdaten>;
 		const result = new SchuelerBetriebsdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schueler_id === undefined)
-			 throw new Error('invalid json format, missing attribute schueler_id');
+			throw new Error('invalid json format, missing attribute schueler_id');
 		result.schueler_id = obj.schueler_id;
 		if (obj.betrieb_id === undefined)
-			 throw new Error('invalid json format, missing attribute betrieb_id');
+			throw new Error('invalid json format, missing attribute betrieb_id');
 		result.betrieb_id = obj.betrieb_id;
 		result.beschaeftigungsart_id = (obj.beschaeftigungsart_id === undefined) ? null : obj.beschaeftigungsart_id === null ? null : obj.beschaeftigungsart_id;
 		result.vertragsbeginn = (obj.vertragsbeginn === undefined) ? null : obj.vertragsbeginn === null ? null : obj.vertragsbeginn;
 		result.vertragsende = (obj.vertragsende === undefined) ? null : obj.vertragsende === null ? null : obj.vertragsende;
 		result.ausbilder = (obj.ausbilder === undefined) ? null : obj.ausbilder === null ? null : obj.ausbilder;
 		if (obj.allgadranschreiben === undefined)
-			 throw new Error('invalid json format, missing attribute allgadranschreiben');
+			throw new Error('invalid json format, missing attribute allgadranschreiben');
 		result.allgadranschreiben = obj.allgadranschreiben;
 		if (obj.praktikum === undefined)
-			 throw new Error('invalid json format, missing attribute praktikum');
+			throw new Error('invalid json format, missing attribute praktikum');
 		result.praktikum = obj.praktikum;
 		result.sortierung = (obj.sortierung === undefined) ? null : obj.sortierung === null ? null : obj.sortierung;
 		result.ansprechpartner_id = (obj.ansprechpartner_id === undefined) ? null : obj.ansprechpartner_id === null ? null : obj.ansprechpartner_id;
@@ -105,18 +105,18 @@ export class SchuelerBetriebsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerBetriebsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schueler_id" : ' + obj.schueler_id + ',';
-		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
-		result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schueler_id" : ' + obj.schueler_id.toString() + ',';
+		result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
+		result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
 		result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
 		result += '"vertragsende" : ' + ((!obj.vertragsende) ? 'null' : JSON.stringify(obj.vertragsende)) + ',';
 		result += '"ausbilder" : ' + ((!obj.ausbilder) ? 'null' : JSON.stringify(obj.ausbilder)) + ',';
 		result += '"allgadranschreiben" : ' + obj.allgadranschreiben! + ',';
 		result += '"praktikum" : ' + obj.praktikum! + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
-		result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id) + ',';
-		result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id) + ',';
+		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
+		result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
+		result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -125,16 +125,16 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerBetriebsdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schueler_id !== undefined) {
-			result += '"schueler_id" : ' + obj.schueler_id + ',';
+			result += '"schueler_id" : ' + obj.schueler_id.toString() + ',';
 		}
 		if (obj.betrieb_id !== undefined) {
-			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
+			result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
 		}
 		if (obj.beschaeftigungsart_id !== undefined) {
-			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id) + ',';
+			result += '"beschaeftigungsart_id" : ' + ((!obj.beschaeftigungsart_id) ? 'null' : obj.beschaeftigungsart_id.toString()) + ',';
 		}
 		if (obj.vertragsbeginn !== undefined) {
 			result += '"vertragsbeginn" : ' + ((!obj.vertragsbeginn) ? 'null' : JSON.stringify(obj.vertragsbeginn)) + ',';
@@ -152,13 +152,13 @@ export class SchuelerBetriebsdaten extends JavaObject {
 			result += '"praktikum" : ' + obj.praktikum + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung) + ',';
+			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
 		}
 		if (obj.ansprechpartner_id !== undefined) {
-			result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id) + ',';
+			result += '"ansprechpartner_id" : ' + ((!obj.ansprechpartner_id) ? 'null' : obj.ansprechpartner_id.toString()) + ',';
 		}
 		if (obj.betreuungslehrer_id !== undefined) {
-			result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id) + ',';
+			result += '"betreuungslehrer_id" : ' + ((!obj.betreuungslehrer_id) ? 'null' : obj.betreuungslehrer_id.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

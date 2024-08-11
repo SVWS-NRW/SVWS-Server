@@ -52,10 +52,10 @@ export class SchulformSchulgliederung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchulformSchulgliederung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchulformSchulgliederung>;
 		const result = new SchulformSchulgliederung();
 		if (obj.schulform === undefined)
-			 throw new Error('invalid json format, missing attribute schulform');
+			throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
 		return result;
@@ -63,7 +63,7 @@ export class SchulformSchulgliederung extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulformSchulgliederung) : string {
 		let result = '{';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -73,7 +73,7 @@ export class SchulformSchulgliederung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformSchulgliederung>) : string {
 		let result = '{';
 		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.gliederung !== undefined) {
 			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';

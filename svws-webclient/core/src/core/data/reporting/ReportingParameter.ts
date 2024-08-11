@@ -59,71 +59,63 @@ export class ReportingParameter extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ReportingParameter {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ReportingParameter>;
 		const result = new ReportingParameter();
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.ausgabeformat === undefined)
-			 throw new Error('invalid json format, missing attribute ausgabeformat');
+			throw new Error('invalid json format, missing attribute ausgabeformat');
 		result.ausgabeformat = obj.ausgabeformat;
 		if (obj.reportvorlage === undefined)
-			 throw new Error('invalid json format, missing attribute reportvorlage');
+			throw new Error('invalid json format, missing attribute reportvorlage');
 		result.reportvorlage = obj.reportvorlage;
-		if ((obj.idsHauptdaten !== undefined) && (obj.idsHauptdaten !== null)) {
+		if (obj.idsHauptdaten !== undefined) {
 			for (const elem of obj.idsHauptdaten) {
-				result.idsHauptdaten?.add(elem);
+				result.idsHauptdaten.add(elem);
 			}
 		}
 		if (obj.einzelausgabeHauptdaten === undefined)
-			 throw new Error('invalid json format, missing attribute einzelausgabeHauptdaten');
+			throw new Error('invalid json format, missing attribute einzelausgabeHauptdaten');
 		result.einzelausgabeHauptdaten = obj.einzelausgabeHauptdaten;
-		if ((obj.idsDetaildaten !== undefined) && (obj.idsDetaildaten !== null)) {
+		if (obj.idsDetaildaten !== undefined) {
 			for (const elem of obj.idsDetaildaten) {
-				result.idsDetaildaten?.add(elem);
+				result.idsDetaildaten.add(elem);
 			}
 		}
 		if (obj.einzelausgabeDetaildaten === undefined)
-			 throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
+			throw new Error('invalid json format, missing attribute einzelausgabeDetaildaten');
 		result.einzelausgabeDetaildaten = obj.einzelausgabeDetaildaten;
 		if (obj.detailLevel === undefined)
-			 throw new Error('invalid json format, missing attribute detailLevel');
+			throw new Error('invalid json format, missing attribute detailLevel');
 		result.detailLevel = obj.detailLevel;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : ReportingParameter) : string {
 		let result = '{';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
-		result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage!) + ',';
-		if (!obj.idsHauptdaten) {
-			result += '"idsHauptdaten" : []';
-		} else {
-			result += '"idsHauptdaten" : [ ';
-			for (let i = 0; i < obj.idsHauptdaten.size(); i++) {
-				const elem = obj.idsHauptdaten.get(i);
-				result += elem;
-				if (i < obj.idsHauptdaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"ausgabeformat" : ' + obj.ausgabeformat.toString() + ',';
+		result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage) + ',';
+		result += '"idsHauptdaten" : [ ';
+		for (let i = 0; i < obj.idsHauptdaten.size(); i++) {
+			const elem = obj.idsHauptdaten.get(i);
+			result += elem.toString();
+			if (i < obj.idsHauptdaten.size() - 1)
+				result += ',';
 		}
-		result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten + ',';
-		if (!obj.idsDetaildaten) {
-			result += '"idsDetaildaten" : []';
-		} else {
-			result += '"idsDetaildaten" : [ ';
-			for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
-				const elem = obj.idsDetaildaten.get(i);
-				result += elem;
-				if (i < obj.idsDetaildaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten.toString() + ',';
+		result += '"idsDetaildaten" : [ ';
+		for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
+			const elem = obj.idsDetaildaten.get(i);
+			result += elem.toString();
+			if (i < obj.idsDetaildaten.size() - 1)
+				result += ',';
 		}
-		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten + ',';
-		result += '"detailLevel" : ' + obj.detailLevel + ',';
+		result += ' ]' + ',';
+		result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
+		result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,50 +124,42 @@ export class ReportingParameter extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ReportingParameter>) : string {
 		let result = '{';
 		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.ausgabeformat !== undefined) {
-			result += '"ausgabeformat" : ' + obj.ausgabeformat + ',';
+			result += '"ausgabeformat" : ' + obj.ausgabeformat.toString() + ',';
 		}
 		if (obj.reportvorlage !== undefined) {
-			result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage!) + ',';
+			result += '"reportvorlage" : ' + JSON.stringify(obj.reportvorlage) + ',';
 		}
 		if (obj.idsHauptdaten !== undefined) {
-			if (!obj.idsHauptdaten) {
-				result += '"idsHauptdaten" : []';
-			} else {
-				result += '"idsHauptdaten" : [ ';
-				for (let i = 0; i < obj.idsHauptdaten.size(); i++) {
-					const elem = obj.idsHauptdaten.get(i);
-					result += elem;
-					if (i < obj.idsHauptdaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"idsHauptdaten" : [ ';
+			for (let i = 0; i < obj.idsHauptdaten.size(); i++) {
+				const elem = obj.idsHauptdaten.get(i);
+				result += elem.toString();
+				if (i < obj.idsHauptdaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.einzelausgabeHauptdaten !== undefined) {
-			result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten + ',';
+			result += '"einzelausgabeHauptdaten" : ' + obj.einzelausgabeHauptdaten.toString() + ',';
 		}
 		if (obj.idsDetaildaten !== undefined) {
-			if (!obj.idsDetaildaten) {
-				result += '"idsDetaildaten" : []';
-			} else {
-				result += '"idsDetaildaten" : [ ';
-				for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
-					const elem = obj.idsDetaildaten.get(i);
-					result += elem;
-					if (i < obj.idsDetaildaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"idsDetaildaten" : [ ';
+			for (let i = 0; i < obj.idsDetaildaten.size(); i++) {
+				const elem = obj.idsDetaildaten.get(i);
+				result += elem.toString();
+				if (i < obj.idsDetaildaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.einzelausgabeDetaildaten !== undefined) {
-			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten + ',';
+			result += '"einzelausgabeDetaildaten" : ' + obj.einzelausgabeDetaildaten.toString() + ',';
 		}
 		if (obj.detailLevel !== undefined) {
-			result += '"detailLevel" : ' + obj.detailLevel + ',';
+			result += '"detailLevel" : ' + obj.detailLevel.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

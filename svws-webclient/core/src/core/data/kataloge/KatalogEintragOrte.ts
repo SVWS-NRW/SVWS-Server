@@ -51,7 +51,7 @@ export class KatalogEintragOrte extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KatalogEintragOrte {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KatalogEintragOrte>;
 		const result = new KatalogEintragOrte();
 		result.ID = (obj.ID === undefined) ? null : obj.ID === null ? null : obj.ID;
 		result.PLZ = (obj.PLZ === undefined) ? null : obj.PLZ === null ? null : obj.PLZ;
@@ -65,13 +65,13 @@ export class KatalogEintragOrte extends JavaObject {
 
 	public static transpilerToJSON(obj : KatalogEintragOrte) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
 		result += '"RegSchl" : ' + ((!obj.RegSchl) ? 'null' : JSON.stringify(obj.RegSchl)) + ',';
 		result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -80,7 +80,7 @@ export class KatalogEintragOrte extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragOrte>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.PLZ !== undefined) {
 			result += '"PLZ" : ' + ((!obj.PLZ) ? 'null' : JSON.stringify(obj.PLZ)) + ',';
@@ -92,13 +92,13 @@ export class KatalogEintragOrte extends JavaObject {
 			result += '"Ort" : ' + ((!obj.Ort) ? 'null' : JSON.stringify(obj.Ort)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

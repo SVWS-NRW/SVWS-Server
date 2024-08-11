@@ -31,25 +31,25 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanListeEintragMinimal {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanListeEintragMinimal>;
 		const result = new StundenplanListeEintragMinimal();
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.gueltigAb === undefined)
-			 throw new Error('invalid json format, missing attribute gueltigAb');
+			throw new Error('invalid json format, missing attribute gueltigAb');
 		result.gueltigAb = obj.gueltigAb;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanListeEintragMinimal) : string {
 		let result = '{';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanListeEintragMinimal>) : string {
 		let result = '{';
 		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.gueltigAb !== undefined) {
-			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb!) + ',';
+			result += '"gueltigAb" : ' + JSON.stringify(obj.gueltigAb) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

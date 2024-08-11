@@ -75,37 +75,40 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerKompetenzKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerKompetenzKatalogEintrag>;
 		const result = new BenutzerKompetenzKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.gruppe_id === undefined)
-			 throw new Error('invalid json format, missing attribute gruppe_id');
+			throw new Error('invalid json format, missing attribute gruppe_id');
 		result.gruppe_id = obj.gruppe_id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if ((obj.nurSchulformen !== undefined) && (obj.nurSchulformen !== null)) {
+			result.nurSchulformen = new ArrayList();
 			for (const elem of obj.nurSchulformen) {
-				result.nurSchulformen?.add(elem);
+				result.nurSchulformen.add(elem);
 			}
+		} else {
+			result.nurSchulformen = null;
 		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BenutzerKompetenzKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"gruppe_id" : ' + obj.gruppe_id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"gruppe_id" : ' + obj.gruppe_id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		if (!obj.nurSchulformen) {
-			result += '"nurSchulformen" : []';
+			result += '"nurSchulformen" : null';
 		} else {
 			result += '"nurSchulformen" : [ ';
 			for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 				const elem = obj.nurSchulformen.get(i);
-				result += elem;
+				result += elem.toString();
 				if (i < obj.nurSchulformen.size() - 1)
 					result += ',';
 			}
@@ -119,22 +122,22 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerKompetenzKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.gruppe_id !== undefined) {
-			result += '"gruppe_id" : ' + obj.gruppe_id + ',';
+			result += '"gruppe_id" : ' + obj.gruppe_id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.nurSchulformen !== undefined) {
 			if (!obj.nurSchulformen) {
-				result += '"nurSchulformen" : []';
+				result += '"nurSchulformen" : null';
 			} else {
 				result += '"nurSchulformen" : [ ';
 				for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 					const elem = obj.nurSchulformen.get(i);
-					result += elem;
+					result += elem.toString();
 					if (i < obj.nurSchulformen.size() - 1)
 						result += ',';
 				}

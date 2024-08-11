@@ -31,13 +31,13 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): LehrerFachrichtungEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerFachrichtungEintrag>;
 		const result = new LehrerFachrichtungEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idFachrichtung === undefined)
-			 throw new Error('invalid json format, missing attribute idFachrichtung');
+			throw new Error('invalid json format, missing attribute idFachrichtung');
 		result.idFachrichtung = obj.idFachrichtung;
 		result.idAnerkennungsgrund = (obj.idAnerkennungsgrund === undefined) ? null : obj.idAnerkennungsgrund === null ? null : obj.idAnerkennungsgrund;
 		return result;
@@ -45,9 +45,9 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : LehrerFachrichtungEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idFachrichtung" : ' + obj.idFachrichtung + ',';
-		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idFachrichtung" : ' + obj.idFachrichtung.toString() + ',';
+		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,13 +56,13 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<LehrerFachrichtungEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idFachrichtung !== undefined) {
-			result += '"idFachrichtung" : ' + obj.idFachrichtung + ',';
+			result += '"idFachrichtung" : ' + obj.idFachrichtung.toString() + ',';
 		}
 		if (obj.idAnerkennungsgrund !== undefined) {
-			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund) + ',';
+			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

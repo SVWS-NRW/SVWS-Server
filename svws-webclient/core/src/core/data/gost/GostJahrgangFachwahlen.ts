@@ -28,31 +28,29 @@ export class GostJahrgangFachwahlen extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostJahrgangFachwahlen {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostJahrgangFachwahlen>;
 		const result = new GostJahrgangFachwahlen();
-		for (let i = 0; i < obj.halbjahr.length; i++) {
-			result.halbjahr[i] = obj.halbjahr[i] == null ? null : (GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(JSON.stringify(obj.halbjahr[i])));
+		if (obj.halbjahr !== undefined) {
+			for (let i = 0; i < obj.halbjahr.length; i++) {
+				result.halbjahr[i] = obj.halbjahr[i] == null ? null : (GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(JSON.stringify(obj.halbjahr[i])));
+			}
 		}
 		if (obj.abitur === undefined)
-			 throw new Error('invalid json format, missing attribute abitur');
+			throw new Error('invalid json format, missing attribute abitur');
 		result.abitur = GostJahrgangFachwahlenHalbjahr.transpilerFromJSON(JSON.stringify(obj.abitur));
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostJahrgangFachwahlen) : string {
 		let result = '{';
-		if (!obj.halbjahr) {
-			result += '"halbjahr" : []';
-		} else {
-			result += '"halbjahr" : [ ';
-			for (let i = 0; i < obj.halbjahr.length; i++) {
-				const elem = obj.halbjahr[i];
-				result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
-				if (i < obj.halbjahr.length - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"halbjahr" : [ ';
+		for (let i = 0; i < obj.halbjahr.length; i++) {
+			const elem = obj.halbjahr[i];
+			result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
+			if (i < obj.halbjahr.length - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result += '"abitur" : ' + GostJahrgangFachwahlenHalbjahr.transpilerToJSON(obj.abitur) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -63,18 +61,14 @@ export class GostJahrgangFachwahlen extends JavaObject {
 		let result = '{';
 		if (obj.halbjahr !== undefined) {
 			const a = obj.halbjahr;
-			if (!a) {
-				result += '"halbjahr" : []';
-			} else {
-				result += '"halbjahr" : [ ';
-				for (let i = 0; i < a.length; i++) {
-					const elem = a[i];
-					result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
-					if (i < a.length - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"halbjahr" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += (elem === null) ? null : GostJahrgangFachwahlenHalbjahr.transpilerToJSON(elem);
+				if (i < a.length - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.abitur !== undefined) {
 			result += '"abitur" : ' + GostJahrgangFachwahlenHalbjahr.transpilerToJSON(obj.abitur) + ',';

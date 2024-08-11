@@ -34,7 +34,7 @@ export class SchuldateiEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiEintrag>;
 		const result = new SchuldateiEintrag();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;

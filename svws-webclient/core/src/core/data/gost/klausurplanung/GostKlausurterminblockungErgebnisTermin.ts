@@ -23,11 +23,11 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungErgebnisTermin {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungErgebnisTermin>;
 		const result = new GostKlausurterminblockungErgebnisTermin();
-		if ((obj.kursklausuren !== undefined) && (obj.kursklausuren !== null)) {
+		if (obj.kursklausuren !== undefined) {
 			for (const elem of obj.kursklausuren) {
-				result.kursklausuren?.add(elem);
+				result.kursklausuren.add(elem);
 			}
 		}
 		return result;
@@ -35,18 +35,14 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurterminblockungErgebnisTermin) : string {
 		let result = '{';
-		if (!obj.kursklausuren) {
-			result += '"kursklausuren" : []';
-		} else {
-			result += '"kursklausuren" : [ ';
-			for (let i = 0; i < obj.kursklausuren.size(); i++) {
-				const elem = obj.kursklausuren.get(i);
-				result += elem;
-				if (i < obj.kursklausuren.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"kursklausuren" : [ ';
+		for (let i = 0; i < obj.kursklausuren.size(); i++) {
+			const elem = obj.kursklausuren.get(i);
+			result += elem.toString();
+			if (i < obj.kursklausuren.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -55,18 +51,14 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurterminblockungErgebnisTermin>) : string {
 		let result = '{';
 		if (obj.kursklausuren !== undefined) {
-			if (!obj.kursklausuren) {
-				result += '"kursklausuren" : []';
-			} else {
-				result += '"kursklausuren" : [ ';
-				for (let i = 0; i < obj.kursklausuren.size(); i++) {
-					const elem = obj.kursklausuren.get(i);
-					result += elem;
-					if (i < obj.kursklausuren.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kursklausuren" : [ ';
+			for (let i = 0; i < obj.kursklausuren.size(); i++) {
+				const elem = obj.kursklausuren.get(i);
+				result += elem.toString();
+				if (i < obj.kursklausuren.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

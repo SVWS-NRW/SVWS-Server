@@ -99,42 +99,42 @@ export class ENMSchueler extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMSchueler {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMSchueler>;
 		const result = new ENMSchueler();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.jahrgangID === undefined)
-			 throw new Error('invalid json format, missing attribute jahrgangID');
+			throw new Error('invalid json format, missing attribute jahrgangID');
 		result.jahrgangID = obj.jahrgangID;
 		if (obj.klasseID === undefined)
-			 throw new Error('invalid json format, missing attribute klasseID');
+			throw new Error('invalid json format, missing attribute klasseID');
 		result.klasseID = obj.klasseID;
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
 		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
 		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (obj.istZieldifferent === undefined)
-			 throw new Error('invalid json format, missing attribute istZieldifferent');
+			throw new Error('invalid json format, missing attribute istZieldifferent');
 		result.istZieldifferent = obj.istZieldifferent;
 		if (obj.istDaZFoerderung === undefined)
-			 throw new Error('invalid json format, missing attribute istDaZFoerderung');
+			throw new Error('invalid json format, missing attribute istDaZFoerderung');
 		result.istDaZFoerderung = obj.istDaZFoerderung;
-		if ((obj.sprachenfolge !== undefined) && (obj.sprachenfolge !== null)) {
+		if (obj.sprachenfolge !== undefined) {
 			for (const elem of obj.sprachenfolge) {
-				result.sprachenfolge?.add(ENMSprachenfolge.transpilerFromJSON(JSON.stringify(elem)));
+				result.sprachenfolge.add(ENMSprachenfolge.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.lernabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute lernabschnitt');
+			throw new Error('invalid json format, missing attribute lernabschnitt');
 		result.lernabschnitt = ENMLernabschnitt.transpilerFromJSON(JSON.stringify(obj.lernabschnitt));
-		if ((obj.leistungsdaten !== undefined) && (obj.leistungsdaten !== null)) {
+		if (obj.leistungsdaten !== undefined) {
 			for (const elem of obj.leistungsdaten) {
-				result.leistungsdaten?.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
+				result.leistungsdaten.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.bemerkungen === undefined)
-			 throw new Error('invalid json format, missing attribute bemerkungen');
+			throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = ENMLeistungBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
 		result.zp10 = ((obj.zp10 === undefined) || (obj.zp10 === null)) ? null : ENMZP10.transpilerFromJSON(JSON.stringify(obj.zp10));
 		result.bkabschluss = ((obj.bkabschluss === undefined) || (obj.bkabschluss === null)) ? null : ENMBKAbschluss.transpilerFromJSON(JSON.stringify(obj.bkabschluss));
@@ -143,40 +143,32 @@ export class ENMSchueler extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMSchueler) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"jahrgangID" : ' + obj.jahrgangID + ',';
-		result += '"klasseID" : ' + obj.klasseID + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"jahrgangID" : ' + obj.jahrgangID.toString() + ',';
+		result += '"klasseID" : ' + obj.klasseID.toString() + ',';
 		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		result += '"istZieldifferent" : ' + obj.istZieldifferent + ',';
-		result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung + ',';
-		if (!obj.sprachenfolge) {
-			result += '"sprachenfolge" : []';
-		} else {
-			result += '"sprachenfolge" : [ ';
-			for (let i = 0; i < obj.sprachenfolge.size(); i++) {
-				const elem = obj.sprachenfolge.get(i);
-				result += ENMSprachenfolge.transpilerToJSON(elem);
-				if (i < obj.sprachenfolge.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"istZieldifferent" : ' + obj.istZieldifferent.toString() + ',';
+		result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung.toString() + ',';
+		result += '"sprachenfolge" : [ ';
+		for (let i = 0; i < obj.sprachenfolge.size(); i++) {
+			const elem = obj.sprachenfolge.get(i);
+			result += ENMSprachenfolge.transpilerToJSON(elem);
+			if (i < obj.sprachenfolge.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result += '"lernabschnitt" : ' + ENMLernabschnitt.transpilerToJSON(obj.lernabschnitt) + ',';
-		if (!obj.leistungsdaten) {
-			result += '"leistungsdaten" : []';
-		} else {
-			result += '"leistungsdaten" : [ ';
-			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
-				const elem = obj.leistungsdaten.get(i);
-				result += ENMLeistung.transpilerToJSON(elem);
-				if (i < obj.leistungsdaten.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"leistungsdaten" : [ ';
+		for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+			const elem = obj.leistungsdaten.get(i);
+			result += ENMLeistung.transpilerToJSON(elem);
+			if (i < obj.leistungsdaten.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
 		result += '"bkabschluss" : ' + ((!obj.bkabschluss) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
@@ -188,13 +180,13 @@ export class ENMSchueler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMSchueler>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.jahrgangID !== undefined) {
-			result += '"jahrgangID" : ' + obj.jahrgangID + ',';
+			result += '"jahrgangID" : ' + obj.jahrgangID.toString() + ',';
 		}
 		if (obj.klasseID !== undefined) {
-			result += '"klasseID" : ' + obj.klasseID + ',';
+			result += '"klasseID" : ' + obj.klasseID.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
@@ -209,41 +201,33 @@ export class ENMSchueler extends JavaObject {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.istZieldifferent !== undefined) {
-			result += '"istZieldifferent" : ' + obj.istZieldifferent + ',';
+			result += '"istZieldifferent" : ' + obj.istZieldifferent.toString() + ',';
 		}
 		if (obj.istDaZFoerderung !== undefined) {
-			result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung + ',';
+			result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung.toString() + ',';
 		}
 		if (obj.sprachenfolge !== undefined) {
-			if (!obj.sprachenfolge) {
-				result += '"sprachenfolge" : []';
-			} else {
-				result += '"sprachenfolge" : [ ';
-				for (let i = 0; i < obj.sprachenfolge.size(); i++) {
-					const elem = obj.sprachenfolge.get(i);
-					result += ENMSprachenfolge.transpilerToJSON(elem);
-					if (i < obj.sprachenfolge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"sprachenfolge" : [ ';
+			for (let i = 0; i < obj.sprachenfolge.size(); i++) {
+				const elem = obj.sprachenfolge.get(i);
+				result += ENMSprachenfolge.transpilerToJSON(elem);
+				if (i < obj.sprachenfolge.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.lernabschnitt !== undefined) {
 			result += '"lernabschnitt" : ' + ENMLernabschnitt.transpilerToJSON(obj.lernabschnitt) + ',';
 		}
 		if (obj.leistungsdaten !== undefined) {
-			if (!obj.leistungsdaten) {
-				result += '"leistungsdaten" : []';
-			} else {
-				result += '"leistungsdaten" : [ ';
-				for (let i = 0; i < obj.leistungsdaten.size(); i++) {
-					const elem = obj.leistungsdaten.get(i);
-					result += ENMLeistung.transpilerToJSON(elem);
-					if (i < obj.leistungsdaten.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"leistungsdaten" : [ ';
+			for (let i = 0; i < obj.leistungsdaten.size(); i++) {
+				const elem = obj.leistungsdaten.get(i);
+				result += ENMLeistung.transpilerToJSON(elem);
+				if (i < obj.leistungsdaten.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.bemerkungen !== undefined) {
 			result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';

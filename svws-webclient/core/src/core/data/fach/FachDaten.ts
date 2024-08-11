@@ -111,85 +111,85 @@ export class FachDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): FachDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<FachDaten>;
 		const result = new FachDaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.kuerzelStatistik === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzelStatistik');
+			throw new Error('invalid json format, missing attribute kuerzelStatistik');
 		result.kuerzelStatistik = obj.kuerzelStatistik;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (obj.istOberstufenFach === undefined)
-			 throw new Error('invalid json format, missing attribute istOberstufenFach');
+			throw new Error('invalid json format, missing attribute istOberstufenFach');
 		result.istOberstufenFach = obj.istOberstufenFach;
 		if (obj.istPruefungsordnungsRelevant === undefined)
-			 throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
+			throw new Error('invalid json format, missing attribute istPruefungsordnungsRelevant');
 		result.istPruefungsordnungsRelevant = obj.istPruefungsordnungsRelevant;
 		if (obj.istSichtbar === undefined)
-			 throw new Error('invalid json format, missing attribute istSichtbar');
+			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
 		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
 		result.bilingualeSprache = (obj.bilingualeSprache === undefined) ? null : obj.bilingualeSprache === null ? null : obj.bilingualeSprache;
 		if (obj.istNachpruefungErlaubt === undefined)
-			 throw new Error('invalid json format, missing attribute istNachpruefungErlaubt');
+			throw new Error('invalid json format, missing attribute istNachpruefungErlaubt');
 		result.istNachpruefungErlaubt = obj.istNachpruefungErlaubt;
 		if (obj.aufZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute aufZeugnis');
+			throw new Error('invalid json format, missing attribute aufZeugnis');
 		result.aufZeugnis = obj.aufZeugnis;
 		if (obj.bezeichnungZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungZeugnis');
+			throw new Error('invalid json format, missing attribute bezeichnungZeugnis');
 		result.bezeichnungZeugnis = obj.bezeichnungZeugnis;
 		if (obj.bezeichnungUeberweisungszeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungUeberweisungszeugnis');
+			throw new Error('invalid json format, missing attribute bezeichnungUeberweisungszeugnis');
 		result.bezeichnungUeberweisungszeugnis = obj.bezeichnungUeberweisungszeugnis;
 		if (obj.maxZeichenInFachbemerkungen === undefined)
-			 throw new Error('invalid json format, missing attribute maxZeichenInFachbemerkungen');
+			throw new Error('invalid json format, missing attribute maxZeichenInFachbemerkungen');
 		result.maxZeichenInFachbemerkungen = obj.maxZeichenInFachbemerkungen;
 		if (obj.istSchriftlichZK === undefined)
-			 throw new Error('invalid json format, missing attribute istSchriftlichZK');
+			throw new Error('invalid json format, missing attribute istSchriftlichZK');
 		result.istSchriftlichZK = obj.istSchriftlichZK;
 		if (obj.istSchriftlichBA === undefined)
-			 throw new Error('invalid json format, missing attribute istSchriftlichBA');
+			throw new Error('invalid json format, missing attribute istSchriftlichBA');
 		result.istSchriftlichBA = obj.istSchriftlichBA;
 		if (obj.istFHRFach === undefined)
-			 throw new Error('invalid json format, missing attribute istFHRFach');
+			throw new Error('invalid json format, missing attribute istFHRFach');
 		result.istFHRFach = obj.istFHRFach;
 		if (obj.holeAusAltenLernabschnitten === undefined)
-			 throw new Error('invalid json format, missing attribute holeAusAltenLernabschnitten');
+			throw new Error('invalid json format, missing attribute holeAusAltenLernabschnitten');
 		result.holeAusAltenLernabschnitten = obj.holeAusAltenLernabschnitten;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : FachDaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"istOberstufenFach" : ' + obj.istOberstufenFach + ',';
-		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
-		result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
+		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
+		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
 		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
-		result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt + ',';
-		result += '"aufZeugnis" : ' + obj.aufZeugnis + ',';
-		result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis!) + ',';
-		result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis!) + ',';
-		result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen + ',';
-		result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK + ',';
-		result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA + ',';
-		result += '"istFHRFach" : ' + obj.istFHRFach + ',';
-		result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten + ',';
+		result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';
+		result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
+		result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis) + ',';
+		result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis) + ',';
+		result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
+		result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK.toString() + ',';
+		result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA.toString() + ',';
+		result += '"istFHRFach" : ' + obj.istFHRFach.toString() + ',';
+		result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -198,28 +198,28 @@ export class FachDaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<FachDaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.kuerzelStatistik !== undefined) {
-			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik!) + ',';
+			result += '"kuerzelStatistik" : ' + JSON.stringify(obj.kuerzelStatistik) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.istOberstufenFach !== undefined) {
-			result += '"istOberstufenFach" : ' + obj.istOberstufenFach + ',';
+			result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
 		}
 		if (obj.istPruefungsordnungsRelevant !== undefined) {
-			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant + ',';
+			result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
-			result += '"istSichtbar" : ' + obj.istSichtbar + ',';
+			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.aufgabenfeld !== undefined) {
 			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
@@ -228,31 +228,31 @@ export class FachDaten extends JavaObject {
 			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.istNachpruefungErlaubt !== undefined) {
-			result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt + ',';
+			result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';
 		}
 		if (obj.aufZeugnis !== undefined) {
-			result += '"aufZeugnis" : ' + obj.aufZeugnis + ',';
+			result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
 		}
 		if (obj.bezeichnungZeugnis !== undefined) {
-			result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis!) + ',';
+			result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis) + ',';
 		}
 		if (obj.bezeichnungUeberweisungszeugnis !== undefined) {
-			result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis!) + ',';
+			result += '"bezeichnungUeberweisungszeugnis" : ' + JSON.stringify(obj.bezeichnungUeberweisungszeugnis) + ',';
 		}
 		if (obj.maxZeichenInFachbemerkungen !== undefined) {
-			result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen + ',';
+			result += '"maxZeichenInFachbemerkungen" : ' + obj.maxZeichenInFachbemerkungen.toString() + ',';
 		}
 		if (obj.istSchriftlichZK !== undefined) {
-			result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK + ',';
+			result += '"istSchriftlichZK" : ' + obj.istSchriftlichZK.toString() + ',';
 		}
 		if (obj.istSchriftlichBA !== undefined) {
-			result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA + ',';
+			result += '"istSchriftlichBA" : ' + obj.istSchriftlichBA.toString() + ',';
 		}
 		if (obj.istFHRFach !== undefined) {
-			result += '"istFHRFach" : ' + obj.istFHRFach + ',';
+			result += '"istFHRFach" : ' + obj.istFHRFach.toString() + ',';
 		}
 		if (obj.holeAusAltenLernabschnitten !== undefined) {
-			result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten + ',';
+			result += '"holeAusAltenLernabschnitten" : ' + obj.holeAusAltenLernabschnitten.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -36,10 +36,10 @@ export class ENMNote extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMNote {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMNote>;
 		const result = new ENMNote();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.notenpunkte = (obj.notenpunkte === undefined) ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
@@ -49,9 +49,9 @@ export class ENMNote extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMNote) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
+		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
 		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -61,13 +61,13 @@ export class ENMNote extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMNote>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.notenpunkte !== undefined) {
-			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
+			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
 		}
 		if (obj.text !== undefined) {
 			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';

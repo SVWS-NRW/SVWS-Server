@@ -51,7 +51,7 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragUnicodeUmwandlung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragUnicodeUmwandlung>;
 		const result = new Schild3KatalogEintragUnicodeUmwandlung();
 		result.ID = (obj.ID === undefined) ? null : obj.ID === null ? null : obj.ID;
 		result.Unicodezeichen = (obj.Unicodezeichen === undefined) ? null : obj.Unicodezeichen === null ? null : obj.Unicodezeichen;
@@ -65,7 +65,7 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragUnicodeUmwandlung) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';
 		result += '"Ersatzzeichen" : ' + ((!obj.Ersatzzeichen) ? 'null' : JSON.stringify(obj.Ersatzzeichen)) + ',';
 		result += '"DecimalZeichen" : ' + ((!obj.DecimalZeichen) ? 'null' : JSON.stringify(obj.DecimalZeichen)) + ',';
@@ -80,7 +80,7 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragUnicodeUmwandlung>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.Unicodezeichen !== undefined) {
 			result += '"Unicodezeichen" : ' + ((!obj.Unicodezeichen) ? 'null' : JSON.stringify(obj.Unicodezeichen)) + ',';

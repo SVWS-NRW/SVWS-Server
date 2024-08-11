@@ -85,21 +85,21 @@ export class HerkunftKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): HerkunftKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<HerkunftKatalogEintrag>;
 		const result = new HerkunftKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
+		if (obj.schulformen !== undefined) {
 			for (const elem of obj.schulformen) {
-				result.schulformen?.add(elem);
+				result.schulformen.add(elem);
 			}
 		}
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -108,11 +108,33 @@ export class HerkunftKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : HerkunftKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		if (!obj.schulformen) {
-			result += '"schulformen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"schulformen" : [ ';
+		for (let i = 0; i < obj.schulformen.size(); i++) {
+			const elem = obj.schulformen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.schulformen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<HerkunftKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.schulformen !== undefined) {
 			result += '"schulformen" : [ ';
 			for (let i = 0; i < obj.schulformen.size(); i++) {
 				const elem = obj.schulformen.get(i);
@@ -122,44 +144,14 @@ export class HerkunftKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<HerkunftKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			if (!obj.schulformen) {
-				result += '"schulformen" : []';
-			} else {
-				result += '"schulformen" : [ ';
-				for (let i = 0; i < obj.schulformen.size(); i++) {
-					const elem = obj.schulformen.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.schulformen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

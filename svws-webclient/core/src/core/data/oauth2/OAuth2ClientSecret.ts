@@ -36,10 +36,10 @@ export class OAuth2ClientSecret extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): OAuth2ClientSecret {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<OAuth2ClientSecret>;
 		const result = new OAuth2ClientSecret();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.authServer = (obj.authServer === undefined) ? null : obj.authServer === null ? null : obj.authServer;
 		result.clientID = (obj.clientID === undefined) ? null : obj.clientID === null ? null : obj.clientID;
@@ -49,7 +49,7 @@ export class OAuth2ClientSecret extends JavaObject {
 
 	public static transpilerToJSON(obj : OAuth2ClientSecret) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"authServer" : ' + ((!obj.authServer) ? 'null' : JSON.stringify(obj.authServer)) + ',';
 		result += '"clientID" : ' + ((!obj.clientID) ? 'null' : JSON.stringify(obj.clientID)) + ',';
 		result += '"clientSecret" : ' + ((!obj.clientSecret) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
@@ -61,7 +61,7 @@ export class OAuth2ClientSecret extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<OAuth2ClientSecret>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.authServer !== undefined) {
 			result += '"authServer" : ' + ((!obj.authServer) ? 'null' : JSON.stringify(obj.authServer)) + ',';

@@ -40,16 +40,16 @@ export class GostLeistungenFachwahl extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostLeistungenFachwahl {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostLeistungenFachwahl>;
 		const result = new GostLeistungenFachwahl();
 		result.fach = ((obj.fach === undefined) || (obj.fach === null)) ? null : GostFach.transpilerFromJSON(JSON.stringify(obj.fach));
 		result.abiturfach = (obj.abiturfach === undefined) ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		if (obj.istFSNeu === undefined)
-			 throw new Error('invalid json format, missing attribute istFSNeu');
+			throw new Error('invalid json format, missing attribute istFSNeu');
 		result.istFSNeu = obj.istFSNeu;
-		if ((obj.belegungen !== undefined) && (obj.belegungen !== null)) {
+		if (obj.belegungen !== undefined) {
 			for (const elem of obj.belegungen) {
-				result.belegungen?.add(GostLeistungenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
+				result.belegungen.add(GostLeistungenFachbelegung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -58,20 +58,16 @@ export class GostLeistungenFachwahl extends JavaObject {
 	public static transpilerToJSON(obj : GostLeistungenFachwahl) : string {
 		let result = '{';
 		result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
-		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
-		result += '"istFSNeu" : ' + obj.istFSNeu + ',';
-		if (!obj.belegungen) {
-			result += '"belegungen" : []';
-		} else {
-			result += '"belegungen" : [ ';
-			for (let i = 0; i < obj.belegungen.size(); i++) {
-				const elem = obj.belegungen.get(i);
-				result += GostLeistungenFachbelegung.transpilerToJSON(elem);
-				if (i < obj.belegungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
+		result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';
+		result += '"belegungen" : [ ';
+		for (let i = 0; i < obj.belegungen.size(); i++) {
+			const elem = obj.belegungen.get(i);
+			result += GostLeistungenFachbelegung.transpilerToJSON(elem);
+			if (i < obj.belegungen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -83,24 +79,20 @@ export class GostLeistungenFachwahl extends JavaObject {
 			result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
 		}
 		if (obj.abiturfach !== undefined) {
-			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
+			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
 		}
 		if (obj.istFSNeu !== undefined) {
-			result += '"istFSNeu" : ' + obj.istFSNeu + ',';
+			result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';
 		}
 		if (obj.belegungen !== undefined) {
-			if (!obj.belegungen) {
-				result += '"belegungen" : []';
-			} else {
-				result += '"belegungen" : [ ';
-				for (let i = 0; i < obj.belegungen.size(); i++) {
-					const elem = obj.belegungen.get(i);
-					result += GostLeistungenFachbelegung.transpilerToJSON(elem);
-					if (i < obj.belegungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"belegungen" : [ ';
+			for (let i = 0; i < obj.belegungen.size(); i++) {
+				const elem = obj.belegungen.get(i);
+				result += GostLeistungenFachbelegung.transpilerToJSON(elem);
+				if (i < obj.belegungen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

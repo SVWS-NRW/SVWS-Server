@@ -63,41 +63,41 @@ export class StundenplanKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanKurs>;
 		const result = new StundenplanKurs();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idFach === undefined)
-			 throw new Error('invalid json format, missing attribute idFach');
+			throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(elem);
+				result.schienen.add(elem);
 			}
 		}
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(elem);
+				result.jahrgaenge.add(elem);
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(elem);
+				result.schueler.add(elem);
 			}
 		}
-		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+		if (obj.lehrer !== undefined) {
 			for (const elem of obj.lehrer) {
-				result.lehrer?.add(elem);
+				result.lehrer.add(elem);
 			}
 		}
 		return result;
@@ -105,59 +105,43 @@ export class StundenplanKurs extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanKurs) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idFach" : ' + obj.idFach + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
-			result += '"schienen" : [ ';
-			for (let i = 0; i < obj.schienen.size(); i++) {
-				const elem = obj.schienen.get(i);
-				result += elem;
-				if (i < obj.schienen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idFach" : ' + obj.idFach.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += elem.toString();
+			if (i < obj.schienen.size() - 1)
+				result += ',';
 		}
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
-			result += '"jahrgaenge" : [ ';
-			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-				const elem = obj.jahrgaenge.get(i);
-				result += elem;
-				if (i < obj.jahrgaenge.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += elem.toString();
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
 		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
-			result += '"schueler" : [ ';
-			for (let i = 0; i < obj.schueler.size(); i++) {
-				const elem = obj.schueler.get(i);
-				result += elem;
-				if (i < obj.schueler.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += elem.toString();
+			if (i < obj.schueler.size() - 1)
+				result += ',';
 		}
-		if (!obj.lehrer) {
-			result += '"lehrer" : []';
-		} else {
-			result += '"lehrer" : [ ';
-			for (let i = 0; i < obj.lehrer.size(); i++) {
-				const elem = obj.lehrer.get(i);
-				result += elem;
-				if (i < obj.lehrer.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"lehrer" : [ ';
+		for (let i = 0; i < obj.lehrer.size(); i++) {
+			const elem = obj.lehrer.get(i);
+			result += elem.toString();
+			if (i < obj.lehrer.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -166,75 +150,59 @@ export class StundenplanKurs extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanKurs>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idFach !== undefined) {
-			result += '"idFach" : ' + obj.idFach + ',';
+			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += elem;
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem.toString();
+				if (i < obj.schienen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += elem;
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"jahrgaenge" : [ ';
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
+				result += elem.toString();
+				if (i < obj.jahrgaenge.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += elem;
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schueler" : [ ';
+			for (let i = 0; i < obj.schueler.size(); i++) {
+				const elem = obj.schueler.get(i);
+				result += elem.toString();
+				if (i < obj.schueler.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			if (!obj.lehrer) {
-				result += '"lehrer" : []';
-			} else {
-				result += '"lehrer" : [ ';
-				for (let i = 0; i < obj.lehrer.size(); i++) {
-					const elem = obj.lehrer.get(i);
-					result += elem;
-					if (i < obj.lehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"lehrer" : [ ';
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
+				result += elem.toString();
+				if (i < obj.lehrer.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

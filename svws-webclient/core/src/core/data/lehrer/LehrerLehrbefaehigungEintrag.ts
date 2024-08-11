@@ -31,13 +31,13 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): LehrerLehrbefaehigungEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerLehrbefaehigungEintrag>;
 		const result = new LehrerLehrbefaehigungEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idLehrbefaehigung === undefined)
-			 throw new Error('invalid json format, missing attribute idLehrbefaehigung');
+			throw new Error('invalid json format, missing attribute idLehrbefaehigung');
 		result.idLehrbefaehigung = obj.idLehrbefaehigung;
 		result.idAnerkennungsgrund = (obj.idAnerkennungsgrund === undefined) ? null : obj.idAnerkennungsgrund === null ? null : obj.idAnerkennungsgrund;
 		return result;
@@ -45,9 +45,9 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : LehrerLehrbefaehigungEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung + ',';
-		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';
+		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -56,13 +56,13 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<LehrerLehrbefaehigungEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idLehrbefaehigung !== undefined) {
-			result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung + ',';
+			result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';
 		}
 		if (obj.idAnerkennungsgrund !== undefined) {
-			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund) + ',';
+			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

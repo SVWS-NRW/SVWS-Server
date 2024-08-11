@@ -36,29 +36,29 @@ export class StundenplanRaum extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanRaum {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanRaum>;
 		const result = new StundenplanRaum();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		if (obj.groesse === undefined)
-			 throw new Error('invalid json format, missing attribute groesse');
+			throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanRaum) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		result += '"groesse" : ' + obj.groesse + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"groesse" : ' + obj.groesse.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,16 +67,16 @@ export class StundenplanRaum extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanRaum>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.groesse !== undefined) {
-			result += '"groesse" : ' + obj.groesse + ',';
+			result += '"groesse" : ' + obj.groesse.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

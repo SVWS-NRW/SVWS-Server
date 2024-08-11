@@ -26,10 +26,10 @@ export class Erzieherart extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Erzieherart {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Erzieherart>;
 		const result = new Erzieherart();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		return result;
@@ -37,7 +37,7 @@ export class Erzieherart extends JavaObject {
 
 	public static transpilerToJSON(obj : Erzieherart) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -47,7 +47,7 @@ export class Erzieherart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Erzieherart>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';

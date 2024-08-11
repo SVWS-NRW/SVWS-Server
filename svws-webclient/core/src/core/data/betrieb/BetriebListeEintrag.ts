@@ -61,10 +61,10 @@ export class BetriebListeEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BetriebListeEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BetriebListeEintrag>;
 		const result = new BetriebListeEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.adressArt = (obj.adressArt === undefined) ? null : obj.adressArt === null ? null : obj.adressArt;
 		result.name1 = (obj.name1 === undefined) ? null : obj.name1 === null ? null : obj.name1;
@@ -79,14 +79,14 @@ export class BetriebListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebListeEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
 		result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnr" : ' + ((!obj.hausnr) ? 'null' : JSON.stringify(obj.hausnr)) + ',';
 		result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
-		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
-		result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
+		result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
+		result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id.toString()) + ',';
 		result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -96,10 +96,10 @@ export class BetriebListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebListeEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.adressArt !== undefined) {
-			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt) + ',';
+			result += '"adressArt" : ' + ((!obj.adressArt) ? 'null' : obj.adressArt.toString()) + ',';
 		}
 		if (obj.name1 !== undefined) {
 			result += '"name1" : ' + ((!obj.name1) ? 'null' : JSON.stringify(obj.name1)) + ',';
@@ -114,10 +114,10 @@ export class BetriebListeEintrag extends JavaObject {
 			result += '"hausnrzusatz" : ' + ((!obj.hausnrzusatz) ? 'null' : JSON.stringify(obj.hausnrzusatz)) + ',';
 		}
 		if (obj.ort_id !== undefined) {
-			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id) + ',';
+			result += '"ort_id" : ' + ((!obj.ort_id) ? 'null' : obj.ort_id.toString()) + ',';
 		}
 		if (obj.ortsteil_id !== undefined) {
-			result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id) + ',';
+			result += '"ortsteil_id" : ' + ((!obj.ortsteil_id) ? 'null' : obj.ortsteil_id.toString()) + ',';
 		}
 		if (obj.branche !== undefined) {
 			result += '"branche" : ' + ((!obj.branche) ? 'null' : JSON.stringify(obj.branche)) + ',';

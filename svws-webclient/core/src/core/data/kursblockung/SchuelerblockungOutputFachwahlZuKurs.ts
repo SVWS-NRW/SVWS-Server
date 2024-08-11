@@ -32,25 +32,25 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerblockungOutputFachwahlZuKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerblockungOutputFachwahlZuKurs>;
 		const result = new SchuelerblockungOutputFachwahlZuKurs();
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		if (obj.kursartID === undefined)
-			 throw new Error('invalid json format, missing attribute kursartID');
+			throw new Error('invalid json format, missing attribute kursartID');
 		result.kursartID = obj.kursartID;
 		if (obj.kursID === undefined)
-			 throw new Error('invalid json format, missing attribute kursID');
+			throw new Error('invalid json format, missing attribute kursID');
 		result.kursID = obj.kursID;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchuelerblockungOutputFachwahlZuKurs) : string {
 		let result = '{';
-		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"kursartID" : ' + obj.kursartID + ',';
-		result += '"kursID" : ' + obj.kursID + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
+		result += '"kursartID" : ' + obj.kursartID.toString() + ',';
+		result += '"kursID" : ' + obj.kursID.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -59,13 +59,13 @@ export class SchuelerblockungOutputFachwahlZuKurs extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerblockungOutputFachwahlZuKurs>) : string {
 		let result = '{';
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.kursartID !== undefined) {
-			result += '"kursartID" : ' + obj.kursartID + ',';
+			result += '"kursartID" : ' + obj.kursartID.toString() + ',';
 		}
 		if (obj.kursID !== undefined) {
-			result += '"kursID" : ' + obj.kursID + ',';
+			result += '"kursID" : ' + obj.kursID.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -195,47 +195,47 @@ export class FachKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): FachKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<FachKatalogEintrag>;
 		const result = new FachKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzelASD === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzelASD');
+			throw new Error('invalid json format, missing attribute kuerzelASD');
 		result.kuerzelASD = obj.kuerzelASD;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		result.aufgabenfeld = (obj.aufgabenfeld === undefined) ? null : obj.aufgabenfeld === null ? null : obj.aufgabenfeld;
 		result.fachgruppe = (obj.fachgruppe === undefined) ? null : obj.fachgruppe === null ? null : obj.fachgruppe;
 		result.abJahrgang = (obj.abJahrgang === undefined) ? null : obj.abJahrgang === null ? null : obj.abJahrgang;
 		if (obj.istFremdsprache === undefined)
-			 throw new Error('invalid json format, missing attribute istFremdsprache');
+			throw new Error('invalid json format, missing attribute istFremdsprache');
 		result.istFremdsprache = obj.istFremdsprache;
 		if (obj.istHKFS === undefined)
-			 throw new Error('invalid json format, missing attribute istHKFS');
+			throw new Error('invalid json format, missing attribute istHKFS');
 		result.istHKFS = obj.istHKFS;
 		if (obj.istAusRegUFach === undefined)
-			 throw new Error('invalid json format, missing attribute istAusRegUFach');
+			throw new Error('invalid json format, missing attribute istAusRegUFach');
 		result.istAusRegUFach = obj.istAusRegUFach;
 		if (obj.istErsatzPflichtFS === undefined)
-			 throw new Error('invalid json format, missing attribute istErsatzPflichtFS');
+			throw new Error('invalid json format, missing attribute istErsatzPflichtFS');
 		result.istErsatzPflichtFS = obj.istErsatzPflichtFS;
 		if (obj.istKonfKoop === undefined)
-			 throw new Error('invalid json format, missing attribute istKonfKoop');
+			throw new Error('invalid json format, missing attribute istKonfKoop');
 		result.istKonfKoop = obj.istKonfKoop;
 		if (obj.nurSII === undefined)
-			 throw new Error('invalid json format, missing attribute nurSII');
+			throw new Error('invalid json format, missing attribute nurSII');
 		result.nurSII = obj.nurSII;
 		if (obj.exportASD === undefined)
-			 throw new Error('invalid json format, missing attribute exportASD');
+			throw new Error('invalid json format, missing attribute exportASD');
 		result.exportASD = obj.exportASD;
-		if ((obj.zulaessig !== undefined) && (obj.zulaessig !== null)) {
+		if (obj.zulaessig !== undefined) {
 			for (const elem of obj.zulaessig) {
-				result.zulaessig?.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
+				result.zulaessig.add(SchulformSchulgliederung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -245,23 +245,80 @@ export class FachKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : FachKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzelASD" : ' + JSON.stringify(obj.kuerzelASD!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzelASD" : ' + JSON.stringify(obj.kuerzelASD) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld.toString()) + ',';
 		result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
 		result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
-		result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
-		result += '"istHKFS" : ' + obj.istHKFS + ',';
-		result += '"istAusRegUFach" : ' + obj.istAusRegUFach + ',';
-		result += '"istErsatzPflichtFS" : ' + obj.istErsatzPflichtFS + ',';
-		result += '"istKonfKoop" : ' + obj.istKonfKoop + ',';
-		result += '"nurSII" : ' + obj.nurSII + ',';
-		result += '"exportASD" : ' + obj.exportASD + ',';
-		if (!obj.zulaessig) {
-			result += '"zulaessig" : []';
-		} else {
+		result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
+		result += '"istHKFS" : ' + obj.istHKFS.toString() + ',';
+		result += '"istAusRegUFach" : ' + obj.istAusRegUFach.toString() + ',';
+		result += '"istErsatzPflichtFS" : ' + obj.istErsatzPflichtFS.toString() + ',';
+		result += '"istKonfKoop" : ' + obj.istKonfKoop.toString() + ',';
+		result += '"nurSII" : ' + obj.nurSII.toString() + ',';
+		result += '"exportASD" : ' + obj.exportASD.toString() + ',';
+		result += '"zulaessig" : [ ';
+		for (let i = 0; i < obj.zulaessig.size(); i++) {
+			const elem = obj.zulaessig.get(i);
+			result += SchulformSchulgliederung.transpilerToJSON(elem);
+			if (i < obj.zulaessig.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<FachKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzelASD !== undefined) {
+			result += '"kuerzelASD" : ' + JSON.stringify(obj.kuerzelASD) + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.aufgabenfeld !== undefined) {
+			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld.toString()) + ',';
+		}
+		if (obj.fachgruppe !== undefined) {
+			result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
+		}
+		if (obj.abJahrgang !== undefined) {
+			result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
+		}
+		if (obj.istFremdsprache !== undefined) {
+			result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
+		}
+		if (obj.istHKFS !== undefined) {
+			result += '"istHKFS" : ' + obj.istHKFS.toString() + ',';
+		}
+		if (obj.istAusRegUFach !== undefined) {
+			result += '"istAusRegUFach" : ' + obj.istAusRegUFach.toString() + ',';
+		}
+		if (obj.istErsatzPflichtFS !== undefined) {
+			result += '"istErsatzPflichtFS" : ' + obj.istErsatzPflichtFS.toString() + ',';
+		}
+		if (obj.istKonfKoop !== undefined) {
+			result += '"istKonfKoop" : ' + obj.istKonfKoop.toString() + ',';
+		}
+		if (obj.nurSII !== undefined) {
+			result += '"nurSII" : ' + obj.nurSII.toString() + ',';
+		}
+		if (obj.exportASD !== undefined) {
+			result += '"exportASD" : ' + obj.exportASD.toString() + ',';
+		}
+		if (obj.zulaessig !== undefined) {
 			result += '"zulaessig" : [ ';
 			for (let i = 0; i < obj.zulaessig.size(); i++) {
 				const elem = obj.zulaessig.get(i);
@@ -271,76 +328,11 @@ export class FachKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<FachKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzelASD !== undefined) {
-			result += '"kuerzelASD" : ' + JSON.stringify(obj.kuerzelASD!) + ',';
-		}
-		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.aufgabenfeld !== undefined) {
-			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld) + ',';
-		}
-		if (obj.fachgruppe !== undefined) {
-			result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
-		}
-		if (obj.abJahrgang !== undefined) {
-			result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
-		}
-		if (obj.istFremdsprache !== undefined) {
-			result += '"istFremdsprache" : ' + obj.istFremdsprache + ',';
-		}
-		if (obj.istHKFS !== undefined) {
-			result += '"istHKFS" : ' + obj.istHKFS + ',';
-		}
-		if (obj.istAusRegUFach !== undefined) {
-			result += '"istAusRegUFach" : ' + obj.istAusRegUFach + ',';
-		}
-		if (obj.istErsatzPflichtFS !== undefined) {
-			result += '"istErsatzPflichtFS" : ' + obj.istErsatzPflichtFS + ',';
-		}
-		if (obj.istKonfKoop !== undefined) {
-			result += '"istKonfKoop" : ' + obj.istKonfKoop + ',';
-		}
-		if (obj.nurSII !== undefined) {
-			result += '"nurSII" : ' + obj.nurSII + ',';
-		}
-		if (obj.exportASD !== undefined) {
-			result += '"exportASD" : ' + obj.exportASD + ',';
-		}
-		if (obj.zulaessig !== undefined) {
-			if (!obj.zulaessig) {
-				result += '"zulaessig" : []';
-			} else {
-				result += '"zulaessig" : [ ';
-				for (let i = 0; i < obj.zulaessig.size(); i++) {
-					const elem = obj.zulaessig.get(i);
-					result += SchulformSchulgliederung.transpilerToJSON(elem);
-					if (i < obj.zulaessig.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

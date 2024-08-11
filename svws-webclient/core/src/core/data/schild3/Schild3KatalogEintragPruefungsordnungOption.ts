@@ -96,7 +96,7 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnungOption {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragPruefungsordnungOption>;
 		const result = new Schild3KatalogEintragPruefungsordnungOption();
 		result.OP_Schulformen = (obj.OP_Schulformen === undefined) ? null : obj.OP_Schulformen === null ? null : obj.OP_Schulformen;
 		result.OP_POKrz = (obj.OP_POKrz === undefined) ? null : obj.OP_POKrz === null ? null : obj.OP_POKrz;
@@ -132,9 +132,9 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 		result += '"OP_Jahrgaenge" : ' + ((!obj.OP_Jahrgaenge) ? 'null' : JSON.stringify(obj.OP_Jahrgaenge)) + ',';
 		result += '"OP_BKIndex" : ' + ((!obj.OP_BKIndex) ? 'null' : JSON.stringify(obj.OP_BKIndex)) + ',';
 		result += '"OP_BKAnl_Typ" : ' + ((!obj.OP_BKAnl_Typ) ? 'null' : JSON.stringify(obj.OP_BKAnl_Typ)) + ',';
-		result += '"OP_Reihenfolge" : ' + ((!obj.OP_Reihenfolge) ? 'null' : obj.OP_Reihenfolge) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"OP_Reihenfolge" : ' + ((!obj.OP_Reihenfolge) ? 'null' : obj.OP_Reihenfolge.toString()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -182,13 +182,13 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 			result += '"OP_BKAnl_Typ" : ' + ((!obj.OP_BKAnl_Typ) ? 'null' : JSON.stringify(obj.OP_BKAnl_Typ)) + ',';
 		}
 		if (obj.OP_Reihenfolge !== undefined) {
-			result += '"OP_Reihenfolge" : ' + ((!obj.OP_Reihenfolge) ? 'null' : obj.OP_Reihenfolge) + ',';
+			result += '"OP_Reihenfolge" : ' + ((!obj.OP_Reihenfolge) ? 'null' : obj.OP_Reihenfolge.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

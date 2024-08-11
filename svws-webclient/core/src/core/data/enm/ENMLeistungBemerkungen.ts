@@ -71,7 +71,7 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMLeistungBemerkungen {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMLeistungBemerkungen>;
 		const result = new ENMLeistungBemerkungen();
 		result.ASV = (obj.ASV === undefined) ? null : obj.ASV === null ? null : obj.ASV;
 		result.tsASV = (obj.tsASV === undefined) ? null : obj.tsASV === null ? null : obj.tsASV;

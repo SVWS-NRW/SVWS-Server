@@ -29,14 +29,14 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisSchiene {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisSchiene>;
 		const result = new GostBlockungsergebnisSchiene();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(GostBlockungsergebnisKurs.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse.add(GostBlockungsergebnisKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -44,19 +44,15 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBlockungsergebnisSchiene) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
-			result += '"kurse" : [ ';
-			for (let i = 0; i < obj.kurse.size(); i++) {
-				const elem = obj.kurse.get(i);
-				result += GostBlockungsergebnisKurs.transpilerToJSON(elem);
-				if (i < obj.kurse.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += GostBlockungsergebnisKurs.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,21 +61,17 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungsergebnisSchiene>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += GostBlockungsergebnisKurs.transpilerToJSON(elem);
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kurse" : [ ';
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
+				result += GostBlockungsergebnisKurs.transpilerToJSON(elem);
+				if (i < obj.kurse.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

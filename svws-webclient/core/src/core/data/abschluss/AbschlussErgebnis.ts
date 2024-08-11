@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 
 export class AbschlussErgebnis extends JavaObject {
@@ -37,31 +38,37 @@ export class AbschlussErgebnis extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbschlussErgebnis {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbschlussErgebnis>;
 		const result = new AbschlussErgebnis();
 		if (obj.erworben === undefined)
-			 throw new Error('invalid json format, missing attribute erworben');
+			throw new Error('invalid json format, missing attribute erworben');
 		result.erworben = obj.erworben;
 		result.abschluss = (obj.abschluss === undefined) ? null : obj.abschluss === null ? null : obj.abschluss;
 		if ((obj.npFaecher !== undefined) && (obj.npFaecher !== null)) {
+			result.npFaecher = new ArrayList();
 			for (const elem of obj.npFaecher) {
-				result.npFaecher?.add(elem);
+				result.npFaecher.add(elem);
 			}
+		} else {
+			result.npFaecher = null;
 		}
 		if ((obj.log !== undefined) && (obj.log !== null)) {
+			result.log = new ArrayList();
 			for (const elem of obj.log) {
-				result.log?.add(elem);
+				result.log.add(elem);
 			}
+		} else {
+			result.log = null;
 		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AbschlussErgebnis) : string {
 		let result = '{';
-		result += '"erworben" : ' + obj.erworben + ',';
+		result += '"erworben" : ' + obj.erworben.toString() + ',';
 		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		if (!obj.npFaecher) {
-			result += '"npFaecher" : []';
+			result += '"npFaecher" : null';
 		} else {
 			result += '"npFaecher" : [ ';
 			for (let i = 0; i < obj.npFaecher.size(); i++) {
@@ -73,7 +80,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (!obj.log) {
-			result += '"log" : []';
+			result += '"log" : null';
 		} else {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
@@ -92,14 +99,14 @@ export class AbschlussErgebnis extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbschlussErgebnis>) : string {
 		let result = '{';
 		if (obj.erworben !== undefined) {
-			result += '"erworben" : ' + obj.erworben + ',';
+			result += '"erworben" : ' + obj.erworben.toString() + ',';
 		}
 		if (obj.abschluss !== undefined) {
 			result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		}
 		if (obj.npFaecher !== undefined) {
 			if (!obj.npFaecher) {
-				result += '"npFaecher" : []';
+				result += '"npFaecher" : null';
 			} else {
 				result += '"npFaecher" : [ ';
 				for (let i = 0; i < obj.npFaecher.size(); i++) {
@@ -113,7 +120,7 @@ export class AbschlussErgebnis extends JavaObject {
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {
-				result += '"log" : []';
+				result += '"log" : null';
 			} else {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {

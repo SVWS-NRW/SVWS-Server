@@ -29,16 +29,16 @@ export class BenutzerConfig extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerConfig {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerConfig>;
 		const result = new BenutzerConfig();
-		if ((obj.user !== undefined) && (obj.user !== null)) {
+		if (obj.user !== undefined) {
 			for (const elem of obj.user) {
-				result.user?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
+				result.user.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.global !== undefined) && (obj.global !== null)) {
+		if (obj.global !== undefined) {
 			for (const elem of obj.global) {
-				result.global?.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
+				result.global.add(BenutzerConfigElement.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -46,9 +46,30 @@ export class BenutzerConfig extends JavaObject {
 
 	public static transpilerToJSON(obj : BenutzerConfig) : string {
 		let result = '{';
-		if (!obj.user) {
-			result += '"user" : []';
-		} else {
+		result += '"user" : [ ';
+		for (let i = 0; i < obj.user.size(); i++) {
+			const elem = obj.user.get(i);
+			result += BenutzerConfigElement.transpilerToJSON(elem);
+			if (i < obj.user.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"global" : [ ';
+		for (let i = 0; i < obj.global.size(); i++) {
+			const elem = obj.global.get(i);
+			result += BenutzerConfigElement.transpilerToJSON(elem);
+			if (i < obj.global.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<BenutzerConfig>) : string {
+		let result = '{';
+		if (obj.user !== undefined) {
 			result += '"user" : [ ';
 			for (let i = 0; i < obj.user.size(); i++) {
 				const elem = obj.user.get(i);
@@ -58,9 +79,7 @@ export class BenutzerConfig extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.global) {
-			result += '"global" : []';
-		} else {
+		if (obj.global !== undefined) {
 			result += '"global" : [ ';
 			for (let i = 0; i < obj.global.size(); i++) {
 				const elem = obj.global.get(i);
@@ -69,41 +88,6 @@ export class BenutzerConfig extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<BenutzerConfig>) : string {
-		let result = '{';
-		if (obj.user !== undefined) {
-			if (!obj.user) {
-				result += '"user" : []';
-			} else {
-				result += '"user" : [ ';
-				for (let i = 0; i < obj.user.size(); i++) {
-					const elem = obj.user.get(i);
-					result += BenutzerConfigElement.transpilerToJSON(elem);
-					if (i < obj.user.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.global !== undefined) {
-			if (!obj.global) {
-				result += '"global" : []';
-			} else {
-				result += '"global" : [ ';
-				for (let i = 0; i < obj.global.size(); i++) {
-					const elem = obj.global.get(i);
-					result += BenutzerConfigElement.transpilerToJSON(elem);
-					if (i < obj.global.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -56,7 +56,7 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragVersetzungsvermerke {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragVersetzungsvermerke>;
 		const result = new Schild3KatalogEintragVersetzungsvermerke();
 		result.Nr = (obj.Nr === undefined) ? null : obj.Nr === null ? null : obj.Nr;
 		result.Klartext = (obj.Klartext === undefined) ? null : obj.Klartext === null ? null : obj.Klartext;
@@ -74,11 +74,11 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 		result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
 		result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
 		result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
 		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -96,7 +96,7 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 			result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung) + ',';
+			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		if (obj.Schulform !== undefined) {
 			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
@@ -105,10 +105,10 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 			result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

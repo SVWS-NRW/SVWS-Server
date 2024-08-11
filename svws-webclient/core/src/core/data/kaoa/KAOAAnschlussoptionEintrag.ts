@@ -98,25 +98,25 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KAOAAnschlussoptionEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KAOAAnschlussoptionEintrag>;
 		const result = new KAOAAnschlussoptionEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
-		if ((obj.stufen !== undefined) && (obj.stufen !== null)) {
+		if (obj.stufen !== undefined) {
 			for (const elem of obj.stufen) {
-				result.stufen?.add(elem);
+				result.stufen.add(elem);
 			}
 		}
-		if ((obj.anzeigeZusatzmerkmal !== undefined) && (obj.anzeigeZusatzmerkmal !== null)) {
+		if (obj.anzeigeZusatzmerkmal !== undefined) {
 			for (const elem of obj.anzeigeZusatzmerkmal) {
-				result.anzeigeZusatzmerkmal?.add(elem);
+				result.anzeigeZusatzmerkmal.add(elem);
 			}
 		}
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
@@ -126,12 +126,44 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : KAOAAnschlussoptionEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		if (!obj.stufen) {
-			result += '"stufen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"stufen" : [ ';
+		for (let i = 0; i < obj.stufen.size(); i++) {
+			const elem = obj.stufen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.stufen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"anzeigeZusatzmerkmal" : [ ';
+		for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
+			const elem = obj.anzeigeZusatzmerkmal.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.anzeigeZusatzmerkmal.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<KAOAAnschlussoptionEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		}
+		if (obj.stufen !== undefined) {
 			result += '"stufen" : [ ';
 			for (let i = 0; i < obj.stufen.size(); i++) {
 				const elem = obj.stufen.get(i);
@@ -141,9 +173,7 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.anzeigeZusatzmerkmal) {
-			result += '"anzeigeZusatzmerkmal" : []';
-		} else {
+		if (obj.anzeigeZusatzmerkmal !== undefined) {
 			result += '"anzeigeZusatzmerkmal" : [ ';
 			for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
 				const elem = obj.anzeigeZusatzmerkmal.get(i);
@@ -153,57 +183,11 @@ export class KAOAAnschlussoptionEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<KAOAAnschlussoptionEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
-		}
-		if (obj.stufen !== undefined) {
-			if (!obj.stufen) {
-				result += '"stufen" : []';
-			} else {
-				result += '"stufen" : [ ';
-				for (let i = 0; i < obj.stufen.size(); i++) {
-					const elem = obj.stufen.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.stufen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.anzeigeZusatzmerkmal !== undefined) {
-			if (!obj.anzeigeZusatzmerkmal) {
-				result += '"anzeigeZusatzmerkmal" : []';
-			} else {
-				result += '"anzeigeZusatzmerkmal" : [ ';
-				for (let i = 0; i < obj.anzeigeZusatzmerkmal.size(); i++) {
-					const elem = obj.anzeigeZusatzmerkmal.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.anzeigeZusatzmerkmal.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

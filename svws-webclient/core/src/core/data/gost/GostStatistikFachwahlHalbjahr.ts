@@ -41,33 +41,33 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostStatistikFachwahlHalbjahr {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostStatistikFachwahlHalbjahr>;
 		const result = new GostStatistikFachwahlHalbjahr();
 		if (obj.wahlenGKMuendlich === undefined)
-			 throw new Error('invalid json format, missing attribute wahlenGKMuendlich');
+			throw new Error('invalid json format, missing attribute wahlenGKMuendlich');
 		result.wahlenGKMuendlich = obj.wahlenGKMuendlich;
 		if (obj.wahlenGKSchriftlich === undefined)
-			 throw new Error('invalid json format, missing attribute wahlenGKSchriftlich');
+			throw new Error('invalid json format, missing attribute wahlenGKSchriftlich');
 		result.wahlenGKSchriftlich = obj.wahlenGKSchriftlich;
 		if (obj.wahlenGK === undefined)
-			 throw new Error('invalid json format, missing attribute wahlenGK');
+			throw new Error('invalid json format, missing attribute wahlenGK');
 		result.wahlenGK = obj.wahlenGK;
 		if (obj.wahlenZK === undefined)
-			 throw new Error('invalid json format, missing attribute wahlenZK');
+			throw new Error('invalid json format, missing attribute wahlenZK');
 		result.wahlenZK = obj.wahlenZK;
 		if (obj.wahlenLK === undefined)
-			 throw new Error('invalid json format, missing attribute wahlenLK');
+			throw new Error('invalid json format, missing attribute wahlenLK');
 		result.wahlenLK = obj.wahlenLK;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostStatistikFachwahlHalbjahr) : string {
 		let result = '{';
-		result += '"wahlenGKMuendlich" : ' + obj.wahlenGKMuendlich + ',';
-		result += '"wahlenGKSchriftlich" : ' + obj.wahlenGKSchriftlich + ',';
-		result += '"wahlenGK" : ' + obj.wahlenGK + ',';
-		result += '"wahlenZK" : ' + obj.wahlenZK + ',';
-		result += '"wahlenLK" : ' + obj.wahlenLK + ',';
+		result += '"wahlenGKMuendlich" : ' + obj.wahlenGKMuendlich.toString() + ',';
+		result += '"wahlenGKSchriftlich" : ' + obj.wahlenGKSchriftlich.toString() + ',';
+		result += '"wahlenGK" : ' + obj.wahlenGK.toString() + ',';
+		result += '"wahlenZK" : ' + obj.wahlenZK.toString() + ',';
+		result += '"wahlenLK" : ' + obj.wahlenLK.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,19 +76,19 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostStatistikFachwahlHalbjahr>) : string {
 		let result = '{';
 		if (obj.wahlenGKMuendlich !== undefined) {
-			result += '"wahlenGKMuendlich" : ' + obj.wahlenGKMuendlich + ',';
+			result += '"wahlenGKMuendlich" : ' + obj.wahlenGKMuendlich.toString() + ',';
 		}
 		if (obj.wahlenGKSchriftlich !== undefined) {
-			result += '"wahlenGKSchriftlich" : ' + obj.wahlenGKSchriftlich + ',';
+			result += '"wahlenGKSchriftlich" : ' + obj.wahlenGKSchriftlich.toString() + ',';
 		}
 		if (obj.wahlenGK !== undefined) {
-			result += '"wahlenGK" : ' + obj.wahlenGK + ',';
+			result += '"wahlenGK" : ' + obj.wahlenGK.toString() + ',';
 		}
 		if (obj.wahlenZK !== undefined) {
-			result += '"wahlenZK" : ' + obj.wahlenZK + ',';
+			result += '"wahlenZK" : ' + obj.wahlenZK.toString() + ',';
 		}
 		if (obj.wahlenLK !== undefined) {
-			result += '"wahlenLK" : ' + obj.wahlenLK + ',';
+			result += '"wahlenLK" : ' + obj.wahlenLK.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

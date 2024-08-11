@@ -61,25 +61,25 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungErgebnisFehler {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBelegpruefungErgebnisFehler>;
 		const result = new GostBelegpruefungErgebnisFehler();
 		if (obj.code === undefined)
-			 throw new Error('invalid json format, missing attribute code');
+			throw new Error('invalid json format, missing attribute code');
 		result.code = obj.code;
 		if (obj.art === undefined)
-			 throw new Error('invalid json format, missing attribute art');
+			throw new Error('invalid json format, missing attribute art');
 		result.art = obj.art;
 		if (obj.beschreibung === undefined)
-			 throw new Error('invalid json format, missing attribute beschreibung');
+			throw new Error('invalid json format, missing attribute beschreibung');
 		result.beschreibung = obj.beschreibung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostBelegpruefungErgebnisFehler) : string {
 		let result = '{';
-		result += '"code" : ' + JSON.stringify(obj.code!) + ',';
-		result += '"art" : ' + JSON.stringify(obj.art!) + ',';
-		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+		result += '"code" : ' + JSON.stringify(obj.code) + ',';
+		result += '"art" : ' + JSON.stringify(obj.art) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -88,13 +88,13 @@ export class GostBelegpruefungErgebnisFehler extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBelegpruefungErgebnisFehler>) : string {
 		let result = '{';
 		if (obj.code !== undefined) {
-			result += '"code" : ' + JSON.stringify(obj.code!) + ',';
+			result += '"code" : ' + JSON.stringify(obj.code) + ',';
 		}
 		if (obj.art !== undefined) {
-			result += '"art" : ' + JSON.stringify(obj.art!) + ',';
+			result += '"art" : ' + JSON.stringify(obj.art) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung!) + ',';
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

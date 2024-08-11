@@ -36,7 +36,7 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungBeratungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungBeratungsdaten>;
 		const result = new GostLaufbahnplanungBeratungsdaten();
 		result.beratungslehrerID = (obj.beratungslehrerID === undefined) ? null : obj.beratungslehrerID === null ? null : obj.beratungslehrerID;
 		result.beratungsdatum = (obj.beratungsdatum === undefined) ? null : obj.beratungsdatum === null ? null : obj.beratungsdatum;
@@ -47,7 +47,7 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostLaufbahnplanungBeratungsdaten) : string {
 		let result = '{';
-		result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID) + ',';
+		result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID.toString()) + ',';
 		result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';
 		result += '"kommentar" : ' + ((!obj.kommentar) ? 'null' : JSON.stringify(obj.kommentar)) + ',';
 		result += '"ruecklaufdatum" : ' + ((!obj.ruecklaufdatum) ? 'null' : JSON.stringify(obj.ruecklaufdatum)) + ',';
@@ -59,7 +59,7 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLaufbahnplanungBeratungsdaten>) : string {
 		let result = '{';
 		if (obj.beratungslehrerID !== undefined) {
-			result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID) + ',';
+			result += '"beratungslehrerID" : ' + ((!obj.beratungslehrerID) ? 'null' : obj.beratungslehrerID.toString()) + ',';
 		}
 		if (obj.beratungsdatum !== undefined) {
 			result += '"beratungsdatum" : ' + ((!obj.beratungsdatum) ? 'null' : JSON.stringify(obj.beratungsdatum)) + ',';

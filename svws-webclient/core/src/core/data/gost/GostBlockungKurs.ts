@@ -64,35 +64,35 @@ export class GostBlockungKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungKurs>;
 		const result = new GostBlockungKurs();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.fach_id === undefined)
-			 throw new Error('invalid json format, missing attribute fach_id');
+			throw new Error('invalid json format, missing attribute fach_id');
 		result.fach_id = obj.fach_id;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.nummer === undefined)
-			 throw new Error('invalid json format, missing attribute nummer');
+			throw new Error('invalid json format, missing attribute nummer');
 		result.nummer = obj.nummer;
 		if (obj.istKoopKurs === undefined)
-			 throw new Error('invalid json format, missing attribute istKoopKurs');
+			throw new Error('invalid json format, missing attribute istKoopKurs');
 		result.istKoopKurs = obj.istKoopKurs;
 		if (obj.suffix === undefined)
-			 throw new Error('invalid json format, missing attribute suffix');
+			throw new Error('invalid json format, missing attribute suffix');
 		result.suffix = obj.suffix;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if (obj.anzahlSchienen === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlSchienen');
+			throw new Error('invalid json format, missing attribute anzahlSchienen');
 		result.anzahlSchienen = obj.anzahlSchienen;
-		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+		if (obj.lehrer !== undefined) {
 			for (const elem of obj.lehrer) {
-				result.lehrer?.add(GostBlockungKursLehrer.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrer.add(GostBlockungKursLehrer.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -100,26 +100,22 @@ export class GostBlockungKurs extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBlockungKurs) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"fach_id" : ' + obj.fach_id + ',';
-		result += '"kursart" : ' + obj.kursart + ',';
-		result += '"nummer" : ' + obj.nummer + ',';
-		result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
-		result += '"suffix" : ' + JSON.stringify(obj.suffix!) + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
-		if (!obj.lehrer) {
-			result += '"lehrer" : []';
-		} else {
-			result += '"lehrer" : [ ';
-			for (let i = 0; i < obj.lehrer.size(); i++) {
-				const elem = obj.lehrer.get(i);
-				result += GostBlockungKursLehrer.transpilerToJSON(elem);
-				if (i < obj.lehrer.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"fach_id" : ' + obj.fach_id.toString() + ',';
+		result += '"kursart" : ' + obj.kursart.toString() + ',';
+		result += '"nummer" : ' + obj.nummer.toString() + ',';
+		result += '"istKoopKurs" : ' + obj.istKoopKurs.toString() + ',';
+		result += '"suffix" : ' + JSON.stringify(obj.suffix) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result += '"anzahlSchienen" : ' + obj.anzahlSchienen.toString() + ',';
+		result += '"lehrer" : [ ';
+		for (let i = 0; i < obj.lehrer.size(); i++) {
+			const elem = obj.lehrer.get(i);
+			result += GostBlockungKursLehrer.transpilerToJSON(elem);
+			if (i < obj.lehrer.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -128,42 +124,38 @@ export class GostBlockungKurs extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostBlockungKurs>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fach_id !== undefined) {
-			result += '"fach_id" : ' + obj.fach_id + ',';
+			result += '"fach_id" : ' + obj.fach_id.toString() + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + obj.kursart + ',';
+			result += '"kursart" : ' + obj.kursart.toString() + ',';
 		}
 		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + obj.nummer + ',';
+			result += '"nummer" : ' + obj.nummer.toString() + ',';
 		}
 		if (obj.istKoopKurs !== undefined) {
-			result += '"istKoopKurs" : ' + obj.istKoopKurs + ',';
+			result += '"istKoopKurs" : ' + obj.istKoopKurs.toString() + ',';
 		}
 		if (obj.suffix !== undefined) {
-			result += '"suffix" : ' + JSON.stringify(obj.suffix!) + ',';
+			result += '"suffix" : ' + JSON.stringify(obj.suffix) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.anzahlSchienen !== undefined) {
-			result += '"anzahlSchienen" : ' + obj.anzahlSchienen + ',';
+			result += '"anzahlSchienen" : ' + obj.anzahlSchienen.toString() + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			if (!obj.lehrer) {
-				result += '"lehrer" : []';
-			} else {
-				result += '"lehrer" : [ ';
-				for (let i = 0; i < obj.lehrer.size(); i++) {
-					const elem = obj.lehrer.get(i);
-					result += GostBlockungKursLehrer.transpilerToJSON(elem);
-					if (i < obj.lehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"lehrer" : [ ';
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
+				result += GostBlockungKursLehrer.transpilerToJSON(elem);
+				if (i < obj.lehrer.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

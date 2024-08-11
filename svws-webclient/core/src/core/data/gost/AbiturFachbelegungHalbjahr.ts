@@ -71,27 +71,27 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbiturFachbelegungHalbjahr {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbiturFachbelegungHalbjahr>;
 		const result = new AbiturFachbelegungHalbjahr();
 		if (obj.halbjahrKuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute halbjahrKuerzel');
+			throw new Error('invalid json format, missing attribute halbjahrKuerzel');
 		result.halbjahrKuerzel = obj.halbjahrKuerzel;
 		if (obj.kursartKuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kursartKuerzel');
+			throw new Error('invalid json format, missing attribute kursartKuerzel');
 		result.kursartKuerzel = obj.kursartKuerzel;
 		if (obj.schriftlich === undefined)
-			 throw new Error('invalid json format, missing attribute schriftlich');
+			throw new Error('invalid json format, missing attribute schriftlich');
 		result.schriftlich = obj.schriftlich;
 		result.biliSprache = (obj.biliSprache === undefined) ? null : obj.biliSprache === null ? null : obj.biliSprache;
 		result.lehrer = (obj.lehrer === undefined) ? null : obj.lehrer === null ? null : obj.lehrer;
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		if (obj.fehlstundenGesamt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenGesamt');
+			throw new Error('invalid json format, missing attribute fehlstundenGesamt');
 		result.fehlstundenGesamt = obj.fehlstundenGesamt;
 		if (obj.fehlstundenUnentschuldigt === undefined)
-			 throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
+			throw new Error('invalid json format, missing attribute fehlstundenUnentschuldigt');
 		result.fehlstundenUnentschuldigt = obj.fehlstundenUnentschuldigt;
 		result.notenkuerzel = (obj.notenkuerzel === undefined) ? null : obj.notenkuerzel === null ? null : obj.notenkuerzel;
 		result.block1gewertet = (obj.block1gewertet === undefined) ? null : obj.block1gewertet === null ? null : obj.block1gewertet;
@@ -101,17 +101,17 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 
 	public static transpilerToJSON(obj : AbiturFachbelegungHalbjahr) : string {
 		let result = '{';
-		result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel!) + ',';
-		result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel!) + ',';
-		result += '"schriftlich" : ' + obj.schriftlich + ',';
+		result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel) + ',';
+		result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel) + ',';
+		result += '"schriftlich" : ' + obj.schriftlich.toString() + ',';
 		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
-		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
+		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
+		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
-		result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet) + ',';
-		result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis) + ',';
+		result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet.toString()) + ',';
+		result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -120,37 +120,37 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbiturFachbelegungHalbjahr>) : string {
 		let result = '{';
 		if (obj.halbjahrKuerzel !== undefined) {
-			result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel!) + ',';
+			result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel) + ',';
 		}
 		if (obj.kursartKuerzel !== undefined) {
-			result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel!) + ',';
+			result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel) + ',';
 		}
 		if (obj.schriftlich !== undefined) {
-			result += '"schriftlich" : ' + obj.schriftlich + ',';
+			result += '"schriftlich" : ' + obj.schriftlich.toString() + ',';
 		}
 		if (obj.biliSprache !== undefined) {
 			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer) + ',';
+			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
-			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt + ',';
+			result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		}
 		if (obj.fehlstundenUnentschuldigt !== undefined) {
-			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt + ',';
+			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		}
 		if (obj.notenkuerzel !== undefined) {
 			result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
 		}
 		if (obj.block1gewertet !== undefined) {
-			result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet) + ',';
+			result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet.toString()) + ',';
 		}
 		if (obj.block1kursAufZeugnis !== undefined) {
-			result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis) + ',';
+			result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

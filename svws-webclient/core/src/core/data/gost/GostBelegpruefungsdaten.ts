@@ -42,22 +42,22 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBelegpruefungsdaten>;
 		const result = new GostBelegpruefungsdaten();
 		if (obj.abiturdaten === undefined)
-			 throw new Error('invalid json format, missing attribute abiturdaten');
+			throw new Error('invalid json format, missing attribute abiturdaten');
 		result.abiturdaten = Abiturdaten.transpilerFromJSON(JSON.stringify(obj.abiturdaten));
 		if (obj.gostJahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute gostJahrgang');
+			throw new Error('invalid json format, missing attribute gostJahrgang');
 		result.gostJahrgang = GostJahrgangsdaten.transpilerFromJSON(JSON.stringify(obj.gostJahrgang));
-		if ((obj.gostFaecher !== undefined) && (obj.gostFaecher !== null)) {
+		if (obj.gostFaecher !== undefined) {
 			for (const elem of obj.gostFaecher) {
-				result.gostFaecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.gostFaecher.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.gostFaecherKombinationen !== undefined) && (obj.gostFaecherKombinationen !== null)) {
+		if (obj.gostFaecherKombinationen !== undefined) {
 			for (const elem of obj.gostFaecherKombinationen) {
-				result.gostFaecherKombinationen?.add(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(elem)));
+				result.gostFaecherKombinationen.add(GostJahrgangFachkombination.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -67,30 +67,22 @@ export class GostBelegpruefungsdaten extends JavaObject {
 		let result = '{';
 		result += '"abiturdaten" : ' + Abiturdaten.transpilerToJSON(obj.abiturdaten) + ',';
 		result += '"gostJahrgang" : ' + GostJahrgangsdaten.transpilerToJSON(obj.gostJahrgang) + ',';
-		if (!obj.gostFaecher) {
-			result += '"gostFaecher" : []';
-		} else {
-			result += '"gostFaecher" : [ ';
-			for (let i = 0; i < obj.gostFaecher.size(); i++) {
-				const elem = obj.gostFaecher.get(i);
-				result += GostFach.transpilerToJSON(elem);
-				if (i < obj.gostFaecher.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"gostFaecher" : [ ';
+		for (let i = 0; i < obj.gostFaecher.size(); i++) {
+			const elem = obj.gostFaecher.get(i);
+			result += GostFach.transpilerToJSON(elem);
+			if (i < obj.gostFaecher.size() - 1)
+				result += ',';
 		}
-		if (!obj.gostFaecherKombinationen) {
-			result += '"gostFaecherKombinationen" : []';
-		} else {
-			result += '"gostFaecherKombinationen" : [ ';
-			for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
-				const elem = obj.gostFaecherKombinationen.get(i);
-				result += GostJahrgangFachkombination.transpilerToJSON(elem);
-				if (i < obj.gostFaecherKombinationen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"gostFaecherKombinationen" : [ ';
+		for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
+			const elem = obj.gostFaecherKombinationen.get(i);
+			result += GostJahrgangFachkombination.transpilerToJSON(elem);
+			if (i < obj.gostFaecherKombinationen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -105,32 +97,24 @@ export class GostBelegpruefungsdaten extends JavaObject {
 			result += '"gostJahrgang" : ' + GostJahrgangsdaten.transpilerToJSON(obj.gostJahrgang) + ',';
 		}
 		if (obj.gostFaecher !== undefined) {
-			if (!obj.gostFaecher) {
-				result += '"gostFaecher" : []';
-			} else {
-				result += '"gostFaecher" : [ ';
-				for (let i = 0; i < obj.gostFaecher.size(); i++) {
-					const elem = obj.gostFaecher.get(i);
-					result += GostFach.transpilerToJSON(elem);
-					if (i < obj.gostFaecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"gostFaecher" : [ ';
+			for (let i = 0; i < obj.gostFaecher.size(); i++) {
+				const elem = obj.gostFaecher.get(i);
+				result += GostFach.transpilerToJSON(elem);
+				if (i < obj.gostFaecher.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.gostFaecherKombinationen !== undefined) {
-			if (!obj.gostFaecherKombinationen) {
-				result += '"gostFaecherKombinationen" : []';
-			} else {
-				result += '"gostFaecherKombinationen" : [ ';
-				for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
-					const elem = obj.gostFaecherKombinationen.get(i);
-					result += GostJahrgangFachkombination.transpilerToJSON(elem);
-					if (i < obj.gostFaecherKombinationen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"gostFaecherKombinationen" : [ ';
+			for (let i = 0; i < obj.gostFaecherKombinationen.size(); i++) {
+				const elem = obj.gostFaecherKombinationen.get(i);
+				result += GostJahrgangFachkombination.transpilerToJSON(elem);
+				if (i < obj.gostFaecherKombinationen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

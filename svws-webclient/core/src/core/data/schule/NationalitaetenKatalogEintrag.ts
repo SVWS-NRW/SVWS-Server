@@ -122,32 +122,32 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): NationalitaetenKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<NationalitaetenKatalogEintrag>;
 		const result = new NationalitaetenKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.iso3 === undefined)
-			 throw new Error('invalid json format, missing attribute iso3');
+			throw new Error('invalid json format, missing attribute iso3');
 		result.iso3 = obj.iso3;
 		if (obj.iso2 === undefined)
-			 throw new Error('invalid json format, missing attribute iso2');
+			throw new Error('invalid json format, missing attribute iso2');
 		result.iso2 = obj.iso2;
 		result.isoNumerisch = (obj.isoNumerisch === undefined) ? null : obj.isoNumerisch === null ? null : obj.isoNumerisch;
 		if (obj.codeDEStatis === undefined)
-			 throw new Error('invalid json format, missing attribute codeDEStatis');
+			throw new Error('invalid json format, missing attribute codeDEStatis');
 		result.codeDEStatis = obj.codeDEStatis;
 		if (obj.bezeichnungSuche === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungSuche');
+			throw new Error('invalid json format, missing attribute bezeichnungSuche');
 		result.bezeichnungSuche = obj.bezeichnungSuche;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.bezeichnungLang === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungLang');
+			throw new Error('invalid json format, missing attribute bezeichnungLang');
 		result.bezeichnungLang = obj.bezeichnungLang;
 		if (obj.staatsangehoerigkeit === undefined)
-			 throw new Error('invalid json format, missing attribute staatsangehoerigkeit');
+			throw new Error('invalid json format, missing attribute staatsangehoerigkeit');
 		result.staatsangehoerigkeit = obj.staatsangehoerigkeit;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -156,17 +156,17 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : NationalitaetenKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"iso3" : ' + JSON.stringify(obj.iso3!) + ',';
-		result += '"iso2" : ' + JSON.stringify(obj.iso2!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"iso3" : ' + JSON.stringify(obj.iso3) + ',';
+		result += '"iso2" : ' + JSON.stringify(obj.iso2) + ',';
 		result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
-		result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis!) + ',';
-		result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang!) + ',';
-		result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis) + ',';
+		result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang) + ',';
+		result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -175,37 +175,37 @@ export class NationalitaetenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<NationalitaetenKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.iso3 !== undefined) {
-			result += '"iso3" : ' + JSON.stringify(obj.iso3!) + ',';
+			result += '"iso3" : ' + JSON.stringify(obj.iso3) + ',';
 		}
 		if (obj.iso2 !== undefined) {
-			result += '"iso2" : ' + JSON.stringify(obj.iso2!) + ',';
+			result += '"iso2" : ' + JSON.stringify(obj.iso2) + ',';
 		}
 		if (obj.isoNumerisch !== undefined) {
 			result += '"isoNumerisch" : ' + ((!obj.isoNumerisch) ? 'null' : JSON.stringify(obj.isoNumerisch)) + ',';
 		}
 		if (obj.codeDEStatis !== undefined) {
-			result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis!) + ',';
+			result += '"codeDEStatis" : ' + JSON.stringify(obj.codeDEStatis) + ',';
 		}
 		if (obj.bezeichnungSuche !== undefined) {
-			result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche!) + ',';
+			result += '"bezeichnungSuche" : ' + JSON.stringify(obj.bezeichnungSuche) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.bezeichnungLang !== undefined) {
-			result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang!) + ',';
+			result += '"bezeichnungLang" : ' + JSON.stringify(obj.bezeichnungLang) + ',';
 		}
 		if (obj.staatsangehoerigkeit !== undefined) {
-			result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit!) + ',';
+			result += '"staatsangehoerigkeit" : ' + JSON.stringify(obj.staatsangehoerigkeit) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

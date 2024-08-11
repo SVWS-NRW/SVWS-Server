@@ -56,7 +56,7 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragAbiturInfos {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragAbiturInfos>;
 		const result = new Schild3KatalogEintragAbiturInfos();
 		result.PrfOrdnung = (obj.PrfOrdnung === undefined) ? null : obj.PrfOrdnung === null ? null : obj.PrfOrdnung;
 		result.AbiFach = (obj.AbiFach === undefined) ? null : obj.AbiFach === null ? null : obj.AbiFach;
@@ -77,8 +77,8 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 		result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
 		result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
 		result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -105,10 +105,10 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 			result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

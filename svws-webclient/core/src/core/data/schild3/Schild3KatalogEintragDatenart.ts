@@ -46,7 +46,7 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDatenart {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDatenart>;
 		const result = new Schild3KatalogEintragDatenart();
 		result.DatenartKrz = (obj.DatenartKrz === undefined) ? null : obj.DatenartKrz === null ? null : obj.DatenartKrz;
 		result.Datenart = (obj.Datenart === undefined) ? null : obj.Datenart === null ? null : obj.Datenart;
@@ -62,9 +62,9 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
 		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
-		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -82,13 +82,13 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
 		}
 		if (obj.Reihenfolge !== undefined) {
-			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge) + ',';
+			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

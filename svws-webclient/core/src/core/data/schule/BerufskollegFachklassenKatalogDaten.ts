@@ -76,13 +76,13 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BerufskollegFachklassenKatalogDaten>;
 		const result = new BerufskollegFachklassenKatalogDaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.istAusgelaufen === undefined)
-			 throw new Error('invalid json format, missing attribute istAusgelaufen');
+			throw new Error('invalid json format, missing attribute istAusgelaufen');
 		result.istAusgelaufen = obj.istAusgelaufen;
 		result.berufsfeldGruppe = (obj.berufsfeldGruppe === undefined) ? null : obj.berufsfeldGruppe === null ? null : obj.berufsfeldGruppe;
 		result.berufsfeld = (obj.berufsfeld === undefined) ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
@@ -90,13 +90,13 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 		result.ebene2 = (obj.ebene2 === undefined) ? null : obj.ebene2 === null ? null : obj.ebene2;
 		result.ebene3 = (obj.ebene3 === undefined) ? null : obj.ebene3 === null ? null : obj.ebene3;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.bezeichnungM === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungM');
+			throw new Error('invalid json format, missing attribute bezeichnungM');
 		result.bezeichnungM = obj.bezeichnungM;
 		if (obj.bezeichnungW === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnungW');
+			throw new Error('invalid json format, missing attribute bezeichnungW');
 		result.bezeichnungW = obj.bezeichnungW;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -105,18 +105,18 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 
 	public static transpilerToJSON(obj : BerufskollegFachklassenKatalogDaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
 		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : JSON.stringify(obj.berufsfeld)) + ',';
 		result += '"ebene1" : ' + ((!obj.ebene1) ? 'null' : JSON.stringify(obj.ebene1)) + ',';
 		result += '"ebene2" : ' + ((!obj.ebene2) ? 'null' : JSON.stringify(obj.ebene2)) + ',';
 		result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM!) + ',';
-		result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM) + ',';
+		result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -125,10 +125,10 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BerufskollegFachklassenKatalogDaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.istAusgelaufen !== undefined) {
-			result += '"istAusgelaufen" : ' + obj.istAusgelaufen + ',';
+			result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		}
 		if (obj.berufsfeldGruppe !== undefined) {
 			result += '"berufsfeldGruppe" : ' + ((!obj.berufsfeldGruppe) ? 'null' : JSON.stringify(obj.berufsfeldGruppe)) + ',';
@@ -146,19 +146,19 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 			result += '"ebene3" : ' + ((!obj.ebene3) ? 'null' : JSON.stringify(obj.ebene3)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.bezeichnungM !== undefined) {
-			result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM!) + ',';
+			result += '"bezeichnungM" : ' + JSON.stringify(obj.bezeichnungM) + ',';
 		}
 		if (obj.bezeichnungW !== undefined) {
-			result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW!) + ',';
+			result += '"bezeichnungW" : ' + JSON.stringify(obj.bezeichnungW) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

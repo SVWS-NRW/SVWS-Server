@@ -63,21 +63,21 @@ export class AbiturKursMarkierung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbiturKursMarkierung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbiturKursMarkierung>;
 		const result = new AbiturKursMarkierung();
 		if (obj.fuerBerechnung === undefined)
-			 throw new Error('invalid json format, missing attribute fuerBerechnung');
+			throw new Error('invalid json format, missing attribute fuerBerechnung');
 		result.fuerBerechnung = obj.fuerBerechnung;
 		if (obj.aufAbiturZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute aufAbiturZeugnis');
+			throw new Error('invalid json format, missing attribute aufAbiturZeugnis');
 		result.aufAbiturZeugnis = obj.aufAbiturZeugnis;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : AbiturKursMarkierung) : string {
 		let result = '{';
-		result += '"fuerBerechnung" : ' + obj.fuerBerechnung + ',';
-		result += '"aufAbiturZeugnis" : ' + obj.aufAbiturZeugnis + ',';
+		result += '"fuerBerechnung" : ' + obj.fuerBerechnung.toString() + ',';
+		result += '"aufAbiturZeugnis" : ' + obj.aufAbiturZeugnis.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -86,10 +86,10 @@ export class AbiturKursMarkierung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbiturKursMarkierung>) : string {
 		let result = '{';
 		if (obj.fuerBerechnung !== undefined) {
-			result += '"fuerBerechnung" : ' + obj.fuerBerechnung + ',';
+			result += '"fuerBerechnung" : ' + obj.fuerBerechnung.toString() + ',';
 		}
 		if (obj.aufAbiturZeugnis !== undefined) {
-			result += '"aufAbiturZeugnis" : ' + obj.aufAbiturZeugnis + ',';
+			result += '"aufAbiturZeugnis" : ' + obj.aufAbiturZeugnis.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -1849,10 +1849,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpilerFromJSON method code as a String
 	 */
 	public String appendTranspilerFromJSON(final ClassTree node) {
+		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		final StringBuilder sb = new StringBuilder();
 		sb.append(getIndent() + "public static transpilerFromJSON(json : string): " + node.getSimpleName().toString() + " {" + System.lineSeparator());
 		indentC++;
-		sb.append(getIndent() + "const obj = JSON.parse(json);" + System.lineSeparator());
+		sb.append(getIndent() + "const obj = JSON.parse(json) as Partial<" + node.getSimpleName().toString() + ">;" + System.lineSeparator());
 		sb.append(getIndent() + "const result = new " + node.getSimpleName().toString() + "();" + System.lineSeparator());
 		for (final VariableTree attribute : transpiler.getAttributesWithSuperclassAttributes(node)) {
 			final VariableNode variable = new VariableNode(this, attribute);
@@ -1861,7 +1862,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final TypeNode type = variable.getTypeNode();
 			if (type.isPrimitive() || (type.isNotNull() && (type.isString() || type.isNumberClass() || type.isBoolean()))) {
 				sb.append(getIndent() + "if (obj." + attribute.getName() + " === undefined)" + System.lineSeparator());
-				sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator());
+				sb.append(getIndent() + "\tthrow new Error('invalid json format, missing attribute " + attribute.getName() + "');" + System.lineSeparator());
 				sb.append(getIndent() + "result." + attribute.getName() + " = obj." + attribute.getName() + ";" + System.lineSeparator());
 			} else if ((!type.isNotNull()) && (type.isString() || type.isNumberClass() || type.isBoolean())) {
 				String tmpAttribute = "obj." + attribute.getName();
@@ -1874,28 +1875,47 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				sb.append(getIndent() + "if ((obj." + attribute.getName() + " !== undefined) && (obj." + attribute.getName() + " !== null)) {"
-						+ System.lineSeparator());
+				if (type.isNotNull())
+					sb.append(getIndent() + "if (obj." + attribute.getName() + " !== undefined) {"
+							+ System.lineSeparator());
+				else
+					sb.append(getIndent() + "if ((obj." + attribute.getName() + " !== undefined) && (obj." + attribute.getName() + " !== null)) {"
+							+ System.lineSeparator());
 				indentC++;
+				if (!type.isNotNull()) {
+					// TODO Erweitere die Unterstützung, so dass nicht nur Listen möglich sind.
+					unit.imports.put("ArrayList", "java.util");
+					sb.append(getIndent() + "result." + attribute.getName() + " = new ArrayList();" + System.lineSeparator());
+				}
 				sb.append(getIndent() + "for (const elem of obj." + attribute.getName() + ") {" + System.lineSeparator());
 				indentC++;
 				if (paramType.isNotNull() && (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean()))
-					sb.append(getIndent() + "result." + attribute.getName() + "?.add(elem);" + System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + ".add(elem);" + System.lineSeparator());
 				else if (paramType.isString() || paramType.isNumberClass() || paramType.isBoolean())
-					sb.append(getIndent() + "result." + attribute.getName() + "?.add(elem === null ? null : elem);" + System.lineSeparator());
+					sb.append(getIndent() + "result." + attribute.getName() + ".add(elem === null ? null : elem);" + System.lineSeparator());
 				else
-					sb.append(getIndent() + "result." + attribute.getName() + "?.add(" + paramType.transpile(true)
+					sb.append(getIndent() + "result." + attribute.getName() + ".add(" + paramType.transpile(true)
 							+ ".transpilerFromJSON(JSON.stringify(elem)));" + System.lineSeparator());
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				indentC--;
-				sb.append(getIndent() + "}" + System.lineSeparator());
+				if (type.isNotNull()) {
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				} else {
+					sb.append(getIndent() + "} else {" + System.lineSeparator());
+					indentC++;
+					sb.append(getIndent() + "result." + attribute.getName() + " = null;" + System.lineSeparator());
+					indentC--;
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				}
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine array content type of " + type.transpile(false)
 							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
+				sb.append(getIndent() + "if (obj." + attribute.getName() + " !== undefined) {" + System.lineSeparator());
+				indentC++;
 				sb.append(getIndent() + "for (let i = 0; i < obj." + attribute.getName() + ".length; i++) {" + System.lineSeparator());
 				indentC++;
 				if (contentType.isPrimitive()) {
@@ -1918,10 +1938,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				}
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
+				indentC--;
+				sb.append(getIndent() + "}" + System.lineSeparator());
 			} else {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + "if (obj." + attribute.getName() + " === undefined)" + System.lineSeparator());
-					sb.append(getIndent() + "\t throw new Error('invalid json format, missing attribute " + attribute.getName() + "');"
+					sb.append(getIndent() + "\tthrow new Error('invalid json format, missing attribute " + attribute.getName() + "');"
 							+ System.lineSeparator());
 					sb.append(getIndent() + "result." + attribute.getName() + " = " + type.transpile(true) + ".transpilerFromJSON(JSON.stringify(obj."
 							+ attribute.getName() + "));" + System.lineSeparator());
@@ -1964,19 +1986,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final String objAttr = "obj." + attribute.getName();
 			if (type.isPrimitive()) {
 				if (type.isPrimitveBoolean()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else if (type.isPrimitveChar()) {
 					sb.append(getIndent() + addAttrName + " + '\"' + " + objAttr + " + '\"'" + endline);
 				} else if (type.isPrimitveInteger()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else if (type.isPrimitveFloat()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else {
 					throw new TranspilerException("Transpiler Error: Unsupported primitive type while generating transpilerToJSON method");
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + "!)" + endline);
+					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
 					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
@@ -1984,19 +2006,21 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + objAttr + "!" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ")" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
 				final TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
-				indentC++;
-				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : []';" + System.lineSeparator());
-				indentC--;
-				sb.append(getIndent() + "} else {" + System.lineSeparator());
-				indentC++;
+				if (!type.isNotNull()) {
+					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
+					indentC++;
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					indentC--;
+					sb.append(getIndent() + "} else {" + System.lineSeparator());
+					indentC++;
+				}
 				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator());
 				sb.append(getIndent() + "for (let i = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator());
 				indentC++;
@@ -2008,9 +2032,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
-						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += elem.toString();" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem.toString();" + System.lineSeparator());
 				} else
 					sb.append(getIndent() + "result += " + paramType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				sb.append(getIndent() + "if (i < " + objAttr + ".size() - 1)" + System.lineSeparator());
@@ -2020,8 +2044,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				sb.append(getIndent() + "result += ' ]'" + endline);
-				indentC--;
-				sb.append(getIndent() + "}" + System.lineSeparator());
+				if (!type.isNotNull()) {
+					indentC--;
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				}
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
@@ -2029,12 +2055,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
 
-				sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
-				indentC++;
-				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : []';" + System.lineSeparator());
-				indentC--;
-				sb.append(getIndent() + "} else {" + System.lineSeparator());
-				indentC++;
+				if (!type.isNotNull()) {
+					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
+					indentC++;
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					indentC--;
+					sb.append(getIndent() + "} else {" + System.lineSeparator());
+					indentC++;
+				}
 				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator());
 				sb.append(getIndent() + "for (let i = 0; i < " + objAttr + ".length; i++) {" + System.lineSeparator());
 				indentC++;
@@ -2046,9 +2074,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
-						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += elem.toString();" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem.toString();" + System.lineSeparator());
 				} else if (contentType.isPrimitive()) {
 					sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 				} else {
@@ -2065,8 +2093,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				sb.append(getIndent() + "result += ' ]'" + endline);
-				indentC--;
-				sb.append(getIndent() + "}" + System.lineSeparator());
+				if (!type.isNotNull()) {
+					indentC--;
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				}
 			} else {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
@@ -2113,19 +2143,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			indentC++;
 			if (type.isPrimitive()) {
 				if (type.isPrimitveBoolean()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else if (type.isPrimitveChar()) {
 					sb.append(getIndent() + addAttrName + " + '\"' + " + objAttr + " + '\"'" + endline);
 				} else if (type.isPrimitveInteger()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else if (type.isPrimitveFloat()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + ".toString()" + endline);
 				} else {
 					throw new TranspilerException("Transpiler Error: Unsupported primitive type while generating transpilerToJSON method");
 				}
 			} else if (type.isString()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + "!)" + endline);
+					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
 					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
@@ -2133,19 +2163,21 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ")" + endline);
+					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
 				final TypeNode paramType = type.getParameterType(0, false);
 				if (paramType == null)
 					throw new TranspilerException("Transpiler Error: Cannot determine type parameter for the collection type " + type.transpile(false) + ".");
-				sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
-				indentC++;
-				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : []';" + System.lineSeparator());
-				indentC--;
-				sb.append(getIndent() + "} else {" + System.lineSeparator());
-				indentC++;
+				if (!type.isNotNull()) {
+					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
+					indentC++;
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					indentC--;
+					sb.append(getIndent() + "} else {" + System.lineSeparator());
+					indentC++;
+				}
 				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator());
 				sb.append(getIndent() + "for (let i = 0; i < " + objAttr + ".size(); i++) {" + System.lineSeparator());
 				indentC++;
@@ -2157,9 +2189,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (paramType.isNumberClass() || paramType.isBoolean()) {
 					if (paramType.isNotNull())
-						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += elem.toString();" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem.toString();" + System.lineSeparator());
 				} else
 					sb.append(getIndent() + "result += " + paramType.transpile(true) + ".transpilerToJSON(elem);" + System.lineSeparator());
 				sb.append(getIndent() + "if (i < " + objAttr + ".size() - 1)" + System.lineSeparator());
@@ -2169,8 +2201,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				sb.append(getIndent() + "result += ' ]'" + endline);
-				indentC--;
-				sb.append(getIndent() + "}" + System.lineSeparator());
+				if (!type.isNotNull()) {
+					indentC--;
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				}
 			} else if (type.isArrayType()) {
 				TypeNode contentType = type.getArrayContentType(transpiler);
 				if (contentType == null)
@@ -2178,12 +2212,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							+ " for JSON deserialization.");
 				contentType = contentType.getNoDeclarationType();
 				sb.append(getIndent() + "const a = " + objAttr + ";" + System.lineSeparator());
-				sb.append(getIndent() + "if (!a) {" + System.lineSeparator());
-				indentC++;
-				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : []';" + System.lineSeparator());
-				indentC--;
-				sb.append(getIndent() + "} else {" + System.lineSeparator());
-				indentC++;
+				if (!type.isNotNull()) {
+					sb.append(getIndent() + "if (!a) {" + System.lineSeparator());
+					indentC++;
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					indentC--;
+					sb.append(getIndent() + "} else {" + System.lineSeparator());
+					indentC++;
+				}
 				sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : [ ';" + System.lineSeparator());
 				sb.append(getIndent() + "for (let i = 0; i < a.length; i++) {" + System.lineSeparator());
 				indentC++;
@@ -2195,9 +2231,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(getIndent() + "result += " + "(elem === null) ? null : '\"' + elem + '\"';" + System.lineSeparator());
 				} else if (contentType.isNumberClass() || contentType.isBoolean()) {
 					if (contentType.isNotNull())
-						sb.append(getIndent() + "result += elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += elem.toString();" + System.lineSeparator());
 					else
-						sb.append(getIndent() + "result += (elem === null) ? null : elem;" + System.lineSeparator());
+						sb.append(getIndent() + "result += (elem === null) ? null : elem.toString();" + System.lineSeparator());
 				} else if (contentType.isPrimitive()) {
 					sb.append(getIndent() + "result += JSON.stringify(elem);" + System.lineSeparator());
 				} else {
@@ -2214,8 +2250,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				indentC--;
 				sb.append(getIndent() + "}" + System.lineSeparator());
 				sb.append(getIndent() + "result += ' ]'" + endline);
-				indentC--;
-				sb.append(getIndent() + "}" + System.lineSeparator());
+				if (!type.isNotNull()) {
+					indentC--;
+					sb.append(getIndent() + "}" + System.lineSeparator());
+				}
 			} else {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);

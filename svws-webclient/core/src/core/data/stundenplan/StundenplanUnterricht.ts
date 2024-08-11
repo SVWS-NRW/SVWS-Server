@@ -64,39 +64,39 @@ export class StundenplanUnterricht extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanUnterricht {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanUnterricht>;
 		const result = new StundenplanUnterricht();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idZeitraster === undefined)
-			 throw new Error('invalid json format, missing attribute idZeitraster');
+			throw new Error('invalid json format, missing attribute idZeitraster');
 		result.idZeitraster = obj.idZeitraster;
 		if (obj.wochentyp === undefined)
-			 throw new Error('invalid json format, missing attribute wochentyp');
+			throw new Error('invalid json format, missing attribute wochentyp');
 		result.wochentyp = obj.wochentyp;
 		result.idKurs = (obj.idKurs === undefined) ? null : obj.idKurs === null ? null : obj.idKurs;
 		if (obj.idFach === undefined)
-			 throw new Error('invalid json format, missing attribute idFach');
+			throw new Error('invalid json format, missing attribute idFach');
 		result.idFach = obj.idFach;
-		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+		if (obj.lehrer !== undefined) {
 			for (const elem of obj.lehrer) {
-				result.lehrer?.add(elem);
+				result.lehrer.add(elem);
 			}
 		}
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(elem);
+				result.klassen.add(elem);
 			}
 		}
-		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+		if (obj.raeume !== undefined) {
 			for (const elem of obj.raeume) {
-				result.raeume?.add(elem);
+				result.raeume.add(elem);
 			}
 		}
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(elem);
+				result.schienen.add(elem);
 			}
 		}
 		return result;
@@ -104,59 +104,43 @@ export class StundenplanUnterricht extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanUnterricht) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idZeitraster" : ' + obj.idZeitraster + ',';
-		result += '"wochentyp" : ' + obj.wochentyp + ',';
-		result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs) + ',';
-		result += '"idFach" : ' + obj.idFach + ',';
-		if (!obj.lehrer) {
-			result += '"lehrer" : []';
-		} else {
-			result += '"lehrer" : [ ';
-			for (let i = 0; i < obj.lehrer.size(); i++) {
-				const elem = obj.lehrer.get(i);
-				result += elem;
-				if (i < obj.lehrer.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
+		result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
+		result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs.toString()) + ',';
+		result += '"idFach" : ' + obj.idFach.toString() + ',';
+		result += '"lehrer" : [ ';
+		for (let i = 0; i < obj.lehrer.size(); i++) {
+			const elem = obj.lehrer.get(i);
+			result += elem.toString();
+			if (i < obj.lehrer.size() - 1)
+				result += ',';
 		}
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
-			result += '"klassen" : [ ';
-			for (let i = 0; i < obj.klassen.size(); i++) {
-				const elem = obj.klassen.get(i);
-				result += elem;
-				if (i < obj.klassen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += elem.toString();
+			if (i < obj.klassen.size() - 1)
+				result += ',';
 		}
-		if (!obj.raeume) {
-			result += '"raeume" : []';
-		} else {
-			result += '"raeume" : [ ';
-			for (let i = 0; i < obj.raeume.size(); i++) {
-				const elem = obj.raeume.get(i);
-				result += elem;
-				if (i < obj.raeume.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"raeume" : [ ';
+		for (let i = 0; i < obj.raeume.size(); i++) {
+			const elem = obj.raeume.get(i);
+			result += elem.toString();
+			if (i < obj.raeume.size() - 1)
+				result += ',';
 		}
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
-			result += '"schienen" : [ ';
-			for (let i = 0; i < obj.schienen.size(); i++) {
-				const elem = obj.schienen.get(i);
-				result += elem;
-				if (i < obj.schienen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += elem.toString();
+			if (i < obj.schienen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -165,75 +149,59 @@ export class StundenplanUnterricht extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanUnterricht>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idZeitraster !== undefined) {
-			result += '"idZeitraster" : ' + obj.idZeitraster + ',';
+			result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
 		}
 		if (obj.wochentyp !== undefined) {
-			result += '"wochentyp" : ' + obj.wochentyp + ',';
+			result += '"wochentyp" : ' + obj.wochentyp.toString() + ',';
 		}
 		if (obj.idKurs !== undefined) {
-			result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs) + ',';
+			result += '"idKurs" : ' + ((!obj.idKurs) ? 'null' : obj.idKurs.toString()) + ',';
 		}
 		if (obj.idFach !== undefined) {
-			result += '"idFach" : ' + obj.idFach + ',';
+			result += '"idFach" : ' + obj.idFach.toString() + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			if (!obj.lehrer) {
-				result += '"lehrer" : []';
-			} else {
-				result += '"lehrer" : [ ';
-				for (let i = 0; i < obj.lehrer.size(); i++) {
-					const elem = obj.lehrer.get(i);
-					result += elem;
-					if (i < obj.lehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"lehrer" : [ ';
+			for (let i = 0; i < obj.lehrer.size(); i++) {
+				const elem = obj.lehrer.get(i);
+				result += elem.toString();
+				if (i < obj.lehrer.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += elem;
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"klassen" : [ ';
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
+				result += elem.toString();
+				if (i < obj.klassen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.raeume !== undefined) {
-			if (!obj.raeume) {
-				result += '"raeume" : []';
-			} else {
-				result += '"raeume" : [ ';
-				for (let i = 0; i < obj.raeume.size(); i++) {
-					const elem = obj.raeume.get(i);
-					result += elem;
-					if (i < obj.raeume.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"raeume" : [ ';
+			for (let i = 0; i < obj.raeume.size(); i++) {
+				const elem = obj.raeume.get(i);
+				result += elem.toString();
+				if (i < obj.raeume.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += elem;
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schienen" : [ ';
+			for (let i = 0; i < obj.schienen.size(); i++) {
+				const elem = obj.schienen.get(i);
+				result += elem.toString();
+				if (i < obj.schienen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

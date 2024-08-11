@@ -88,46 +88,46 @@ export class SchuelerListeEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerListeEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerListeEintrag>;
 		const result = new SchuelerListeEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.nachname === undefined)
-			 throw new Error('invalid json format, missing attribute nachname');
+			throw new Error('invalid json format, missing attribute nachname');
 		result.nachname = obj.nachname;
 		if (obj.vorname === undefined)
-			 throw new Error('invalid json format, missing attribute vorname');
+			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
 		if (obj.geschlecht === undefined)
-			 throw new Error('invalid json format, missing attribute geschlecht');
+			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
 		if (obj.idKlasse === undefined)
-			 throw new Error('invalid json format, missing attribute idKlasse');
+			throw new Error('invalid json format, missing attribute idKlasse');
 		result.idKlasse = obj.idKlasse;
 		if (obj.idJahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute idJahrgang');
+			throw new Error('invalid json format, missing attribute idJahrgang');
 		result.idJahrgang = obj.idJahrgang;
 		if (obj.jahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute jahrgang');
+			throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
 		result.abiturjahrgang = (obj.abiturjahrgang === undefined) ? null : obj.abiturjahrgang === null ? null : obj.abiturjahrgang;
 		if (obj.schulgliederung === undefined)
-			 throw new Error('invalid json format, missing attribute schulgliederung');
+			throw new Error('invalid json format, missing attribute schulgliederung');
 		result.schulgliederung = obj.schulgliederung;
 		if (obj.status === undefined)
-			 throw new Error('invalid json format, missing attribute status');
+			throw new Error('invalid json format, missing attribute status');
 		result.status = obj.status;
 		if (obj.istDuplikat === undefined)
-			 throw new Error('invalid json format, missing attribute istDuplikat');
+			throw new Error('invalid json format, missing attribute istDuplikat');
 		result.istDuplikat = obj.istDuplikat;
 		result.externeSchulNr = (obj.externeSchulNr === undefined) ? null : obj.externeSchulNr === null ? null : obj.externeSchulNr;
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(elem);
+				result.kurse.add(elem);
 			}
 		}
 		return result;
@@ -135,31 +135,27 @@ export class SchuelerListeEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerListeEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
-		result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
-		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
+		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
+		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
 		result += '"idKlasse" : ' + obj.idKlasse! + ',';
 		result += '"idJahrgang" : ' + obj.idJahrgang! + ',';
-		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
-		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
-		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung!) + ',';
-		result += '"status" : ' + obj.status + ',';
-		result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.toString()) + ',';
+		result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung) + ',';
+		result += '"status" : ' + obj.status.toString() + ',';
+		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt! + ',';
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
-			result += '"kurse" : [ ';
-			for (let i = 0; i < obj.kurse.size(); i++) {
-				const elem = obj.kurse.get(i);
-				result += elem;
-				if (i < obj.kurse.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += elem.toString();
+			if (i < obj.kurse.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -168,16 +164,16 @@ export class SchuelerListeEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerListeEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + JSON.stringify(obj.nachname!) + ',';
+			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + JSON.stringify(obj.vorname!) + ',';
+			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
 		if (obj.geschlecht !== undefined) {
-			result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht!) + ',';
+			result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
 		}
 		if (obj.idKlasse !== undefined) {
 			result += '"idKlasse" : ' + obj.idKlasse + ',';
@@ -186,19 +182,19 @@ export class SchuelerListeEintrag extends JavaObject {
 			result += '"idJahrgang" : ' + obj.idJahrgang + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		}
 		if (obj.abiturjahrgang !== undefined) {
-			result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang) + ',';
+			result += '"abiturjahrgang" : ' + ((!obj.abiturjahrgang) ? 'null' : obj.abiturjahrgang.toString()) + ',';
 		}
 		if (obj.schulgliederung !== undefined) {
-			result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung!) + ',';
+			result += '"schulgliederung" : ' + JSON.stringify(obj.schulgliederung) + ',';
 		}
 		if (obj.status !== undefined) {
-			result += '"status" : ' + obj.status + ',';
+			result += '"status" : ' + obj.status.toString() + ',';
 		}
 		if (obj.istDuplikat !== undefined) {
-			result += '"istDuplikat" : ' + obj.istDuplikat + ',';
+			result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		}
 		if (obj.externeSchulNr !== undefined) {
 			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
@@ -207,18 +203,14 @@ export class SchuelerListeEintrag extends JavaObject {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
 		}
 		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += elem;
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"kurse" : [ ';
+			for (let i = 0; i < obj.kurse.size(); i++) {
+				const elem = obj.kurse.get(i);
+				result += elem.toString();
+				if (i < obj.kurse.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

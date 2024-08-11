@@ -33,17 +33,17 @@ export class SchuleAbschnitte extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuleAbschnitte {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuleAbschnitte>;
 		const result = new SchuleAbschnitte();
 		if (obj.anzahlAbschnitte === undefined)
-			 throw new Error('invalid json format, missing attribute anzahlAbschnitte');
+			throw new Error('invalid json format, missing attribute anzahlAbschnitte');
 		result.anzahlAbschnitte = obj.anzahlAbschnitte;
 		if (obj.abschnittBez === undefined)
-			 throw new Error('invalid json format, missing attribute abschnittBez');
+			throw new Error('invalid json format, missing attribute abschnittBez');
 		result.abschnittBez = obj.abschnittBez;
-		if ((obj.bezAbschnitte !== undefined) && (obj.bezAbschnitte !== null)) {
+		if (obj.bezAbschnitte !== undefined) {
 			for (const elem of obj.bezAbschnitte) {
-				result.bezAbschnitte?.add(elem);
+				result.bezAbschnitte.add(elem);
 			}
 		}
 		return result;
@@ -51,20 +51,16 @@ export class SchuleAbschnitte extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuleAbschnitte) : string {
 		let result = '{';
-		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
-		result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez!) + ',';
-		if (!obj.bezAbschnitte) {
-			result += '"bezAbschnitte" : []';
-		} else {
-			result += '"bezAbschnitte" : [ ';
-			for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
-				const elem = obj.bezAbschnitte.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.bezAbschnitte.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte.toString() + ',';
+		result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez) + ',';
+		result += '"bezAbschnitte" : [ ';
+		for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
+			const elem = obj.bezAbschnitte.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.bezAbschnitte.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,24 +69,20 @@ export class SchuleAbschnitte extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuleAbschnitte>) : string {
 		let result = '{';
 		if (obj.anzahlAbschnitte !== undefined) {
-			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte + ',';
+			result += '"anzahlAbschnitte" : ' + obj.anzahlAbschnitte.toString() + ',';
 		}
 		if (obj.abschnittBez !== undefined) {
-			result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez!) + ',';
+			result += '"abschnittBez" : ' + JSON.stringify(obj.abschnittBez) + ',';
 		}
 		if (obj.bezAbschnitte !== undefined) {
-			if (!obj.bezAbschnitte) {
-				result += '"bezAbschnitte" : []';
-			} else {
-				result += '"bezAbschnitte" : [ ';
-				for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
-					const elem = obj.bezAbschnitte.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.bezAbschnitte.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"bezAbschnitte" : [ ';
+			for (let i = 0; i < obj.bezAbschnitte.size(); i++) {
+				const elem = obj.bezAbschnitte.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.bezAbschnitte.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

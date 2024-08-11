@@ -36,7 +36,7 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): DatenbankVerbindungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<DatenbankVerbindungsdaten>;
 		const result = new DatenbankVerbindungsdaten();
 		result.username = (obj.username === undefined) ? null : obj.username === null ? null : obj.username;
 		result.password = (obj.password === undefined) ? null : obj.password === null ? null : obj.password;

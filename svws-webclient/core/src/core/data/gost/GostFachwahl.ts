@@ -41,19 +41,19 @@ export class GostFachwahl extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostFachwahl {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostFachwahl>;
 		const result = new GostFachwahl();
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		if (obj.schuelerID === undefined)
-			 throw new Error('invalid json format, missing attribute schuelerID');
+			throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
 		if (obj.kursartID === undefined)
-			 throw new Error('invalid json format, missing attribute kursartID');
+			throw new Error('invalid json format, missing attribute kursartID');
 		result.kursartID = obj.kursartID;
 		if (obj.istSchriftlich === undefined)
-			 throw new Error('invalid json format, missing attribute istSchriftlich');
+			throw new Error('invalid json format, missing attribute istSchriftlich');
 		result.istSchriftlich = obj.istSchriftlich;
 		result.abiturfach = (obj.abiturfach === undefined) ? null : obj.abiturfach === null ? null : obj.abiturfach;
 		return result;
@@ -61,11 +61,11 @@ export class GostFachwahl extends JavaObject {
 
 	public static transpilerToJSON(obj : GostFachwahl) : string {
 		let result = '{';
-		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"schuelerID" : ' + obj.schuelerID + ',';
-		result += '"kursartID" : ' + obj.kursartID + ',';
-		result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
-		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
+		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
+		result += '"kursartID" : ' + obj.kursartID.toString() + ',';
+		result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
+		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,19 +74,19 @@ export class GostFachwahl extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostFachwahl>) : string {
 		let result = '{';
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.schuelerID !== undefined) {
-			result += '"schuelerID" : ' + obj.schuelerID + ',';
+			result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		}
 		if (obj.kursartID !== undefined) {
-			result += '"kursartID" : ' + obj.kursartID + ',';
+			result += '"kursartID" : ' + obj.kursartID.toString() + ',';
 		}
 		if (obj.istSchriftlich !== undefined) {
-			result += '"istSchriftlich" : ' + obj.istSchriftlich + ',';
+			result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		}
 		if (obj.abiturfach !== undefined) {
-			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach) + ',';
+			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

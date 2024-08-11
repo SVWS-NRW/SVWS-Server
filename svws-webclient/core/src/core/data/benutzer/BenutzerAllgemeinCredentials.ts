@@ -31,25 +31,25 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerAllgemeinCredentials {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerAllgemeinCredentials>;
 		const result = new BenutzerAllgemeinCredentials();
 		if (obj.anzeigename === undefined)
-			 throw new Error('invalid json format, missing attribute anzeigename');
+			throw new Error('invalid json format, missing attribute anzeigename');
 		result.anzeigename = obj.anzeigename;
 		if (obj.benutzername === undefined)
-			 throw new Error('invalid json format, missing attribute benutzername');
+			throw new Error('invalid json format, missing attribute benutzername');
 		result.benutzername = obj.benutzername;
 		if (obj.password === undefined)
-			 throw new Error('invalid json format, missing attribute password');
+			throw new Error('invalid json format, missing attribute password');
 		result.password = obj.password;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BenutzerAllgemeinCredentials) : string {
 		let result = '{';
-		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
-		result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
-		result += '"password" : ' + JSON.stringify(obj.password!) + ',';
+		result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename) + ',';
+		result += '"benutzername" : ' + JSON.stringify(obj.benutzername) + ',';
+		result += '"password" : ' + JSON.stringify(obj.password) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -58,13 +58,13 @@ export class BenutzerAllgemeinCredentials extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerAllgemeinCredentials>) : string {
 		let result = '{';
 		if (obj.anzeigename !== undefined) {
-			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename!) + ',';
+			result += '"anzeigename" : ' + JSON.stringify(obj.anzeigename) + ',';
 		}
 		if (obj.benutzername !== undefined) {
-			result += '"benutzername" : ' + JSON.stringify(obj.benutzername!) + ',';
+			result += '"benutzername" : ' + JSON.stringify(obj.benutzername) + ',';
 		}
 		if (obj.password !== undefined) {
-			result += '"password" : ' + JSON.stringify(obj.password!) + ',';
+			result += '"password" : ' + JSON.stringify(obj.password) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

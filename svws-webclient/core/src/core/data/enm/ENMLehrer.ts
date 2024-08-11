@@ -46,10 +46,10 @@ export class ENMLehrer extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMLehrer {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMLehrer>;
 		const result = new ENMLehrer();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.nachname = (obj.nachname === undefined) ? null : obj.nachname === null ? null : obj.nachname;
@@ -61,7 +61,7 @@ export class ENMLehrer extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMLehrer) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
@@ -75,7 +75,7 @@ export class ENMLehrer extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMLehrer>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';

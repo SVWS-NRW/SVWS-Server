@@ -48,22 +48,22 @@ export class StundenplanPausenzeit extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanPausenzeit {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanPausenzeit>;
 		const result = new StundenplanPausenzeit();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.wochentag === undefined)
-			 throw new Error('invalid json format, missing attribute wochentag');
+			throw new Error('invalid json format, missing attribute wochentag');
 		result.wochentag = obj.wochentag;
 		result.beginn = (obj.beginn === undefined) ? null : obj.beginn === null ? null : obj.beginn;
 		result.ende = (obj.ende === undefined) ? null : obj.ende === null ? null : obj.ende;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(elem);
+				result.klassen.add(elem);
 			}
 		}
 		return result;
@@ -71,23 +71,19 @@ export class StundenplanPausenzeit extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanPausenzeit) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"wochentag" : ' + obj.wochentag + ',';
-		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
-		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
-			result += '"klassen" : [ ';
-			for (let i = 0; i < obj.klassen.size(); i++) {
-				const elem = obj.klassen.get(i);
-				result += elem;
-				if (i < obj.klassen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"wochentag" : ' + obj.wochentag.toString() + ',';
+		result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn.toString()) + ',';
+		result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende.toString()) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += elem.toString();
+			if (i < obj.klassen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -96,33 +92,29 @@ export class StundenplanPausenzeit extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanPausenzeit>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.wochentag !== undefined) {
-			result += '"wochentag" : ' + obj.wochentag + ',';
+			result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		}
 		if (obj.beginn !== undefined) {
-			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn) + ',';
+			result += '"beginn" : ' + ((!obj.beginn) ? 'null' : obj.beginn.toString()) + ',';
 		}
 		if (obj.ende !== undefined) {
-			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende) + ',';
+			result += '"ende" : ' + ((!obj.ende) ? 'null' : obj.ende.toString()) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += elem;
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"klassen" : [ ';
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
+				result += elem.toString();
+				if (i < obj.klassen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

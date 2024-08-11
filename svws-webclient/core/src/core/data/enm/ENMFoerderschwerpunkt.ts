@@ -31,10 +31,10 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMFoerderschwerpunkt {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMFoerderschwerpunkt>;
 		const result = new ENMFoerderschwerpunkt();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.kuerzel = (obj.kuerzel === undefined) ? null : obj.kuerzel === null ? null : obj.kuerzel;
 		result.beschreibung = (obj.beschreibung === undefined) ? null : obj.beschreibung === null ? null : obj.beschreibung;
@@ -43,7 +43,7 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMFoerderschwerpunkt) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result = result.slice(0, -1);
@@ -54,7 +54,7 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMFoerderschwerpunkt>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
 			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';

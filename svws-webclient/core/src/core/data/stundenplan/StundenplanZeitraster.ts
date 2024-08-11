@@ -41,16 +41,16 @@ export class StundenplanZeitraster extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanZeitraster {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanZeitraster>;
 		const result = new StundenplanZeitraster();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.wochentag === undefined)
-			 throw new Error('invalid json format, missing attribute wochentag');
+			throw new Error('invalid json format, missing attribute wochentag');
 		result.wochentag = obj.wochentag;
 		if (obj.unterrichtstunde === undefined)
-			 throw new Error('invalid json format, missing attribute unterrichtstunde');
+			throw new Error('invalid json format, missing attribute unterrichtstunde');
 		result.unterrichtstunde = obj.unterrichtstunde;
 		result.stundenbeginn = (obj.stundenbeginn === undefined) ? null : obj.stundenbeginn === null ? null : obj.stundenbeginn;
 		result.stundenende = (obj.stundenende === undefined) ? null : obj.stundenende === null ? null : obj.stundenende;
@@ -59,11 +59,11 @@ export class StundenplanZeitraster extends JavaObject {
 
 	public static transpilerToJSON(obj : StundenplanZeitraster) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"wochentag" : ' + obj.wochentag + ',';
-		result += '"unterrichtstunde" : ' + obj.unterrichtstunde + ',';
-		result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn) + ',';
-		result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"wochentag" : ' + obj.wochentag.toString() + ',';
+		result += '"unterrichtstunde" : ' + obj.unterrichtstunde.toString() + ',';
+		result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn.toString()) + ',';
+		result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -72,19 +72,19 @@ export class StundenplanZeitraster extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<StundenplanZeitraster>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.wochentag !== undefined) {
-			result += '"wochentag" : ' + obj.wochentag + ',';
+			result += '"wochentag" : ' + obj.wochentag.toString() + ',';
 		}
 		if (obj.unterrichtstunde !== undefined) {
-			result += '"unterrichtstunde" : ' + obj.unterrichtstunde + ',';
+			result += '"unterrichtstunde" : ' + obj.unterrichtstunde.toString() + ',';
 		}
 		if (obj.stundenbeginn !== undefined) {
-			result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn) + ',';
+			result += '"stundenbeginn" : ' + ((!obj.stundenbeginn) ? 'null' : obj.stundenbeginn.toString()) + ',';
 		}
 		if (obj.stundenende !== undefined) {
-			result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende) + ',';
+			result += '"stundenende" : ' + ((!obj.stundenende) ? 'null' : obj.stundenende.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

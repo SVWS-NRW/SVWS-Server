@@ -29,14 +29,14 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): AbgangsartKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<AbgangsartKatalogEintrag>;
 		const result = new AbgangsartKatalogEintrag();
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
-		if ((obj.historie !== undefined) && (obj.historie !== null)) {
+		if (obj.historie !== undefined) {
 			for (const elem of obj.historie) {
-				result.historie?.add(AbgangsartKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.historie.add(AbgangsartKatalogDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -44,19 +44,15 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : AbgangsartKatalogEintrag) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		if (!obj.historie) {
-			result += '"historie" : []';
-		} else {
-			result += '"historie" : [ ';
-			for (let i = 0; i < obj.historie.size(); i++) {
-				const elem = obj.historie.get(i);
-				result += AbgangsartKatalogDaten.transpilerToJSON(elem);
-				if (i < obj.historie.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"historie" : [ ';
+		for (let i = 0; i < obj.historie.size(); i++) {
+			const elem = obj.historie.get(i);
+			result += AbgangsartKatalogDaten.transpilerToJSON(elem);
+			if (i < obj.historie.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,21 +61,17 @@ export class AbgangsartKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<AbgangsartKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.historie !== undefined) {
-			if (!obj.historie) {
-				result += '"historie" : []';
-			} else {
-				result += '"historie" : [ ';
-				for (let i = 0; i < obj.historie.size(); i++) {
-					const elem = obj.historie.get(i);
-					result += AbgangsartKatalogDaten.transpilerToJSON(elem);
-					if (i < obj.historie.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"historie" : [ ';
+			for (let i = 0; i < obj.historie.size(); i++) {
+				const elem = obj.historie.get(i);
+				result += AbgangsartKatalogDaten.transpilerToJSON(elem);
+				if (i < obj.historie.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -114,27 +114,27 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): PruefungsordnungKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<PruefungsordnungKatalogEintrag>;
 		const result = new PruefungsordnungKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		result.kuerzelSchild = (obj.kuerzelSchild === undefined) ? null : obj.kuerzelSchild === null ? null : obj.kuerzelSchild;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		result.gvJahr = (obj.gvJahr === undefined) ? null : obj.gvJahr === null ? null : obj.gvJahr;
 		if (obj.gvNr === undefined)
-			 throw new Error('invalid json format, missing attribute gvNr');
+			throw new Error('invalid json format, missing attribute gvNr');
 		result.gvNr = obj.gvNr;
 		if (obj.gvSeiten === undefined)
-			 throw new Error('invalid json format, missing attribute gvSeiten');
+			throw new Error('invalid json format, missing attribute gvSeiten');
 		result.gvSeiten = obj.gvSeiten;
 		if (obj.link === undefined)
-			 throw new Error('invalid json format, missing attribute link');
+			throw new Error('invalid json format, missing attribute link');
 		result.link = obj.link;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -143,16 +143,16 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : PruefungsordnungKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr) + ',';
-		result += '"gvNr" : ' + JSON.stringify(obj.gvNr!) + ',';
-		result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten!) + ',';
-		result += '"link" : ' + JSON.stringify(obj.link!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr.toString()) + ',';
+		result += '"gvNr" : ' + JSON.stringify(obj.gvNr) + ',';
+		result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten) + ',';
+		result += '"link" : ' + JSON.stringify(obj.link) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -161,34 +161,34 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<PruefungsordnungKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.kuerzelSchild !== undefined) {
 			result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.gvJahr !== undefined) {
-			result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr) + ',';
+			result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr.toString()) + ',';
 		}
 		if (obj.gvNr !== undefined) {
-			result += '"gvNr" : ' + JSON.stringify(obj.gvNr!) + ',';
+			result += '"gvNr" : ' + JSON.stringify(obj.gvNr) + ',';
 		}
 		if (obj.gvSeiten !== undefined) {
-			result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten!) + ',';
+			result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten) + ',';
 		}
 		if (obj.link !== undefined) {
-			result += '"link" : ' + JSON.stringify(obj.link!) + ',';
+			result += '"link" : ' + JSON.stringify(obj.link) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

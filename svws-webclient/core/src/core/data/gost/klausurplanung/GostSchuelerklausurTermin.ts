@@ -66,16 +66,16 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurTermin {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostSchuelerklausurTermin>;
 		const result = new GostSchuelerklausurTermin();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idSchuelerklausur === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuelerklausur');
+			throw new Error('invalid json format, missing attribute idSchuelerklausur');
 		result.idSchuelerklausur = obj.idSchuelerklausur;
 		if (obj.folgeNr === undefined)
-			 throw new Error('invalid json format, missing attribute folgeNr');
+			throw new Error('invalid json format, missing attribute folgeNr');
 		result.folgeNr = obj.folgeNr;
 		result.idTermin = (obj.idTermin === undefined) ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
@@ -85,11 +85,11 @@ export class GostSchuelerklausurTermin extends JavaObject {
 
 	public static transpilerToJSON(obj : GostSchuelerklausurTermin) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
-		result += '"folgeNr" : ' + obj.folgeNr + ',';
-		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur.toString() + ',';
+		result += '"folgeNr" : ' + obj.folgeNr.toString() + ',';
+		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
+		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -99,19 +99,19 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostSchuelerklausurTermin>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idSchuelerklausur !== undefined) {
-			result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur + ',';
+			result += '"idSchuelerklausur" : ' + obj.idSchuelerklausur.toString() + ',';
 		}
 		if (obj.folgeNr !== undefined) {
-			result += '"folgeNr" : ' + obj.folgeNr + ',';
+			result += '"folgeNr" : ' + obj.folgeNr.toString() + ',';
 		}
 		if (obj.idTermin !== undefined) {
-			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin) + ',';
+			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit) + ',';
+			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';

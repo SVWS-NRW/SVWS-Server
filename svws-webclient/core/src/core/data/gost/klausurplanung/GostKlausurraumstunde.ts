@@ -51,25 +51,25 @@ export class GostKlausurraumstunde extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurraumstunde {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurraumstunde>;
 		const result = new GostKlausurraumstunde();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idRaum === undefined)
-			 throw new Error('invalid json format, missing attribute idRaum');
+			throw new Error('invalid json format, missing attribute idRaum');
 		result.idRaum = obj.idRaum;
 		if (obj.idZeitraster === undefined)
-			 throw new Error('invalid json format, missing attribute idZeitraster');
+			throw new Error('invalid json format, missing attribute idZeitraster');
 		result.idZeitraster = obj.idZeitraster;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostKlausurraumstunde) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idRaum" : ' + obj.idRaum + ',';
-		result += '"idZeitraster" : ' + obj.idZeitraster + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idRaum" : ' + obj.idRaum.toString() + ',';
+		result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -78,13 +78,13 @@ export class GostKlausurraumstunde extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumstunde>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idRaum !== undefined) {
-			result += '"idRaum" : ' + obj.idRaum + ',';
+			result += '"idRaum" : ' + obj.idRaum.toString() + ',';
 		}
 		if (obj.idZeitraster !== undefined) {
-			result += '"idZeitraster" : ' + obj.idZeitraster + ',';
+			result += '"idZeitraster" : ' + obj.idZeitraster.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

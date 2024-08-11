@@ -64,27 +64,27 @@ export class Abteilung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Abteilung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Abteilung>;
 		const result = new Abteilung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.idSchuljahresabschnitts === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitts');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitts');
 		result.idSchuljahresabschnitts = obj.idSchuljahresabschnitts;
 		result.idAbteilungsleiter = (obj.idAbteilungsleiter === undefined) ? null : obj.idAbteilungsleiter === null ? null : obj.idAbteilungsleiter;
 		result.raum = (obj.raum === undefined) ? null : obj.raum === null ? null : obj.raum;
 		result.email = (obj.email === undefined) ? null : obj.email === null ? null : obj.email;
 		result.durchwahl = (obj.durchwahl === undefined) ? null : obj.durchwahl === null ? null : obj.durchwahl;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(AbteilungKlassenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(AbteilungKlassenzuordnung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -92,26 +92,22 @@ export class Abteilung extends JavaObject {
 
 	public static transpilerToJSON(obj : Abteilung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts + ',';
-		result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
+		result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		result += '"raum" : ' + ((!obj.raum) ? 'null' : JSON.stringify(obj.raum)) + ',';
 		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
 		result += '"durchwahl" : ' + ((!obj.durchwahl) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
-			result += '"klassen" : [ ';
-			for (let i = 0; i < obj.klassen.size(); i++) {
-				const elem = obj.klassen.get(i);
-				result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
-				if (i < obj.klassen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
+			if (i < obj.klassen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -120,16 +116,16 @@ export class Abteilung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Abteilung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.idSchuljahresabschnitts !== undefined) {
-			result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts + ',';
+			result += '"idSchuljahresabschnitts" : ' + obj.idSchuljahresabschnitts.toString() + ',';
 		}
 		if (obj.idAbteilungsleiter !== undefined) {
-			result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter) + ',';
+			result += '"idAbteilungsleiter" : ' + ((!obj.idAbteilungsleiter) ? 'null' : obj.idAbteilungsleiter.toString()) + ',';
 		}
 		if (obj.raum !== undefined) {
 			result += '"raum" : ' + ((!obj.raum) ? 'null' : JSON.stringify(obj.raum)) + ',';
@@ -141,21 +137,17 @@ export class Abteilung extends JavaObject {
 			result += '"durchwahl" : ' + ((!obj.durchwahl) ? 'null' : JSON.stringify(obj.durchwahl)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"klassen" : [ ';
+			for (let i = 0; i < obj.klassen.size(); i++) {
+				const elem = obj.klassen.get(i);
+				result += AbteilungKlassenzuordnung.transpilerToJSON(elem);
+				if (i < obj.klassen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

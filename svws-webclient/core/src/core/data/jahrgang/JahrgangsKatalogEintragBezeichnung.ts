@@ -51,21 +51,21 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): JahrgangsKatalogEintragBezeichnung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<JahrgangsKatalogEintragBezeichnung>;
 		const result = new JahrgangsKatalogEintragBezeichnung();
 		if (obj.schulform === undefined)
-			 throw new Error('invalid json format, missing attribute schulform');
+			throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : JahrgangsKatalogEintragBezeichnung) : string {
 		let result = '{';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -74,10 +74,10 @@ export class JahrgangsKatalogEintragBezeichnung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<JahrgangsKatalogEintragBezeichnung>) : string {
 		let result = '{';
 		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

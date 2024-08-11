@@ -36,19 +36,19 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungDaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungDaten>;
 		const result = new GostKlausurterminblockungDaten();
 		if (obj.konfiguration === undefined)
-			 throw new Error('invalid json format, missing attribute konfiguration');
+			throw new Error('invalid json format, missing attribute konfiguration');
 		result.konfiguration = GostKlausurterminblockungKonfiguration.transpilerFromJSON(JSON.stringify(obj.konfiguration));
-		if ((obj.klausuren !== undefined) && (obj.klausuren !== null)) {
+		if (obj.klausuren !== undefined) {
 			for (const elem of obj.klausuren) {
-				result.klausuren?.add(GostKursklausur.transpilerFromJSON(JSON.stringify(elem)));
+				result.klausuren.add(GostKursklausur.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.richKlausuren !== undefined) && (obj.richKlausuren !== null)) {
+		if (obj.richKlausuren !== undefined) {
 			for (const elem of obj.richKlausuren) {
-				result.richKlausuren?.add(GostKursklausurRich.transpilerFromJSON(JSON.stringify(elem)));
+				result.richKlausuren.add(GostKursklausurRich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -57,30 +57,22 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	public static transpilerToJSON(obj : GostKlausurterminblockungDaten) : string {
 		let result = '{';
 		result += '"konfiguration" : ' + GostKlausurterminblockungKonfiguration.transpilerToJSON(obj.konfiguration) + ',';
-		if (!obj.klausuren) {
-			result += '"klausuren" : []';
-		} else {
-			result += '"klausuren" : [ ';
-			for (let i = 0; i < obj.klausuren.size(); i++) {
-				const elem = obj.klausuren.get(i);
-				result += GostKursklausur.transpilerToJSON(elem);
-				if (i < obj.klausuren.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"klausuren" : [ ';
+		for (let i = 0; i < obj.klausuren.size(); i++) {
+			const elem = obj.klausuren.get(i);
+			result += GostKursklausur.transpilerToJSON(elem);
+			if (i < obj.klausuren.size() - 1)
+				result += ',';
 		}
-		if (!obj.richKlausuren) {
-			result += '"richKlausuren" : []';
-		} else {
-			result += '"richKlausuren" : [ ';
-			for (let i = 0; i < obj.richKlausuren.size(); i++) {
-				const elem = obj.richKlausuren.get(i);
-				result += GostKursklausurRich.transpilerToJSON(elem);
-				if (i < obj.richKlausuren.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"richKlausuren" : [ ';
+		for (let i = 0; i < obj.richKlausuren.size(); i++) {
+			const elem = obj.richKlausuren.get(i);
+			result += GostKursklausurRich.transpilerToJSON(elem);
+			if (i < obj.richKlausuren.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -92,32 +84,24 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 			result += '"konfiguration" : ' + GostKlausurterminblockungKonfiguration.transpilerToJSON(obj.konfiguration) + ',';
 		}
 		if (obj.klausuren !== undefined) {
-			if (!obj.klausuren) {
-				result += '"klausuren" : []';
-			} else {
-				result += '"klausuren" : [ ';
-				for (let i = 0; i < obj.klausuren.size(); i++) {
-					const elem = obj.klausuren.get(i);
-					result += GostKursklausur.transpilerToJSON(elem);
-					if (i < obj.klausuren.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"klausuren" : [ ';
+			for (let i = 0; i < obj.klausuren.size(); i++) {
+				const elem = obj.klausuren.get(i);
+				result += GostKursklausur.transpilerToJSON(elem);
+				if (i < obj.klausuren.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.richKlausuren !== undefined) {
-			if (!obj.richKlausuren) {
-				result += '"richKlausuren" : []';
-			} else {
-				result += '"richKlausuren" : [ ';
-				for (let i = 0; i < obj.richKlausuren.size(); i++) {
-					const elem = obj.richKlausuren.get(i);
-					result += GostKursklausurRich.transpilerToJSON(elem);
-					if (i < obj.richKlausuren.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"richKlausuren" : [ ';
+			for (let i = 0; i < obj.richKlausuren.size(); i++) {
+				const elem = obj.richKlausuren.get(i);
+				result += GostKursklausurRich.transpilerToJSON(elem);
+				if (i < obj.richKlausuren.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

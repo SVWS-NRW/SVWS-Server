@@ -81,17 +81,17 @@ export class GostKlausurraumRich extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurraumRich {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurraumRich>;
 		const result = new GostKlausurraumRich();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.groesse === undefined)
-			 throw new Error('invalid json format, missing attribute groesse');
+			throw new Error('invalid json format, missing attribute groesse');
 		result.groesse = obj.groesse;
-		if ((obj.schuelerklausurterminIDs !== undefined) && (obj.schuelerklausurterminIDs !== null)) {
+		if (obj.schuelerklausurterminIDs !== undefined) {
 			for (const elem of obj.schuelerklausurterminIDs) {
-				result.schuelerklausurterminIDs?.add(elem);
+				result.schuelerklausurterminIDs.add(elem);
 			}
 		}
 		return result;
@@ -99,20 +99,16 @@ export class GostKlausurraumRich extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurraumRich) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"groesse" : ' + obj.groesse + ',';
-		if (!obj.schuelerklausurterminIDs) {
-			result += '"schuelerklausurterminIDs" : []';
-		} else {
-			result += '"schuelerklausurterminIDs" : [ ';
-			for (let i = 0; i < obj.schuelerklausurterminIDs.size(); i++) {
-				const elem = obj.schuelerklausurterminIDs.get(i);
-				result += elem;
-				if (i < obj.schuelerklausurterminIDs.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"groesse" : ' + obj.groesse.toString() + ',';
+		result += '"schuelerklausurterminIDs" : [ ';
+		for (let i = 0; i < obj.schuelerklausurterminIDs.size(); i++) {
+			const elem = obj.schuelerklausurterminIDs.get(i);
+			result += elem.toString();
+			if (i < obj.schuelerklausurterminIDs.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -121,24 +117,20 @@ export class GostKlausurraumRich extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumRich>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.groesse !== undefined) {
-			result += '"groesse" : ' + obj.groesse + ',';
+			result += '"groesse" : ' + obj.groesse.toString() + ',';
 		}
 		if (obj.schuelerklausurterminIDs !== undefined) {
-			if (!obj.schuelerklausurterminIDs) {
-				result += '"schuelerklausurterminIDs" : []';
-			} else {
-				result += '"schuelerklausurterminIDs" : [ ';
-				for (let i = 0; i < obj.schuelerklausurterminIDs.size(); i++) {
-					const elem = obj.schuelerklausurterminIDs.get(i);
-					result += elem;
-					if (i < obj.schuelerklausurterminIDs.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"schuelerklausurterminIDs" : [ ';
+			for (let i = 0; i < obj.schuelerklausurterminIDs.size(); i++) {
+				const elem = obj.schuelerklausurterminIDs.get(i);
+				result += elem.toString();
+				if (i < obj.schuelerklausurterminIDs.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

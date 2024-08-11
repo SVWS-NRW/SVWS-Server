@@ -33,15 +33,15 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchulformGliederungJahrgaenge {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchulformGliederungJahrgaenge>;
 		const result = new SchulformGliederungJahrgaenge();
 		if (obj.schulform === undefined)
-			 throw new Error('invalid json format, missing attribute schulform');
+			throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
-		if ((obj.jahrgaenge !== undefined) && (obj.jahrgaenge !== null)) {
+		if (obj.jahrgaenge !== undefined) {
 			for (const elem of obj.jahrgaenge) {
-				result.jahrgaenge?.add(elem);
+				result.jahrgaenge.add(elem);
 			}
 		}
 		return result;
@@ -49,20 +49,16 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 
 	public static transpilerToJSON(obj : SchulformGliederungJahrgaenge) : string {
 		let result = '{';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
-		if (!obj.jahrgaenge) {
-			result += '"jahrgaenge" : []';
-		} else {
-			result += '"jahrgaenge" : [ ';
-			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-				const elem = obj.jahrgaenge.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.jahrgaenge.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"jahrgaenge" : [ ';
+		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+			const elem = obj.jahrgaenge.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.jahrgaenge.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -71,24 +67,20 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchulformGliederungJahrgaenge>) : string {
 		let result = '{';
 		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.gliederung !== undefined) {
 			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		if (obj.jahrgaenge !== undefined) {
-			if (!obj.jahrgaenge) {
-				result += '"jahrgaenge" : []';
-			} else {
-				result += '"jahrgaenge" : [ ';
-				for (let i = 0; i < obj.jahrgaenge.size(); i++) {
-					const elem = obj.jahrgaenge.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.jahrgaenge.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"jahrgaenge" : [ ';
+			for (let i = 0; i < obj.jahrgaenge.size(); i++) {
+				const elem = obj.jahrgaenge.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.jahrgaenge.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

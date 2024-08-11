@@ -56,16 +56,16 @@ export class SchuleInfo extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuleInfo {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuleInfo>;
 		const result = new SchuleInfo();
 		if (obj.schulNr === undefined)
-			 throw new Error('invalid json format, missing attribute schulNr');
+			throw new Error('invalid json format, missing attribute schulNr');
 		result.schulNr = obj.schulNr;
 		if (obj.schulform === undefined)
-			 throw new Error('invalid json format, missing attribute schulform');
+			throw new Error('invalid json format, missing attribute schulform');
 		result.schulform = obj.schulform;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		result.strassenname = (obj.strassenname === undefined) ? null : obj.strassenname === null ? null : obj.strassenname;
 		result.hausnummer = (obj.hausnummer === undefined) ? null : obj.hausnummer === null ? null : obj.hausnummer;
@@ -77,9 +77,9 @@ export class SchuleInfo extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuleInfo) : string {
 		let result = '{';
-		result += '"schulNr" : ' + obj.schulNr + ',';
-		result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+		result += '"schulNr" : ' + obj.schulNr.toString() + ',';
+		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
@@ -93,13 +93,13 @@ export class SchuleInfo extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuleInfo>) : string {
 		let result = '{';
 		if (obj.schulNr !== undefined) {
-			result += '"schulNr" : ' + obj.schulNr + ',';
+			result += '"schulNr" : ' + obj.schulNr.toString() + ',';
 		}
 		if (obj.schulform !== undefined) {
-			result += '"schulform" : ' + JSON.stringify(obj.schulform!) + ',';
+			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.strassenname !== undefined) {
 			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';

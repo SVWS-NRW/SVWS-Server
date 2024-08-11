@@ -66,13 +66,13 @@ export class BetriebAnsprechpartner extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BetriebAnsprechpartner {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BetriebAnsprechpartner>;
 		const result = new BetriebAnsprechpartner();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.betrieb_id === undefined)
-			 throw new Error('invalid json format, missing attribute betrieb_id');
+			throw new Error('invalid json format, missing attribute betrieb_id');
 		result.betrieb_id = obj.betrieb_id;
 		result.name = (obj.name === undefined) ? null : obj.name === null ? null : obj.name;
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
@@ -87,8 +87,8 @@ export class BetriebAnsprechpartner extends JavaObject {
 
 	public static transpilerToJSON(obj : BetriebAnsprechpartner) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"betrieb_id" : ' + obj.betrieb_id + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
 		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
@@ -105,10 +105,10 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BetriebAnsprechpartner>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.betrieb_id !== undefined) {
-			result += '"betrieb_id" : ' + obj.betrieb_id + ',';
+			result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
 		}
 		if (obj.name !== undefined) {
 			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';

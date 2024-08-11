@@ -51,7 +51,7 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragFilterFehlendeEintraege {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragFilterFehlendeEintraege>;
 		const result = new Schild3KatalogEintragFilterFehlendeEintraege();
 		result.ID = (obj.ID === undefined) ? null : obj.ID === null ? null : obj.ID;
 		result.Beschreibung = (obj.Beschreibung === undefined) ? null : obj.Beschreibung === null ? null : obj.Beschreibung;
@@ -65,7 +65,7 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragFilterFehlendeEintraege) : string {
 		let result = '{';
-		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+		result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
 		result += '"Feldname" : ' + ((!obj.Feldname) ? 'null' : JSON.stringify(obj.Feldname)) + ',';
 		result += '"Tabellen" : ' + ((!obj.Tabellen) ? 'null' : JSON.stringify(obj.Tabellen)) + ',';
@@ -80,7 +80,7 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragFilterFehlendeEintraege>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID) + ',';
+			result += '"ID" : ' + ((!obj.ID) ? 'null' : obj.ID.toString()) + ',';
 		}
 		if (obj.Beschreibung !== undefined) {
 			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';

@@ -98,23 +98,23 @@ export class NotenKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): NotenKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<NotenKatalogEintrag>;
 		const result = new NotenKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		result.notenpunkte = (obj.notenpunkte === undefined) ? null : obj.notenpunkte === null ? null : obj.notenpunkte;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.text === undefined)
-			 throw new Error('invalid json format, missing attribute text');
+			throw new Error('invalid json format, missing attribute text');
 		result.text = obj.text;
 		if (obj.textZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute textZeugnis');
+			throw new Error('invalid json format, missing attribute textZeugnis');
 		result.textZeugnis = obj.textZeugnis;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -123,14 +123,14 @@ export class NotenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : NotenKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"sortierung" : ' + obj.sortierung + ',';
-		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		result += '"text" : ' + JSON.stringify(obj.text!) + ',';
-		result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
+		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
+		result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -139,28 +139,28 @@ export class NotenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<NotenKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + obj.sortierung + ',';
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.notenpunkte !== undefined) {
-			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte) + ',';
+			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.text !== undefined) {
-			result += '"text" : ' + JSON.stringify(obj.text!) + ',';
+			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.textZeugnis !== undefined) {
-			result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis!) + ',';
+			result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

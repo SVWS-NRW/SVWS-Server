@@ -53,44 +53,90 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): StundenplanInputSimpleKurs {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<StundenplanInputSimpleKurs>;
 		const result = new StundenplanInputSimpleKurs();
-		if ((obj.lehrkraefte !== undefined) && (obj.lehrkraefte !== null)) {
+		if (obj.lehrkraefte !== undefined) {
 			for (const elem of obj.lehrkraefte) {
-				result.lehrkraefte?.add(StundenplanInputSimpleLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrkraefte.add(StundenplanInputSimpleLehrkraft.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.klassen !== undefined) && (obj.klassen !== null)) {
+		if (obj.klassen !== undefined) {
 			for (const elem of obj.klassen) {
-				result.klassen?.add(StundenplanInputSimpleKlasse.transpilerFromJSON(JSON.stringify(elem)));
+				result.klassen.add(StundenplanInputSimpleKlasse.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(StundenplanInputSimpleFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(StundenplanInputSimpleFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+		if (obj.raeume !== undefined) {
 			for (const elem of obj.raeume) {
-				result.raeume?.add(StundenplanInputSimpleRaum.transpilerFromJSON(JSON.stringify(elem)));
+				result.raeume.add(StundenplanInputSimpleRaum.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kopplungen !== undefined) && (obj.kopplungen !== null)) {
+		if (obj.kopplungen !== undefined) {
 			for (const elem of obj.kopplungen) {
-				result.kopplungen?.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
+				result.kopplungen.add(StundenplanInputSimpleKopplung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj.wochenstunden === undefined)
-			 throw new Error('invalid json format, missing attribute wochenstunden');
+			throw new Error('invalid json format, missing attribute wochenstunden');
 		result.wochenstunden = obj.wochenstunden;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : StundenplanInputSimpleKurs) : string {
 		let result = '{';
-		if (!obj.lehrkraefte) {
-			result += '"lehrkraefte" : []';
-		} else {
+		result += '"lehrkraefte" : [ ';
+		for (let i = 0; i < obj.lehrkraefte.size(); i++) {
+			const elem = obj.lehrkraefte.get(i);
+			result += StundenplanInputSimpleLehrkraft.transpilerToJSON(elem);
+			if (i < obj.lehrkraefte.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"klassen" : [ ';
+		for (let i = 0; i < obj.klassen.size(); i++) {
+			const elem = obj.klassen.get(i);
+			result += StundenplanInputSimpleKlasse.transpilerToJSON(elem);
+			if (i < obj.klassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += StundenplanInputSimpleFach.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"raeume" : [ ';
+		for (let i = 0; i < obj.raeume.size(); i++) {
+			const elem = obj.raeume.get(i);
+			result += StundenplanInputSimpleRaum.transpilerToJSON(elem);
+			if (i < obj.raeume.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kopplungen" : [ ';
+		for (let i = 0; i < obj.kopplungen.size(); i++) {
+			const elem = obj.kopplungen.get(i);
+			result += StundenplanInputSimpleKopplung.transpilerToJSON(elem);
+			if (i < obj.kopplungen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<StundenplanInputSimpleKurs>) : string {
+		let result = '{';
+		if (obj.lehrkraefte !== undefined) {
 			result += '"lehrkraefte" : [ ';
 			for (let i = 0; i < obj.lehrkraefte.size(); i++) {
 				const elem = obj.lehrkraefte.get(i);
@@ -100,9 +146,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.klassen) {
-			result += '"klassen" : []';
-		} else {
+		if (obj.klassen !== undefined) {
 			result += '"klassen" : [ ';
 			for (let i = 0; i < obj.klassen.size(); i++) {
 				const elem = obj.klassen.get(i);
@@ -112,9 +156,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
+		if (obj.faecher !== undefined) {
 			result += '"faecher" : [ ';
 			for (let i = 0; i < obj.faecher.size(); i++) {
 				const elem = obj.faecher.get(i);
@@ -124,9 +166,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.raeume) {
-			result += '"raeume" : []';
-		} else {
+		if (obj.raeume !== undefined) {
 			result += '"raeume" : [ ';
 			for (let i = 0; i < obj.raeume.size(); i++) {
 				const elem = obj.raeume.get(i);
@@ -136,9 +176,7 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kopplungen) {
-			result += '"kopplungen" : []';
-		} else {
+		if (obj.kopplungen !== undefined) {
 			result += '"kopplungen" : [ ';
 			for (let i = 0; i < obj.kopplungen.size(); i++) {
 				const elem = obj.kopplungen.get(i);
@@ -148,86 +186,8 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"wochenstunden" : ' + obj.wochenstunden + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<StundenplanInputSimpleKurs>) : string {
-		let result = '{';
-		if (obj.lehrkraefte !== undefined) {
-			if (!obj.lehrkraefte) {
-				result += '"lehrkraefte" : []';
-			} else {
-				result += '"lehrkraefte" : [ ';
-				for (let i = 0; i < obj.lehrkraefte.size(); i++) {
-					const elem = obj.lehrkraefte.get(i);
-					result += StundenplanInputSimpleLehrkraft.transpilerToJSON(elem);
-					if (i < obj.lehrkraefte.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.klassen !== undefined) {
-			if (!obj.klassen) {
-				result += '"klassen" : []';
-			} else {
-				result += '"klassen" : [ ';
-				for (let i = 0; i < obj.klassen.size(); i++) {
-					const elem = obj.klassen.get(i);
-					result += StundenplanInputSimpleKlasse.transpilerToJSON(elem);
-					if (i < obj.klassen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += StundenplanInputSimpleFach.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.raeume !== undefined) {
-			if (!obj.raeume) {
-				result += '"raeume" : []';
-			} else {
-				result += '"raeume" : [ ';
-				for (let i = 0; i < obj.raeume.size(); i++) {
-					const elem = obj.raeume.get(i);
-					result += StundenplanInputSimpleRaum.transpilerToJSON(elem);
-					if (i < obj.raeume.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kopplungen !== undefined) {
-			if (!obj.kopplungen) {
-				result += '"kopplungen" : []';
-			} else {
-				result += '"kopplungen" : [ ';
-				for (let i = 0; i < obj.kopplungen.size(); i++) {
-					const elem = obj.kopplungen.get(i);
-					result += StundenplanInputSimpleKopplung.transpilerToJSON(elem);
-					if (i < obj.kopplungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.wochenstunden !== undefined) {
-			result += '"wochenstunden" : ' + obj.wochenstunden + ',';
+			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

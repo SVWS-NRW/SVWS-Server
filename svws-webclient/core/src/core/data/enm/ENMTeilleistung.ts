@@ -61,13 +61,13 @@ export class ENMTeilleistung extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): ENMTeilleistung {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<ENMTeilleistung>;
 		const result = new ENMTeilleistung();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.artID === undefined)
-			 throw new Error('invalid json format, missing attribute artID');
+			throw new Error('invalid json format, missing attribute artID');
 		result.artID = obj.artID;
 		result.tsArtID = (obj.tsArtID === undefined) ? null : obj.tsArtID === null ? null : obj.tsArtID;
 		result.datum = (obj.datum === undefined) ? null : obj.datum === null ? null : obj.datum;
@@ -81,8 +81,8 @@ export class ENMTeilleistung extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMTeilleistung) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"artID" : ' + obj.artID + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"artID" : ' + obj.artID.toString() + ',';
 		result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
 		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
@@ -98,10 +98,10 @@ export class ENMTeilleistung extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMTeilleistung>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.artID !== undefined) {
-			result += '"artID" : ' + obj.artID + ',';
+			result += '"artID" : ' + obj.artID.toString() + ',';
 		}
 		if (obj.tsArtID !== undefined) {
 			result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';

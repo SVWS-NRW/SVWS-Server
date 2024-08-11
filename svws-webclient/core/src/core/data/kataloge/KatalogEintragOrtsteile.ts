@@ -56,25 +56,25 @@ export class KatalogEintragOrtsteile extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): KatalogEintragOrtsteile {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<KatalogEintragOrtsteile>;
 		const result = new KatalogEintragOrtsteile();
 		if (obj.ID === undefined)
-			 throw new Error('invalid json format, missing attribute ID');
+			throw new Error('invalid json format, missing attribute ID');
 		result.ID = obj.ID;
 		if (obj.PLZ === undefined)
-			 throw new Error('invalid json format, missing attribute PLZ');
+			throw new Error('invalid json format, missing attribute PLZ');
 		result.PLZ = obj.PLZ;
 		if (obj.RegSchl === undefined)
-			 throw new Error('invalid json format, missing attribute RegSchl');
+			throw new Error('invalid json format, missing attribute RegSchl');
 		result.RegSchl = obj.RegSchl;
 		if (obj.Ort === undefined)
-			 throw new Error('invalid json format, missing attribute Ort');
+			throw new Error('invalid json format, missing attribute Ort');
 		result.Ort = obj.Ort;
 		if (obj.Ortsteil === undefined)
-			 throw new Error('invalid json format, missing attribute Ortsteil');
+			throw new Error('invalid json format, missing attribute Ortsteil');
 		result.Ortsteil = obj.Ortsteil;
 		if (obj.Stand === undefined)
-			 throw new Error('invalid json format, missing attribute Stand');
+			throw new Error('invalid json format, missing attribute Stand');
 		result.Stand = obj.Stand;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -83,14 +83,14 @@ export class KatalogEintragOrtsteile extends JavaObject {
 
 	public static transpilerToJSON(obj : KatalogEintragOrtsteile) : string {
 		let result = '{';
-		result += '"ID" : ' + obj.ID + ',';
-		result += '"PLZ" : ' + JSON.stringify(obj.PLZ!) + ',';
-		result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl!) + ',';
-		result += '"Ort" : ' + JSON.stringify(obj.Ort!) + ',';
-		result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil!) + ',';
-		result += '"Stand" : ' + JSON.stringify(obj.Stand!) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+		result += '"ID" : ' + obj.ID.toString() + ',';
+		result += '"PLZ" : ' + JSON.stringify(obj.PLZ) + ',';
+		result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl) + ',';
+		result += '"Ort" : ' + JSON.stringify(obj.Ort) + ',';
+		result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil) + ',';
+		result += '"Stand" : ' + JSON.stringify(obj.Stand) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -99,28 +99,28 @@ export class KatalogEintragOrtsteile extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<KatalogEintragOrtsteile>) : string {
 		let result = '{';
 		if (obj.ID !== undefined) {
-			result += '"ID" : ' + obj.ID + ',';
+			result += '"ID" : ' + obj.ID.toString() + ',';
 		}
 		if (obj.PLZ !== undefined) {
-			result += '"PLZ" : ' + JSON.stringify(obj.PLZ!) + ',';
+			result += '"PLZ" : ' + JSON.stringify(obj.PLZ) + ',';
 		}
 		if (obj.RegSchl !== undefined) {
-			result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl!) + ',';
+			result += '"RegSchl" : ' + JSON.stringify(obj.RegSchl) + ',';
 		}
 		if (obj.Ort !== undefined) {
-			result += '"Ort" : ' + JSON.stringify(obj.Ort!) + ',';
+			result += '"Ort" : ' + JSON.stringify(obj.Ort) + ',';
 		}
 		if (obj.Ortsteil !== undefined) {
-			result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil!) + ',';
+			result += '"Ortsteil" : ' + JSON.stringify(obj.Ortsteil) + ',';
 		}
 		if (obj.Stand !== undefined) {
-			result += '"Stand" : ' + JSON.stringify(obj.Stand!) + ',';
+			result += '"Stand" : ' + JSON.stringify(obj.Stand) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

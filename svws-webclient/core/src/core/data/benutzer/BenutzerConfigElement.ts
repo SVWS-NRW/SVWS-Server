@@ -26,21 +26,21 @@ export class BenutzerConfigElement extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerConfigElement {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerConfigElement>;
 		const result = new BenutzerConfigElement();
 		if (obj.key === undefined)
-			 throw new Error('invalid json format, missing attribute key');
+			throw new Error('invalid json format, missing attribute key');
 		result.key = obj.key;
 		if (obj.value === undefined)
-			 throw new Error('invalid json format, missing attribute value');
+			throw new Error('invalid json format, missing attribute value');
 		result.value = obj.value;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BenutzerConfigElement) : string {
 		let result = '{';
-		result += '"key" : ' + JSON.stringify(obj.key!) + ',';
-		result += '"value" : ' + JSON.stringify(obj.value!) + ',';
+		result += '"key" : ' + JSON.stringify(obj.key) + ',';
+		result += '"value" : ' + JSON.stringify(obj.value) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -49,10 +49,10 @@ export class BenutzerConfigElement extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerConfigElement>) : string {
 		let result = '{';
 		if (obj.key !== undefined) {
-			result += '"key" : ' + JSON.stringify(obj.key!) + ',';
+			result += '"key" : ' + JSON.stringify(obj.key) + ',';
 		}
 		if (obj.value !== undefined) {
-			result += '"value" : ' + JSON.stringify(obj.value!) + ',';
+			result += '"value" : ' + JSON.stringify(obj.value) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -96,40 +96,40 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerLeistungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchildReportingSchuelerLeistungsdaten>;
 		const result = new SchildReportingSchuelerLeistungsdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.abschnittID === undefined)
-			 throw new Error('invalid json format, missing attribute abschnittID');
+			throw new Error('invalid json format, missing attribute abschnittID');
 		result.abschnittID = obj.abschnittID;
 		if (obj.fachID === undefined)
-			 throw new Error('invalid json format, missing attribute fachID');
+			throw new Error('invalid json format, missing attribute fachID');
 		result.fachID = obj.fachID;
 		if (obj.fachKuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute fachKuerzel');
+			throw new Error('invalid json format, missing attribute fachKuerzel');
 		result.fachKuerzel = obj.fachKuerzel;
 		if (obj.fach === undefined)
-			 throw new Error('invalid json format, missing attribute fach');
+			throw new Error('invalid json format, missing attribute fach');
 		result.fach = obj.fach;
 		result.lehrerID = (obj.lehrerID === undefined) ? null : obj.lehrerID === null ? null : obj.lehrerID;
 		result.lehrerKuerzel = (obj.lehrerKuerzel === undefined) ? null : obj.lehrerKuerzel === null ? null : obj.lehrerKuerzel;
 		result.kursID = (obj.kursID === undefined) ? null : obj.kursID === null ? null : obj.kursID;
 		if (obj.kurs === undefined)
-			 throw new Error('invalid json format, missing attribute kurs');
+			throw new Error('invalid json format, missing attribute kurs');
 		result.kurs = obj.kurs;
 		if (obj.kursart === undefined)
-			 throw new Error('invalid json format, missing attribute kursart');
+			throw new Error('invalid json format, missing attribute kursart');
 		result.kursart = obj.kursart;
 		if (obj.kursartAllg === undefined)
-			 throw new Error('invalid json format, missing attribute kursartAllg');
+			throw new Error('invalid json format, missing attribute kursartAllg');
 		result.kursartAllg = obj.kursartAllg;
 		if (obj.note === undefined)
-			 throw new Error('invalid json format, missing attribute note');
+			throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
 		if (obj.noteKuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute noteKuerzel');
+			throw new Error('invalid json format, missing attribute noteKuerzel');
 		result.noteKuerzel = obj.noteKuerzel;
 		result.notePunkte = (obj.notePunkte === undefined) ? null : obj.notePunkte === null ? null : obj.notePunkte;
 		result.sortierungAllg = (obj.sortierungAllg === undefined) ? null : obj.sortierungAllg === null ? null : obj.sortierungAllg;
@@ -139,22 +139,22 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : SchildReportingSchuelerLeistungsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"abschnittID" : ' + obj.abschnittID + ',';
-		result += '"fachID" : ' + obj.fachID + ',';
-		result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel!) + ',';
-		result += '"fach" : ' + JSON.stringify(obj.fach!) + ',';
-		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"abschnittID" : ' + obj.abschnittID.toString() + ',';
+		result += '"fachID" : ' + obj.fachID.toString() + ',';
+		result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel) + ',';
+		result += '"fach" : ' + JSON.stringify(obj.fach) + ',';
+		result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
 		result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
-		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
-		result += '"kurs" : ' + JSON.stringify(obj.kurs!) + ',';
-		result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
-		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
-		result += '"note" : ' + JSON.stringify(obj.note!) + ',';
-		result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel!) + ',';
-		result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';
-		result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg) + ',';
-		result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII) + ',';
+		result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
+		result += '"kurs" : ' + JSON.stringify(obj.kurs) + ',';
+		result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
+		result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
+		result += '"note" : ' + JSON.stringify(obj.note) + ',';
+		result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel) + ',';
+		result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte.toString()) + ',';
+		result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg.toString()) + ',';
+		result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -163,52 +163,52 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerLeistungsdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.abschnittID !== undefined) {
-			result += '"abschnittID" : ' + obj.abschnittID + ',';
+			result += '"abschnittID" : ' + obj.abschnittID.toString() + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + obj.fachID + ',';
+			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.fachKuerzel !== undefined) {
-			result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel!) + ',';
+			result += '"fachKuerzel" : ' + JSON.stringify(obj.fachKuerzel) + ',';
 		}
 		if (obj.fach !== undefined) {
-			result += '"fach" : ' + JSON.stringify(obj.fach!) + ',';
+			result += '"fach" : ' + JSON.stringify(obj.fach) + ',';
 		}
 		if (obj.lehrerID !== undefined) {
-			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID) + ',';
+			result += '"lehrerID" : ' + ((!obj.lehrerID) ? 'null' : obj.lehrerID.toString()) + ',';
 		}
 		if (obj.lehrerKuerzel !== undefined) {
 			result += '"lehrerKuerzel" : ' + ((!obj.lehrerKuerzel) ? 'null' : JSON.stringify(obj.lehrerKuerzel)) + ',';
 		}
 		if (obj.kursID !== undefined) {
-			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID) + ',';
+			result += '"kursID" : ' + ((!obj.kursID) ? 'null' : obj.kursID.toString()) + ',';
 		}
 		if (obj.kurs !== undefined) {
-			result += '"kurs" : ' + JSON.stringify(obj.kurs!) + ',';
+			result += '"kurs" : ' + JSON.stringify(obj.kurs) + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + JSON.stringify(obj.kursart!) + ',';
+			result += '"kursart" : ' + JSON.stringify(obj.kursart) + ',';
 		}
 		if (obj.kursartAllg !== undefined) {
-			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg!) + ',';
+			result += '"kursartAllg" : ' + JSON.stringify(obj.kursartAllg) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + JSON.stringify(obj.note!) + ',';
+			result += '"note" : ' + JSON.stringify(obj.note) + ',';
 		}
 		if (obj.noteKuerzel !== undefined) {
-			result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel!) + ',';
+			result += '"noteKuerzel" : ' + JSON.stringify(obj.noteKuerzel) + ',';
 		}
 		if (obj.notePunkte !== undefined) {
-			result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte) + ',';
+			result += '"notePunkte" : ' + ((!obj.notePunkte) ? 'null' : obj.notePunkte.toString()) + ',';
 		}
 		if (obj.sortierungAllg !== undefined) {
-			result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg) + ',';
+			result += '"sortierungAllg" : ' + ((!obj.sortierungAllg) ? 'null' : obj.sortierungAllg.toString()) + ',';
 		}
 		if (obj.sortierungSekII !== undefined) {
-			result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII) + ',';
+			result += '"sortierungSekII" : ' + ((!obj.sortierungSekII) ? 'null' : obj.sortierungSekII.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

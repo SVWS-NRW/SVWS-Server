@@ -45,36 +45,62 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostNachschreibterminblockungKonfiguration {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostNachschreibterminblockungKonfiguration>;
 		const result = new GostNachschreibterminblockungKonfiguration();
 		if (obj.maxTimeMillis === undefined)
-			 throw new Error('invalid json format, missing attribute maxTimeMillis');
+			throw new Error('invalid json format, missing attribute maxTimeMillis');
 		result.maxTimeMillis = obj.maxTimeMillis;
-		if ((obj.schuelerklausurtermine !== undefined) && (obj.schuelerklausurtermine !== null)) {
+		if (obj.schuelerklausurtermine !== undefined) {
 			for (const elem of obj.schuelerklausurtermine) {
-				result.schuelerklausurtermine?.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
+				result.schuelerklausurtermine.add(GostSchuelerklausurTermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.termine !== undefined) && (obj.termine !== null)) {
+		if (obj.termine !== undefined) {
 			for (const elem of obj.termine) {
-				result.termine?.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
+				result.termine.add(GostKlausurtermin.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen');
+			throw new Error('invalid json format, missing attribute _regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen');
 		result._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen = obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen;
 		if (obj._regel_gleiche_fachart_auf_selbe_termine_verteilen === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_gleiche_fachart_auf_selbe_termine_verteilen');
+			throw new Error('invalid json format, missing attribute _regel_gleiche_fachart_auf_selbe_termine_verteilen');
 		result._regel_gleiche_fachart_auf_selbe_termine_verteilen = obj._regel_gleiche_fachart_auf_selbe_termine_verteilen;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostNachschreibterminblockungKonfiguration) : string {
 		let result = '{';
-		result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
-		if (!obj.schuelerklausurtermine) {
-			result += '"schuelerklausurtermine" : []';
-		} else {
+		result += '"maxTimeMillis" : ' + obj.maxTimeMillis.toString() + ',';
+		result += '"schuelerklausurtermine" : [ ';
+		for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
+			const elem = obj.schuelerklausurtermine.get(i);
+			result += GostSchuelerklausurTermin.transpilerToJSON(elem);
+			if (i < obj.schuelerklausurtermine.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"termine" : [ ';
+		for (let i = 0; i < obj.termine.size(); i++) {
+			const elem = obj.termine.get(i);
+			result += GostKlausurtermin.transpilerToJSON(elem);
+			if (i < obj.termine.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen.toString() + ',';
+		result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<GostNachschreibterminblockungKonfiguration>) : string {
+		let result = '{';
+		if (obj.maxTimeMillis !== undefined) {
+			result += '"maxTimeMillis" : ' + obj.maxTimeMillis.toString() + ',';
+		}
+		if (obj.schuelerklausurtermine !== undefined) {
 			result += '"schuelerklausurtermine" : [ ';
 			for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
 				const elem = obj.schuelerklausurtermine.get(i);
@@ -84,9 +110,7 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.termine) {
-			result += '"termine" : []';
-		} else {
+		if (obj.termine !== undefined) {
 			result += '"termine" : [ ';
 			for (let i = 0; i < obj.termine.size(); i++) {
 				const elem = obj.termine.get(i);
@@ -96,51 +120,11 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen + ',';
-		result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<GostNachschreibterminblockungKonfiguration>) : string {
-		let result = '{';
-		if (obj.maxTimeMillis !== undefined) {
-			result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
-		}
-		if (obj.schuelerklausurtermine !== undefined) {
-			if (!obj.schuelerklausurtermine) {
-				result += '"schuelerklausurtermine" : []';
-			} else {
-				result += '"schuelerklausurtermine" : [ ';
-				for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
-					const elem = obj.schuelerklausurtermine.get(i);
-					result += GostSchuelerklausurTermin.transpilerToJSON(elem);
-					if (i < obj.schuelerklausurtermine.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.termine !== undefined) {
-			if (!obj.termine) {
-				result += '"termine" : []';
-			} else {
-				result += '"termine" : [ ';
-				for (let i = 0; i < obj.termine.size(); i++) {
-					const elem = obj.termine.get(i);
-					result += GostKlausurtermin.transpilerToJSON(elem);
-					if (i < obj.termine.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen !== undefined) {
-			result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen + ',';
+			result += '"_regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen" : ' + obj._regel_nachschreiber_der_selben_klausur_auf_selbe_termine_verteilen.toString() + ',';
 		}
 		if (obj._regel_gleiche_fachart_auf_selbe_termine_verteilen !== undefined) {
-			result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen + ',';
+			result += '"_regel_gleiche_fachart_auf_selbe_termine_verteilen" : ' + obj._regel_gleiche_fachart_auf_selbe_termine_verteilen.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

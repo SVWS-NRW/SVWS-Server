@@ -61,45 +61,74 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurraumblockungKonfiguration {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurraumblockungKonfiguration>;
 		const result = new GostKlausurraumblockungKonfiguration();
 		if (obj.maxTimeMillis === undefined)
-			 throw new Error('invalid json format, missing attribute maxTimeMillis');
+			throw new Error('invalid json format, missing attribute maxTimeMillis');
 		result.maxTimeMillis = obj.maxTimeMillis;
-		if ((obj.schuelerklausurtermine !== undefined) && (obj.schuelerklausurtermine !== null)) {
+		if (obj.schuelerklausurtermine !== undefined) {
 			for (const elem of obj.schuelerklausurtermine) {
-				result.schuelerklausurtermine?.add(GostSchuelerklausurTerminRich.transpilerFromJSON(JSON.stringify(elem)));
+				result.schuelerklausurtermine.add(GostSchuelerklausurTerminRich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.raeume !== undefined) && (obj.raeume !== null)) {
+		if (obj.raeume !== undefined) {
 			for (const elem of obj.raeume) {
-				result.raeume?.add(GostKlausurraumRich.transpilerFromJSON(JSON.stringify(elem)));
+				result.raeume.add(GostKlausurraumRich.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		if (obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_in_moeglichst_wenig_raeume');
+			throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_in_moeglichst_wenig_raeume');
 		result._regel_optimiere_blocke_in_moeglichst_wenig_raeume = obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume;
 		if (obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume');
+			throw new Error('invalid json format, missing attribute _regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume');
 		result._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume;
 		if (obj._regel_forciere_selbe_kursklausur_im_selben_raum === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_forciere_selbe_kursklausur_im_selben_raum');
+			throw new Error('invalid json format, missing attribute _regel_forciere_selbe_kursklausur_im_selben_raum');
 		result._regel_forciere_selbe_kursklausur_im_selben_raum = obj._regel_forciere_selbe_kursklausur_im_selben_raum;
 		if (obj._regel_forciere_selbe_klausurdauer_pro_raum === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_forciere_selbe_klausurdauer_pro_raum');
+			throw new Error('invalid json format, missing attribute _regel_forciere_selbe_klausurdauer_pro_raum');
 		result._regel_forciere_selbe_klausurdauer_pro_raum = obj._regel_forciere_selbe_klausurdauer_pro_raum;
 		if (obj._regel_forciere_selben_klausurstart_pro_raum === undefined)
-			 throw new Error('invalid json format, missing attribute _regel_forciere_selben_klausurstart_pro_raum');
+			throw new Error('invalid json format, missing attribute _regel_forciere_selben_klausurstart_pro_raum');
 		result._regel_forciere_selben_klausurstart_pro_raum = obj._regel_forciere_selben_klausurstart_pro_raum;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : GostKlausurraumblockungKonfiguration) : string {
 		let result = '{';
-		result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
-		if (!obj.schuelerklausurtermine) {
-			result += '"schuelerklausurtermine" : []';
-		} else {
+		result += '"maxTimeMillis" : ' + obj.maxTimeMillis.toString() + ',';
+		result += '"schuelerklausurtermine" : [ ';
+		for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
+			const elem = obj.schuelerklausurtermine.get(i);
+			result += GostSchuelerklausurTerminRich.transpilerToJSON(elem);
+			if (i < obj.schuelerklausurtermine.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"raeume" : [ ';
+		for (let i = 0; i < obj.raeume.size(); i++) {
+			const elem = obj.raeume.get(i);
+			result += GostKlausurraumRich.transpilerToJSON(elem);
+			if (i < obj.raeume.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume.toString() + ',';
+		result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume.toString() + ',';
+		result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum.toString() + ',';
+		result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum.toString() + ',';
+		result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum.toString() + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumblockungKonfiguration>) : string {
+		let result = '{';
+		if (obj.maxTimeMillis !== undefined) {
+			result += '"maxTimeMillis" : ' + obj.maxTimeMillis.toString() + ',';
+		}
+		if (obj.schuelerklausurtermine !== undefined) {
 			result += '"schuelerklausurtermine" : [ ';
 			for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
 				const elem = obj.schuelerklausurtermine.get(i);
@@ -109,9 +138,7 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.raeume) {
-			result += '"raeume" : []';
-		} else {
+		if (obj.raeume !== undefined) {
 			result += '"raeume" : [ ';
 			for (let i = 0; i < obj.raeume.size(); i++) {
 				const elem = obj.raeume.get(i);
@@ -121,63 +148,20 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume + ',';
-		result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume + ',';
-		result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum + ',';
-		result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
-		result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<GostKlausurraumblockungKonfiguration>) : string {
-		let result = '{';
-		if (obj.maxTimeMillis !== undefined) {
-			result += '"maxTimeMillis" : ' + obj.maxTimeMillis + ',';
-		}
-		if (obj.schuelerklausurtermine !== undefined) {
-			if (!obj.schuelerklausurtermine) {
-				result += '"schuelerklausurtermine" : []';
-			} else {
-				result += '"schuelerklausurtermine" : [ ';
-				for (let i = 0; i < obj.schuelerklausurtermine.size(); i++) {
-					const elem = obj.schuelerklausurtermine.get(i);
-					result += GostSchuelerklausurTerminRich.transpilerToJSON(elem);
-					if (i < obj.schuelerklausurtermine.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.raeume !== undefined) {
-			if (!obj.raeume) {
-				result += '"raeume" : []';
-			} else {
-				result += '"raeume" : [ ';
-				for (let i = 0; i < obj.raeume.size(); i++) {
-					const elem = obj.raeume.get(i);
-					result += GostKlausurraumRich.transpilerToJSON(elem);
-					if (i < obj.raeume.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume !== undefined) {
-			result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume + ',';
+			result += '"_regel_optimiere_blocke_in_moeglichst_wenig_raeume" : ' + obj._regel_optimiere_blocke_in_moeglichst_wenig_raeume.toString() + ',';
 		}
 		if (obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume !== undefined) {
-			result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume + ',';
+			result += '"_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume" : ' + obj._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume.toString() + ',';
 		}
 		if (obj._regel_forciere_selbe_kursklausur_im_selben_raum !== undefined) {
-			result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum + ',';
+			result += '"_regel_forciere_selbe_kursklausur_im_selben_raum" : ' + obj._regel_forciere_selbe_kursklausur_im_selben_raum.toString() + ',';
 		}
 		if (obj._regel_forciere_selbe_klausurdauer_pro_raum !== undefined) {
-			result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum + ',';
+			result += '"_regel_forciere_selbe_klausurdauer_pro_raum" : ' + obj._regel_forciere_selbe_klausurdauer_pro_raum.toString() + ',';
 		}
 		if (obj._regel_forciere_selben_klausurstart_pro_raum !== undefined) {
-			result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum + ',';
+			result += '"_regel_forciere_selben_klausurstart_pro_raum" : ' + obj._regel_forciere_selben_klausurstart_pro_raum.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

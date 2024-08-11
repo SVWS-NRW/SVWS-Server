@@ -42,26 +42,26 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionMetaData {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionMetaData>;
 		const result = new GostKlausurenCollectionMetaData();
-		if ((obj.faecher !== undefined) && (obj.faecher !== null)) {
+		if (obj.faecher !== undefined) {
 			for (const elem of obj.faecher) {
-				result.faecher?.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
+				result.faecher.add(GostFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(SchuelerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.schueler.add(SchuelerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.lehrer !== undefined) && (obj.lehrer !== null)) {
+		if (obj.lehrer !== undefined) {
 			for (const elem of obj.lehrer) {
-				result.lehrer?.add(LehrerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.lehrer.add(LehrerListeEintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse.add(KursDaten.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -69,9 +69,46 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 
 	public static transpilerToJSON(obj : GostKlausurenCollectionMetaData) : string {
 		let result = '{';
-		if (!obj.faecher) {
-			result += '"faecher" : []';
-		} else {
+		result += '"faecher" : [ ';
+		for (let i = 0; i < obj.faecher.size(); i++) {
+			const elem = obj.faecher.get(i);
+			result += GostFach.transpilerToJSON(elem);
+			if (i < obj.faecher.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += SchuelerListeEintrag.transpilerToJSON(elem);
+			if (i < obj.schueler.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"lehrer" : [ ';
+		for (let i = 0; i < obj.lehrer.size(); i++) {
+			const elem = obj.lehrer.get(i);
+			result += LehrerListeEintrag.transpilerToJSON(elem);
+			if (i < obj.lehrer.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += KursDaten.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionMetaData>) : string {
+		let result = '{';
+		if (obj.faecher !== undefined) {
 			result += '"faecher" : [ ';
 			for (let i = 0; i < obj.faecher.size(); i++) {
 				const elem = obj.faecher.get(i);
@@ -81,9 +118,7 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
+		if (obj.schueler !== undefined) {
 			result += '"schueler" : [ ';
 			for (let i = 0; i < obj.schueler.size(); i++) {
 				const elem = obj.schueler.get(i);
@@ -93,9 +128,7 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.lehrer) {
-			result += '"lehrer" : []';
-		} else {
+		if (obj.lehrer !== undefined) {
 			result += '"lehrer" : [ ';
 			for (let i = 0; i < obj.lehrer.size(); i++) {
 				const elem = obj.lehrer.get(i);
@@ -105,9 +138,7 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
+		if (obj.kurse !== undefined) {
 			result += '"kurse" : [ ';
 			for (let i = 0; i < obj.kurse.size(); i++) {
 				const elem = obj.kurse.get(i);
@@ -116,69 +147,6 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<GostKlausurenCollectionMetaData>) : string {
-		let result = '{';
-		if (obj.faecher !== undefined) {
-			if (!obj.faecher) {
-				result += '"faecher" : []';
-			} else {
-				result += '"faecher" : [ ';
-				for (let i = 0; i < obj.faecher.size(); i++) {
-					const elem = obj.faecher.get(i);
-					result += GostFach.transpilerToJSON(elem);
-					if (i < obj.faecher.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += SchuelerListeEintrag.transpilerToJSON(elem);
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.lehrer !== undefined) {
-			if (!obj.lehrer) {
-				result += '"lehrer" : []';
-			} else {
-				result += '"lehrer" : [ ';
-				for (let i = 0; i < obj.lehrer.size(); i++) {
-					const elem = obj.lehrer.get(i);
-					result += LehrerListeEintrag.transpilerToJSON(elem);
-					if (i < obj.lehrer.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += KursDaten.transpilerToJSON(elem);
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

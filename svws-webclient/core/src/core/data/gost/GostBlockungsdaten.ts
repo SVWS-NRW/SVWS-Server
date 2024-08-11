@@ -80,51 +80,51 @@ export class GostBlockungsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GostBlockungsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GostBlockungsdaten>;
 		const result = new GostBlockungsdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.name === undefined)
-			 throw new Error('invalid json format, missing attribute name');
+			throw new Error('invalid json format, missing attribute name');
 		result.name = obj.name;
 		if (obj.abijahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute abijahrgang');
+			throw new Error('invalid json format, missing attribute abijahrgang');
 		result.abijahrgang = obj.abijahrgang;
 		if (obj.gostHalbjahr === undefined)
-			 throw new Error('invalid json format, missing attribute gostHalbjahr');
+			throw new Error('invalid json format, missing attribute gostHalbjahr');
 		result.gostHalbjahr = obj.gostHalbjahr;
 		if (obj.istAktiv === undefined)
-			 throw new Error('invalid json format, missing attribute istAktiv');
+			throw new Error('invalid json format, missing attribute istAktiv');
 		result.istAktiv = obj.istAktiv;
-		if ((obj.schienen !== undefined) && (obj.schienen !== null)) {
+		if (obj.schienen !== undefined) {
 			for (const elem of obj.schienen) {
-				result.schienen?.add(GostBlockungSchiene.transpilerFromJSON(JSON.stringify(elem)));
+				result.schienen.add(GostBlockungSchiene.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.regeln !== undefined) && (obj.regeln !== null)) {
+		if (obj.regeln !== undefined) {
 			for (const elem of obj.regeln) {
-				result.regeln?.add(GostBlockungRegel.transpilerFromJSON(JSON.stringify(elem)));
+				result.regeln.add(GostBlockungRegel.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.kurse !== undefined) && (obj.kurse !== null)) {
+		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
-				result.kurse?.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
+				result.kurse.add(GostBlockungKurs.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.schueler !== undefined) && (obj.schueler !== null)) {
+		if (obj.schueler !== undefined) {
 			for (const elem of obj.schueler) {
-				result.schueler?.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
+				result.schueler.add(Schueler.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.fachwahlen !== undefined) && (obj.fachwahlen !== null)) {
+		if (obj.fachwahlen !== undefined) {
 			for (const elem of obj.fachwahlen) {
-				result.fachwahlen?.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
+				result.fachwahlen.add(GostFachwahl.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.ergebnisse !== undefined) && (obj.ergebnisse !== null)) {
+		if (obj.ergebnisse !== undefined) {
 			for (const elem of obj.ergebnisse) {
-				result.ergebnisse?.add(GostBlockungsergebnis.transpilerFromJSON(JSON.stringify(elem)));
+				result.ergebnisse.add(GostBlockungsergebnis.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -132,14 +132,82 @@ export class GostBlockungsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : GostBlockungsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		result += '"abijahrgang" : ' + obj.abijahrgang + ',';
-		result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		result += '"istAktiv" : ' + obj.istAktiv + ',';
-		if (!obj.schienen) {
-			result += '"schienen" : []';
-		} else {
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		result += '"abijahrgang" : ' + obj.abijahrgang.toString() + ',';
+		result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
+		result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
+		result += '"schienen" : [ ';
+		for (let i = 0; i < obj.schienen.size(); i++) {
+			const elem = obj.schienen.get(i);
+			result += GostBlockungSchiene.transpilerToJSON(elem);
+			if (i < obj.schienen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"regeln" : [ ';
+		for (let i = 0; i < obj.regeln.size(); i++) {
+			const elem = obj.regeln.get(i);
+			result += GostBlockungRegel.transpilerToJSON(elem);
+			if (i < obj.regeln.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kurse" : [ ';
+		for (let i = 0; i < obj.kurse.size(); i++) {
+			const elem = obj.kurse.get(i);
+			result += GostBlockungKurs.transpilerToJSON(elem);
+			if (i < obj.kurse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"schueler" : [ ';
+		for (let i = 0; i < obj.schueler.size(); i++) {
+			const elem = obj.schueler.get(i);
+			result += Schueler.transpilerToJSON(elem);
+			if (i < obj.schueler.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"fachwahlen" : [ ';
+		for (let i = 0; i < obj.fachwahlen.size(); i++) {
+			const elem = obj.fachwahlen.get(i);
+			result += GostFachwahl.transpilerToJSON(elem);
+			if (i < obj.fachwahlen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"ergebnisse" : [ ';
+		for (let i = 0; i < obj.ergebnisse.size(); i++) {
+			const elem = obj.ergebnisse.get(i);
+			result += GostBlockungsergebnis.transpilerToJSON(elem);
+			if (i < obj.ergebnisse.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<GostBlockungsdaten>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.name !== undefined) {
+			result += '"name" : ' + JSON.stringify(obj.name) + ',';
+		}
+		if (obj.abijahrgang !== undefined) {
+			result += '"abijahrgang" : ' + obj.abijahrgang.toString() + ',';
+		}
+		if (obj.gostHalbjahr !== undefined) {
+			result += '"gostHalbjahr" : ' + obj.gostHalbjahr.toString() + ',';
+		}
+		if (obj.istAktiv !== undefined) {
+			result += '"istAktiv" : ' + obj.istAktiv.toString() + ',';
+		}
+		if (obj.schienen !== undefined) {
 			result += '"schienen" : [ ';
 			for (let i = 0; i < obj.schienen.size(); i++) {
 				const elem = obj.schienen.get(i);
@@ -149,9 +217,7 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.regeln) {
-			result += '"regeln" : []';
-		} else {
+		if (obj.regeln !== undefined) {
 			result += '"regeln" : [ ';
 			for (let i = 0; i < obj.regeln.size(); i++) {
 				const elem = obj.regeln.get(i);
@@ -161,9 +227,7 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.kurse) {
-			result += '"kurse" : []';
-		} else {
+		if (obj.kurse !== undefined) {
 			result += '"kurse" : [ ';
 			for (let i = 0; i < obj.kurse.size(); i++) {
 				const elem = obj.kurse.get(i);
@@ -173,9 +237,7 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.schueler) {
-			result += '"schueler" : []';
-		} else {
+		if (obj.schueler !== undefined) {
 			result += '"schueler" : [ ';
 			for (let i = 0; i < obj.schueler.size(); i++) {
 				const elem = obj.schueler.get(i);
@@ -185,9 +247,7 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.fachwahlen) {
-			result += '"fachwahlen" : []';
-		} else {
+		if (obj.fachwahlen !== undefined) {
 			result += '"fachwahlen" : [ ';
 			for (let i = 0; i < obj.fachwahlen.size(); i++) {
 				const elem = obj.fachwahlen.get(i);
@@ -197,9 +257,7 @@ export class GostBlockungsdaten extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		if (!obj.ergebnisse) {
-			result += '"ergebnisse" : []';
-		} else {
+		if (obj.ergebnisse !== undefined) {
 			result += '"ergebnisse" : [ ';
 			for (let i = 0; i < obj.ergebnisse.size(); i++) {
 				const elem = obj.ergebnisse.get(i);
@@ -208,112 +266,6 @@ export class GostBlockungsdaten extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<GostBlockungsdaten>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.name !== undefined) {
-			result += '"name" : ' + JSON.stringify(obj.name!) + ',';
-		}
-		if (obj.abijahrgang !== undefined) {
-			result += '"abijahrgang" : ' + obj.abijahrgang + ',';
-		}
-		if (obj.gostHalbjahr !== undefined) {
-			result += '"gostHalbjahr" : ' + obj.gostHalbjahr + ',';
-		}
-		if (obj.istAktiv !== undefined) {
-			result += '"istAktiv" : ' + obj.istAktiv + ',';
-		}
-		if (obj.schienen !== undefined) {
-			if (!obj.schienen) {
-				result += '"schienen" : []';
-			} else {
-				result += '"schienen" : [ ';
-				for (let i = 0; i < obj.schienen.size(); i++) {
-					const elem = obj.schienen.get(i);
-					result += GostBlockungSchiene.transpilerToJSON(elem);
-					if (i < obj.schienen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.regeln !== undefined) {
-			if (!obj.regeln) {
-				result += '"regeln" : []';
-			} else {
-				result += '"regeln" : [ ';
-				for (let i = 0; i < obj.regeln.size(); i++) {
-					const elem = obj.regeln.get(i);
-					result += GostBlockungRegel.transpilerToJSON(elem);
-					if (i < obj.regeln.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.kurse !== undefined) {
-			if (!obj.kurse) {
-				result += '"kurse" : []';
-			} else {
-				result += '"kurse" : [ ';
-				for (let i = 0; i < obj.kurse.size(); i++) {
-					const elem = obj.kurse.get(i);
-					result += GostBlockungKurs.transpilerToJSON(elem);
-					if (i < obj.kurse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.schueler !== undefined) {
-			if (!obj.schueler) {
-				result += '"schueler" : []';
-			} else {
-				result += '"schueler" : [ ';
-				for (let i = 0; i < obj.schueler.size(); i++) {
-					const elem = obj.schueler.get(i);
-					result += Schueler.transpilerToJSON(elem);
-					if (i < obj.schueler.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.fachwahlen !== undefined) {
-			if (!obj.fachwahlen) {
-				result += '"fachwahlen" : []';
-			} else {
-				result += '"fachwahlen" : [ ';
-				for (let i = 0; i < obj.fachwahlen.size(); i++) {
-					const elem = obj.fachwahlen.get(i);
-					result += GostFachwahl.transpilerToJSON(elem);
-					if (i < obj.fachwahlen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
-		if (obj.ergebnisse !== undefined) {
-			if (!obj.ergebnisse) {
-				result += '"ergebnisse" : []';
-			} else {
-				result += '"ergebnisse" : [ ';
-				for (let i = 0; i < obj.ergebnisse.size(); i++) {
-					const elem = obj.ergebnisse.get(i);
-					result += GostBlockungsergebnis.transpilerToJSON(elem);
-					if (i < obj.ergebnisse.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
 		}
 		result = result.slice(0, -1);
 		result += '}';

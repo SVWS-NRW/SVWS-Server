@@ -129,32 +129,32 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): FachgruppenKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<FachgruppenKatalogEintrag>;
 		const result = new FachgruppenKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.nummer = (obj.nummer === undefined) ? null : obj.nummer === null ? null : obj.nummer;
 		result.idSchild = (obj.idSchild === undefined) ? null : obj.idSchild === null ? null : obj.idSchild;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		if (obj.farbe === undefined)
-			 throw new Error('invalid json format, missing attribute farbe');
+			throw new Error('invalid json format, missing attribute farbe');
 		result.farbe = RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
-		if ((obj.schulformen !== undefined) && (obj.schulformen !== null)) {
+		if (obj.schulformen !== undefined) {
 			for (const elem of obj.schulformen) {
-				result.schulformen?.add(elem);
+				result.schulformen.add(elem);
 			}
 		}
 		if (obj.sortierung === undefined)
-			 throw new Error('invalid json format, missing attribute sortierung');
+			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
 		if (obj.fuerZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute fuerZeugnis');
+			throw new Error('invalid json format, missing attribute fuerZeugnis');
 		result.fuerZeugnis = obj.fuerZeugnis;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
@@ -163,15 +163,50 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : FachgruppenKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer) + ',';
-		result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild) + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer.toString()) + ',';
+		result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild.toString()) + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
-		if (!obj.schulformen) {
-			result += '"schulformen" : []';
-		} else {
+		result += '"schulformen" : [ ';
+		for (let i = 0; i < obj.schulformen.size(); i++) {
+			const elem = obj.schulformen.get(i);
+			result += '"' + elem + '"';
+			if (i < obj.schulformen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"sortierung" : ' + obj.sortierung! + ',';
+		result += '"fuerZeugnis" : ' + obj.fuerZeugnis.toString() + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result = result.slice(0, -1);
+		result += '}';
+		return result;
+	}
+
+	public static transpilerToJSONPatch(obj : Partial<FachgruppenKatalogEintrag>) : string {
+		let result = '{';
+		if (obj.id !== undefined) {
+			result += '"id" : ' + obj.id.toString() + ',';
+		}
+		if (obj.nummer !== undefined) {
+			result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer.toString()) + ',';
+		}
+		if (obj.idSchild !== undefined) {
+			result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild.toString()) + ',';
+		}
+		if (obj.bezeichnung !== undefined) {
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.kuerzel !== undefined) {
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		}
+		if (obj.farbe !== undefined) {
+			result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
+		}
+		if (obj.schulformen !== undefined) {
 			result += '"schulformen" : [ ';
 			for (let i = 0; i < obj.schulformen.size(); i++) {
 				const elem = obj.schulformen.get(i);
@@ -181,60 +216,17 @@ export class FachgruppenKatalogEintrag extends JavaObject {
 			}
 			result += ' ]' + ',';
 		}
-		result += '"sortierung" : ' + obj.sortierung! + ',';
-		result += '"fuerZeugnis" : ' + obj.fuerZeugnis + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
-		result = result.slice(0, -1);
-		result += '}';
-		return result;
-	}
-
-	public static transpilerToJSONPatch(obj : Partial<FachgruppenKatalogEintrag>) : string {
-		let result = '{';
-		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
-		}
-		if (obj.nummer !== undefined) {
-			result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer) + ',';
-		}
-		if (obj.idSchild !== undefined) {
-			result += '"idSchild" : ' + ((!obj.idSchild) ? 'null' : obj.idSchild) + ',';
-		}
-		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		}
-		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
-		}
-		if (obj.farbe !== undefined) {
-			result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			if (!obj.schulformen) {
-				result += '"schulformen" : []';
-			} else {
-				result += '"schulformen" : [ ';
-				for (let i = 0; i < obj.schulformen.size(); i++) {
-					const elem = obj.schulformen.get(i);
-					result += '"' + elem + '"';
-					if (i < obj.schulformen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
-			}
-		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';
 		}
 		if (obj.fuerZeugnis !== undefined) {
-			result += '"fuerZeugnis" : ' + obj.fuerZeugnis + ',';
+			result += '"fuerZeugnis" : ' + obj.fuerZeugnis.toString() + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon) + ',';
+			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis) + ',';
+			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -61,10 +61,10 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchSchule {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuelerSchulbesuchSchule>;
 		const result = new SchuelerSchulbesuchSchule();
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		result.schulgliederung = (obj.schulgliederung === undefined) ? null : obj.schulgliederung === null ? null : obj.schulgliederung;
 		result.entlassgrundID = (obj.entlassgrundID === undefined) ? null : obj.entlassgrundID === null ? null : obj.entlassgrundID;
@@ -79,9 +79,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuelerSchulbesuchSchule) : string {
 		let result = '{';
-		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer!) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
-		result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID) + ',';
+		result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID.toString()) + ',';
 		result += '"abschlussartID" : ' + ((!obj.abschlussartID) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';
 		result += '"organisationsFormID" : ' + ((!obj.organisationsFormID) ? 'null' : JSON.stringify(obj.organisationsFormID)) + ',';
 		result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
@@ -96,13 +96,13 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuelerSchulbesuchSchule>) : string {
 		let result = '{';
 		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer!) + ',';
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		}
 		if (obj.schulgliederung !== undefined) {
 			result += '"schulgliederung" : ' + ((!obj.schulgliederung) ? 'null' : JSON.stringify(obj.schulgliederung)) + ',';
 		}
 		if (obj.entlassgrundID !== undefined) {
-			result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID) + ',';
+			result += '"entlassgrundID" : ' + ((!obj.entlassgrundID) ? 'null' : obj.entlassgrundID.toString()) + ',';
 		}
 		if (obj.abschlussartID !== undefined) {
 			result += '"abschlussartID" : ' + ((!obj.abschlussartID) ? 'null' : JSON.stringify(obj.abschlussartID)) + ',';

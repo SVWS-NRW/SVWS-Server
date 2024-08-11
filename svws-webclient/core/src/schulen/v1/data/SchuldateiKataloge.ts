@@ -27,11 +27,11 @@ export class SchuldateiKataloge extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiKataloge {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiKataloge>;
 		const result = new SchuldateiKataloge();
-		if ((obj.katalog !== undefined) && (obj.katalog !== null)) {
+		if (obj.katalog !== undefined) {
 			for (const elem of obj.katalog) {
-				result.katalog?.add(SchuldateiKatalogeintrag.transpilerFromJSON(JSON.stringify(elem)));
+				result.katalog.add(SchuldateiKatalogeintrag.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -39,18 +39,14 @@ export class SchuldateiKataloge extends JavaObject {
 
 	public static transpilerToJSON(obj : SchuldateiKataloge) : string {
 		let result = '{';
-		if (!obj.katalog) {
-			result += '"katalog" : []';
-		} else {
-			result += '"katalog" : [ ';
-			for (let i = 0; i < obj.katalog.size(); i++) {
-				const elem = obj.katalog.get(i);
-				result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
-				if (i < obj.katalog.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"katalog" : [ ';
+		for (let i = 0; i < obj.katalog.size(); i++) {
+			const elem = obj.katalog.get(i);
+			result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
+			if (i < obj.katalog.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -59,18 +55,14 @@ export class SchuldateiKataloge extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiKataloge>) : string {
 		let result = '{';
 		if (obj.katalog !== undefined) {
-			if (!obj.katalog) {
-				result += '"katalog" : []';
-			} else {
-				result += '"katalog" : [ ';
-				for (let i = 0; i < obj.katalog.size(); i++) {
-					const elem = obj.katalog.get(i);
-					result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
-					if (i < obj.katalog.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"katalog" : [ ';
+			for (let i = 0; i < obj.katalog.size(); i++) {
+				const elem = obj.katalog.get(i);
+				result += SchuldateiKatalogeintrag.transpilerToJSON(elem);
+				if (i < obj.katalog.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

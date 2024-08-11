@@ -80,40 +80,40 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): LehrerPersonalabschnittsdaten {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<LehrerPersonalabschnittsdaten>;
 		const result = new LehrerPersonalabschnittsdaten();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.idLehrer === undefined)
-			 throw new Error('invalid json format, missing attribute idLehrer');
+			throw new Error('invalid json format, missing attribute idLehrer');
 		result.idLehrer = obj.idLehrer;
 		if (obj.idSchuljahresabschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		result.pflichtstundensoll = (obj.pflichtstundensoll === undefined) ? null : obj.pflichtstundensoll === null ? null : obj.pflichtstundensoll;
 		result.rechtsverhaeltnis = (obj.rechtsverhaeltnis === undefined) ? null : obj.rechtsverhaeltnis === null ? null : obj.rechtsverhaeltnis;
 		result.beschaeftigungsart = (obj.beschaeftigungsart === undefined) ? null : obj.beschaeftigungsart === null ? null : obj.beschaeftigungsart;
 		result.einsatzstatus = (obj.einsatzstatus === undefined) ? null : obj.einsatzstatus === null ? null : obj.einsatzstatus;
 		result.stammschulnummer = (obj.stammschulnummer === undefined) ? null : obj.stammschulnummer === null ? null : obj.stammschulnummer;
-		if ((obj.anrechnungen !== undefined) && (obj.anrechnungen !== null)) {
+		if (obj.anrechnungen !== undefined) {
 			for (const elem of obj.anrechnungen) {
-				result.anrechnungen?.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
+				result.anrechnungen.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.mehrleistung !== undefined) && (obj.mehrleistung !== null)) {
+		if (obj.mehrleistung !== undefined) {
 			for (const elem of obj.mehrleistung) {
-				result.mehrleistung?.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
+				result.mehrleistung.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.minderleistung !== undefined) && (obj.minderleistung !== null)) {
+		if (obj.minderleistung !== undefined) {
 			for (const elem of obj.minderleistung) {
-				result.minderleistung?.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
+				result.minderleistung.add(LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if ((obj.funktionen !== undefined) && (obj.funktionen !== null)) {
+		if (obj.funktionen !== undefined) {
 			for (const elem of obj.funktionen) {
-				result.funktionen?.add(LehrerPersonalabschnittsdatenLehrerfunktion.transpilerFromJSON(JSON.stringify(elem)));
+				result.funktionen.add(LehrerPersonalabschnittsdatenLehrerfunktion.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
 		return result;
@@ -121,62 +121,46 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 
 	public static transpilerToJSON(obj : LehrerPersonalabschnittsdaten) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"idLehrer" : ' + obj.idLehrer + ',';
-		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
-		result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
+		result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
 		result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
 		result += '"beschaeftigungsart" : ' + ((!obj.beschaeftigungsart) ? 'null' : JSON.stringify(obj.beschaeftigungsart)) + ',';
 		result += '"einsatzstatus" : ' + ((!obj.einsatzstatus) ? 'null' : JSON.stringify(obj.einsatzstatus)) + ',';
 		result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
-		if (!obj.anrechnungen) {
-			result += '"anrechnungen" : []';
-		} else {
-			result += '"anrechnungen" : [ ';
-			for (let i = 0; i < obj.anrechnungen.size(); i++) {
-				const elem = obj.anrechnungen.get(i);
-				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-				if (i < obj.anrechnungen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += '"anrechnungen" : [ ';
+		for (let i = 0; i < obj.anrechnungen.size(); i++) {
+			const elem = obj.anrechnungen.get(i);
+			result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+			if (i < obj.anrechnungen.size() - 1)
+				result += ',';
 		}
-		if (!obj.mehrleistung) {
-			result += '"mehrleistung" : []';
-		} else {
-			result += '"mehrleistung" : [ ';
-			for (let i = 0; i < obj.mehrleistung.size(); i++) {
-				const elem = obj.mehrleistung.get(i);
-				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-				if (i < obj.mehrleistung.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"mehrleistung" : [ ';
+		for (let i = 0; i < obj.mehrleistung.size(); i++) {
+			const elem = obj.mehrleistung.get(i);
+			result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+			if (i < obj.mehrleistung.size() - 1)
+				result += ',';
 		}
-		if (!obj.minderleistung) {
-			result += '"minderleistung" : []';
-		} else {
-			result += '"minderleistung" : [ ';
-			for (let i = 0; i < obj.minderleistung.size(); i++) {
-				const elem = obj.minderleistung.get(i);
-				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-				if (i < obj.minderleistung.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"minderleistung" : [ ';
+		for (let i = 0; i < obj.minderleistung.size(); i++) {
+			const elem = obj.minderleistung.get(i);
+			result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+			if (i < obj.minderleistung.size() - 1)
+				result += ',';
 		}
-		if (!obj.funktionen) {
-			result += '"funktionen" : []';
-		} else {
-			result += '"funktionen" : [ ';
-			for (let i = 0; i < obj.funktionen.size(); i++) {
-				const elem = obj.funktionen.get(i);
-				result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
-				if (i < obj.funktionen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
+		result += ' ]' + ',';
+		result += '"funktionen" : [ ';
+		for (let i = 0; i < obj.funktionen.size(); i++) {
+			const elem = obj.funktionen.get(i);
+			result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
+			if (i < obj.funktionen.size() - 1)
+				result += ',';
 		}
+		result += ' ]' + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -185,16 +169,16 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<LehrerPersonalabschnittsdaten>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.idLehrer !== undefined) {
-			result += '"idLehrer" : ' + obj.idLehrer + ',';
+			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
 		}
 		if (obj.idSchuljahresabschnitt !== undefined) {
-			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.pflichtstundensoll !== undefined) {
-			result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll) + ',';
+			result += '"pflichtstundensoll" : ' + ((!obj.pflichtstundensoll) ? 'null' : obj.pflichtstundensoll.toString()) + ',';
 		}
 		if (obj.rechtsverhaeltnis !== undefined) {
 			result += '"rechtsverhaeltnis" : ' + ((!obj.rechtsverhaeltnis) ? 'null' : JSON.stringify(obj.rechtsverhaeltnis)) + ',';
@@ -209,60 +193,44 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 			result += '"stammschulnummer" : ' + ((!obj.stammschulnummer) ? 'null' : JSON.stringify(obj.stammschulnummer)) + ',';
 		}
 		if (obj.anrechnungen !== undefined) {
-			if (!obj.anrechnungen) {
-				result += '"anrechnungen" : []';
-			} else {
-				result += '"anrechnungen" : [ ';
-				for (let i = 0; i < obj.anrechnungen.size(); i++) {
-					const elem = obj.anrechnungen.get(i);
-					result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-					if (i < obj.anrechnungen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"anrechnungen" : [ ';
+			for (let i = 0; i < obj.anrechnungen.size(); i++) {
+				const elem = obj.anrechnungen.get(i);
+				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+				if (i < obj.anrechnungen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.mehrleistung !== undefined) {
-			if (!obj.mehrleistung) {
-				result += '"mehrleistung" : []';
-			} else {
-				result += '"mehrleistung" : [ ';
-				for (let i = 0; i < obj.mehrleistung.size(); i++) {
-					const elem = obj.mehrleistung.get(i);
-					result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-					if (i < obj.mehrleistung.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"mehrleistung" : [ ';
+			for (let i = 0; i < obj.mehrleistung.size(); i++) {
+				const elem = obj.mehrleistung.get(i);
+				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+				if (i < obj.mehrleistung.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.minderleistung !== undefined) {
-			if (!obj.minderleistung) {
-				result += '"minderleistung" : []';
-			} else {
-				result += '"minderleistung" : [ ';
-				for (let i = 0; i < obj.minderleistung.size(); i++) {
-					const elem = obj.minderleistung.get(i);
-					result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
-					if (i < obj.minderleistung.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"minderleistung" : [ ';
+			for (let i = 0; i < obj.minderleistung.size(); i++) {
+				const elem = obj.minderleistung.get(i);
+				result += LehrerPersonalabschnittsdatenAnrechnungsstunden.transpilerToJSON(elem);
+				if (i < obj.minderleistung.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		if (obj.funktionen !== undefined) {
-			if (!obj.funktionen) {
-				result += '"funktionen" : []';
-			} else {
-				result += '"funktionen" : [ ';
-				for (let i = 0; i < obj.funktionen.size(); i++) {
-					const elem = obj.funktionen.get(i);
-					result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
-					if (i < obj.funktionen.size() - 1)
-						result += ',';
-				}
-				result += ' ]' + ',';
+			result += '"funktionen" : [ ';
+			for (let i = 0; i < obj.funktionen.size(); i++) {
+				const elem = obj.funktionen.get(i);
+				result += LehrerPersonalabschnittsdatenLehrerfunktion.transpilerToJSON(elem);
+				if (i < obj.funktionen.size() - 1)
+					result += ',';
 			}
+			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

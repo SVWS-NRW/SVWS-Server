@@ -91,73 +91,73 @@ export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerLernabschnitt {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchildReportingSchuelerLernabschnitt>;
 		const result = new SchildReportingSchuelerLernabschnitt();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.schuelerID === undefined)
-			 throw new Error('invalid json format, missing attribute schuelerID');
+			throw new Error('invalid json format, missing attribute schuelerID');
 		result.schuelerID = obj.schuelerID;
 		if (obj.schuljahr === undefined)
-			 throw new Error('invalid json format, missing attribute schuljahr');
+			throw new Error('invalid json format, missing attribute schuljahr');
 		result.schuljahr = obj.schuljahr;
 		if (obj.abschnitt === undefined)
-			 throw new Error('invalid json format, missing attribute abschnitt');
+			throw new Error('invalid json format, missing attribute abschnitt');
 		result.abschnitt = obj.abschnitt;
 		if (obj.wechselNr === undefined)
-			 throw new Error('invalid json format, missing attribute wechselNr');
+			throw new Error('invalid json format, missing attribute wechselNr');
 		result.wechselNr = obj.wechselNr;
 		if (obj.istGewertet === undefined)
-			 throw new Error('invalid json format, missing attribute istGewertet');
+			throw new Error('invalid json format, missing attribute istGewertet');
 		result.istGewertet = obj.istGewertet;
 		if (obj.istWiederholung === undefined)
-			 throw new Error('invalid json format, missing attribute istWiederholung');
+			throw new Error('invalid json format, missing attribute istWiederholung');
 		result.istWiederholung = obj.istWiederholung;
 		if (obj.pruefungsOrdnung === undefined)
-			 throw new Error('invalid json format, missing attribute pruefungsOrdnung');
+			throw new Error('invalid json format, missing attribute pruefungsOrdnung');
 		result.pruefungsOrdnung = obj.pruefungsOrdnung;
 		if (obj.klasse === undefined)
-			 throw new Error('invalid json format, missing attribute klasse');
+			throw new Error('invalid json format, missing attribute klasse');
 		result.klasse = obj.klasse;
 		if (obj.klasseStatistik === undefined)
-			 throw new Error('invalid json format, missing attribute klasseStatistik');
+			throw new Error('invalid json format, missing attribute klasseStatistik');
 		result.klasseStatistik = obj.klasseStatistik;
 		if (obj.jahrgang === undefined)
-			 throw new Error('invalid json format, missing attribute jahrgang');
+			throw new Error('invalid json format, missing attribute jahrgang');
 		result.jahrgang = obj.jahrgang;
 		if (obj.jahrgangStatistik === undefined)
-			 throw new Error('invalid json format, missing attribute jahrgangStatistik');
+			throw new Error('invalid json format, missing attribute jahrgangStatistik');
 		result.jahrgangStatistik = obj.jahrgangStatistik;
 		if (obj.datumZeugniskonferenz === undefined)
-			 throw new Error('invalid json format, missing attribute datumZeugniskonferenz');
+			throw new Error('invalid json format, missing attribute datumZeugniskonferenz');
 		result.datumZeugniskonferenz = obj.datumZeugniskonferenz;
 		if (obj.datumZeugnis === undefined)
-			 throw new Error('invalid json format, missing attribute datumZeugnis');
+			throw new Error('invalid json format, missing attribute datumZeugnis');
 		result.datumZeugnis = obj.datumZeugnis;
 		if (obj.logPruefungsalgorithmus === undefined)
-			 throw new Error('invalid json format, missing attribute logPruefungsalgorithmus');
+			throw new Error('invalid json format, missing attribute logPruefungsalgorithmus');
 		result.logPruefungsalgorithmus = obj.logPruefungsalgorithmus;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : SchildReportingSchuelerLernabschnitt) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"schuelerID" : ' + obj.schuelerID + ',';
-		result += '"schuljahr" : ' + obj.schuljahr + ',';
-		result += '"abschnitt" : ' + obj.abschnitt + ',';
-		result += '"wechselNr" : ' + obj.wechselNr + ',';
-		result += '"istGewertet" : ' + obj.istGewertet + ',';
-		result += '"istWiederholung" : ' + obj.istWiederholung + ',';
-		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
-		result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
-		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
-		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
-		result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik!) + ',';
-		result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz!) + ',';
-		result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis!) + ',';
-		result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus!) + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
+		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
+		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		result += '"wechselNr" : ' + obj.wechselNr.toString() + ',';
+		result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
+		result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
+		result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
+		result += '"klasse" : ' + JSON.stringify(obj.klasse) + ',';
+		result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik) + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik) + ',';
+		result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz) + ',';
+		result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis) + ',';
+		result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -166,49 +166,49 @@ export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SchildReportingSchuelerLernabschnitt>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.schuelerID !== undefined) {
-			result += '"schuelerID" : ' + obj.schuelerID + ',';
+			result += '"schuelerID" : ' + obj.schuelerID.toString() + ',';
 		}
 		if (obj.schuljahr !== undefined) {
-			result += '"schuljahr" : ' + obj.schuljahr + ',';
+			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
 		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt + ',';
+			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		}
 		if (obj.wechselNr !== undefined) {
-			result += '"wechselNr" : ' + obj.wechselNr + ',';
+			result += '"wechselNr" : ' + obj.wechselNr.toString() + ',';
 		}
 		if (obj.istGewertet !== undefined) {
-			result += '"istGewertet" : ' + obj.istGewertet + ',';
+			result += '"istGewertet" : ' + obj.istGewertet.toString() + ',';
 		}
 		if (obj.istWiederholung !== undefined) {
-			result += '"istWiederholung" : ' + obj.istWiederholung + ',';
+			result += '"istWiederholung" : ' + obj.istWiederholung.toString() + ',';
 		}
 		if (obj.pruefungsOrdnung !== undefined) {
-			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung!) + ',';
+			result += '"pruefungsOrdnung" : ' + JSON.stringify(obj.pruefungsOrdnung) + ',';
 		}
 		if (obj.klasse !== undefined) {
-			result += '"klasse" : ' + JSON.stringify(obj.klasse!) + ',';
+			result += '"klasse" : ' + JSON.stringify(obj.klasse) + ',';
 		}
 		if (obj.klasseStatistik !== undefined) {
-			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik!) + ',';
+			result += '"klasseStatistik" : ' + JSON.stringify(obj.klasseStatistik) + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang!) + ',';
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		}
 		if (obj.jahrgangStatistik !== undefined) {
-			result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik!) + ',';
+			result += '"jahrgangStatistik" : ' + JSON.stringify(obj.jahrgangStatistik) + ',';
 		}
 		if (obj.datumZeugniskonferenz !== undefined) {
-			result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz!) + ',';
+			result += '"datumZeugniskonferenz" : ' + JSON.stringify(obj.datumZeugniskonferenz) + ',';
 		}
 		if (obj.datumZeugnis !== undefined) {
-			result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis!) + ',';
+			result += '"datumZeugnis" : ' + JSON.stringify(obj.datumZeugnis) + ',';
 		}
 		if (obj.logPruefungsalgorithmus !== undefined) {
-			result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus!) + ',';
+			result += '"logPruefungsalgorithmus" : ' + JSON.stringify(obj.logPruefungsalgorithmus) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

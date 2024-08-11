@@ -46,7 +46,7 @@ export class MigrateBody extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): MigrateBody {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<MigrateBody>;
 		const result = new MigrateBody();
 		result.srcUsername = (obj.srcUsername === undefined) ? null : obj.srcUsername === null ? null : obj.srcUsername;
 		result.srcPassword = (obj.srcPassword === undefined) ? null : obj.srcPassword === null ? null : obj.srcPassword;

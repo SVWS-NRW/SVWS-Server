@@ -51,14 +51,14 @@ export class GEAbschlussFach extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): GEAbschlussFach {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<GEAbschlussFach>;
 		const result = new GEAbschlussFach();
 		if (obj.kuerzel === undefined)
-			 throw new Error('invalid json format, missing attribute kuerzel');
+			throw new Error('invalid json format, missing attribute kuerzel');
 		result.kuerzel = obj.kuerzel;
 		result.bezeichnung = (obj.bezeichnung === undefined) ? null : obj.bezeichnung === null ? null : obj.bezeichnung;
 		if (obj.note === undefined)
-			 throw new Error('invalid json format, missing attribute note');
+			throw new Error('invalid json format, missing attribute note');
 		result.note = obj.note;
 		result.istFremdsprache = (obj.istFremdsprache === undefined) ? null : obj.istFremdsprache === null ? null : obj.istFremdsprache;
 		result.kursart = (obj.kursart === undefined) ? null : obj.kursart === null ? null : obj.kursart;
@@ -69,13 +69,13 @@ export class GEAbschlussFach extends JavaObject {
 
 	public static transpilerToJSON(obj : GEAbschlussFach) : string {
 		let result = '{';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
-		result += '"note" : ' + obj.note + ',';
-		result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache) + ',';
+		result += '"note" : ' + obj.note.toString() + ',';
+		result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache.toString()) + ',';
 		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
-		result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich) + ',';
-		result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen) + ',';
+		result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich.toString()) + ',';
+		result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,25 +84,25 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GEAbschlussFach>) : string {
 		let result = '{';
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel!) + ',';
+			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + obj.note + ',';
+			result += '"note" : ' + obj.note.toString() + ',';
 		}
 		if (obj.istFremdsprache !== undefined) {
-			result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache) + ',';
+			result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache.toString()) + ',';
 		}
 		if (obj.kursart !== undefined) {
 			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (obj.ausgleich !== undefined) {
-			result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich) + ',';
+			result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich.toString()) + ',';
 		}
 		if (obj.ausgeglichen !== undefined) {
-			result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen) + ',';
+			result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

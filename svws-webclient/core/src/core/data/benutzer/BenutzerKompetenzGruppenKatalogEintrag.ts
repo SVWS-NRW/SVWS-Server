@@ -66,29 +66,29 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	}
 
 	public static transpilerFromJSON(json : string): BenutzerKompetenzGruppenKatalogEintrag {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<BenutzerKompetenzGruppenKatalogEintrag>;
 		const result = new BenutzerKompetenzGruppenKatalogEintrag();
 		if (obj.id === undefined)
-			 throw new Error('invalid json format, missing attribute id');
+			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		if (obj.bezeichnung === undefined)
-			 throw new Error('invalid json format, missing attribute bezeichnung');
+			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
 		if (obj.spalte === undefined)
-			 throw new Error('invalid json format, missing attribute spalte');
+			throw new Error('invalid json format, missing attribute spalte');
 		result.spalte = obj.spalte;
 		if (obj.zeile === undefined)
-			 throw new Error('invalid json format, missing attribute zeile');
+			throw new Error('invalid json format, missing attribute zeile');
 		result.zeile = obj.zeile;
 		return result;
 	}
 
 	public static transpilerToJSON(obj : BenutzerKompetenzGruppenKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id + ',';
-		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
-		result += '"spalte" : ' + obj.spalte + ',';
-		result += '"zeile" : ' + obj.zeile + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"spalte" : ' + obj.spalte.toString() + ',';
+		result += '"zeile" : ' + obj.zeile.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,16 +97,16 @@ export class BenutzerKompetenzGruppenKatalogEintrag extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<BenutzerKompetenzGruppenKatalogEintrag>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + obj.id + ',';
+			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung!) + ',';
+			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.spalte !== undefined) {
-			result += '"spalte" : ' + obj.spalte + ',';
+			result += '"spalte" : ' + obj.spalte.toString() + ',';
 		}
 		if (obj.zeile !== undefined) {
-			result += '"zeile" : ' + obj.zeile + ',';
+			result += '"zeile" : ' + obj.zeile.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

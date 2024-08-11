@@ -49,17 +49,17 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 	}
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitErreichbarkeit {
-		const obj = JSON.parse(json);
+		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitErreichbarkeit>;
 		const result = new SchuldateiOrganisationseinheitErreichbarkeit();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
 		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
-			 throw new Error('invalid json format, missing attribute schulnummer');
+			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
 		if (obj.liegenschaft === undefined)
-			 throw new Error('invalid json format, missing attribute liegenschaft');
+			throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
 		result.kommgruppe = (obj.kommgruppe === undefined) ? null : obj.kommgruppe === null ? null : obj.kommgruppe;
 		result.codekey = (obj.codekey === undefined) ? null : obj.codekey === null ? null : obj.codekey;
@@ -72,10 +72,10 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		result += '"schulnummer" : ' + obj.schulnummer! + ',';
 		result += '"liegenschaft" : ' + obj.liegenschaft! + ',';
-		result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe) + ',';
+		result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe.toString()) + ',';
 		result += '"codekey" : ' + ((!obj.codekey) ? 'null' : JSON.stringify(obj.codekey)) + ',';
 		result += '"codewert" : ' + ((!obj.codewert) ? 'null' : JSON.stringify(obj.codewert)) + ',';
 		result = result.slice(0, -1);
@@ -95,7 +95,7 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + obj.schulnummer + ',';
@@ -104,7 +104,7 @@ export class SchuldateiOrganisationseinheitErreichbarkeit extends SchuldateiEint
 			result += '"liegenschaft" : ' + obj.liegenschaft + ',';
 		}
 		if (obj.kommgruppe !== undefined) {
-			result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe) + ',';
+			result += '"kommgruppe" : ' + ((!obj.kommgruppe) ? 'null' : obj.kommgruppe.toString()) + ',';
 		}
 		if (obj.codekey !== undefined) {
 			result += '"codekey" : ' + ((!obj.codekey) ? 'null' : JSON.stringify(obj.codekey)) + ',';
