@@ -468,6 +468,10 @@ public final class ApiMethod {
 			sb.append("\t\tconst result : ApiFile = await super.postJSONtoZIP(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
 			sb.append("\t\treturn result;" + System.lineSeparator());
 			return;
+		} else if ((producesType == ApiMimeType.APPLICATION_OCTET_STREAM) && (this.consumesFirst == ApiMimeType.APPLICATION_JSON)) {
+			sb.append("\t\tconst result : ApiFile = await super.postJSONtoOctetStream(path, " + (requestBody.exists ? "body" : null) + ");" + System.lineSeparator());
+			sb.append("\t\treturn result;" + System.lineSeparator());
+			return;
 		} else if ((producesType == ApiMimeType.APPLICATION_JSON) && (this.consumesFirst == ApiMimeType.MULTIPART_FORM_DATA)) {
 			sb.append("\t\tconst result : string = await super.postMultipart(path, " + (requestBody.exists ? "data" : null) + ");"
 					+ System.lineSeparator());

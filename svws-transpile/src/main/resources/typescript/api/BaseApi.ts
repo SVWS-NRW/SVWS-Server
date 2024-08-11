@@ -14,7 +14,7 @@ export class BaseApi {
 	protected username : string;
 
 	/** Der Default-RequestInit für einen Fetch */
-	protected requestinit : RequestInit =  {
+	protected requestinit : RequestInit = {
 		cache : 'no-cache',
 		credentials : 'same-origin'
 	}
@@ -33,7 +33,7 @@ export class BaseApi {
 		this.url = url;
 		this.username = username;
 		const tmp = (new TextEncoder()).encode(username + ":" + password);
-		this.headers["Authorization"] = "Basic " + btoa(String.fromCodePoint(...tmp));
+		this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
 	}
 
 
@@ -58,7 +58,7 @@ export class BaseApi {
 	protected async getBinary(path : string, mimetype : string) : Promise<ApiFile> {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
-		requestInit.headers["Accept"] = mimetype;
+		requestInit.headers.Accept = mimetype;
 		requestInit.body = null;
 		requestInit.method = 'GET';
 		try {
@@ -119,7 +119,7 @@ export class BaseApi {
 	protected async getTextBased(path : string, mimetype : string) : Promise<string> {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
-		requestInit.headers["Accept"] = mimetype;
+		requestInit.headers.Accept = mimetype;
 		requestInit.body = null;
 		requestInit.method = 'GET';
 		try {
@@ -147,7 +147,7 @@ export class BaseApi {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
 		requestInit.headers["Content-Type"] = mimetype_send;
-		requestInit.headers["Accept"] = mimetype_receive;
+		requestInit.headers.Accept = mimetype_receive;
 		requestInit.body = body;
 		requestInit.method = 'POST';
 		try {
@@ -174,7 +174,7 @@ export class BaseApi {
 		const requestInit : RequestInit = { ...this.requestinit };
 		requestInit.headers = { ...this.headers };
 		requestInit.headers["Content-Type"] = mimetype_send;
-		requestInit.headers["Accept"] = mimetype_receive;
+		requestInit.headers.Accept = mimetype_receive;
 		requestInit.body = body;
 		requestInit.method = 'POST';
 		try {
@@ -191,6 +191,10 @@ export class BaseApi {
 				throw (e instanceof OpenApiError) ? e : new OpenApiError(e, 'Fetch failed for POST: ' + path);
 			throw new Error("Unexpected Error: " + e);
 		}
+	}
+
+	public async postJSONtoOctetStream(path : string, body : string | null) : Promise<ApiFile> {
+		return this.postTextBasedToBinary(path, 'application/json', 'application/octet-stream', body);
 	}
 
 	public async postJSONtoPDF(path : string, body : string | null) : Promise<ApiFile> {
@@ -259,7 +263,7 @@ export class BaseApi {
 		requestInit.headers = { ...this.headers };
 		if (mimetype_send !== null)
 			requestInit.headers["Content-Type"] = mimetype_send;
-		requestInit.headers["Accept"] = mimetype_receive;
+		requestInit.headers.Accept = mimetype_receive;
 		requestInit.body = body;
 		requestInit.method = 'DELETE';
 		try {
