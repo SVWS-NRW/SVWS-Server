@@ -31,6 +31,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getRaeume(api.schema);
 		const raumListeManager = new RaumListeManager(api.abschnitt.id, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte, api.schulform, listKatalogeintraege);
+		raumListeManager.setFilterAuswahlPermitted(true);
 		this.setPatchedDefaultState({ raumListeManager })
 	}
 
@@ -43,7 +44,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 			this.setPatchedState({ raumListeManager });
 			return;
 		}
-		if ((raum !== null) && (raumListeManager.hasDaten() && (raum.id === raumListeManager.auswahl().id)))
+		if ((raumListeManager.hasDaten() && (raum.id === raumListeManager.auswahl().id)))
 			return;
 		raumListeManager.setDaten(raum);
 		this.setPatchedState({ raumListeManager });

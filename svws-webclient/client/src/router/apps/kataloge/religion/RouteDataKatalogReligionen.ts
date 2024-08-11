@@ -33,6 +33,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		// Bestimme den Eintrag von vorher, um ggf. eine neue ID für das Routing zurückzugeben
 		const hatteAuswahl = (this.religionListeManager.auswahlID() !== null) ? this.religionListeManager.auswahl() : null;
 		const religionListeManager = new ReligionListeManager(-1, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
+		religionListeManager.setFilterAuswahlPermitted(true);
 		// Wählen nun einen Eintrag aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
 			let auswahl = religionListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);

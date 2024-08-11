@@ -44,6 +44,7 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 		const listSchuelerVermerkartZusammenfassung = await api.server.getSchuelerByVermerkartID(api.schema, auswahl.id);
 
 		const vermerkartenManager : VermerkartenManager = new VermerkartenManager(listKatalogeintraege, listSchuelerVermerkartZusammenfassung);
+		vermerkartenManager.setFilterAuswahlPermitted(true);
 		vermerkartenManager.setDaten(auswahl ?? vermerkartenManager.liste.list().get(0));
 		this.setPatchedDefaultState({ vermerkartenManager})
 	}

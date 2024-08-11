@@ -39,7 +39,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			 return;
+			return;
 		// Prüfe, mit welchen Daten der Manager ausgstattet war, so dass diese für die aktuelle Ansicht wieder geladen werden können
 		const hatteAuswahlID = this.lehrerListeManager.auswahlID();
 		const hatteDaten = this.lehrerListeManager.hasDaten();
@@ -49,6 +49,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listLehrer);
+		lehrerListeManager.setFilterAuswahlPermitted(true);
 		// Lade ggf. die Daten für die Ansichten nach
 		if (hatteDaten && (hatteAuswahlID !== null)) {
 			lehrerListeManager.setDaten(await api.server.getLehrerStammdaten(api.schema, hatteAuswahlID));
@@ -80,7 +81,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			this.commit();
 			return;
 		}
-		if ((lehrer !== null) && (this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id)))
+		if ((this.lehrerListeManager.hasDaten() && (lehrer.id === this.lehrerListeManager.auswahl().id)))
 			return;
 		const hattePersonaldaten = this.lehrerListeManager.hasPersonalDaten();
 		let auswahl = this.lehrerListeManager.liste.get(lehrer.id);
@@ -113,8 +114,6 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const idLehrer = this.lehrerListeManager.auswahl().id;
 		const daten = this.lehrerListeManager.daten();
-		if (daten === null)
-			return;
 		await api.server.patchLehrerStammdaten(data, api.schema, idLehrer);
 		Object.assign(daten, data);
 		this.lehrerListeManager.setDaten(daten);
@@ -136,7 +135,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const abschnittsdaten = this.lehrerListeManager.getAbschnittById(id);
 		if (abschnittsdaten === null)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id + " geladen.");
+			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten mit der ID " + id.toString() + " geladen.");
 		await api.server.patchLehrerPersonalabschnittsdaten(data, api.schema, abschnittsdaten.id);
 		Object.assign(abschnittsdaten, data);
 		this.commit();

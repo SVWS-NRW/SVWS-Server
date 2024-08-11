@@ -86,7 +86,7 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 			result.wochentyp = wochentyp;
 		}
 		if ((result.wochentyp < 0) || (result.wochentyp > manager.getWochenTypModell()))
-			throw new DeveloperNotificationException("Der Wochentyp " + result.wochentyp + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell() + " des Stundenplans");
+			throw new DeveloperNotificationException("Der Wochentyp " + result.wochentyp.toString() + " passt nicht zum Wochentyp-Modell " + this.manager.getWochenTypModell().toString() + " des Stundenplans");
 		return result;
 	}
 

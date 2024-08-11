@@ -71,6 +71,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
+		klassenListeManager.setFilterAuswahlPermitted(true);
 		klassenListeManager.setFilterNurSichtbar(false);
 
 		// Versuche die ausgewählte Klasse von vorher zu laden
@@ -87,7 +88,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			 return null;
+			return null;
 		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
@@ -166,8 +167,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		const idKlasse = this.klassenListeManager.auswahl().id;
 		const daten = this.klassenListeManager.daten();
-		if (daten === null)
-			return;
 		await api.server.patchKlasse(data, api.schema, idKlasse);
 		Object.assign(daten, data);
 		const eintrag = this.klassenListeManager.liste.get(idKlasse);

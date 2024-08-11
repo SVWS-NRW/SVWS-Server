@@ -32,7 +32,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			 return null;
+			return null;
 		return await this.ladeListe(idSchuljahresabschnitt);
 	}
 
@@ -51,8 +51,9 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 		// Bestimme die Fachdaten vorher, um ggf. eine neue ID für das Routing zurückzugeben
 		const hatteAuswahl = (this.fachListeManager.auswahlID() !== null) ? this.fachListeManager.auswahl() : null;
 		const fachListeManager = new FachListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,	api.schulform, listKatalogeintraege);
+		fachListeManager.setFilterAuswahlPermitted(true);
 		// Wählen nun ein Fach aus, dabei wird sich ggf. an der alten Auswahl orientiert
-		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null)) {
+		if (hatteAuswahl) {
 			let auswahl = fachListeManager.getByKuerzelOrNull(hatteAuswahl.kuerzel);
 			if ((auswahl === null) && (fachListeManager.liste.size() > 0))
 				auswahl = fachListeManager.liste.list().get(0);
@@ -83,7 +84,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 			this.setPatchedState({ fachListeManager });
 			return;
 		}
-		if ((fach !== null) && (fachListeManager.hasDaten() && (fach.id === fachListeManager.auswahl().id)))
+		if ((fachListeManager.hasDaten() && (fach.id === fachListeManager.auswahl().id)))
 			return;
 		const daten = await this.getDatenInternal(fach);
 		fachListeManager.setDaten(daten);

@@ -60,7 +60,7 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 	}
 
 	patch = async (data : Partial<JahrgangsDaten>) => {
-		if ((this.auswahl === undefined) || (this.daten === undefined))
+		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		await api.server.patchJahrgang(data, api.schema, this.daten.id);
 		Object.assign(this.daten, data);

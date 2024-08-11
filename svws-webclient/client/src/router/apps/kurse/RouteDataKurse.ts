@@ -1,10 +1,9 @@
-import { ArrayList, KursListeManager, type FachDaten, type JahrgangsDaten, type KursDaten, type LehrerListeEintrag, type Schueler, DeveloperNotificationException} from "@core";
+import { ArrayList, KursListeManager, type KursDaten, type Schueler, DeveloperNotificationException} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeKurse } from "~/router/apps/kurse/RouteKurse";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
@@ -45,9 +44,10 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
+		kursListeManager.setFilterAuswahlPermitted(true);
 		// Wählen nun einen Kurs aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		let result : number | null = null;
-		if (hatteAuswahl && (hatteAuswahl.kuerzel !== null) && (!hatteAuswahl.idJahrgaenge.isEmpty())) {
+		if (hatteAuswahl && (!hatteAuswahl.idJahrgaenge.isEmpty())) {
 			let auswahl = kursListeManager.getByKuerzelAndJahrgangOrNull(hatteAuswahl.kuerzel, hatteAuswahl.idJahrgaenge.get(0));
 			if ((auswahl === null) && (kursListeManager.liste.size() > 0))
 				auswahl = kursListeManager.liste.list().get(0);
@@ -63,7 +63,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
 		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
-			 return null;
+			return null;
 		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}
 
@@ -85,7 +85,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 			this.commit();
 			return;
 		}
-		if ((kurs !== null) && (this.kursListeManager.hasDaten() && (kurs.id === this.kursListeManager.auswahl().id)))
+		if ((this.kursListeManager.hasDaten() && (kurs.id === this.kursListeManager.auswahl().id)))
 			return;
 		let daten = this.kursListeManager.liste.get(kurs.id);
 		if (daten === null)

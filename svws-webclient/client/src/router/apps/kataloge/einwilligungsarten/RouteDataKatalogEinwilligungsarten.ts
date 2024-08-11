@@ -79,8 +79,7 @@ export class RouteDataKatalogEinwilligungsarten extends RouteData<RouteStateKata
 			return;
 		const einwilligungen = await api.server.deleteEinwilligungsarten(listID, api.schema);
 		for (const eintrag of einwilligungen)
-			if (eintrag.id !== null)
-				mapKatalogeintraege.delete(eintrag.id);
+			mapKatalogeintraege.delete(eintrag.id);
 		let auswahl = this.auswahl;
 		if (this.auswahl && mapKatalogeintraege.get(this.auswahl.id) === undefined)
 			auswahl = mapKatalogeintraege.values().next().value;
