@@ -135,8 +135,10 @@
 	const zeitrasterRange = computed(() => {
 		// TODO warten bis die Methode implementiert ist und dann mit den beiden TODOs oben aktivieren
 		// if (props.ignoreEmpty)
-		// 	return props.manager().zeitrasterGetStundenRangeOhneLeere();
-		return props.manager().zeitrasterGetStundenRange();
+		// 	const stunden =  props.manager().zeitrasterGetStundenRangeOhneLeere();
+		const stunden = props.manager().zeitrasterGetStundenRange();
+		// Prüfe noch, ob in den Stunden überhaupt Zeitraster-Einträge vorliegen
+		return stunden.filter((stunde) => !props.manager().getListZeitrasterZuStunde(stunde).isEmpty());
 	})
 
 	const gesamtzeit = computed(() => {
