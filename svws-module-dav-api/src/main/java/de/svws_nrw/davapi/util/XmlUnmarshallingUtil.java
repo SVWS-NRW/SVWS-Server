@@ -17,7 +17,6 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.module.jakarta.xmlbind.JakartaXmlBindAnnotationModule;
 
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 
@@ -141,7 +140,7 @@ public final class XmlUnmarshallingUtil {
 
 	private static Logger createLogger() {
 		final Logger logger = new Logger();
-		logger.addConsumer(new LogConsumerConsole(true, false));
+		logger.copyConsumer(Logger.global());
 		return logger;
 	}
 }

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
@@ -374,7 +373,7 @@ public class APIAdressbuch {
 
 	private static Logger createLogger() {
 		final Logger logger = new Logger();
-		logger.addConsumer(new LogConsumerConsole(true, false));
+		logger.copyConsumer(Logger.global());
 		return logger;
 	}
 }

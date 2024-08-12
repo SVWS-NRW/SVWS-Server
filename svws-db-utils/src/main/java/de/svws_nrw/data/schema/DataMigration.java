@@ -7,7 +7,6 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -60,9 +59,9 @@ public final class DataMigration {
 	 */
 	public static Response migrateMDB(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		try {
 			if (SVWSKonfiguration.get().isLoggingEnabled())
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
@@ -126,9 +125,9 @@ public final class DataMigration {
 	public static Response migrateDBMS(final DBEntityManager conn, final DBDriver srcDBDriver, final DatenbankVerbindungsdaten verbindungsdaten,
 			final Integer schulnummer) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		try {
 			if (SVWSKonfiguration.get().isLoggingEnabled())
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
@@ -160,9 +159,9 @@ public final class DataMigration {
 	 */
 	private static Response migrateInto(final DBEntityManager conn, final DBConfig srcConfig, final Integer schulnummer) {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		// Prüfe das angegebene Datenbanksystem für die Quelldatenbank
 		if ((srcConfig.getDBDriver() == null) || (srcConfig.getDBDriver() == DBDriver.MDB) || (srcConfig.getDBDriver() == DBDriver.SQLITE)) {

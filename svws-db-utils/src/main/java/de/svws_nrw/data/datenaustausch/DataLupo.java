@@ -10,7 +10,6 @@ import de.svws_nrw.base.FileUtils;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.exceptions.UserNotificationException;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
@@ -51,9 +50,9 @@ public final class DataLupo {
 	public static Response importMDB(final Benutzer user, final SimpleBinaryMultipartBody multipart, final boolean replaceJahrgang,
 			final boolean replaceSchueler) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
 		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
@@ -120,9 +119,9 @@ public final class DataLupo {
 	 */
 	public static Response exportMDB(final Benutzer user, final String jahrgang) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		// Bestimme den Dateinamen für eine temporäre LuPO-Datei
 		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();

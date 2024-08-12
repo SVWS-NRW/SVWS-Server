@@ -17,7 +17,6 @@ import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -309,9 +308,9 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
-			logger.addConsumer(new LogConsumerConsole());
 			try {
 				if (SVWSKonfiguration.get().isLoggingEnabled())
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
@@ -485,9 +484,9 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
-			logger.addConsumer(new LogConsumerConsole());
 			try {
 				if (SVWSKonfiguration.get().isLoggingEnabled())
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
@@ -545,9 +544,9 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
-			logger.addConsumer(new LogConsumerConsole());
 			try {
 				if (SVWSKonfiguration.get().isLoggingEnabled())
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
@@ -792,9 +791,9 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request, final Integer schulnummer) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
-			logger.addConsumer(new LogConsumerConsole());
 			try {
 				if (SVWSKonfiguration.get().isLoggingEnabled())
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
@@ -1169,9 +1168,9 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			final Logger logger = new Logger();
+			logger.copyConsumer(Logger.global());
 			final LogConsumerList log = new LogConsumerList();
 			logger.addConsumer(log);
-			logger.addConsumer(new LogConsumerConsole());
 			try {
 				if (SVWSKonfiguration.get().isLoggingEnabled())
 					logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));

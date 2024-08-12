@@ -29,7 +29,6 @@ import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -139,9 +138,9 @@ public final class DataKurs42 {
 	 */
 	public static Response importZip(final DBEntityManager conn, final SimpleBinaryMultipartBody multipart) {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		boolean success = true;
 		Status statusCode = Status.OK;
@@ -371,9 +370,9 @@ public final class DataKurs42 {
 	 */
 	public static Response importRaeume(final DBEntityManager conn, final SimpleBinaryMultipartBody multipart) {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		boolean success = true;
 		Status statusCode = Status.OK;

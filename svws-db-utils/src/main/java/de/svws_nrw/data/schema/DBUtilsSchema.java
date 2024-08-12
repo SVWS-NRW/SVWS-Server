@@ -103,6 +103,7 @@ public final class DBUtilsSchema {
 
 		// Erzeuge einen Logger für das Update
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
 		try {

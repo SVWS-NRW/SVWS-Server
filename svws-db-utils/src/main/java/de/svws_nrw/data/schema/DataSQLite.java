@@ -5,7 +5,6 @@ import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
 import de.svws_nrw.core.data.SimpleOperationResponse;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
@@ -64,9 +63,9 @@ public final class DataSQLite {
 	 */
 	public static Response exportSQLite(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		try {
 			if (SVWSKonfiguration.get().isLoggingEnabled())
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + schemaname + ".log", true, true));
@@ -122,9 +121,9 @@ public final class DataSQLite {
 	 */
 	public static Response importSQLite(final DBEntityManager conn, final byte[] srcDB) throws ApiOperationException {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		try {
 			if (SVWSKonfiguration.get().isLoggingEnabled())
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));

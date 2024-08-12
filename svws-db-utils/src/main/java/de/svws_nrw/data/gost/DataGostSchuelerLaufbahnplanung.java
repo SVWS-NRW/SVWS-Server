@@ -38,7 +38,6 @@ import de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Note;
@@ -766,9 +765,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		// Erstelle den Logger
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		boolean success = true;
 		final List<InputPart> l = multipart.getFormDataMap().get("data");
 		// Gehe die Dateien durch und führe jeweils dein Import durch
@@ -840,9 +839,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle den Logger
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		// Importiere die Daten...
 		GostLaufbahnplanungDaten laufbahnplanungsdaten = null;
 		try {
@@ -880,9 +879,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// Erstelle den Logger
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 		// Führe den Import durch und erstelle die Response mit dem Log
 		final SimpleOperationResponse daten = new SimpleOperationResponse();
 		daten.success = doImport(conn, dtoSchueler, laufbahnplanungsdaten, logger);

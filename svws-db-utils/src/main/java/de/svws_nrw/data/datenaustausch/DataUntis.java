@@ -39,7 +39,6 @@ import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Geschlecht;
@@ -254,10 +253,10 @@ public final class DataUntis {
 	 */
 	public static Response importGPU001(final DBEntityManager conn, final UntisGPU001MultipartBody multipart, final boolean ignoreMissing) {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
-		final SimpleOperationResponse daten = new SimpleOperationResponse();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
+		final SimpleOperationResponse daten = new SimpleOperationResponse();
 		try {
 			// Erstelle aus dem Multipart den String mit dem Inhalt der Textdatei
 			logger.logLn("Lese die Datensätze aus der Text-Datei ein.");
@@ -294,9 +293,9 @@ public final class DataUntis {
 	 */
 	public static Response importGPU005(final DBEntityManager conn, final SimpleBinaryMultipartBody multipart) {
 		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 		final LogConsumerList log = new LogConsumerList();
 		logger.addConsumer(log);
-		logger.addConsumer(new LogConsumerConsole());
 
 		boolean success = true;
 		Status statusCode = Status.OK;
