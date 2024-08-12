@@ -27,10 +27,6 @@ public final class ResourceFileManager {
 	/** Verwaltet die Ressourcen des Admin-Web-Clients */
 	private static ResourceFileManager _admin = null;
 
-	/** Die Instant des zu verwendenden Loggers */
-	private static Logger _logger = null;
-
-
 
 	/**
 	 * Erstellt einen neuen Manager für alle Datei-Ressourcen in dem angebenen Pfad.
@@ -44,24 +40,13 @@ public final class ResourceFileManager {
 
 
 	/**
-	 * Setzt den zu verwendenden Logger
-	 *
-	 * @param logger   der Logger
-	 */
-	public static void setLogger(final Logger logger) {
-		_logger = logger;
-	}
-
-
-	/**
 	 * Gibt die Ressourcen des Web-Clients zurück.
 	 *
 	 * @return die Ressourcen des Web-Clients
 	 */
 	public static ResourceFileManager client() {
 		if (_client == null) {
-			if (_logger != null)
-				_logger.logLn("Füge die Datei-Ressourcen für den SVWS-Client hinzu:");
+			Logger.global().logLn("Füge die Datei-Ressourcen für den SVWS-Client hinzu:");
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String path = config.getClientPath();
 			_client = new ResourceFileManager(path);
@@ -77,8 +62,7 @@ public final class ResourceFileManager {
 	 */
 	public static ResourceFileManager admin() {
 		if (_admin == null) {
-			if (_logger != null)
-				_logger.logLn("Füge die Datei-Ressourcen für den SVWS-Admin-Client hinzu:");
+			Logger.global().logLn("Füge die Datei-Ressourcen für den SVWS-Admin-Client hinzu:");
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String path = config.getAdminClientPath();
 			if ((path == null) || (path.isBlank()))
@@ -106,8 +90,7 @@ public final class ResourceFileManager {
 		for (final File f : dir_content) {
 			if (f.isFile()) {
 				final ResourceFile file = new ResourceFile(prefix, f);
-				if (_logger != null)
-					_logger.logLn(2, file.getPath());
+				Logger.global().logLn(2, file.getPath());
 				files.put(file.getPath(), file);
 			} else if (f.isDirectory()) {
 				addDirectory(prefix, f);

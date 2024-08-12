@@ -13,6 +13,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class Logger {
 
+	/** Die globale Instanz des Loggers */
+	private static Logger _instance = null;
+
 	/// Ein interner Vektor zum Speichern der Consumer von Log-Informationen.
 	private final @NotNull ArrayList<Consumer<LogData>> consumer = new ArrayList<>();
 
@@ -21,6 +24,20 @@ public class Logger {
 
 	/// Die Einrückung für die Ausgabe, die bei neuen Log-Informationen genutzt wird.
 	private int indent = 0;
+
+
+	/**
+	 * Gibt die Instanz des Loggers zurück.
+	 *
+	 * @return die globale Logger-Instanz
+	 */
+	public static Logger global() {
+		if (_instance == null) {
+			_instance = new Logger();
+			_instance.addConsumer(new LogConsumerConsole(true, true));
+		}
+		return _instance;
+	}
 
 
 	/**
@@ -102,11 +119,8 @@ public class Logger {
 	 * @param data   die Log-Informationen
 	 */
 	private void log(final @NotNull LogData data) {
-		for (final @NotNull Consumer<LogData> c : consumer) {
-			if (c == null)
-				continue;
+		for (final @NotNull Consumer<LogData> c : consumer)
 			c.accept(data);
-		}
 	}
 
 

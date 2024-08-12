@@ -24,6 +24,114 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public class Main {
 
+
+	/**
+	 * Aktualisiert das Schema, mit welchem der Manager initialisiert wurde.
+	 *
+	 * @param dbManager   der Schema-Manager
+	 * @param logger   der Logger
+	 *
+	 * @return true, falls die Aktualisierung erfolgreich war, und ansonsten false
+	 *
+	 * @throws ApiOperationException falls ein interner Fehler aufgetreten ist
+	 */
+	private static boolean updateSchema(final DBSchemaManager dbManager, final Logger logger) throws ApiOperationException {
+		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
+		final boolean devMode = (svwsconfig.getServerMode() != ServerMode.STABLE);
+		LogConsumerLogfile logfile = null;
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
+				logfile = new LogConsumerLogfile("svws_schema_" + dbManager.getSchemaname() + ".log", true, true);
+				logger.addConsumer(logfile);
+			}
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
+		logger.logLn("Revision veraltet - führe Update aus...");
+		logger.modifyIndent(2);
+		final boolean success = dbManager.updater.update(dbManager.getUser(), -1, devMode, true);
+		logger.modifyIndent(-2);
+		if (logfile != null)
+			logger.removeConsumer(logfile);
+		return success;
+	}
+
+
+	/**
+	 * Aktualisiert die Core-Type-Daten im Datenbank-Schema
+	 *
+	 * @param dbManager   der Schema-Manager
+	 * @param logger   der Logger
+	 *
+	 * @return true, falls die Aktualisierung erfolgreich war, und ansonsten false
+	 *
+	 * @throws ApiOperationException falls ein interner Fehler aufgetreten ist
+	 */
+	private static boolean updateSchemaCoreTypes(final DBSchemaManager dbManager, final Logger logger) throws ApiOperationException {
+		LogConsumerLogfile logfile = null;
+		try {
+			if (SVWSKonfiguration.get().isLoggingEnabled()) {
+				logfile = new LogConsumerLogfile("svws_schema_" + dbManager.getSchemaname() + ".log", true, true);
+				logger.addConsumer(logfile);
+			}
+		} catch (final IOException e) {
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		}
+		logger.logLn("Core-Types veraltet - führe Update aus...");
+		logger.modifyIndent(2);
+		final boolean success = dbManager.updater.coreTypes.update(dbManager.getUser(), true, -1);
+		logger.modifyIndent(-2);
+		if (logfile != null)
+			logger.removeConsumer(logfile);
+		return success;
+	}
+
+
+
+	/**
+	 * Prüft das übergebene Schema und führt ggf. Updates durch.
+	 *
+	 * @param schema   das Schema
+	 * @param logger   der Logger
+	 */
+	private static void pruefeSchema(final DBSchemaListeEintrag schema, final Logger logger) {
+		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
+		final boolean devMode = (svwsconfig.getServerMode() != ServerMode.STABLE);
+
+		logger.logLn("-> zu Schema " + schema.name);
+		logger.modifyIndent(2);
+		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
+		boolean schemaOK = true;
+		Benutzer dbUser = null;
+		try {
+			dbUser = Benutzer.create(dbconfig);
+		} catch (final DBException e) {
+			logger.logLn(e.getMessage());
+			schemaOK = false;
+		}
+		if (schemaOK && (dbUser != null)) {
+			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
+				if (dbConn == null) {
+					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
+					return;
+				}
+				final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
+				if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
+					schemaOK = false;
+				if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
+					schemaOK = false;
+			} catch (@SuppressWarnings("unused") final Exception e) {
+				schemaOK = false;
+			}
+		}
+		if (!schemaOK) {
+			svwsconfig.deactivateSchema(schema.name);
+			logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
+		}
+		logger.modifyIndent(-2);
+	}
+
+
 	/**
 	 * Diese Methode ist der Einsprungspunkt für die Java-Kommandozeilen-Applikation
 	 * des SVWS-Servers.
@@ -45,8 +153,8 @@ public class Main {
 
 		// Erstelle den SVWS-Server und nimm dessen Logger zur Ausgabe der Informationen beim Serverstart
 		final SvwsServer server = SvwsServer.instance();
-		final Logger logger = server.logger();
-		ResourceFileManager.setLogger(logger);
+		final Logger logger = new Logger();
+		logger.copyConsumer(Logger.global());
 
 		// Gebe ein paar Status-Informationen beim Start des Servers aus
 		logger.logLn("SVWS-Server Version " + SVWSVersion.version());
@@ -57,7 +165,6 @@ public class Main {
 
 		// Lese Konfiguration
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();
-		final boolean devMode = svwsconfig.getServerMode() != ServerMode.STABLE;
 
 		// Lese alle HTML, CSS and Javascript Ressourcen für den Web-Client und den Admin-Web-Client
 		ResourceFileManager.client();
@@ -70,68 +177,8 @@ public class Main {
 			final List<DBSchemaListeEintrag> schemata = svwsconfig.getSchemaList();
 			logger.logLn("Prüfe Datenbankverbindungen (" + schemata.size() + ")...");
 			logger.modifyIndent(2);
-			for (final DBSchemaListeEintrag schema : schemata) {
-				logger.logLn("-> zu Schema " + schema.name);
-				logger.modifyIndent(2);
-				final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
-				boolean schemaOK = true;
-				try {
-					final Benutzer dbUser = Benutzer.create(dbconfig);
-					try (DBEntityManager dbConn = dbUser.getEntityManager()) {
-						if (dbConn == null) {
-							logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
-							continue;
-						}
-						final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
-						if (!dbManager.updater.isUptodate(-1, devMode)) {
-							LogConsumerLogfile logfile = null;
-							try {
-								if (SVWSKonfiguration.get().isLoggingEnabled()) {
-									logfile = new LogConsumerLogfile("svws_schema_" + schema.name + ".log", true, true);
-									logger.addConsumer(logfile);
-								}
-							} catch (final IOException e) {
-								throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
-							}
-							logger.logLn("Revision veraltet - führe Update aus...");
-							logger.modifyIndent(2);
-							if (!dbManager.updater.update(dbUser, -1, devMode, true))
-								schemaOK = false;
-							logger.modifyIndent(-2);
-							if (logfile != null)
-								logger.removeConsumer(logfile);
-						}
-						if (!dbManager.updater.coreTypes.isUptodate()) {
-							LogConsumerLogfile logfile = null;
-							try {
-								if (SVWSKonfiguration.get().isLoggingEnabled()) {
-									logfile = new LogConsumerLogfile("svws_schema_" + schema.name + ".log", true, true);
-									logger.addConsumer(logfile);
-								}
-							} catch (final IOException e) {
-								throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
-							}
-							logger.logLn("Core-Types veraltet - führe Update aus...");
-							logger.modifyIndent(2);
-							if (!dbManager.updater.coreTypes.update(dbUser, true, -1))
-								schemaOK = false;
-							logger.modifyIndent(-2);
-							if (logfile != null)
-								logger.removeConsumer(logfile);
-						}
-					} catch (@SuppressWarnings("unused") final Exception e) {
-						schemaOK = false;
-					}
-				} catch (final DBException e) {
-					logger.logLn(e.getMessage());
-					schemaOK = false;
-				}
-				if (!schemaOK) {
-					svwsconfig.deactivateSchema(schema.name);
-					logger.logLn("Fehler: Schema kann nicht aktualisiert werden. Das Schema wird deaktiviert.");
-				}
-				logger.modifyIndent(-2);
-			}
+			for (final DBSchemaListeEintrag schema : schemata)
+				pruefeSchema(schema, logger);
 			logger.modifyIndent(-2);
 		}
 

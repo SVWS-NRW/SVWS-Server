@@ -40,7 +40,6 @@ import de.svws_nrw.api.RestAppDebug;
 import de.svws_nrw.api.RestAppSchemaRoot;
 import de.svws_nrw.api.RestAppServer;
 import de.svws_nrw.config.SVWSKonfiguration;
-import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Application;
@@ -54,9 +53,6 @@ public final class SvwsServer {
 
 	/** Die Instanz dieses SVWS-Servers */
 	private static SvwsServer _instance = null;
-
-	/** Die Instanzdes globalen Loggers */
-	private final Logger _logger;
 
 	/** Die Instanz des Jetty-Servers (siehe {@link Server}) */
 	private final Server server;
@@ -79,10 +75,6 @@ public final class SvwsServer {
 	 * und die Http-Konfiguration basieren auf der {@link SVWSKonfiguration} hinzu.
 	 */
 	private SvwsServer() {
-		// Erstelle den Logger
-		_logger = new Logger();
-		_logger.addConsumer(new LogConsumerConsole(true, true));
-
 		// Create a server with a threadpool of max. 500 threads
 		final QueuedThreadPool threadPool = new QueuedThreadPool();
 		threadPool.setMaxThreads(500);
@@ -127,16 +119,6 @@ public final class SvwsServer {
 		if (_instance == null)
 			_instance = new SvwsServer();
 		return _instance;
-	}
-
-
-	/**
-	 * Gibt den Logger zurück, der dem Server zugeordnet ist.
-	 *
-	 * @return der Logger
-	 */
-	public Logger logger() {
-		return _logger;
 	}
 
 
@@ -328,7 +310,7 @@ public final class SvwsServer {
 		final ServletHolder servlet = servletHandler.addServletWithMapping(HttpServletDispatcher.class, pathSpecs[0]);
 		final ServletMapping mapping = servletHandler.getServletMapping(pathSpecs[0]);
 		mapping.setPathSpecs(pathSpecs);
-		_logger.logLn("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
+		Logger.global().logLn("Registriere API-Applikation " + c.getSimpleName() + ": " + Arrays.toString(mapping.getPathSpecs()));
 		servlet.setInitParameter("jakarta.ws.rs.Application", c.getCanonicalName());
 	}
 

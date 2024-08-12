@@ -83,6 +83,16 @@ public final class DBSchemaStatus {
 
 
 	/**
+	 * Gibt den Namen des Schemas zurück.
+	 *
+	 * @return der Name des Schemas;
+	 */
+	public String getSchemaname() {
+		return this.schemaName;
+	}
+
+
+	/**
 	 * Gibt die aktuelle Revision des Datenbankschemas zurück.
 	 *
 	 * @return die aktuelle Revision des Datenbankschemas

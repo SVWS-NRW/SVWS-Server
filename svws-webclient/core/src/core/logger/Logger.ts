@@ -1,10 +1,16 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData, cast_de_svws_nrw_core_logger_LogData } from '../../core/logger/LogData';
 import type { Consumer } from '../../java/util/function/Consumer';
+import { LogConsumerConsole } from '../../core/logger/LogConsumerConsole';
 import { ArrayList } from '../../java/util/ArrayList';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class Logger extends JavaObject {
+
+	/**
+	 * Die globale Instanz des Loggers
+	 */
+	private static _instance : Logger | null = null;
 
 	private readonly consumer : ArrayList<Consumer<LogData>> = new ArrayList<Consumer<LogData>>();
 
@@ -15,6 +21,19 @@ export class Logger extends JavaObject {
 
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Gibt die Instanz des Loggers zurück.
+	 *
+	 * @return die globale Logger-Instanz
+	 */
+	public static global() : Logger | null {
+		if (Logger._instance === null) {
+			Logger._instance = new Logger();
+			Logger._instance.addConsumer(new LogConsumerConsole(true, true));
+		}
+		return Logger._instance;
 	}
 
 	/**
@@ -127,11 +146,8 @@ export class Logger extends JavaObject {
 	public log(__param0 : LogData | LogLevel | number | string, __param1? : number | string, __param2? : string) : void {
 		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogData')))) && (__param1 === undefined) && (__param2 === undefined)) {
 			const data : LogData = cast_de_svws_nrw_core_logger_LogData(__param0);
-			for (const c of this.consumer) {
-				if (c === null)
-					continue;
+			for (const c of this.consumer)
 				c.accept(data);
-			}
 		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.logger.LogLevel')))) && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && (typeof __param2 === "string"))) {
 			const level : LogLevel = cast_de_svws_nrw_core_logger_LogLevel(__param0);
 			const indent : number = __param1 as number;

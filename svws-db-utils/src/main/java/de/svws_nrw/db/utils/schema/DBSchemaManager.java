@@ -97,6 +97,16 @@ public final class DBSchemaManager {
 
 
 	/**
+	 * Gibt den Namen des Schemas zurück.
+	 *
+	 * @return der Name des Schemas;
+	 */
+	public String getSchemaname() {
+		return this.status.getSchemaname();
+	}
+
+
+	/**
 	 * Gibt den Schema-Status  (see {@link DBSchemaStatus} zurück.
 	 *
 	 * @return der Schema-Status von diesem Schema-Manager
