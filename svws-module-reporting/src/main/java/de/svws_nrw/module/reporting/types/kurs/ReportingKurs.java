@@ -127,10 +127,10 @@ public class ReportingKurs {
 	 * @return		Die Kursleitung
 	 */
 	public List<ReportingLehrer> listeLehrer() {
-		List<ReportingLehrer> listeLehrer = new ArrayList<>();
+		final List<ReportingLehrer> listeLehrer = new ArrayList<>();
 		if (kursLehrer != null)
 			listeLehrer.add(kursLehrer);
-		if (zusatzLehrer != null && !zusatzLehrer.isEmpty())
+		if ((zusatzLehrer != null) && !zusatzLehrer.isEmpty())
 			listeLehrer.addAll(zusatzLehrer);
 		return listeLehrer;
 	}

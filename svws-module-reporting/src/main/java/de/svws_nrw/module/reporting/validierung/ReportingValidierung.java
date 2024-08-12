@@ -10,16 +10,13 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
 import de.svws_nrw.data.gost.DataGostBlockungsergebnisse;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.DBEntityManager;
@@ -188,7 +185,6 @@ public final class ReportingValidierung {
 
 		try {
 			// Lese die Parameter im Wechsel aus.
-
 			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
 				selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 			}
@@ -203,15 +199,6 @@ public final class ReportingValidierung {
 		} catch (final Exception e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
-		}
-
-		// TODO: Parameter von DataGostKlausuren.getAllData sollten eine Liste fassen können, statt einem einzigen Jahrgang.
-		try {
-			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
-			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
-		} catch (final ApiOperationException e) {
-			throw new ApiOperationException(Status.NOT_FOUND, e,
-					"FEHLER: Zum ausgewählten Schuljahresabschnitt konnten keine Klausurplanungsdaten ermittelt werden.");
 		}
 	}
 

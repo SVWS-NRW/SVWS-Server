@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
 import de.svws_nrw.core.adt.Pair;
@@ -50,16 +51,21 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 			selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 		}
 
-		final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
-		final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
+		try {
+			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
+			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
 
-		final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
-				new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);
+			final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
+					new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);
 
-		// Daten-Context für Thymeleaf erzeugen.
-		final Context context = new Context();
-		context.setVariable("GostKlausurplan", gostKlausurplan);
+			// Daten-Context für Thymeleaf erzeugen.
+			final Context context = new Context();
+			context.setVariable("GostKlausurplan", gostKlausurplan);
 
-		super.setContext(context);
+			super.setContext(context);
+		} catch (final ApiOperationException e) {
+			throw new ApiOperationException(Response.Status.NOT_FOUND, e,
+					"FEHLER: Zu den übergebenen Stufen konnten keine Klausurplanungsdaten ermittelt und kein html-Klausuren-Kontext erstellt werden.");
+		}
 	}
 }

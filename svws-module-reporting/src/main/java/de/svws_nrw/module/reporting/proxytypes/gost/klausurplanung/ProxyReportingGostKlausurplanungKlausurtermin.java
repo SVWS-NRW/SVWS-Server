@@ -33,7 +33,8 @@ import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 public class ProxyReportingGostKlausurplanungKlausurtermin extends ReportingGostKlausurplanungKlausurtermin {
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt.
+	 * Erstellt ein neues Reporting-Objekt. Dabei werden Kurs- und Schülerklausuren dieses Termins und dessen Räume als LEERE Liste initialisiert.
+	 * Das Hinzufügen dieser Elemente erfolgt in der Proxy-Klassen bei ihrer Erzeugung.
 	 * @param gostKlausurtermin	Der GostKlausurtermin mit den Daten zum Klausurtermin.
 	 */
 	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurtermin gostKlausurtermin) {
