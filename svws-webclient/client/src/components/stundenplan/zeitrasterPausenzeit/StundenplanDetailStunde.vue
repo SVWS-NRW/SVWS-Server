@@ -19,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref, type Ref } from "vue";
+	import { computed, ref } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { SvwsUiInputNumber } from "@ui";
 	import type { StundenplanManager, Wochentag } from "@core";
 	import { ArrayList, DateUtils, StundenplanZeitraster } from "@core";
@@ -32,7 +33,7 @@
 		addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
-	const numberInput: Ref<InstanceType<typeof SvwsUiInputNumber> | null> = ref(null);
+	const numberInput = ref<ComponentExposed<typeof SvwsUiInputNumber>>();
 
 	const first = computed(() => {
 		if (props.stundenplanManager().getListZeitrasterZuStunde(props.item).isEmpty())

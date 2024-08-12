@@ -152,8 +152,8 @@
 	});
 
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
-		let zbeginn =  props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
-		let zende =  props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
+		let zbeginn = props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
+		let zende = props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
 		if (wochentag !== undefined) {
 			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
 			if (z !== null) {
@@ -163,13 +163,9 @@
 					zende = z.stundenende;
 			}
 		}
-		let rowStart = 0;
-		let rowEnd = 10;
-		if ((zbeginn !== null) && (zende !== null)) {
-			rowStart = (zbeginn - beginn.value) / 5;
-			rowEnd = (zende - beginn.value) / 5;
-		}
-		return "grid-row-start: " + Math.round(rowStart + 1) + "; grid-row-end: " + Math.round(rowEnd + 1) + ";";
+		const rowStart = (zbeginn - beginn.value) / 5;
+		const rowEnd = (zende - beginn.value) / 5;
+		return "grid-row-start: " + Math.round(rowStart + 1).toString() + "; grid-row-end: " + Math.round(rowEnd + 1).toString() + ";";
 	}
 
 	function posPause(wochentag: Wochentag | undefined, pause: StundenplanPausenzeit): string {
@@ -181,12 +177,12 @@
 			rowStart = (pause.beginn - beginn.value) / 5;
 			rowEnd = (pause.ende - beginn.value) / 5;
 		}
-		return "grid-row-start: " + Math.round(rowStart + 1) + "; grid-row-end: " + Math.round(rowEnd + 1) + ";";
+		return "grid-row-start: " + Math.round(rowStart + 1).toString() + "; grid-row-end: " + Math.round(rowEnd + 1).toString() + ";";
 	}
 
 	async function addWochentag() {
 		const letzerWochentag = props.manager().zeitrasterGetWochentagMaxEnum();
-		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() ?  1 : 0), 1, 1);
+		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() ? 1 : 0), 1, 1);
 		await props.addZeitraster(list);
 	}
 
@@ -194,7 +190,7 @@
 		const letzteStunde = props.manager().zeitrasterGetStundeMax();
 		const wochentagMin = props.manager().zeitrasterGetWochentagMin();
 		const wochentagMax = props.manager().zeitrasterGetWochentagMax();
-		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() ?  1 : 0));
+		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() ? 1 : 0));
 		await props.addZeitraster(list);
 	}
 

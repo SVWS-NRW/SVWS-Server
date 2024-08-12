@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card :title="`${Wochentag.fromIDorException(item.wochentag)} ${item.unterrichtstunde}. Stunde`">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="patchBeginn" />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @change="patchEnde" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="patchBeginn" ref="inputBeginn" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.stundenende ?? 0)" placeholder="Stundenende" @change="patchEnde" ref="inputEnde" />
 			<div class="col-span-full">
 				<svws-ui-button type="danger" @click="removeZeitraster([item])"><span class="icon i-ri-delete-bin-line" /> Eintrag entfernen </svws-ui-button>
 			</div>
@@ -32,8 +32,10 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
+	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanManager } from "@core";
 	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
+	import { SvwsUiTextInput } from "@ui";
 
 	const props = defineProps<{
 		item: StundenplanZeitraster;
@@ -41,6 +43,9 @@
 		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	const inputBeginn = ref<ComponentExposed<typeof SvwsUiTextInput>>();
+	const inputEnde = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 
 	const ueberschneidung = ref<boolean>(false);
 
@@ -56,7 +61,7 @@
 	}
 
 	async function patchBeginn(start: string | null) {
-		if (start === null)
+		if ((start === null) || (inputBeginn.value?.input === null) || (inputBeginn.value?.input === undefined))
 			return;
 		ueberschneidung.value = false;
 		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
@@ -69,10 +74,11 @@
 			await props.patchZeitraster(list);
 		else
 			ueberschneidung.value = true;
+		inputBeginn.value.input.value = props.stundenplanManager().zeitrasterGetByIdStringOfUhrzeitBeginn(props.item.id);
 	}
 
 	async function patchEnde(ende: string | null) {
-		if (ende === null)
+		if ((ende === null) || (inputEnde.value?.input === undefined) || inputEnde.value.input === null)
 			return;
 		ueberschneidung.value = false;
 		const stundenende = DateUtils.gibMinutenOfZeitAsString(ende);
@@ -85,6 +91,7 @@
 			await props.patchZeitraster(list);
 		else
 			ueberschneidung.value = true;
+		inputEnde.value.input.value = props.stundenplanManager().zeitrasterGetByIdStringOfUhrzeitEnde(props.item.id);
 	}
 
 </script>
