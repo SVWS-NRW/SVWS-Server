@@ -85,10 +85,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				halbjahr: this._state.value.halbjahr,
 				view: view,
 			}
-			if (this._state.value.manager)
-				Object.assign(result, {manager: this._state.value.manager});
-			if (this._state.value.kalenderwoche !== undefined)
-				Object.assign(result, {kalenderwoche: this._state.value.kalenderwoche});
+			Object.assign(result, {manager: this._state.value.manager, kalenderwoche: this._state.value.kalenderwoche});
 			// Setze den State neu
 			this.setPatchedDefaultState(result);
 		} finally {
@@ -187,7 +184,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	setRaumTermin = async (termin: GostKlausurtermin | null) => {
 		if (termin !== null && (this.terminSelected.value === undefined || !this.terminSelected.value.equals(termin))) {
 			this.terminSelected.value = termin;
-			await this.erzeugeKlausurraummanager(termin);
+			// await this.erzeugeKlausurraummanager(termin);
 		}
 		this.commit();
 	}
@@ -226,7 +223,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung) => {
-		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr + "" + kw.kw), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + "" + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
 	gotoTermin = async (idtermin: number | undefined) => {
@@ -279,13 +276,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				if (this._state.value.abschnitt === undefined)
 					throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
 				const result = await api.server.patchGostKlausurenKursklausur(patch, api.schema, klausur.id, this._state.value.abschnitt.id);
-				if (result.kursKlausurPatched !== null)
+				if (result.kursKlausurPatched !== null) {
 					this.manager.kursklausurPatchAttributes(result.kursKlausurPatched);
+					this.manager.setzeRaumZuSchuelerklausuren(result);
+				}
 				return result;
 			} else if (klausur instanceof GostSchuelerklausurTermin) {
 				const _schuelerklausurtermin = this.manager.schuelerklausurterminGetByIdOrException(klausur.id);
 				await api.server.patchGostKlausurenSchuelerklausurtermin(patch, api.schema, klausur.id);
-			 	this.manager.schuelerklausurterminPatchAttributes(Object.assign(_schuelerklausurtermin, patch));
+				this.manager.schuelerklausurterminPatchAttributes(Object.assign(_schuelerklausurtermin, patch));
 			}
 			return new GostKlausurenCollectionSkrsKrsData();
 		} finally {
@@ -391,19 +390,19 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return true;
 	}
 
-	erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>) => {
-		api.status.start();
-		if (termin instanceof GostKlausurtermin) {
-			if (!this.manager.hasRaumdataZuTermin(termin)) {
-				const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-				this.manager.addRaumData(krsCollection);
-			}
-		} else {
-			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenSktids(termin, api.schema);
-			this.manager.addRaumData(krsCollection);
-		}
-		api.status.stop();
-	}
+	// erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>) => {
+	// 	api.status.start();
+	// 	if (termin instanceof GostKlausurtermin) {
+	// 		if (!this.manager.hasRaumdataZuTermin(termin)) {
+	// 			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
+	// 			this.manager.addRaumData(krsCollection);
+	// 		}
+	// 	} else {
+	// 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenSktids(termin, api.schema);
+	// 		this.manager.addRaumData(krsCollection);
+	// 	}
+	// 	api.status.stop();
+	// }
 
 	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<GostKlausurenCollectionSkrsKrsData> => {
 		if (this._state.value.abschnitt === undefined)

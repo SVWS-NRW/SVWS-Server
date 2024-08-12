@@ -469,10 +469,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		if (includeSelbesDatum) {
 			final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
 			final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);
-			retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, termineSelbesDatum.stream().map(t -> t.id).toList());
+			retCollection.idsKlausurtermine = termineSelbesDatum.stream().map(t -> t.id).toList();
 		} else {
-			retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, skts.stream().map(s -> s.idTermin).toList());
+			retCollection.idsKlausurtermine = skts.stream().map(s -> s.idTermin).toList();
 		}
+		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, retCollection.idsKlausurtermine);
 		if (retCollection.raeume.isEmpty())
 			return retCollection;
 		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);

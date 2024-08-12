@@ -3678,7 +3678,7 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurGetMengeByRaumAndKursklausur(final @NotNull GostKlausurraum raum, final @NotNull GostKursklausur kursklausur) {
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaumAndKursklausur(final @NotNull GostKlausurraum raum, final @NotNull GostKursklausur kursklausur) {
 		return DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raum.id, kursklausur.id);
 	}
 
@@ -3689,7 +3689,7 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Menge aller {@link GostSchuelerklausurTermin}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
 	 */
-	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaum(final @NotNull GostKlausurraum raum) {
 		final List<GostSchuelerklausurTermin> schuelerklausuren = new ArrayList<>();
 		if (!_schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
 			return schuelerklausuren;
@@ -3727,15 +3727,16 @@ public class GostKlausurplanManager {
 	}
 
 	/**
-	 * Prüft, ob alle zu einer {@link GostKursklausur} gehörenden {@link GostSchuelerklausurTermin}e einem {@link GostKlausurraum}
-	 * zugeordnet sind.
+	 * Prüft, ob alle zu einer {@link GostKursklausur} gehörenden {@link GostSchuelerklausurTermin}e an einem bestimmten {@link GostKlausurtermin} einem {@link GostKlausurraum}
+	 * zugeordnet sind. Wird kein {@link GostKlausurtermin} übergeben, wird der Haupttermin der {@link GostKursklausur} geprüft.
 	 *
+	 * @param termin der zu prüfende {@link GostKlausurtermin}. Wird kein <code>null</code> übergeben, wird der Haupttermin der {@link GostKursklausur} geprüft.
 	 * @param kk die zu prüfende {@link GostKursklausur}
 	 *
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
-	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk) {
-		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMapGetIsNull(_schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
+	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk, final GostKlausurtermin termin) {
+		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin != null ? termin.id : kk.idTermin, kk.id)) {
 			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -4010,6 +4011,22 @@ public class GostKlausurplanManager {
 			if (raum.idStundenplanRaum == null)
 				return false;
 		return true;
+	}
+
+	/**
+	 * Prüft, ob die {@link GostKursklausur} schon eine Raumzuweisung an einem {@link GostKlausurtermin} hat.
+	 *
+	 * @param klausur die zu prüfende {@link GostKursklausur}
+	 *
+	 * @return <code>true</code>, falls die {@link GostKursklausur} schon eine Raumzuweisung an einem {@link GostKlausurtermin} hat.
+	 */
+	public boolean hatRaumzuteilungByKursklausur(final @NotNull GostKursklausur klausur) {
+		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(terminOrExceptionByKursklausur(klausur), klausur)) {
+			final List<GostKlausurraumstunde> stunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(skt.id);
+			if (stunden != null && !stunden.isEmpty())
+				return true;
+		}
+		return false;
 	}
 
 }

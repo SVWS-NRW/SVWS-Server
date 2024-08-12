@@ -47,7 +47,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 		const kwAlt = (from !== undefined) && (from.name === to.name) && (!(from_params.kw instanceof Array)) && (from_params.kw !== undefined) ? parseInt(from_params.kw) : undefined;
 		if ((kwEntry === undefined) && (kwAlt === undefined)) {
 			const kwNeu = routeGostKlausurplanung.data.kalenderwoche.value.jahr === -1 ? routeGostKlausurplanung.data.manager.getStundenplanManager().kalenderwochenzuordnungGetByDatum(new Date().toISOString()) : routeGostKlausurplanung.data.kalenderwoche.value;
-			return this.getRoute(abiturjahr, halbjahr.id, parseInt(kwNeu.jahr + "" + kwNeu.kw), termin ? termin.id : termin);
+			return this.getRoute(abiturjahr, halbjahr.id, parseInt(kwNeu.jahr.toString() + "" + kwNeu.kw.toString()), termin ? termin.id : termin);
 		} else if ((kwEntry === undefined) && (kwAlt !== undefined)) {
 			return this.getRoute(abiturjahr, halbjahr.id, kwAlt, termin ? termin.id : termin);
 		} else if (kwEntry !== undefined) {

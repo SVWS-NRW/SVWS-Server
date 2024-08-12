@@ -70,18 +70,18 @@
 								<div v-for="klausur in kursklausuren()"
 									:key="klausur.id"
 									:data="klausur"
-									:draggable="onDrag !== undefined && draggable(klausur)"
+									:draggable="onDrag !== undefined && draggable(klausur, termin)"
 									@dragstart="onDrag && onDrag(klausur);$event.stopPropagation()"
 									@dragend="onDrag && onDrag(undefined);$event.stopPropagation()"
 									class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')"
 									:class="[
 										props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 										{
-											'cursor-grab active:cursor-grabbing group': onDrag !== undefined && (draggable === undefined || draggable(klausur))
+											'cursor-grab active:cursor-grabbing group': onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))
 										}
 									]">
 									<div class="svws-ui-td" role="cell">
-										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur))" />
+										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
 									</div>
 									<div class="svws-ui-td" :class="{'-ml-2': inTooltip}" role="cell">
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
@@ -154,7 +154,7 @@
 		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
-		draggable?: (data: GostKlausurplanungDragData) => boolean;
+		draggable?: (data: GostKlausurplanungDragData, termin: GostKlausurtermin) => boolean;
 		//onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		compact?: boolean;
 		compactWithDate?: boolean;

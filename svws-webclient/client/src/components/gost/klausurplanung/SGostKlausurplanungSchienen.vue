@@ -160,7 +160,8 @@
 				<span>Klicke auf einen Termin oder verschiebe eine Klausur, um Details zu bestehenden bzw. entstehenden Konflikten anzuzeigen.</span>
 			</div>
 		</svws-ui-content-card>
-		<s-gost-klausurplanung-modal :show="returnModal()" :text="modalError" :jump-to="gotoVorgaben" />
+		<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
+		<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Die Kursklausur hat bereits eine oder mehrere Raumzuweisungen. Beim Fortfahren werden diese gelöscht." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 	</div>
 </template>
 
@@ -199,10 +200,16 @@
 		return "N.N."
 	}
 
-	const modal = ref<boolean>(false);
+	const modalVorgaben = ref<boolean>(false);
+	function returnModalVorgaben(): () => Ref<boolean> {
+		return () => modalVorgaben;
+	}
 
-	function returnModal(): () => Ref<boolean> {
-		return () => modal;
+	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
+	let klausurMoveDragData: GostKlausurplanungDragData = undefined;
+	const modalKlausurHatRaeume = ref<boolean>(false);
+	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
+		return () => modalKlausurHatRaeume;
 	}
 
 	const modalError = ref<string | undefined>(undefined);
@@ -213,7 +220,7 @@
 		} catch(err) {
 			if (err instanceof OpenApiError) {
 				modalError.value = await err.response?.text();
-				modal.value = true;
+				modalVorgaben.value = true;
 			} else
 				throw err;
 		}
@@ -240,17 +247,32 @@
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
 		if (dragData.value instanceof GostKursklausur) {
 			const klausur = dragData.value;
-			if (zone === undefined && klausur.idTermin !== null)
-				await props.patchKlausur(klausur, {idTermin: null});
-			else if (zone instanceof GostKlausurtermin) {
-				const termin = zone;
-				if (termin.id !== klausur.idTermin) {
-					await props.patchKlausur(klausur, {idTermin: termin.id});
-					terminSelected.value = zone;
-				}
+			klausurMoveDropZone = zone;
+			klausurMoveDragData = dragData.value;
+			if (props.kMan().hatRaumzuteilungByKursklausur(klausur)) {
+				modalKlausurHatRaeume.value = true;
+				return;
+			} else {
+				await verschiebeKlausurTrotzRaumzuweisung();
 			}
 		}
 	};
+
+	async function verschiebeKlausurTrotzRaumzuweisung() {
+		if (klausurMoveDragData instanceof GostKursklausur) {
+			if (klausurMoveDropZone === undefined && klausurMoveDragData.idTermin !== null)
+				await props.patchKlausur(klausurMoveDragData, {idTermin: null});
+			else if (klausurMoveDropZone instanceof GostKlausurtermin) {
+				const termin = klausurMoveDropZone;
+				if (termin.id !== klausurMoveDragData.idTermin) {
+					await props.patchKlausur(klausurMoveDragData, {idTermin: termin.id});
+					terminSelected.value = klausurMoveDropZone;
+				}
+			}
+		}
+	}
+
+
 
 	const dropOverCssClasses = (termin: GostKlausurtermin) => ({
 		"bg-success": dragData.value !== undefined && (props.kMan().vorgabeByKursklausur(dragData.value as GostKursklausur).quartal === termin.quartal || termin.quartal === 0),

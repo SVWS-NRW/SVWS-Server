@@ -3387,7 +3387,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public schuelerklausurGetMengeByRaumAndKursklausur(raum : GostKlausurraum, kursklausur : GostKursklausur) : List<GostSchuelerklausurTermin> {
+	public schuelerklausurterminGetMengeByRaumAndKursklausur(raum : GostKlausurraum, kursklausur : GostKursklausur) : List<GostSchuelerklausurTermin> {
 		return DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur, raum.id, kursklausur.id);
 	}
 
@@ -3398,7 +3398,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die Menge aller {@link GostSchuelerklausurTermin}e zurück, die in einem {@link GostKlausurraum} geschrieben werden.
 	 */
-	public schuelerklausurGetMengeByRaum(raum : GostKlausurraum) : List<GostSchuelerklausurTermin> {
+	public schuelerklausurterminGetMengeByRaum(raum : GostKlausurraum) : List<GostSchuelerklausurTermin> {
 		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>();
 		if (!this._schuelerklausurterminmenge_by_idRaum_and_idKursklausur.containsKey1(raum.id))
 			return schuelerklausuren;
@@ -3435,15 +3435,16 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob alle zu einer {@link GostKursklausur} gehörenden {@link GostSchuelerklausurTermin}e einem {@link GostKlausurraum}
-	 * zugeordnet sind.
+	 * Prüft, ob alle zu einer {@link GostKursklausur} gehörenden {@link GostSchuelerklausurTermin}e an einem bestimmten {@link GostKlausurtermin} einem {@link GostKlausurraum}
+	 * zugeordnet sind. Wird kein {@link GostKlausurtermin} übergeben, wird der Haupttermin der {@link GostKursklausur} geprüft.
 	 *
+	 * @param termin der zu prüfende {@link GostKlausurtermin}. Wird kein <code>null</code> übergeben, wird der Haupttermin der {@link GostKursklausur} geprüft.
 	 * @param kk die zu prüfende {@link GostKursklausur}
 	 *
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
-	public isKursklausurAlleSchuelerklausurenVerplant(kk : GostKursklausur) : boolean {
-		for (const sk of DeveloperNotificationException.ifMapGetIsNull(this._schuelerklausurterminmenge_by_idKursklausur, kk.id)) {
+	public isKursklausurAlleSchuelerklausurenVerplant(kk : GostKursklausur, termin : GostKlausurtermin | null) : boolean {
+		for (const sk of DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin !== null ? termin.id : kk.idTermin, kk.id)) {
 			if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -3716,6 +3717,22 @@ export class GostKlausurplanManager extends JavaObject {
 			if (raum.idStundenplanRaum === null)
 				return false;
 		return true;
+	}
+
+	/**
+	 * Prüft, ob die {@link GostKursklausur} schon eine Raumzuweisung an einem {@link GostKlausurtermin} hat.
+	 *
+	 * @param klausur die zu prüfende {@link GostKursklausur}
+	 *
+	 * @return <code>true</code>, falls die {@link GostKursklausur} schon eine Raumzuweisung an einem {@link GostKlausurtermin} hat.
+	 */
+	public hatRaumzuteilungByKursklausur(klausur : GostKursklausur) : boolean {
+		for (const skt of this.schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(this.terminOrExceptionByKursklausur(klausur), klausur)) {
+			const stunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(skt.id);
+			if (stunden !== null && !stunden.isEmpty())
+				return true;
+		}
+		return false;
 	}
 
 	transpilerCanonicalName(): string {

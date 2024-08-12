@@ -168,7 +168,7 @@
 	}
 
 	const anzahlProKwKonflikte = (threshold: number, thresholdOnly: boolean, showMore: boolean) => {
-		let konflikte = anzahlProKwKonflikte2(threshold, thresholdOnly);
+		const konflikte = anzahlProKwKonflikte2(threshold, thresholdOnly);
 		return showMore ? konflikte : konflikte.slice(0, 3);
 	}
 
@@ -217,7 +217,7 @@
 		return props.kMan().getStundenplanManager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, props.kalenderwoche.value.wochentyp, day, stunde);
 	}
 
-	function sumSchreiber(day: any, stunde: number) {
+	function sumSchreiber(day: Wochentag, stunde: number) {
 		const kurse = kurseGefiltert(day, stunde);
 		let summe = 0;
 		if (props.terminSelected.value !== undefined)
@@ -233,8 +233,8 @@
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		if (data instanceof GostKlausurtermin) {
 			props.terminSelected.value = data;
-			if (data === undefined)
-				zeitrasterSelected.value = undefined;
+			// if (data === undefined)
+			zeitrasterSelected.value = undefined;
 		} else if (data === undefined) {
 			props.terminSelected.value = undefined;
 		}
@@ -246,7 +246,7 @@
 				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: null, startzeit: null});
 			else if (zone instanceof StundenplanZeitraster) {
 				const date = props.kMan().getStundenplanManager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zone);
-				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: date, startzeit: date !== null ? zone.stundenbeginn : null});
+				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: date, startzeit: zone.stundenbeginn});
 			}
 		props.terminSelected.value = undefined;
 	};

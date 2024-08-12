@@ -111,7 +111,7 @@
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
 						:termin="() => termin"
-						:class="undefined"
+						:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurTermin).isEmpty()}"
 						:k-man
 						:drag-data
 						:on-drag
@@ -255,6 +255,15 @@
 			@apply max-h-full pt-8 pb-8 px-4 -mx-4 overflow-y-auto h-[unset];
 			scrollbar-gutter: stable;
 		}
+	}
+}
+
+.is-drop-zone {
+	@apply relative bg-primary/5;
+
+	&:before {
+		content: '';
+		@apply absolute inset-1 border border-svws pointer-events-none rounded-lg ring-4 ring-svws/25;
 	}
 }
 

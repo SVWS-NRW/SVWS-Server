@@ -62,10 +62,10 @@
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
 
-	let terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
+	const terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
 
 	const createTermin = async (create: boolean) => {
-		if (props.patchKlausur && props.createSchuelerklausurTermin && create && terminSelected.value !== undefined) {
+		if (props.patchKlausur && props.createSchuelerklausurTermin && create) {
 			await props.patchKlausur(terminSelected.value, { bemerkung: terminSelected.value.bemerkung } );
 			await props.createSchuelerklausurTermin(terminSelected.value.idSchuelerklausur);
 		}

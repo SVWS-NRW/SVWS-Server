@@ -87,18 +87,18 @@
 	const calculatCssClassesKlausur = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
 		return {
-			"text-black/50 dark:text-white/50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur),
-			"": !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur),
+			"text-black/50 dark:text-white/50": props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
+			"": !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(klausur, termin ? termin : null),
 		}
 	};
 
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
-	function isDraggable(object: any) : boolean {
+	function isDraggable(object: any, termin: GostKlausurtermin) : boolean {
 		if (object instanceof GostKursklausur) {
 			//if (object.idTermin === props.terminauswahl.value.id)
-			return !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(object);
+			return !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(object, termin);
 		} else if (object instanceof GostKlausurtermin && props.terminSelected.value) {
 			return object.id === props.terminSelected.value.id && props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value).size() > 0;
 		} else if (object instanceof GostSchuelerklausurTermin) {
@@ -113,7 +113,7 @@
 		if (zone instanceof GostKlausurraum) {
 			const rRaum = new GostKlausurraumRich(zone, null);
 			if (dragData.value instanceof GostKursklausur)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminGetMengeByKursklausur(dragData.value));
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.kMan().terminGetByIdOrException(zone.idTermin), dragData.value));
 			else if (dragData.value instanceof GostKlausurtermin && props.terminSelected.value)
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value));
 			else if (dragData.value instanceof GostSchuelerklausurTermin)
@@ -122,8 +122,8 @@
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), false);
 		} else if (zone instanceof GostKlausurtermin) {
 			const rRaum = new GostKlausurraumRich();
-			if (dragData.value instanceof GostKursklausur)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminGetMengeByKursklausur(dragData.value));
+			if (dragData.value instanceof GostKursklausur && props.terminSelected.value)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, dragData.value));
 			else if (dragData.value instanceof GostSchuelerklausurTermin)
 				rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
 			if (!rRaum.schuelerklausurterminIDs.isEmpty())

@@ -5,8 +5,9 @@
 			{{ text }}
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="abbrechen">OK</svws-ui-button>
-			<svws-ui-button type="primary" @click="activate_recovery">Zu den Klausurvorgaben</svws-ui-button>
+			<svws-ui-button type="secondary" @click="props.show().value = false">{{ abbrechen_text }}</svws-ui-button>
+			<svws-ui-button v-if="jumpTo !== undefined" type="primary" @click="jump_to">{{ jumpTo_text }}</svws-ui-button>
+			<svws-ui-button v-if="weiter !== undefined" type="primary" @click="weiter();props.show().value = false;">{{ weiter_text }}</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
@@ -18,19 +19,23 @@
 	const props = withDefaults(defineProps<{
 		show: () => Ref<boolean>;
 		text: string | undefined;
-		jumpTo: () => Promise<void>;
+		jumpTo?: () => Promise<void>;
+		weiter?: () => void;
+		jumpTo_text?: string;
+		weiter_text?: string;
+		abbrechen_text?: string;
 	}>(), {
+		jumpTo: undefined,
+		weiter: undefined,
+		weiter_text: "weiter",
+		jumpTo_text: "springen",
+		abbrechen_text: "abbrechen",
 	});
 
-	async function activate_recovery() {
+	async function jump_to() {
 		props.show().value = false;
-		await props.jumpTo();
+		await props.jumpTo!();
 	}
-
-	async function abbrechen() {
-		props.show().value = false;
-	}
-
 
 
 </script>

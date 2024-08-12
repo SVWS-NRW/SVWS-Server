@@ -53,8 +53,8 @@
 						<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 						<div class="svws-ui-td flex" role="cell">
 							<div>
-								<span v-if="kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() }}/</span>
-								<span :class="kMan().schuelerklausurGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
+								<span v-if="kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur)" class="font-bold">{{ kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).size() }}/</span>
+								<span :class="kMan().schuelerklausurterminGetMengeByRaumAndKursklausur(raum, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 								<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 							</div>
 						</div>
@@ -108,7 +108,7 @@
 
 	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum);
 
-	const anzahlSuS = () => props.kMan().schuelerklausurGetMengeByRaum(props.raum).size();
+	const anzahlSuS = () => props.kMan().schuelerklausurterminGetMengeByRaum(props.raum).size();
 
 	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
 
