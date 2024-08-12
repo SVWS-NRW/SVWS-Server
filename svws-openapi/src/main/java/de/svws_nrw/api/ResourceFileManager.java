@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.core.Response.Status;
@@ -26,6 +27,9 @@ public final class ResourceFileManager {
 	/** Verwaltet die Ressourcen des Admin-Web-Clients */
 	private static ResourceFileManager _admin = null;
 
+	/** Die Instant des zu verwendenden Loggers */
+	private static Logger _logger = null;
+
 
 
 	/**
@@ -38,6 +42,17 @@ public final class ResourceFileManager {
 		addDirectory(path, new File(path));
 	}
 
+
+	/**
+	 * Setzt den zu verwendenden Logger
+	 *
+	 * @param logger   der Logger
+	 */
+	public static void setLogger(final Logger logger) {
+		_logger = logger;
+	}
+
+
 	/**
 	 * Gibt die Ressourcen des Web-Clients zurück.
 	 *
@@ -45,6 +60,8 @@ public final class ResourceFileManager {
 	 */
 	public static ResourceFileManager client() {
 		if (_client == null) {
+			if (_logger != null)
+				_logger.logLn("Füge die Datei-Ressourcen für den SVWS-Client hinzu:");
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String path = config.getClientPath();
 			_client = new ResourceFileManager(path);
@@ -60,6 +77,8 @@ public final class ResourceFileManager {
 	 */
 	public static ResourceFileManager admin() {
 		if (_admin == null) {
+			if (_logger != null)
+				_logger.logLn("Füge die Datei-Ressourcen für den SVWS-Admin-Client hinzu:");
 			final SVWSKonfiguration config = SVWSKonfiguration.get();
 			final String path = config.getAdminClientPath();
 			if ((path == null) || (path.isBlank()))
@@ -87,8 +106,8 @@ public final class ResourceFileManager {
 		for (final File f : dir_content) {
 			if (f.isFile()) {
 				final ResourceFile file = new ResourceFile(prefix, f);
-				// TODO log info
-				System.out.println("Adding File Resource: " + file.getPath());
+				if (_logger != null)
+					_logger.logLn(2, file.getPath());
 				files.put(file.getPath(), file);
 			} else if (f.isDirectory()) {
 				addDirectory(prefix, f);

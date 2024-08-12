@@ -46,6 +46,7 @@ public class Main {
 		// Erstelle den SVWS-Server und nimm dessen Logger zur Ausgabe der Informationen beim Serverstart
 		final SvwsServer server = SvwsServer.instance();
 		final Logger logger = server.logger();
+		ResourceFileManager.setLogger(logger);
 
 		// Gebe ein paar Status-Informationen beim Start des Servers aus
 		logger.logLn("SVWS-Server Version " + SVWSVersion.version());

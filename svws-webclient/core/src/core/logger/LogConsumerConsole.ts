@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData } from '../../core/logger/LogData';
 import type { Consumer } from '../../java/util/function/Consumer';
+import { DateUtils } from '../../core/utils/DateUtils';
 
 export class LogConsumerConsole extends JavaObject implements Consumer<LogData> {
 
@@ -57,9 +58,7 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	 * @param t   die auszugebenden Log-Informationen
 	 */
 	public accept(t : LogData) : void {
-		if (t === null)
-			return;
-		const s : string | null = ((this.lastLogDataHadNewLine && this.printTime) ? t.getTime() + " " : "") + ((this.lastLogDataHadNewLine && this.printLevel) ? t.getLevel() + " " : "") + t.getText()!;
+		const s : string | null = ((this.lastLogDataHadNewLine && this.printTime) ? DateUtils.toISO8601(t.getTime())! + " " : "") + ((this.lastLogDataHadNewLine && this.printLevel) ? t.getLevel() + " " : "") + t.getText()!;
 		if (t.isNewLine())
 			console.log(JSON.stringify(s));
 		else

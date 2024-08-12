@@ -1,9 +1,40 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { JavaInteger } from '../../java/lang/JavaInteger';
+import { StringBuilder } from '../../java/lang/StringBuilder';
 import { StringUtils } from '../../core/utils/StringUtils';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class DateUtils extends JavaObject {
+
+	/**
+	 * Die Anzahl der Tage zwischen dem Jahr 0 und dem Jahr 1.1.1970
+	 */
+	public static readonly DAYS_FROM_0_TO_1970 : number = 719528;
+
+	/**
+	 * Die Anzahl an Tagen in 400 Jahren
+	 */
+	public static readonly DAYS_PER_400_YEARS : number = 146097;
+
+	/**
+	 * Die Anzahl an Tagen in 100 Jahren, nicht der Speziallfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt
+	 */
+	public static readonly DAYS_PER_100_YEARS : number = 36524;
+
+	/**
+	 * Die Anzahl an Tagen in 4 Jahren
+	 */
+	public static readonly DAYS_PER_4_YEARS : number = 1461;
+
+	/**
+	 * Die Anzahl an Tagen in einem Jahr, welches kein Schaltjahr ist
+	 */
+	public static readonly DAYS_PER_YEAR : number = 365;
+
+	/**
+	 * Die Anzahl an Tagen in einem Schaltjahr
+	 */
+	public static readonly DAYS_PER_LEAP_YEAR : number = 366;
 
 	/**
 	 * Das kleinste gültige Jahr für das alle Datumsberechnungen geprüft wurden.
@@ -374,6 +405,75 @@ export class DateUtils extends JavaObject {
 		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
 		result[1] = ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 		return result;
+	}
+
+	/**
+	 * Gibt den übergebenen Unix-Zeitstempel (Millisekunden seit dem 1.1.1970 um 0 Uhr) in der
+	 * ISO-8601-Darstellung {@code uuuu-MM-dd'T'HH:mm:ss.SSS} als String zurück.
+	 *
+	 * @param time   der Zeitstempel
+	 *
+	 * @return der String mit der ISO-8601-Darstellung des Zeitstempels
+	 */
+	public static toISO8601(time : number) : string | null {
+		const s : StringBuilder | null = new StringBuilder();
+		const days : number = DateUtils.DAYS_FROM_0_TO_1970 + Math.trunc(time / 86400000);
+		const years400 : number = Math.trunc(days / DateUtils.DAYS_PER_400_YEARS);
+		const daysLeft400 : number = days - years400 * DateUtils.DAYS_PER_400_YEARS;
+		const years100 : number = Math.trunc((daysLeft400 - 1) / DateUtils.DAYS_PER_100_YEARS);
+		const daysLeft100 : number = daysLeft400 - years100 * DateUtils.DAYS_PER_100_YEARS;
+		const years4 : number = Math.trunc(daysLeft100 / DateUtils.DAYS_PER_4_YEARS);
+		const years1 : number = Math.trunc((daysLeft100 - 1) / DateUtils.DAYS_PER_YEAR) % 4;
+		const year : number = years400 * 400 + years100 * 100 + years4 * 4 + years1;
+		const isLeapYear : boolean = (years1 === 0) && ((years100 === 0) || (years4 !== 0));
+		let day : number = (daysLeft400 - 60) - years100 * DateUtils.DAYS_PER_100_YEARS - years4 * DateUtils.DAYS_PER_4_YEARS - years1 * DateUtils.DAYS_PER_YEAR;
+		if (day < 0)
+			day += (isLeapYear ? DateUtils.DAYS_PER_LEAP_YEAR : DateUtils.DAYS_PER_YEAR);
+		const m5 : number = Math.trunc(day / 153);
+		day -= m5 * 153;
+		const m2 : number = Math.trunc(day / 61);
+		day -= m2 * 61;
+		const m1 : number = Math.trunc(day / 31);
+		day -= m1 * 31;
+		const month : number = (((m5 * 5 + m2 * 2 + m1) + 2) % 12) + 1;
+		if (year < 1000)
+			s.append("0");
+		if (year < 100)
+			s.append("0");
+		if (year < 10)
+			s.append("0");
+		s.append(year);
+		s.append("-");
+		if (month < 10)
+			s.append("0");
+		s.append(month);
+		s.append("-");
+		if (day < 10)
+			s.append("0");
+		s.append(day);
+		s.append("T");
+		const hour : number = Math.trunc(time / 3600000) % 24;
+		if (hour < 10)
+			s.append("0");
+		s.append(hour);
+		s.append(":");
+		const min : number = Math.trunc(time / 60000) % 60;
+		if (min < 10)
+			s.append("0");
+		s.append(min);
+		s.append(":");
+		const sec : number = Math.trunc(time / 1000) % 60;
+		if (sec < 10)
+			s.append("0");
+		s.append(sec);
+		s.append(".");
+		const ms : number = time % 1000;
+		if (ms < 100)
+			s.append("0");
+		if (ms < 10)
+			s.append("0");
+		s.append(ms);
+		return s.toString();
 	}
 
 	transpilerCanonicalName(): string {

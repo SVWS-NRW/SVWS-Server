@@ -6,12 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.TimeZone;
 import java.util.function.Consumer;
 
 import de.svws_nrw.core.logger.LogData;
+import de.svws_nrw.core.utils.DateUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -73,11 +71,9 @@ public class LogConsumerLogfile implements Consumer<@NotNull LogData> {
 	 */
 	@Override
 	public void accept(final @NotNull LogData t) {
-		if (t == null)
-			return;
 		String s = "";
 		if ((lastLogDataHadNewLine && printTime))
-			s += LocalDateTime.ofInstant(Instant.ofEpochMilli(t.getTime()), TimeZone.getDefault().toZoneId()) + " ";
+			s += DateUtils.toISO8601(t.getTime()) + " ";
 		if (lastLogDataHadNewLine && printLevel)
 			s += String.format("%-8.8s ", t.getLevel());
 		s += t.getText();

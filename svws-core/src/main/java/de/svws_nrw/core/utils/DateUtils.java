@@ -10,6 +10,25 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class DateUtils {
 
+	/** Die Anzahl der Tage zwischen dem Jahr 0 und dem Jahr 1.1.1970 */
+	public static final long DAYS_FROM_0_TO_1970 = 719528L;
+
+	/** Die Anzahl an Tagen in 400 Jahren */
+	public static final long DAYS_PER_400_YEARS = 146097L;
+
+	/** Die Anzahl an Tagen in 100 Jahren, nicht der Speziallfall, wenn ein Jahrhundert mit einem Schaltjahr beginnt */
+	public static final long DAYS_PER_100_YEARS = 36524L;
+
+	/** Die Anzahl an Tagen in 4 Jahren */
+	public static final long DAYS_PER_4_YEARS = 1461L;
+
+	/** Die Anzahl an Tagen in einem Jahr, welches kein Schaltjahr ist */
+	public static final long DAYS_PER_YEAR = 365L;
+
+	/** Die Anzahl an Tagen in einem Schaltjahr */
+	public static final long DAYS_PER_LEAP_YEAR = 366L;
+
+
 	/** Das kleinste gültige Jahr für das alle Datumsberechnungen geprüft wurden. */
 	public static final int MIN_GUELTIGES_JAHR = 1900;
 
@@ -405,6 +424,77 @@ public final class DateUtils {
 		result[0] = (iso8601[1] > 7) ? iso8601[0] : (iso8601[0] - 1);
 		result[1] = ((iso8601[1] > 1) && (iso8601[1] < 8)) ? 2 : 1;
 		return result;
+	}
+
+
+	/**
+	 * Gibt den übergebenen Unix-Zeitstempel (Millisekunden seit dem 1.1.1970 um 0 Uhr) in der
+	 * ISO-8601-Darstellung {@code uuuu-MM-dd'T'HH:mm:ss.SSS} als String zurück.
+	 *
+	 * @param time   der Zeitstempel
+	 *
+	 * @return der String mit der ISO-8601-Darstellung des Zeitstempels
+	 */
+	public static String toISO8601(final long time) {
+		final StringBuilder s = new StringBuilder();
+		final long days = DAYS_FROM_0_TO_1970 + time / 86400000L;
+		final long years400 = days / DAYS_PER_400_YEARS;  // Die Anzahl der 400-Jahres-Zyklen
+		final long daysLeft400 = days - years400 * DAYS_PER_400_YEARS;  // Die Anzahl der Tage im aktuellen 400-Jahres-Zyklus
+		final long years100 = (daysLeft400 - 1L) / DAYS_PER_100_YEARS;  // Die Anzahl der 100-Jahres-Zyklen im aktuellen 400-Jahres-Zyklus
+		final long daysLeft100 = daysLeft400 - years100 * DAYS_PER_100_YEARS;  // Die Anzahl der Tage im aktuellen 100-Jahres-Zyklus
+		final long years4 = daysLeft100 / DAYS_PER_4_YEARS;  // Die Anzahl der 4-Jahres-Zyklen im aktuellen 100-Jahres-Zyklus
+		final long years1 = (daysLeft100 - 1L) / DAYS_PER_YEAR % 4; // Dis Anzahl der Jahre im aktuellen 4-Jahres-Zyklus, beachte Jahr 0 des aktuellen 400-Jahres-Zyklus
+		final long year = years400 * 400 + years100 * 100 + years4 * 4 + years1;
+		final boolean isLeapYear = (years1 == 0) && ((years100 == 0) || (years4 != 0));
+		// Berechne den Monat und den Tag des Monats anhand des Tag des Jahres relativ zum 1. März und hänge Januar und Februar hinten an. Dieser Trick ermöglicht eine schnelle Berechnung...
+		long day = (daysLeft400 - 60) - years100 * DAYS_PER_100_YEARS - years4 * DAYS_PER_4_YEARS - years1 * DAYS_PER_YEAR;
+		if (day < 0)
+			day += (isLeapYear ? DAYS_PER_LEAP_YEAR : DAYS_PER_YEAR);
+		final long m5 = day / 153;   // Die Anzahl der 5-Monatsgruppen (März bis Juli - 153 Tage, August bis Dezember - 153 Tage, Januar und Februar - die restlichen Tage)
+		day -= m5 * 153;  // reduziere die Anzahl der Tage um die 5 Monatsgruppen
+		final long m2 = day / 61;   // Die Anzahl der 2-Monatsgruppen innerhalb der aktuellen 5-Monatsgruppe (der erste Monat hat immer 31 und der zweite 30 - min der Ausnahme am Ende beim Februar)
+		day -= m2 * 61;  // reduziere die Anzahl der Tage um die 2 Monatsgruppen
+		final long m1 = day / 31;   // Die Anzahl der ggf. noch abgeschlossenen ersten Monate der aktuellen 2-Monatsgruppe
+		day -= m1 * 31;
+		final long month = (((m5 * 5 + m2 * 2 + m1) + 2) % 12) + 1;   // Bestimme den Monat beginnend mit dem März und rotiere dann Januars und Februar nach vorne, um die korrekte Reihenfolge wiederherzustellen
+		if (year < 1000)
+			s.append("0");
+		if (year < 100)
+			s.append("0");
+		if (year < 10)
+			s.append("0");
+		s.append(year);
+		s.append("-");
+		if (month < 10)
+			s.append("0");
+		s.append(month);
+		s.append("-");
+		if (day < 10)
+			s.append("0");
+		s.append(day);
+		s.append("T");
+		final long hour = time / 3600000L % 24L;
+		if (hour < 10)
+			s.append("0");
+		s.append(hour);
+		s.append(":");
+		final long min = time / 60000L % 60L;
+		if (min < 10)
+			s.append("0");
+		s.append(min);
+		s.append(":");
+		final long sec = time / 1000L % 60L;
+		if (sec < 10)
+			s.append("0");
+		s.append(sec);
+		s.append(".");
+		final long ms = time % 1000L;
+		if (ms < 100)
+			s.append("0");
+		if (ms < 10)
+			s.append("0");
+		s.append(ms);
+		return s.toString();
 	}
 
 }

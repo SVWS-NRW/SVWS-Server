@@ -81,7 +81,7 @@ public final class SvwsServer {
 	private SvwsServer() {
 		// Erstelle den Logger
 		_logger = new Logger();
-		_logger.addConsumer(new LogConsumerConsole(false, false));
+		_logger.addConsumer(new LogConsumerConsole(true, true));
 
 		// Create a server with a threadpool of max. 500 threads
 		final QueuedThreadPool threadPool = new QueuedThreadPool();

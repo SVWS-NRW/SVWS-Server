@@ -2,6 +2,7 @@ package de.svws_nrw.core.logger;
 
 import java.util.function.Consumer;
 
+import de.svws_nrw.core.utils.DateUtils;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -52,9 +53,7 @@ public class LogConsumerConsole implements Consumer<LogData> {
 	 */
 	@Override
 	public void accept(final @NotNull LogData t) {
-		if (t == null)
-			return;
-		final String s = ((lastLogDataHadNewLine && printTime) ? t.getTime() + " " : "")
+		final String s = ((lastLogDataHadNewLine && printTime) ? DateUtils.toISO8601(t.getTime()) + " " : "")
 				+ ((lastLogDataHadNewLine && printLevel) ? t.getLevel() + " " : "")
 				+ t.getText();
 		if (t.isNewLine())
