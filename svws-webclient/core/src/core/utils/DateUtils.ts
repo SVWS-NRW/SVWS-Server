@@ -277,21 +277,23 @@ export class DateUtils extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
+	 * Liefert die Minuten einer Zeitangabe im Format hh:mm oder hh.mm.
 	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
 	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
 	 *
-	 * @param zeit  Die Zeitangabe im Format hh:mm.
+	 * @param zeit  Die Zeitangabe im Format hh:mm oder hh.mm.
 	 *
-	 * @return die Minuten einer Zeitangabe im Format hh:mm.
+	 * @return die Minuten einer Zeitangabe im Format hh:mm oder hh.mm.
 	 */
 	public static gibMinutenOfZeitAsString(zeit : string) : number {
-		const sSplit : Array<string> = zeit.split(":");
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", sSplit.length !== 2);
+		let sSplit : Array<string> = zeit.split(":");
+		if (sSplit.length !== 2)
+			sSplit = zeit.split(".");
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sSplit.length !== 2);
 		const sStunden : string = sSplit[0].trim();
 		const sMinuten : string = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sStunden.length < 1) || (sStunden.length > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sMinuten.length < 1) || (sMinuten.length > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sStunden.length < 1) || (sStunden.length > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sMinuten.length < 1) || (sMinuten.length > 2));
 		const stunden : number = JavaInteger.parseInt(sStunden);
 		const minuten : number = JavaInteger.parseInt(sMinuten);
 		DeveloperNotificationException.ifTrue("(stunden < 0) || (stunden > 23)", (stunden < 0) || (stunden > 23));

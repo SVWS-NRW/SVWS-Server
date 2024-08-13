@@ -288,22 +288,24 @@ public final class DateUtils {
 	}
 
 	/**
-	 * Liefert die Minuten einer Zeitangabe im Format hh:mm.
+	 * Liefert die Minuten einer Zeitangabe im Format hh:mm oder hh.mm.
 	 * <br>hh muss ein- oder zweistellig sein, im Bereich 0 bis 23.
 	 * <br>mm muss ein- oder zweistellig sein, im Bereich 0 bis 59.
 	 *
-	 * @param zeit  Die Zeitangabe im Format hh:mm.
+	 * @param zeit  Die Zeitangabe im Format hh:mm oder hh.mm.
 	 *
-	 * @return die Minuten einer Zeitangabe im Format hh:mm.
+	 * @return die Minuten einer Zeitangabe im Format hh:mm oder hh.mm.
 	 */
 	public static int gibMinutenOfZeitAsString(final @NotNull String zeit) {
-		final @NotNull String @NotNull [] sSplit = zeit.split(":");
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", sSplit.length != 2);
+		@NotNull String @NotNull [] sSplit = zeit.split(":");
+		if (sSplit.length != 2)
+			sSplit = zeit.split(".");
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", sSplit.length != 2);
 
 		final @NotNull String sStunden = sSplit[0].trim();
 		final @NotNull String sMinuten = sSplit[1].trim();
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sStunden.length() < 1) || (sStunden.length() > 2));
-		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm sein!", (sMinuten.length() < 1) || (sMinuten.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sStunden.length() < 1) || (sStunden.length() > 2));
+		DeveloperNotificationException.ifTrue("Zeit muss im Format hh:mm oder hh.mm sein!", (sMinuten.length() < 1) || (sMinuten.length() > 2));
 
 		final int stunden = Integer.parseInt(sStunden);
 		final int minuten = Integer.parseInt(sMinuten);
