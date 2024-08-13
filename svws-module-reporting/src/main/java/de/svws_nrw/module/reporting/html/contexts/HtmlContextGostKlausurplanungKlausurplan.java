@@ -45,10 +45,24 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHlabjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT valdiert. Die Daten aus den Paramatern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
-
 		final List<Pair<Integer, Integer>> selection = new ArrayList<>();
-		for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-			selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
+
+		if (!parameterDaten.isEmpty()) {
+			// Stelle die übergebenen Stufen und Halbjahre zusammen.
+			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
+				selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
+			}
+		} else {
+			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
+			// EF:
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 3,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt - 1));
+			// Q1:
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 2,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt + 1));
+			// Q2:
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 1,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt + 3));
 		}
 
 		try {
@@ -65,7 +79,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 			super.setContext(context);
 		} catch (final ApiOperationException e) {
 			throw new ApiOperationException(Response.Status.NOT_FOUND, e,
-					"FEHLER: Zu den übergebenen Stufen konnten keine Klausurplanungsdaten ermittelt und kein html-Klausuren-Kontext erstellt werden.");
+					"FEHLER: Zu mindestens einer Stufe konnten keine Klausurplanungsdaten ermittelt werden. Es konnte kein html-Klausuren-Kontext erstellt werden.");
 		}
 	}
 }

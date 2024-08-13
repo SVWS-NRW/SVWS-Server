@@ -209,9 +209,10 @@ public class ReportingRepository {
 						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt)
 								.toList().getFirst();
 		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Stammdaten der Schule oder ihre Abschnittsdaten konnten nicht ermittelt werden.");
+			this.logger.logLn(LogLevel.ERROR, 8,
+					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"FEHLER: Die Stammdaten der Schule oder ihre Abschnittsdaten konnten nicht ermittelt werden.");
+					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
 		}
 
 		// Ermittle grundlegende Kataloge.

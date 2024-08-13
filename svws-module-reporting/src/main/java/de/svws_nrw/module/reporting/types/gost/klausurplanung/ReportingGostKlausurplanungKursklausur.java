@@ -144,12 +144,12 @@ public class ReportingGostKlausurplanungKursklausur {
 	}
 
 	/**
-	 * Die Startuhrzeit des Klausurtermins, falls schon gesetzt.
+	 * Die Startuhrzeit der Kursklausur, falls schon gesetzt.
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
 		if (this.startzeit == null) {
-			if (klausurtermin != null)
+			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
 				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
 			else
 				return "";

@@ -26,7 +26,7 @@ import jakarta.ws.rs.core.Response.Status;
 public final class ReportingFactory {
 
 	/** Die Verbindung zur Datenbank */
-	private DBEntityManager conn;
+	private final DBEntityManager conn;
 
 	/** Die Daten für die Report-Ausgabe. */
 	private final ReportingParameter reportingParameter;
@@ -81,12 +81,13 @@ public final class ReportingFactory {
 		}
 
 		// Validiere Hauptdaten-Angabe
-		if (this.reportingParameter.idsHauptdaten != null)
+		if (this.reportingParameter.idsHauptdaten == null) {
+			this.reportingParameter.idsHauptdaten = new ArrayList<>();
+		} else {
 			this.reportingParameter.idsHauptdaten.removeIf(Objects::isNull);
-		if ((this.reportingParameter.idsHauptdaten == null) || this.reportingParameter.idsHauptdaten.isEmpty()) {
-			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Es wurden keine Daten zum Drucken an die Reporting-Factory übergeben.");
-			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Es wurden keine Daten zum Drucken an die Reporting-Factory übergeben.");
 		}
+		if (this.reportingParameter.idsHauptdaten.isEmpty())
+			this.logger.logLn(LogLevel.INFO, 4, "HINWEIS: Die Liste der Hauptdaten ist leer an die Reporting-Factory übergeben worden.");
 
 		// Stelle sicher, dass bei nicht vorhandenen Detaildaten eine leere Liste statt null vorhanden ist.
 		if (this.reportingParameter.idsDetaildaten == null)
