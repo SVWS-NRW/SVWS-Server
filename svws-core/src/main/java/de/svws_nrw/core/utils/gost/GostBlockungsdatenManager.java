@@ -2196,6 +2196,18 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Ermittelt den Schüler für die angegebene ID. <br>
+	 * Gibt null zurück, falls die Schüler-ID unbekannt ist.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 *
+	 * @return Das zugehörige {@link Schueler}-Objekt oder null
+	 */
+	public Schueler schuelerGetOrNull(final long idSchueler) {
+		return _map_idSchueler_schueler.get(idSchueler);
+	}
+
+	/**
 	 * Liefert die aktuelle Menge aller Schüler.
 	 * Das ist die interne Referenz zur Liste der Schüler im {@link GostBlockungsdaten}-Objekt.
 	 *

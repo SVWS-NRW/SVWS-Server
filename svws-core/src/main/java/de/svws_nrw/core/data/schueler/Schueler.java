@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
  * Sie liefert ID, Nachname, Vorname und Geschlecht des Schülers mit der angegebenen ID.
+ * Außerdem wird der aktuelle Schülerstatus und ggf. der Abschlussjahrgang des Schülers
+ * angegeben.
  */
 @XmlRootElement
 @Schema(description = "Ein Schüler-Eintrag mit der ID, Nachname, Vorname und Geschlecht.")
@@ -28,12 +30,16 @@ public class Schueler {
 	@Schema(description = "der Vorname", example = "Max")
 	public @NotNull String vorname = "";
 
+	/** Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert. */
+	@Schema(description = "die ID des Geschlechtes", example = "3")
+	public int geschlecht;
+
 	/** Der Status des Schülerdatensatzes. Gültige Werte sind im Enum-Typ {@link SchuelerStatus} definiert. */
 	@Schema(description = "die ID des Status des Schülers (Aktiv, Extern, etc.)", example = "8")
 	public int status;
 
-	/** Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert. */
-	@Schema(description = "die ID des Geschlechtes", example = "3")
-	public int geschlecht;
+	/** Ggf. der Abschlussjahrgang, dem der Schüler aktuell zugeordnet ist */
+	@Schema(description = "der Abschlussjahrgang, dem der Schüler aktuell zugeordnet ist", example = "2026")
+	public int abschlussjahrgang = -1;
 
 }

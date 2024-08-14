@@ -46,7 +46,7 @@ public class GostBlockungsdaten {
 	/** Die für die Blockung angelegten Kurse */
 	public @NotNull List<GostBlockungKurs> kurse = new ArrayList<>();
 
-	/** Die SchülerInnen für die Blockung. */
+	/** Die Schüler für die Blockung. */
 	public @NotNull List<Schueler> schueler = new ArrayList<>();
 
 	/** Die Fachwahlen für die Blockung */

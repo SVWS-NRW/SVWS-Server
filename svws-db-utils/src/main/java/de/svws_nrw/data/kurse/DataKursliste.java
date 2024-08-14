@@ -82,7 +82,7 @@ public final class DataKursliste extends DataManager<Long> {
 				listSchueler = new ArrayList<>();
 				mapKursSchueler.put(ks.Kurs_ID, listSchueler);
 			}
-			listSchueler.add(DataSchuelerliste.mapToSchueler.apply(dtoSchueler));
+			listSchueler.add(DataSchuelerliste.mapToSchueler(dtoSchueler, null));   // TODO Abschlussjahrgang bestimmen
 		}
 		for (final KursDaten eintrag : daten) {
 			final List<Schueler> listSchueler = mapKursSchueler.get(eintrag.id);

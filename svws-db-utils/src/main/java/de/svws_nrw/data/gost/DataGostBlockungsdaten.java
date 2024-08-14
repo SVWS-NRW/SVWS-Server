@@ -23,6 +23,7 @@ import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.Schueler;
+import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
 import de.svws_nrw.core.types.fach.ZulaessigesFach;
@@ -32,6 +33,8 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
+import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.core.utils.gost.GostFachwahlManager;
@@ -244,14 +247,52 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			manager.regelAddListe(regelListeAdd);
 		}
 
-		// Schüler-Menge hinzufügen.
-		final List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
+		// Schüler des Abiturjahrgangs hinzufügen...
+		List<DTOSchueler> schuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, blockung.Abi_Jahrgang)).getSchuelerDTOs();
+		final Set<Long> schuelerIDsJahrgang = schuelerDTOs.stream().map(s -> s.ID).collect(Collectors.toSet());
 		final List<Schueler> schuelerListe = new ArrayList<>();
 		for (final DTOSchueler dto : schuelerDTOs) {
 			if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, blockung.Abi_Jahrgang, mapSchuljahresabschnitte))
 				continue;
-			schuelerListe.add(DataSchuelerliste.mapToSchueler.apply(dto));
+			schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, blockung.Abi_Jahrgang));
 		}
+		// Bestimme alle Schüler-IDs, welche in Kurs-Schüler-Zuordnungen von Blockungsergebnissen vorkommen, aber nicht zum Abiturjahrgang gehören
+		final List<Long> ergebnisIDs = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungZwischenergebnis.class, blockung.ID)
+				.stream().map(e -> e.ID).toList();
+		final List<Long> weitereSchuelerIDs = (ergebnisIDs.isEmpty()) ? new ArrayList<>()
+				: conn.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_LIST_BY_ZWISCHENERGEBNIS_ID, DTOGostBlockungZwischenergebnisKursSchueler.class,
+						ergebnisIDs).stream().map(ks -> ks.Schueler_ID).distinct().filter(s -> !schuelerIDsJahrgang.contains(s)).toList();
+		if (!weitereSchuelerIDs.isEmpty()) {
+			final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
+			schuelerDTOs = conn.queryList(DTOSchueler.QUERY_LIST_BY_ID, DTOSchueler.class, weitereSchuelerIDs);
+			final Map<Long, DTOSchueler> mapSchueler = schuelerDTOs.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
+			final Set<Long> schuelerIDs = schuelerDTOs.stream().map(s -> s.ID).collect(Collectors.toSet());
+			final List<DTOSchuelerLernabschnittsdaten> listAbschnitte = conn.queryList(
+					"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
+							+ " AND s.Schuljahresabschnitts_ID = l.Schuljahresabschnitts_ID AND l.WechselNr = 0",
+					DTOSchuelerLernabschnittsdaten.class,
+					schuelerIDs);
+			final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
+			final List<SchuelerListeEintrag> tmpSchuelerListe = schuelerDTOs.stream()
+					.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+					.toList();
+
+			for (final SchuelerListeEintrag s : tmpSchuelerListe) {
+				final DTOSchueler dto = mapSchueler.get(s.id);
+				if (dto == null)
+					continue;
+				final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
+				if (schuljahresabschnitt == null)
+					continue;
+				final int abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung),
+						schuljahresabschnitt.Jahr, s.jahrgang);
+				// Prüfe, ob der Schüler noch an der Schule ist. Wenn ja, dann füge ihn zu der Liste hinzu...
+				if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, abiturjahrgang, mapSchuljahresabschnitte))
+					continue;
+				schuelerListe.add(DataSchuelerliste.mapToSchueler(dto, abiturjahrgang));
+			}
+		}
+		// ... und Füge alle Schüler zum Manager hinzu
 		manager.schuelerAddListe(schuelerListe);
 
 		// Schüler-Fachwahl-Menge hinzufügen.

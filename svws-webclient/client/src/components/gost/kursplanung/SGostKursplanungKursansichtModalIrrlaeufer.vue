@@ -5,8 +5,15 @@
 		<template #modalDescription>
 			Sollen folgende fehlerhafte Kurs-Schüler-Zuordnungen entfernt werden?
 			<svws-ui-table selectable v-model="selected" :items="zuordnungen" disable-footer :columns="[{key: 'idKurs', label: 'Kurs',}, {key: 'idSchueler', label: 'Schüler'}]">
-				<template #cell(idSchueler)="{value: idSchueler}"> {{ getErgebnismanager().getOfSchuelerNameVorname(idSchueler) }} </template>
-				<template #cell(idKurs)="{value: idKurs}"> {{ getErgebnismanager().getOfKursName(idKurs) }} </template>
+				<template #cell(idSchueler)="{value: idSchueler}">
+					{{ getErgebnismanager().getOfSchuelerNameVorname(idSchueler) }}
+					<span v-if="getErgebnismanager().getParent().daten().abijahrgang !== getErgebnismanager().getParent().schuelerGet(idSchueler).abschlussjahrgang">
+						(Abi {{ getErgebnismanager().getParent().schuelerGet(idSchueler).abschlussjahrgang }})
+					</span>
+				</template>
+				<template #cell(idKurs)="{value: idKurs}">
+					{{ getErgebnismanager().getOfKursName(idKurs) }}
+				</template>
 			</svws-ui-table>
 		</template>
 		<template #modalActions>

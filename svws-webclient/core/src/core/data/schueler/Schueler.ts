@@ -18,14 +18,19 @@ export class Schueler extends JavaObject {
 	public vorname : string = "";
 
 	/**
+	 * Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert.
+	 */
+	public geschlecht : number = 0;
+
+	/**
 	 * Der Status des Schülerdatensatzes. Gültige Werte sind im Enum-Typ {@link SchuelerStatus} definiert.
 	 */
 	public status : number = 0;
 
 	/**
-	 * Die ID des Geschlechtes. Gültige Werte sind im Enum-Typ {@link Geschlecht} definiert.
+	 * Ggf. der Abschlussjahrgang, dem der Schüler aktuell zugeordnet ist
 	 */
-	public geschlecht : number = 0;
+	public abschlussjahrgang : number = -1;
 
 
 	public constructor() {
@@ -52,12 +57,15 @@ export class Schueler extends JavaObject {
 		if (obj.vorname === undefined)
 			throw new Error('invalid json format, missing attribute vorname');
 		result.vorname = obj.vorname;
-		if (obj.status === undefined)
-			throw new Error('invalid json format, missing attribute status');
-		result.status = obj.status;
 		if (obj.geschlecht === undefined)
 			throw new Error('invalid json format, missing attribute geschlecht');
 		result.geschlecht = obj.geschlecht;
+		if (obj.status === undefined)
+			throw new Error('invalid json format, missing attribute status');
+		result.status = obj.status;
+		if (obj.abschlussjahrgang === undefined)
+			throw new Error('invalid json format, missing attribute abschlussjahrgang');
+		result.abschlussjahrgang = obj.abschlussjahrgang;
 		return result;
 	}
 
@@ -66,8 +74,9 @@ export class Schueler extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
-		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
+		result += '"status" : ' + obj.status.toString() + ',';
+		result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -84,11 +93,14 @@ export class Schueler extends JavaObject {
 		if (obj.vorname !== undefined) {
 			result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		}
+		if (obj.geschlecht !== undefined) {
+			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
+		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';
 		}
-		if (obj.geschlecht !== undefined) {
-			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
+		if (obj.abschlussjahrgang !== undefined) {
+			result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

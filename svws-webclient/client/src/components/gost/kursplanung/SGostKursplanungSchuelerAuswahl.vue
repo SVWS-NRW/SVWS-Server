@@ -133,10 +133,13 @@
 						</template>
 					</div>
 					<div role="cell" class="svws-ui-td">
-						<div class="flex flex-col">
+						<div class="flex flex-row">
 							{{ `${s.nachname}, ${s.vorname}` }}
+							<template v-if="getDatenmanager().schuelerGet(s.id).abschlussjahrgang !== getDatenmanager().daten().abijahrgang">
+								<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
+							</template>
 							<template v-if="s.status !== 2">
-								<span class="mt-0.5 text-sm">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
+								<span class="ml-1">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 							</template>
 						</div>
 					</div>
@@ -223,14 +226,14 @@
 		if (kurs === undefined)
 			return '';
 		const anzahl = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id);
-		return anzahl > 0 ? `+${anzahl} weitere` : '';
+		return anzahl > 0 ? `+${anzahl.toString()} weitere` : '';
 	})
 
 	function istSchriftlich(id: number) {
 		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined) {
 			const fachId = fach.value?.id || props.schuelerFilter().kurs?.fach_id
 			if (fachId !== undefined)
-				return props.getErgebnismanager().getParent()?.schuelerGetOfFachFachwahl(id, fachId).istSchriftlich ? 's':'m';
+				return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, fachId).istSchriftlich ? 's':'m';
 		}
 		return undefined;
 	}
@@ -270,7 +273,7 @@
 		if (idFach === undefined)
 			return false
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, idFach);
-		let idKurs = kurs?.id;
+		const idKurs = kurs?.id;
 		if (idKurs === undefined)
 			return false;
 		return (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
@@ -306,9 +309,10 @@
 		if (kurs === null)
 			return;
 		const idKurs = kurs.id;
-		fixier_regel(idKurs, idSchueler).value
-			? await fixieren_regel_entfernen(idKurs, idSchueler)
-			: await fixieren_regel_hinzufuegen(idKurs, idSchueler)
+		if (fixier_regel(idKurs, idSchueler).value === undefined)
+			await fixieren_regel_hinzufuegen(idKurs, idSchueler)
+		else
+			await fixieren_regel_entfernen(idKurs, idSchueler);
 	}
 
 </script>

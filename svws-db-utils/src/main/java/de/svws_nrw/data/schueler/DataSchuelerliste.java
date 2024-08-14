@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schueler.Schueler;
@@ -146,13 +145,19 @@ public final class DataSchuelerliste extends DataManager<Long> {
 
 	/**
 	 * Lambda-Ausdruck zum Befüllen des Core-DTOs Schueler aus DTOSchueler
+	 *
+	 * @param dto   das Schüler-DTO mit den zu mappenden Daten
+	 * @param abschlussjahrgang   der Abschlussjahrgang des Schülers oder null, falls dieser nicht gesetzt werden soll
+	 *
+	 * @return das Core-DTO mit den gemappten Daten
 	 */
-	public static final Function<DTOSchueler, Schueler> mapToSchueler = (final DTOSchueler dto) -> {
+	public static Schueler mapToSchueler(final DTOSchueler dto, final Integer abschlussjahrgang) {
 		final Schueler schueler = new Schueler();
 		schueler.id = dto.ID;
 		schueler.nachname = dto.Nachname;
 		schueler.vorname = (dto.Vorname == null) ? "" : dto.Vorname;
 		schueler.geschlecht = dto.Geschlecht.id;
+		schueler.abschlussjahrgang = (abschlussjahrgang == null) ? -1 : abschlussjahrgang;
 		schueler.status = dto.Status.id;
 		return schueler;
 	};

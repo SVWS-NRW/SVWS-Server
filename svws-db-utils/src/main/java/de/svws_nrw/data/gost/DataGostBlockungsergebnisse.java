@@ -137,8 +137,11 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 			// Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur EINE Regelvalidierung am Ende erfolgt.
 			final @NotNull Set<@NotNull GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
-			for (final var ks : listKursSchueler) // Fehlerhafte Zuordnungen führen im Manager nicht mehr zu Exceptions!
+			for (final var ks : listKursSchueler) { // Fehlerhafte Zuordnungen müssen im Manager abgefangen werden!
+				if (datenManager.schuelerGetOrNull(ks.Schueler_ID) == null)
+					continue;
 				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(ks.Blockung_Kurs_ID, ks.Schueler_ID));
+			}
 			final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
 					manager.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
 			manager.kursSchuelerUpdateExecute(uKursSchueler);

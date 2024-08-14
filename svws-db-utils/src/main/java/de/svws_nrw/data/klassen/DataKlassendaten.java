@@ -630,7 +630,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		if (attachSchueler) {
 			final List<DTOSchueler> schuelerDtosNichtGeloescht = getSchuelerDtosNichtGeloeschtByKlassenID(dto.ID);
 			for (final DTOSchueler schuelerDto : schuelerDtosNichtGeloescht)
-				klassenDaten.schueler.add(DataSchuelerliste.mapToSchueler.apply(schuelerDto));
+				klassenDaten.schueler.add(DataSchuelerliste.mapToSchueler(schuelerDto, null));  // TODO Bestimme den Abschlussjahrgang
 		}
 
 		return klassenDaten;

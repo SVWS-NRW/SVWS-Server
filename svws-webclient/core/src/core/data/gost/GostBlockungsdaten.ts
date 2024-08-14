@@ -52,7 +52,7 @@ export class GostBlockungsdaten extends JavaObject {
 	public kurse : List<GostBlockungKurs> = new ArrayList<GostBlockungKurs>();
 
 	/**
-	 * Die SchülerInnen für die Blockung.
+	 * Die Schüler für die Blockung.
 	 */
 	public schueler : List<Schueler> = new ArrayList<Schueler>();
 
