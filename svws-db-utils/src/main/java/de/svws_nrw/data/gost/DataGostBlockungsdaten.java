@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -227,6 +228,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 
 		// Regeln hinzufügen.
 		final List<DTOGostBlockungRegel> regeln = conn.queryList(DTOGostBlockungRegel.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungRegel.class, blockung.ID);
+		final Set<Long> regelSchuelerIDs = new HashSet<>();
 		if (!regeln.isEmpty()) {
 			final List<Long> regelIDs = regeln.stream().map(r -> r.ID).toList();
 			final List<DTOGostBlockungRegelParameter> regelParamsDB = conn.queryList(DTOGostBlockungRegelParameter.QUERY_LIST_BY_REGEL_ID,
@@ -239,9 +241,16 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				eintrag.id = regel.ID;
 				eintrag.typ = regel.Typ.typ;
 				final List<DTOGostBlockungRegelParameter> p = regelParams.get(eintrag.id);
-				if ((p != null) && (!p.isEmpty()))
+				if ((p != null) && (!p.isEmpty())) {
 					eintrag.parameter.addAll(p.stream().sorted((a, b) -> Integer.compare(a.Nummer, b.Nummer))
 							.map(r -> r.Parameter).toList());
+					// Sammle alle Schüler-IDs die in Regeln vorkommen, so dass diese auch in der Schülerliste des Abijahrgangs unten mitgeladen werden...
+					if (regel.Typ.hasParamType(GostKursblockungRegelParameterTyp.SCHUELER_ID)) {
+						for (int i = 0; i < regel.Typ.getParamCount(); i++)
+							if (regel.Typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID)
+								regelSchuelerIDs.add(eintrag.parameter.get(i));
+					}
+				}
 				regelListeAdd.add(eintrag);
 			}
 			manager.regelAddListe(regelListeAdd);
@@ -260,8 +269,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<Long> ergebnisIDs = conn.queryList(DTOGostBlockungZwischenergebnis.QUERY_BY_BLOCKUNG_ID, DTOGostBlockungZwischenergebnis.class, blockung.ID)
 				.stream().map(e -> e.ID).toList();
 		final List<Long> weitereSchuelerIDs = (ergebnisIDs.isEmpty()) ? new ArrayList<>()
-				: conn.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_LIST_BY_ZWISCHENERGEBNIS_ID, DTOGostBlockungZwischenergebnisKursSchueler.class,
-						ergebnisIDs).stream().map(ks -> ks.Schueler_ID).distinct().filter(s -> !schuelerIDsJahrgang.contains(s)).toList();
+				: Stream.concat(conn.queryList(DTOGostBlockungZwischenergebnisKursSchueler.QUERY_LIST_BY_ZWISCHENERGEBNIS_ID,
+						DTOGostBlockungZwischenergebnisKursSchueler.class, ergebnisIDs).stream().map(ks -> ks.Schueler_ID), regelSchuelerIDs.stream())
+						.distinct().filter(s -> !schuelerIDsJahrgang.contains(s)).toList();
 		if (!weitereSchuelerIDs.isEmpty()) {
 			final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 			schuelerDTOs = conn.queryList(DTOSchueler.QUERY_LIST_BY_ID, DTOSchueler.class, weitereSchuelerIDs);
