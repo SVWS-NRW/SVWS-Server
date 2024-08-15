@@ -2,6 +2,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SatInput } from '../../../core/adt/sat/SatInput';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import { SatOutput } from '../../../core/adt/sat/SatOutput';
 import { System } from '../../../java/lang/System';
 import { SatSolver, cast_de_svws_nrw_core_adt_sat_SatSolver } from '../../../core/adt/sat/SatSolver';

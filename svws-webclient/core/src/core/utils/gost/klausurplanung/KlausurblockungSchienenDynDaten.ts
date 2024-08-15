@@ -4,6 +4,7 @@ import { LinkedCollection } from '../../../../core/adt/collection/LinkedCollecti
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../../../core/logger/Logger';
+import { JavaMath } from '../../../../java/lang/JavaMath';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';

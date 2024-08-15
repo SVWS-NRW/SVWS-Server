@@ -7,6 +7,7 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../../../core/logger/Logger';
 import { MapUtils } from '../../../../core/utils/MapUtils';
+import { JavaMath } from '../../../../java/lang/JavaMath';
 import { LogLevel } from '../../../../core/logger/LogLevel';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';

@@ -1616,6 +1616,19 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					};
 				}
 			}
+			// replace some Math commands
+			if ((type instanceof final ExpressionClassType classType) && ("java.lang.Math".equals(classType.getFullQualifiedName()))) {
+				final Set<String> strMethods = Set.of(
+						"clamp"
+				);
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					transpiler.getTranspilerUnit(node).imports.put("Math", "java.lang");
+					return switch (ms.getIdentifier().toString()) {
+						case "clamp" -> "JavaMath.clamp(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+						default -> throw new TranspilerException("TranspilerError: Unhandled Math method");
+					};
+				}
+			}
 			// replace reflective Array commands
 			if ((type instanceof final ExpressionClassType classType) && ("java.lang.reflect.Array".equals(classType.getFullQualifiedName()))) {
 				if ("newInstance".equals(ms.getIdentifier().toString())) {
@@ -2873,7 +2886,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					/**/
 				}
 				case "java.lang.Math" -> {
-					/**/
+					final String importLocation = importPathPrefix + "java/lang/Java" + key;
+					sb.append("import { Java%s } from '%s';".formatted(key, importLocation));
+					sb.append(System.lineSeparator());
 				}
 				case "java.io.PrintStream" -> {
 					/**/

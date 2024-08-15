@@ -6,6 +6,7 @@ import { ArrayList } from '../../java/util/ArrayList';
 import { GostFachwahl } from '../../core/data/gost/GostFachwahl';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { JavaString } from '../../java/lang/JavaString';
+import { JavaMath } from '../../java/lang/JavaMath';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 import { JavaInteger } from '../../java/lang/JavaInteger';

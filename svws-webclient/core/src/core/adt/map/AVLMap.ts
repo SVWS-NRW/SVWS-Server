@@ -7,6 +7,7 @@ import type { NavigableSet } from '../../../java/util/NavigableSet';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import type { NavigableMap } from '../../../java/util/NavigableMap';
 import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import type { Comparator } from '../../../java/util/Comparator';
 import { cast_java_util_Comparator } from '../../../java/util/Comparator';
 import { NullPointerException } from '../../../java/lang/NullPointerException';

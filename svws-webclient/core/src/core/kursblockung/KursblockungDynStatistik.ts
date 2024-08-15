@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { Logger } from '../../core/logger/Logger';
 import { Arrays } from '../../java/util/Arrays';
+import { JavaMath } from '../../java/lang/JavaMath';
 import { System } from '../../java/lang/System';
 
 export class KursblockungDynStatistik extends JavaObject {

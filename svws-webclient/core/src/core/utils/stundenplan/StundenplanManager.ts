@@ -7,6 +7,7 @@ import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { StundenplanJahrgang } from '../../../core/data/stundenplan/StundenplanJahrgang';
 import { DateUtils } from '../../../core/utils/DateUtils';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import type { Comparator } from '../../../java/util/Comparator';
 import { StundenplanSchueler } from '../../../core/data/stundenplan/StundenplanSchueler';
 import { StundenplanKlassenunterricht } from '../../../core/data/stundenplan/StundenplanKlassenunterricht';

@@ -5049,7 +5049,7 @@ public enum ZulaessigesFach {
 	private static @NotNull Map<String, ZulaessigesFach> getMapFremdsprachenByKuerzelAtomar() {
 		if (_mapFremdsprachenKuerzelAtomar.isEmpty()) {
 			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
-				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
+				if ((!s.daten.istFremdsprache) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
 					continue;
 				_mapFremdsprachenKuerzelAtomar.put(s.daten.kuerzel, s);
 			}
@@ -5067,7 +5067,7 @@ public enum ZulaessigesFach {
 	public static @NotNull List<String> getListFremdsprachenKuerzelAtomar() {
 		if (_listFremdsprachenKuerzel.isEmpty()) {
 			for (final ZulaessigesFach s : ZulaessigesFach.values()) {
-				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel == null) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
+				if ((!s.daten.istFremdsprache) || (!s.daten.kuerzel.equals(s.daten.kuerzelASD)))
 					continue;
 				_listFremdsprachenKuerzel.add(s.daten.kuerzel);
 			}
@@ -5085,7 +5085,7 @@ public enum ZulaessigesFach {
 	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
 	 */
 	private boolean hasSchulform(final Schulform schulform) {
-		if ((schulform == null) || (schulform.daten == null))
+		if (schulform == null)
 			return false;
 		for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> sfsgl : zulaessig[0]) {
 			if (sfsgl.a == schulform)
@@ -5200,7 +5200,7 @@ public enum ZulaessigesFach {
 	 */
 	public @NotNull String getHMTLFarbeRGBA(final double alpha) {
 		final @NotNull RGBFarbe farbe = getFarbe();
-		final double a = Math.min(Math.max(alpha, 0.0), 1.0);
+		final double a = Math.clamp(alpha, 0.0, 1.0);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

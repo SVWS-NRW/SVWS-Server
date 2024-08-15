@@ -3,6 +3,7 @@ import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { JavaMath } from '../../../java/lang/JavaMath';
 
 export class SatInput extends JavaObject {
 

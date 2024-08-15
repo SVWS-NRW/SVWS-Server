@@ -4,6 +4,7 @@ import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../core/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import { RGBFarbe } from '../../../core/data/RGBFarbe';
 import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
 import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
@@ -1528,7 +1529,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	private static getMapFremdsprachenByKuerzelAtomar() : JavaMap<string, ZulaessigesFach> {
 		if (ZulaessigesFach._mapFremdsprachenKuerzelAtomar.isEmpty()) {
 			for (const s of ZulaessigesFach.values()) {
-				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel === null) || (!JavaObject.equalsTranspiler(s.daten.kuerzel, (s.daten.kuerzelASD))))
+				if ((!s.daten.istFremdsprache) || (!JavaObject.equalsTranspiler(s.daten.kuerzel, (s.daten.kuerzelASD))))
 					continue;
 				ZulaessigesFach._mapFremdsprachenKuerzelAtomar.put(s.daten.kuerzel, s);
 			}
@@ -1545,7 +1546,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	public static getListFremdsprachenKuerzelAtomar() : List<string> {
 		if (ZulaessigesFach._listFremdsprachenKuerzel.isEmpty()) {
 			for (const s of ZulaessigesFach.values()) {
-				if ((!s.daten.istFremdsprache) || (s.daten.kuerzel === null) || (!JavaObject.equalsTranspiler(s.daten.kuerzel, (s.daten.kuerzelASD))))
+				if ((!s.daten.istFremdsprache) || (!JavaObject.equalsTranspiler(s.daten.kuerzel, (s.daten.kuerzelASD))))
 					continue;
 				ZulaessigesFach._listFremdsprachenKuerzel.add(s.daten.kuerzel);
 			}
@@ -1562,7 +1563,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	 * @return true, falls das Fach in der Schulform zulässig ist, ansonsten false.
 	 */
 	private hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null))
+		if (schulform === null)
 			return false;
 		for (const sfsgl of this.zulaessig[0]) {
 			if (sfsgl.a === schulform)
@@ -1669,7 +1670,7 @@ export class ZulaessigesFach extends JavaEnum<ZulaessigesFach> {
 	 */
 	public getHMTLFarbeRGBA(alpha : number) : string {
 		const farbe : RGBFarbe = this.getFarbe();
-		const a : number = Math.min(Math.max(alpha, 0.0), 1.0);
+		const a : number = JavaMath.clamp(alpha, 0.0, 1.0);
 		return "rgba(" + farbe.red + "," + farbe.green + "," + farbe.blue + ", " + a + ")";
 	}
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import { MapUtils } from '../../../../core/utils/MapUtils';
+import { JavaMath } from '../../../../java/lang/JavaMath';
 import { System } from '../../../../java/lang/System';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';

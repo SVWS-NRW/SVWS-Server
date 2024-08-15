@@ -6,6 +6,7 @@ import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBloc
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
+import { JavaMath } from '../../../java/lang/JavaMath';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { Predicate } from '../../../java/util/function/Predicate';

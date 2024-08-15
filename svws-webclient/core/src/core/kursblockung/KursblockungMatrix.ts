@@ -3,6 +3,7 @@ import { Random } from '../../java/util/Random';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { JavaLong } from '../../java/lang/JavaLong';
 import { Arrays } from '../../java/util/Arrays';
+import { JavaMath } from '../../java/lang/JavaMath';
 import { System } from '../../java/lang/System';
 
 export class KursblockungMatrix extends JavaObject {

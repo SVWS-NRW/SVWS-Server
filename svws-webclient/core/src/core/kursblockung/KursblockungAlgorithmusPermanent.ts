@@ -10,6 +10,7 @@ import { KursblockungAlgorithmusPermanentKSchuelervorschlag } from '../../core/k
 import { ArrayList } from '../../java/util/ArrayList';
 import { KursblockungAlgorithmusSMatching } from '../../core/kursblockung/KursblockungAlgorithmusSMatching';
 import { Logger } from '../../core/logger/Logger';
+import { JavaMath } from '../../java/lang/JavaMath';
 import { System } from '../../java/lang/System';
 import { KursblockungAlgorithmusSMatchingW } from '../../core/kursblockung/KursblockungAlgorithmusSMatchingW';
 import { Random } from '../../java/util/Random';
