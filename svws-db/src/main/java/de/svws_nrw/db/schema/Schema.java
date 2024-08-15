@@ -232,6 +232,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Usergroups;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Users;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Versetzung;
 import de.svws_nrw.db.schema.tabellen.Tabelle_ZuordnungReportvorlagen;
+import jakarta.validation.constraints.NotNull;
 
 
 /**
@@ -249,7 +250,11 @@ public final class Schema {
 	public static final String javaDTOPackage = "dto";
 
 	/** Eine Map von dem Namen der Tabelle auf die einzelnen Tabellen. */
-	public static final Map<String, SchemaTabelle> tabellen = new LinkedHashMap<>();
+	private static final Map<String, SchemaTabelle> _tabellen = new LinkedHashMap<>();
+
+	/** Die Liste mit allen Tabellen aus allen Schema-Revisionen */
+	private static List<SchemaTabelle> _alleTabellen = null;
+
 
 	/**
 	 * Fügt eine Tabelle zu dem Schema hinzu.
@@ -260,7 +265,7 @@ public final class Schema {
 	 * @return die Instanz der Tabellen-Definitions-Klasse
 	 */
 	public static <T extends SchemaTabelle> T add(final T t) {
-		tabellen.put(t.name(), t);
+		_tabellen.put(t.name(), t);
 		return t;
 	}
 
@@ -1000,11 +1005,23 @@ public final class Schema {
 	 *
 	 * @return eine Liste mit den definierten Tabellen
 	 */
-	public static List<SchemaTabelle> getTabellen(final long rev) {
-		return tabellen.values().stream()
+	public static @NotNull List<SchemaTabelle> getTabellen(final long rev) {
+		return _tabellen.values().stream()
 				.filter(t -> ((rev == -1) && (t.veraltet().revision == -1))
 						|| ((rev != -1) && (rev >= t.revision().revision) && ((t.veraltet().revision == -1) || (rev < t.veraltet().revision))))
 				.toList();
+	}
+
+
+	/**
+	 * Liefert alle Tabellen, welche in irgendeiner Revision definiert war bzw. ist.
+	 *
+	 * @return eine Liste mit den Tabellen
+	 */
+	public static @NotNull List<SchemaTabelle> tabellen() {
+		if (_alleTabellen == null)
+			_alleTabellen = new ArrayList<>(_tabellen.values());
+		return _alleTabellen;
 	}
 
 }

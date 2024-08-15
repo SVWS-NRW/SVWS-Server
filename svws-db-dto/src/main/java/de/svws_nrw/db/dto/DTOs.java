@@ -490,7 +490,7 @@ public final class DTOs {
      * @return die DTO-Klasse
      */
     public static Class<? extends Object> getFromDTOName(final String name) {
-    	return getMapDTOName2DTOClass().get(name);
+        return getMapDTOName2DTOClass().get(name);
     }
 
 
@@ -742,7 +742,7 @@ public final class DTOs {
      * @return die DTO-Klasse
      */
     public static Class<? extends Object> getFromTableName(final String name) {
-    	return getMapTablename2DTOClass().get(name);
+        return getMapTablename2DTOClass().get(name);
     }
 
 }

@@ -15,7 +15,7 @@ import de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager;
  * JSON-Dateien hinterlegt sind. Hierbei werden die Daten auch vereinzelt
  * auf Korrektheit geprüft.
  */
-public class TestBerufskollegFachklassenManager {
+class TestBerufskollegFachklassenManager {
 
 	// TODO Tests für BerufskollegFachklassenManager manager = JsonDaten.fachklassenManager;
 	/**

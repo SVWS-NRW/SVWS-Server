@@ -63,7 +63,7 @@ public final class DTOCreatorTable {
 	 */
 	public static void init() {
 		if (all.isEmpty()) {
-			for (final SchemaTabelle tab : Schema.tabellen.values().stream().sorted((a, b) -> {
+			for (final SchemaTabelle tab : Schema.tabellen().stream().sorted((a, b) -> {
 				final String a_cmp = a.javaSubPackage() + "." + a.javaClassName();
 				final String b_cmp = b.javaSubPackage() + "." + b.javaClassName();
 				return a_cmp.compareTo(b_cmp);

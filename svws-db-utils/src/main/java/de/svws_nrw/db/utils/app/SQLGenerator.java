@@ -45,7 +45,7 @@ public class SQLGenerator {
 	public static String getCreateSchemaSkript(final DBDriver dbms, final long rev) {
 		final String newline = System.lineSeparator();
 		final StringBuilder sb = new StringBuilder();
-		for (final SchemaTabelle t : Schema.tabellen.values()) {
+		for (final SchemaTabelle t : Schema.tabellen()) {
 			sb.append(t.getSQL(dbms, rev));
 			final var sql_indizes = t.getSQLIndizes(rev);
 			if ((sql_indizes != null) && (!"".equals(sql_indizes)))
@@ -54,7 +54,7 @@ public class SQLGenerator {
 		}
 		sb.append(newline
 				+ ((dbms == DBDriver.MSSQL) ? "GO" + newline + newline : "")
-				+ Schema.tabellen.values().stream()
+				+ Schema.tabellen().stream()
 						.map(tab -> tab.getSQLTrigger(dbms, rev, true))
 						.filter(sql -> (sql != null) && (!"".equals(sql)))
 						.collect(Collectors.joining(newline + newline))
@@ -96,7 +96,7 @@ public class SQLGenerator {
 	public static String getInserts(final long revision) {
 		final long rev = (revision == -1) ? SchemaRevisionen.maxRevision.revision : revision;
 		final StringBuilder result = new StringBuilder();
-		for (final SchemaTabelle tab : Schema.tabellen.values()) {
+		for (final SchemaTabelle tab : Schema.tabellen()) {
 			if (!tab.isDefined(rev))
 				continue;
 			if (tab.hasCoreType()) {

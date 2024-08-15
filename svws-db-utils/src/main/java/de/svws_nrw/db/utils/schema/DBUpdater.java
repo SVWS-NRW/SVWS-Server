@@ -297,7 +297,7 @@ public class DBUpdater {
 	private boolean dropTrigger(final DBEntityManager conn, final long veraltet) {
 		logger.log("- Verwerfe: ");
 		final var dbms = conn.getDBDriver();
-		final List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
+		final List<SchemaTabelleTrigger> trigger = Schema.tabellen().stream()
 				.flatMap(tab -> tab.trigger().stream())
 				.filter(trig -> trig.veraltet().revision == veraltet)
 				.toList();
@@ -335,7 +335,7 @@ public class DBUpdater {
 	 */
 	private boolean dropIndices(final DBEntityManager conn, final long veraltet) {
 		logger.log("- Verwerfe: ");
-		final List<SchemaTabelleIndex> indizesVeraltet = Schema.tabellen.values().stream()
+		final List<SchemaTabelleIndex> indizesVeraltet = Schema.tabellen().stream()
 				.flatMap(tab -> tab.indizes().stream())
 				.filter(idx -> idx.veraltet().revision == veraltet)
 				.toList();
@@ -376,7 +376,7 @@ public class DBUpdater {
 	 */
 	private boolean dropUniqueConstraints(final DBEntityManager conn, final long veraltet) {
 		logger.log("- Verwerfe: ");
-		final List<SchemaTabelleUniqueIndex> ucs = Schema.tabellen.values().stream()
+		final List<SchemaTabelleUniqueIndex> ucs = Schema.tabellen().stream()
 				.flatMap(tab -> tab.unique().stream())
 				.filter(uc -> uc.veraltet().revision == veraltet)
 				.toList();
@@ -417,7 +417,7 @@ public class DBUpdater {
 	 */
 	private boolean dropForeignKeys(final DBEntityManager conn, final long veraltet) {
 		logger.log("- Verwerfe: ");
-		final List<SchemaTabelleFremdschluessel> fks = Schema.tabellen.values().stream()
+		final List<SchemaTabelleFremdschluessel> fks = Schema.tabellen().stream()
 				.flatMap(tab -> tab.fremdschluessel().stream())
 				.filter(fk -> fk.veraltet().revision == veraltet)
 				.toList();
@@ -886,7 +886,7 @@ public class DBUpdater {
 	private boolean createNewTrigger(final DBEntityManager conn, final long revision) {
 		logger.log("- Erstelle: ");
 		final var dbms = conn.getDBDriver();
-		final List<SchemaTabelleTrigger> trigger = Schema.tabellen.values().stream()
+		final List<SchemaTabelleTrigger> trigger = Schema.tabellen().stream()
 				.flatMap(tab -> tab.trigger().stream())
 				.filter(trig -> trig.dbms() == dbms)
 				.filter(trig -> trig.revision().revision == revision)
