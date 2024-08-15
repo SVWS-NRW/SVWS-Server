@@ -438,8 +438,8 @@ public final class DBRootManager {
 			if (!benutzer.contains(config.getUsername()))
 				return true;
 			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema("information_schema"));
-			try (DBEntityManager conn = userInformationSchema.getEntityManager()) {
-				/* Kein Zugriff über conn nötig... Nur ein Verbindungstest */
+			try (DBEntityManager tmpConn = userInformationSchema.getEntityManager()) {
+				/* Kein Zugriff über tmpConn nötig... Nur ein Verbindungstest */
 			}
 			return true;
 		} catch (@SuppressWarnings("unused") final Exception e) {

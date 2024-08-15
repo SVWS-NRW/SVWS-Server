@@ -153,9 +153,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel", "kuerzelStatistik");
 
-	private final ObjLongConsumer<DTOJahrgang> initDTO = (dto, id) -> {
-		dto.ID = id;
-	};
+	private final ObjLongConsumer<DTOJahrgang> initDTO = (dto, id) -> dto.ID = id;
 
 
 	/**

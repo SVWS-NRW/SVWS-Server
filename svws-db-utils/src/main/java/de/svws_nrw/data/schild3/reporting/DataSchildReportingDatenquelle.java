@@ -204,16 +204,13 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 		// Prüfe, ob alle Parameter vom Typ Long sind
 		final ArrayList<Long> paramListe = new ArrayList<>();
 		for (final Object p : params) {
-			if (p instanceof final Long l)
-				paramListe.add(l);
-			else if (p instanceof final Integer i)
-				paramListe.add(i.longValue());
-			else if (p instanceof final Short s)
-				paramListe.add(s.longValue());
-			else if (p instanceof final Byte b)
-				paramListe.add(b.longValue());
-			else
-				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			switch (p) {
+				case final Long l -> paramListe.add(l);
+				case final Integer i -> paramListe.add(i.longValue());
+				case final Short s -> paramListe.add(s.longValue());
+				case final Byte b -> paramListe.add(b.longValue());
+				default -> throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			}
 		}
 		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) paramListe;
 		return getDaten(conn, paramListeJMT);
@@ -229,12 +226,11 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 		// Prüfe, ob alle Parameter vom Typ Double sind
 		final ArrayList<Double> paramListe = new ArrayList<>();
 		for (final Object p : params) {
-			if (p instanceof final Double d)
-				paramListe.add(d);
-			else if (p instanceof final Float f)
-				paramListe.add(f.doubleValue());
-			else
-				throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			switch (p) {
+				case final Double d -> paramListe.add(d);
+				case final Float f -> paramListe.add(f.doubleValue());
+				default -> throw new ApiOperationException(Status.CONFLICT, meldungUngueltigerParameter);
+			}
 		}
 		@SuppressWarnings("unchecked") final List<JMT> paramListeJMT = (List<JMT>) paramListe;
 		return getDaten(conn, paramListeJMT);

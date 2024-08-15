@@ -157,7 +157,7 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 						}
 					}
 					case "gueltigInHalbjahr" -> {
-						final Boolean[] data = JSONMapper.convertToBooleanArray(value, false, false, 6);
+						final Boolean[] data = JSONMapper.convertToBooleanArray(value, false, 6);
 						kombi.EF1 = data[0];
 						kombi.EF2 = data[1];
 						kombi.Q11 = data[2];

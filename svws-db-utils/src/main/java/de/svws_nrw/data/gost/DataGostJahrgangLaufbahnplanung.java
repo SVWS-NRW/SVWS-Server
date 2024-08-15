@@ -157,7 +157,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 				final Object value = entry.getValue();
 				switch (key) {
 					case "halbjahre" -> {
-						final String[] wahlen = JSONMapper.convertToStringArray(value, true, true, 6);
+						final String[] wahlen = JSONMapper.convertToStringArray(value, true, 6);
 						if ((wahlen == null) || ((wahlen.length != 0) && (wahlen.length != 6)))
 							throw new ApiOperationException(Status.CONFLICT);
 						if (wahlen.length == 0) {

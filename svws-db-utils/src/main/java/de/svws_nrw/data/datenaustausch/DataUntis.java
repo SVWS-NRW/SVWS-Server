@@ -2,8 +2,6 @@ package de.svws_nrw.data.datenaustausch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +16,8 @@ import java.util.zip.ZipOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+
+import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
 import de.svws_nrw.base.untis.UntisGPU005;
@@ -416,10 +416,7 @@ public final class DataUntis {
 			logger.modifyIndent(-2);
 			return true;
 		} catch (final UnrecognizedPropertyException upe) {
-			final StringWriter sw = new StringWriter();
-			final PrintWriter pw = new PrintWriter(sw);
-			upe.printStackTrace(pw);
-			sw.toString().lines().forEach(logger::logLn);
+			LogUtils.logStacktrace(logger, upe);
 			logger.logLn("[Fehler] Konnte die Datei GPU005.txt nicht einlesen. Prüfen sie ggf. auch die Zeichenkodierung der Datei."
 					+ " Diese muss UTF-8 (ohne BOM) sein.");
 			logger.modifyIndent(-2);

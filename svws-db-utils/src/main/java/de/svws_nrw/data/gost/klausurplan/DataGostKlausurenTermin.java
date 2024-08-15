@@ -132,7 +132,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		if (schuelerklausurTermine.isEmpty())
 			return new ArrayList<>(ergebnis);
 		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
-		if (schuelerklausurTermineNullTermin.size() > 0) {
+		if (!schuelerklausurTermineNullTermin.isEmpty()) {
 			final List<GostSchuelerklausur> schuelerklausurNullTermin =
 					DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
 			final List<GostKursklausur> kursklausurNullTermin =

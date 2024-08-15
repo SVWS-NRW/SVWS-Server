@@ -13,7 +13,7 @@ import de.svws_nrw.core.types.schule.Schulgliederung;
 /**
  * Diese Klasse prüft die Methoden der {@link JSONMapper}-Klasse.
  */
-public class TestJSONMapper {
+class TestJSONMapper {
 	/**
 	 * Tests für das Komprimieren und Dekomprimieren von Core-DTOs mit dem GZip-Verfahren
 	 */

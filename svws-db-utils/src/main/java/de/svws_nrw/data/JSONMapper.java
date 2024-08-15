@@ -431,7 +431,6 @@ public final class JSONMapper {
 	 *
 	 * @param obj          das zu konvertierende Objekt
 	 * @param nullable     gibt an, ob Elemente auch null sein dürfen oder nicht
-	 * @param allowEmpty   gibt an, ob auch leere Arrays erlaubt sind oder nicht
 	 * @param size         die verlangte Größe des Arrays
 	 *
 	 * @return das konvertierte boolean-Array
@@ -439,7 +438,7 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	public static Boolean[] convertToBooleanArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size)
+	public static Boolean[] convertToBooleanArray(final Object obj, final boolean nullable, final Integer size)
 			throws ApiOperationException {
 		if (obj == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
@@ -468,7 +467,6 @@ public final class JSONMapper {
 	 *
 	 * @param obj          das zu konvertierende Objekt
 	 * @param nullable     gibt an, ob Elemente auch null sein dürfen oder nicht
-	 * @param allowEmpty   gibt an, ob auch leere Arrays erlaubt sind oder nicht
 	 * @param size         die verlangte Größe des Arrays
 	 *
 	 * @return das konvertierte String-Array
@@ -476,7 +474,7 @@ public final class JSONMapper {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	public static String[] convertToStringArray(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer size)
+	public static String[] convertToStringArray(final Object obj, final boolean nullable, final Integer size)
 			throws ApiOperationException {
 		if (obj == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
@@ -521,16 +519,13 @@ public final class JSONMapper {
 			for (final Object obj : liste) {
 				if (obj == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist innerhalb der Liste nicht erlaubt.");
-				if (obj instanceof final Byte b)
-					result.add(b.longValue());
-				else if (obj instanceof final Short s)
-					result.add(s.longValue());
-				else if (obj instanceof final Integer i)
-					result.add(i.longValue());
-				else if (obj instanceof final Long l)
-					result.add(l.longValue());
-				else
-					throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
+				switch (obj) {
+					case final Byte b -> result.add(b.longValue());
+					case final Short s -> result.add(s.longValue());
+					case final Integer i -> result.add(i.longValue());
+					case final Long l -> result.add(l);
+					default -> throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
+				}
 			}
 		} else
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von Long-Werten erwartet.");
@@ -560,14 +555,12 @@ public final class JSONMapper {
 			for (final Object obj : liste) {
 				if (obj == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist innerhalb der Liste nicht erlaubt.");
-				if (obj instanceof final Byte b)
-					result.add(b.intValue());
-				else if (obj instanceof final Short s)
-					result.add(s.intValue());
-				else if (obj instanceof final Integer i)
-					result.add(i.intValue());
-				else
-					throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer");
+				switch (obj) {
+					case final Byte b -> result.add(b.intValue());
+					case final Short s -> result.add(s.intValue());
+					case final Integer i -> result.add(i);
+					default -> throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Integer");
+				}
 			}
 		} else
 			throw new ApiOperationException(Status.BAD_REQUEST, "Es wird eine Array von Integer-Werten erwartet.");

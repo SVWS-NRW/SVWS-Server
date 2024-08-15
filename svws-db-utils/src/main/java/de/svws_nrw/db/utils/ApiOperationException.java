@@ -17,7 +17,7 @@ public class ApiOperationException extends Exception {
 	private final Status status;
 
 	/** Der zu serialisierende Body der Exception */
-	private final Object body;
+	private final transient Object body;
 
 	/** der Mime-Type der Body-Information */
 	private final String mimeType;

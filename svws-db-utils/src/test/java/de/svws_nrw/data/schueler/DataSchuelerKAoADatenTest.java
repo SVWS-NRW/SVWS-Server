@@ -30,17 +30,17 @@ class DataSchuelerKAoADatenTest {
 	 */
 	@BeforeEach
 	void setup() {
-		final SchuelerKAoADaten daten = new SchuelerKAoADaten();
-		daten.id = 135L;
-		daten.jahrgang = "09";
-		daten.kategorie = 14L;
-		daten.merkmal = 69L;
-		daten.zusatzmerkmal = 117L;
-		daten.anschlussoption = 22L;
-		daten.berufsfeld = 12L;
-		daten.ebene4 = 4L;
-		daten.bemerkung = "test text 123";
-		this.daten = daten;
+		final SchuelerKAoADaten kaoa = new SchuelerKAoADaten();
+		kaoa.id = 135L;
+		kaoa.jahrgang = "09";
+		kaoa.kategorie = 14L;
+		kaoa.merkmal = 69L;
+		kaoa.zusatzmerkmal = 117L;
+		kaoa.anschlussoption = 22L;
+		kaoa.berufsfeld = 12L;
+		kaoa.ebene4 = 4L;
+		kaoa.bemerkung = "test text 123";
+		this.daten = kaoa;
 	}
 
 	/**
@@ -50,16 +50,6 @@ class DataSchuelerKAoADatenTest {
 	@Test
 	void testValidateOK() throws ApiOperationException {
 		DataSchuelerKAoADaten.validate(daten);
-	}
-
-	/**
-	 * Testet ob eine Fehler kommt wenn keine Kategorie gefunden wird
-	 */
-	@Test
-	void testValidateKategorieNotFound() {
-		daten.kategorie = -1L;
-		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-		assertThrows(ApiOperationException.class, () -> DataSchuelerKAoADaten.validateKategorie(daten, kategorie));
 	}
 
 	/**

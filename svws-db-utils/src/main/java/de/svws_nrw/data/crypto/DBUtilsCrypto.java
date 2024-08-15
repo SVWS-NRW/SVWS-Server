@@ -30,8 +30,8 @@ public final class DBUtilsCrypto {
 	}
 
 	private static String nameToAscii(final String name) {
-		final String keineUmlaute = name.trim().replaceAll("Ä", "Ae").replaceAll("Ö", "Oe").replaceAll("Ü", "Ue").replaceAll("ä", "ae").replaceAll("ö", "oe")
-				.replaceAll("ü", "ue").replaceAll("ß", "ss");
+		final String keineUmlaute = name.trim().replace("Ä", "Ae").replace("Ö", "Oe").replace("Ü", "Ue").replace("ä", "ae").replace("ö", "oe")
+				.replace("ü", "ue").replace("ß", "ss");
 		final String normalized = Normalizer.normalize(keineUmlaute, Normalizer.Form.NFD).replace('\u0141', 'L').replace('\u0142', 'l');
 		final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 		final String noAccents = pattern.matcher(normalized).replaceAll("");

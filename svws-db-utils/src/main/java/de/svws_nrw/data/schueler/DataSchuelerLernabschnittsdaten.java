@@ -550,6 +550,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 					dtoFachBem.BemerkungVersetzung = JSONMapper.convertToString(value, true, true, null);
 					patchedDTOFachBem = true;
 				}
+				default -> { /**/ }
 			}
 		}
 		if (patchedDTOLernabschitt) {
