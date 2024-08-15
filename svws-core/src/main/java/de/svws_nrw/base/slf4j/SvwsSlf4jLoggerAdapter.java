@@ -15,7 +15,7 @@ public final class SvwsSlf4jLoggerAdapter extends LegacyAbstractLogger {
 	private static final long serialVersionUID = 7876756220542311972L;
 
 	// Der SVWS-Logger
-	private final Logger _logger;
+	private final transient Logger _logger;
 
 
 	/**

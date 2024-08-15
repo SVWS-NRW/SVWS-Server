@@ -94,7 +94,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		} else throw new Error('invalid method overload');
 	}
 
-	public add(e : T) : boolean {
+	public add(e : T | null) : boolean {
 		if (e === null)
 			return false;
 		if (this._nodes.length === 0)
@@ -240,8 +240,6 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		if (this as unknown === c as unknown)
 			return false;
 		const tmp : Array<T | null> = this.newArray(this._nodes[0], this._nodes.length);
-		if (tmp === null)
-			return false;
 		let i : number = 0;
 		let elem : T | null;
 		let changed : boolean = false;

@@ -108,7 +108,7 @@ public final class MinHeap<T> implements Queue<T> {
 	}
 
 	@Override
-	public boolean add(final @NotNull T e) throws IllegalStateException {
+	public boolean add(final T e) throws IllegalStateException {
 		if (e == null)
 			return false;
 		if (_nodes.length == 0)
@@ -199,7 +199,7 @@ public final class MinHeap<T> implements Queue<T> {
 			if (_size == 0)
 				return false;
 			final @NotNull T[] tmp = Arrays.copyOf(_nodes, _size);
-			for (final @NotNull T t : tmp)
+			for (final T t : tmp)
 				if (t != null)
 					this.add(t);
 			return true;
@@ -260,8 +260,6 @@ public final class MinHeap<T> implements Queue<T> {
 		if (this == c)
 			return false;
 		final @NotNull T[] tmp = newArray(_nodes[0], _nodes.length);
-		if (tmp == null)
-			return false;
 		int i = 0;
 		T elem;
 		boolean changed = false;
