@@ -71,11 +71,7 @@ public class SchemaRevisionUpdateSQL {
 	 * @param sql    der SQL-Befehl
 	 */
 	private void add(final DBDriver dbms, final String sql) {
-		var liste = _sql.get(dbms);
-		if (liste == null) {
-			liste = new ArrayList<>();
-			_sql.put(dbms, liste);
-		}
+		final var liste = _sql.computeIfAbsent(dbms, d -> new ArrayList<>());
 		liste.add(sql);
 	}
 
@@ -122,8 +118,12 @@ public class SchemaRevisionUpdateSQL {
 			final SchemaTabelle... tabellen) {
 		_kommentare.add(kommentar);
 		_tabellen.addAll(Arrays.asList(tabellen));
-		for (final DBDriver dbms : DBDriver.values())
-			add(dbms, (dbms == dbms2) ? sql2 : ((dbms == dbms3) ? sql3 : sql));
+		for (final DBDriver dbms : DBDriver.values()) {
+			if (dbms == dbms2)
+				add(dbms, sql2);
+			else
+				add(dbms, (dbms == dbms3) ? sql3 : sql);
+		}
 	}
 
 	/**

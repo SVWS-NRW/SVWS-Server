@@ -37,6 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -88,8 +90,7 @@ public final class SVWSKonfiguration {
 		if (instanceConfig.dto == null)
 			readXML(path, DEFAULT_CONFIG_FILENAME_XML);
 		if (instanceConfig.dto == null) {
-			// TODO log error
-			System.out.println("Erstelle leere Konfiguration mit Default-Werten...");
+			Logger.global().logLn(LogLevel.INFO, "Erstelle leere Konfiguration mit Default-Werten...");
 			instanceConfig.dto = new SVWSKonfigurationDTO();
 			instanceConfig.dto.dbKonfiguration = new SVWSKonfigurationDatabaseDTO();
 			instanceConfig.dto.dbKonfiguration.dbms = DBDriver.MARIA_DB.toString();
@@ -175,11 +176,9 @@ public final class SVWSKonfiguration {
 				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
 			}
 		} catch (final JsonMappingException e) {
-			// TODO log error into logger
-			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
+			Logger.global().logLn(LogLevel.ERROR, "Fehler in der Konfiguration '%s': %s".formatted(filename, e));
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			// TODO log error into logger
-			System.out.println("Konfiguration '" + filename + "' nicht gefunden!");
+			Logger.global().logLn(LogLevel.ERROR, "Konfiguration '%s' nicht gefunden!".formatted(filename));
 		}
 	}
 
@@ -206,11 +205,9 @@ public final class SVWSKonfiguration {
 				instanceConfig.dto.dbconfigs.put(schema.name, instanceConfig.getDBConfig(i));
 			}
 		} catch (final JsonMappingException e) {
-			// TODO log error into logger
-			System.out.println("Fehler in der Konfiguration '" + filename + "': " + e);
+			Logger.global().logLn(LogLevel.ERROR, "Fehler in der Konfiguration '%s': %s".formatted(filename, e));
 		} catch (@SuppressWarnings("unused") final IOException e) {
-			// TODO log error into logger
-			System.out.println("Konfiguration '" + filename + "' nicht gefunden!");
+			Logger.global().logLn(LogLevel.ERROR, "Konfiguration '%s' nicht gefunden!".formatted(filename));
 		}
 	}
 

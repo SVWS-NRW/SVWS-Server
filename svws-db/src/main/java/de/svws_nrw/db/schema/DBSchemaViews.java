@@ -42,7 +42,7 @@ public final class DBSchemaViews {
 	 *
 	 * @param view   die hinzuzufügende View
 	 */
-	private void addView(final @NotNull View view) {
+	private void addView(final View view) {
 		if (view == null)
 			throw new NullPointerException("Kann null nicht zu der Liste der Views hinzufügen.");
 		allViews.add(view);
@@ -63,12 +63,7 @@ public final class DBSchemaViews {
 	 * @return die Liste der Views, welche in der angegebenen Revision erstellt werden.
 	 */
 	public List<View> getViewsCreated(final long revision) {
-		List<View> v = views.get(revision);
-		if (v == null) {
-			v = new ArrayList<>();
-			views.put(revision, v);
-		}
-		return v;
+		return views.computeIfAbsent(revision, r -> new ArrayList<>());
 	}
 
 
@@ -80,12 +75,7 @@ public final class DBSchemaViews {
 	 * @return die Liste der Views, welche in der angegebenen Revision als veraltet gesetzt sind.
 	 */
 	public List<View> getViewsDeprecated(final long revision) {
-		List<View> v = viewsDeprecated.get(revision);
-		if (v == null) {
-			v = new ArrayList<>();
-			viewsDeprecated.put(revision, v);
-		}
-		return v;
+		return viewsDeprecated.computeIfAbsent(revision, r -> new ArrayList<>());
 	}
 
 

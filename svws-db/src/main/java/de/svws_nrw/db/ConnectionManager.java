@@ -19,6 +19,8 @@ import org.eclipse.persistence.sessions.server.ServerSession;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 
+import de.svws_nrw.core.logger.LogLevel;
+import de.svws_nrw.core.logger.Logger;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -251,12 +253,11 @@ public final class ConnectionManager {
 						final ServerSession serverSession = em.unwrap(ServerSession.class);
 						final ConnectionPool pool = serverSession.getConnectionPools().get("default");
 						if (pool == null) {
-							System.err.println("Fehler beim Zugriff auf den DB-Connection-Pool default");
+							Logger.global().logLn(LogLevel.ERROR, "Fehler beim Zugriff auf den DB-Connection-Pool default");
 						} else {
-							System.err.println(
-									"INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
-							System.err.println("Total number of connections: " + pool.getTotalNumberOfConnections());
-							System.err.println("Available number of connections: " + pool.getConnectionsAvailable().size());
+							Logger.global().logLn(LogLevel.ERROR, "INFO: Verbindung zur Datenbank unterbrochen - versuche sie neu aufzubauen...");
+							Logger.global().logLn(LogLevel.ERROR, "Total number of connections: " + pool.getTotalNumberOfConnections());
+							Logger.global().logLn(LogLevel.ERROR, "Available number of connections: " + pool.getConnectionsAvailable().size());
 							pool.resetConnections();
 						}
 					}
@@ -282,14 +283,14 @@ public final class ConnectionManager {
 	private static void closeSingle(final DBConfig config) {
 		final ConnectionManager manager = mapManager.get(config);
 		if (manager == null) {
-			System.err.println("Fehler beim Schließen des Verbindungs-Managers zu " + config.getDBLocation()
-					+ " (Schema: " + config.getDBSchema() + "), Datenbank-Benutzer: " + config.getUsername());
+			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen des Verbindungs-Managers zu %s (Schema: %s), Datenbank-Benutzer: %s"
+					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
 			return;
 		}
 		manager.close();
 		mapManager.remove(config);
-		System.out.println("Verbindungs-Manager des Datenbank-Benutzers " + config.getUsername() + " zu "
-				+ config.getDBLocation() + " (Schema: " + config.getDBSchema() + ") geschlossen.");
+		Logger.global().logLn(LogLevel.INFO, "Verbindungs-Manager des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 	}
 
 	/**

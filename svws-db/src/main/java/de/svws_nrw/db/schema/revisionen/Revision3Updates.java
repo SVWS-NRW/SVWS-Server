@@ -420,7 +420,7 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 				final List<Long> tmpLeistungsdatenIDs = conn.queryNative(sql);
 				if (!tmpLeistungsdatenIDs.isEmpty()) {
 					sql = "UPDATE SchuelerLeistungsdaten SET Kurs_ID = NULL WHERE ID IN ";
-					sql += tmpLeistungsdatenIDs.stream().map(id -> String.valueOf(id)).collect(Collectors.joining(",", "(", ")"));
+					sql += tmpLeistungsdatenIDs.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
 					if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(sql)) {
 						logger.logLn("Fehler beim Entfernen der Kurszuordnung in den Leistungsdaten.");
 						return false;

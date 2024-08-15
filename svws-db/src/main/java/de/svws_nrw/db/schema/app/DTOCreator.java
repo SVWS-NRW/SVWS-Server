@@ -237,7 +237,7 @@ public class DTOCreator {
 					+ "     * @return die DTO-Klasse" + System.lineSeparator()
 					+ "     */" + System.lineSeparator()
 					+ "    public static Class<? extends Object> getFromDTOName(final String name) {" + System.lineSeparator()
-					+ "    	return getMapDTOName2DTOClass().get(name);" + System.lineSeparator()
+					+ "        return getMapDTOName2DTOClass().get(name);" + System.lineSeparator()
 					+ "    }" + System.lineSeparator()
 					+ "" + System.lineSeparator()
 					+ "" + System.lineSeparator()
@@ -264,7 +264,7 @@ public class DTOCreator {
 					+ "     * @return die DTO-Klasse" + System.lineSeparator()
 					+ "     */" + System.lineSeparator()
 					+ "    public static Class<? extends Object> getFromTableName(final String name) {" + System.lineSeparator()
-					+ "    	return getMapTablename2DTOClass().get(name);" + System.lineSeparator()
+					+ "        return getMapTablename2DTOClass().get(name);" + System.lineSeparator()
 					+ "    }" + System.lineSeparator()
 					+ "" + System.lineSeparator()
 					+ "}" + System.lineSeparator();

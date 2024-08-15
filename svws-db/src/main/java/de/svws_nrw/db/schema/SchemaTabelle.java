@@ -842,7 +842,7 @@ public class SchemaTabelle {
 						+ "  IF (@maxInsertedID > @tmpID)" + newline
 						+ "    BEGIN" + newline
 						+ "      SET @tmpID = @maxInsertedID" + newline
-						+ "	 END" + newline
+						+ "    END" + newline
 						+ "  UPDATE Schema_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
 						+ "  SET NOCOUNT OFF" + newline
 						+ "END;" + newline
@@ -869,7 +869,7 @@ public class SchemaTabelle {
 						+ "      IF (@maxInsertedID > @tmpID)" + newline
 						+ "        BEGIN" + newline
 						+ "          SET @tmpID = @maxInsertedID" + newline
-						+ "	      END" + newline
+						+ "        END" + newline
 						+ "      UPDATE Schema_AutoInkremente SET MaxID = @tmpID WHERE NameTabelle = ''" + tab + "''" + newline
 						+ "    END" + newline
 						+ "END;" + newline
@@ -877,16 +877,16 @@ public class SchemaTabelle {
 			} else if (DBDriver.SQLITE.equals(dbms)) {
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_1 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
-								+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+								+ "  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
 								+ "BEGIN" + newline
 								+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_2 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+								+ "WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
 								+ "BEGIN" + newline
 								+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab
 								+ "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
@@ -894,25 +894,25 @@ public class SchemaTabelle {
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_3 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-								+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
 								+ "BEGIN" + newline
 								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM "
 								+ tab + "), 0));" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_4 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-								+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
 								+ "BEGIN" + newline
 								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_INSERT_" + tab + "_5 AFTER INSERT ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-								+ "	  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+								+ "WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "  (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
 								+ "BEGIN" + newline
 								+ "  UPDATE " + tab + " SET " + spalte + " = coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0) + 1 WHERE " + spalte
 								+ " = NEW." + spalte + ";" + newline
@@ -921,16 +921,16 @@ public class SchemaTabelle {
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_1 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
-								+ "	  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL AND " + newline
+								+ "  NEW." + spalte + " > (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "')" + newline
 								+ "BEGIN" + newline
 								+ "  UPDATE Schema_AutoInkremente SET MaxID = NEW." + spalte + " WHERE NameTabelle = '" + tab + "';" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_2 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
+								+ "WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NOT NULL" + newline
 								+ "BEGIN" + newline
 								+ "  UPDATE " + tab + " SET " + spalte + " = (SELECT MaxID FROM Schema_AutoInkremente WHERE NameTabelle='" + tab
 								+ "') + 1 WHERE " + spalte + " = NEW." + spalte + ";" + newline
@@ -938,25 +938,25 @@ public class SchemaTabelle {
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_3 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-								+ "	  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "  NEW." + spalte + " < coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
 								+ "BEGIN" + newline
 								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "', coalesce((SELECT max(" + spalte + ") FROM "
 								+ tab + "), 0));" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_4 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " >= 0 AND " + newline
-								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
-								+ "	  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
+								+ "WHEN NEW." + spalte + " >= 0 AND " + newline
+								+ "  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL AND" + newline
+								+ "  NEW." + spalte + " >= coalesce((SELECT max(" + spalte + ") FROM " + tab + "), 0)" + newline
 								+ "BEGIN" + newline
 								+ "  INSERT INTO Schema_AutoInkremente(NameTabelle, MaxID) VALUES ('" + tab + "',  NEW." + spalte + ");" + newline
 								+ "END;\r\n");
 				result.add(
 						"CREATE TRIGGER t_AutoIncrement_UPDATE_" + tab + "_5 AFTER UPDATE ON " + tab + " FOR EACH ROW" + newline
-								+ "	WHEN NEW." + spalte + " < 0 AND" + newline
-								+ "	  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
+								+ "WHEN NEW." + spalte + " < 0 AND" + newline
+								+ "  (SELECT max(MaxID) FROM Schema_AutoInkremente WHERE NameTabelle='" + tab + "') IS NULL" + newline
 								+ "BEGIN" + newline
 								+ "  -- Update der " + spalte + " in der Tabelle " + tab
 								+ " erfolgt durch den Autoinkrement-Trigger 2, daher hier auch kein +1, sondern nur den Max-Wert schreiben" + newline
