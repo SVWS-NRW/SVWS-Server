@@ -41,8 +41,8 @@ public final class UntisGPU001 {
 	/** Ggf. die Stundenlänge in Minuten oder leer */
 	public Integer dauer = null;
 
-	/** Ignorieren - Dummy für das Einlesen der Daten */
-	public String dummy;
+	/** Dummy - Dieses Feld wird von Untis nicht belegt und kann genutzt werden, um den Wochentyp für den SVWS-Server anzugeben */
+	public String wochentyp;
 
 
 
@@ -56,7 +56,7 @@ public final class UntisGPU001 {
 			.addNumberColumn("wochentag")
 			.addNumberColumn("stunde")
 			.addNumberColumn("dauer")
-			.addColumn("dummy")
+			.addColumn("wochentyp")
 			.build()
 			.withColumnSeparator(';')
 			.withQuoteChar('\"')
@@ -82,7 +82,7 @@ public final class UntisGPU001 {
 	public String toString() {
 		return "Unterricht[id=" + idUnterricht + ", klasse=" + klasseKuerzel + ", lehrer="
 				+ lehrerKuerzel + ", fach/kurs=" + fachKuerzel + ", raum=" + raumKuerzel + ", wochentag="
-				+ wochentag + ", stunde=" + stunde + "]";
+				+ wochentag + ", stunde=" + stunde + ", wochentyp=" + wochentyp + "]";
 	}
 
 }

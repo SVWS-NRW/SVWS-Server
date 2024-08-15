@@ -115,15 +115,15 @@ public final class DataUntis {
 		final int schuljahr = DateUtils.getSchuljahrFromDateISO8601(beginn);
 		if (schuljahr > schuljahresabschnitt.schuljahr) {
 			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts"
-					+ " und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+					.formatted(beginn, schuljahresabschnitt.schuljahr) + " und ist damit unzulässig.");
 			throw new ApiOperationException(Status.CONFLICT, "Das angegebene Startdatum %s liegt nach dem Schuljahr %d des angegebenen Schuljahresabschnitts"
-					+ " und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+					.formatted(beginn, schuljahresabschnitt.schuljahr) + " und ist damit unzulässig.");
 		}
 		if (schuljahr < schuljahresabschnitt.schuljahr) {
 			logger.logLn(2, "[Fehler] - Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts und ist damit unzulässig."
 					.formatted(beginn, schuljahresabschnitt.schuljahr));
 			throw new ApiOperationException(Status.CONFLICT, "Das angegebene Startdatum %s liegt vor dem Schuljahr %d des angegebenen Schuljahresabschnitts"
-					+ " und ist damit unzulässig.".formatted(beginn, schuljahresabschnitt.schuljahr));
+					.formatted(beginn, schuljahresabschnitt.schuljahr) + " und ist damit unzulässig.");
 		}
 		// Erstelle den neuen Stundenplan
 		final long idStundenplan = conn.transactionGetNextID(DTOStundenplan.class);
@@ -148,6 +148,7 @@ public final class DataUntis {
 		long next_rid = conn.transactionGetNextID(DTOStundenplanUnterrichtRaum.class);
 		long next_sid = conn.transactionGetNextID(DTOStundenplanUnterrichtSchiene.class);
 		final Set<LongArrayKey> setKursUnterricht = new HashSet<>();
+		int maxWochentyp = 0;
 		for (final UntisGPU001 u : unterrichte) {
 			logger.logLn("-> Importiere Unterricht: " + u.toString());
 			// Bestimme den Zeitraster-Eintrag des neuen Stundenplans
@@ -191,7 +192,18 @@ public final class DataUntis {
 				}
 				// Erstelle den Klassen-Unterricht ...
 				final long uid = next_uid++;
-				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, 0, fach.id);
+				int wt = 0;
+				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
+					try {
+						wt = Integer.valueOf(u.wochentyp);
+						if ((wt < 0) || (wt > 4))
+							wt = 0;
+					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+						wt = 0;
+					}
+				}
+				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
+				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, fach.id);
 				dtoUnterricht.Kurs_ID = null;
 				conn.transactionPersist(dtoUnterricht);
 				conn.transactionFlush();
@@ -209,12 +221,23 @@ public final class DataUntis {
 				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde };
 				if (!setKursUnterricht.add(new LongArrayKey(key))) {
 					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d hinzugefügt."
-							+ " Überspringe diesen Eintrag...".formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde));
+							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde) + " Überspringe diesen Eintrag...");
 					continue;
 				}
 				// Erstelle den Kurs-Unterricht ...
 				final long uid = next_uid++;
-				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, 0, kurs.idFach);
+				int wt = 0;
+				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
+					try {
+						wt = Integer.valueOf(u.wochentyp);
+						if ((wt < 0) || (wt > 4))
+							wt = 0;
+					} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
+						wt = 0;
+					}
+				}
+				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
+				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, kurs.idFach);
 				dtoUnterricht.Kurs_ID = kurs.id;
 				conn.transactionPersist(dtoUnterricht);
 				conn.transactionFlush();
@@ -236,6 +259,13 @@ public final class DataUntis {
 					conn.transactionPersist(new DTOStundenplanUnterrichtRaum(next_rid++, uid,
 							DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
 			}
+			conn.transactionFlush();
+		}
+		// Passe ggf. das Wochentyp-Modell an, falls Unterrichte mit einem Wochentyp eingelesen wurden.
+		if (maxWochentyp != 0) {
+			logger.logLn("-> Setze das Wochentyp-Modell auf %d.".formatted(maxWochentyp));
+			dtoStundenplan.WochentypModell = maxWochentyp;
+			conn.transactionPersist(dtoStundenplan);
 			conn.transactionFlush();
 		}
 	}
