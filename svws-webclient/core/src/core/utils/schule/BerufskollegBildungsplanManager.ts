@@ -288,7 +288,7 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 			const faecher : List<BKFBFach> = new ArrayList<BKFBFach>();
 			faecher.addAll(this._mapFachByKuerzel.values());
 			return faecher;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((__param1 !== undefined) && typeof __param1 === "number")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const schluessel : BKFachklassenSchluessel = cast_de_svws_nrw_core_data_bk_BKFachklassenSchluessel(__param0);
 			const schuljahr : number = __param1 as number;
 			return this.getFaecherByIndexFachklasseSchuljahr(schluessel.index, schluessel.schluessel, schuljahr);

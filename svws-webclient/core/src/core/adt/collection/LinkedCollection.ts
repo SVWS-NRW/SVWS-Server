@@ -60,7 +60,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 			this._tail = null;
 			this._size = 0;
 			this._modCount = 0;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null))) {
 			const c : LinkedCollection<E> | null = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			this._size = 0;
 			this._modCount = 0;
@@ -208,7 +208,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public addAll(c : Collection<E> | null) : boolean {
 		if ((c === null) || (c.size() === 0))
 			return false;
-		if (((c instanceof JavaObject) && ((c as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection')))) {
+		if (((c instanceof JavaObject) && (c.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection')))) {
 			const coll : LinkedCollection<E> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(c);
 			if ((coll._tail === null) || (coll._head === null))
 				throw new NullPointerException()
@@ -282,7 +282,7 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	public equals(obj : unknown | null) : boolean {
 		if (obj === null)
 			return false;
-		if (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('java.util.Collection')))))
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('java.util.Collection')))))
 			return false;
 		const other : Collection<any> = cast_java_util_Collection(obj);
 		if (this._size !== other.size())

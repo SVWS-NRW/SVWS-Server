@@ -42,7 +42,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	private toEntry(obj : unknown | null) : JavaMapEntry<K, V> | null {
 		if (obj === null)
 			return null;
-		if (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('java.util.Map.Entry')))))
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('java.util.Map.Entry')))))
 			return null;
 		const entry : JavaMapEntry<K, V> = cast_java_util_Map_Entry(obj);
 		return entry;

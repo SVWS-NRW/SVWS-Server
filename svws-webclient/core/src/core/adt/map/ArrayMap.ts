@@ -53,7 +53,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	 * Die Funktion, welche jedem Schlüsselwert einem Index im Array zuordnet - für den Fall, dass es sich um einen Enum-Type handelt.
 	 */
 	private readonly keyIndexFunctionEnum : JavaFunction<K, number> = { apply : (key: K) => {
-		const isEnum : boolean = ((key instanceof JavaObject) && ((key as JavaObject).isTranspiledInstanceOf('java.lang.Enum')));
+		const isEnum : boolean = ((key instanceof JavaObject) && (key.isTranspiledInstanceOf('java.lang.Enum')));
 		if (!isEnum)
 			throw new IllegalArgumentException("Der Schlüsselwerte ist keine Enum-Konstanten und somit nicht zulässig.")
 		return (cast_java_lang_Enum(key)).ordinal();
@@ -87,7 +87,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 			if (keyArray.length <= 0)
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
 			const firstKey : K = keyArray[0];
-			if (!(((firstKey instanceof JavaObject) && ((firstKey as JavaObject).isTranspiledInstanceOf('java.lang.Enum')))))
+			if (!(((firstKey instanceof JavaObject) && (firstKey.isTranspiledInstanceOf('java.lang.Enum')))))
 				throw new IllegalArgumentException("Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.")
 			this.keyArray = keyArray;
 			this.keyIndexFunction = this.keyIndexFunctionEnum;

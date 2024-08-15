@@ -294,15 +294,15 @@ export class GostKlausurplanManager extends JavaObject {
 		super();
 		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			// empty method body
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
 			this.vorgabeAddAll(listVorgaben);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			const faecherManager : GostFaecherManager | null = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
 			this._faecherManager = faecherManager;
 			this.vorgabeAddAll(listVorgaben);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && ((__param1 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && ((__param2 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && ((__param3 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && ((__param4 as JavaObject).isTranspiledInstanceOf('java.util.List'))) || (__param4 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null))) {
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
 			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
 			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param2);
@@ -310,7 +310,7 @@ export class GostKlausurplanManager extends JavaObject {
 			const listSchuelerklausurtermine : List<GostSchuelerklausurTermin> = cast_java_util_List(__param4);
 			this.addKlausurDataOhneUpdate(listVorgaben, listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
 			this.update_all();
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData')))) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData')))) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			const allData : GostKlausurenCollectionAllData = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionAllData(__param0);
 			this.addAllData(allData);
 		} else throw new Error('invalid method overload');

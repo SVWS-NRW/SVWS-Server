@@ -47,7 +47,7 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 			const map : AVLMap<E, E> = new AVLMap<E, E>(comparator);
 			map.allowKeyAlone(true);
 			this._set = map.navigableKeySet();
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('java.util.SortedSet'))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.SortedSet'))) || (__param0 === null))) {
 			const set : SortedSet<E> = cast_java_util_SortedSet(__param0);
 			const map : AVLMap<E, E> = new AVLMap<E, E>();
 			map.allowKeyAlone(true);

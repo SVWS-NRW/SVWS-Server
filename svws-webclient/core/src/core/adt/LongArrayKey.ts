@@ -30,7 +30,7 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 			return false;
 		if (this as unknown === obj as unknown)
 			return true;
-		if (!(((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.LongArrayKey')))))
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.LongArrayKey')))))
 			return false;
 		const keys2 : Array<number> = (cast_de_svws_nrw_core_adt_LongArrayKey(obj))._keys;
 		if (this._keys.length !== keys2.length)

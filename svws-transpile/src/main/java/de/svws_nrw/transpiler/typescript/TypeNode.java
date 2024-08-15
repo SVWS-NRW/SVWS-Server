@@ -763,7 +763,7 @@ public class TypeNode {
 							+ classType.getFullQualifiedName() + "'))))";
 				}
 				// Otherwise we can check for a complete Java-object...
-				return "((" + obj + " instanceof JavaObject) && ((" + obj + " as JavaObject).isTranspiledInstanceOf('" + classType.getFullQualifiedName()
+				return "((" + obj + " instanceof JavaObject) && (" + obj + ".isTranspiledInstanceOf('" + classType.getFullQualifiedName()
 						+ "')))";
 			}
 			throw new TranspilerException("Transpiler Error: Unhandled type information for the identifier " + i.getName().toString());

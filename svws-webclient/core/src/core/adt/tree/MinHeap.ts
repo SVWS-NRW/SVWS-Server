@@ -84,7 +84,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			this._comparator = comparator;
 			this._initialCapacity = 63;
 			this._modCount = 0;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap'))) || (__param0 === null)) && (__param1 === undefined)) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap'))) || (__param0 === null)) && (__param1 === undefined)) {
 			const original : MinHeap<T> = cast_de_svws_nrw_core_adt_tree_MinHeap(__param0);
 			this._comparator = original._comparator;
 			this._initialCapacity = original._initialCapacity;
@@ -358,7 +358,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 			return true;
 		if (obj === null)
 			return false;
-		if (((obj instanceof JavaObject) && ((obj as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap')))) {
+		if (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.core.adt.tree.MinHeap')))) {
 			const other : MinHeap<any> | null = cast_de_svws_nrw_core_adt_tree_MinHeap(obj);
 			return Arrays.deepEquals(this.toSortedArray(), other.toSortedArray());
 		}

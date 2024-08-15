@@ -333,7 +333,7 @@ export class SatInput extends JavaObject {
 			for (const x of pArray)
 				list.addLast(x);
 			this.add_clause_exactly(list, pAmount);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.adt.collection.LinkedCollection'))) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
 			const pList : LinkedCollection<number> = cast_de_svws_nrw_core_adt_collection_LinkedCollection(__param0);
 			const pAmount : number = __param1 as number;
 			const list : LinkedCollection<number> = new LinkedCollection<number>(pList);

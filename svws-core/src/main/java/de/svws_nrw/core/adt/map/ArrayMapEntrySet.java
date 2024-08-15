@@ -128,12 +128,12 @@ final class ArrayMapEntrySet<K, V> implements Set<Map.Entry<K, V>> {
 	}
 
 	@Override
-	public boolean addAll(final Collection<? extends @NotNull Entry<K, V>> collection) {
+	public boolean addAll(final Collection<? extends Entry<K, V>> collection) {
 		if (collection == null)
 			throw new NullPointerException();
 		if (this == collection)
 			return true;
-		for (final @NotNull Entry<K, V> entry : collection)
+		for (final Entry<K, V> entry : collection)
 			if (!add(entry))
 				return false;
 		return true;

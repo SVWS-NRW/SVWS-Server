@@ -51,7 +51,7 @@ export class GostFachwahlManager extends JavaObject {
 		super();
 		if ((__param0 === undefined)) {
 			// empty method body
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'))) || (__param0 === null))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'))) || (__param0 === null))) {
 			const fachwahlen : GostJahrgangFachwahlenHalbjahr | null = cast_de_svws_nrw_core_data_gost_GostJahrgangFachwahlenHalbjahr(__param0);
 			for (const fw of fachwahlen.fachwahlen)
 				this.add(fw);

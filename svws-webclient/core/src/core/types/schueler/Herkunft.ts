@@ -424,28 +424,28 @@ export class Herkunft extends JavaEnum<Herkunft> {
 		super(name, ordinal);
 		Herkunft.all_values_by_ordinal.push(this);
 		Herkunft.all_values_by_name.set(name, this);
-		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSonstige'))))) {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSonstige'))))) {
 			const h : HerkunftSonstige = cast_de_svws_nrw_core_types_schueler_HerkunftSonstige(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 1000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgang'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgang'))))) {
 			const h : HerkunftBildungsgang = cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgang(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 2000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftBildungsgangsTyp'))))) {
 			const h : HerkunftBildungsgangsTyp = cast_de_svws_nrw_core_types_schueler_HerkunftBildungsgangsTyp(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
 				this.historie[i] = new HerkunftKatalogEintrag(h.historie[i].id + 3000000000, h.historie[i].kuerzel, h.historie[i].schulformen, h.historie[i].beschreibung, h.historie[i].gueltigVon, h.historie[i].gueltigBis);
 			}
 			this.daten = this.historie[this.historie.length - 1];
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && ((__param0 as JavaObject).isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSchulform'))))) {
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schueler.HerkunftSchulform'))))) {
 			const h : HerkunftSchulform = cast_de_svws_nrw_core_types_schueler_HerkunftSchulform(__param0);
 			this.historie = Array(h.historie.length).fill(null);
 			for (let i : number = 0; i < h.historie.length; i++) {
