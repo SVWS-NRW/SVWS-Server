@@ -1489,7 +1489,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Kurse
 		);
-		// TODO Prüfe
 		final String alleSchulgliederungen = Arrays.stream(Schulgliederung.values())
 				.map(sgl -> Arrays.stream(sgl.historie).toList()).flatMap(List::stream)
 				.map(h -> h.kuerzel).distinct().collect(Collectors.joining("','", "('", "')"));
@@ -1497,7 +1496,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				"UPDATE EigeneSchule_Jahrgaenge SET SGL = '***' WHERE SGL NOT IN " + alleSchulgliederungen,
 				Schema.tab_EigeneSchule_Jahrgaenge
 		);
-		// TODO Prüfe
 		add("Überprüfung der Schulgliederung",
 				"UPDATE Schueler SET ASDSchulform = '***' WHERE ASDSchulform NOT IN " + alleSchulgliederungen,
 				Schema.tab_Schueler
@@ -2079,7 +2077,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_SchuelerBKAbschluss, Schema.tab_EigeneSchule
 		);
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("Schüler-Klassen-Zuordnung: Entferne alle Einträge, die nicht in der neuen Klassentabelle vorhanden sind und wo daher keine Zuordnung machbar ist",
 				"""
 				UPDATE Schueler
@@ -2094,8 +2091,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Schueler, Schema.tab_Klassen
 		);
-
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("Schüler-Klassen-Zuordnung: Bestimme die Klassen-ID des Schülers und setze diese",
 				"""
 				UPDATE Schueler
@@ -2106,7 +2101,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Schueler, Schema.tab_Klassen
 		);
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("SchuelerFoerderempfehlungen-Klassen-Zuordnung: Entferne alle Einträge, die nicht in der neuen Klassentabelle vorhanden sind und wo daher keine Zuordnung machbar ist",
 				"""
 				UPDATE SchuelerFoerderempfehlungen
@@ -2123,7 +2117,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("SchuelerFoerderempfehlungen-Klassen-Zuordnung: Bestimme die Klassen-ID der Schüler-Förderempfehlung und setze diese",
 				"""
 				UPDATE SchuelerFoerderempfehlungen
@@ -2135,7 +2128,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_SchuelerFoerderempfehlungen, Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("Schüler-Lernabschnitt-Klassen-Zuordnung: Entferne alle Einträge, die nicht in der neuen Klassentabelle vorhanden sind und wo daher keine Zuordnung machbar ist",
 				"""
 				UPDATE SchuelerLernabschnittsdaten
@@ -2150,7 +2142,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_SchuelerLernabschnittsdaten, Schema.tab_Klassen
 		);
-		// TODO verschiebe nach erstelleNeueKlassenTabelle
 		add("Schüler-Lernabschnitt-Klassen-Zuordnung: Bestimme die Klassen-ID des Schüler-Lernabschnitts und setze diese",
 				"""
 				UPDATE SchuelerLernabschnittsdaten
