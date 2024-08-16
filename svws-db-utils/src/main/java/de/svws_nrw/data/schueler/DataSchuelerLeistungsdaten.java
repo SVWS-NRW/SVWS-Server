@@ -2,9 +2,11 @@ package de.svws_nrw.data.schueler;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
@@ -203,6 +205,40 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			case "fehlstundenUnentschuldigt" -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
 		}
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer mit einer funktionsbezogenen Kompetenz auf den Lernabschnitt zugreift und wenn ja, ob dieser dann
+	 * die Kompetenz auf den Klassen für die übergebenen Lernabschnitte hat. Hat er diese Kompetenz nicht, so wird eine
+	 * Exception geschmissen.
+	 *
+	 * @param idsLernabschnitte   die IDs der Lernabschnitte
+	 *
+	 * @throws ApiOperationException   im Fehlerfall, wenn der Benutzer nicht alle Rechte zum Zugriff auf die übergebene Lernabschnitte hat (503 - FORBIDDEN)
+	 */
+	private void checkFunktionsbezogeneKompetenzAufLernabschnitt(final List<Long> idsLernabschnitte) throws ApiOperationException {
+		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, idsLernabschnitte);
+			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte)
+				checkBenutzerFunktionsbezogeneKompetenzKlasse(lernabschnitt.Klassen_ID);
+		}
+	}
+
+
+	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu erstellen
+		final long idLernabschnitt = JSONMapper.convertToLong(initAttributes.get("lernabschnittID"), false);
+		checkFunktionsbezogeneKompetenzAufLernabschnitt(List.of(idLernabschnitt));
+	}
+
+
+	@Override
+	public void checkBeforeDeletion(final List<DTOSchuelerLeistungsdaten> dtos) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu löschen
+		checkFunktionsbezogeneKompetenzAufLernabschnitt(dtos.stream().map(l -> l.Abschnitt_ID).toList());
 	}
 
 

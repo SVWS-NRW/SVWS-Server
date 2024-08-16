@@ -14,7 +14,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -474,6 +478,50 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(deletedCoreDTOs).build();
 	}
 
+
+	/**
+	 * Prüft, ob der Benutzer den Zugriff nur über eine funktionsbezogene Kompetenz erhalten hat und nicht (auch) durch
+	 * eine nicht funktionsbezogene Kompetenz.
+	 *
+	 * @param kompetenzFunktionsbezogen   die zu prüfende funktionsbezogene Kompetenz
+	 * @param kompetenzenAndere   die zu prüfenden anderen Kompetenzen, die ggf. einen nicht funktionsbezogenen Zugang zu den Daten erlauben
+	 *
+	 * @return true, wenn der Zugriff über die funktionsbezogene Kompetenz erfolgt, und ansonsten false
+	 */
+	public boolean checkBenutzerFunktionsbezogeneKompetenz(final BenutzerKompetenz kompetenzFunktionsbezogen, final Set<BenutzerKompetenz> kompetenzenAndere) {
+		final Benutzer user = conn.getUser();
+		if (user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen)) {
+			for (final BenutzerKompetenz andere : kompetenzenAndere)
+				if (user.hatVerwendeteKompetenz(andere))
+					return false;
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer auf die angegeben Klasse funktionsbezogene Rechte hat oder nicht.
+	 *
+	 * @param idKlasse   die ID der zu prüfenden Klasse
+	 *
+	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (503 - FORBIDDEN).
+	 */
+	public void checkBenutzerFunktionsbezogeneKompetenzKlasse(final Long idKlasse) throws ApiOperationException {
+		if (idKlasse == null)
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
+		final boolean hatKompetenzFuerKlasse = conn.getUser().getKlassenIDs().contains(idKlasse);
+		if (!hatKompetenzFuerKlasse) {
+			final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse %s des Schuljahresabschnittes %s.%s (ID %d)"
+							.formatted(klasse.Klasse, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idKlasse));
+		}
+	}
+
+
 	/**
 	 * Methode prüft vor dem Löschen, ob alle Vorbedingungen zum Löschen erfüllt sind.
 	 * Standardmäßig hat diese Methode keine Implementierung.
@@ -609,8 +657,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	ID getNextID(final ID lastID, final Map<String, Object> initAttributes) {
 		if (getClassID().isAssignableFrom(Long.class))
 			return (ID) createNextLongID((Long) lastID);
-		else
-			return getID(initAttributes);
+		return getID(initAttributes);
 	}
 
 

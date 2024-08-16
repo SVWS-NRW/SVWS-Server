@@ -55,6 +55,12 @@ public final class Benutzer {
 	private List<BenutzerKompetenz> _kompetenzen = new ArrayList<>();
 
 	/**
+	 * Die Menge der bei der Operation verwendeten Benutzerkompetenzen, sofern nicht die Admin-Kompetenz verwendet
+	 * wurde oder keine Kompetenz notwendig war.
+	 */
+	private final Set<BenutzerKompetenz> _kompetenzenVerwendet = new HashSet<>();
+
+	/**
 	 * Enthält die IDs zu den Klassen, bei welchen der Benutzer einen vollständigen Zugriff bei
 	 * funktionsbezogenenen Operationen erhält. Dies kann z.B. durch die Tätigkeit als Klassenlehrer oder
 	 * auch durch die Tätigkeit als Abteilungsleiter erfolgen.
@@ -146,10 +152,23 @@ public final class Benutzer {
 			return false;
 		if (kompetenzen.contains(BenutzerKompetenz.KEINE))
 			return true;
+		_kompetenzenVerwendet.clear();
 		for (final BenutzerKompetenz kompetenz : kompetenzen)
 			if (this._kompetenzen.contains(kompetenz))
-				return true;
-		return false;
+				_kompetenzenVerwendet.add(kompetenz);
+		return !_kompetenzenVerwendet.isEmpty();
+	}
+
+
+	/**
+	 * Prüft, ob die übergebene Kompetenz bei der Anmeldung verwendet wurde oder nicht.
+	 *
+	 * @param kompetenz   die auf Verwendung zu prüfende Kompetenz
+	 *
+	 * @return true, wenn die Kompetenz verwendet wurde und ansonsten false
+	 */
+	public boolean hatVerwendeteKompetenz(final BenutzerKompetenz kompetenz) {
+		return _kompetenzenVerwendet.contains(kompetenz);
 	}
 
 
