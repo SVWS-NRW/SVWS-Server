@@ -21,6 +21,14 @@
 					<b>Wichtig:</b> Wurde die Kurs42-Datei quartalsweise verwaltet, so ist in der Datei "Blockung.txt" der Eintrag Abschnitt
 					entsprechend auf das Halbjahr zu korrigieren, für welches die Blockung importiert werden soll.
 				</p>
+				<p>
+					<b>Wichtig:</b> Die Datei Schueler.txt muss die korrekten Datenbank-IDs beinhalten. Sind diese fehlerhaft, so kommt es ggf. zu fehlerhaften
+					oder auch fehlenden Zuordnungen, die den Import unbrauchbar machen.
+				</p>
+				<p>
+					<b>Wichtig:</b> Die Blockung wird anschließend nur korrekt dargestellt, wenn die Laufbahnplanungsdaten im Client bereits vorhanden sind, weil die
+					Fachwahlen nicht aus Kurs 42 importiert werden. GGf. muss zuvor ein Jahrgangsbezogener Import aus LuPO erfolgen.
+				</p>
 			</div>
 			<svws-ui-input-wrapper>
 				<input type="file" accept=".zip" @change="import_file" :disabled="loading">
