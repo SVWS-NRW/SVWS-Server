@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurtermin;
 
 
 /**
@@ -15,75 +16,15 @@ import de.svws_nrw.core.utils.DateUtils;
  */
 public class ReportingGostKlausurplanungKlausurtermin {
 
-	/** Die textuelle Bemerkung zum Termin, sofern vorhanden. */
-	protected String bemerkung;
-
-	/** Die Bezeichnung des Klausurtermins, falls schon gesetzt. */
-	protected String bezeichnung;
-
-	/** Das Datum des Klausurtermins, falls schon gesetzt. */
-	protected String datum;
-
-	/** Das Gost-Halbjahr, in dem die Klausur geschrieben wird. */
-	protected GostHalbjahr gostHalbjahr;
-
-	/** Die ID des Klausurtermins. */
-	public long id;
-
-	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
-	protected boolean istHaupttermin;
-
-	/** Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur. */
-	protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
-
-	/** Die Liste von Kursklausuren zu diesem Klausurtermin */
-	protected List<ReportingGostKlausurplanungKursklausur> kursklausuren;
-
-	/** Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht. */
-	protected boolean nachschreiberZugelassen;
-
-	/** Das Quartal, in welchem die Klausur geschrieben wird. */
-	protected int quartal;
-
-	/** Die Liste aller Schülerklausuren zu diesem Termin. */
-	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
-
-	/** Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
-	protected Integer startzeit;
+	private ProxyReportingGostKlausurplanungKlausurtermin proxy;
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
-	 * @param bemerkung					Die textuelle Bemerkung zum Termin, sofern vorhanden.
-	 * @param bezeichnung				Die Bezeichnung des Klausurtermins, falls schon gesetzt.
-	 * @param datum						Das Datum des Klausurtermins, falls schon gesetzt.
-	 * @param gostHalbjahr				Das Gost-Halbjahr, in dem die Klausur geschrieben wird.
-	 * @param id						Die ID des Klausurtermins.
-	 * @param istHaupttermin			Die Information, ob es sich um einen Haupttermin handelt oder nicht.
-	 * @param klausurraeume 			Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
-	 * @param kursklausuren				Die Liste von Kursklausuren zu diesem Klausurtermin
-	 * @param nachschreiberZugelassen	Die Information, ob es bei einem Haupttermin auch Nachschreibklausuren zugelassen sind oder nicht.
-	 * @param quartal					Das Quartal, in welchem die Klausur geschrieben wird.
-	 * @param schuelerklausuren			Die Liste aller Schülerklausuren zu diesem Termin.
-	 * @param startzeit					Die Startzeit des Klausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
+	 * @param proxy					Die textuelle Bemerkung zum Termin, sofern vorhanden.
 	 */
-	public ReportingGostKlausurplanungKlausurtermin(final String bemerkung, final String bezeichnung, final String datum,
-			final GostHalbjahr gostHalbjahr, final long id, final boolean istHaupttermin,
-			final List<ReportingGostKlausurplanungKlausurraum> klausurraeume, final List<ReportingGostKlausurplanungKursklausur> kursklausuren,
-			final boolean nachschreiberZugelassen, final int quartal, final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren,
-			final Integer startzeit) {
-		this.bemerkung = bemerkung;
-		this.bezeichnung = bezeichnung;
-		this.datum = datum;
-		this.gostHalbjahr = gostHalbjahr;
-		this.id = id;
-		this.istHaupttermin = istHaupttermin;
-		this.klausurraeume = klausurraeume;
-		this.kursklausuren = kursklausuren;
-		this.nachschreiberZugelassen = nachschreiberZugelassen;
-		this.quartal = quartal;
-		this.schuelerklausuren = schuelerklausuren;
-		this.startzeit = startzeit;
+	public ReportingGostKlausurplanungKlausurtermin(final ProxyReportingGostKlausurplanungKlausurtermin proxy) {
+		this.proxy = proxy;
 	}
 
 
@@ -94,10 +35,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren zum Kurstermin.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
-		if (this.schuelerklausuren.isEmpty()) {
-			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
+		return this.schuelerklausuren().stream().filter(k -> k.nummerTerminfolge == 0).toList();
 	}
 
 	/**
@@ -105,10 +43,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren als Nachschreibklausuren.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
-		if (this.schuelerklausuren.isEmpty()) {
-			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
+		return this.schuelerklausuren().stream().filter(k -> k.nummerTerminfolge > 0).toList();
 	}
 
 	/**
@@ -116,10 +51,10 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (this.startzeit == null) {
+		if (proxy.startzeit == null) {
 			return "";
 		} else
-			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+			return DateUtils.gibZeitStringOfMinuten(proxy.startzeit);
 	}
 
 	/**
@@ -128,7 +63,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 */
 	public String rauemeUndStunden() {
 		final List<String> tempList = new ArrayList<>();
-		for (final ReportingGostKlausurplanungKlausurraum raum : klausurraeume) {
+		for (final ReportingGostKlausurplanungKlausurraum raum : klausurraeume()) {
 			String temp = "";
 			if ((raum.raumdaten != null) && (raum.raumdaten.kuerzel() != null)) {
 				temp = temp + " " + raum.raumdaten.kuerzel();
@@ -157,7 +92,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
-		return bemerkung;
+		return proxy.bemerkung;
 	}
 
 	/**
@@ -165,7 +100,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
-		return bezeichnung;
+		return proxy.bezeichnung;
 	}
 
 	/**
@@ -173,7 +108,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes datum
 	 */
 	public String datum() {
-		return datum;
+		return proxy.datum;
 	}
 
 	/**
@@ -181,7 +116,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
-		return gostHalbjahr;
+		return GostHalbjahr.fromIDorException(proxy.halbjahr);
 	}
 
 	/**
@@ -189,7 +124,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return id;
+		return proxy.id;
 	}
 
 	/**
@@ -197,7 +132,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes istHaupttermin
 	 */
 	public boolean istHaupttermin() {
-		return istHaupttermin;
+		return proxy.istHaupttermin;
 	}
 
 	/**
@@ -205,7 +140,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes klausurraeume
 	 */
 	public List<ReportingGostKlausurplanungKlausurraum> klausurraeume() {
-		return klausurraeume;
+		return proxy.getKlausurraeume();
 	}
 
 	/**
@@ -213,7 +148,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes kursklausuren
 	 */
 	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
-		return kursklausuren;
+		return proxy.getKursklausuren();
 	}
 
 	/**
@@ -221,7 +156,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes nachschreiberZugelassen
 	 */
 	public boolean nachschreiberZugelassen() {
-		return nachschreiberZugelassen;
+		return proxy.nachschreiberZugelassen;
 	}
 
 	/**
@@ -229,7 +164,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes quartal
 	 */
 	public int quartal() {
-		return quartal;
+		return proxy.quartal;
 	}
 
 	/**
@@ -237,6 +172,6 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Inhalt des Feldes schuelerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
-		return schuelerklausuren;
+		return proxy.getSchuelerklausuren();
 	}
 }

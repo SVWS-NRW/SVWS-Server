@@ -3,6 +3,9 @@ package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import java.util.List;
 
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurraum;
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
 
 /**
@@ -13,56 +16,25 @@ import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanung
  */
 public class ReportingGostKlausurplanungKlausurraum {
 
-	/** Die Klausuraufsichten in diesem Raum für den Klausurtermin. */
-	protected List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten;
-
-	/** Die Bemerkung zum Raum für die Klausur. */
-	protected String bemerkung;
-
-	/** Die ID des Raumes in der Klausurplanung, genauer die ID für die Kombination aus Raum der Schule und Klausurtermin. */
-	protected long id;
-
-	/** Der Klausurtermin, dem dieser Raum mit seinen Aufischten zugeordnet wurde. */
-	protected ReportingGostKlausurplanungKlausurtermin klausurtermin;
-
-	/** Die Daten des Raumes gemäß dem zum Klausurtermin gültigen Stundenplanes. */
-	protected ReportingStundenplanungRaum raumdaten;
-
+	private ProxyReportingGostKlausurplanungKlausurraum proxy;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
-	 * @param aufsichten	Die Klausuraufsichten in diesem Raum für den Klausurtermin.
-	 * @param bemerkung		Die Bemerkung zum Raum für die Klausur.
-	 * @param id			Die ID des Raumes in der Klausurplanung, genauer die ID für die Kombination aus Raum der Schule und Klausurtermin.
-	 * @param klausurtermin	Der Klausurtermin, dem dieser Raum mit seinen Aufischten zugeordnet wurde.
-	 * @param raumdaten		Die Daten des Raumes gemäß dem zum Klausurtermin gültigen Stundenplanes.
+	 * @param proxy
 	 */
-	public ReportingGostKlausurplanungKlausurraum(final List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten, final String bemerkung, final long id,
-			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingStundenplanungRaum raumdaten) {
-		this.aufsichten = aufsichten;
-		this.bemerkung = bemerkung;
-		this.id = id;
-		this.klausurtermin = klausurtermin;
-		this.raumdaten = raumdaten;
+	public ReportingGostKlausurplanungKlausurraum(final ProxyReportingGostKlausurplanungKlausurraum proxy) {
+		this.proxy = proxy;
 	}
 
 
 	// ##### Getter #####
 
 	/**
-	 * Die Klausuraufsichten in diesem Raum für den Klausurtermin.
-	 * @return Inhalt des Feldes aufsichten
-	 */
-	public List<ReportingGostKlausurplanungKlausuraufsicht> aufsichten() {
-		return aufsichten;
-	}
-
-	/**
 	 * Die Bemerkung zum Raum für die Klausur.
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
-		return bemerkung;
+		return proxy.bemerkung;
 	}
 
 	/**
@@ -70,7 +42,7 @@ public class ReportingGostKlausurplanungKlausurraum {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return id;
+		return proxy.id;
 	}
 
 	/**

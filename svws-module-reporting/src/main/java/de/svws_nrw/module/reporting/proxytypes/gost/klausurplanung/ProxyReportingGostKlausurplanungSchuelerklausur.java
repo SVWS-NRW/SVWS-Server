@@ -1,14 +1,13 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
+import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
+import de.svws_nrw.data.DTOManagerMapper;
+import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
@@ -33,40 +32,51 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  *    		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGostKlausurplanungSchuelerklausur {
+public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuelerklausur {
+
+	private final GostKlausurplanManager manager;
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
-	 * @param gostSchuelerklausur		Die GostKursklausur mit den Daten zur Klausur eines Kurses.
-	 * @param gostSchuelerklausurtermin	Der GostSchuelerklausurtermin mit den Daten zum Klausurtermin der Schülerklausur.
-	 * @param klausurraum 				Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
-	 * @param klausurtermin 			Der Termin der Schülerklausur aus den Klausurterminen.
-	 * @param kursklausur 				Die Kursklausur, der diese Schülerklausur zugeordnet wurde.
-	 * @param schueler					Der Shcüler zu dieser Schülerklausur.
+	 * @param manager		der Manager
 	 */
-	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostSchuelerklausur gostSchuelerklausur,
-			final GostSchuelerklausurTermin gostSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
-			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
-			final ReportingSchueler schueler) {
-		super(gostSchuelerklausur.bemerkung,
-				gostSchuelerklausur.id,
-				gostSchuelerklausurtermin.id,
-				klausurraum,
-				klausurtermin,
-				kursklausur,
-				gostSchuelerklausurtermin.folgeNr,
-				schueler,
-				gostSchuelerklausurtermin.startzeit);
-
-		// Die fertige Schülerklausur der Kursklausur zuweisen, wenn diese noch nicht dort in der Liste enthalten ist.
-		if ((super.kursklausur != null) && super.kursklausur.schuelerklausuren().stream().noneMatch(s -> s.id() == super.id)) {
-			super.kursklausur.schuelerklausuren().add(this);
-		}
-
-		// Die fertige Schülerklausur dem Klausurtermin zuweisen, wenn diese noch nicht dort in der Liste enthalten ist.
-		if ((super.klausurtermin != null) && super.klausurtermin.schuelerklausuren().stream().noneMatch(s -> s.id() == super.id)) {
-			super.klausurtermin.schuelerklausuren().add(this);
-		}
+	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostKlausurplanManager manager) {
+		this.manager = manager;
 	}
+
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		return (another != null) && (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return Long.hashCode(id);
+	}
+
+	/**
+	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
+	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
+	 * {@link GostKlausurraum}.
+	 */
+	public static final DTOManagerMapper<GostSchuelerklausur, ProxyReportingGostKlausurplanungSchuelerklausur, GostKlausurplanManager> dtoMapper = (final GostSchuelerklausur z, final GostKlausurplanManager m) -> {
+		final ProxyReportingGostKlausurplanungSchuelerklausur daten = new ProxyReportingGostKlausurplanungSchuelerklausur(m);
+		daten.id = z.id;
+		daten.bemerkung = z.bemerkung;
+		daten.idKursklausur = z.idKursklausur;
+		daten.idSchueler = z.idSchueler;
+		return daten;
+	};
 }

@@ -14,17 +14,18 @@ import de.svws_nrw.db.utils.ApiOperationException;
  * @param <M> der Manager-Typ
  */
 @FunctionalInterface
-public interface DTOMapper<T, R, M> {
+public interface DTOManagerMapper<T, R, M> {
 
 	/**
 	 * Applies this function to the given argument.
 	 *
 	 * @param t the function argument
+	 * @param m the manager argument
 	 * @return the function result
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	R apply(T t, M m) throws ApiOperationException;
+	R apply(T t, M m);
 
 
 	/**
@@ -33,17 +34,19 @@ public interface DTOMapper<T, R, M> {
 	 *
 	 * @param <D>             der DB-DTO-Typ
 	 * @param <C>             der Core-DTO-Typ
+	 * @param <M> der Manager-Typ
 	 * @param dtoCollection   die Collection der DB-DTOs
 	 * @param mapper          der dto-Mapper
+	 * @param manager	der Manager
 	 *
 	 * @return die Liste der Core-DTOs
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	static <D, C> List<C> mapList(final Collection<D> dtoCollection, final DTOMapper<D, C> mapper) throws ApiOperationException {
+	static <D, C, M> List<C> mapList(final Collection<D> dtoCollection, final DTOManagerMapper<D, C, M> mapper, final M manager) throws ApiOperationException {
 		final List<C> daten = new ArrayList<>();
 		for (final D dto : dtoCollection)
-			daten.add(mapper.apply(dto));
+			daten.add(mapper.apply(dto, manager));
 		return daten;
 	}
 
