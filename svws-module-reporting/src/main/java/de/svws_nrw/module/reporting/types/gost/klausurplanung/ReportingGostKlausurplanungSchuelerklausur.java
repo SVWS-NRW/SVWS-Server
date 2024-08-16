@@ -1,8 +1,5 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
-import de.svws_nrw.core.utils.DateUtils;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurtermin;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -33,13 +30,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (this.startzeit == null) {
-			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
-				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
-			else
-				return "";
-		} else
-			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+		return proxy.getStartuhrzeit();
 	}
 
 
@@ -66,7 +57,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes klausurraum
 	 */
 	public ReportingGostKlausurplanungKlausurraum klausurraum() {
-		return klausurraum;
+		return proxy.getKlausurraum();
 	}
 
 	/**
@@ -74,7 +65,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
-		return klausurtermin;
+		return proxy.getKlausurtermin();
 	}
 
 	/**
@@ -82,7 +73,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes kursklausur
 	 */
 	public ReportingGostKlausurplanungKursklausur kursklausur() {
-		return kursklausur;
+		return proxy.getKursklausur();
 	}
 
 	/**
@@ -90,7 +81,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes nummerTerminfolge
 	 */
 	public int nummerTerminfolge() {
-		return nummerTerminfolge;
+		return proxy.folgeNr;
 	}
 
 	/**
@@ -98,6 +89,6 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes schueler
 	 */
 	public ReportingSchueler schueler() {
-		return schueler;
+		return proxy.getSchueler();
 	}
 }

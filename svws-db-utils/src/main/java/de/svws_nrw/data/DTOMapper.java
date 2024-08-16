@@ -11,10 +11,9 @@ import de.svws_nrw.db.utils.ApiOperationException;
  *
  * @param <T> der DB-DTO-Typ
  * @param <R> der Core-DTO-Typ
- * @param <M> der Manager-Typ
  */
 @FunctionalInterface
-public interface DTOMapper<T, R, M> {
+public interface DTOMapper<T, R> {
 
 	/**
 	 * Applies this function to the given argument.
@@ -24,7 +23,7 @@ public interface DTOMapper<T, R, M> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	R apply(T t, M m) throws ApiOperationException;
+	R apply(T t) throws ApiOperationException;
 
 
 	/**

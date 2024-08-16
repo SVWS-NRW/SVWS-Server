@@ -18,7 +18,6 @@ public class ReportingGostKlausurplanungKlausurtermin {
 
 	private ProxyReportingGostKlausurplanungKlausurtermin proxy;
 
-
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param proxy					Die textuelle Bemerkung zum Termin, sofern vorhanden.
@@ -35,7 +34,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren zum Kurstermin.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
-		return this.schuelerklausuren().stream().filter(k -> k.nummerTerminfolge == 0).toList();
+		return proxy.getSchuelerklausurenKurstermin();
 	}
 
 	/**
@@ -43,7 +42,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren als Nachschreibklausuren.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
-		return this.schuelerklausuren().stream().filter(k -> k.nummerTerminfolge > 0).toList();
+		return proxy.getSchuelerklausurenNachschreibtermin();
 	}
 
 	/**
@@ -51,10 +50,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (proxy.startzeit == null) {
+		if (proxy.startzeit == null)
 			return "";
-		} else
-			return DateUtils.gibZeitStringOfMinuten(proxy.startzeit);
+		return DateUtils.gibZeitStringOfMinuten(proxy.startzeit);
 	}
 
 	/**
@@ -65,22 +63,14 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		final List<String> tempList = new ArrayList<>();
 		for (final ReportingGostKlausurplanungKlausurraum raum : klausurraeume()) {
 			String temp = "";
-			if ((raum.raumdaten != null) && (raum.raumdaten.kuerzel() != null)) {
-				temp = temp + " " + raum.raumdaten.kuerzel();
-			} else if (!raum.aufsichten.isEmpty()) {
-				temp = temp + " ???";
-			}
-			if (!raum.aufsichten.isEmpty()) {
-				temp = temp + " (Std. " + raum.aufsichten.getFirst().unterrichtsstunde.unterrichtstunde() + "-"
-						+ raum.aufsichten.getLast().unterrichtsstunde.unterrichtstunde() + ")";
-			}
+			if (raum.kuerzel() != null)
+				temp = temp + " " + raum.kuerzel();
 			if (!temp.isEmpty())
 				tempList.add(temp);
 		}
 		if (tempList.isEmpty())
 			return "";
-		else
-			return String.join(",", tempList);
+		return String.join(",", tempList);
 	}
 
 

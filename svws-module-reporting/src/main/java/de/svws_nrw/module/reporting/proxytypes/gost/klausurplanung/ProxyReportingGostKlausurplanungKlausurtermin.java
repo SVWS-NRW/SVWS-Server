@@ -1,12 +1,9 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DTOManagerMapper;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
@@ -42,17 +39,17 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurtermin {
 
 	private final GostKlausurplanManager manager;
-	private List<ReportingGostKlausurplanungKursklausur> kursklausuren;
-	private List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
-	private List<ReportingGostKlausurplanungKlausurraum> raeume;
+	private final ReportingGostKlausurplanungKlausurplan plan;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt. Dabei werden Kurs- und Schülerklausuren dieses Termins und dessen Räume als LEERE Liste initialisiert.
 	 * Das Hinzufügen dieser Elemente erfolgt in der Proxy-Klassen bei ihrer Erzeugung.
 	 * @param manager	Der GostKlausurtermin mit den Daten zum Klausurtermin.
+	 * @param plan Der Plan
 	 */
-	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurplanManager manager) {
+	public ProxyReportingGostKlausurplanungKlausurtermin(final GostKlausurplanManager manager, final ReportingGostKlausurplanungKlausurplan plan) {
 		this.manager = manager;
+		this.plan = plan;
 	}
 
 	/**
@@ -60,12 +57,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 * @return Inhalt des Feldes kursklausuren
 	 */
 	public List<ReportingGostKlausurplanungKursklausur> getKursklausuren() {
-		if (kursklausuren == null) {
-			kursklausuren = new ArrayList<>();
-			for (final GostKursklausur kk : manager.kursklausurGetMengeByTermin(this))
-				kursklausuren.add(new ReportingGostKlausurplanungKursklausur((ProxyReportingGostKlausurplanungKursklausur) kk));
-		}
-		return kursklausuren;
+		return manager.kursklausurGetMengeByTermin(this).stream().map(kk -> new ReportingGostKlausurplanungKursklausur((ProxyReportingGostKlausurplanungKursklausur) kk)).toList();
 	}
 
 	/**
@@ -73,12 +65,23 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 * @return Inhalt des Feldes klausurschreiber
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> getSchuelerklausuren() {
-		if (schuelerklausuren == null) {
-			schuelerklausuren = new ArrayList<>();
-			for (final GostSchuelerklausur sk : manager.schuelerklausurGetMengeByTermin(this))
-				schuelerklausuren.add(new ReportingGostKlausurplanungSchuelerklausur((ProxyReportingGostKlausurplanungSchuelerklausur) sk));
-		}
-		return schuelerklausuren;
+		return manager.schuelerklausurterminGetMengeByTermin(this).stream().map(sk -> new ReportingGostKlausurplanungSchuelerklausur((ProxyReportingGostKlausurplanungSchuelerklausur) sk)).toList();
+	}
+
+	/**
+	 * Die Liste der Schülerklausuren zum Termin ihres Kurses.
+	 * @return Die Schülerklausuren zum Kurstermin.
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> getSchuelerklausurenKurstermin() {
+		return manager.schuelerklausurterminAktuellHtGetMengeByTermin(this).stream().map(sk -> new ReportingGostKlausurplanungSchuelerklausur((ProxyReportingGostKlausurplanungSchuelerklausur) sk)).toList();
+	}
+
+	/**
+	 * Die Liste der Schülerklausuren zum Termin die Nachschreibklausuren darstellen.
+	 * @return Die Schülerklausuren als Nachschreibklausuren.
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> getSchuelerklausurenNachschreibtermin() {
+		return manager.schuelerklausurterminAktuellNtGetMengeByTermin(this).stream().map(sk -> new ReportingGostKlausurplanungSchuelerklausur((ProxyReportingGostKlausurplanungSchuelerklausur) sk)).toList();
 	}
 
 	/**
@@ -86,12 +89,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 * @return Inhalt des Feldes klausurraeume
 	 */
 	public List<ReportingGostKlausurplanungKlausurraum> getKlausurraeume() {
-		if (raeume == null) {
-			raeume = new ArrayList<>();
-			for (final GostKlausurraum sk : manager.raumGetMengeByTermin(this))
-				raeume.add(new ReportingGostKlausurplanungKlausurraum((ProxyReportingGostKlausurplanungKlausurraum) sk));
-		}
-		return raeume;
+		return manager.raumGetMengeByTermin(this).stream().map(kr -> new ReportingGostKlausurplanungKlausurraum((ProxyReportingGostKlausurplanungKlausurraum) kr)).toList();
 	}
 
 	/**
@@ -102,7 +100,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostKlausurtermin) && (this.id == ((GostKlausurtermin) another).id);
+		return super.equals(another);
 	}
 
 	/**
@@ -112,7 +110,7 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 */
 	@Override
 	public int hashCode() {
-		return Long.hashCode(id);
+		return super.hashCode();
 	}
 
 	/**
@@ -120,8 +118,8 @@ public class ProxyReportingGostKlausurplanungKlausurtermin extends GostKlausurte
 	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
 	 * {@link GostKlausurraum}.
 	 */
-	public static final DTOManagerMapper<GostKlausurtermin, ProxyReportingGostKlausurplanungKlausurtermin, GostKlausurplanManager> dtoMapper = (final GostKlausurtermin z, final GostKlausurplanManager m) -> {
-		final ProxyReportingGostKlausurplanungKlausurtermin daten = new ProxyReportingGostKlausurplanungKlausurtermin(m);
+	public static final DTOManagerMapper<GostKlausurtermin, ProxyReportingGostKlausurplanungKlausurtermin, GostKlausurplanManager, ReportingGostKlausurplanungKlausurplan> dtoMapper = (final GostKlausurtermin z, final GostKlausurplanManager m, final ReportingGostKlausurplanungKlausurplan p) -> {
+		final ProxyReportingGostKlausurplanungKlausurtermin daten = new ProxyReportingGostKlausurplanungKlausurtermin(m, p);
 		daten.id = z.id;
 		daten.abijahr = z.abijahr;
 		daten.bemerkung = z.bemerkung;

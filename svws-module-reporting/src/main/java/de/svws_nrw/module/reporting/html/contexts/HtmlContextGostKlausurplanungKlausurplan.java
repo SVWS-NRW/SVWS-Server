@@ -1,6 +1,8 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +10,16 @@ import org.thymeleaf.context.Context;
 
 import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
+import de.svws_nrw.core.utils.stundenplan.StundenplanListUtils;
+import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
+import de.svws_nrw.data.stundenplan.DataStundenplan;
+import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurraum;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
@@ -72,11 +80,29 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		try {
 			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
 			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager();
-			final GostKlausurenCollectionAllData allProxiedData = coreDtoToReportingProxy(allData, gostKlausurManager);
-			gostKlausurManager.addAllData(allProxiedData);
-
 			final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
-					new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);
+					new ReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);
+			final GostKlausurenCollectionAllData allProxiedData = coreDtoToReportingProxy(allData, gostKlausurManager, gostKlausurplan);
+			gostKlausurManager.addAllData(allProxiedData);
+			gostKlausurplan.init_all();
+
+
+			final List<StundenplanListeEintrag> sl = DataStundenplanListe.getStundenplaene(reportingRepository.conn(), reportingRepository.auswahlSchuljahresabschnitt().id);
+			if (sl.isEmpty())
+				throw new DeveloperNotificationException("Keine Stundenplandaten gefunden");
+
+			Date date = new Date();
+			String modifiedDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+			final StundenplanListeEintrag slEntry = StundenplanListUtils.get(sl, modifiedDate);
+			if (slEntry == null)
+				throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
+
+
+
+			final Stundenplan stundenplan = DataStundenplan.getStundenplan(reportingRepository.conn(), slEntry.id);
+			final StundenplanManager stundenplanManager = new StundenplanManager(stundenplan, new ArrayList(), new ArrayList(), null);
+			gostKlausurManager.setStundenplanManager(stundenplanManager);
+
 
 			// Daten-Context für Thymeleaf erzeugen.
 			final Context context = new Context();
@@ -89,15 +115,15 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		}
 	}
 
-	private GostKlausurenCollectionAllData coreDtoToReportingProxy(final GostKlausurenCollectionAllData coreCollection, final GostKlausurplanManager manager) {
+	private static GostKlausurenCollectionAllData coreDtoToReportingProxy(final GostKlausurenCollectionAllData coreCollection, final GostKlausurplanManager manager, final ReportingGostKlausurplanungKlausurplan plan) {
 		final GostKlausurenCollectionAllData reportingCollection = new GostKlausurenCollectionAllData();
-		reportingCollection.kursklausuren.addAll(coreCollection.kursklausuren.stream().map(k -> ProxyReportingGostKlausurplanungKursklausur.dtoMapper.apply(k, manager)).toList());
+		reportingCollection.kursklausuren.addAll(coreCollection.kursklausuren.stream().map(k -> ProxyReportingGostKlausurplanungKursklausur.dtoMapper.apply(k, manager, plan)).toList());
 		reportingCollection.metadata = coreCollection.metadata;
-		reportingCollection.schuelerklausuren.addAll(coreCollection.schuelerklausuren.stream().map(k -> ProxyReportingGostKlausurplanungSchuelerklausur.dtoMapper.apply(k, manager)).toList());
-		reportingCollection.schuelerklausurtermine = coreCollection.schuelerklausurtermine;
-		reportingCollection.termine.addAll(coreCollection.termine.stream().map(k -> ProxyReportingGostKlausurplanungKlausurtermin.dtoMapper.apply(k, manager)).toList());
+		reportingCollection.schuelerklausuren = coreCollection.schuelerklausuren;
+		reportingCollection.schuelerklausurtermine.addAll(coreCollection.schuelerklausurtermine.stream().map(k -> ProxyReportingGostKlausurplanungSchuelerklausur.dtoMapper.apply(k, manager, plan)).toList());
+		reportingCollection.termine.addAll(coreCollection.termine.stream().map(k -> ProxyReportingGostKlausurplanungKlausurtermin.dtoMapper.apply(k, manager, plan)).toList());
 		reportingCollection.vorgaben = coreCollection.vorgaben;
-		reportingCollection.raumdata.raeume.addAll(coreCollection.raumdata.raeume.stream().map(k -> ProxyReportingGostKlausurplanungKlausurraum.dtoMapper.apply(k, manager)).toList());
+		reportingCollection.raumdata.raeume.addAll(coreCollection.raumdata.raeume.stream().map(k -> ProxyReportingGostKlausurplanungKlausurraum.dtoMapper.apply(k, manager, plan)).toList());
 		reportingCollection.raumdata.raumstunden = coreCollection.raumdata.raumstunden;
 		reportingCollection.raumdata.sktRaumstunden = coreCollection.raumdata.sktRaumstunden;
 		return reportingCollection;
