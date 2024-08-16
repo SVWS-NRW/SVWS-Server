@@ -5,9 +5,15 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
@@ -15,8 +21,10 @@ import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
-import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -41,21 +49,15 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  *  		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingGostKlausurplanungKlausurplan {
+public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKlausurplanungKlausurplan {
 
 	/** Repository für die Reporting. */
 	@JsonIgnore
-	protected final ReportingRepository reportingRepository;
+	private final ReportingRepository reportingRepository;
 
 	/** Klausurmanager des GOSt-Klausurplans. */
 	@JsonIgnore
-	protected final GostKlausurplanManager manager;
-
-	/** Eine Liste, die alle Kurse des Klausurplanes beinhaltet. */
-	protected List<ReportingKurs> kurse;
-
-	/** Eine Liste, die alle Schüler des Klausurplanes beinhaltet. */
-	protected List<ReportingSchueler> schueler;
+	private final GostKlausurplanManager gostKlausurplanManager;
 
 
 
@@ -66,26 +68,55 @@ public class ProxyReportingGostKlausurplanungKlausurplan {
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
 	 */
 	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager) {
+		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
-		this.manager = gostKlausurplanManager;
+		this.gostKlausurplanManager = gostKlausurplanManager;
 
-
-
-	}
-
-	/**
-	 * Erstellt ein neues Reporting-Objekt anhand des Abiturjahres und des Gost-Halbjahres.
-	 *
-	 */
-	public void init_all() {
 		// 1. Schülerstammdaten der Schüler aus den Schülerklausuren ermitteln und in Listen und Maps einfügen.
 		initSchueler();
 
 		// 2. Kurs-Objekte anhand der Kursklausuren erzeugen.
-		kurse.addAll(this.manager.getKursManager().kurse().stream()
+		super.kurse.addAll(this.gostKlausurplanManager.getKursManager().kurse().stream()
 				.map(k -> new ProxyReportingKurs(this.reportingRepository, k))
 				.toList());
+
+		// 3. Klausurtermine erstellen
+		// HINWEIS: Termine werden ohne Klausuren erzeugt. Wenn Klausuren erzeugt werden, werden diese dem Termin zugewiesen.
+		super.klausurtermine.addAll(this.gostKlausurplanManager.terminGetMengeAsList().stream()
+				.map(t -> (ReportingGostKlausurplanungKlausurtermin) new ProxyReportingGostKlausurplanungKlausurtermin(t))
+				.toList());
+
+		// 4. Kursklausuren erstellen.
+		// HINWEIS: Kursklausuren und Klausurtermine erhalten ihre Schülerklausuren erst bei der Erzeugung der Schülerklausuren.
+		// HINWEIS: Die Klausurräume werden in einem folgenden Schritt zentral zugewiesen.
+		super.kursklausuren.addAll(this.gostKlausurplanManager.kursklausurGetMengeAsList().stream()
+				.map(k -> (ReportingGostKlausurplanungKursklausur) new ProxyReportingGostKlausurplanungKursklausur(
+						k,
+						this.gostKlausurplanManager.vorgabeByKursklausur(k),
+						(this.gostKlausurplanManager.terminOrNullByKursklausur(k) == null) ? null
+								: klausurtermin(this.gostKlausurplanManager.terminOrNullByKursklausur(k).id),
+						kurs(this.gostKlausurplanManager.kursdatenByKursklausur(k).id)))
+				.toList());
+
+		// 5. Klausurräume mit Aufsichten (sofern schon zugeteilt) erstellen.
+		initKlausurraeume();
+
+		// 6. Schülerklausuren erstellen.
+		initSchuelerklausuren();
+
+		// 7. Sortiere alle Schülerklausuren, sowohl Gesamtliste als auch bei den Kursklausuren.
+		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
+		super.schuelerklausuren.sort(Comparator
+				.comparing((ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
+				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
+				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
+				.thenComparing(sk -> sk.schueler().id()));
+		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(Comparator
+				.comparing((ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
+				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
+				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
+				.thenComparing(sk -> sk.schueler().id())));
 	}
 
 	/**
@@ -95,7 +126,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan {
 		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
 		final List<Long> fehlendeSchueler = new ArrayList<>();
 
-		for (final Long idSchueler : this.manager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()) {
+		for (final Long idSchueler : this.gostKlausurplanManager.schuelerklausurGetMengeAsList().stream().map(s -> s.idSchueler).distinct().toList()) {
 			if (this.reportingRepository.mapSchuelerStammdaten().containsKey(idSchueler))
 				schuelerStammdaten.add(this.reportingRepository.mapSchuelerStammdaten().get(idSchueler));
 			else
@@ -109,7 +140,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan {
 		}
 
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
-		schueler.addAll(schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
+		super.schueler.addAll(schuelerStammdaten.stream().map(s -> (ReportingSchueler) new ProxyReportingSchueler(this.reportingRepository, s))
 				.sorted(Comparator.comparing(ReportingSchueler::nachname, colGerman)
 						.thenComparing(ReportingSchueler::vorname, colGerman)
 						.thenComparing(ReportingSchueler::vornamen, colGerman)
@@ -117,39 +148,68 @@ public class ProxyReportingGostKlausurplanungKlausurplan {
 				.toList());
 	}
 
-
-
 	/**
-	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes beinhaltet, denen bereits ein Datum zugewiesen wurde.
-	 * @return Liste der Klausurtermine mit Datumsangabe
+	 * Initialisiert die Raumdaten und Unterrichtsstunden der Klausurräume. Das Ergebnis wird in den übergebenen Listen gespeichert.
 	 */
-	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineMitDatum() {
-		return manager.terminMitDatumGetMenge().stream().map(t -> new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) t)).toList();
+	private void initKlausurraeume() {
+		// Durchlaufe alle Klausurtermine und weise ihnen die ReportingKlausurräume zu, die aus den Daten erzeugt werden.
+		for (final ReportingGostKlausurplanungKlausurtermin termin : super.klausurtermine) {
+			// Einem Termin können mehrere Räume zugewiesen worden sein. Ermittle sie gemäß TerminID.
+			final GostKlausurtermin gostKlausurtermin = this.gostKlausurplanManager.terminGetByIdOrNull(termin.id);
+			if (gostKlausurtermin != null) {
+				// Durchlaufe alle Räume, ermittle dabei die Klausurstunden und erzeuge damit die Klausurräume.
+				for (final GostKlausurraum terminraum : this.gostKlausurplanManager.raumGetMengeByTermin(gostKlausurtermin)) {
+					termin.klausurraeume().add(
+							new ProxyReportingGostKlausurplanungKlausurraum(this.reportingRepository, termin, terminraum,
+									this.gostKlausurplanManager.klausurraumstundeGetMengeByRaum(terminraum)));
+				}
+			}
+		}
 	}
 
 	/**
-	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes beinhaltet, denen noch kein Datum zugewiesen wurde.
-	 * @return Liste der Klausurtermine ohne Datumsangabe
+	 * Initialsiert die Schülerklausuren mit allen Informationen (auch individuelle Raumdaten, Zeit oder Klausurdaten).
 	 */
-	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineOhneDatum() {
-		return manager.terminOhneDatumGetMenge().stream().map(t -> new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) t)).toList();
-	}
+	private void initSchuelerklausuren() {
 
-	/**
-	 * Eine Liste, die alle Termine des Klausurplanes beinhaltet.
-	 * @return Liste der Klausurtermine
-	 */
-	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermine() {
-		return manager.terminGetMengeAsList().stream().map(t -> new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) t)).toList();
-	}
+		// Listen und Maps mit Daten aus den vorherigen Schritten, um nicht erneut auf die DB zugreifen zu müssen.
+		final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine =
+				super.klausurtermine.stream().collect(Collectors.toMap(ReportingGostKlausurplanungKlausurtermin::id, t -> t));
+		final Map<Long, ReportingGostKlausurplanungKursklausur> mapKursklausuren =
+				super.kursklausuren.stream().collect(Collectors.toMap(ReportingGostKlausurplanungKursklausur::id, k -> k));
 
-	/**
-	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes zum angegebenen Datum beinhaltet.
-	 * @param  datum 	Datum, zu dem die Liste der Klausurtermine zurückgegeben werden soll.
-	 * @return 			Liste der Klausurtermine mit dem gewünschten Datum
-	 */
-	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineZumDatum(final String datum) {
-		return manager.terminGetMengeByDatum(datum).stream().map(t -> new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) t)).toList();
+		// Durchlaufe nun alle Schülerklausuren und erzeuge dafür deren Termine mit Klausurräumen usw.
+		for (final GostSchuelerklausur sk : gostKlausurplanManager.schuelerklausurGetMengeAsList()) {
+
+			// Zu einer Schülerklausur kann es mehrere Schülerklausurtermine geben, die sich in ihrer FolgeNr unterscheiden (z. B. bei Nachschrieb).
+			for (final GostSchuelerklausurTermin skTermin : gostKlausurplanManager.schuelerklausurterminGetMengeBySchuelerklausur(sk)) {
+				// 1. Den Klausurtermin für den Schülerklausurtermin ermitteln.
+				ReportingGostKlausurplanungKlausurtermin klausurtermin = null;
+
+				// Der Termin mit FolgeNr 0 und TerminID null ist der Termin der Kursklausur.
+				if ((skTermin.folgeNr == 0) && (skTermin.idTermin == null)) {
+					klausurtermin = mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id).klausurtermin();
+				} else {
+					klausurtermin = (skTermin.idTermin != null) ? mapKlausurtermine.get(skTermin.idTermin) : null;
+				}
+
+				// 2. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
+				ReportingGostKlausurplanungKlausurraum klausurraum = null;
+
+				final GostKlausurraum gostKlausurraum = gostKlausurplanManager.klausurraumGetBySchuelerklausurtermin(skTermin);
+				if (gostKlausurraum != null) {
+					final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.klausurraumstundeGetMengeByRaum(gostKlausurraum);
+					if (!gostKlausurraumstundenSchueler.isEmpty()) {
+						klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(
+								this.reportingRepository, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);
+					}
+				}
+
+				// 3. Schülerklausur erzeugen und der Gesamtliste der Schülerklausuren hinzufügen.
+				super.schuelerklausuren.add(new ProxyReportingGostKlausurplanungSchuelerklausur(sk, skTermin, klausurraum, klausurtermin,
+						mapKursklausuren.get(gostKlausurplanManager.kursklausurBySchuelerklausur(sk).id), schueler(sk.idSchueler)));
+			}
+		}
 	}
 
 

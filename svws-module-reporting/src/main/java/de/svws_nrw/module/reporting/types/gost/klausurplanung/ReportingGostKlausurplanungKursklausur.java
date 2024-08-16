@@ -1,9 +1,12 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
@@ -43,12 +46,15 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKurs() {
-		if (this.kurs() == null)
+		if (this.kurs == null) {
 			return "00";
-		final int anzahl = this.kurs().schueler().size();
-		if (anzahl < 10)
-			return "0" + anzahl;
-		return "" + anzahl;
+		} else {
+			final int anzahl = this.kurs.schueler().stream().map(ReportingSchueler::id).distinct().toList().size();
+			if (anzahl < 10)
+				return "0" + anzahl;
+			else
+				return "" + anzahl;
+		}
 	}
 
 	/**
@@ -56,7 +62,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return	Liste der Klausurschreiber.
 	 */
 	public List<String> klausurschreiberNamen() {
-		return schuelerklausuren().stream().map(s -> s.schueler().vorname() + " " + s.schueler().nachname()).toList();
+		return schuelerklausuren().stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
 	}
 
 	/**
@@ -64,7 +70,15 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Die Liste der Räume der Kursklausur.
 	 */
 	public List<String> raeume() {
-		return proxy.raeume().stream().map(r -> r.kuerzel()).distinct().toList();
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0).
+			return schuelerklausuren.stream()
+					.filter(s -> (s.klausurtermin != null) && (s.nummerTerminfolge == 0)
+							&& (s.klausurraum != null) && (s.klausurraum.raumdaten != null))
+					.map(s -> s.klausurraum.raumdaten.kuerzel()).distinct().toList();
+		}
 	}
 
 	/**
@@ -72,7 +86,13 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		return proxy.getStartuhrzeit();
+		if (this.startzeit == null) {
+			if ((klausurtermin != null) && (klausurtermin.startzeit != null))
+				return DateUtils.gibZeitStringOfMinuten(klausurtermin.startzeit);
+			else
+				return "";
+		} else
+			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
 	/**
@@ -80,7 +100,23 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Die Unterrichtsstunden der Klausur.
 	 */
 	public List<Integer> stunden() {
-		return proxy.stunden();
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
+			return new ArrayList<>();
+		} else {
+			// Der erste Termin einer Schülerklausur ist der Termin der Kursklausur (FolgeNr ist 0). Nehme diesen für die Zeiten.
+			final List<ReportingGostKlausurplanungSchuelerklausur> klausurenMitRaumUndStunden = schuelerklausuren.stream()
+					.filter(s -> (s.klausurtermin != null)
+							&& (s.nummerTerminfolge == 0)
+							&& (s.klausurraum != null)
+							&& (!s.klausurraum.aufsichten.isEmpty()))
+					.toList();
+
+			if (!klausurenMitRaumUndStunden.isEmpty())
+				return klausurenMitRaumUndStunden.getFirst().klausurraum.aufsichten.stream()
+						.map(a -> a.unterrichtsstunde.unterrichtstunde()).toList();
+			else
+				return new ArrayList<>();
+		}
 	}
 
 	/**
@@ -88,7 +124,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return	Liste der Klausurschreiber als Text.
 	 */
 	public String textKlausurschreiberNamen() {
-		if (this.kurs() == null) {
+		if (this.kurs == null) {
 			return "";
 		} else {
 			return String.join(", ", klausurschreiberNamen());
@@ -100,7 +136,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Die Liste der Räume der Kursklausur als Text.
 	 */
 	public String textRaeume() {
-		if (schuelerklausuren().isEmpty()) {
+		if ((schuelerklausuren == null) || schuelerklausuren.isEmpty()) {
 			return "";
 		} else {
 			return String.join(", ", raeume());
@@ -191,7 +227,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes kurs
 	 */
 	public ReportingKurs kurs() {
-		return proxy.getKurs();
+		return kurs;
 	}
 
 	/**

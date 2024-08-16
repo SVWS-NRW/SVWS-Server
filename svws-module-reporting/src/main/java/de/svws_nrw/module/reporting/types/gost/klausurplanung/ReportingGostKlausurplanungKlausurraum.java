@@ -1,7 +1,12 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 
+import java.util.List;
+
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurraum;
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
+import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum in der GOSt-Klausurplanung.</p>
@@ -45,31 +50,14 @@ public class ReportingGostKlausurplanungKlausurraum {
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
-		return proxy.getKlausurtermin();
+		return klausurtermin;
 	}
 
 	/**
-	 * Die Kapazität des Raumes (in Bezug auf die Anzahl der Schülerplätze).
-	 * @return Inhalt des Feldes kapazitaet
+	 * Die Daten des Raumes gemäß dem zum Klausurtermin gültigen Stundenplanes.
+	 * @return Inhalt des Feldes raumdaten
 	 */
-	public int kapazitaet() {
-		return proxy.getKapazitaet();
+	public ReportingStundenplanungRaum raumdaten() {
+		return raumdaten;
 	}
-
-	/**
-	 * Das Kürzel des Raumes.
-	 * @return Inhalt des Feldes kuerzel
-	 */
-	public String kuerzel() {
-		return proxy.getKuerzel();
-	}
-
-	/**
-	 * Die Beschreibung des Raumes.
-	 * @return Inhalt des Feldes beschreibung
-	 */
-	public String beschreibung() {
-		return proxy.getBeschreibung();
-	}
-
 }

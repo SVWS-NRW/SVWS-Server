@@ -167,7 +167,7 @@
 										<td class="small bot-grey pad-1001" th:text="${schuelerklausur.schueler().nachname() + ', ' + schuelerklausur.schueler().vorname()}">GE-GK2</td>
 										<td class="small bot-grey pad-1001" th:text="${schuelerklausur.kursklausur().kurs().kuerzel()}">ABC</td>
 										<td class="small bot-grey pad-1001" th:text="${schuelerklausur.kursklausur().kurs().kursLehrer().kuerzel()}">ABC</td>
-										<td class="small bot-grey pad-1001" th:text="${((schuelerklausur.klausurraum() == null) || (schuelerklausur.klausurraum().kuerzel() == null)) ? '' : schuelerklausur.klausurraum().kuerzel()}">A2.13</td>
+										<td class="small bot-grey pad-1001" th:text="${((schuelerklausur.klausurraum() == null) || (schuelerklausur.klausurraum().raumdaten() == null)) ? '' : schuelerklausur.klausurraum().raumdaten().kuerzel()}">A2.13</td>
 										<td class="small bot-grey pad-1001" th:text="${schuelerklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
 										<td class="small bot-grey pad-1001 ta-r" th:text="${schuelerklausur.kursklausur().dauer() + ' Min.'}">180 Min.</td>
 										<td class="small bot-grey pad-1001 ta-r" th:text="${(schuelerklausur.kursklausur().istAudioNotwendig() ? 'A' : '') + (schuelerklausur.kursklausur().istVideoNotwendig() ? 'V' : '')}">A</td>

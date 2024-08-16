@@ -1,14 +1,12 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
-import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DTOManagerMapper;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 
 
 /**
@@ -36,51 +34,13 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 public class ProxyReportingGostKlausurplanungKlausurraum extends GostKlausurraum {
 
 	private final GostKlausurplanManager manager;
-	private final ReportingGostKlausurplanungKlausurplan plan;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
 	 * @param manager		der Manager
-	 * @param plan
 	 */
-	public ProxyReportingGostKlausurplanungKlausurraum(final GostKlausurplanManager manager, final ReportingGostKlausurplanungKlausurplan plan) {
+	public ProxyReportingGostKlausurplanungKlausurraum(final GostKlausurplanManager manager) {
 		this.manager = manager;
-		this.plan = plan;
-	}
-
-	/**
-	 * Der Klausurtermin, dem dieser Raum mit seinen Aufischten zugeordnet wurde.
-	 * @return Inhalt des Feldes klausurtermin
-	 */
-	public ReportingGostKlausurplanungKlausurtermin getKlausurtermin() {
-		return new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) manager.terminGetByIdOrException(idTermin));
-	}
-
-	/**
-	 * Die Kapazität des Raumes (in Bezug auf die Anzahl der Schülerplätze).
-	 * @return Inhalt des Feldes kapazitaet
-	 */
-	public int getKapazitaet() {
-		final StundenplanRaum raum = manager.stundenplanraumGetByKlausurraumOrNull(this);
-		return raum == null ? -1 : raum.groesse;
-	}
-
-	/**
-	 * Das Kürzel des Raumes.
-	 * @return Inhalt des Feldes kuerzel
-	 */
-	public String getKuerzel() {
-		final StundenplanRaum raum = manager.stundenplanraumGetByKlausurraumOrNull(this);
-		return raum == null ? null : raum.kuerzel;
-	}
-
-	/**
-	 * Die Beschreibung des Raumes.
-	 * @return Inhalt des Feldes beschreibung
-	 */
-	public String getBeschreibung() {
-		final StundenplanRaum raum = manager.stundenplanraumGetByKlausurraumOrNull(this);
-		return raum == null ? null : raum.beschreibung;
 	}
 
 	/**
@@ -91,7 +51,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends GostKlausurraum
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return super.equals(another);
+		return (another != null) && (another instanceof GostKlausurraum) && (this.id == ((GostKlausurraum) another).id);
 	}
 
 	/**
@@ -101,7 +61,7 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends GostKlausurraum
 	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return Long.hashCode(id);
 	}
 
 	/**
@@ -109,8 +69,8 @@ public class ProxyReportingGostKlausurplanungKlausurraum extends GostKlausurraum
 	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
 	 * {@link GostKlausurraum}.
 	 */
-	public static final DTOManagerMapper<GostKlausurraum, ProxyReportingGostKlausurplanungKlausurraum, GostKlausurplanManager, ReportingGostKlausurplanungKlausurplan> dtoMapper = (final GostKlausurraum z, final GostKlausurplanManager m, final ReportingGostKlausurplanungKlausurplan p) -> {
-		final ProxyReportingGostKlausurplanungKlausurraum daten = new ProxyReportingGostKlausurplanungKlausurraum(m, p);
+	public static final DTOManagerMapper<GostKlausurraum, ProxyReportingGostKlausurplanungKlausurraum, GostKlausurplanManager> dtoMapper = (final GostKlausurraum z, final GostKlausurplanManager m) -> {
+		final ProxyReportingGostKlausurplanungKlausurraum daten = new ProxyReportingGostKlausurplanungKlausurraum(m);
 		daten.id = z.id;
 		daten.bemerkung = z.bemerkung;
 		daten.idStundenplanRaum = z.idStundenplanRaum;

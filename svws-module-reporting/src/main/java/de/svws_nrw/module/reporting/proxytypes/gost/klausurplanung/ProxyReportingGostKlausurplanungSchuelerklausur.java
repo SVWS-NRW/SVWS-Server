@@ -1,17 +1,13 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
-import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
-import de.svws_nrw.core.utils.DateUtils;
+import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DTOManagerMapper;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
-import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
@@ -36,60 +32,17 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  *    		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuelerklausurTermin {
+public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuelerklausur {
 
 	private final GostKlausurplanManager manager;
-	private final ReportingGostKlausurplanungKlausurplan plan;
+
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
 	 * @param manager		der Manager
-	 * @param plan plan
 	 */
-	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostKlausurplanManager manager, final ReportingGostKlausurplanungKlausurplan plan) {
+	public ProxyReportingGostKlausurplanungSchuelerklausur(final GostKlausurplanManager manager) {
 		this.manager = manager;
-		this.plan = plan;
-	}
-
-	/**
-	 * Der Schüler dieser Schülerklausur.
-	 * @return Inhalt des Feldes schueler
-	 */
-	public ReportingSchueler getSchueler() {
-		return plan.schueler(manager.schuelerklausurBySchuelerklausurtermin(this).idSchueler);
-	}
-
-	/**
-	 * Der Termin der Schülerklausur aus den Klausurterminen.
-	 * @return Inhalt des Feldes klausurtermin
-	 */
-	public ReportingGostKlausurplanungKlausurtermin getKlausurtermin() {
-		return new ReportingGostKlausurplanungKlausurtermin((ProxyReportingGostKlausurplanungKlausurtermin) manager.terminOrNullBySchuelerklausurTermin(this));
-	}
-
-	/**
-	 * Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur.
-	 * @return Inhalt des Feldes kursklausur
-	 */
-	public ReportingGostKlausurplanungKursklausur getKursklausur() {
-		return new ReportingGostKlausurplanungKursklausur((ProxyReportingGostKlausurplanungKursklausur) manager.kursklausurBySchuelerklausurTermin(this));
-	}
-
-	/**
-	 * Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
-	 * @return Inhalt des Feldes klausurraum
-	 */
-	public ReportingGostKlausurplanungKlausurraum getKlausurraum() {
-		return new ReportingGostKlausurplanungKlausurraum((ProxyReportingGostKlausurplanungKlausurraum) manager.klausurraumGetBySchuelerklausurtermin(this));
-	}
-
-	/**
-	 * Die Startuhrzeit der Schülerklausur, falls schon gesetzt.
-	 * @return Die Uhrzeitangabe der Startzeit.
-	 */
-	public String getStartuhrzeit() {
-		Integer startzeit = manager.startzeitBySchuelerklausurterminOrNull(this);
-		return startzeit == null ? "" : DateUtils.gibZeitStringOfMinuten(startzeit);
 	}
 
 	/**
@@ -100,7 +53,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuele
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return super.equals(another);
+		return (another != null) && (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
 	}
 
 	/**
@@ -110,7 +63,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuele
 	 */
 	@Override
 	public int hashCode() {
-		return super.hashCode();
+		return Long.hashCode(id);
 	}
 
 	/**
@@ -118,14 +71,12 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends GostSchuele
 	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
 	 * {@link GostKlausurraum}.
 	 */
-	public static final DTOManagerMapper<GostSchuelerklausurTermin, ProxyReportingGostKlausurplanungSchuelerklausur, GostKlausurplanManager, ReportingGostKlausurplanungKlausurplan> dtoMapper = (final GostSchuelerklausurTermin z, final GostKlausurplanManager m, final ReportingGostKlausurplanungKlausurplan p) -> {
-		final ProxyReportingGostKlausurplanungSchuelerklausur daten = new ProxyReportingGostKlausurplanungSchuelerklausur(m, p);
+	public static final DTOManagerMapper<GostSchuelerklausur, ProxyReportingGostKlausurplanungSchuelerklausur, GostKlausurplanManager> dtoMapper = (final GostSchuelerklausur z, final GostKlausurplanManager m) -> {
+		final ProxyReportingGostKlausurplanungSchuelerklausur daten = new ProxyReportingGostKlausurplanungSchuelerklausur(m);
 		daten.id = z.id;
 		daten.bemerkung = z.bemerkung;
-		daten.folgeNr = z.folgeNr;
-		daten.idSchuelerklausur = z.idSchuelerklausur;
-		daten.idTermin = z.idTermin;
-		daten.startzeit = z.startzeit;
+		daten.idKursklausur = z.idKursklausur;
+		daten.idSchueler = z.idSchueler;
 		return daten;
 	};
 }
