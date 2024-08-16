@@ -552,6 +552,21 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
+	 * Methode prüft vor dem Patchen eines Datenbank-DTOs, ob alle Vorbedingungen zum Patch erfüllt sind.
+	 * Standardmäßig hat diese Methode keine Implementierung.
+	 * Wenn eine Prüfung durchgeführt werden soll, muss diese Methode überschrieben werden.
+	 *
+	 * @param dto               das DTO
+	 * @param patchAttributes   die Map mit den zu patchenden Attributen für das DTO
+	 *
+	 * @throws ApiOperationException wird geworfen, wenn eine Vorbedingung nicht erfüllt wurde
+	 */
+	public void checkBeforePatch(final DatabaseDTO dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		// Methode kann überschrieben werden
+	}
+
+
+	/**
 	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
 	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
 	 * übergebenen Mappings zugelassen.
@@ -572,6 +587,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		final DatabaseDTO dto = conn.queryByKey(classDatabaseDTO, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Die Entität für die angegebene ID wurden in der Datenbank nicht gefunden.");
+
+		checkBeforePatch(dto, attributesToPatch);
 
 		// Patchings auf DTO anwenden und anschließend in DB persistieren
 		applyPatchMappings(dto, attributesToPatch, null, Collections.emptySet(), false);
