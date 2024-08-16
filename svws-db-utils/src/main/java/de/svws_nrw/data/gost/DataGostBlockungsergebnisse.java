@@ -513,8 +513,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 							"Die Zuordnung des Schüler mit der ID %d zu dem Kurs mit der ID %d sollte doppelt entfernt werden.".formatted(zuordnung.idSchueler,
 									zuordnung.idKurs));
 				setEntfernt.add(eintrag);
-				if (!schuelerIDs.contains(zuordnung.idSchueler))
-					throw new ApiOperationException(Status.NOT_FOUND, "Der Schüler mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idSchueler));
+				/* Die Schüler-ID wird beim Entfernen nicht darauf geprüft, ob sie einem Schüler im gleichen Abiturjahrgang gehört, so dass auch fehlerhafte
+				 * Zuweisungen entfernt werden können */
 				if (!kursIDs.contains(zuordnung.idKurs))
 					throw new ApiOperationException(Status.NOT_FOUND, "Der Kurs mit der ID %d wurde nicht gefunden.".formatted(zuordnung.idKurs));
 				// Prüfe, ob die Zuordnung überhaupt existiert und entfernt werden kann
@@ -1191,9 +1191,9 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @return die HTTP-Response, welchen den Erfolg der Operation angibt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
-     */
-    public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
-    	// Bestimmt die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
+	 */
+	public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
+		// Bestimmt die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
 		final DTOSchuljahresabschnitte schuleAbschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
 
