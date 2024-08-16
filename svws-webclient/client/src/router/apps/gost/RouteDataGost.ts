@@ -171,8 +171,6 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
-		if (this.jahrgangsdaten === undefined)
-			return false;
 		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
 		this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
 		return true;
@@ -192,8 +190,6 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	patchFach = async (data: Partial<GostFach>, fach_id: number) => {
-		if (this.jahrgangsdaten === undefined)
-			return;
 		await api.server.patchGostAbiturjahrgangFach(data, api.schema, this.jahrgangsdaten.abiturjahr, fach_id);
 		const fach = this.faecherManager.get(fach_id);
 		if (fach !== null)
@@ -205,7 +201,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>, isEntering: boolean) : Promise<Partial<RouteDataGost>> {
 		if (jahrgang && (jahrgang.abiturjahr === curState.auswahl?.abiturjahr) && (curState.jahrgangsdaten !== undefined) && !isEntering)
 			return curState;
-		if ((jahrgang === undefined) || (jahrgang === null) || (this.mapJahrgaenge.size === 0)) {
+		if ((jahrgang === undefined) || (this.mapJahrgaenge.size === 0)) {
 			return Object.assign({ ... this._defaultState }, {
 				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
 			});
@@ -233,7 +229,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
-		if (value === undefined || value === null) {
+		if (value === undefined) {
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
 			// await RouteManager.doRoute({ name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;

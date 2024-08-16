@@ -57,18 +57,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 
 
 	/**
-     * Erstellt einen neuen Knoten für das Routing mithilfe einer
-     * einfachen Default-Router-View.
-     * Es können mithilfe der Methode "setView" noch weitere Router-Views
-     * ergänzt werden
-     *
+	 * Erstellt einen neuen Knoten für das Routing mithilfe einer
+	 * einfachen Default-Router-View.
+	 * Es können mithilfe der Methode "setView" noch weitere Router-Views
+	 * ergänzt werden
+	 *
 	 * @param schulformen   die Schulformen, welche für welche die Route erlaubt ist.
 	 * @param kompetenzen   die Kompetenzen, die ein Benutzer für den Zugriff auf die Route benötigt
-     * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
-     * @param path          der Pfad der Route (siehe RouteRecordRaw)
-     * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
-     * @param data          die dem Knoten zugeordneten Daten
-     */
+	 * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
+	 * @param path          der Pfad der Route (siehe RouteRecordRaw)
+	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
+	* @param data          die dem Knoten zugeordneten Daten
+	 */
 	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
@@ -78,7 +78,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
-				text: name 	// Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				text: name // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
 			}
 		};
 		this._children = [];
@@ -94,18 +94,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 
 
 	/**
-     * Gibt das vue-router-Object (siehe RouteRecordRaw)
-     * für diesen Knoten zurück.
-     *
-     * @returns das Objekt
-     */
+	 * Gibt das vue-router-Object (siehe RouteRecordRaw)
+	 * für diesen Knoten zurück.
+	 *
+	 * @returns das Objekt
+	 */
 	public get record() : RouteRecordRaw {
 		return this._record;
 	}
 
 	/**
-     * Gibt den Namen der Route zurück.
-     */
+	 * Gibt den Namen der Route zurück.
+	 */
 	public get name() : string {
 		if (this._record.name === undefined)
 			throw Error("Die Route hat keinen gültigen Namen");
@@ -127,22 +127,22 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Setzt den Text der Route, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
-     */
+	 * Setzt den Text der Route, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
+	 */
 	public set text(text : string) {
 		(this._record.meta as { text: string }).text = text;
 	}
 
 	/**
-     * Gibt die Daten zurück, die diesem Knoten zugeordnet sind.
-     */
+	 * Gibt die Daten zurück, die diesem Knoten zugeordnet sind.
+	 */
 	public get data() : TRouteData {
 		return this._data;
 	}
 
 	/**
-     * Setzt die Daten, die diesem Knoten zugeordnet sind
-     */
+	 * Setzt die Daten, die diesem Knoten zugeordnet sind
+	 */
 	public set data(data : TRouteData ) {
 		this._data = data;
 	}
@@ -162,26 +162,24 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Setzt die Kind-Knoten für diesen Knoten in Bezug auf das
-     * "Nested"-Routing.
-     *
-     * @param nodes   Ein Array mit den Kindern für das Routing
-     */
+	 * Setzt die Kind-Knoten für diesen Knoten in Bezug auf das
+	 * "Nested"-Routing.
+	 *
+	 * @param nodes   Ein Array mit den Kindern für das Routing
+	 */
 	public set children(nodes: RouteNode<any, any>[]) {
-		if (this._children !== undefined)
-			this._children.forEach(c => c.parent = undefined);
+		this._children.forEach(c => c.parent = undefined);
 		this._children = nodes;
-		if (this._children !== undefined)
-			this._children.forEach(c => c.parent = this);
+		this._children.forEach(c => c.parent = this);
 		this._record.children = nodes.length === 0 ? undefined : nodes.map(n => n.record);
 	}
 
 	/**
-     * Gibt die Kind-Knoten für diesen Knoten in Bezug auf das
-     * "Nested"-Routing zurück.
-     *
-     * @returns ein Array mit den Kind-Knoten
-     */
+	 * Gibt die Kind-Knoten für diesen Knoten in Bezug auf das
+	 * "Nested"-Routing zurück.
+	 *
+	 * @returns ein Array mit den Kind-Knoten
+	 */
 	public get children() : RouteNode<any, any>[] {
 		const result : RouteNode<any, any>[] = [];
 		for (const node of this._children) {
@@ -193,21 +191,21 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Setzt die Knoten, welche bei der Auswahl dieser Route für ein
-     * Menu zur Verfügung stehen.
-     *
-     * @param nodes   Ein Array mit den Knoten
-     */
+	 * Setzt die Knoten, welche bei der Auswahl dieser Route für ein
+	 * Menu zur Verfügung stehen.
+	 *
+	 * @param nodes   Ein Array mit den Knoten
+	 */
 	public set menu(nodes: RouteNode<any, any>[]) {
 		this._menu = nodes;
 	}
 
 	/**
-     * Gibt die Knoten zurück, welche bei der Auswahl dieser Route für ein
-     * Menu zur Verfügung stehen.
-     *
-     * @returns ein Array mit den Knoten
-     */
+	 * Gibt die Knoten zurück, welche bei der Auswahl dieser Route für ein
+	 * Menu zur Verfügung stehen.
+	 *
+	 * @returns ein Array mit den Knoten
+	 */
 	public get menu() : RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menu)
@@ -217,29 +215,29 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Gibt den Elter-Knoten zurück, sofern einer gesetzt wurde
-     *
-     * @return der Elter-Knoten oder undefined
-     */
+	 * Gibt den Elter-Knoten zurück, sofern einer gesetzt wurde
+	 *
+	 * @return der Elter-Knoten oder undefined
+	 */
 	public get parent(): TRouteParent | undefined {
 		return this._parent;
 	}
 
 	/**
-     * Setzt oder entfernt den Elter-Knoten
-     *
-     * @param value der Elter-Knoten oder undefined
-     */
+	 * Setzt oder entfernt den Elter-Knoten
+	 *
+	 * @param value der Elter-Knoten oder undefined
+	 */
 	protected set parent(value: TRouteParent | undefined) {
 		this._parent = value;
 	}
 
 	/**
-     * Gibt die vue-route-Record-Objekte der Kind-Knoten für diesen Knoten in
-     * Bezug auf das  "Nested"-Routing zurück.
-     *
-     * @returns ein Array mit den vue-route-Record-Objekten
-     */
+	 * Gibt die vue-route-Record-Objekte der Kind-Knoten für diesen Knoten in
+	 * Bezug auf das  "Nested"-Routing zurück.
+	 *
+	 * @returns ein Array mit den vue-route-Record-Objekten
+	 */
 	public get children_records() : RouteRecordRaw[] {
 		const result : RouteRecordRaw[] = [];
 		for (const node of this.children)
@@ -248,48 +246,48 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Gibt ein passend zu dem getter children ein Array zurück,
-     * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
-     * nicht.
-     *
-     * @returns ein Array mit der
-     */
+	 * Gibt ein passend zu dem getter children ein Array zurück,
+	 * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
+	 * nicht.
+	 *
+	 * @returns ein Array mit der
+	 */
 	public children_hidden() : ComputedRef<boolean[]> {
 		const route = useRoute();
 		return computed(() => this.children.map(c => c.hidden(route.params) !== false));
 	}
 
 	/**
-     * TODO
-     */
+	 * TODO
+	 */
 	public get selectedChild() : RouteNode<any, any> | undefined {
 		return this._selectedChild.value;
 	}
 
 	/**
-     * TODO
-     */
+	 * TODO
+	 */
 	public set selectedChildRecord(record : RouteRecordRaw | undefined) {
 		this._selectedChild.value = (record === undefined) || (record.name === undefined) ? undefined : RouteNode.mapNodesByName.get(record.name?.toString());
 	}
 
 	/**
-     * TODO
-     */
+	 * TODO
+	 */
 	public get selectedChildRecord() : RouteRecordRaw | undefined {
 		return this._selectedChild.value?.record;
 	}
 
 	/**
-     * TODO
-     */
+	 * TODO
+	 */
 	public set defaultChild(node : RouteNode<any, any> | undefined) {
 		this._defaultChild = node;
 	}
 
 	/**
-     * TODO
-     */
+	 * TODO
+	 */
 	public get defaultChild() : RouteNode<any, any> | undefined {
 		return this._defaultChild;
 	}
@@ -323,17 +321,17 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Setzt der Property-Handler für die Default-View
-     */
+	 * Setzt der Property-Handler für die Default-View
+	 */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })["default"] = handler;
 	}
 
 	/**
-     * Gibt zurück, ob der Knoten für das Routing versteckt ist oder nicht.
-     *
-     * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
-     */
+	 * Gibt zurück, ob der Knoten für das Routing versteckt ist oder nicht.
+	 *
+	 * @returns {boolean} true, falls der Knoten versteckt werden soll und für das Routing nicht zur Verfügung steht.
+	 */
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
 		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
@@ -343,10 +341,10 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Prüft, ob die Route aktuell ausgewählt ist oder Parent einer anderen Route
-     *
-     * @returns {boolean} true, wenn die Route den vorgegebenen Namen hat.
-     */
+	 * Prüft, ob die Route aktuell ausgewählt ist oder Parent einer anderen Route
+	 *
+	 * @returns {boolean} true, wenn die Route den vorgegebenen Namen hat.
+	 */
 	public isSelected(name: RouteRecordName | null | undefined): boolean {
 		const node = RouteNode.getNodeByName(this.name);
 		if (node === undefined || !name)
@@ -360,13 +358,13 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Setzt die Informationen zu der (weiteren?) Router-View mit dem Namen "name". Ist eine
-     * View mit dem Namen bereits definiert, so wird diese ersetzt.
-     *
-     * @param name   der name der zweiten Router-View
-     * @param component   die vue-Komponente für die Darstellung
-     * @param prop_handler   der Property-Handler zum Erstellen der Properties für die Komponente
-     */
+	 * Setzt die Informationen zu der (weiteren?) Router-View mit dem Namen "name". Ist eine
+	 * View mit dem Namen bereits definiert, so wird diese ersetzt.
+	 *
+	 * @param name   der name der zweiten Router-View
+	 * @param component   die vue-Komponente für die Darstellung
+	 * @param prop_handler   der Property-Handler zum Erstellen der Properties für die Komponente
+	 */
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		if ((this._record.components === undefined) || (this._record.props === undefined))
 			throw new DeveloperNotificationException("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
@@ -388,41 +386,41 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 
 
 	/**
-     * Ein Default-Handler zur Bestimmung der Properties einer Route.
-     * Liefert ein leeres Objekt zurück.
-     *
-     * @param to   die Informationen zur Route
-     *
-     * @returns das Properties-Objekt
-     */
+	 * Ein Default-Handler zur Bestimmung der Properties einer Route.
+	 * Liefert ein leeres Objekt zurück.
+	 *
+	 * @param to   die Informationen zur Route
+	 *
+	 * @returns das Properties-Objekt
+	 */
 	protected getNoProps(to: RouteLocationNormalized): Record<string, any> {
 		return {};
 	}
 
 
 	/**
-     * TODO see RouterManager - global hook
-     *
-     * @param to    die Ziel-Route
-     * @param to_params die Parameter der Ziel-Route
-     * @param from   die Quell-Route
-     * @param from_params die Parameter der Quell-Route
-     */
+	 * TODO see RouterManager - global hook
+	 *
+	 * @param to    die Ziel-Route
+	 * @param to_params die Parameter der Ziel-Route
+	 * @param from   die Quell-Route
+	 * @param from_params die Parameter der Quell-Route
+	 */
 	protected async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		return true;
 	}
 
 	/**
-     * TODO see RouterManager - global hook
-     *
-     * @param to    die Ziel-Route
-     * @param to_params die Parameter der Ziel-Route
-     * @param from   die Quell-Route
-     * @param from_params die Parameter der Quell-Route
-     */
+	 * TODO see RouterManager - global hook
+	 *
+	 * @param to    die Ziel-Route
+	 * @param to_params die Parameter der Ziel-Route
+	 * @param from   die Quell-Route
+	 * @param from_params die Parameter der Quell-Route
+	 */
 	public async doBeforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
-			return this.beforeEach(to, to_params, from, from_params);
+			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
@@ -431,14 +429,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Prüft, ob dieser Knoten ein Nachfolger-Knoten des Kontens mit dem angegebenen
-     * Knoten ist.
-     *
-     * @param other   der andere Knoten (bzw. der Name), der evtl. ein Vorgänger dieses Knotens ist
-     *
-     * @returns die Folge der Knoten von dem anderen Knoten bis zu diesem Knoten (einschließlich),
-     *   falls dieser Knoten ein Nachfolger-Knoten ist und ansonsten false
-     */
+	 * Prüft, ob dieser Knoten ein Nachfolger-Knoten des Kontens mit dem angegebenen
+	 * Knoten ist.
+	 *
+	 * @param other   der andere Knoten (bzw. der Name), der evtl. ein Vorgänger dieses Knotens ist
+	 *
+	 * @returns die Folge der Knoten von dem anderen Knoten bis zu diesem Knoten (einschließlich),
+	 *   falls dieser Knoten ein Nachfolger-Knoten ist und ansonsten false
+	 */
 	public checkSuccessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
 		if ((other_node === undefined) || (this.parent === undefined))
@@ -455,14 +453,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Prüft, ob dieser Knoten ein Vorgänger-Knoten des Kontens mit dem angegebenen
-     * Knoten ist.
-     *
-     * @param other   der andere Knoten (bzw. der Name), der evtl. ein Nachfolger dieses Knotens ist
-     *
-     * @returns die Folge der Knoten von diesem Knoten bis zu dem anderen Knoten (einschließlich),
-     *   falls dieser Knoten ein Vorgänger-Knoten ist und ansonsten false
-     */
+	 * Prüft, ob dieser Knoten ein Vorgänger-Knoten des Kontens mit dem angegebenen
+	 * Knoten ist.
+	 *
+	 * @param other   der andere Knoten (bzw. der Name), der evtl. ein Nachfolger dieses Knotens ist
+	 *
+	 * @returns die Folge der Knoten von diesem Knoten bis zu dem anderen Knoten (einschließlich),
+	 *   falls dieser Knoten ein Vorgänger-Knoten ist und ansonsten false
+	 */
 	public checkPredecessorOf(other: string | RouteNode<any, any>): RouteNode<any, any>[] | false {
 		const other_node = typeof other === "string" ? RouteNode.getNodeByName(other) : other;
 		if ((other_node === undefined) || (other_node.parent === undefined))
@@ -479,13 +477,13 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Bestimmt die Vorgänger dieses Knotens und gibt diese als Array
-     * zurück. Dabei ist das Array so sortiert, dass das letzte Element im
-     * Array der direkte Vorgänger dieses Knotens ist. Existiert
-     * kein Vorgänger, so ist das Array leer.
-     *
-     * @returns die Vorgänger dieses Knotens als Array
-     */
+	 * Bestimmt die Vorgänger dieses Knotens und gibt diese als Array
+	 * zurück. Dabei ist das Array so sortiert, dass das letzte Element im
+	 * Array der direkte Vorgänger dieses Knotens ist. Existiert
+	 * kein Vorgänger, so ist das Array leer.
+	 *
+	 * @returns die Vorgänger dieses Knotens als Array
+	 */
 	public getPredecessors(): RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [ ];
 		let current: RouteNode<any, any> | undefined = this.parent;
@@ -558,7 +556,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
    */
 	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-		  return await this.leaveBefore(from, from_params);
+			return await this.leaveBefore(from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doLeaveBefore(" + from.name + ")");
@@ -594,7 +592,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Führt einen Reset der Daten bei diesem Knoten aus.
 	 */
 	public resetData() : void {
-		if ((this._hasData) && (this._data !== undefined))
+		if (this._hasData)
 			this._data.reset();
 	}
 
@@ -619,7 +617,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected static getIntParam(params: RouteParams, name: string) : number | undefined | Error {
 		const value = params[name];
-		if (value === undefined || value.toString().trim().length === 0)
+		if ((value === undefined) || value.toString().trim().length === 0)
 			return undefined;
 		if (value instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");

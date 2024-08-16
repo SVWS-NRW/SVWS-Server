@@ -75,6 +75,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		routeGost.data.params = from_params;
+		this.data.reset();
 	}
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
