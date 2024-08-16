@@ -97,7 +97,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(() -> dmr.mapAttribute(null, null, null, null));
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode mapAttribute() ist standardmäßig nicht implementiert.");
 	}
 
@@ -112,7 +112,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(() -> dmr.initDTO(null, null));
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode initDTO() ist standardmäßig nicht implementiert.");
 	}
 
@@ -127,7 +127,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(() -> dmr.getID(null));
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode getID() ist standardmäßig nicht implementiert.");
 	}
 
@@ -142,7 +142,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(dmr::getAll);
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode getAll() ist standardmäßig nicht implementiert.");
 	}
 
@@ -157,7 +157,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(dmr::getList);
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode getList() ist standardmäßig nicht implementiert.");
 	}
 
@@ -172,7 +172,7 @@ class DataManagerRevisedTest {
 
 		final Throwable result = catchThrowable(() -> dmr.getById(null));
 
-		assertThat(result).isInstanceOf(UnsupportedOperationException.class)
+		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode getById() ist standardmäßig nicht implementiert.");
 	}
 
