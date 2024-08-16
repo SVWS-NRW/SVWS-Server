@@ -1,17 +1,13 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
-import de.svws_nrw.data.DTOMapper;
-import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -21,8 +17,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -30,33 +24,26 @@ import jakarta.ws.rs.core.Response.Status;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerLeistungsdaten}.
  */
-public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
+public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, DTOSchuelerLeistungsdaten, SchuelerLeistungsdaten> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerLeistungsdaten}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link SchuelerLeistungsdaten}.
 	 *
 	 * @param conn                   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
 	public DataSchuelerLeistungsdaten(final DBEntityManager conn) {
 		super(conn);
+		setAttributesRequiredOnCreation("lernabschnittID", "fachID");
 	}
 
 	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+	protected void initDTO(final DTOSchuelerLeistungsdaten dto, final Long newId) throws ApiOperationException {
+		dto.ID = newId;
 	}
+
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-
-
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuelerLeistungsdaten} in einen Core-DTO {@link SchuelerLeistungsdaten}.
-	 */
-	private final DTOMapper<DTOSchuelerLeistungsdaten, SchuelerLeistungsdaten> dtoMapper = (final DTOSchuelerLeistungsdaten dto) -> {
+	public SchuelerLeistungsdaten map(final DTOSchuelerLeistungsdaten dto) {
 		final SchuelerLeistungsdaten daten = new SchuelerLeistungsdaten();
 		daten.id = dto.ID;
 		daten.lernabschnittID = dto.Abschnitt_ID;
@@ -88,7 +75,147 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 		daten.fehlstundenGesamt = (dto.FehlStd == null) ? 0 : dto.FehlStd;
 		daten.fehlstundenUnentschuldigt = (dto.uFehlStd == null) ? 0 : dto.uFehlStd;
 		return daten;
-	};
+	}
+
+
+	private void mapKursID(final DTOSchuelerLeistungsdaten dto, final Long idKurs) throws ApiOperationException {
+		if (idKurs != null) {
+			/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
+			final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
+			if (kurs == null)
+				throw new ApiOperationException(Status.CONFLICT);
+			// Setze Fachlehrer
+			dto.Fachlehrer_ID = kurs.Lehrer_ID;
+			// Passe ggf. die Kursart an, wenn sie sich geändert hat
+			if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
+				final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
+				dto.KursartAllg = kurs.KursartAllg;
+				if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
+					dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
+					dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+					dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+					ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
+					if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
+						dto.AbiFach = null;
+					if ("3".equals(dto.AbiFach))
+						kursart = ZulaessigeKursart.AB3;
+					else if ("4".equals(dto.AbiFach))
+						kursart = ZulaessigeKursart.AB4;
+					dto.Kursart = kursart.daten.kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+					dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
+					if ("2".equals(dto.AbiFach))
+						dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
+					if (dto.AbiFach == null)
+						dto.AbiFach = "1";
+				} else {
+					dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
+				}
+			}
+		}
+		dto.Kurs_ID = idKurs;
+	}
+
+
+	@Override
+	protected void mapAttribute(final DTOSchuelerLeistungsdaten dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}
+			case "lernabschnittID" -> {
+				final long idAbschnitt = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Abschnitt_ID = idAbschnitt;
+			}
+			case "fachID" -> {
+				final long idFach = JSONMapper.convertToLong(value, false);
+				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
+				if (fach == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Fach_ID = idFach;
+				dto.Sortierung = fach.SortierungAllg;
+				dto.Kurs_ID = null;
+			}
+			case "kursID" -> mapKursID(dto, JSONMapper.convertToLong(value, true));
+			case "kursart" -> {
+				final String strKursart = JSONMapper.convertToString(value, true, false, null);
+				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
+				if (kursart == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Kursart = kursart.daten.kuerzel;
+				dto.KursartAllg = kursart.daten.kuerzelAllg;
+			}
+			case "abifach" -> {
+				final Integer abiFach = JSONMapper.convertToInteger(value, true);
+				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);
+			}
+			case "istZP10oderZK10" -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false);
+			case "koopSchule" -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000);
+			case "lehrerID" -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Fachlehrer_ID = idLehrer;
+			}
+			case "wochenstunden" -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
+			case "zusatzkraftID" -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Zusatzkraft_ID = idLehrer;
+			}
+			case "zusatzkraftWochenstunden" -> dto.WochenstdZusatzkraft = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
+			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false);
+			case "note" -> dto.NotenKrz = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null));
+			case "noteQuartal" -> dto.NotenKrzQuartal = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null));
+			case "istGemahnt" -> dto.Warnung = JSONMapper.convertToBoolean(value, false);
+			case "mahndatum" -> {
+				final String strMahndatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.Warndatum = strMahndatum;
+			}
+			case "istEpochal" -> dto.VorherAbgeschl = JSONMapper.convertToBoolean(value, false);
+			case "geholtJahrgangAbgeschlossen" -> {
+				final String strJahrgang = JSONMapper.convertToString(value, true, false, null);
+				// TODO Jahrgang validieren
+				dto.AbschlussJahrgang = strJahrgang;
+			}
+			case "gewichtungAllgemeinbildend" -> dto.Gewichtung = JSONMapper.convertToIntegerInRange(value, true, 0, 10);
+			// noteBerufsabschluss -> dto.NoteAbschlussBA
+			case "textFachbezogeneLernentwicklung" -> dto.Lernentw = JSONMapper.convertToString(value, true, true, null);
+			case "umfangLernstandsbericht" -> {
+				final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
+				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Umfang = ((strUmfang == null) || strUmfang.isBlank()) ? null : strUmfang;
+			}
+			case "fehlstundenGesamt" -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
+			case "fehlstundenUnentschuldigt" -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
+		}
+	}
+
+
+	@Override
+	public SchuelerLeistungsdaten getById(final Long id) throws ApiOperationException {
+		// Prüfe, ob die Leistungsdaten mit der ID existieren
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
+		return map(dto);
+	}
 
 
 	/**
@@ -98,10 +225,8 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 	 * @param list          die Liste, in die eingefügt wird
 	 *
 	 * @return eine Liste mit der Leistungsdaten des Lernabschnitts
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) throws ApiOperationException {
+	public boolean getByLernabschnitt(final Long abschnittID, final List<SchuelerLeistungsdaten> list) {
 		// Bestimme die Leistungsdaten des Lernabschnitts
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(DTOSchuelerLeistungsdaten.QUERY_BY_ABSCHNITT_ID,
 				DTOSchuelerLeistungsdaten.class, abschnittID);
@@ -109,209 +234,8 @@ public final class DataSchuelerLeistungsdaten extends DataManager<Long> {
 			return false;
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOSchuelerLeistungsdaten l : leistungsdaten)
-			list.add(dtoMapper.apply(l));
+			list.add(map(l));
 		return true;
-	}
-
-
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		// Prüfe, ob die Leistungsdaten mit der ID existieren
-		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final DTOSchuelerLeistungsdaten dto = conn.queryByKey(DTOSchuelerLeistungsdaten.class, id);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Die Leistungsdaten mit der ID %d wurden in der Datenbank nicht gefunden".formatted(id));
-		final SchuelerLeistungsdaten daten = dtoMapper.apply(dto);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	private static final Map<String, DataBasicMapper<DTOSchuelerLeistungsdaten>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id.longValue() != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("lernabschnittID", (conn, dto, value, map) -> {
-				final long idAbschnitt = JSONMapper.convertToLong(value, false);
-				if (conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idAbschnitt) == null)
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Abschnitt_ID = idAbschnitt;
-			}),
-			Map.entry("fachID", (conn, dto, value, map) -> {
-				final long idFach = JSONMapper.convertToLong(value, false);
-				final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
-				if (fach == null)
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Fach_ID = idFach;
-				dto.Sortierung = fach.SortierungAllg;
-				dto.Kurs_ID = null;
-			}),
-			Map.entry("kursID", (conn, dto, value, map) -> {
-				final Long idKurs = JSONMapper.convertToLong(value, true);
-				if (idKurs != null) {
-					/// Prüfe, ob der Kurs existiert und passe ggf. Fachlehrer und Kursart an.
-					final DTOKurs kurs = conn.queryByKey(DTOKurs.class, idKurs);
-					if (kurs == null)
-						throw new ApiOperationException(Status.CONFLICT);
-					// Setze Fachlehrer
-					dto.Fachlehrer_ID = kurs.Lehrer_ID;
-					// Passe ggf. die Kursart an, wenn sie sich geändert hat
-					if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
-						final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
-						dto.KursartAllg = kurs.KursartAllg;
-						if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
-							dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
-						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
-							dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
-							dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
-							ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
-							if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
-								dto.AbiFach = null;
-							if ("3".equals(dto.AbiFach))
-								kursart = ZulaessigeKursart.AB3;
-							else if ("4".equals(dto.AbiFach))
-								kursart = ZulaessigeKursart.AB4;
-							dto.Kursart = kursart.daten.kuerzel;
-						} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
-							dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
-							if ("2".equals(dto.AbiFach))
-								dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
-							if (dto.AbiFach == null)
-								dto.AbiFach = "1";
-						} else {
-							dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
-						}
-					}
-				}
-				dto.Kurs_ID = idKurs;
-			}),
-			Map.entry("kursart", (conn, dto, value, map) -> {
-				final String strKursart = JSONMapper.convertToString(value, true, false, null);
-				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
-				if (kursart == null)
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Kursart = kursart.daten.kuerzel;
-				dto.KursartAllg = kursart.daten.kuerzelAllg;
-			}),
-			Map.entry("abifach", (conn, dto, value, map) -> {
-				final Integer abiFach = JSONMapper.convertToInteger(value, true);
-				if ((abiFach != null) && (abiFach != 1) && (abiFach != 2) && (abiFach != 3) && (abiFach != 4))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.AbiFach = (abiFach == null) ? null : ("" + abiFach);
-			}),
-			Map.entry("istZP10oderZK10", (conn, dto, value, map) -> dto.Prf10Fach = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("koopSchule", (conn, dto, value, map) -> dto.SchulNr = JSONMapper.convertToIntegerInRange(value, true, 100000, 1000000)),
-			Map.entry("lehrerID", (conn, dto, value, map) -> {
-				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Fachlehrer_ID = idLehrer;
-			}),
-			Map.entry("wochenstunden", (conn, dto, value, map) -> dto.Wochenstunden = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
-			Map.entry("zusatzkraftID", (conn, dto, value, map) -> {
-				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Zusatzkraft_ID = idLehrer;
-			}),
-			Map.entry("zusatzkraftWochenstunden", (conn, dto, value, map) -> dto.WochenstdZusatzkraft =
-					JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
-			Map.entry("aufZeugnis", (conn, dto, value, map) -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("note", (conn, dto, value, map) -> dto.NotenKrz = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
-			Map.entry("noteQuartal", (conn, dto, value, map) -> dto.NotenKrzQuartal = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null))),
-			Map.entry("istGemahnt", (conn, dto, value, map) -> dto.Warnung = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("mahndatum", (conn, dto, value, map) -> {
-				final String strMahndatum = JSONMapper.convertToString(value, true, false, null);
-				// TODO Datum validieren
-				dto.Warndatum = strMahndatum;
-			}),
-			Map.entry("istEpochal", (conn, dto, value, map) -> dto.VorherAbgeschl = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("geholtJahrgangAbgeschlossen", (conn, dto, value, map) -> {
-				final String strJahrgang = JSONMapper.convertToString(value, true, false, null);
-				// TODO Jahrgang validieren
-				dto.AbschlussJahrgang = strJahrgang;
-			}),
-			Map.entry("gewichtungAllgemeinbildend", (conn, dto, value, map) -> dto.Gewichtung = JSONMapper.convertToIntegerInRange(value, true, 0, 10)),
-			// noteBerufsabschluss -> dto.NoteAbschlussBA
-			Map.entry("textFachbezogeneLernentwicklung", (conn, dto, value, map) -> dto.Lernentw = JSONMapper.convertToString(value, true, true, null)),
-			Map.entry("umfangLernstandsbericht", (conn, dto, value, map) -> {
-				final String strUmfang = JSONMapper.convertToString(value, true, true, 1);
-				if ((strUmfang != null) && (!strUmfang.isBlank()) && (!strUmfang.equals("V")) && (!strUmfang.equals("R")))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Umfang = ((strUmfang == null) || strUmfang.isBlank()) ? null : strUmfang;
-			}),
-			Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.FehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
-			Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.uFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)));
-
-	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOSchuelerLeistungsdaten.class, patchMappings);
-	}
-
-
-	private static final Set<String> requiredCreateAttributes = Set.of("lernabschnittID", "fachID");
-
-	private final ObjLongConsumer<DTOSchuelerLeistungsdaten> initDTO = (dto, id) -> dto.ID = id;
-
-	/**
-	 * Fügt die Leistungsdaten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
-	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
-	 *
-	 * @param is   der InputStream mit den JSON-Daten
-	 *
-	 * @return die Response mit den Daten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response add(final InputStream is) throws ApiOperationException {
-		return super.addBasic(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
-	}
-
-
-	/**
-	 * Fügt mehrere Leistungsdaten mit den übergebenen JSON-Daten der Datenbank hinzu und gibt die zugehörigen CoreDTOs
-	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
-	 *
-	 * @param is   der InputStream mit den JSON-Daten
-	 *
-	 * @return die Response mit den Daten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response addMultiple(final InputStream is) throws ApiOperationException {
-		return super.addBasicMultiple(is, DTOSchuelerLeistungsdaten.class, initDTO, dtoMapper, requiredCreateAttributes, patchMappings);
-	}
-
-
-	/**
-	 * Löscht die Leistungsdaten mit der angegebenen ID
-	 *
-	 * @param id   die ID der Leistungsdaten
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response delete(final Long id) throws ApiOperationException {
-		return super.deleteBasic(id, DTOSchuelerLeistungsdaten.class, dtoMapper);
-	}
-
-
-	/**
-	 * Löscht die Leistungsdaten mit den angegebenen IDs
-	 *
-	 * @param ids   die IDs der Leistungsdaten
-	 *
-	 * @return die HTTP-Response, welchen den Erfolg der Lösch-Operation angibt.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response deleteMultiple(final List<Long> ids) throws ApiOperationException {
-		return super.deleteBasicMultiple(ids, DTOSchuelerLeistungsdaten.class, dtoMapper);
 	}
 
 }

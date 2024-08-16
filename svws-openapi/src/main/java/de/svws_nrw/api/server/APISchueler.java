@@ -447,7 +447,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schülerleistungsdaten-Eintrag mit der angegebenen ID gefunden")
 	public Response getSchuelerLeistungsdatenByID(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).get(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -479,7 +479,7 @@ public class APISchueler {
 			@RequestBody(description = "Der Patch für die Schülerleistungsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -510,7 +510,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							schema = @Schema(implementation = SchuelerLeistungsdaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -541,7 +541,7 @@ public class APISchueler {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON,
 							array = @ArraySchema(schema = @Schema(implementation = SchuelerLeistungsdaten.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).addMultiple(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -569,7 +569,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerLeistungsdaten(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -600,7 +600,7 @@ public class APISchueler {
 			@RequestBody(description = "Die IDs der zu löschenden Leistungsdaten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).deleteMultiple(JSONMapper.toListOfLong(is)),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerLeistungsdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
