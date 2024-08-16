@@ -237,6 +237,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 
 	@Override
 	public void checkBeforePatch(final DTOSchuelerLeistungsdaten dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu verändern
 		if (patchAttributes.get("lernabschnittID") != null) {
 			final long idLernabschnitt = JSONMapper.convertToLong(patchAttributes.get("lernabschnittID"), false);
 			checkFunktionsbezogeneKompetenzAufLernabschnitt(List.of(idLernabschnitt));

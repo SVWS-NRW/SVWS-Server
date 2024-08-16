@@ -4,6 +4,7 @@ import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.types.Note;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.fach.BilingualeSprache;
 import de.svws_nrw.core.types.klassen.Klassenart;
 import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
@@ -38,6 +39,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
@@ -347,6 +349,41 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	}
 
 
+	private void checkFunktionsbezogeneKompetenzAufKlasse(final List<Long> idsKlassen) throws ApiOperationException {
+		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
+			for (final Long idKlasse : idsKlassen)
+				checkBenutzerFunktionsbezogeneKompetenzKlasse(idKlasse);
+		}
+	}
+
+
+	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten in dem Lernabschnitt zu erstellen
+		final Long idKlasse = JSONMapper.convertToLong(initAttributes.get("klassenID"), true);
+		checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
+	}
+
+
+	@Override
+	public void checkBeforePatch(final DTOSchuelerLernabschnittsdaten dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten in dem Lernabschnitt zu verändern
+		if (patchAttributes.get("klassenID") != null) {
+			final Long idKlasse = JSONMapper.convertToLong(patchAttributes.get("klassenID"), true);
+			checkFunktionsbezogeneKompetenzAufKlasse(List.of(idKlasse));
+		}
+		checkFunktionsbezogeneKompetenzAufKlasse(List.of(dto.Klassen_ID));
+	}
+
+
+	@Override
+	public void checkBeforeDeletion(final List<DTOSchuelerLernabschnittsdaten> dtos) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Lernabschnittsdaten zu löschen
+		checkFunktionsbezogeneKompetenzAufKlasse(dtos.stream().map(l -> l.Klassen_ID).toList());
+	}
+
+
 	@Override
 	public SchuelerLernabschnittsdaten getById(final Long id) throws ApiOperationException {
 		// Prüfe, ob der Lernabschnitt mit der ID existiert
@@ -483,12 +520,13 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	public Response patchBemerkungen(final Long id, final InputStream is) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch mit der ID null ist nicht möglich.");
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
+		final Map<String, Object> attributesToPatch = JSONMapper.toMap(is);
+		if (attributesToPatch.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
 		final DTOSchuelerLernabschnittsdaten dto = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
+		checkBeforePatch(dto, attributesToPatch);
 		final List<DTOSchuelerPSFachBemerkungen> dtoListFachBem = conn.queryList(
 				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, id);
 		final DTOSchuelerPSFachBemerkungen dtoFachBem = (dtoListFachBem.isEmpty())
@@ -496,7 +534,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 				: dtoListFachBem.getFirst();
 		boolean patchedDTOLernabschitt = false;
 		boolean patchedDTOFachBem = false;
-		for (final Entry<String, Object> entry : map.entrySet()) {
+		for (final Entry<String, Object> entry : attributesToPatch.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();
 			switch (key) {
