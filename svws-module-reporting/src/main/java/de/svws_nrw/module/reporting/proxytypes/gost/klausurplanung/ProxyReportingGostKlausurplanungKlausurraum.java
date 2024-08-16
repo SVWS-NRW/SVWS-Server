@@ -1,12 +1,21 @@
 package de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
-import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DTOManagerMapper;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
+import de.svws_nrw.core.data.stundenplan.Stundenplan;
+import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungRaum;
+import de.svws_nrw.module.reporting.proxytypes.stundenplanung.ProxyReportingStundenplanungZeitrasterstunde;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausuraufsicht;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurraum;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
+import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungZeitrasterstunde;
 
 
 /**
@@ -31,50 +40,58 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
  *    		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
  *  </ul>
  */
-public class ProxyReportingGostKlausurplanungKlausurraum extends GostKlausurraum {
+public class ProxyReportingGostKlausurplanungKlausurraum extends ReportingGostKlausurplanungKlausurraum {
 
-	private final GostKlausurplanManager manager;
+	/** Repository für die Reporting. */
+	@JsonIgnore
+	private final ReportingRepository reportingRepository;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt.
-	 * @param manager		der Manager
+	 * @param reportingRepository		Repository für die Reporting.
+	 * @param klausurtermin 			Der Klausurtermin, dem dieser Klausurraum zugeordnet ist.
+	 * @param gostKlausurraum 			Der Klausurraum mit Informationen zum Termin und dem Stundeplanraum
+	 * @param gostKlausurraumstunden	Die Raumstunde mit Informationen zum Klausurraum und der Unterrichtsstunde aus dem Zeitraster.
 	 */
-	public ProxyReportingGostKlausurplanungKlausurraum(final GostKlausurplanManager manager) {
-		this.manager = manager;
-	}
+	public ProxyReportingGostKlausurplanungKlausurraum(final ReportingRepository reportingRepository,
+			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final GostKlausurraum gostKlausurraum,
+			final List<GostKlausurraumstunde> gostKlausurraumstunden) {
+		super(new ArrayList<>(),
+				gostKlausurraum.bemerkung,
+				gostKlausurraum.id,
+				klausurtermin,
+				null);
 
-	/**
-	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
-	 *
-	 * @param another     das zu vergleichende Objekt
-	 * @return true, falls die Objekte indentisch sind, sonst false
-	 */
-	@Override
-	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostKlausurraum) && (this.id == ((GostKlausurraum) another).id);
-	}
+		this.reportingRepository = reportingRepository;
 
-	/**
-	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
-	 *
-	 * @return den HashCode
-	 */
-	@Override
-	public int hashCode() {
-		return Long.hashCode(id);
-	}
+		// Stundenplan zum Klausurtermin ermitteln. Ohne Stundenplan gibt es keine Raumdaten und kein Zeitraster für die Aufsichten.
+		final Stundenplan stundenplan = this.reportingRepository.stundenplan(super.klausurtermin.datum());
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
-	 * {@link DTOGostKlausurenRaeume} in einen Core-DTO
-	 * {@link GostKlausurraum}.
-	 */
-	public static final DTOManagerMapper<GostKlausurraum, ProxyReportingGostKlausurplanungKlausurraum, GostKlausurplanManager> dtoMapper = (final GostKlausurraum z, final GostKlausurplanManager m) -> {
-		final ProxyReportingGostKlausurplanungKlausurraum daten = new ProxyReportingGostKlausurplanungKlausurraum(m);
-		daten.id = z.id;
-		daten.bemerkung = z.bemerkung;
-		daten.idStundenplanRaum = z.idStundenplanRaum;
-		daten.idTermin = z.idTermin;
-		return daten;
-	};
+		if (stundenplan != null) {
+			// Wenn bereits ein Raum der Schule (aus dem Stundenplan) der Klausur zugeordnet wurde, dann die Daten ermitteln und ergänzen.
+			if (gostKlausurraum.idStundenplanRaum != null) {
+				stundenplan.raeume.stream().filter(r -> r.id == gostKlausurraum.idStundenplanRaum).findFirst()
+						.ifPresent(stundenplanRaum -> super.raumdaten = new ProxyReportingStundenplanungRaum(stundenplanRaum, stundenplan.id));
+			}
+
+			// Stunden der Klausur für die Aufsichten aus dem Zeitraster des Stundenplans ergänzen.
+			if ((gostKlausurraumstunden != null) && !gostKlausurraumstunden.isEmpty()) {
+				final List<ReportingStundenplanungZeitrasterstunde> stunden = new ArrayList<>();
+				for (final GostKlausurraumstunde stunde : gostKlausurraumstunden) {
+					if (stunde != null) {
+						stundenplan.zeitraster.stream().filter(z -> z.id == stunde.idZeitraster).findFirst()
+								.ifPresent(
+										stundenplanstunde -> stunden.add(new ProxyReportingStundenplanungZeitrasterstunde(stundenplanstunde, stundenplan.id)));
+					}
+				}
+				if (!stunden.isEmpty()) {
+					stunden.sort(Comparator.comparing(ReportingStundenplanungZeitrasterstunde::unterrichtstunde));
+					// TODO: Wenn die Aufsichten im Client vorhanden sind und die Datenstrukturen stehen, dann ProxyReportingGostKlausurplanungKlausuraufsicht
+					//  anlegen. Zudem müssen dann auch die fehlenden Daten (hier null) ergänzt werden.
+					super.aufsichten.addAll(stunden.stream().map(z -> (new ReportingGostKlausurplanungKlausuraufsicht(null, null, null, null, z))).toList());
+				}
+			}
+		}
+
+	}
 }

@@ -1,9 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.klausurplanung;
 
 import de.svws_nrw.core.utils.DateUtils;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurtermin;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -15,14 +12,59 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ReportingGostKlausurplanungSchuelerklausur {
 
-	private ProxyReportingGostKlausurplanungSchuelerklausur proxy;
+	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
+	protected String bemerkung;
+
+	/** Die ID der Schülerklausur. */
+	protected long id;
+
+	/** Die ID des Schülerklausurtermins. */
+	protected long idSchuelerklausurtermin;
+
+	/** Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur. */
+	protected final ReportingGostKlausurplanungKlausurraum klausurraum;
+
+	/** Der Termin der Schülerklausur aus den Klausurterminen. */
+	protected ReportingGostKlausurplanungKlausurtermin klausurtermin;
+
+	/** Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur. */
+	protected ReportingGostKlausurplanungKursklausur kursklausur;
+
+	/** Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bzgl. der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.) */
+	protected int nummerTerminfolge;
+
+	/** Der Schüler dieser Schülerklausur. */
+	protected ReportingSchueler schueler;
+
+	/** Die Startzeit des Schülerklausurtermins in Minuten seit 0 Uhr, falls schon gesetzt. */
+	protected Integer startzeit;
+
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
-	 * @param proxy
+	 * @param bemerkung					Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
+	 * @param id						Die ID der Schülerklausur.
+	 * @param idSchuelerklausurtermin	Die ID des Schülerklausurtermins.
+	 * @param klausurraum				Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * @param klausurtermin				Der Termin der Schülerklausur aus den Klausurterminen.
+	 * @param kursklausur				Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur.
+	 * @param nummerTerminfolge			Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bzgl. der Kursklausur (0 = Kursklausur, usw.)
+	 * @param schueler					Der Schüler dieser Schülerklausur.
+	 * @param startzeit					Die Startzeit des Schülerklausurtermins in Minuten seit 0 Uhr, falls schon gesetzt.
 	 */
-	public ReportingGostKlausurplanungSchuelerklausur(final ProxyReportingGostKlausurplanungSchuelerklausur proxy) {
-		this.proxy = proxy;
+	public ReportingGostKlausurplanungSchuelerklausur(final String bemerkung, final long id,
+			final long idSchuelerklausurtermin, final ReportingGostKlausurplanungKlausurraum klausurraum,
+			final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingGostKlausurplanungKursklausur kursklausur,
+			final int nummerTerminfolge, final ReportingSchueler schueler, final Integer startzeit) {
+		this.klausurraum = klausurraum;
+		this.bemerkung = bemerkung;
+		this.id = id;
+		this.idSchuelerklausurtermin = idSchuelerklausurtermin;
+		this.klausurtermin = klausurtermin;
+		this.kursklausur = kursklausur;
+		this.nummerTerminfolge = nummerTerminfolge;
+		this.schueler = schueler;
+		this.startzeit = startzeit;
 	}
 
 
@@ -50,7 +92,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
-		return proxy.bemerkung;
+		return bemerkung;
 	}
 
 	/**
@@ -58,7 +100,15 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return proxy.id;
+		return id;
+	}
+
+	/**
+	 * Die ID des Schülerklausurtermins.
+	 * @return Inhalt des Feldes idSchuelerklausurtermin
+	 */
+	public long idSchuelerklausurtermin() {
+		return idSchuelerklausurtermin;
 	}
 
 	/**

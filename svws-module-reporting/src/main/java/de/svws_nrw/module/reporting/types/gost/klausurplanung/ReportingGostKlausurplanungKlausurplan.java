@@ -17,11 +17,21 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ReportingGostKlausurplanungKlausurplan {
 
+	/** Eine Liste, die alle Termine des Klausurplanes beinhaltet. */
+	protected List<ReportingGostKlausurplanungKlausurtermin> klausurtermine;
+
 	/** Eine Liste, die alle Kurse des Klausurplanes beinhaltet. */
 	protected List<ReportingKurs> kurse;
 
+	/** Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet. */
+	protected List<ReportingGostKlausurplanungKursklausur> kursklausuren;
+
 	/** Eine Liste, die alle Schüler des Klausurplanes beinhaltet. */
 	protected List<ReportingSchueler> schueler;
+
+	/** Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet. */
+	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
+
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
@@ -38,6 +48,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 		// Fülle die Basislisten mit den übergebenen Daten.
 		this.schueler = (schueler != null) ? schueler : new ArrayList<>();
 		this.kurse = (kurse != null) ? kurse : new ArrayList<>();
+		this.klausurtermine = (klausurtermine != null) ? klausurtermine : new ArrayList<>();
+		this.kursklausuren = (kursklausuren != null) ? kursklausuren : new ArrayList<>();
+		this.schuelerklausuren = (schuelerklausuren != null) ? schuelerklausuren : new ArrayList<>();
 	}
 
 

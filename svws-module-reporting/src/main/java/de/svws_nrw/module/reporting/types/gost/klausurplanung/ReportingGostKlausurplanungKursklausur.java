@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.core.utils.DateUtils;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
@@ -17,14 +16,68 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
  */
 public class ReportingGostKlausurplanungKursklausur {
 
-	private ProxyReportingGostKlausurplanungKursklausur proxy;
+	/** Die Auswahlzeit in Minuten, sofern vorhanden. */
+	protected int auswahlzeit;
+
+	/** Die textuelle Bemerkung zur Kursklausur, sofern vorhanden. */
+	protected String bemerkung;
+
+	/** Die Dauer der Klausur in Minuten. */
+	protected int dauer;
+
+	/** Die ID der Kursklausur. */
+	protected long id;
+
+	/** Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen. */
+	protected boolean istAudioNotwendig;
+
+	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
+	protected boolean istMdlPruefung;
+
+	/** Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse. */
+	protected boolean istVideoNotwendig;
+
+	/** Der Termin aus der Klausurplanung, an dem diese Kursklausur stattfindet. */
+	protected ReportingGostKlausurplanungKlausurtermin klausurtermin;
+
+	/** Die Liste der Schülerklausuren zu dieser Klausur. */
+	protected List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren;
+
+	/** Der Kurs, indem die Klausur geschrieben wird, mit seinen Daten. */
+	protected ReportingKurs kurs;
+
+	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, wenn abweichend vom Klausurtermin, sonst null. */
+	protected Integer startzeit;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
-	 * @param proxy		Das Proxy-Objekt
+	 * @param auswahlzeit		Die Auswahlzeit in Minuten, sofern vorhanden.
+	 * @param bemerkung			Die textuelle Bemerkung zur Kursklausur, sofern vorhanden.
+	 * @param dauer				Die Dauer der Klausur in Minuten.
+	 * @param id				Die ID der Kursklausur.
+	 * @param istAudioNotwendig	Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen.
+	 * @param istMdlPruefung	Die Information, ob es sich um eine mündliche Prüfung handelt.
+	 * @param istVideoNotwendig	Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse.
+	 * @param klausurtermin		Der Termin aus der Klausurplanung, an dem diese Kursklausur stattfindet.
+	 * @param kurs				Der Kurs, indem die Klausur geschrieben wird, mit seinen Daten.
+	 * @param schuelerklausuren	Die Liste der Schülerklausuren zu dieser Klausur.
+	 * @param startzeit			Die Startzeit der Klausur in Minuten seit 0 Uhr, wenn abweichend vom Klausurtermin, sonst null.
 	 */
-	public ReportingGostKlausurplanungKursklausur(final ProxyReportingGostKlausurplanungKursklausur proxy) {
-		this.proxy = proxy;
+	public ReportingGostKlausurplanungKursklausur(final int auswahlzeit, final String bemerkung, final int dauer, final long id,
+			final boolean istAudioNotwendig, final boolean istMdlPruefung,
+			final boolean istVideoNotwendig, final ReportingGostKlausurplanungKlausurtermin klausurtermin, final ReportingKurs kurs,
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final Integer startzeit) {
+		this.auswahlzeit = auswahlzeit;
+		this.bemerkung = bemerkung;
+		this.dauer = dauer;
+		this.id = id;
+		this.istAudioNotwendig = istAudioNotwendig;
+		this.istMdlPruefung = istMdlPruefung;
+		this.istVideoNotwendig = istVideoNotwendig;
+		this.klausurtermin = klausurtermin;
+		this.kurs = kurs;
+		this.schuelerklausuren = schuelerklausuren;
+		this.startzeit = startzeit;
 	}
 
 
@@ -35,10 +88,15 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Anzahl der Schüler
 	 */
 	public String anzahlSchuelerKlausur() {
-		if (schuelerklausuren().isEmpty())
+		if ((this.schuelerklausuren == null) || this.schuelerklausuren.isEmpty()) {
 			return "00";
-		final int anzahl = schuelerklausuren().size();
-		return anzahl < 10 ? ("0" + anzahl) : ("" + anzahl);
+		} else {
+			final int anzahl = schuelerklausuren.stream().map(s -> s.id).distinct().toList().size();
+			if (anzahl < 10)
+				return "0" + anzahl;
+			else
+				return "" + anzahl;
+		}
 	}
 
 	/**
@@ -62,7 +120,11 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return	Liste der Klausurschreiber.
 	 */
 	public List<String> klausurschreiberNamen() {
-		return schuelerklausuren().stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
+		if (this.kurs == null) {
+			return new ArrayList<>();
+		} else {
+			return schuelerklausuren.stream().map(s -> s.schueler.vorname() + " " + s.schueler.nachname()).toList();
+		}
 	}
 
 	/**
@@ -163,7 +225,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes auswahlzeit
 	 */
 	public int auswahlzeit() {
-		return proxy.getVorgabe().auswahlzeit;
+		return auswahlzeit;
 	}
 
 	/**
@@ -171,7 +233,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
-		return proxy.bemerkung;
+		return bemerkung;
 	}
 
 	/**
@@ -179,7 +241,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes dauer
 	 */
 	public int dauer() {
-		return proxy.getVorgabe().dauer;
+		return dauer;
 	}
 
 	/**
@@ -187,7 +249,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
-		return proxy.id;
+		return id;
 	}
 
 	/**
@@ -195,7 +257,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes istAudioNotwendig
 	 */
 	public boolean istAudioNotwendig() {
-		return proxy.getVorgabe().istAudioNotwendig;
+		return istAudioNotwendig;
 	}
 
 	/**
@@ -203,7 +265,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes istMdlPruefung
 	 */
 	public boolean istMdlPruefung() {
-		return proxy.getVorgabe().istMdlPruefung;
+		return istMdlPruefung;
 	}
 
 	/**
@@ -211,7 +273,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes istVideoNotwendig
 	 */
 	public boolean istVideoNotwendig() {
-		return proxy.getVorgabe().istVideoNotwendig;
+		return istVideoNotwendig;
 	}
 
 	/**
@@ -219,7 +281,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
-		return proxy.getTermin();
+		return klausurtermin;
 	}
 
 	/**
@@ -235,7 +297,7 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes klausurschreiber
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {
-		return proxy.getSchuelerklausuren();
+		return schuelerklausuren;
 	}
 
 	/**
@@ -243,6 +305,6 @@ public class ReportingGostKlausurplanungKursklausur {
 	 * @return Inhalt des Feldes startzeit
 	 */
 	public Integer startzeit() {
-		return proxy.startzeit;
+		return startzeit;
 	}
 }

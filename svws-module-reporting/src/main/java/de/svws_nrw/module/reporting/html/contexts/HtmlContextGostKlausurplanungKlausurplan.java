@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
 import de.svws_nrw.core.adt.Pair;
@@ -12,13 +13,8 @@ import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurraum;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurtermin;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKursklausur;
-import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
-import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -71,9 +67,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 		try {
 			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
-			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager();
-			final GostKlausurenCollectionAllData allProxiedData = coreDtoToReportingProxy(allData, gostKlausurManager);
-			gostKlausurManager.addAllData(allProxiedData);
+			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
 
 			final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
 					new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);
@@ -87,19 +81,5 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 			throw new ApiOperationException(Response.Status.NOT_FOUND, e,
 					"FEHLER: Zu mindestens einer Stufe konnten keine Klausurplanungsdaten ermittelt werden. Es konnte kein html-Klausuren-Kontext erstellt werden.");
 		}
-	}
-
-	private GostKlausurenCollectionAllData coreDtoToReportingProxy(final GostKlausurenCollectionAllData coreCollection, final GostKlausurplanManager manager) {
-		final GostKlausurenCollectionAllData reportingCollection = new GostKlausurenCollectionAllData();
-		reportingCollection.kursklausuren.addAll(coreCollection.kursklausuren.stream().map(k -> ProxyReportingGostKlausurplanungKursklausur.dtoMapper.apply(k, manager)).toList());
-		reportingCollection.metadata = coreCollection.metadata;
-		reportingCollection.schuelerklausuren.addAll(coreCollection.schuelerklausuren.stream().map(k -> ProxyReportingGostKlausurplanungSchuelerklausur.dtoMapper.apply(k, manager)).toList());
-		reportingCollection.schuelerklausurtermine = coreCollection.schuelerklausurtermine;
-		reportingCollection.termine.addAll(coreCollection.termine.stream().map(k -> ProxyReportingGostKlausurplanungKlausurtermin.dtoMapper.apply(k, manager)).toList());
-		reportingCollection.vorgaben = coreCollection.vorgaben;
-		reportingCollection.raumdata.raeume.addAll(coreCollection.raumdata.raeume.stream().map(k -> ProxyReportingGostKlausurplanungKlausurraum.dtoMapper.apply(k, manager)).toList());
-		reportingCollection.raumdata.raumstunden = coreCollection.raumdata.raumstunden;
-		reportingCollection.raumdata.sktRaumstunden = coreCollection.raumdata.sktRaumstunden;
-		return reportingCollection;
 	}
 }
