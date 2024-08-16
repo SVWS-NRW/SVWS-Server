@@ -13,8 +13,8 @@ import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
-import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerLernabschnittsdaten}.
  */
-public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
+public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Long, DTOSchuelerLernabschnittsdaten, SchuelerLernabschnittsdaten> {
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerLernabschnittsdaten}.
@@ -55,16 +55,307 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 */
 	public DataSchuelerLernabschnittsdaten(final DBEntityManager conn) {
 		super(conn);
+		setAttributesRequiredOnCreation("schuelerID", "schuljahresabschnitt");
 	}
 
 	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+	protected void initDTO(final DTOSchuelerLernabschnittsdaten dto, final Long newId) throws ApiOperationException {
+		dto.ID = newId;
 	}
 
+
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
+	public SchuelerLernabschnittsdaten map(final DTOSchuelerLernabschnittsdaten dto) throws ApiOperationException {
+		// Ermittle die Fachbemerkungen
+		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(
+				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, dto.ID);
+		if (bemerkungen == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
+		if (bemerkungen.size() > 1)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
+
+		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
+		daten.id = dto.ID;
+		daten.schuelerID = dto.Schueler_ID;
+		daten.schuljahresabschnitt = dto.Schuljahresabschnitts_ID;
+		daten.wechselNr = dto.WechselNr;
+		daten.datumAnfang = dto.DatumVon;
+		daten.datumEnde = dto.DatumBis;
+		daten.datumKonferenz = dto.Konferenzdatum;
+		daten.datumZeugnis = dto.ZeugnisDatum;
+		daten.anzahlSchulbesuchsjahre = dto.Schulbesuchsjahre;
+		daten.istGewertet = (dto.SemesterWertung == null) || dto.SemesterWertung;
+		daten.istWiederholung = (dto.Wiederholung != null) && dto.Wiederholung;
+		daten.pruefungsOrdnung = dto.PruefOrdnung;
+		daten.tutorID = dto.Tutor_ID;
+		daten.klassenID = dto.Klassen_ID;
+		daten.folgeklassenID = dto.Folgeklasse_ID;
+		daten.schulgliederung = dto.Schulgliederung.daten.kuerzel;
+		daten.jahrgangID = dto.Jahrgang_ID;
+		daten.fachklasseID = dto.Fachklasse_ID;
+		daten.schwerpunktID = dto.Schwerpunkt_ID;
+		daten.organisationsform = dto.OrgFormKrz;
+		daten.Klassenart = dto.Klassenart;
+		daten.fehlstundenGesamt = (dto.SumFehlStd == null) ? 0 : dto.SumFehlStd;
+		daten.fehlstundenUnentschuldigt = (dto.SumFehlStdU == null) ? 0 : dto.SumFehlStdU;
+		daten.fehlstundenGrenzwert = dto.FehlstundenGrenzwert;
+		daten.hatSchwerbehinderungsNachweis = (dto.Schwerbehinderung != null) && dto.Schwerbehinderung;
+		daten.hatAOSF = (dto.AOSF != null) && dto.AOSF;
+		daten.hatAutismus = (dto.Autist != null) && dto.Autist;
+		daten.hatZieldifferentenUnterricht = (dto.ZieldifferentesLernen != null) && dto.ZieldifferentesLernen;
+		daten.foerderschwerpunkt1ID = dto.Foerderschwerpunkt_ID;
+		daten.foerderschwerpunkt2ID = dto.Foerderschwerpunkt2_ID;
+		daten.sonderpaedagogeID = dto.Sonderpaedagoge_ID;
+		daten.bilingualerZweig = dto.BilingualerZweig;
+		daten.istFachpraktischerAnteilAusreichend = dto.FachPraktAnteilAusr;
+		daten.versetzungsvermerk = dto.VersetzungKrz;
+		daten.noteDurchschnitt = dto.DSNote;
+		daten.noteLernbereichGSbzwAL = (dto.Gesamtnote_GS == null) ? null : dto.Gesamtnote_GS.getNoteSekI();
+		daten.noteLernbereichNW = (dto.Gesamtnote_NW == null) ? null : dto.Gesamtnote_NW.getNoteSekI();
+		daten.abschlussart = dto.AbschlussArt;
+		daten.istAbschlussPrognose = dto.AbschlIstPrognose;
+		daten.abschluss = dto.Abschluss;
+		daten.abschlussBerufsbildend = dto.Abschluss_B;
+		daten.textErgebnisPruefungsalgorithmus = dto.PruefAlgoErgebnis;
+		daten.zeugnisart = dto.Zeugnisart;
+		if (dto.MoeglNPFaecher != null) {
+			final String[] moeglicheNPFaecher = dto.MoeglNPFaecher.split(",");
+			if ((moeglicheNPFaecher.length > 0) && (!moeglicheNPFaecher[0].trim().isBlank())) {
+				daten.nachpruefungen = new SchuelerLernabschnittNachpruefungsdaten();
+				Collections.addAll(daten.nachpruefungen.moegliche, moeglicheNPFaecher);
+				if (dto.NPV_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "V";
+					np.fachID = dto.NPV_Fach_ID;
+					np.datum = dto.NPV_Datum;
+					np.note = dto.NPV_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+				if (dto.NPAA_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "A";
+					np.fachID = dto.NPAA_Fach_ID;
+					np.datum = dto.NPAA_Datum;
+					np.note = dto.NPAA_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+				if (dto.NPBQ_Fach_ID != null) {
+					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
+					np.grund = "B";
+					np.fachID = dto.NPBQ_Fach_ID;
+					np.datum = dto.NPBQ_Datum;
+					np.note = dto.NPBQ_NoteKrz;
+					daten.nachpruefungen.pruefungen.add(np);
+				}
+			}
+		}
+		daten.bemerkungen.zeugnisAllgemein = dto.ZeugnisBem;
+		if (!bemerkungen.isEmpty()) {
+			final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
+			daten.bemerkungen.zeugnisASV = b.ASV;
+			daten.bemerkungen.zeugnisLELS = b.LELS;
+			daten.bemerkungen.zeugnisAUE = b.AUE;
+			daten.bemerkungen.uebergangESF = b.ESF;
+			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
+			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
+		}
+
+		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(dto.ID, daten.leistungsdaten)))
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Leistungsdaten zur Abschnitt-ID " + dto.ID + " gefunden.");
+
+		return daten;
+	}
+
+
+	@Override
+	protected void mapAttribute(final DTOSchuelerLernabschnittsdaten dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "id" -> {
+				final Long patch_id = JSONMapper.convertToLong(value, true);
+				if ((patch_id == null) || (patch_id != dto.ID))
+					throw new ApiOperationException(Status.BAD_REQUEST);
+			}
+			case "schuelerID" -> {
+				final long idSchueler = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOSchueler.class, idSchueler) == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Schueler_ID = idSchueler;
+			}
+			case "schuljahresabschnitt" -> {
+				final long schuljahresabschnitt = JSONMapper.convertToLong(value, false);
+				if (conn.queryByKey(DTOSchuljahresabschnitte.class, schuljahresabschnitt) == null)
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Schuljahresabschnitts_ID = schuljahresabschnitt;
+			}
+			case "wechselNr" -> dto.WechselNr = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
+			case "datumAnfang" -> {
+				final String strDatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.DatumVon = strDatum;
+			}
+			case "datumEnde" -> {
+				final String strDatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.DatumBis = strDatum;
+			}
+			case "datumKonferenz" -> {
+				final String strDatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.Konferenzdatum = strDatum;
+			}
+			case "datumZeugnis" -> {
+				final String strDatum = JSONMapper.convertToString(value, true, false, null);
+				// TODO Datum validieren
+				dto.ZeugnisDatum = strDatum;
+			}
+			case "anzahlSchulbesuchsjahre" -> dto.Schulbesuchsjahre = JSONMapper.convertToIntegerInRange(value, true, 0, 100);
+			case "istGewertet" -> dto.SemesterWertung = JSONMapper.convertToBoolean(value, false);
+			case "istWiederholung" -> dto.Wiederholung = JSONMapper.convertToBoolean(value, false);
+			case "pruefungsOrdnung" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				// TODO Prüfungsordnung anhand des Schild3-Katalogs validieren
+				dto.PruefOrdnung = str;
+			}
+			case "tutorID" -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Tutor_ID = idLehrer;
+			}
+			case "klassenID" -> {
+				final Long idKlasse = JSONMapper.convertToLong(value, true);
+				if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Klassen_ID = idKlasse;
+			}
+			case "folgeklassenID" -> {
+				final Long idKlasse = JSONMapper.convertToLong(value, true);
+				if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Folgeklasse_ID = idKlasse;
+			}
+			case "schulgliederung" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				dto.Schulgliederung = Schulgliederung.getByKuerzel(str);
+			}
+			case "jahrgangID" -> {
+				final Long idJahrgang = JSONMapper.convertToLong(value, true);
+				if ((idJahrgang != null) && (conn.queryByKey(DTOJahrgang.class, idJahrgang) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Jahrgang_ID = idJahrgang;
+			}
+			case "fachklasseID" -> {
+				final Long idFachklasse = JSONMapper.convertToLong(value, true);
+				if (idFachklasse != null) {
+					final var manager = JsonDaten.fachklassenManager;
+					if (manager.getDaten(idFachklasse) == null)
+						throw new ApiOperationException(Status.CONFLICT);
+				}
+				dto.Fachklasse_ID = idFachklasse;
+			}
+			case "schwerpunktID" -> {
+				final Long idSchwerpunkt = JSONMapper.convertToLong(value, true);
+				// TODO Validierung des Schwerpunktes
+				dto.Schwerpunkt_ID = idSchwerpunkt;
+			}
+			case "organisationsform" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				if (str != null) {
+					if ((schule.Schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.getByKuerzel(str) == null))
+						throw new ApiOperationException(Status.CONFLICT);
+					if ((AllgemeinbildendOrganisationsformen.getByKuerzel(str) == null) && (BerufskollegOrganisationsformen.getByKuerzel(str) == null))
+						throw new ApiOperationException(Status.CONFLICT);
+				}
+				dto.OrgFormKrz = str;
+			}
+			case "Klassenart" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				if ((str != null) && (Klassenart.getByKuerzel(str) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Klassenart = str;
+			}
+			case "fehlstundenGesamt" -> dto.SumFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
+			case "fehlstundenUnentschuldigt" -> dto.SumFehlStdU = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
+			case "fehlstundenGrenzwert" -> dto.FehlstundenGrenzwert = JSONMapper.convertToIntegerInRange(value, true, 0, 100000);
+			case "hatSchwerbehinderungsNachweis" -> dto.Schwerbehinderung = JSONMapper.convertToBoolean(value, false);
+			case "hatAOSF" -> dto.AOSF = JSONMapper.convertToBoolean(value, false);
+			case "hatAutismus" -> dto.Autist = JSONMapper.convertToBoolean(value, false);
+			case "hatZieldifferentenUnterricht" -> dto.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false);
+			case "foerderschwerpunkt1ID" -> {
+				final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
+				if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Foerderschwerpunkt_ID = idFoerderschwerpunkt;
+			}
+			case "foerderschwerpunkt2ID" -> {
+				final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
+				if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Foerderschwerpunkt2_ID = idFoerderschwerpunkt;
+			}
+			case "sonderpaedagogeID" -> {
+				final Long idLehrer = JSONMapper.convertToLong(value, true);
+				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Sonderpaedagoge_ID = idLehrer;
+			}
+			case "bilingualerZweig" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				if ((str != null) && (BilingualeSprache.getByKuerzel(str) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.BilingualerZweig = str;
+			}
+			case "istFachpraktischerAnteilAusreichend" -> dto.FachPraktAnteilAusr = JSONMapper.convertToBoolean(value, true);
+			case "versetzungsvermerk" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				// TODO Prüfung des Versetzungsvermerks
+				//if ((str != null) && (???))
+				//	throw new ApiOperationException(Status.CONFLICT);
+				dto.VersetzungKrz = str;
+			}
+			case "noteDurchschnitt" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				// TODO Prüfung der Durchschnittsnote
+				dto.DSNote = str;
+			}
+			case "noteLernbereichGSbzwAL" -> dto.Gesamtnote_GS = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6));
+			case "noteLernbereichNW" -> dto.Gesamtnote_NW = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6));
+			case "abschlussart" -> {
+				final Integer abschlussart = JSONMapper.convertToInteger(value, true);
+				// TODO Prüfung der Abschlussart
+				dto.AbschlussArt = abschlussart;
+			}
+			case "istAbschlussPrognose" -> dto.AbschlIstPrognose = JSONMapper.convertToBoolean(value, true);
+			case "abschluss" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				if ((str != null) && (SchulabschlussAllgemeinbildend.getByKuerzel(str) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Abschluss = str;
+			}
+			case "abschlussBerufsbildend" -> {
+				final String str = JSONMapper.convertToString(value, true, false, null);
+				if ((str != null) && (SchulabschlussBerufsbildend.getByKuerzel(str) == null))
+					throw new ApiOperationException(Status.CONFLICT);
+				dto.Abschluss_B = str;
+			}
+			case "textErgebnisPruefungsalgorithmus" -> dto.PruefAlgoErgebnis = JSONMapper.convertToString(value, true, false, null);
+			case "zeugnisart" -> dto.Zeugnisart = JSONMapper.convertToString(value, true, false, 5);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
+		}
+	}
+
+
+	@Override
+	public SchuelerLernabschnittsdaten getById(final Long id) throws ApiOperationException {
+		// Prüfe, ob der Lernabschnitt mit der ID existiert
+		if (id == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es ist keine Abschnitt-ID angegeben worden.");
+		final DTOSchuelerLernabschnittsdaten dto = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
+		return map(dto);
 	}
 
 
@@ -81,22 +372,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 	 */
 	public Response get(final Long schueler_id, final long schuljahresabschnitt) throws ApiOperationException {
 		final SchuelerLernabschnittsdaten daten = getFromSchuelerIDUndSchuljahresabschnittID(schueler_id, schuljahresabschnitt);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-
-	/**
-	 * Bestimmt die Lernabschnittsdaten anhand der übergebenen Lernabschnitts-ID
-	 *
-	 * @param id die Lernabschnitt-ID
-	 *
-	 * @return die Lernabschnittsdaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	@Override
-	public Response get(final Long id) throws ApiOperationException {
-		final SchuelerLernabschnittsdaten daten = getFromID(id);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -131,7 +406,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen aktuellen Lernabschnitt zum Schüler mit der ID " + schueler_id
 					+ " und der Schuljahresabschnitt-ID " + schuljahresabschnitt_id + " gefunden.");
 
-		return getFromID(lernabschnittsdaten.getFirst().ID);
+		return getById(lernabschnittsdaten.getFirst().ID);
 	}
 
 
@@ -171,7 +446,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 
 		final List<SchuelerLernabschnittsdaten> daten = new ArrayList<>();
 		for (final DTOSchuelerLernabschnittsdaten a : dtoLernabschnitte)
-			daten.add(getFromID(a.ID));
+			daten.add(getById(a.ID));
 		return daten;
 	}
 
@@ -194,303 +469,6 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 				.toList();
 	}
 
-
-	/**
-	 * Gibt die Lernabschnittsdaten zur ID des Abschnitts zurück.
-	 *
-	 * @param id	die ID des Lernabschnitts.
-	 *
-	 * @return		die SchuelerLernabschnittsdaten zur ID.
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public SchuelerLernabschnittsdaten getFromID(final Long id) throws ApiOperationException {
-		// Prüfe, ob der Lernabschnitt mit der ID existiert
-		if (id == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es ist keine Abschnitt-ID angegeben worden.");
-		final DTOSchuelerLernabschnittsdaten aktuell = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, id);
-		if (aktuell == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur Abschnitt-ID " + id + " gefunden.");
-		// Ermittle die Fachbemerkungen
-		final List<DTOSchuelerPSFachBemerkungen> bemerkungen = conn.queryList(
-				DTOSchuelerPSFachBemerkungen.QUERY_BY_ABSCHNITT_ID, DTOSchuelerPSFachBemerkungen.class, aktuell.ID);
-		if (bemerkungen == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
-		if (bemerkungen.size() > 1)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + id + " gefunden.");
-
-		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
-		daten.id = aktuell.ID;
-		daten.schuelerID = aktuell.Schueler_ID;
-		daten.schuljahresabschnitt = aktuell.Schuljahresabschnitts_ID;
-		daten.wechselNr = aktuell.WechselNr;
-		daten.datumAnfang = aktuell.DatumVon;
-		daten.datumEnde = aktuell.DatumBis;
-		daten.datumKonferenz = aktuell.Konferenzdatum;
-		daten.datumZeugnis = aktuell.ZeugnisDatum;
-		daten.anzahlSchulbesuchsjahre = aktuell.Schulbesuchsjahre;
-		daten.istGewertet = (aktuell.SemesterWertung == null) || aktuell.SemesterWertung;
-		daten.istWiederholung = (aktuell.Wiederholung != null) && aktuell.Wiederholung;
-		daten.pruefungsOrdnung = aktuell.PruefOrdnung;
-		daten.tutorID = aktuell.Tutor_ID;
-		daten.klassenID = aktuell.Klassen_ID;
-		daten.folgeklassenID = aktuell.Folgeklasse_ID;
-		daten.schulgliederung = aktuell.Schulgliederung.daten.kuerzel;
-		daten.jahrgangID = aktuell.Jahrgang_ID;
-		daten.fachklasseID = aktuell.Fachklasse_ID;
-		daten.schwerpunktID = aktuell.Schwerpunkt_ID;
-		daten.organisationsform = aktuell.OrgFormKrz;
-		daten.Klassenart = aktuell.Klassenart;
-		daten.fehlstundenGesamt = (aktuell.SumFehlStd == null) ? 0 : aktuell.SumFehlStd;
-		daten.fehlstundenUnentschuldigt = (aktuell.SumFehlStdU == null) ? 0 : aktuell.SumFehlStdU;
-		daten.fehlstundenGrenzwert = aktuell.FehlstundenGrenzwert;
-		daten.hatSchwerbehinderungsNachweis = (aktuell.Schwerbehinderung != null) && aktuell.Schwerbehinderung;
-		daten.hatAOSF = (aktuell.AOSF != null) && aktuell.AOSF;
-		daten.hatAutismus = (aktuell.Autist != null) && aktuell.Autist;
-		daten.hatZieldifferentenUnterricht = (aktuell.ZieldifferentesLernen != null) && aktuell.ZieldifferentesLernen;
-		daten.foerderschwerpunkt1ID = aktuell.Foerderschwerpunkt_ID;
-		daten.foerderschwerpunkt2ID = aktuell.Foerderschwerpunkt2_ID;
-		daten.sonderpaedagogeID = aktuell.Sonderpaedagoge_ID;
-		daten.bilingualerZweig = aktuell.BilingualerZweig;
-		daten.istFachpraktischerAnteilAusreichend = aktuell.FachPraktAnteilAusr;
-		daten.versetzungsvermerk = aktuell.VersetzungKrz;
-		daten.noteDurchschnitt = aktuell.DSNote;
-		daten.noteLernbereichGSbzwAL = (aktuell.Gesamtnote_GS == null) ? null : aktuell.Gesamtnote_GS.getNoteSekI();
-		daten.noteLernbereichNW = (aktuell.Gesamtnote_NW == null) ? null : aktuell.Gesamtnote_NW.getNoteSekI();
-		daten.abschlussart = aktuell.AbschlussArt;
-		daten.istAbschlussPrognose = aktuell.AbschlIstPrognose;
-		daten.abschluss = aktuell.Abschluss;
-		daten.abschlussBerufsbildend = aktuell.Abschluss_B;
-		daten.textErgebnisPruefungsalgorithmus = aktuell.PruefAlgoErgebnis;
-		daten.zeugnisart = aktuell.Zeugnisart;
-		if (aktuell.MoeglNPFaecher != null) {
-			final String[] moeglicheNPFaecher = aktuell.MoeglNPFaecher.split(",");
-			if ((moeglicheNPFaecher.length > 0) && (!moeglicheNPFaecher[0].trim().isBlank())) {
-				daten.nachpruefungen = new SchuelerLernabschnittNachpruefungsdaten();
-				Collections.addAll(daten.nachpruefungen.moegliche, moeglicheNPFaecher);
-				if (aktuell.NPV_Fach_ID != null) {
-					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-					np.grund = "V";
-					np.fachID = aktuell.NPV_Fach_ID;
-					np.datum = aktuell.NPV_Datum;
-					np.note = aktuell.NPV_NoteKrz;
-					daten.nachpruefungen.pruefungen.add(np);
-				}
-				if (aktuell.NPAA_Fach_ID != null) {
-					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-					np.grund = "A";
-					np.fachID = aktuell.NPAA_Fach_ID;
-					np.datum = aktuell.NPAA_Datum;
-					np.note = aktuell.NPAA_NoteKrz;
-					daten.nachpruefungen.pruefungen.add(np);
-				}
-				if (aktuell.NPBQ_Fach_ID != null) {
-					final SchuelerLernabschnittNachpruefung np = new SchuelerLernabschnittNachpruefung();
-					np.grund = "B";
-					np.fachID = aktuell.NPBQ_Fach_ID;
-					np.datum = aktuell.NPBQ_Datum;
-					np.note = aktuell.NPBQ_NoteKrz;
-					daten.nachpruefungen.pruefungen.add(np);
-				}
-			}
-		}
-		daten.bemerkungen.zeugnisAllgemein = aktuell.ZeugnisBem;
-		if (!bemerkungen.isEmpty()) {
-			final DTOSchuelerPSFachBemerkungen b = bemerkungen.get(0);
-			daten.bemerkungen.zeugnisASV = b.ASV;
-			daten.bemerkungen.zeugnisLELS = b.LELS;
-			daten.bemerkungen.zeugnisAUE = b.AUE;
-			daten.bemerkungen.uebergangESF = b.ESF;
-			daten.bemerkungen.foerderschwerpunkt = b.BemerkungFSP;
-			daten.bemerkungen.versetzungsentscheidung = b.BemerkungVersetzung;
-		}
-
-		if (!(new DataSchuelerLeistungsdaten(conn).getByLernabschnitt(aktuell.ID, daten.leistungsdaten)))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Keine Leistungsdaten zur Abschnitt-ID " + id + " gefunden.");
-
-		return daten;
-	}
-
-	private static final Map<String, DataBasicMapper<DTOSchuelerLernabschnittsdaten>> patchMappings = Map.ofEntries(
-			Map.entry("id", (conn, dto, value, map) -> {
-				final Long patch_id = JSONMapper.convertToLong(value, true);
-				if ((patch_id == null) || (patch_id != dto.ID))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("schuelerID", (conn, dto, value, map) -> {
-				final long idSchueler = JSONMapper.convertToLong(value, false);
-				if (conn.queryByKey(DTOSchueler.class, idSchueler) == null)
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Schueler_ID = idSchueler;
-			}),
-			Map.entry("schuljahresabschnitt", (conn, dto, value, map) -> {
-				final long schuljahresabschnitt = JSONMapper.convertToLong(value, false);
-				if (conn.queryByKey(DTOSchuljahresabschnitte.class, schuljahresabschnitt) == null)
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Schuljahresabschnitts_ID = schuljahresabschnitt;
-			}),
-			Map.entry("wechselNr", (conn, dto, value, map) -> dto.WechselNr = JSONMapper.convertToIntegerInRange(value, true, 0, 1000)),
-			Map.entry("datumAnfang", (conn, dto, value, map) -> {
-				final String strDatum = JSONMapper.convertToString(value, true, false, null);
-				// TODO Datum validieren
-				dto.DatumVon = strDatum;
-			}),
-			Map.entry("datumEnde", (conn, dto, value, map) -> {
-				final String strDatum = JSONMapper.convertToString(value, true, false, null);
-				// TODO Datum validieren
-				dto.DatumBis = strDatum;
-			}),
-			Map.entry("datumKonferenz", (conn, dto, value, map) -> {
-				final String strDatum = JSONMapper.convertToString(value, true, false, null);
-				// TODO Datum validieren
-				dto.Konferenzdatum = strDatum;
-			}),
-			Map.entry("datumZeugnis", (conn, dto, value, map) -> {
-				final String strDatum = JSONMapper.convertToString(value, true, false, null);
-				// TODO Datum validieren
-				dto.ZeugnisDatum = strDatum;
-			}),
-			Map.entry("anzahlSchulbesuchsjahre", (conn, dto, value, map) -> dto.Schulbesuchsjahre = JSONMapper.convertToIntegerInRange(value, true, 0, 100)),
-			Map.entry("istGewertet", (conn, dto, value, map) -> dto.SemesterWertung = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("istWiederholung", (conn, dto, value, map) -> dto.Wiederholung = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("pruefungsOrdnung", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				// TODO Prüfungsordnung anhand des Schild3-Katalogs validieren
-				dto.PruefOrdnung = str;
-			}),
-			Map.entry("tutorID", (conn, dto, value, map) -> {
-				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Tutor_ID = idLehrer;
-			}),
-			Map.entry("klassenID", (conn, dto, value, map) -> {
-				final Long idKlasse = JSONMapper.convertToLong(value, true);
-				if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Klassen_ID = idKlasse;
-			}),
-			Map.entry("folgeklassenID", (conn, dto, value, map) -> {
-				final Long idKlasse = JSONMapper.convertToLong(value, true);
-				if ((idKlasse != null) && (conn.queryByKey(DTOKlassen.class, idKlasse) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Folgeklasse_ID = idKlasse;
-			}),
-			Map.entry("schulgliederung", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				dto.Schulgliederung = Schulgliederung.getByKuerzel(str);
-			}),
-			Map.entry("jahrgangID", (conn, dto, value, map) -> {
-				final Long idJahrgang = JSONMapper.convertToLong(value, true);
-				if ((idJahrgang != null) && (conn.queryByKey(DTOJahrgang.class, idJahrgang) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Jahrgang_ID = idJahrgang;
-			}),
-			Map.entry("fachklasseID", (conn, dto, value, map) -> {
-				final Long idFachklasse = JSONMapper.convertToLong(value, true);
-				if (idFachklasse != null) {
-					final var manager = JsonDaten.fachklassenManager;
-					if (manager.getDaten(idFachklasse) == null)
-						throw new ApiOperationException(Status.CONFLICT);
-				}
-				dto.Fachklasse_ID = idFachklasse;
-			}),
-			Map.entry("schwerpunktID", (conn, dto, value, map) -> {
-				final Long idSchwerpunkt = JSONMapper.convertToLong(value, true);
-				// TODO Validierung des Schwerpunktes
-				dto.Schwerpunkt_ID = idSchwerpunkt;
-			}),
-			Map.entry("organisationsform", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-				if (str != null) {
-					if ((schule.Schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.getByKuerzel(str) == null))
-						throw new ApiOperationException(Status.CONFLICT);
-					if ((AllgemeinbildendOrganisationsformen.getByKuerzel(str) == null) && (BerufskollegOrganisationsformen.getByKuerzel(str) == null))
-						throw new ApiOperationException(Status.CONFLICT);
-				}
-				dto.OrgFormKrz = str;
-			}),
-			Map.entry("Klassenart", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (Klassenart.getByKuerzel(str) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Klassenart = str;
-			}),
-			Map.entry("fehlstundenGesamt", (conn, dto, value, map) -> dto.SumFehlStd = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
-			Map.entry("fehlstundenUnentschuldigt", (conn, dto, value, map) -> dto.SumFehlStdU = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
-			Map.entry("fehlstundenGrenzwert", (conn, dto, value, map) -> dto.FehlstundenGrenzwert = JSONMapper.convertToIntegerInRange(value, true, 0, 100000)),
-			Map.entry("hatSchwerbehinderungsNachweis", (conn, dto, value, map) -> dto.Schwerbehinderung = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatAOSF", (conn, dto, value, map) -> dto.AOSF = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatAutismus", (conn, dto, value, map) -> dto.Autist = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatZieldifferentenUnterricht", (conn, dto, value, map) -> dto.ZieldifferentesLernen = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("foerderschwerpunkt1ID", (conn, dto, value, map) -> {
-				final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
-				if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Foerderschwerpunkt_ID = idFoerderschwerpunkt;
-			}),
-			Map.entry("foerderschwerpunkt2ID", (conn, dto, value, map) -> {
-				final Long idFoerderschwerpunkt = JSONMapper.convertToLong(value, true);
-				if ((idFoerderschwerpunkt != null) && (conn.queryByKey(DTOFoerderschwerpunkt.class, idFoerderschwerpunkt) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Foerderschwerpunkt2_ID = idFoerderschwerpunkt;
-			}),
-			Map.entry("sonderpaedagogeID", (conn, dto, value, map) -> {
-				final Long idLehrer = JSONMapper.convertToLong(value, true);
-				if ((idLehrer != null) && (conn.queryByKey(DTOLehrer.class, idLehrer) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Sonderpaedagoge_ID = idLehrer;
-			}),
-			Map.entry("bilingualerZweig", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (BilingualeSprache.getByKuerzel(str) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.BilingualerZweig = str;
-			}),
-			Map.entry("istFachpraktischerAnteilAusreichend", (conn, dto, value, map) -> dto.FachPraktAnteilAusr = JSONMapper.convertToBoolean(value, true)),
-			Map.entry("versetzungsvermerk", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				// TODO Prüfung des Versetzungsvermerks
-				//if ((str != null) && (???))
-				//	throw new ApiOperationException(Status.CONFLICT);
-				dto.VersetzungKrz = str;
-			}),
-			Map.entry("noteDurchschnitt", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				// TODO Prüfung der Durchschnittsnote
-				dto.DSNote = str;
-			}),
-			Map.entry("noteLernbereichGSbzwAL",
-					(conn, dto, value, map) -> dto.Gesamtnote_GS = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6))),
-			Map.entry("noteLernbereichNW",
-					(conn, dto, value, map) -> dto.Gesamtnote_NW = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6))),
-			Map.entry("abschlussart", (conn, dto, value, map) -> {
-				final Integer abschlussart = JSONMapper.convertToInteger(value, true);
-				// TODO Prüfung der Abschlussart
-				dto.AbschlussArt = abschlussart;
-			}),
-			Map.entry("istAbschlussPrognose", (conn, dto, value, map) -> dto.AbschlIstPrognose = JSONMapper.convertToBoolean(value, true)),
-			Map.entry("abschluss", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (SchulabschlussAllgemeinbildend.getByKuerzel(str) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Abschluss = str;
-			}),
-			Map.entry("abschlussBerufsbildend", (conn, dto, value, map) -> {
-				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (SchulabschlussBerufsbildend.getByKuerzel(str) == null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Abschluss_B = str;
-			}),
-			Map.entry("textErgebnisPruefungsalgorithmus",
-					(conn, dto, value, map) -> dto.PruefAlgoErgebnis = JSONMapper.convertToString(value, true, false, null)),
-			Map.entry("zeugnisart", (conn, dto, value, map) -> dto.Zeugnisart = JSONMapper.convertToString(value, true, false, 5)));
-
-	@Override
-	public Response patch(final Long id, final InputStream is) throws ApiOperationException {
-		return super.patchBasic(id, is, DTOSchuelerLernabschnittsdaten.class, patchMappings);
-	}
 
 	/**
 	 * Für einen Patch für die angegebenen Bemerkungsfelder aus.
@@ -550,7 +528,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManager<Long> {
 					dtoFachBem.BemerkungVersetzung = JSONMapper.convertToString(value, true, true, null);
 					patchedDTOFachBem = true;
 				}
-				default -> { /**/ }
+				default -> {
+					/**/ }
 			}
 		}
 		if (patchedDTOLernabschitt) {

@@ -130,9 +130,11 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param attributes die Map mit initialen oder zu patchenden Attributen für ein DTO
 	 *
 	 * @return die custom ID
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected ID getID(final Map<String, Object> attributes) {
-		throw new UnsupportedOperationException("Die Methode getID() ist standardmäßig nicht implementiert.");
+	protected ID getID(final Map<String, Object> attributes) throws ApiOperationException {
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode getID() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -169,7 +171,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param id    die ID
 	 */
 	protected void initDTO(final DatabaseDTO dto, final ID id) throws ApiOperationException {
-		throw new UnsupportedOperationException("Die Methode initDTO() ist standardmäßig nicht implementiert.");
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode initDTO() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -196,7 +198,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   wenn ein Fehler bei dem Mapping auftritt
 	 */
 	protected void mapAttribute(final DatabaseDTO dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
-		throw new UnsupportedOperationException("Die Methode mapAttribute() ist standardmäßig nicht implementiert.");
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode mapAttribute() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -210,7 +212,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<CoreDTO> getAll() throws ApiOperationException {
-		throw new UnsupportedOperationException("Die Methode getAll() ist standardmäßig nicht implementiert.");
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode getAll() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -241,7 +243,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<CoreDTO> getList() throws ApiOperationException {
-		throw new UnsupportedOperationException("Die Methode getList() ist standardmäßig nicht implementiert.");
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode getList() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -273,7 +275,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public CoreDTO getById(final ID id) throws ApiOperationException {
-		throw new UnsupportedOperationException("Die Methode getById() ist standardmäßig nicht implementiert.");
+		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode getById() ist standardmäßig nicht implementiert.");
 	}
 
 
@@ -669,9 +671,11 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param initAttributes die Map mit den initialen Attributen für das neue DTO
 	 *
 	 * @return die neue ID
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	ID getNextID(final ID lastID, final Map<String, Object> initAttributes) {
+	ID getNextID(final ID lastID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		if (getClassID().isAssignableFrom(Long.class))
 			return (ID) createNextLongID((Long) lastID);
 		return getID(initAttributes);
