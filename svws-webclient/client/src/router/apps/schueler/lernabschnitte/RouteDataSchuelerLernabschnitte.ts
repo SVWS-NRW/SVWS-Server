@@ -7,6 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
+import { routeSchuelerLernabschnittGostKlausuren, RouteSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
@@ -113,7 +114,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const manager = new SchuelerLernabschnittManager(api.schulform, schueler, daten, schuljahresabschnitt, curState.listFaecher, curState.listFoerderschwerpunkte, curState.listJahrgaenge, listKlassen, listKurse, curState.listLehrer);
 		let klausurManager = undefined;
 		const abiturjahrgang = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
-		if (abiturjahrgang !== null) {
+		if (routeSchuelerLernabschnittGostKlausuren.hatEineKompetenz() && abiturjahrgang !== null) {
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
