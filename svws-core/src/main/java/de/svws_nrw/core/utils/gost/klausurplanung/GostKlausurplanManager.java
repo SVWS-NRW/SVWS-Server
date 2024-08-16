@@ -204,6 +204,7 @@ public class GostKlausurplanManager {
 	// GostSchuelerklausurTermin
 	private final @NotNull Map<Long, GostSchuelerklausurTermin> _schuelerklausurtermin_by_id = new HashMap<>();
 	private final @NotNull List<GostSchuelerklausurTermin> _schuelerklausurterminmenge = new ArrayList<>();
+	private final @NotNull List<GostSchuelerklausurTermin> _schuelerklausurterminaktuellmenge = new ArrayList<>();
 	private final @NotNull Map<Long, GostSchuelerklausurTermin> _schuelerklausurterminaktuell_by_idSchuelerklausur = new HashMap<>();
 	private final @NotNull Map<Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idSchuelerklausur = new HashMap<>();
 	private final @NotNull Map<Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idTermin = new HashMap<>();
@@ -221,6 +222,7 @@ public class GostKlausurplanManager {
 	private final @NotNull Map<Long, List<GostKlausurraum>> _raummenge_by_idTermin = new HashMap<>();
 	private final @NotNull HashMap2D<Long, Long, GostKlausurraum> _raum_by_idTermin_and_idStundenplanraum = new HashMap2D<>();
 	private final @NotNull Map<Long, GostKlausurraum> _klausurraum_by_idSchuelerklausurtermin = new HashMap<>();
+	private final @NotNull HashMap2D<Long, Long, List<GostKlausurraum>> _raummenge_by_idTermin_and_idKursklausur = new HashMap2D<>();
 
 	// GostKlausurraumstunde
 	private final @NotNull Map<Long, GostKlausurraumstunde> _raumstunde_by_id = new HashMap<>();
@@ -539,6 +541,7 @@ public class GostKlausurplanManager {
 		update_klausurraum_by_idSchuelerklausurtermin(); // benötigt _raumstundenmenge_by_idSchuelerklausurtermin,
 
 		update_schuelerklausurterminaktuell_by_idSchuelerklausur();
+		update_schuelerklausurterminaktuellmenge(); // benötigt _schuelerklausurterminaktuell_by_idSchuelerklausur
 		update_schuelerklausurmenge_by_idKursklausur();
 		update_schuelerklausurterminmenge_by_idSchuelerklausur();
 		update_schuelerklausurterminmenge_by_idTermin();
@@ -550,6 +553,9 @@ public class GostKlausurplanManager {
 		update_schuelerklausurterminmenge_by_idRaum_and_idKursklausur(); // benötigt _raumstundenmenge_by_idSchuelerklausurtermin
 		update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
+
+		update_raummenge_by_idTermin_and_idKursklausur(); // benötigt _schuelerklausurterminaktuellmenge
+
 	}
 
 	private void update_vorgabenmenge_by_halbjahr_and_quartal() {
@@ -605,6 +611,13 @@ public class GostKlausurplanManager {
 		_terminmenge_by_datum_and_abijahr.clear();
 		for (final @NotNull GostKlausurtermin t : _terminmenge)
 			Map2DUtils.getOrCreateArrayList(_terminmenge_by_datum_and_abijahr, t.datum, t.abijahr).add(t);
+	}
+
+	private void update_schuelerklausurterminaktuellmenge() {
+		_schuelerklausurterminaktuellmenge.clear();
+		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminmenge)
+			if (istSchuelerklausurterminAktuell(skt))
+				_schuelerklausurterminaktuellmenge.add(skt);
 	}
 
 	private void update_schuelerklausurterminaktuell_by_idSchuelerklausur() {
@@ -717,6 +730,18 @@ public class GostKlausurplanManager {
 		_raummenge_by_idTermin.clear();
 		for (final @NotNull GostKlausurraum raum : _raummenge)
 			MapUtils.getOrCreateArrayList(_raummenge_by_idTermin, raum.idTermin).add(raum);
+	}
+
+	private void update_raummenge_by_idTermin_and_idKursklausur() {
+		_raummenge_by_idTermin_and_idKursklausur.clear();
+		for (final @NotNull GostSchuelerklausurTermin skt : _schuelerklausurterminaktuellmenge) {
+			final GostKlausurtermin termin = terminOrNullBySchuelerklausurTermin(skt);
+			if (termin != null) {
+				final GostKlausurraum raum = klausurraumGetBySchuelerklausurtermin(skt);
+				if (raum != null)
+					Map2DUtils.getOrCreateArrayList(_raummenge_by_idTermin_and_idKursklausur, termin.id, kursklausurBySchuelerklausurTermin(skt).id).add(raum);
+			}
+		}
 	}
 
 	private void update_raumstundenmenge_by_idRaum() {
@@ -2308,13 +2333,59 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull List<GostKlausurtermin> terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang,
 			final @NotNull GostHalbjahr halbjahr, final int quartal) {
-		final List<GostKlausurtermin> termineMitDatum = new ArrayList<>();
+		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : terminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr,
 				quartal))
 			if (termin.datum != null)
-				termineMitDatum.add(termin);
-		termineMitDatum.sort(_compTermin);
-		return termineMitDatum;
+				ergebnis.add(termin);
+		ergebnis.sort(_compTermin);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von {@link GostKlausurtermin}en, denen bereits ein Datum zugewiesen wurde.
+	 *
+	 * @return die Liste von {@link GostKlausurtermin}en, denen bereits ein Datum zugewiesen wurde.
+	 */
+	public @NotNull List<GostKlausurtermin> terminMitDatumGetMenge() {
+		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostKlausurtermin termin : _terminmenge)
+			if (termin.datum != null)
+				ergebnis.add(termin);
+		ergebnis.sort(_compTermin);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von {@link GostKlausurtermin}en, denen noch kein Datum zugewiesen wurde.
+	 *
+	 * @return die Liste von {@link GostKlausurtermin}en, denen noch kein Datum zugewiesen wurde.
+	 */
+	public @NotNull List<GostKlausurtermin> terminOhneDatumGetMenge() {
+		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostKlausurtermin termin : _terminmenge)
+			if (termin.datum == null)
+				ergebnis.add(termin);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von {@link GostKlausurtermin}en, denen noch kein Datum zugewiesen wurde.
+	 *
+	 * @param abiJahrgang   der Abitur-Jahrgang, zu dem die {@link GostKlausurtermin}e gesucht werden
+	 * @param halbjahr      das {@link GostHalbjahr}, zu dem die {@link GostKlausurtermin}e gesucht werden
+	 * @param quartal       die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Liste von {@link GostKlausurtermin}en, denen noch kein Datum zugewiesen wurde.
+	 */
+	public @NotNull List<GostKlausurtermin> terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang,
+			final @NotNull GostHalbjahr halbjahr, final int quartal) {
+		final List<GostKlausurtermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostKlausurtermin termin : terminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr,
+				quartal))
+			if (termin.datum == null)
+				ergebnis.add(termin);
+		return ergebnis;
 	}
 
 	/**
@@ -2380,17 +2451,7 @@ public class GostKlausurplanManager {
 		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
-			int skStartzeit = -1;
-			final @NotNull GostKursklausur kk = kursklausurBySchuelerklausurTermin(skt);
-			if (skt.startzeit != null)
-				skStartzeit = skt.startzeit;
-			else if (kk.startzeit != null)
-				skStartzeit = kk.startzeit;
-			else if (termin.startzeit != null)
-				skStartzeit = termin.startzeit;
-			else
-				throw new DeveloperNotificationException(
-						"Startzeit des Termins nicht definiert, Termin-ID: " + termin.id);
+			final int skStartzeit = startzeitBySchuelerklausurterminOrException(skt);
 			if (skStartzeit < minStart)
 				minStart = skStartzeit;
 		}
@@ -2414,18 +2475,7 @@ public class GostKlausurplanManager {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeBySchuelerklausurTermin(skt);
-			int skStartzeit = -1;
-			final @NotNull GostKursklausur kk = kursklausurBySchuelerklausurTermin(skt);
-			if (skt.startzeit != null)
-				skStartzeit = skt.startzeit;
-			else if (kk.startzeit != null)
-				skStartzeit = kk.startzeit;
-			else if (termin.startzeit != null)
-				skStartzeit = termin.startzeit;
-			else
-				throw new DeveloperNotificationException(
-						"Startzeit des Termins nicht definiert, Termin-ID: " + termin.id);
-			final int endzeit = skStartzeit + vorgabe.dauer + vorgabe.auswahlzeit;
+			final int endzeit = startzeitBySchuelerklausurterminOrException(skt) + vorgabe.dauer + vorgabe.auswahlzeit;
 			if (endzeit > maxEnd)
 				maxEnd = endzeit;
 		}
@@ -2983,6 +3033,34 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Gibt die Startzeit des übergebenen {@link GostSchuelerklausurTermin}s aus. Falls keine individuelle Zeit
+	 * gesetzt ist, wird die Zeit der {@link GostKursklausur} zurückgegeben, sonst die des {@link GostKlausurtermin}s. Sollte kein {@link GostKlausurtermin} gesetzt
+	 * sein oder der {@link GostKlausurtermin} keine Startzeit definiert haben, wird <code>null</code>
+	 * zurückgegeben.
+	 *
+	 * @param skt der {@link GostSchuelerklausurTermin}, dessen Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit des {@link GostSchuelerklausurTermin}s oder <code>null</code>
+	 */
+	public Integer startzeitBySchuelerklausurterminOrNull(final @NotNull GostSchuelerklausurTermin skt) {
+		return skt.startzeit != null ? skt.startzeit : startzeitByKursklausurOrNull(kursklausurBySchuelerklausurTermin(skt));
+	}
+
+	/**
+	 * Gibt die Startzeit des übergebenen {@link GostSchuelerklausurTermin}s aus. Falls keine individuelle Zeit
+	 * gesetzt ist, wird die Zeit der {@link GostKursklausur} zurückgegeben, sonst die des {@link GostKlausurtermin}s. Sollte kein {@link GostKlausurtermin} gesetzt
+	 * sein oder der {@link GostKlausurtermin} keine Startzeit definiert haben, wird eine <code>DeveloperNotificationException</code> geworfen.
+	 * zurückgegeben.
+	 *
+	 * @param skt der {@link GostSchuelerklausurTermin}, dessen Startzeit gesucht wird.
+	 *
+	 * @return die Startzeit des {@link GostSchuelerklausurTermin}s
+	 */
+	public int startzeitBySchuelerklausurterminOrException(final @NotNull GostSchuelerklausurTermin skt) {
+		return skt.startzeit != null ? skt.startzeit : startzeitByKursklausurOrException(kursklausurBySchuelerklausurTermin(skt));
+	}
+
+	/**
 	 * Gibt die Startzeit der übergebenen {@link GostKursklausur} aus. Falls keine individuelle Zeit
 	 * gesetzt ist, wird die Zeit des {@link GostKlausurtermin}s zurückgegeben. Sollte kein {@link GostKlausurtermin} gesetzt
 	 * sein oder der {@link GostKlausurtermin} keine Startzeit definiert haben, wird <code>null</code>
@@ -2993,9 +3071,9 @@ public class GostKlausurplanManager {
 	 * @return die Startzeit der {@link GostKursklausur} oder <code>null</code>
 	 */
 	public Integer startzeitByKursklausurOrNull(final @NotNull GostKursklausur klausur) {
-		final GostKlausurtermin termin = terminOrNullByKursklausur(klausur);
 		if (klausur.startzeit != null)
 			return klausur.startzeit;
+		final GostKlausurtermin termin = terminOrNullByKursklausur(klausur);
 		return (termin == null) ? null : termin.startzeit;
 	}
 
@@ -3288,6 +3366,21 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert eine Liste von Haupttermin-{@link GostSchuelerklausurTermin}en zum übergebenen {@link GostKlausurtermin}
+	 *
+	 * @param termin der {@link GostKlausurtermin}
+	 *
+	 * @return die Liste von Haupttermin-{@link GostSchuelerklausurTermin}en zum übergebenen {@link GostKlausurtermin}
+	 */
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellHtGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
+		final @NotNull List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminAktuellGetMengeByTermin(termin))
+			if (skt.folgeNr == 0)
+				ergebnis.add(skt);
+		return ergebnis;
+	}
+
+	/**
 	 * Liefert eine Liste von Nachschreib-{@link GostSchuelerklausurTermin}en zum übergebenen {@link GostKlausurtermin}
 	 *
 	 * @param termin der {@link GostKlausurtermin}
@@ -3297,6 +3390,21 @@ public class GostKlausurplanManager {
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminNtGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
 		final @NotNull List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
 		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminGetMengeByTermin(termin))
+			if (skt.folgeNr > 0)
+				ergebnis.add(skt);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert eine Liste von aktuellen Nachschreib-{@link GostSchuelerklausurTermin}en zum übergebenen {@link GostKlausurtermin}
+	 *
+	 * @param termin der {@link GostKlausurtermin}
+	 *
+	 * @return die Liste von aktuellen Nachschreib-{@link GostSchuelerklausurTermin}en zum übergebenen {@link GostKlausurtermin}
+	 */
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellNtGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
+		final @NotNull List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminAktuellGetMengeByTermin(termin))
 			if (skt.folgeNr > 0)
 				ergebnis.add(skt);
 		return ergebnis;
@@ -3631,7 +3739,7 @@ public class GostKlausurplanManager {
 	 *
 	 * @param raum der {@link GostKlausurraum}
 	 *
-	 * @return die die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum} zurück.
+	 * @return die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
 	 */
 	public @NotNull List<GostKlausurraumstunde> klausurraumstundeGetMengeByRaum(final @NotNull GostKlausurraum raum) {
 		final List<GostKlausurraumstunde> stunden = _raumstundenmenge_by_idRaum.get(raum.id);
@@ -3888,6 +3996,19 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert die Menge der {@link GostKlausurraum}e zu den als Parameter übergebenen {@link GostKlausurtermin} und {@link GostKursklausur}.
+	 *
+	 * @param termin der {@link GostKlausurtermin}, zu dem die {@link GostKlausurraum}e gesucht werden
+	 * @param klausur die {@link GostKursklausur}, zu der die {@link GostKlausurraum}e gesucht werden
+	 *
+	 * @return die Menge der {@link GostKlausurraum}e zu den als Parameter übergebenen {@link GostKlausurtermin} und {@link GostKursklausur}.
+	 */
+	public @NotNull List<GostKlausurraum> raumGetMengeByTerminAndKursklausur(final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur klausur) {
+		final List<GostKlausurraum> raeume = _raummenge_by_idTermin_and_idKursklausur.getOrNull(termin.id, klausur.id);
+		return (raeume == null) ? new ArrayList<>() : raeume;
+	}
+
+	/**
 	 * Liefert die Menge der {@link GostKlausurraum}e, ggf. jahrgangsübergreifend, zum als Parameter übergebenen {@link GostKlausurtermin}.
 	 *
 	 * @param termin der {@link GostKlausurtermin}, zu dem die {@link GostKlausurraum}e gesucht werden
@@ -3999,6 +4120,17 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Liefert den {@link StundenplanRaum} zu einem übergebenen {@link GostKlausurraum}. Falls kein {@link StundenplanRaum} zugeordnet ist, wird eine <code>DeveloperNotificationException</code> geworfen.
+	 *
+	 * @param raum der {@link GostKlausurraum}
+	 *
+	 * @return der zugehörige {@link StundenplanRaum}
+	 */
+	public StundenplanRaum stundenplanraumGetByKlausurraumOrNull(final @NotNull GostKlausurraum raum) {
+		return raum.idStundenplanRaum == null ? null : getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
+	}
+
+	/**
 	 * Prüft, ob allen zum übergebenen {@link GostKlausurtermin} gehörigen {@link GostKlausurraum}en ein {@link StundenplanRaum} zugewiesen ist.
 	 *
 	 * @param termin der zu prüfende {@link GostKlausurtermin}
@@ -4027,6 +4159,21 @@ public class GostKlausurplanManager {
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Liefert die Menge von {@link StundenplanZeitraster} zum übergebenen {@link GostKlausurraum} zurück.
+	 *
+	 * @param raum der {@link GostKlausurraum}
+	 *
+	 * @return die Menge von {@link StundenplanZeitraster}en zum übergebenen {@link GostKlausurraum}.
+	 */
+	public @NotNull List<StundenplanZeitraster> zeitrasterGetMengeByRaum(final @NotNull GostKlausurraum raum) {
+		final @NotNull List<StundenplanZeitraster> ergebnis = new ArrayList<>();
+		for (final @NotNull GostKlausurraumstunde rs : klausurraumstundeGetMengeByRaum(raum)) {
+			ergebnis.add(getStundenplanManager().zeitrasterGetByIdOrException(rs.idZeitraster));
+		}
+		return ergebnis;
 	}
 
 }

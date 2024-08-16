@@ -14,13 +14,13 @@
 						@dragover="checkDropZoneTerminAuswahl"
 						class="h-full">
 						<div>
-							<div class="leading-tight flex flex-col gap-0.5" v-if="termineOhne.length === 0">
+							<div class="leading-tight flex flex-col gap-0.5" v-if="kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).isEmpty()">
 								<span>Aktuell keine Klausuren zu planen.</span>
 								<span class="opacity-50">Bereits geplante Einträge können hier zurückgelegt werden.</span>
 							</div>
 						</div>
 						<ul class="flex flex-col gap-0.5 -mx-3">
-							<li v-for="termin in termineOhne"
+							<li v-for="termin in kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 								:key="termin.id"
 								:data="termin"
 								:draggable="isDraggable(termin)"
@@ -250,14 +250,6 @@
 			}
 		props.terminSelected.value = undefined;
 	};
-
-	const termineOhne = computed(() => {
-		const a = [];
-		for (const termin of props.kMan().terminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value))
-			if (termin.datum === null)
-				a.push(termin);
-		return a;
-	});
 
 	// const termineMit = computed(() => {
 	// 	const terms = props.kMan().terminGetMengeAsList();
