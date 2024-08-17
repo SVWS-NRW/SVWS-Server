@@ -1,1 +1,1 @@
-export type DownloadPDFTypen = "Klausurplan aktuelle Jgst." | "Klausurplan alle Jgst."
+export type DownloadPDFTypen = "Klausurplan (Kurse)" | "Klausurplan (Kurse und Nachschreiber)" | "Klausurplan (detailliert)" | "Klausurplan alle Jgst. (Kurse)" | "Klausurplan alle Jgst. (Kurse und Nachschreiber)" | "Klausurplan alle Jgst. (detailliert)"

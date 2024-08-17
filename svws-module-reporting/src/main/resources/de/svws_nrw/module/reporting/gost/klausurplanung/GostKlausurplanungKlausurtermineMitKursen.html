@@ -120,7 +120,7 @@
 											des Kurses.
 										</td>
 									</tr>
-									<tr th:if="${!kursklausur.klausurschreiberNamen().isEmpty()}">
+									<tr th:if="${(Parameter.detailLevel > 1) && !kursklausur.klausurschreiberNamen().isEmpty()}">
 										<td></td>
 										<td colspan="7" class="beschriftung pad-1001 ta-l" th:text="${kursklausur.textKlausurschreiberNamen()}">Max Mustermann, Tina Test</td>
 									</tr>
@@ -130,14 +130,14 @@
 							</table>
 						</td>
 					</tr>
-					<tr th:if="${!termin.kursklausuren().isEmpty() && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
+					<tr th:if="${(Parameter.detailLevel > 0) && !termin.kursklausuren().isEmpty() && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
 						<td style="height: 2mm"></td>
 					</tr>
-					<tr th:if="${!termin.schuelerklausurenNachschreibtermin().isEmpty()}">
+					<tr th:if="${(Parameter.detailLevel > 0) && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
 						<td></td>
 						<td colspan="4" class="f-bold">Schülerklausuren:</td>
 					</tr>
-					<tr th:if="${!termin.schuelerklausurenNachschreibtermin().isEmpty()}">
+					<tr th:if="${(Parameter.detailLevel > 0) && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
 						<td></td>
 						<td colspan="4">
 							<table class="fixed-layout-100 no-space-pad">

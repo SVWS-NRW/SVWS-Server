@@ -20,8 +20,12 @@
 	onMounted(() => isMounted.value = true);
 
 	const dropdownList = [
-		{ text: "Klausurplan akutelle Jgst.", action: () => downloadPDF("Klausurplan aktuelle Jgst."), default: true },
-		{ text: "Klausurplan alle Jgst.", action: () => downloadPDF("Klausurplan alle Jgst.") },
+		{ text: "Klausurplan (Kurse)", action: () => downloadPDF("Klausurplan (Kurse)")},
+		{ text: "Klausurplan (Kurse und Nachschreiber)", action: () => downloadPDF("Klausurplan (Kurse und Nachschreiber)") },
+		{ text: "Klausurplan (detailliert)", action: () => downloadPDF("Klausurplan (detailliert)"), default: true },
+		{ text: "Klausurplan alle Jgst. (Kurse)", action: () => downloadPDF("Klausurplan alle Jgst. (Kurse)") },
+		{ text: "Klausurplan alle Jgst. (Kurse und Nachschreiber)", action: () => downloadPDF("Klausurplan alle Jgst. (Kurse und Nachschreiber)") },
+		{ text: "Klausurplan alle Jgst. (detailliert)", action: () => downloadPDF("Klausurplan alle Jgst. (detailliert)") },
 	];
 
 	async function downloadPDF(title: DownloadPDFTypen) {

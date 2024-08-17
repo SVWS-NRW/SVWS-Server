@@ -466,9 +466,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		const reportingParameter = new ReportingParameter();
 		reportingParameter.idSchuljahresabschnitt = routeApp.data.aktAbschnitt.value.id;
 		reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN.getBezeichnung()!;
-		if (title === "Klausurplan aktuelle Jgst.") {
+		if (title.startsWith("Klausurplan (", 0)) {
 			reportingParameter.idsHauptdaten.add(this.abiturjahr);
 			reportingParameter.idsHauptdaten.add(this.halbjahr.id);
+		}
+		if (title.indexOf("Nachschreiber") > 0) {
+			reportingParameter.detailLevel = 1;
+		}
+		if (title.indexOf("detailliert") > 0) {
+			reportingParameter.detailLevel = 2;
 		}
 		return await api.server.pdfReport(reportingParameter, api.schema);
 	})
