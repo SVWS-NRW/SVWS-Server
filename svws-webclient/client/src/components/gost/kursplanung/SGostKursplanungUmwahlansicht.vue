@@ -300,8 +300,7 @@
 			return kursarten;
 		for (const belegung of fachbelegungen.value) {
 			const z = props.getErgebnismanager().getOfSchuelerOfFachKursart(idSchueler.value, belegung.fachID);
-			if (z !== null)
-				kursarten.set(belegung.fachID, z);
+			kursarten.set(belegung.fachID, z);
 		}
 		return kursarten;
 	});
@@ -311,10 +310,7 @@
 		if (fwKurszuordnung !== undefined)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
-		const zulfach = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-		if (!zulfach)
-			return "#ffffff";
-		return zulfach.getHMTLFarbeRGB();
+		return ZulaessigesFach.getByKuerzelASD(f.kuerzel).getHMTLFarbeRGB();
 	}
 
 	function getFachwahlKursname(idFach: number): string {
@@ -322,7 +318,7 @@
 		if (fw === undefined) {
 			const f = props.getErgebnismanager().getFach(idFach);
 			const fwKursart = fachwahlKursarten.value.get(idFach);
-			return `${f.kuerzelAnzeige}-${(fwKursart === undefined) ? '??' : fwKursart.kuerzel}`;
+			return `${f.kuerzelAnzeige ?? '??'}-${fwKursart?.kuerzel ?? '??'}`;
 		}
 		return props.getErgebnismanager().getOfKursName(fw.id);
 	}

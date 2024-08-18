@@ -122,7 +122,7 @@
 	import type { GostKursplanungSchuelerFilter } from './GostKursplanungSchuelerFilter';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsergebnisManager, Schueler, List, GostBlockungsdatenManager , GostBlockungsergebnisKursSchuelerZuordnungUpdate} from '@core';
-	import { ArrayList, GostKursart, GostBlockungsergebnisKurs, GostBlockungKurs, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
+	import { ArrayList, GostKursart, GostBlockungsergebnisKurs, GostBlockungRegelUpdate, SetUtils, HashSet, DTOUtils } from '@core';
 
 	const props = defineProps<{
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
@@ -223,8 +223,6 @@
 	const fachwahlschueler = computed(() => {
 		const kurswahlschueler = props.schuelerFilter().filtered.value;
 		const arr: Schueler[] = [];
-		if (kurswahlschueler === undefined)
-			return arr;
 		const liste = new Set();
 		for (const s of kurswahlschueler)
 			liste.add(s.id);
@@ -313,7 +311,7 @@
 	async function toggleFixierRegelAlleKursSchueler() {
 		const kurs = props.schuelerFilter().kurs;
 		const kursSchueler = props.schuelerFilter().filtered.value;
-		if ((kurs === undefined) || (kursSchueler === undefined) || (kursSchueler.length === 0))
+		if ((kurs === undefined) || (kursSchueler.length === 0))
 			return;
 		const setSchueler = new HashSet<number>();
 		for (const s of kursSchueler)
@@ -329,7 +327,7 @@
 		if (kurs === undefined)
 			return false;
 		const kursSchueler = props.schuelerFilter().filtered.value;
-		if (kursSchueler === undefined || kursSchueler.length === 0)
+		if (kursSchueler.length === 0)
 			return false;
 		let i = 0;
 		for (const schueler of kursSchueler)

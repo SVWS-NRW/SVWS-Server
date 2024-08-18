@@ -1,4 +1,5 @@
-import type { GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager, SchuelerListeEintrag } from "@core";
+import type { GostBlockungRegelUpdate, GostBlockungsdatenManager, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungsergebnisManager,
+	Schueler } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungUmwahlansichtProps {
@@ -11,6 +12,6 @@ export interface GostKursplanungUmwahlansichtProps {
 	gotoLaufbahnplanung: (idSchueler: number) => Promise<void>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
-	schueler: SchuelerListeEintrag | undefined;
+	schueler: Schueler | undefined;
 	apiStatus: ApiStatus;
 }

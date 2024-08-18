@@ -32,6 +32,11 @@ export class Schueler extends JavaObject {
 	 */
 	public abschlussjahrgang : number = -1;
 
+	/**
+	 * Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 */
+	public externeSchulNr : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -66,6 +71,7 @@ export class Schueler extends JavaObject {
 		if (obj.abschlussjahrgang === undefined)
 			throw new Error('invalid json format, missing attribute abschlussjahrgang');
 		result.abschlussjahrgang = obj.abschlussjahrgang;
+		result.externeSchulNr = (obj.externeSchulNr === undefined) ? null : obj.externeSchulNr === null ? null : obj.externeSchulNr;
 		return result;
 	}
 
@@ -77,6 +83,7 @@ export class Schueler extends JavaObject {
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
+		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -101,6 +108,9 @@ export class Schueler extends JavaObject {
 		}
 		if (obj.abschlussjahrgang !== undefined) {
 			result += '"abschlussjahrgang" : ' + obj.abschlussjahrgang.toString() + ',';
+		}
+		if (obj.externeSchulNr !== undefined) {
+			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

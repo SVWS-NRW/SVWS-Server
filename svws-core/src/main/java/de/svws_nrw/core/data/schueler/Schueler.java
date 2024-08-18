@@ -42,4 +42,8 @@ public class Schueler {
 	@Schema(description = "der Abschlussjahrgang, dem der Schüler aktuell zugeordnet ist", example = "2026")
 	public int abschlussjahrgang = -1;
 
+	/** Das Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist. */
+	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
+	public String externeSchulNr;
+
 }

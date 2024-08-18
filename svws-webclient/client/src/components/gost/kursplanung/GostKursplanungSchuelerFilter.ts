@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart } from "@core";
+import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart, Schueler } from "@core";
 import type { Ref } from "vue";
 import { ArrayList, Geschlecht, GostSchriftlichkeit } from "@core";
 import { computed, ref } from "vue";
@@ -13,21 +13,18 @@ export class GostKursplanungSchuelerFilter {
 	private _kurs: Ref<GostBlockungKurs | undefined> = ref(undefined);
 	private _fach: Ref<number | undefined> = ref(undefined);
 	private _kursart: Ref<GostKursart | undefined> = ref(undefined);
-	private mapSchueler: Map<number, SchuelerListeEintrag>;
-	private datenmanager: GostBlockungsdatenManager | undefined;
-	private ergebnismanager: (() => GostBlockungsergebnisManager) | undefined;
+	private datenmanager: GostBlockungsdatenManager;
+	private ergebnismanager: (() => GostBlockungsergebnisManager);
 	private faecher: List<GostFach>;
 
-	public constructor(datenmanager: GostBlockungsdatenManager | undefined, ergebnismanager: (() => GostBlockungsergebnisManager) | undefined,
-		faecher: List<GostFach>, mapSchueler: Map<number, SchuelerListeEintrag>) {
+	public constructor(datenmanager: GostBlockungsdatenManager, ergebnismanager: (() => GostBlockungsergebnisManager), faecher: List<GostFach>) {
 		this.datenmanager = datenmanager;
 		this.ergebnismanager = ergebnismanager;
 		this.faecher = faecher;
-		this.mapSchueler = mapSchueler;
 	}
 
 	public getKurse() : List<GostBlockungKurs> {
-		return new ArrayList(this.datenmanager?.kursGetListeSortiertNachKursartFachNummer()) || new ArrayList<GostBlockungKurs>();
+		return new ArrayList(this.datenmanager.kursGetListeSortiertNachKursartFachNummer());
 	}
 
 	get name(): string {
@@ -68,31 +65,19 @@ export class GostKursplanungSchuelerFilter {
 		this._kursart.value = value;
 	}
 
-	public filtered = computed<SchuelerListeEintrag[]>(() => {
-		const gefiltert: SchuelerListeEintrag[] = [];
-		// Wenn keine Manager initialisiert sind, dann kann nicht gefiltert werden ...
-		if (this.ergebnismanager === undefined) {
-			for (const s of this.mapSchueler.values())
-				gefiltert.push(s);
-			return gefiltert;
-		}
+	public filtered = computed<Schueler[]>(() => {
+		const gefiltert: Schueler[] = [];
 		// ... wenn sie definiert sind, dann findet die Filterung statt
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1 : 0) + (this.nichtwahlen.value ? 2 : 0)
 		const res = this.ergebnismanager().getOfSchuelerMengeGefiltert(this.kurs?.id || -1, this.fach || -1, this.kursart?.id || -1, pKonfliktTyp, this._name.value);
-		if (res === undefined)
-			return gefiltert;
 		for (const s of res) {
-			const ss = this.mapSchueler.get(s.id);
-			if (ss !== undefined)
-				gefiltert.push(ss);
+			const ss = this.datenmanager.schuelerGet(s.id);
+			gefiltert.push(ss);
 		}
 		return gefiltert;
 	})
 
 	public statistics = computed(() => {
-		// Ist kein Manager vorhanden, dann gib eine leere Statistik zurück...
-		if (this.ergebnismanager === undefined)
-			return { m: 0, w: 0, d: 0, x: 0, schriftlich: 0, muendlich: 0 };
 		// ... ansonsten bestimme die Statistik aus dem Ergebnis-Manager
 		const kurs = this.kurs?.id || -1;
 		const fach = this.fach || -1;

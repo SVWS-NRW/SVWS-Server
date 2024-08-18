@@ -159,6 +159,7 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		schueler.geschlecht = dto.Geschlecht.id;
 		schueler.abschlussjahrgang = (abschlussjahrgang == null) ? -1 : abschlussjahrgang;
 		schueler.status = dto.Status.id;
+		schueler.externeSchulNr = dto.ExterneSchulNr;
 		return schueler;
 	};
 

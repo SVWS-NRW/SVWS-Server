@@ -188,7 +188,7 @@
 	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
-	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, SchuelerListeEintrag } from "@core";
+	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, Schueler } from "@core";
 	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
@@ -205,7 +205,7 @@
 		set: (value) => props.schuelerFilter().fach = value?.id
 	})
 
-	const selected = computed<SchuelerListeEintrag | undefined>({
+	const selected = computed<Schueler | undefined>({
 		get: () => props.schueler,
 		set: (value) => { if (value !== undefined) void props.setSchueler(value); }
 	});

@@ -3,7 +3,9 @@ import type { Ref} from "vue";
 import { ref, computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
-import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, SchuelerListeEintrag, Schuljahresabschnitt, GostBlockungRegelUpdate, GostBlockungsergebnisKursSchuelerZuordnungUpdate } from "@core";
+import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
+	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, Schuljahresabschnitt, GostBlockungRegelUpdate,
+	GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler } from "@core";
 import {
 	GostBlockungsdaten,
 	GostBlockungsergebnis,
@@ -13,7 +15,6 @@ import {
 	GostBlockungsergebnisManager,
 	GostFaecherManager,
 	GostHalbjahr,
-	SchuelerStatus,
 	HashSet,
 	ReportingReportvorlage, ReportingParameter
 } from "@core";
@@ -29,7 +30,6 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
 	abiturjahr: number | undefined;
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
 	faecherManager: GostFaecherManager;
 	mapFachwahlStatistik: Map<number, GostStatistikFachwahl>;
 	// ... die mit dem Abiturjahrgang aktualisiert/mitgeladen werden
@@ -45,17 +45,14 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	// ...auch abhängig von dem ausgewählten Blockungsergebnis
 	auswahlErgebnis: GostBlockungsergebnis | undefined;
 	ergebnismanager: GostBlockungsergebnisManager | undefined;
-	schuelerFilter: GostKursplanungSchuelerFilter;
+	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	// ... auch abhängig von dem ausgewählten Schüler
-	auswahlSchueler: SchuelerListeEintrag | undefined;
+	auswahlSchueler: Schueler | undefined;
 }
-
-const emptySchuelerFilter = () => new GostKursplanungSchuelerFilter(undefined, undefined, new ArrayList(), new Map());
 
 const defaultState: RouteStateGostKursplanung = {
 	abiturjahr: undefined,
 	jahrgangsdaten: undefined,
-	mapSchueler: new Map(),
 	faecherManager: new GostFaecherManager(),
 	mapFachwahlStatistik: new Map(),
 	mapLehrer: new Map(),
@@ -67,7 +64,7 @@ const defaultState: RouteStateGostKursplanung = {
 	datenmanager: undefined,
 	auswahlErgebnis: undefined,
 	ergebnismanager: undefined,
-	schuelerFilter: emptySchuelerFilter(),
+	schuelerFilter: undefined,
 	auswahlSchueler: undefined,
 };
 
@@ -106,13 +103,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
 		const faecherManager = new GostFaecherManager(listFaecher);
-		// Lade die Schülerliste des Abiturjahrgangs
-		const mapSchueler = new Map<number, SchuelerListeEintrag>();
-		for (const s of listSchueler) {
-			const status = SchuelerStatus.fromID(s.status);
-			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME, SchuelerStatus.WARTELISTE].includes(status)))
-				mapSchueler.set(s.id, s);
-		}
 		// Lade die Lehrerliste
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
@@ -128,7 +118,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.setPatchedDefaultState({
 			abiturjahr,
 			jahrgangsdaten,
-			mapSchueler,
 			faecherManager,
 			mapLehrer,
 			halbjahr: this._state.value.halbjahr,
@@ -141,10 +130,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if (this._state.value.jahrgangsdaten === undefined)
 			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen, so dass keine Jahrgangsdaten zur Verfügung stehen.");
 		return this._state.value.jahrgangsdaten;
-	}
-
-	public get mapSchueler(): Map<number, SchuelerListeEintrag> {
-		return this._state.value.mapSchueler;
 	}
 
 	public get faecherManager() : GostFaecherManager {
@@ -256,7 +241,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
-			schuelerFilter: emptySchuelerFilter(),
+			schuelerFilter: undefined,
 		});
 		return result;
 	}
@@ -270,7 +255,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			datenmanager: undefined,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
-			schuelerFilter: emptySchuelerFilter(),
+			schuelerFilter: undefined,
 		});
 	}
 
@@ -309,7 +294,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				datenmanager: undefined,
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
-				schuelerFilter: emptySchuelerFilter(),
+				schuelerFilter: undefined,
 				auswahlSchueler: undefined,
 			});
 			return;
@@ -327,7 +312,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			datenmanager,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
-			schuelerFilter: emptySchuelerFilter(),
+			schuelerFilter: undefined,
 		});
 		let ergebnis : GostBlockungsergebnis | undefined = undefined;
 		if (ergebnisse.size() > 0) {
@@ -393,7 +378,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			this.setPatchedState({
 				auswahlErgebnis: undefined,
 				ergebnismanager: undefined,
-				schuelerFilter: emptySchuelerFilter(),
+				schuelerFilter: undefined,
 				auswahlSchueler: undefined,
 			});
 			return;
@@ -402,26 +387,29 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor keine Blockung ausgewählt wurde.");
 		api.status.start();
 		const ergebnismanager = this.datenmanager.ergebnisManagerGet(auswahlErgebnis.id);
-		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, () => this.ergebnismanager, this.faecherManager.faecher(), this.mapSchueler)
+		const schuelerFilter = new GostKursplanungSchuelerFilter(this.datenmanager, () => this.ergebnismanager, this.faecherManager.faecher())
 		api.status.stop();
 		this.setPatchedState({ auswahlErgebnis, ergebnismanager, schuelerFilter });
 	}
 
 	public get schuelerFilter(): GostKursplanungSchuelerFilter {
-		return this._state.value.schuelerFilter;
+		const filter = this._state.value.schuelerFilter;
+		if (filter === undefined)
+			throw new DeveloperNotificationException("Es wurde noch kein Schüler-Filter erstellt.");
+		return filter;
 	}
 
 	public get hatSchueler(): boolean {
 		return this._state.value.auswahlSchueler !== undefined;
 	}
 
-	public get auswahlSchueler() : SchuelerListeEintrag {
+	public get auswahlSchueler() : Schueler {
 		if (this._state.value.auswahlSchueler === undefined)
 			throw new DeveloperNotificationException("Es wurde noch kein Schüler ausgewählt.");
 		return this._state.value.auswahlSchueler;
 	}
 
-	public async setAuswahlSchueler(auswahlSchueler: SchuelerListeEintrag | undefined) {
+	public async setAuswahlSchueler(auswahlSchueler: Schueler | undefined) {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann kein Ergebnis ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
 		if (auswahlSchueler?.id === this._state.value.auswahlSchueler?.id)
@@ -473,7 +461,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			if (data.istAktiv === true) {
 				for (const blockung of this.mapBlockungen.values())
 					blockung.istAktiv = (blockung.id === idBlockung);
-			} else if (data.istAktiv === false) {
+			} else {
 				const blockung = this.mapBlockungen.get(idBlockung);
 				if (blockung !== undefined)
 					blockung.istAktiv = false;
@@ -843,7 +831,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			id = value.id;
 		else
 			id = value;
-		if ((id !== this.auswahlErgebnis?.id) && (!RouteManager.isActive()))
+		if ((id !== this.auswahlErgebnis.id) && (!RouteManager.isActive()))
 			if (this.hatErgebnis && this.hatSchueler && (id !== undefined))
 				await RouteManager.doRoute(routeGostKursplanung.getRouteSchueler(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, id, this.auswahlSchueler.id));
 			else if (id !== undefined)
@@ -852,7 +840,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id));
 	}
 
-	gotoSchueler = async (schueler: SchuelerListeEintrag) => {
+	gotoSchueler = async (schueler: Schueler) => {
 		// TODO alle möglichen Fälle von fehlenden Informationen (Abiturjahr, Blockung und Ergebnis) berücksichtigen
 		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
 			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
