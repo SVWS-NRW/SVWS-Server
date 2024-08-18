@@ -233,7 +233,7 @@
 	});
 
 	function getUnterrichte(wochentag: number, stunde: number, wochentyp: number, schiene: number | null) : List<StundenplanUnterricht> {
-		let result = (schiene === null)
+		const result = (schiene === null)
 			? mapUnterrichte.value.getOrNull(wochentag, stunde, wochentyp)
 			: mapUnterrichteBySchiene.value.getOrNull(wochentag, stunde, wochentyp, schiene);
 		return (result === null) ? new ArrayList<StundenplanUnterricht>() : result;
@@ -249,7 +249,7 @@
 	});
 
 	function getSchienenListe(wochentag: number, stunde: number, wochentyp: number): List<StundenplanSchiene> {
-		let result = mapSchienen.value.getOrNull(wochentag, stunde, wochentyp);
+		const result = mapSchienen.value.getOrNull(wochentag, stunde, wochentyp);
 		return (result === null) ? new ArrayList<StundenplanSchiene>() : result;
 	}
 
@@ -269,7 +269,7 @@
 	});
 
 	function getPausenzeitenListeByWochentag(wochentag: number): List<StundenplanPausenzeit> {
-		let result = mapPausenzeitenListeByWochentag.value.get(wochentag);
+		const result = mapPausenzeitenListeByWochentag.value.get(wochentag);
 		return (result === null) ? new ArrayList<StundenplanPausenzeit>() : result;
 	}
 
@@ -282,7 +282,7 @@
 	});
 
 	function getPausenaufsichten(idPausenzeit: number): List<StundenplanPausenaufsicht> {
-		let result = mapPausenaufsichtenByPausenzeitId.value.get(idPausenzeit);
+		const result = mapPausenaufsichtenByPausenzeitId.value.get(idPausenzeit);
 		return (result === null) ? new ArrayList<StundenplanPausenaufsicht>() : result;
 	}
 
@@ -302,7 +302,7 @@
 
 
 	function onDragLeaveInternal(event: DragEvent, wochentag: number, stunde: number) {
-		const container : HTMLDivElement | null = event.currentTarget instanceof HTMLDivElement ? event.currentTarget as HTMLDivElement : null;
+		const container = event.currentTarget instanceof HTMLDivElement ? event.currentTarget : null;
 		if (container === null)
 			return;
 		const rect = container.getBoundingClientRect();
@@ -399,8 +399,8 @@
 	}
 
 	function posZeitraster(wochentag: number | undefined, stunde: number): string {
-		let zbeginn =  props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
-		let zende =  props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
+		let zbeginn = props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
+		let zende = props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
 		if (wochentag !== undefined) {
 			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag, stunde);
 			if (z !== null) {
@@ -412,10 +412,6 @@
 		}
 		let rowStart = 0;
 		let rowEnd = 10;
-		if ((zbeginn !== null) && (zende !== null)) {
-			rowStart = (zbeginn - beginn.value) / props.zeitrasterSteps;
-			rowEnd = (zende - beginn.value) / props.zeitrasterSteps;
-		}
 		if (props.hideZeitachse) {
 			rowStart = stunde - 1;
 			rowEnd = stunde;
@@ -682,7 +678,7 @@
 	 * @param stunde      die Stunde, über der sich der Mouse-Pointer befindet
 	 */
 	function checkDropZoneZeitraster(event: DragEvent, wochentag: number, stunde: number) : void {
-		const container : HTMLDivElement | null = event.currentTarget instanceof HTMLDivElement ? event.currentTarget as HTMLDivElement : null;
+		const container = event.currentTarget instanceof HTMLDivElement ? event.currentTarget : null;
 		if (container === null)
 			return;
 		const rect = container.getBoundingClientRect();
@@ -722,20 +718,19 @@
 	.svws-ui-stundenplan--head,
 	.svws-ui-stundenplan--body {
 		@apply grid grid-flow-col;
-		grid-template-columns: 8rem repeat(auto-fit, minmax(10rem, 1fr));
 
 		:not(.svws-hat-zeitachse).svws-spalte-pausenzeit & {
-			grid-template-columns: 8rem repeat(auto-fit, minmax(10rem, 1fr) minmax(2rem, 0.2fr));
+			grid-template-columns: 8rem repeat(auto-fit, minmax(0rem, 1fr) minmax(2rem, 0.2fr));
 		}
 
 		.svws-hat-zeitachse:not(.svws-spalte-pausenzeit) & {
 			@media screen {
-				grid-template-columns: 2rem 8rem repeat(auto-fit, minmax(10rem, 1fr));
+				grid-template-columns: 2rem repeat(auto-fit, minmax(0rem, 1fr));
 			}
 		}
 		.svws-hat-zeitachse.svws-spalte-pausenzeit & {
 			@media screen {
-				grid-template-columns: 2rem 8rem repeat(auto-fit, minmax(10rem, 1fr) minmax(2rem, 0.2fr));
+				grid-template-columns: 2rem 8rem repeat(auto-fit, minmax(0rem, 1fr) minmax(2rem, 0.2fr));
 			}
 		}
 
