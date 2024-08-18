@@ -1213,7 +1213,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerSprachpruefungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getListAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -1240,7 +1240,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).get(sprache),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).getByKuerzelAsResponse(sprache),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -1273,7 +1273,7 @@ public class APISchueler {
 			@PathParam("sprache") final @NotNull String sprache, @RequestBody(description = "Der Patch für die Sprachprüfung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachpruefung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).patch(sprache, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).patchByKuerzelAsResponse(sprache, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -1304,7 +1304,7 @@ public class APISchueler {
 			@RequestBody(description = "Die Sprachpruefung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachpruefung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -1334,7 +1334,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerSprachpruefung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).delete(sprache),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachpruefung(conn, id).deleteByKuerzelAsResponse(sprache),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);

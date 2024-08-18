@@ -163,14 +163,14 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 
 	@Override
 	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
-		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu erstellen
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der aktuellen Klasse des Schülers hat, um die Sprachbelegung zu erstellen
 		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
 	}
 
 
 	@Override
 	public void checkBeforePatch(final DTOSchuelerSprachenfolge dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
-		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu verändern
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der aktuellen Klasse des Schülers hat, um die Sprachbelegung zu verändern
 		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
 		if (patchAttributes.get("sprache") == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Bei einem Patch für die Sprachbelegung muss ein Sprachkürzel angegeben werden.");
@@ -183,7 +183,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 
 	@Override
 	public void checkBeforeDeletion(final List<DTOSchuelerSprachenfolge> dtos) throws ApiOperationException {
-		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu löschen
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der aktuellen Klasse des Schülers hat, um die Sprachbelegung zu löschen
 		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
 	}
 
