@@ -26,42 +26,52 @@
 <th:block th:each="datum,itStatDatum : ${GostKlausurplan.datumsangabenKlausurtermine()}">
 	<table class="fixed-layout-100 no-space-pad">
 		<colgroup>
-			<col style="width: 6%;"/>
-			<col style="width: 8%;"/>
-			<col style="width: 11%;"/>
-			<col style="width: 35%;"/>
-			<col style="width: 40%;"/>
+			<col style="width: 80%;"/>
+			<col style="width: 20%;"/>
 		</colgroup>
 		<thead>
 		<tr>
-			<td colspan="5" class="pad-top bob-grey"><h3 th:text="${#convert.toDateDEWochentag(datum)} + ', ' + ${#convert.toDateDE(datum)}">15.03.2024</h3>
-			</td>
+			<td class="pad-top bob-grey"><h3 th:text="${#convert.toWochentagDE(datum)} + ', ' + ${#convert.toDateDE(datum)}">15.03.2024</h3></td>
+			<td class="pad-top bob-grey ta-r"><h3 th:text="${'KW' + #convert.toKalenderwocheDE(datum)}">KW23</h3></td>
 		</tr>
 		</thead>
 		<tbody>
 		<tr th:each="termin,itStatTermin : ${GostKlausurplan.klausurtermineZumDatum(datum)}">
-			<td colspan="5">
+			<td colspan="2">
 				<table class="fixed-layout-100 no-space-pad">
 					<colgroup>
 						<col style="width: 6%;"/>
-						<col style="width: 6%;"/>
-						<col style="width: 13%;"/>
-						<col style="width: 35%;"/>
-						<col style="width: 40%;"/>
+						<col style="width: 94%;"/>
 					</colgroup>
 					<thead>
 					<tr>
 						<td class="bob-grey" th:text="${termin.gostHalbjahr().kuerzel}">Q2.2</td>
-						<td colspan="2" class="bob-grey" th:text="${termin.startuhrzeit() + ' Uhr'}">Uhrzeit</td>
-						<td colspan="2" class="bob-grey" th:text="${termin.bezeichnung()}">Bezeichnung</td>
+						<td class="bob-grey">
+							<table class="fixed-layout-100 no-space-pad">
+								<colgroup>
+									<col style="width: 16%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 14%;"/>
+									<col style="width: 13%;"/>
+									<col style="width: 13%;"/>
+									<col style="width: 12%;"/>
+									<col style="width: 8%;"/>
+								</colgroup>
+								<tr>
+									<td class="pad-1001" th:text="${termin.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
+									<td colspan="7" class="pad-1001" th:text="${termin.bezeichnung()}">Kursgruppe M-PH</td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 					<tr th:if="${!termin.rauemeUndStunden().isEmpty()}">
 						<td></td>
-						<td colspan="4" class="bob-grey beschriftung ta-l" th:text="${'Räume und Stunden:' + termin.rauemeUndStunden()}">Räume und Stunden: 1.02 (1.-4.), 2.13 (3.-4.)</td>
+						<td class="bob-grey beschriftung pad-1001 ta-l" th:text="${'Räume und Stunden:' + termin.rauemeUndStunden()}">Räume und Stunden: 1.02 (1.-4.), 2.13 (3.-4.)</td>
 					</tr>
 					<tr>
 						<td></td>
-						<td colspan="4" class="beschriftung ta-l" th:text="${(termin.bemerkung() == null || termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
+						<td class="beschriftung pad-1001 ta-l" th:text="${(termin.bemerkung() == null || termin.bemerkung().isEmpty()) ? '' : 'Bemerkung: ' + termin.bemerkung()}">Bemerkung: Der Text mit Bemerkungen zum Klausurtermin</td>
 					</tr>
 					<tr>
 						<td style="height: 2mm"></td>
@@ -74,7 +84,7 @@
 					</tr>
 					<tr th:if="${!termin.kursklausuren().isEmpty()}">
 						<td></td>
-						<td colspan="4">
+						<td>
 							<table class="fixed-layout-100 no-space-pad">
 								<colgroup>
 									<col style="width: 16%;"/>
@@ -135,11 +145,11 @@
 					</tr>
 					<tr th:if="${(Parameter.detailLevel > 0) && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
 						<td></td>
-						<td colspan="4" class="f-bold">Schülerklausuren:</td>
+						<td class="f-bold">Schülerklausuren:</td>
 					</tr>
 					<tr th:if="${(Parameter.detailLevel > 0) && !termin.schuelerklausurenNachschreibtermin().isEmpty()}">
 						<td></td>
-						<td colspan="4">
+						<td>
 							<table class="fixed-layout-100 no-space-pad">
 								<colgroup>
 									<col style="width: 25%;"/>
