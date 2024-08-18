@@ -3,9 +3,11 @@ package de.svws_nrw.module.reporting.proxytypes.gost.kursplanung;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
+import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -34,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -196,11 +197,16 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 			// Ergänze bei den Schülern die Kursbelegung mit dem neuen Kurs (ohne die Mitschüler des Kurses).
 			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
+				GostFachwahl fw;
+				try {
+					fw = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id);
+				} catch (@SuppressWarnings("unused") final DeveloperNotificationException dne) {
+					// Wenn eine ungültige Kurs-Schüler-Zuordnung vorliegt, existiert ggf. keine Fachwahl dazu. Dieser Fehler muss angefangen werden...
+					fw = null;
+				}
 				mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
-						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(
-								Objects.toString(ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).abiturfach, ""),
-								ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id).istSchriftlich,
-								reportingGostKursplanungKurs));
+						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung((fw == null) ? "" : ("" + fw.abiturfach),
+								(fw == null) ? false : fw.istSchriftlich, reportingGostKursplanungKurs));
 			}
 
 			// Füge den neuen Kurs in die Liste der Kurse der entsprechenden Schienen ein.

@@ -2565,9 +2565,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchuelerAbiturLK(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
-			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
-				summe++;
+			try {
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
+					summe++;
+			} catch(dne) {
+				// empty block
+			}
 		}
 		return summe;
 	}
@@ -2582,9 +2586,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchuelerAbitur3(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
-			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3))
-				summe++;
+			try {
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3))
+					summe++;
+			} catch(dne) {
+				// empty block
+			}
 		}
 		return summe;
 	}
@@ -2599,9 +2607,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursAnzahlSchuelerAbitur4(idKurs : number) : number {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
-			const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
-			if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4))
-				summe++;
+			try {
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4))
+					summe++;
+			} catch(dne) {
+				// empty block
+			}
 		}
 		return summe;
 	}

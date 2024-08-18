@@ -309,7 +309,6 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final List<GostFachwahl> fachwahlen =
 				(new DataGostAbiturjahrgangFachwahlen(conn, blockung.Abi_Jahrgang)).getSchuelerFachwahlenHalbjahr(blockung.Halbjahr).fachwahlen;
 		manager.fachwahlAddListe(fachwahlen);
-		// TODO Lese bei Bedarf die Fachwahlen weiterer Abiturjahrgänge ein
 
 		return manager;
 	}

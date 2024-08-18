@@ -2789,9 +2789,13 @@ public class GostBlockungsergebnisManager {
 	public int getOfKursAnzahlSchuelerAbiturLK(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
-			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach != null) && ((fachwahl.abiturfach == 1) || (fachwahl.abiturfach == 2)))
-				summe++;
+			try {
+				final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+				if ((fachwahl.abiturfach != null) && ((fachwahl.abiturfach == 1) || (fachwahl.abiturfach == 2)))
+					summe++;
+			} catch (@SuppressWarnings("unused") final DeveloperNotificationException dne) {
+				// Für die Kurs-Schüler-Zuordnung existiert keine Fachwahl. Ignoriere diese...
+			}
 		}
 		return summe;
 	}
@@ -2806,9 +2810,13 @@ public class GostBlockungsergebnisManager {
 	public int getOfKursAnzahlSchuelerAbitur3(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
-			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 3))
-				summe++;
+			try {
+				final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+				if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 3))
+					summe++;
+			} catch (@SuppressWarnings("unused") final DeveloperNotificationException dne) {
+				// Für die Kurs-Schüler-Zuordnung existiert keine Fachwahl. Ignoriere diese...
+			}
 		}
 		return summe;
 	}
@@ -2823,9 +2831,13 @@ public class GostBlockungsergebnisManager {
 	public int getOfKursAnzahlSchuelerAbitur4(final long idKurs) {
 		int summe = 0;
 		for (final @NotNull Long idSchueler : getKursE(idKurs).schueler) {
-			final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
-			if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 4))
-				summe++;
+			try {
+				final @NotNull GostFachwahl fachwahl = getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
+				if ((fachwahl.abiturfach != null) && (fachwahl.abiturfach == 4))
+					summe++;
+			} catch (@SuppressWarnings("unused") final DeveloperNotificationException dne) {
+				// Für die Kurs-Schüler-Zuordnung existiert keine Fachwahl. Ignoriere diese...
+			}
 		}
 		return summe;
 	}
