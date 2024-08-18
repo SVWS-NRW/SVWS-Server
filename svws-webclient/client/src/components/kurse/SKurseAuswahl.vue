@@ -30,12 +30,10 @@
 
 <script setup lang="ts">
 
-	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
-	import { ServerMode } from "@core";
-	import type { Ref} from "vue";
-	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ref, computed, shallowRef } from "vue";
+	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
+	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
 
@@ -91,7 +89,7 @@
 	const findSchueler = (items: Iterable<SchuelerListeEintrag>, search: string) => {
 		const list = [];
 		for (const i of items)
-			if ((i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())) || (i.vorname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
+			if ((i.nachname.toLocaleLowerCase().includes(search.toLocaleLowerCase())) || (i.vorname.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
 				list.push(i);
 		return list;
 	}
@@ -159,12 +157,12 @@
 	});
 
 
-	const search: Ref<string> = ref("");
+	const search = ref("");
 
 	const rowsFiltered = computed<KursDaten[]>(() => {
 		const arr = [];
 		for (const e of props.kursListeManager().filtered())
-			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			if (e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
 		return arr;
 	});
@@ -190,7 +188,7 @@
 
 	function setAuswahl(items : KursDaten[]) {
 		const auswahl = props.kursListeManager().liste;
-		for (const vorhanden of [ ... auswahl.auswahl() ])
+		for (const vorhanden of auswahl.auswahl())
 			if (!items.includes(vorhanden))
 				auswahl.auswahlRemove(vorhanden);
 		for (const item of items)

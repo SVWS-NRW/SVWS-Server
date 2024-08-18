@@ -44,7 +44,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const kursListeManager = new KursListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKurse, listSchueler, listJahrgaenge, listLehrer, listFaecher);
-		kursListeManager.setFilterAuswahlPermitted(true);
+		kursListeManager.setFilterAuswahlPermitted(false);
 		// Wählen nun einen Kurs aus, dabei wird sich ggf. an der alten Auswahl orientiert
 		let result : number | null = null;
 		if (hatteAuswahl && (!hatteAuswahl.idJahrgaenge.isEmpty())) {
