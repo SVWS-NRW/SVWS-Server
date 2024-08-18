@@ -7,7 +7,6 @@ import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
-import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -196,17 +195,26 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					new ArrayList<>());
 
 			// Ergänze bei den Schülern die Kursbelegung mit dem neuen Kurs (ohne die Mitschüler des Kurses).
+			// Es kann der Fall auftreten, dass z. B. durch Wiederholung Kursbelegungen ohne Fachwahlen auftreten. Diese werden mit Standardwerten gefüllt.
 			for (final long idKursschueler : ergebnisManager.getOfKursSchuelermenge(kurs.id).stream().map(s -> s.id).toList()) {
-				GostFachwahl fw;
+				String fachwahlAbiturfach = "";
+				boolean fachwahlGueltig = false;
+				boolean fachwahlSchriftlich = false;
 				try {
-					fw = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id);
-				} catch (@SuppressWarnings("unused") final DeveloperNotificationException dne) {
-					// Wenn eine ungültige Kurs-Schüler-Zuordnung vorliegt, existiert ggf. keine Fachwahl dazu. Dieser Fehler muss angefangen werden...
-					fw = null;
+					final GostFachwahl gostFachwahl = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id);
+					if (gostFachwahl != null) {
+						fachwahlAbiturfach = "" + gostFachwahl.abiturfach;
+						fachwahlGueltig = true;
+						fachwahlSchriftlich = gostFachwahl.istSchriftlich;
+					}
+				} catch (final Exception e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"INFO: Fehler mit definiertem Rückgabewert abgefangen aufgrund fehlender Fachwahl eines Schülers bei dessen Kursplanungskursbelegung.",
+							e, reportingRepository.logger(), LogLevel.INFO, 0);
 				}
 				mapBlockungsergebnisSchuelermenge.get(idKursschueler).gostKursplanungKursbelegungen()
-						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung((fw == null) ? "" : ("" + fw.abiturfach),
-								(fw == null) ? false : fw.istSchriftlich, reportingGostKursplanungKurs));
+						.add(new ProxyReportingSchuelerGostKursplanungKursbelegung(fachwahlAbiturfach, fachwahlGueltig, fachwahlSchriftlich,
+								reportingGostKursplanungKurs));
 			}
 
 			// Füge den neuen Kurs in die Liste der Kurse der entsprechenden Schienen ein.

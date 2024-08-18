@@ -104,8 +104,8 @@
 						<td class="bob-grey pad-1001 small tc-grey" th:text="${#numbers.formatInteger(iterStatSchueler.count,2)} + '.'">Nr.</td>
 						<td class="bob-grey pad-1001" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
 						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm'}">s</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${#strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()}">3</td>
+						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
+						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
 						<td class="bob-grey pad-1001 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
 						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
 					</tr>
