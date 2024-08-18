@@ -1,14 +1,14 @@
 package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.data.DataBasicMapper;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerSprachenfolge;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -19,37 +19,41 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link Sprachbelegung}.
  */
-public final class DataSchuelerSprachbelegung extends DataManager<String> {
+public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, DTOSchuelerSprachenfolge, Sprachbelegung> {
 
 	private final long idSchueler;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Sprachbelegung}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Sprachbelegung}.
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param idSchueler   die ID des Schülers
 	 */
 	public DataSchuelerSprachbelegung(final DBEntityManager conn, final long idSchueler) {
 		super(conn);
+		setAttributesRequiredOnCreation("sprache");
 		this.idSchueler = idSchueler;
 	}
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuelerSprachenfolge} in
-	 * einen Core-DTO {@link Sprachbelegung}.
-	 */
-	private static final Function<DTOSchuelerSprachenfolge, Sprachbelegung> dtoMapper = (final DTOSchuelerSprachenfolge dto) -> {
+
+	@Override
+	protected void initDTO(final DTOSchuelerSprachenfolge dto, final Long newId) throws ApiOperationException {
+		dto.ID = newId;
+		dto.Schueler_ID = idSchueler;
+	}
+
+
+	@Override
+	protected Sprachbelegung map(final DTOSchuelerSprachenfolge dto) throws ApiOperationException {
 		final Sprachbelegung daten = new Sprachbelegung();
 		daten.sprache = dto.Sprache;
 		daten.reihenfolge = dto.ReihenfolgeNr;
@@ -63,45 +67,155 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 		daten.hatGraecum = (dto.GraecumErreicht != null) && dto.GraecumErreicht;
 		daten.hatHebraicum = (dto.HebraicumErreicht != null) && dto.HebraicumErreicht;
 		return daten;
-	};
-
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
 	}
 
-	private List<DTOSchuelerSprachenfolge> getDTOs() throws ApiOperationException {
+
+	@Override
+	protected void mapAttribute(final DTOSchuelerSprachenfolge dto, final String name, final Object value, final Map<String, Object> map)
+			throws ApiOperationException {
+		switch (name) {
+			case "sprache" -> {
+				final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
+				if ((patchSprache == null) || (patchSprache.isBlank()))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Ein Patch darf kein leeres Sprachkürzel beinhalten");
+				// TODO Prüfe, ob es sich um ein gültiges Sprachkürzel handelt.
+				dto.Sprache = patchSprache;
+			}
+			case "reihenfolge" -> dto.ReihenfolgeNr = JSONMapper.convertToIntegerInRange(value, true, 0, 9);
+			case "belegungVonJahrgang" -> {
+				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
+				if (kuerzel == null) {
+					dto.ASDJahrgangVon = null;
+				} else {
+					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					if (jg == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
+					dto.ASDJahrgangVon = jg.daten.kuerzel;
+				}
+			}
+			case "belegungVonAbschnitt" -> {
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				if (schule == null)
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten der Schule konnten nicht bestimmt werden.");
+				dto.AbschnittVon = JSONMapper.convertToIntegerInRange(value, true, 1, ((schule.AnzahlAbschnitte == null) ? 2 : schule.AnzahlAbschnitte) + 1);
+			}
+			case "belegungBisJahrgang" -> {
+				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
+				if (kuerzel == null) {
+					dto.ASDJahrgangBis = null;
+				} else {
+					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					if (jg == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
+					dto.ASDJahrgangBis = jg.daten.kuerzel;
+				}
+			}
+			case "belegungBisAbschnitt" -> {
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				if (schule == null)
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten der Schule konnten nicht bestimmt werden.");
+				dto.AbschnittBis = JSONMapper.convertToIntegerInRange(value, true, 1, ((schule.AnzahlAbschnitte == null) ? 2 : schule.AnzahlAbschnitte) + 1);
+			}
+			case "referenzniveau" -> {
+				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
+				if (kuerzel == null) {
+					dto.Referenzniveau = null;
+				} else {
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
+					if (niveau == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
+					dto.Referenzniveau = niveau;
+				}
+			}
+			case "hatKleinesLatinum" -> dto.KleinesLatinumErreicht = JSONMapper.convertToBoolean(value, false);
+			case "hatLatinum" -> dto.LatinumErreicht = JSONMapper.convertToBoolean(value, false);
+			case "hatGraecum" -> dto.GraecumErreicht = JSONMapper.convertToBoolean(value, false);
+			case "hatHebraicum" -> dto.HebraicumErreicht = JSONMapper.convertToBoolean(value, false);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");
+		}
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer mit einer funktionsbezogenen Kompetenz auf den aktuellen Lernabschnitt des Schülers zugreift
+	 * und wenn ja, ob dieser dann die Kompetenz auf den Klassen für diesen Lernabschnitt hat. Hat er diese Kompetenz
+	 * nicht, so wird eine Exception geschmissen.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall, wenn der Benutzer nicht alle Rechte zum Zugriff hat (503 - FORBIDDEN)
+	 */
+	private void checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt() throws ApiOperationException {
+		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
+			final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+			if (dtoSchueler == null)
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Der Schüler mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(idSchueler));
+			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
+					"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.Schuljahresabschnitts_ID = ?2 AND e.WechselNr = 0",
+					DTOSchuelerLernabschnittsdaten.class, dtoSchueler.ID, dtoSchueler.Schuljahresabschnitts_ID);
+			if (lernabschnitte.size() != 1)
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+						"Für den Schüler mit der ID %d konnte kein eindeutiger aktueller Lernabschnitt bestimmt werden.".formatted(dtoSchueler.ID));
+			checkBenutzerFunktionsbezogeneKompetenzKlasse(lernabschnitte.get(0).Klassen_ID);
+		}
+	}
+
+
+	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu erstellen
+		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
+	}
+
+
+	@Override
+	public void checkBeforePatch(final DTOSchuelerSprachenfolge dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu verändern
+		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
+		if (patchAttributes.get("sprache") == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Bei einem Patch für die Sprachbelegung muss ein Sprachkürzel angegeben werden.");
+		final String patchSprache = JSONMapper.convertToString(patchAttributes.get("sprache"), false, false, 2);
+		if (!patchSprache.equals(dto.Sprache))
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Bei einem Patch für die Sprachbelegung muss das Sprachkürzel im Patch mit dem Sprachkürzel im DTO übereinstimmen.");
+	}
+
+
+	@Override
+	public void checkBeforeDeletion(final List<DTOSchuelerSprachenfolge> dtos) throws ApiOperationException {
+		// Prüfe ggf., ob der Benutzer die Rechte in Abhängigkeit der Klasse hat, um die Leistungsdaten in dem Lernabschnitt zu löschen
+		checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt();
+	}
+
+
+	@Override
+	public List<Sprachbelegung> getList() throws ApiOperationException {
 		// Überprüfe, ob die Schüler-ID gültig ist.
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (schueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
 		// Bestimme die Sprachbelegungen des Schülers
-		return conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler);
-	}
-
-	private List<Sprachbelegung> getSprachbelegungen() throws ApiOperationException {
-		return getDTOs().stream().map(dtoMapper).toList();
-	}
-
-	@Override
-	public Response getList() throws ApiOperationException {
-		final List<Sprachbelegung> daten = getSprachbelegungen();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-	}
-
-	/**
-	 * Gibt eine Liste der Sprachbelegungen des Schülers zurück
-	 * @return Liste der Sprachbelegungen des Schülers
-	 */
-	public List<Sprachbelegung> getListSprachbelegungen() {
-		List<Sprachbelegung> result = new ArrayList<>();
-
-		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (schueler != null)
-			result = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler).stream().map(dtoMapper).toList();
-
+		final List<DTOSchuelerSprachenfolge> dtos = conn.queryList(DTOSchuelerSprachenfolge.QUERY_BY_SCHUELER_ID, DTOSchuelerSprachenfolge.class, idSchueler);
+		final List<Sprachbelegung> result = new ArrayList<>();
+		for (final DTOSchuelerSprachenfolge dto : dtos)
+			result.add(map(dto));
 		return result;
 	}
+
+
+	/**
+	 * Gibt die Liste der Sprachbelegungen des Schülers zurück. Im Fehlerfall ist diese Liste leer.
+	 *
+	 * @return Die Liste der Sprachbelegungen des Schülers
+	 */
+	public List<Sprachbelegung> getListSprachbelegungen() {
+		try {
+			return this.getList();
+		} catch (@SuppressWarnings("unused") final ApiOperationException e) {
+			return new ArrayList<>();
+		}
+	}
+
 
 	private DTOSchuelerSprachenfolge getDTO(final @NotNull String kuerzel) throws ApiOperationException {
 		if (kuerzel.isBlank())
@@ -114,144 +228,83 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 		final List<DTOSchuelerSprachenfolge> belegungen = conn.queryList("SELECT e FROM DTOSchuelerSprachenfolge e WHERE e.Schueler_ID = ?1 AND e.Sprache = ?2",
 				DTOSchuelerSprachenfolge.class, idSchueler, kuerzel);
 		if (belegungen.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachbelegung mit dem Kürzel gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachbelegung mit dem Kürzel %s gefunden.".formatted(kuerzel));
 		if (belegungen.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Es wurden mehrere Einträge zu dem Schüler mit der ID %d und der Sprache %s gefunden."
 					.formatted(idSchueler, kuerzel));
 		return belegungen.get(0);
 	}
 
-	private Sprachbelegung getSprachbelegung(final @NotNull String kuerzel) throws ApiOperationException {
-		return dtoMapper.apply(getDTO(kuerzel));
-	}
 
 	@Override
-	public Response get(final @NotNull String kuerzel) throws ApiOperationException {
-		final Sprachbelegung daten = getSprachbelegung(kuerzel);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	public Sprachbelegung getById(final Long id) throws ApiOperationException {
+		// Überprüfe, ob die Schüler-ID gültig ist.
+		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (schueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
+		// Hole die Sprachbelegung
+		final DTOSchuelerSprachenfolge belegung = conn.queryByKey(DTOSchuelerSprachenfolge.class, id);
+		if (belegung == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Sprachbelegung mit der ID %d gefunden.".formatted(id));
+		return map(belegung);
 	}
-
-	private static final Map<String, DataBasicMapper<DTOSchuelerSprachenfolge>> patchMappings = Map.ofEntries(
-			Map.entry("sprache", (conn, dto, value, map) -> {
-				final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
-				if ((patchSprache == null) || (patchSprache.isBlank()) || (!patchSprache.equals(dto.Sprache)))
-					throw new ApiOperationException(Status.BAD_REQUEST);
-			}),
-			Map.entry("reihenfolge", (conn, dto, value, map) -> dto.ReihenfolgeNr = JSONMapper.convertToIntegerInRange(value, true, 0, 9)),
-			Map.entry("belegungVonJahrgang", (conn, dto, value, map) -> {
-				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-				if (kuerzel == null) {
-					dto.ASDJahrgangVon = null;
-				} else {
-					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
-					if (jg == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-					dto.ASDJahrgangVon = jg.daten.kuerzel;
-				}
-			}),
-			Map.entry("belegungVonAbschnitt", (conn, dto, value, map) -> {
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-				if (schule == null)
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten der Schule konnten nicht bestimmt werden.");
-				dto.AbschnittVon = JSONMapper.convertToIntegerInRange(value, true, 1, ((schule.AnzahlAbschnitte == null) ? 2 : schule.AnzahlAbschnitte) + 1);
-			}),
-			Map.entry("belegungBisJahrgang", (conn, dto, value, map) -> {
-				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-				if (kuerzel == null) {
-					dto.ASDJahrgangBis = null;
-				} else {
-					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
-					if (jg == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-					dto.ASDJahrgangBis = jg.daten.kuerzel;
-				}
-			}),
-			Map.entry("belegungBisAbschnitt", (conn, dto, value, map) -> {
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-				if (schule == null)
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Daten der Schule konnten nicht bestimmt werden.");
-				dto.AbschnittBis = JSONMapper.convertToIntegerInRange(value, true, 1, ((schule.AnzahlAbschnitte == null) ? 2 : schule.AnzahlAbschnitte) + 1);
-			}),
-			Map.entry("referenzniveau", (conn, dto, value, map) -> {
-				final String kuerzel = JSONMapper.convertToString(value, true, false, 10);
-				if (kuerzel == null) {
-					dto.Referenzniveau = null;
-				} else {
-					final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
-					if (niveau == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
-					dto.Referenzniveau = niveau;
-				}
-			}),
-			Map.entry("hatKleinesLatinum", (conn, dto, value, map) -> dto.KleinesLatinumErreicht = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatLatinum", (conn, dto, value, map) -> dto.LatinumErreicht = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatGraecum", (conn, dto, value, map) -> dto.GraecumErreicht = JSONMapper.convertToBoolean(value, false)),
-			Map.entry("hatHebraicum", (conn, dto, value, map) -> dto.HebraicumErreicht = JSONMapper.convertToBoolean(value, false)));
-
-	@Override
-	public Response patch(final @NotNull String kuerzel, final InputStream is) throws ApiOperationException {
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		if (map.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "In dem Patch sind keine Daten enthalten.");
-		final DTOSchuelerSprachenfolge dto = getDTO(kuerzel);
-		if (dto == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
-		conn.transactionPersist(dto);
-		conn.transactionFlush();
-		return Response.status(Status.OK).build();
-	}
-
-
-	private static final Set<String> requiredCreateAttributes = Set.of("sprache");
 
 
 	/**
-	 * Fügt eine neue Sprachbelegung mit den übergebenen JSON-Daten der Datenbank hinzu und gibt das zugehörige CoreDTO
-	 * zurück. Falls ein Fehler auftritt wird ein entsprechender Response-Code zurückgegeben.
+	 * Bestimmt die Sprachbelegung anhand des übergebenen Sprachkürzels und der Schüler-ID.
 	 *
-	 * @param is   der InputStream mit den JSON-Daten
+	 * @param kuerzel   das Sprach-Kürzel
 	 *
-	 * @return die Response mit den Daten
+	 * @return die Sprachbelegung
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response add(final InputStream is) throws ApiOperationException {
-		// Prüfe, ob ein Schüler mit der idSchueler existiert und lade diesen
-		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, idSchueler);
-		if (schueler == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Ein Schüler mit der ID %d ist nicht vorhanden.".formatted(idSchueler));
-		// Prüfe, ob alle relevanten Attribute im JSON-Inputstream vorhanden sind
-		final Map<String, Object> map = JSONMapper.toMap(is);
-		for (final String attr : requiredCreateAttributes)
-			if (!map.containsKey(attr))
-				throw new ApiOperationException(Status.BAD_REQUEST, "Das Attribut %s fehlt in der Anfrage".formatted(attr));
-		try {
-			// Bestimme die nächste verfügbare ID
-			final long newID = conn.transactionGetNextID(DTOSchuelerSprachenfolge.class);
-			final String sprache = JSONMapper.convertToString(map.get("sprache"), false, false, 2);
-			if ((sprache == null) || (sprache.isBlank()))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			if (!ZulaessigesFach.getListFremdsprachenKuerzelAtomar().contains(sprache))
-				throw new ApiOperationException(Status.BAD_REQUEST);
-			final DTOSchuelerSprachenfolge dto = new DTOSchuelerSprachenfolge(newID, idSchueler, sprache);
-			applyPatchMappings(conn, dto, map, patchMappings, Collections.emptySet(), null);
-			// Persistiere das DTO in der Datenbank
-			if (!conn.transactionPersist(dto))
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-			conn.transactionFlush();
-			final Sprachbelegung daten = dtoMapper.apply(dto);
-			return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (final Exception e) {
-			if (e instanceof final ApiOperationException aoe)
-				throw aoe;
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-		}
+	public Sprachbelegung getByKuerzel(final @NotNull String kuerzel) throws ApiOperationException {
+		return map(getDTO(kuerzel));
 	}
 
 
 	/**
-	 * Löscht eine Sprachbelegung
+	 * Bestimmt das DTO anhand des übergebenen Kürzels der Sprachbelegung und der Schüler-ID
+	 *
+	 * @param kuerzel   das Kürzel der Sprachbelegung
+	 *
+	 * @return die Sprachbelegung als Response
+	 *
+	 * @throws ApiOperationException im FehlerFall
+	 */
+	public Response getByKuerzelAsResponse(final @NotNull String kuerzel) throws ApiOperationException {
+		final Sprachbelegung daten = getByKuerzel(kuerzel);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+	}
+
+
+	/**
+	 * Passt die Informationen der Sprachbelegung mit dem übergebenen Sprach-Kürzel des Schülers mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an.
+	 *
+	 * @param kuerzel   das Sprachkürzel
+	 * @param is        der Input-Stream
+	 *
+	 * @return die HTTP-Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public Response patchByKuerzelAsResponse(final @NotNull String kuerzel, final InputStream is) throws ApiOperationException {
+		final DTOSchuelerSprachenfolge dto = getDTO(kuerzel);
+		if (dto == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es konnte keine Sprachbelegung zu dem Sprach-Kürzel %s bei dem Schüler mit der ID %d gefunden werden.".formatted(kuerzel,
+							this.idSchueler));
+		final Map<String, Object> attributesToPatch = JSONMapper.toMap(is);
+		attributesToPatch.put("sprache", kuerzel);
+		patch(dto.ID, attributesToPatch);
+		return Response.status(Status.NO_CONTENT).build();
+	}
+
+
+	/**
+	 * Löscht eine Sprachbelegung anhand des übergebenen Sprachkürzels und der Schüler-ID.
 	 *
 	 * @param kuerzel   das Kürzel der Sprache
 	 *
@@ -259,16 +312,12 @@ public final class DataSchuelerSprachbelegung extends DataManager<String> {
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public Response delete(final @NotNull String kuerzel) throws ApiOperationException {
+	public Response deleteByKuerzelAsResponse(final @NotNull String kuerzel) throws ApiOperationException {
 		// Bestimme das DTO
 		final DTOSchuelerSprachenfolge dto = getDTO(kuerzel);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Sprachbelegung daten = dtoMapper.apply(dto);
-		// Entferne das DTO
-		conn.transactionRemove(dto);
-		conn.transactionFlush();
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return deleteAsResponse(dto.ID);
 	}
 
 }

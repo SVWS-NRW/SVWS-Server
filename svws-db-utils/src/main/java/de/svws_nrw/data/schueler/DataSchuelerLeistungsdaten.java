@@ -8,7 +8,6 @@ import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -23,7 +22,7 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link SchuelerLeistungsdaten}.
  */
 public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, DTOSchuelerLeistungsdaten, SchuelerLeistungsdaten> {

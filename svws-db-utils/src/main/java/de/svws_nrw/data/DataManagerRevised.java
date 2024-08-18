@@ -578,7 +578,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
+	protected void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
 		// Prüfe, ob benötigte Parameter übergeben wurden
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
@@ -612,7 +612,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	CoreDTO addBasic(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+	protected CoreDTO addBasic(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Prüfe, ob alle relevanten Attribute für das Erstellen des DTOs übergeben wurden
 		final String missingAttrsStr = attributesRequiredOnCreation.stream().filter(attr -> !initAttributes.containsKey(attr)).collect(Collectors.joining(","));
 		if (!missingAttrsStr.isEmpty())
@@ -675,7 +675,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	@SuppressWarnings("unchecked")
-	ID getNextID(final ID lastID, final Map<String, Object> initAttributes) throws ApiOperationException {
+	protected ID getNextID(final ID lastID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		if (getClassID().isAssignableFrom(Long.class))
 			return (ID) createNextLongID((Long) lastID);
 		return getID(initAttributes);
@@ -689,7 +689,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @return die neue default ID
 	 */
-	Long createNextLongID(final Long lastID) {
+	protected Long createNextLongID(final Long lastID) {
 		return (lastID == null) ? conn.transactionGetNextID(classDatabaseDTO) : (lastID + 1L);
 	}
 

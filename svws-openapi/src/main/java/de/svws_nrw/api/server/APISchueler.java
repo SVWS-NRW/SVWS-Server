@@ -1065,7 +1065,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerSprachbelegungen(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).getList(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).getListAsResponse(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -1092,7 +1092,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "404", description = "Kein Schüler mit der angegebenen ID gefunden")
 	public Response getSchuelerSprachbelegung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).get(sprache),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).getByKuerzelAsResponse(sprache),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN);
 	}
@@ -1125,7 +1125,7 @@ public class APISchueler {
 			@PathParam("sprache") final @NotNull String sprache, @RequestBody(description = "Der Patch für die Sprachbelegung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachbelegung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).patch(sprache, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).patchByKuerzelAsResponse(sprache, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -1156,7 +1156,7 @@ public class APISchueler {
 			@RequestBody(description = "Die Sprachbelegung", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Sprachbelegung.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).add(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
@@ -1186,7 +1186,7 @@ public class APISchueler {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteSchuelerSprachbelegung(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@PathParam("sprache") final @NotNull String sprache, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).delete(sprache),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataSchuelerSprachbelegung(conn, id).deleteByKuerzelAsResponse(sprache),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN,
 				BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN);
