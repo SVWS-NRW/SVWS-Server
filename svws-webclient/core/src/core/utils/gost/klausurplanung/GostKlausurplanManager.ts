@@ -2011,13 +2011,13 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert eine {@link PairNN}-Liste aller aktiven Paralleljahrgänge in der Oberstufe. Die {@ling PairNN}e bestehen aus dem jeweiligen Abiturjahrgang und dem {@link GostHalbjahr}.
+	 * Liefert eine {@link PairNN}-Liste aller aktiven Paralleljahrgänge in der Oberstufe. Die {@link PairNN}e bestehen aus dem jeweiligen Abiturjahrgang und dem {@link GostHalbjahr}.
 	 *
 	 * @param abiJahrgang der Abitur-Jahrgang, zu dem die Paralleljahrgänge gesucht werden
 	 * @param halbjahr    das {@link GostHalbjahr}, zu dem die Paralleljahrgänge gesucht werden
-	 * @param includeSelf falls <code>true</code>, ist das {@ling PairNN} aus <code>abiJahrgang</code> und <code>halbjahr</code> in der Rückgabe inkludiert
+	 * @param includeSelf falls <code>true</code>, ist das {@link PairNN} aus <code>abiJahrgang</code> und <code>halbjahr</code> in der Rückgabe inkludiert
 	 *
-	 * @return die {@link PairNN}-Liste aller aktiven Paralleljahrgänge in der Oberstufe. Die {@ling PairNN}e bestehen aus dem jeweiligen Abiturjahrgang und dem {@link GostHalbjahr}.
+	 * @return die {@link PairNN}-Liste aller aktiven Paralleljahrgänge in der Oberstufe. Die {@link PairNN}e bestehen aus dem jeweiligen Abiturjahrgang und dem {@link GostHalbjahr}.
 	 */
 	public static halbjahreParallelUndAktivGetMenge(abiJahrgang : number, halbjahr : GostHalbjahr, includeSelf : boolean) : List<PairNN<number, GostHalbjahr>> {
 		const ergebnis : List<PairNN<number, GostHalbjahr>> = new ArrayList<PairNN<number, GostHalbjahr>>();
