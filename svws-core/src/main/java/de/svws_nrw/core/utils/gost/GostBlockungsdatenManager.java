@@ -2247,6 +2247,19 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert zum Tupel (Schüler, Fach) die jeweilige Fachwahl. <br>
+	 * Gibt null zurück, falls der Schüler das Fach nicht gewählt hat.
+	 *
+	 * @param idSchueler  Die Datenbank-ID des Schülers.
+	 * @param idFach      Die Datenbank-ID des Faches.
+	 *
+	 * @return Zum Tupel (Schüler, Fach) jeweilige {@link GostFachwahl} oder null.
+	 */
+	public GostFachwahl schuelerGetOfFachFachwahlOrNull(final long idSchueler, final long idFach) {
+		return _map2d_idSchueler_idFach_fachwahl.getOrNull(idSchueler, idFach);
+	}
+
+	/**
 	 * Liefert TRUE, falls der übergebene Schüler das entsprechende Fach gewählt hat.
 	 *
 	 * @param idSchueler  Die Datenbank.ID des Schülers.

@@ -223,3 +223,4 @@ hr {
 .i-ri-play-line {@apply bg-[url(remixicon/icons/Media/play-line.svg)] bg-no-repeat bg-center}
 .i-ri-message-line {@apply bg-[url(remixicon/icons/Communication/message-line.svg)] bg-no-repeat bg-center}
 .i-ri-chat-new-line {@apply bg-[url(remixicon/icons/Communication/chat-new-line.svg)] bg-no-repeat bg-center}
+.i-ri-question-mark {@apply bg-[url(remixicon/icons/Editor/question-mark.svg)] bg-no-repeat bg-center}

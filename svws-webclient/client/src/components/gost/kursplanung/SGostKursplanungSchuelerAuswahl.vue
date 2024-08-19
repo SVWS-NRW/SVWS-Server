@@ -146,10 +146,11 @@
 					<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
 						<span class="w-full text-center">{{ s.geschlecht }}</span>
 					</div>
-					<div v-if="istSchriftlich(s.id)" role="cell" class="svws-ui-td svws-align-center">
+					<div v-if="fach !== undefined || schuelerFilter().kurs !== undefined" role="cell" class="svws-ui-td svws-align-center">
 						<span>
 							<span v-if="istSchriftlich(s.id) === 's'" class="icon inline-block i-ri-draft-line -my-0.5" />
-							<span v-else class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
+							<span v-else-if="istSchriftlich(s.id) === 'm'" class="icon inline-block i-ri-chat-1-line -my-0.5 opacity-75" />
+							<span v-else class="icon inline-block i-ri-question-mark -my-0.5 opacity-75" />
 						</span>
 					</div>
 				</div>
@@ -229,14 +230,23 @@
 		return anzahl > 0 ? `+${anzahl.toString()} weitere` : '';
 	})
 
+
 	function istSchriftlich(id: number) {
-		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined) {
-			const fachId = fach.value?.id || props.schuelerFilter().kurs?.fach_id
-			if (fachId !== undefined)
-				return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, fachId).istSchriftlich ? 's':'m';
-		}
-		return undefined;
+		const kurs = props.schuelerFilter().kurs;
+		if ((fach.value === undefined) && (kurs === undefined))
+			return undefined;
+		let idFach : number;
+		if (fach.value !== undefined) {
+			idFach = fach.value.id;
+		} else if (kurs !== undefined) {
+			idFach = kurs.fach_id;
+		} else
+			return undefined;
+		if (!props.getErgebnismanager().getParent().schuelerGetHatFach(id, idFach))
+			return undefined;
+		return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, idFach).istSchriftlich ? 's':'m';
 	}
+
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [

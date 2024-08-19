@@ -2378,9 +2378,14 @@ public class GostBlockungsergebnisManager {
 				return false;
 
 			// Schüler hat den Kurs. Stimmt die Schriftlichkeit ebenfalls?
-			if (!getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit != null)
-					&& (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
-				return false;
+			if (schriftlichkeit != null) {
+				// Prüfe, ob die Kurs-Schüler-Zuordnung gültig ist oder nicht
+				final boolean ungueltig = getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs);
+				if (ungueltig && (schriftlichkeit == GostSchriftlichkeit.SCHRIFTLICH))
+					return false;
+				if (!ungueltig && (schriftlichkeit.getIstSchriftlichOrException() != getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
+					return false;
+			}
 		}
 
 		if (idFach >= 0) {

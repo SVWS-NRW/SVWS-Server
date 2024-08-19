@@ -105,7 +105,7 @@
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
-						<s-gost-kursplanung-regelansicht :get-datenmanager :faecher-manager :map-schueler :regeln-update :get-ergebnismanager :api-status />
+						<s-gost-kursplanung-regelansicht :get-datenmanager :faecher-manager :regeln-update :get-ergebnismanager :api-status />
 					</div>
 				</aside>
 			</Teleport>

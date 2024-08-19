@@ -2183,8 +2183,13 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		if (idKurs >= 0) {
 			if (!this.getOfSchuelerOfKursIstZugeordnet(idSchueler, idKurs))
 				return false;
-			if (!this.getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs) && (schriftlichkeit !== null) && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
-				return false;
+			if (schriftlichkeit !== null) {
+				const ungueltig : boolean = this.getOfSchuelerOfKursIstUngueltig(idSchueler, idKurs);
+				if (ungueltig && (schriftlichkeit as unknown === GostSchriftlichkeit.SCHRIFTLICH as unknown))
+					return false;
+				if (!ungueltig && (schriftlichkeit.getIstSchriftlichOrException() !== this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs).istSchriftlich))
+					return false;
+			}
 		}
 		if (idFach >= 0) {
 			if (idKursart >= 0) {

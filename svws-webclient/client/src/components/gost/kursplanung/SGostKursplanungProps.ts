@@ -1,5 +1,7 @@
 import type { WritableComputedRef } from "vue";
-import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager, GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, SchuelerListeEintrag, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile, List, GostBlockungsergebnisKursSchuelerZuordnung, GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet } from "@core";
+import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager,
+	GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile,
+	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { DownloadPDFTypen } from "./DownloadPDFTypen";
@@ -39,14 +41,13 @@ export interface GostKursplanungProps {
 	halbjahr: GostHalbjahr;
 	mapLehrer: Map<number, LehrerListeEintrag>;
 	mapFachwahlStatistik: () => Map<number, GostStatistikFachwahl>;
-	mapSchueler: Map<number, SchuelerListeEintrag>;
 	apiStatus: ApiStatus;
 	updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 	// Config
 	zeigeSchienenbezeichnungen: () => boolean;
-	setZeigeSchienenbezeichnungen: (value: boolean) => void;
+	setZeigeSchienenbezeichnungen: (value: boolean) => Promise<void>;
 	blockungstabelleHidden: () => boolean;
-	setBlockungstabelleHidden: (value: boolean) => void;
+	setBlockungstabelleHidden: (value: boolean) => Promise<void>;
 	fixierteVerschieben: () => boolean;
 	setFixierteVerschieben: (value: boolean) => Promise<void>;
 	inZielkursFixieren: () => boolean;

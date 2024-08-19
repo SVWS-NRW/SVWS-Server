@@ -28,5 +28,5 @@ export interface GostKursplanungAuswahlProps {
 	aktAbschnitt: Schuljahresabschnitt;
 	mode: ServerMode;
 	ausfuehrlicheDarstellungKursdifferenz: () => boolean;
-	setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
+	setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => Promise<void>;
 }

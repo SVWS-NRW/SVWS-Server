@@ -98,7 +98,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		// Prüfe die Blockung und setzte diese ggf.
 		if (idBlockung === undefined) {
 			// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. die aktive Blockung oder das erste Element aus
-			if ((idBlockung === undefined) && (this.data.mapBlockungen.size > 0)) {
+			if (this.data.mapBlockungen.size > 0) {
 				let blockungsEintrag : GostBlockungListeneintrag | undefined = undefined;
 				for (const e of this.data.mapBlockungen.values()) {
 					if (e.istAktiv === true) {
@@ -148,7 +148,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				return this.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, ergebnis.id);
 			}
 			if ((this.data.hatBlockung) && (this.data.ergebnisse.size() <= 0))
-				return;   // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
+				return; // akzeptiere die Route, da kein Ergebnis vorhanden ist - sollt eigentlich nicht vorkommen, da ein Vorlagenergebnis notwendig ist
 			return this.getRouteHalbjahr(abiturjahr, halbjahr.id); // Es existiert keine Blockung, also route zu der Halbjahresauswahl
 		}
 		let ergebnis;
@@ -268,7 +268,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			halbjahr: this.data.halbjahr,
 			mapLehrer: this.data.mapLehrer,
 			mapFachwahlStatistik: () => this.data.mapFachwahlStatistik,
-			mapSchueler: this.data.mapSchueler,
 			updateKursSchuelerZuordnungen: this.data.updateKursSchuelerZuordnungen,
 			apiStatus: api.status,
 			//Config
