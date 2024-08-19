@@ -1,4 +1,4 @@
-import type { List, SchuelerListeManager, Schulform, Schulgliederung, ServerMode, Sprachbelegung, Sprachpruefung } from "@core";
+import type { BenutzerKompetenz, List, SchuelerListeManager, Schulform, Schulgliederung, ServerMode, Sprachbelegung, Sprachpruefung } from "@core";
 
 export interface SchuelerSprachenProps {
 	sprachbelegungen: () => List<Sprachbelegung>;
@@ -13,4 +13,6 @@ export interface SchuelerSprachenProps {
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
 	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
+	benutzerKompetenzenKlassen: Set<number>;
 }

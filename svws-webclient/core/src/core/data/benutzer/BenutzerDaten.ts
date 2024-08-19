@@ -50,6 +50,16 @@ export class BenutzerDaten extends JavaObject {
 	 */
 	public kompetenzen : List<number> = new ArrayList<number>();
 
+	/**
+	 * Die IDs der Klassen bei denen der Benutzer funktionsbezogene Kompetenzen hat - entweder über Klassenleitungen oder über Abteilungsleitungen.
+	 */
+	public kompetenzenKlassen : List<number> = new ArrayList<number>();
+
+	/**
+	 * Die IDs der aktuellen Lehrer-Leitungsfunktionen, welche diesem Benutzer zugeordnet sind. Dies kann auch für funktionsbezogene Kompetenzen genutzt werden.
+	 */
+	public leitungsfunktionen : List<number> = new ArrayList<number>();
+
 
 	public constructor() {
 		super();
@@ -97,6 +107,16 @@ export class BenutzerDaten extends JavaObject {
 				result.kompetenzen.add(elem);
 			}
 		}
+		if (obj.kompetenzenKlassen !== undefined) {
+			for (const elem of obj.kompetenzenKlassen) {
+				result.kompetenzenKlassen.add(elem);
+			}
+		}
+		if (obj.leitungsfunktionen !== undefined) {
+			for (const elem of obj.leitungsfunktionen) {
+				result.leitungsfunktionen.add(elem);
+			}
+		}
 		return result;
 	}
 
@@ -122,6 +142,22 @@ export class BenutzerDaten extends JavaObject {
 			const elem = obj.kompetenzen.get(i);
 			result += elem.toString();
 			if (i < obj.kompetenzen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kompetenzenKlassen" : [ ';
+		for (let i = 0; i < obj.kompetenzenKlassen.size(); i++) {
+			const elem = obj.kompetenzenKlassen.get(i);
+			result += elem.toString();
+			if (i < obj.kompetenzenKlassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"leitungsfunktionen" : [ ';
+		for (let i = 0; i < obj.leitungsfunktionen.size(); i++) {
+			const elem = obj.leitungsfunktionen.get(i);
+			result += elem.toString();
+			if (i < obj.leitungsfunktionen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -169,6 +205,26 @@ export class BenutzerDaten extends JavaObject {
 				const elem = obj.kompetenzen.get(i);
 				result += elem.toString();
 				if (i < obj.kompetenzen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kompetenzenKlassen !== undefined) {
+			result += '"kompetenzenKlassen" : [ ';
+			for (let i = 0; i < obj.kompetenzenKlassen.size(); i++) {
+				const elem = obj.kompetenzenKlassen.get(i);
+				result += elem.toString();
+				if (i < obj.kompetenzenKlassen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.leitungsfunktionen !== undefined) {
+			result += '"leitungsfunktionen" : [ ';
+			for (let i = 0; i < obj.leitungsfunktionen.size(); i++) {
+				const elem = obj.leitungsfunktionen.get(i);
+				result += elem.toString();
+				if (i < obj.leitungsfunktionen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

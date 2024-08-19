@@ -1,12 +1,16 @@
 package de.svws_nrw.data.benutzer;
 
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESException;
@@ -15,6 +19,7 @@ import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
+import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.Benutzer;
@@ -27,8 +32,12 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.erzieher.DTOSchuelerErzieherAdresse;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
+import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
+import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
@@ -289,6 +298,109 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	}
 
 
+	/**
+	 * Bestimmt die Menge der Klassen-IDs, welche dem Benutzer als Klassenleitungen zugeordnet sind.
+	 * Bei einem Benutzer-Typ der nicht Lehrer ist, wird eine leere Liste zurückgegeben.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die Liste der Klassen-IDs
+	 */
+	public static List<Long> getKlassenVonKlassenleitungen(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		// Nur Lehrer-Benutzer können funktionsbezogene Kompetenzen haben.
+		if (typBenutzer != BenutzerTyp.LEHRER.id)
+			return new ArrayList<>();
+		// Bestimme die Klassen mit Klassenlehrern oder Abteilungsleiterrechten ...
+		final List<DTOKlassenLeitung> klassenleitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_LEHRER_ID, DTOKlassenLeitung.class, idBenutzer);
+		return klassenleitungen.stream().map(kl -> kl.Klassen_ID).distinct().toList();
+	}
+
+
+	/**
+	 * Bestimmt die Menge der Klassen-IDs, welche dem Benutzer aufgrund von Abteilungsleitungen zugeordnet sind.
+	 * Bei einem Benutzer-Typ der nicht Lehrer ist, wird eine leere Liste zurückgegeben.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die Liste der Klassen-IDs
+	 */
+	public static List<Long> getKlassenVonAbteilungsleitungen(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		// Nur Lehrer-Benutzer können Leitungsfunktionen haben.
+		if (typBenutzer != BenutzerTyp.LEHRER.id)
+			return new ArrayList<>();
+		// Bestimme die Klassen-IDs aus den Abteilungsinformationen - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
+		final List<Long> listAbteilungsIDs = conn.queryList(DTOAbteilungen.QUERY_BY_ABTEILUNGSLEITER_ID, DTOAbteilungen.class, idBenutzer)
+				.stream().map(a -> a.ID).toList();
+		if (listAbteilungsIDs.isEmpty())
+			return new ArrayList<>();
+		final List<DTOAbteilungsKlassen> listAbteilungenKlassen =
+				conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, listAbteilungsIDs);
+		return listAbteilungenKlassen.stream().map(ak -> ak.Klassen_ID).distinct().toList();
+	}
+
+
+	/**
+	 * Bestimmt die Menge der Klassen-IDs, welche dem Benutzer aufgrund von Klassenleitungen und Abteilungsleitungen zugeordnet sind.
+	 * Bei einem Benutzer-Typ der nicht Lehrer ist, wird eine leere Liste zurückgegeben.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die Liste der Klassen-IDs
+	 */
+	public static List<Long> getKlassenFunktionsbezogen(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		return Stream.concat(
+				getKlassenVonKlassenleitungen(conn, typBenutzer, idBenutzer).stream(),
+				getKlassenVonAbteilungsleitungen(conn, typBenutzer, idBenutzer).stream()
+		).distinct().toList();
+	}
+
+
+	/**
+	 * Gibt die Liste der aktuellen Leitunsfunktionen des Lehrers mit den angegebenen ID zurück.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die aktuellen Leitunsfunktionen
+	 */
+	public static List<LehrerLeitungsfunktion> getLeitungsfunktionen(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		// Nur Lehrer-Benutzer können Leitungsfunktionen haben.
+		if (typBenutzer != BenutzerTyp.LEHRER.id)
+			return new ArrayList<>();
+		final List<DTOSchulleitung> schulleitungsfunktionen = conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, idBenutzer);
+		final List<LehrerLeitungsfunktion> result = new ArrayList<>();
+		for (final DTOSchulleitung slf : schulleitungsfunktionen) {
+			final LocalDateTime von = ((slf.Von == null) ? LocalDate.of(1900, 1, 1) : LocalDate.parse(slf.Von)).atStartOfDay();
+			final LocalDateTime bis = ((slf.Bis == null) ? LocalDate.of(9999, 12, 31) : LocalDate.parse(slf.Bis)).atTime(23, 59, 59);
+			final LocalDateTime jetzt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
+			final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(slf.ID);
+			if ((funktion != null) && (von.compareTo(jetzt) <= 0) && (jetzt.compareTo(bis) <= 0))
+				result.add(funktion);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Gibt die Liste der IDs der aktuellen Leitunsfunktionen des Lehrers mit den angegebenen ID zurück.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die IDs der aktuellen Leitunsfunktionen
+	 */
+	public static List<Long> getLeitungsfunktionenIDs(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		return getLeitungsfunktionen(conn, typBenutzer, idBenutzer).stream().map(l -> l.daten.id).toList();
+	}
+
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
@@ -321,6 +433,9 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 					gdaten.kompetenzen.add(kompetenzID);
 			daten.gruppen.add(gdaten);
 		}
+		// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
+		daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
+		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(conn, daten.typ, daten.typID));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

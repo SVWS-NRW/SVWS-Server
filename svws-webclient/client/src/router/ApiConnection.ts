@@ -1,4 +1,3 @@
-import type { Ref, ShallowRef} from "vue";
 import { ref, shallowRef } from "vue";
 
 import type { BenutzerDaten, DBSchemaListeEintrag, List, SchuleStammdaten} from "@core";
@@ -11,10 +10,10 @@ import { AESAlgo } from "~/utils/crypto/aesAlgo";
 export class ApiConnection {
 
 	// Gibt an, ob der Client beim Server authentifiziert ist
-	protected _authenticated: Ref<boolean> = ref(false);
+	protected _authenticated = ref<boolean>(false);
 
 	// Der Hostname (evtl. mit Port) des Servers, bei dem der Login stattfindet
-	protected _hostname: Ref<string> = ref(window.location.hostname + ":" + window.location.port);
+	protected _hostname = ref<string>(window.location.hostname + ":" + window.location.port);
 
 	// Die URL mit welcher der Server verbunden ist
 	protected _url: string | undefined = undefined;
@@ -38,22 +37,25 @@ export class ApiConnection {
 	protected _api: ApiServer | undefined;
 
 	// Die Benutzerdaten des angemeldeten Benutzers
-	protected _benutzerdaten: ShallowRef<BenutzerDaten | undefined> = shallowRef(undefined);
+	protected _benutzerdaten = shallowRef<BenutzerDaten | undefined>(undefined);
 
 	// Gibt an, ob der Benutzer Administrator-Rechte hat oder nicht (direkt oder indirekt über eine Gruppen-Zugehörigkeit)
-	protected _istAdmin: ShallowRef<boolean | undefined> = shallowRef(undefined);
+	protected _istAdmin = shallowRef<boolean | undefined>(undefined);
 
 	// Gibt die Kompetenzen des Benutzer zurück, die der Benutzer direkt oder indirekt über eine Gruppen-Zugehörigkeit besitzt
-	protected _kompetenzen: ShallowRef<Set<BenutzerKompetenz> | undefined> = shallowRef(undefined);
+	protected _kompetenzen = shallowRef<Set<BenutzerKompetenz> | undefined>(undefined);
+
+	// Enthält die Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
+	protected _kompetenzenKlasse = shallowRef<Set<number> | undefined>(undefined);
 
 	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
-	protected _config: Ref<Config | undefined> = ref(undefined);
+	protected _config = ref<Config | undefined>(undefined);
 
 	// Die Stammdaten der Schule, sofern ein Login stattgefunden hat
-	protected _stammdaten: ShallowRef<{ stammdaten: SchuleStammdaten | undefined }> = shallowRef({ stammdaten : undefined });
+	protected _stammdaten = shallowRef<{ stammdaten: SchuleStammdaten | undefined }>({ stammdaten : undefined });
 
 	// Der Modus, in welchem der Server betrieben wird
-	protected _serverMode: Ref<ServerMode> = shallowRef(ServerMode.STABLE)
+	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
 
 
 	public constructor() {
@@ -108,6 +110,13 @@ export class ApiConnection {
 		if (this._kompetenzen.value === undefined)
 			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen Kompetenzen ermittelt werden können.");
 		return this._kompetenzen.value;
+	}
+
+	// Die Klassen-IDs, auf denen der angemeldete Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
+	get kompetenzenKlasse(): Set<number> {
+		if (this._kompetenzenKlasse.value === undefined)
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
+		return this._kompetenzenKlasse.value;
 	}
 
 	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
@@ -276,6 +285,23 @@ export class ApiConnection {
 		return result;
 	}
 
+
+	/**
+	 * Ermittelt, die Menge an Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung
+	 * funktionsbezogene Kompetenzen hat.
+	 *
+	 * @param daten   die Daten des Benutzers
+	 *
+	 * @returns die Menge an Klassen-IDs
+	 */
+	protected getKompetenzenKlasse(daten: BenutzerDaten): Set<number> {
+		const result = new Set<number>();
+		for (const id of daten.kompetenzenKlassen)
+			result.add(id);
+		return result;
+	}
+
+
 	/**
 	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
 	 * TypeScript-Objekt.
@@ -321,6 +347,7 @@ export class ApiConnection {
 			this._benutzerdaten.value = await this._api.getBenutzerDatenEigene(this._schema);
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
+			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.getConfig();
 		} catch (error) {
@@ -329,6 +356,7 @@ export class ApiConnection {
 			this._benutzerdaten.value = undefined;
 			this._istAdmin.value = undefined;
 			this._kompetenzen.value = undefined;
+			this._kompetenzenKlasse.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
 			this._stammdaten.value = {stammdaten: undefined};
@@ -362,6 +390,7 @@ export class ApiConnection {
 		this._benutzerdaten.value = undefined;
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
+		this._kompetenzenKlasse.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

@@ -60,6 +60,8 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
 			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
 		};
 	}
 

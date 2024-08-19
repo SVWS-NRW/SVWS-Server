@@ -183,6 +183,18 @@ class Api {
 		return false;
 	}
 
+
+	/**
+	 * Die Menge an Klassen-IDs, auf denen der angemeldete Benutzer aufgrund einer Klassen-
+	 * oder Abteilungsleitung funktionsbezogene Kompetenzen hat.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerKompetenzenKlassen(): Set<number> {
+		return this.conn.kompetenzenKlasse;
+	}
+
+
 	/**
 	 * Gibt den Typ des Benutzers zurück.
 	 *

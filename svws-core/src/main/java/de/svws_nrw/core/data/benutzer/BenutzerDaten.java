@@ -53,5 +53,12 @@ public class BenutzerDaten {
 	@Schema(description = "die Kompetenzen, die speziell diesem Benutzer zugeordnet sind")
 	public @NotNull List<Long> kompetenzen = new ArrayList<>();
 
+	/** Die IDs der Klassen bei denen der Benutzer funktionsbezogene Kompetenzen hat - entweder über Klassenleitungen oder über Abteilungsleitungen. */
+	@Schema(description = "die IDs der Klassen bei denen der Benutzer funktionsbezogene Kompetenzen hat - entweder über Klassenleitungen oder über Abteilungsleitungen")
+	public @NotNull List<Long> kompetenzenKlassen = new ArrayList<>();
+
+	/** Die IDs der aktuellen Lehrer-Leitungsfunktionen, welche diesem Benutzer zugeordnet sind. Dies kann auch für funktionsbezogene Kompetenzen genutzt werden. */
+	@Schema(description = "die IDs der aktuellen Lehrer-Leitungsfunktionen, welche diesem Benutzer zugeordnet sind. Dies kann auch für funktionsbezogene Kompetenzen genutzt werden.")
+	public @NotNull List<Long> leitungsfunktionen = new ArrayList<>();
 
 }

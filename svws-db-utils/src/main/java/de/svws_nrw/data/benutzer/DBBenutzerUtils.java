@@ -1,12 +1,7 @@
 package de.svws_nrw.data.benutzer;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -14,15 +9,10 @@ import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.ThrowingFunction;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
-import de.svws_nrw.db.dto.current.schild.lehrer.DTOSchulleitung;
-import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
-import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -67,32 +57,8 @@ public final class DBBenutzerUtils {
 					.forEach(komp -> user.getKompetenzen().add(komp));
 			// Funktionsbezogene Rechte bei Lehrern
 			if ((dbBenutzer.Typ == BenutzerTyp.LEHRER) && (dbBenutzer.TypID != null)) {
-				// Bestimme die Klassen mit Klassenlehrern oder Abteilungsleiterrechten ...
-				final long idLehrer = dbBenutzer.TypID;
-				final Set<Long> idsKlassen = new HashSet<>();
-				// ... die Klassen-IDs aus den Abteilungsinformationen - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
-				final List<Long> listAbteilungsIDs = conn.queryList(DTOAbteilungen.QUERY_BY_ABTEILUNGSLEITER_ID, DTOAbteilungen.class, idLehrer)
-						.stream().map(a -> a.ID).toList();
-				if (!listAbteilungsIDs.isEmpty()) {
-					final List<DTOAbteilungsKlassen> listAbteilungenKlassen =
-							conn.queryList(DTOAbteilungsKlassen.QUERY_LIST_BY_ABTEILUNG_ID, DTOAbteilungsKlassen.class, listAbteilungsIDs);
-					idsKlassen.addAll(listAbteilungenKlassen.stream().map(ak -> ak.Klassen_ID).toList());
-				}
-				// ... die Klassen-IDs von Klassenleitungen anhand der Klassenlehrer-Tabelle - eine Unterscheidung anhand des Schuljahresabschnittes ist hier nicht nötig
-				final List<DTOKlassenLeitung> klassenleitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_LEHRER_ID, DTOKlassenLeitung.class, idLehrer);
-				idsKlassen.addAll(klassenleitungen.stream().map(kl -> kl.Klassen_ID).toList());
-				user.setKlassenIDs(idsKlassen);
-				// Bestimme die Schulleitungsfunktion anhand der Tabelle Schulleitung und des aktuellen Datums
-				final List<DTOSchulleitung> schulleitungsfunktionen = conn.queryList(DTOSchulleitung.QUERY_BY_LEHRERID, DTOSchulleitung.class, idLehrer);
-				final List<LehrerLeitungsfunktion> leitungsfunktionenAktuell = new ArrayList<>();
-				for (final DTOSchulleitung slf : schulleitungsfunktionen) {
-					final LocalDateTime von = ((slf.Von == null) ? LocalDate.of(1900, 1, 1) : LocalDate.parse(slf.Von)).atStartOfDay();
-					final LocalDateTime bis = ((slf.Bis == null) ? LocalDate.of(9999, 12, 31) : LocalDate.parse(slf.Bis)).atTime(23, 59, 59);
-					final LocalDateTime jetzt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
-					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(slf.ID);
-					if ((funktion != null) && (von.compareTo(jetzt) <= 0) && (jetzt.compareTo(bis) <= 0))
-						leitungsfunktionenAktuell.add(funktion);
-				}
+				user.setKlassenIDs(DataBenutzerDaten.getKlassenFunktionsbezogen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
+				user.setLeitungsfunktionen(DataBenutzerDaten.getLeitungsfunktionen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
 			}
 		}
 	}
