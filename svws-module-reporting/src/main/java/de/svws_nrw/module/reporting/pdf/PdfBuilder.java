@@ -89,8 +89,6 @@ public class PdfBuilder {
 	 * Erzeugt eine Response mit der PDF-Datei als Content
 	 *
 	 * @return Response mit der PDF-Datei als Content
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response getPdfResponse() {
 		try {
