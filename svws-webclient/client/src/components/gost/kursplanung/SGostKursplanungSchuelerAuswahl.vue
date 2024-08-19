@@ -144,7 +144,7 @@
 						</div>
 					</div>
 					<div v-if="showGeschlecht()" role="cell" class="svws-ui-td svws-align-center pl-0">
-						<span class="w-full text-center">{{ s.geschlecht }}</span>
+						<span class="w-full text-center">{{ Geschlecht.fromValue(s.geschlecht)?.kuerzel }}</span>
 					</div>
 					<div v-if="fach !== undefined || schuelerFilter().kurs !== undefined" role="cell" class="svws-ui-td svws-align-center">
 						<span>
@@ -190,7 +190,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { KursplanungSchuelerAuswahlProps } from "./SGostKursplanungSchuelerAuswahlProps";
 	import type { GostBlockungKurs, GostBlockungsergebnisKurs, GostFach, GostFachwahl, Schueler } from "@core";
-	import { GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
+	import { Geschlecht, GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
