@@ -17,6 +17,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
@@ -245,12 +246,17 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		// Prüfe ggf. zunächst, ob eine funktionsbezogene Kompetenz des Fachlehrers genügt
 		final Long connLehrerId = conn.getUser().getIdLehrer();
 		if ((connLehrerId != null) && (dto.Fachlehrer_ID != null) && (connLehrerId.longValue() == dto.Fachlehrer_ID.longValue())) {
-			final Set<String> erlaubt = Set.of("id", "note", "noteQuartal", "fehlstundenGesamt", "fehlstundenUnentschuldigt");
-			final Set<String> vorhanden = new HashSet<>(patchAttributes.keySet());
-			// Entferne aus der Menge der vorhanden patch-Attribute die für Fachlehrerkompetenzen erlaubten Attribute. Ist das Resultat leer, so ist der Zugriff erlaubt
-			vorhanden.removeAll(erlaubt);
-			if (vorhanden.isEmpty())
-				return;
+			// Prüfe, ob es sich um den aktuellen Lernabschnitt der Schule handelt. In vergangenen Lernabschnitten darf der Lehrer nicht darauf zugreifen
+			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
+			if ((lernabschnitt != null) && (lernabschnitt.Schuljahresabschnitts_ID == schule.Schuljahresabschnitts_ID)) {
+				// Entferne aus der Menge der vorhanden patch-Attribute die für Fachlehrerkompetenzen erlaubten Attribute. Ist das Resultat leer, so ist der Zugriff erlaubt
+				final Set<String> erlaubt = Set.of("id", "note", "noteQuartal", "fehlstundenGesamt", "fehlstundenUnentschuldigt");
+				final Set<String> vorhanden = new HashSet<>(patchAttributes.keySet());
+				vorhanden.removeAll(erlaubt);
+				if (vorhanden.isEmpty())
+					return;
+			}
 		}
 		// Die funktionsbezogene Kompetenz des Fachlehrers ist nicht ausreichend, prüfe auf Klassenlehrer- oder Abteilungsleiter-Kompetenzen
 		checkFunktionsbezogeneKompetenzAufLernabschnitt(List.of(dto.Abschnitt_ID));
