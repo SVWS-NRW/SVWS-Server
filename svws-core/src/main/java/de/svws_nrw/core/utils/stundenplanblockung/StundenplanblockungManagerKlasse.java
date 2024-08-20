@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Objekt zur Speicherung einer Klasse während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

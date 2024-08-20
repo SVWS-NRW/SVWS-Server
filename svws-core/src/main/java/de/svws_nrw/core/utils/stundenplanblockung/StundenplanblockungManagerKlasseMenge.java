@@ -10,6 +10,7 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungKlasse;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Objekt zur Speicherung mehrerer Klassen während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

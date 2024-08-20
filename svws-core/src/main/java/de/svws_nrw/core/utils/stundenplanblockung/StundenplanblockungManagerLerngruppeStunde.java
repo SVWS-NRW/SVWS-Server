@@ -3,6 +3,7 @@ package de.svws_nrw.core.utils.stundenplanblockung;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Objekt zur Speicherung einer oder mehrerer Unterrichtsstunden während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

@@ -9,8 +9,7 @@ import java.util.Random;
 import jakarta.validation.constraints.NotNull;
 
 /**
- *
- *
+ * Ein Objekt zur Speicherung mehrerer Räume während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

@@ -9,6 +9,7 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Objekt zur Speicherung mehrerer Fächer während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

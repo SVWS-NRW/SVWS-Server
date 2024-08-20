@@ -10,8 +10,7 @@ import de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLehrkraft;
 import jakarta.validation.constraints.NotNull;
 
 /**
- *
- *
+ * Ein Objekt zur Speicherung mehrerer Lehrkraefte während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */

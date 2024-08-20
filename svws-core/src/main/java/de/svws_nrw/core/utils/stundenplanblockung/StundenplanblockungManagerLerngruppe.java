@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * Ein Objekt zur Speicherung einer Lerngruppe während der Stundenplanberechnung.
  *
  * @author Benjamin A. Bartsch
  */
