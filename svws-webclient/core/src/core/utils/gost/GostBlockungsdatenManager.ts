@@ -2177,7 +2177,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Schüler-ID unbekannt ist.
 	 */
 	public schuelerGetListeOfFachwahlen(pSchuelerID : number) : List<GostFachwahl> {
-		return DeveloperNotificationException.ifNull("_map_schuelerID_fachwahlen.get(" + pSchuelerID + ")", this._map_idSchueler_fachwahlen.get(pSchuelerID));
+		this.schuelerGetOrNull(pSchuelerID);
+		const fachwahlen : List<GostFachwahl> | null = this._map_idSchueler_fachwahlen.get(pSchuelerID);
+		return (fachwahlen === null) ? new ArrayList() : fachwahlen;
 	}
 
 	/**
