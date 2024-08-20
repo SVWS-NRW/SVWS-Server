@@ -28,22 +28,6 @@ export default tseslint.config(
         sourceType: "module",
 				programs: false,
         project: true,
-				// mit `true` wird die nächste tsconfig verwendet statt wie unten alle explizit anzugeben
-				// TODO: löschen, wenn es auch so funktioniert
-				// project: [
-				// 	"./tsconfig.base.json",
-				// 	"./svws-transpile/tsconfig.json",
-				// 	"./svws-transpile/src/test/ts/tsconfig.json",
-				// 	"./svws-webclient/core/tsconfig.json",
-				// 	"./svws-webclient/ui/tsconfig.json",
-				// 	"./svws-webclient/components/tsconfig.json",
-				// 	"./svws-webclient/client/tsconfig.json",
-				// 	"./svws-webclient/admin/tsconfig.json",
-				// 	"./svws-webclient/laufbahnplanung/tsconfig.json",
-				// 	"./svws-webclient/core-test/tsconfig.json",
-				// 	"./svws-webclient/api-test/tsconfig.json",
-				// 	"./svws-webclient/browser-test/tsconfig.json",
-				// ]
       },
       ecmaVersion: "latest",
       sourceType: "module",
