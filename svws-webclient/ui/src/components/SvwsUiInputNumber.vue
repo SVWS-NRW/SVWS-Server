@@ -49,9 +49,9 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="input && !hideStepper" class="svws-input-stepper">
-			<button role="button" :disabled="disabled" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><span class="icon i-ri-subtract-line inline-block" /></button>
-			<button role="button" :disabled="disabled" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><span class="icon i-ri-add-line inline-block" /></button>
+		<span v-if="input && !hideStepper && !disabled" class="svws-input-stepper">
+			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><span class="icon i-ri-subtract-line inline-block" /></button>
+			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
 	</label>
 </template>
@@ -108,7 +108,6 @@
 		}
 	};
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<number | null>(props.modelValue);
 
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
