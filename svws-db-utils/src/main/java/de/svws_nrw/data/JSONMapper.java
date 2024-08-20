@@ -674,8 +674,6 @@ public final class JSONMapper {
 	 * @param data   der zu konvertierende Integer-Wert
 	 *
 	 * @return die Response
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response fromInteger(final Integer data) {
 		return Response.ok((data == null) ? null : data.toString(), MediaType.APPLICATION_JSON).build();

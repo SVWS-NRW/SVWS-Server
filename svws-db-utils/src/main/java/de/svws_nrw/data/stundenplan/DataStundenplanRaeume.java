@@ -223,8 +223,6 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param conn             die Datenbankverbindung
 	 * @param dtoStundenplan   das DTO des Stundenplans
 	 * @param raeume           die hinzuzufügenden Räume
-	 *
-	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static void addRaeume(final @NotNull DBEntityManager conn, final DTOStundenplan dtoStundenplan, final List<Raum> raeume) {
 		long id = conn.transactionGetNextID(DTOStundenplanRaum.class);
