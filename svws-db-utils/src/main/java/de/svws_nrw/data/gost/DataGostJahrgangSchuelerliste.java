@@ -85,7 +85,11 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 
 		// Erstelle die Schülerliste
 		return schuelerListe.stream()
-				.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+				.map(s -> {
+					final SchuelerListeEintrag sle = DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform);
+					sle.abiturjahrgang = this.abijahrgang;
+					return sle;
+				})
 				.sorted(DataSchuelerliste.dataComparator)
 				.toList();
 	}
