@@ -58,11 +58,18 @@
 
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
-	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException } from "@core";
+	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList,
+		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
+
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
+			|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
+				&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse));
+	});
 
 	function getLehrerText(lehrer: LehrerListeEintrag) : string {
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
@@ -98,7 +105,7 @@
 
 	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const k = klasse.value;
-		if ((k === undefined) || (k.klassenLeitungen === null))
+		if (k === undefined)
 			return [];
 		const result: LehrerListeEintrag[] = [];
 		for (const lid of k.klassenLeitungen)
@@ -175,7 +182,7 @@
 			const gliederung = Schulgliederung.getByKuerzel(props.manager().lernabschnittGet().schulgliederung);
 			return gliederung === null ? undefined : gliederung;
 		},
-		set: (value) => void props.patch({ schulgliederung: value === undefined || value === null ? null : value.daten.kuerzel })
+		set: (value) => void props.patch({ schulgliederung: (value === undefined) || (value === null) ? null : value.daten.kuerzel })
 	});
 
 	const organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {

@@ -8,6 +8,7 @@ import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~
 
 import type { SchuelerLernabschnittLeistungenProps } from "~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungenProps";
 import { routeApp } from "../../RouteApp";
+import { routeSchueler } from "../RouteSchueler";
 
 const SSchuelerLernabschnittLeistungen = () => import("~/components/schueler/lernabschnitte/leistungen/SSchuelerLernabschnittLeistungen.vue");
 
@@ -31,7 +32,13 @@ export class RouteSchuelerLernabschnittLeistungen extends RouteNode<any, RouteSc
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittLeistungenProps {
 		return {
+			serverMode: api.mode,
+			benutzerdaten: api.benutzerdaten,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerKompetenzenKlassen: api.benutzerKompetenzenKlassen,
+			schule: api.schuleStammdaten,
 			schulform: api.schulform,
+			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
 			manager: () => routeSchuelerLernabschnitte.data.manager,
 			patch: routeSchuelerLernabschnitte.data.patchLernabschnitt,
 			patchLeistung: routeSchuelerLernabschnitte.data.patchLeistung,
