@@ -76,6 +76,44 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 	}
 
 
+	private static BenutzerApiPrincipal loginUsingDBAuthentication(final String username, final String password, final String path, final String schemaname) {
+		// Prüfe, ob der root-Zugriff per Konfiguration deaktiviert wurde. Dann darf aus Sicherheitgründen auch keine Kennwort-Prüfung stattfinden!
+		if (SVWSKonfiguration.get().isDBRootAccessDisabled())
+			return null;
+		// Prüfe, ob eine Anmeldung über das root-Schema erfolgt oder über ein spezielle Schema
+		final boolean useRootSchema = path.matches("/api/schema/root/.*");
+		String schema = schemaname;
+		if (!useRootSchema) {
+			final var pathelements = path.split("/");
+			if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2]))) {
+				if ("liste".equals(pathelements[3]))
+					schema = "information_schema";
+				else
+					schema = pathelements[4].replace("%20", " ");
+			}
+		}
+		// Erstelle eine DB-Konfiguration für den Datenbank-Root-Zugriff mit den angegebenen Benutzerdaten
+		// An dieser Stelle kann nicht vorausgesetzt werden, dass ein anderes SVWS-Schema bereits generiert wurde.
+		DBConfig rootConfig = SVWSKonfiguration.get().getRootDBConfig(username, password);
+		if ((username == null) || (username.isBlank()))
+			return null;
+		if (!schema.isBlank())
+			rootConfig = rootConfig.switchSchema(schema);
+		try {
+			final Benutzer benutzer = Benutzer.create(rootConfig);
+			benutzer.setUsername(username);
+			benutzer.setPassword(password);
+			try (DBEntityManager conn = benutzer.getEntityManager()) {
+				if (conn == null)  // Prüfe, ob eine Verbindung zu der DB aufgebaut werden konnte
+					return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
+			}
+			return new BenutzerApiPrincipal(benutzer);
+		} catch (@SuppressWarnings("unused") final DBException de) {
+			return null;
+		}
+	}
+
+
 	/**
 	 * Prüft, ob der Login mit dem angegebenen Benutzername und dem angegebenen Kennwort bei dem HTTP-Request gültig ist.
 	 *
@@ -123,7 +161,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if ((!isAnonymous) && (!isDBAuthentication)) {
 			final var pathelements = path.split("/");
 			if ((pathelements.length > 2) && ("".equals(pathelements[0])) && (("db".equals(pathelements[1])) || ("dav".equals(pathelements[1]))))
-				schema = pathelements[2];
+				schema = pathelements[2].replace("%20", " ");
 		}
 
 		// Erzeuge ggf. einen anonymen Principal
@@ -131,41 +169,8 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 			return new BenutzerApiPrincipal();
 
 		// Prüfe, ob ein Zugriff als Root auf das DBMS nötig ist
-		if (isDBAuthentication) {
-			// Prüfe, ob der root-Zugriff per Konfiguration deaktiviert wurde. Dann darf aus Sicherheitgründen auch keine Kennwort-Prüfung stattfinden!
-			if (SVWSKonfiguration.get().isDBRootAccessDisabled())
-				return null;
-			// Prüfe, ob eine Anmeldung über das root-Schema erfolgt oder über ein spezielle Schema
-			final boolean useRootSchema = path.matches("/api/schema/root/.*");
-			if (!useRootSchema) {
-				final var pathelements = path.split("/");
-				if ((pathelements.length > 4) && ("".equals(pathelements[0])) && ("api".equals(pathelements[1])) && ("schema".equals(pathelements[2]))) {
-					if ("liste".equals(pathelements[3]))
-						schema = "information_schema";
-					else
-						schema = pathelements[4];
-				}
-			}
-			// Erstelle eine DB-Konfiguration für den Datenbank-Root-Zugriff mit den angegebenen Benutzerdaten
-			// An dieser Stelle kann nicht vorausgesetzt werden, dass ein anderes SVWS-Schema bereits generiert wurde.
-			DBConfig rootConfig = SVWSKonfiguration.get().getRootDBConfig(username, password);
-			if ((username == null) || (username.isBlank()))
-				return null;
-			if (!schema.isBlank())
-				rootConfig = rootConfig.switchSchema(schema);
-			try {
-				final Benutzer benutzer = Benutzer.create(rootConfig);
-				benutzer.setUsername(username);
-				benutzer.setPassword(password);
-				try (DBEntityManager conn = benutzer.getEntityManager()) {
-					if (conn == null)  // Prüfe, ob eine Verbindung zu der DB aufgebaut werden konnte
-						return null; // wenn nicht, dann liegt ein Verbindungs- oder Authentifizierungsfehler vor und die Authentifizierung ist fehlgeschlagen
-				}
-				return new BenutzerApiPrincipal(benutzer);
-			} catch (@SuppressWarnings("unused") final DBException de) {
-				return null;
-			}
-		}
+		if (isDBAuthentication)
+			return loginUsingDBAuthentication(username, password, path, schema);
 
 		// Existiert keine Konfiguration zu dem Schema so liegt immer einer anonymer Zugriff vor -> anonymer Principal
 		DBConfig config = SVWSKonfiguration.get().getDBConfig(schema);
