@@ -244,6 +244,7 @@ nexusPublishing {
 
 
 task allJavadoc(type: Javadoc) {
+	group "documentation"
     project.subprojects.each {
         if (it.plugins.hasPlugin('java')) {
             source += it.java.sourceSets.main.allJava
