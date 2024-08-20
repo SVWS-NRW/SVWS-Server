@@ -16,7 +16,14 @@ const SGostFachwahlenLeistungskurse = () => import("~/components/gost/fachwahlen
 export class RouteGostFachwahlenLeistungskurse extends RouteNode<any, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen.leistungskurse", "leistungskurse", SGostFachwahlenLeistungskurse);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.fachwahlen.leistungskurse", "leistungskurse", SGostFachwahlenLeistungskurse);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Leistungskurse";

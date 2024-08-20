@@ -20,7 +20,14 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 	private _halbjahr = ref<GostHalbjahr>(GostHalbjahr.EF1);
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen.fach.halbjahr", "fach/:idfach(\\d+)/halbjahr/:idhalbjahr(\\d+)", SGostFachwahlenFachHalbjahr);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.fachwahlen.fach.halbjahr", "fach/:idfach(\\d+)/halbjahr/:idhalbjahr(\\d+)", SGostFachwahlenFachHalbjahr);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Fach- und Halbjahresbezogen";

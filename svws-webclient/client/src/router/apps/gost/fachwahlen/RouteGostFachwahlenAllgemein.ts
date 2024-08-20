@@ -16,7 +16,14 @@ const SGostFachwahlenAllgemein = () => import("~/components/gost/fachwahlen/SGos
 export class RouteGostFachwahlenAllgemein extends RouteNode<any, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen.allgemein", "allgemein", SGostFachwahlenAllgemein);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.fachwahlen.allgemein", "allgemein", SGostFachwahlenAllgemein);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Allgemein";

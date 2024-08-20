@@ -17,7 +17,10 @@ const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGost
 export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehler, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.laufbahnfehler", "laufbahnfehler", SGostLaufbahnfehler, new RouteDataGostLaufbahnfehler());
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.laufbahnfehler", "laufbahnfehler", SGostLaufbahnfehler, new RouteDataGostLaufbahnfehler());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnen";

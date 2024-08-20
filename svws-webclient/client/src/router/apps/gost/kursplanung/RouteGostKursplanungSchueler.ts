@@ -20,7 +20,10 @@ const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplan
 export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKursplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.setView("gost_kursplanung_schueler_auswahl", SGostKursplanungSchuelerAuswahl, (route) => this.getAuswahlProps(route));

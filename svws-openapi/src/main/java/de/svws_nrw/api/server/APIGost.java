@@ -1173,10 +1173,7 @@ public class APIGost {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangFachkombinationen(conn, abiturjahr).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
-				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN);
+				BenutzerKompetenz.KEINE);
 	}
 
 

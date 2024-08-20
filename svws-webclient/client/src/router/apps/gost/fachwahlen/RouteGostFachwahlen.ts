@@ -27,7 +27,14 @@ const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahl
 export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
+		], "gost.fachwahlen", "fachwahlen", SGostFachwahlen, new RouteDataGostFachwahlen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen";
@@ -59,7 +66,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
+		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
 		if (abiturjahr === undefined || abiturjahr === -1)
 			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: routeGost.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
 		await this.data.setEintrag(abiturjahr);

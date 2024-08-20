@@ -16,5 +16,5 @@ export interface GostAuswahlProps {
 	removeAbiturjahrgang: () => Promise<void>;
 	// Config
 	filterNurAktuelle: () => boolean;
-	setFilterNurAktuelle: (value: boolean) => void;
+	setFilterNurAktuelle: (value: boolean) => Promise<void>;
 }

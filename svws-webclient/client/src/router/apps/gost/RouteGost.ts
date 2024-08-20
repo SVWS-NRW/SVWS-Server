@@ -28,7 +28,16 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost", "gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+		], "gost", "gost/:abiturjahr(-?\\d+)?", SGostApp, new RouteDataGost());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Oberstufe";

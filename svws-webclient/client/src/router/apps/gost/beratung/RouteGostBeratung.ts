@@ -15,7 +15,8 @@ const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue
 export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.beratung", "beratung", SGostBeratung, new RouteDataGostBeratung());
+		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN ],
+			"gost.beratung", "beratung", SGostBeratung, new RouteDataGostBeratung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Beratung";
