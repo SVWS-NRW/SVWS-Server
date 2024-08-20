@@ -29,7 +29,7 @@ class SvwsVSCodePlugin implements Plugin<Project> {
 			def sourceJson
 			try {
 				sourceJson = jsonSlurper.parse(source)
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 				return
 			}
 
@@ -37,7 +37,7 @@ class SvwsVSCodePlugin implements Plugin<Project> {
 			def targetJson
 			try {
 				targetJson = jsonSlurper.parse(target)
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 				target.text = source.text
 				return
 			}
@@ -53,17 +53,27 @@ class SvwsVSCodePlugin implements Plugin<Project> {
 
 	// Konfiguration der VSCode Settings für das angegebene Projekt
 	void configureVisualStudioCode() {
-		project.logger.info('Info: Aktualisiere Visual Studio Code-Konfiguration für Projekt ' + project.name);
+		project.logger.info('Info: Aktualisiere Visual Studio Code-Konfiguration für Projekt ' + project.name.toString())
 		project.ext.setVSCSettings(project.file('.vscode/settings.json'), project.getRootProject().file('config/vscode/settings.json'))
 	}
 
 	void apply(Project project) {
 		this.project = project
 
-		// Defintion der Plugin ID
-		project.pluginManager.apply "svws.gradle.svwsvscode.plugin"
+		def initVSCode = project.task('initVSCode') {
+			group "ide"
+			description = 'Konfiguriert die Code Styles und die Inspections in IntelliJ'
+			// Definition der Plugin ID
+			project.pluginManager.apply "svws.gradle.svwsvscode.plugin"
 
-		this.addSetVisualStudioCodeSettingsMethod()
-		this.configureVisualStudioCode()
+			this.addSetVisualStudioCodeSettingsMethod()
+			this.configureVisualStudioCode()
+
+		}
+
+		// Führe initVSCode bei Reload Gradle Projekte aus
+		project.gradle.projectsLoaded {
+			initVSCode()
+		}
 	}
 }

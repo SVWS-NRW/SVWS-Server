@@ -295,15 +295,93 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 		this.project = project
-		// ID des Plugins
-		project.pluginManager.apply "svws.gradle.svwsintellij.plugin"
 
-		// Füge Methode zum Überschreiben der Formatter Optionen hinzu
-		this.addSetIntellijFormatterMethod()
-		// Füge Methode zum Merge der Inspections Optionen hinzu
-		this.addSetIntellijInspectionsMethod()
+		def initIntelliJ = project.task('initIntelliJ') {
+			group "ide"
+			description = 'Konfiguriert die Code Styles und die Inspections in IntelliJ'
+			// ID des Plugins
+			project.pluginManager.apply "svws.gradle.svwsintellij.plugin"
 
-		// Starte die Konfiguration der IntelliJ IDE
-		this.configureIntellij()
+			// Füge Methode zum Überschreiben der Formatter Optionen hinzu
+			this.addSetIntellijFormatterMethod()
+			// Füge Methode zum Merge der Inspections Optionen hinzu
+			this.addSetIntellijInspectionsMethod()
+
+			// Starte die Konfiguration der IntelliJ IDE
+			this.configureIntellij()
+
+		}
+
+		// Führe initIntelliJ bei Reload Gradle Projekte aus
+		project.gradle.projectsLoaded {
+			initIntelliJ()
+		}
+
+		def cleanIntelliJ = project.task('cleanIntelliJ') {
+			group "ide"
+			description = 'Löscht Code Style und Inspections Profile in allen Projekten. ' +
+					'Eigene Inspection Profile werden dabei ignoriert.'
+
+			doLast {
+				File codeStylesFolder = project.file('.idea/codeStyles')
+				File inspectionsFolder = project.file('.idea/inspectionProfiles')
+
+				/** Wenn es um die Inspections im Rootproject geht, dann sollen nur diese gelöscht werden, die auch von
+				 * diesem Plugin erstellt werden.
+				 * Eigene Konfigurationen des Entwicklers bleiben erhalten
+				 */
+				if (project == project.rootProject) {
+					// Code Styles werden dennoch komplett gelöscht
+					if (codeStylesFolder.exists()) {
+						println "Lösche Ordner: ${codeStylesFolder.absolutePath}"
+						codeStylesFolder.deleteDir()
+					}
+					if (!inspectionsFolder.exists()) {
+						return
+					}
+					// In der profiles_settings.xml wird nur das Project_Profile angepasst
+					File inspectionsProfileSettings = project.file('.idea/inspectionProfiles/profiles_settings.xml')
+					if (inspectionsProfileSettings.exists()) {
+						removeProjectProfileSetting(inspectionsProfileSettings)
+					}
+					// Löscht das SVWS Profil, das durch initIntelliJ erzeugt wird
+					File inspectionsProfile = project.file('.idea/inspectionProfiles/SVWS_Server_Inspections.xml')
+					if (inspectionsProfile.exists()) {
+						println "Lösche Inspections Profil: ${inspectionsProfile.absolutePath}"
+						inspectionsProfile.delete()
+					}
+				} else {
+					// In den Subprojects werden alle Code Styles und Inspectionprofile gelöscht
+					// Liste der zu löschenden Ordner (relativ zu jedem Projektverzeichnis)
+					def foldersToDelete = [codeStylesFolder, inspectionsFolder]
+
+					foldersToDelete.each { folderName ->
+						def folder = project.file(folderName)
+						if (folder.exists()) {
+							println "Lösche Ordner: ${folder.absolutePath}"
+							folder.deleteDir()
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * In den Profile Settings wird nur die definition des Project_Profile angepasst, falls dieses auf das
+	 * zu löschende SVWS Profil verweist.
+	 *
+	 * @param inspectionsProfileSettings Die Datei profile_settings.xml
+	 */
+	private static void removeProjectProfileSetting(File inspectionsProfileSettings) {
+		Node xml = new XmlParser().parse(inspectionsProfileSettings)
+		def nodeToRemove = xml.settings.option.find { node ->
+			node.name() == 'option' && node.@name == 'PROJECT_PROFILE' && node.@value == 'SVWS-Server-Inspections'
+		}
+		if (nodeToRemove) {
+			// Entferne den Node
+			nodeToRemove.parent().remove(nodeToRemove)
+			printXml(inspectionsProfileSettings, xml)
+		}
 	}
 }
