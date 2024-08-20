@@ -70,7 +70,7 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	 * Gibt die Bezeichnung dieser Report-Vorlage zurück
 	 * @return Die Bezeichnung dieser Report-Vorlage
 	 */
-	public getBezeichnung() : string | null {
+	public getBezeichnung() : string {
 		return (this.bezeichnung !== null) ? this.bezeichnung : "";
 	}
 

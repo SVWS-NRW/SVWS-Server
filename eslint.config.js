@@ -77,8 +77,9 @@ export default tseslint.config(
 			// Deaktivierte Regeln:
 			// Temporär defekt:
 			"@typescript-eslint/no-unsafe-call": "off",
-			"@typescript-eslint/no-unsafe-assignment": "off",
 			"@typescript-eslint/no-unsafe-return": "off",
+			"@typescript-eslint/no-unsafe-argument": "off",
+			"@typescript-eslint/no-unsafe-assignment": "off",
 			"@typescript-eslint/no-unsafe-member-access": "off",
 			// Zu häufig, erstmal warn
 			"@typescript-eslint/prefer-optional-chain": "off",

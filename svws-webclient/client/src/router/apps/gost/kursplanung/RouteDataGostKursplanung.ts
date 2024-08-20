@@ -6,18 +6,9 @@ import type { ApiPendingData } from "~/components/ApiStatus";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
 	GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, Schuljahresabschnitt, GostBlockungRegelUpdate,
 	GostBlockungsergebnisKursSchuelerZuordnungUpdate, Schueler } from "@core";
-import {
-	GostBlockungsdaten,
-	GostBlockungsergebnis,
-	ArrayList,
-	DeveloperNotificationException,
-	GostBlockungsdatenManager,
-	GostBlockungsergebnisManager,
-	GostFaecherManager,
-	GostHalbjahr,
-	HashSet,
-	ReportingReportvorlage, ReportingParameter
-} from "@core";
+import { GostBlockungsdaten, GostBlockungsergebnis, ArrayList, DeveloperNotificationException,
+	GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFaecherManager, GostHalbjahr,
+	HashSet, ReportingReportvorlage, ReportingParameter } from "@core";
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -505,8 +496,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		const kurs = await api.server.addGostBlockungKurs(api.schema, this.auswahlBlockung.id, fach_id, kursart_id);
-		if (kurs === undefined)
-			return;
 		this.datenmanager.kursAdd(kurs);
 		this.ergebnismanager.setAddKursByID(kurs.id);
 		this.commit();
@@ -575,8 +564,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		const lehrer = await api.server.addGostBlockungKurslehrer(api.schema, kurs_id, lehrer_id);
-		if (lehrer === undefined)
-			return
 		this.datenmanager.kursAddLehrkraft(kurs_id, lehrer);
 		this.ergebnismanager.patchOfKursLehrkaefteChanged();
 		this.commit();
@@ -606,8 +593,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		const schiene = await api.server.addGostBlockungSchiene(api.schema, this.auswahlBlockung.id);
-		if (schiene === undefined)
-			return
 		this.datenmanager.schieneAdd(schiene);
 		this.ergebnismanager.setAddSchieneByID(schiene.id)
 		this.commit();
@@ -618,8 +603,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (!this.hatErgebnis))
 			return;
 		const result = await api.server.deleteGostBlockungSchieneByID(api.schema, schiene.id);
-		if (!result)
-			return;
 		this.datenmanager.schieneRemoveByID(result.id);
 		this.ergebnismanager.setRemoveSchieneByID(result.id);
 		this.commit();
@@ -763,7 +746,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	gotoBlockung = async (value: GostBlockungListeneintrag | undefined) => {
 		if (value !== this._state.value.auswahlBlockung) {
-			if (value === undefined || value === null)
+			if (value === undefined)
 				await RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.abiturjahr, this.halbjahr.id));
 			else
 				await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(this.abiturjahr, this.halbjahr.id, value.id));
@@ -821,6 +804,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				reportingParameter.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			default:
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}
 	})
@@ -849,7 +833,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	public kurssortierung = computed<'fach' | 'kursart'>({
 		get: () => {
 			const value = api.config.getValue('gost.kursplanung.kursansicht.sortierung');
-			if ((value === undefined) || ((value !== 'kursart') && (value !== 'fach')))
+			if (((value !== 'kursart') && (value !== 'fach')))
 				return 'kursart';
 			return value;
 		},
