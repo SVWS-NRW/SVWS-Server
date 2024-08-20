@@ -252,6 +252,8 @@ task allJavadoc(type: Javadoc) {
         }
     }
     destinationDir = file("${buildDir}/docs/javadoc-all")
+    options.addStringOption('Xmaxerrs', '10000')
+    options.addStringOption('Xmaxwarns', '10000')
 }
 
 
