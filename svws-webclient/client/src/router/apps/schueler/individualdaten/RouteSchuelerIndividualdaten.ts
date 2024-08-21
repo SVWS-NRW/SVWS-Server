@@ -43,6 +43,8 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			mapReligionen: this.data.mapReligionen,
 			mapSchulen: this.data.mapSchulen,
 			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		};
 	}
 
