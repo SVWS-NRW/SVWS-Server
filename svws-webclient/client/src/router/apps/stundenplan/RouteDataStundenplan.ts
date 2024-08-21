@@ -10,8 +10,10 @@ import { routeStundenplanDaten } from "./RouteStundenplanDaten";
 import { routeKatalogPausenzeiten } from "../kataloge/pausenzeit/RouteKatalogPausenzeiten";
 import { routeKatalogAufsichtsbereiche } from "../kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogRaeume } from "../kataloge/raum/RouteKatalogRaeume";
+import { routeApp } from "../RouteApp";
 
 interface RouteStateStundenplan extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: Map<number, StundenplanListeEintrag>;
 	daten: Stundenplan | undefined;
@@ -26,6 +28,7 @@ interface RouteStateStundenplan extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateStundenplan> {
+	idSchuljahresabschnitt: -1,
 	auswahl: undefined,
 	mapKatalogeintraege: new Map(),
 	daten: undefined,
@@ -96,6 +99,42 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		return this._state.value.selected;
 	}
 
+	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<void> {
+		api.status.start();
+		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt)
+		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
+		const auswahl = (listKatalogeintraege.size() > 0) ? listKatalogeintraege.get(0) : undefined;
+		for (const l of listKatalogeintraege)
+			mapKatalogeintraege.set(l.id, l);
+		const listRaeume = await api.server.getRaeume(api.schema);
+		const listPausenzeiten = await api.server.getPausenzeiten(api.schema);
+		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
+		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
+		const listLehrer = await api.server.getLehrer(api.schema);
+		const { daten, stundenplanManager, stundenplanUnterrichtListeManager } = (auswahl !== undefined)
+			? await this.ladeEintrag(auswahl)
+			: { daten: undefined, stundenplanManager: undefined, stundenplanUnterrichtListeManager: undefined };
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge, listLehrer,
+			daten, stundenplanManager, stundenplanUnterrichtListeManager })
+		api.status.stop();
+	}
+
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<void> {
+		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+			return;
+		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
+	}
+
+	/**
+	 * Gibt die ID des aktuell gesetzten Schuljahresabschnittes zurück.
+	 *
+	 * @returns die ID des aktuell gesetzten Schuljahresabschnittes
+	 */
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
+
 	public setSelection = (selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => {
 		this.setPatchedState({selected});
 	}
@@ -109,15 +148,13 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		Object.assign(daten, data);
 		if (data.wochenTypModell !== undefined)
 			this.stundenplanManager.stundenplanSetWochenTypModell(data.wochenTypModell);
-		if (this.auswahl) {
-			if (data.bezeichnungStundenplan)
-				this.auswahl.bezeichnung = data.bezeichnungStundenplan;
-			if (data.gueltigAb)
-				this.auswahl.gueltigAb = data.gueltigAb;
-			if (data.gueltigBis)
-				this.auswahl.gueltigBis = data.gueltigBis;
-			this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
-		}
+		if (data.bezeichnungStundenplan)
+			this.auswahl.bezeichnung = data.bezeichnungStundenplan;
+		if (data.gueltigAb)
+			this.auswahl.gueltigAb = data.gueltigAb;
+		if (data.gueltigBis)
+			this.auswahl.gueltigBis = data.gueltigBis;
+		this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
 		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
 		api.status.stop();
 	}
@@ -544,22 +581,6 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		}
 	}
 
-	public async ladeListe() {
-		api.status.start();
-		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, api.abschnitt.id)
-		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
-		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
-		for (const l of listKatalogeintraege)
-			mapKatalogeintraege.set(l.id, l);
-		const listRaeume = await api.server.getRaeume(api.schema);
-		const listPausenzeiten = await api.server.getPausenzeiten(api.schema);
-		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrer(api.schema);
-		this.setPatchedDefaultState({ auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge, listLehrer })
-		api.status.stop();
-	}
-
 	private async ladeEintrag(auswahl: StundenplanListeEintrag) : Promise<{ daten: Stundenplan, stundenplanManager: StundenplanManager, stundenplanUnterrichtListeManager: StundenplanUnterrichtListeManager }> {
 		const daten = await api.server.getStundenplan(api.schema, auswahl.id);
 		const unterrichtsdaten = await api.server.getStundenplanUnterrichte(api.schema, auswahl.id);
@@ -590,7 +611,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 
 	addEintrag = async () => {
 		api.status.start();
-		const eintrag = await api.server.addStundenplan(api.schema, api.abschnitt.id);
+		const eintrag = await api.server.addStundenplan(api.schema, routeApp.data.idSchuljahresabschnitt);
 		this.mapKatalogeintraege.set(eintrag.id, eintrag)
 		api.status.stop();
 		await this.gotoEintrag(eintrag);

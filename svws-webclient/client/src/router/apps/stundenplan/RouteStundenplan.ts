@@ -20,6 +20,7 @@ import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenpl
 
 import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
+import { routeError } from "~/router/error/RouteError";
 
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
@@ -45,31 +46,40 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
+		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+		if (idSchuljahresabschnitt instanceof Error)
+			return routeError.getRoute(idSchuljahresabschnitt);
+		if (idSchuljahresabschnitt === undefined)
+			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
+
+		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
-			await this.data.ladeListe();
-		} else {
+		if (to_params.id !== undefined) {
 			const id = parseInt(to_params.id);
 			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined && this.data.auswahl !== undefined) {
-				await this.data.ladeListe();
-				return this.getRoute(this.data.auswahl.id);
-			}
-			else if (eintrag)
-				await this.data.setEintrag(eintrag);
+			if ((eintrag === undefined) && (this.data.auswahl !== undefined))
+				return this.getRoute(undefined);
+			await this.data.setEintrag(eintrag);
 		}
-		if (to.name === this.name && this.data.auswahl !== undefined)
+		if (to.name === this.name) {
+			if (this.data.auswahl === undefined)
+				return;
 			return this.getRoute(this.data.auswahl.id);
+		}
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
 					this.data.setView(child, this.children);
 	}
 
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
+	}
+
 	public getRoute(id?: number) : RouteLocationRaw {
+		if (id === undefined)
+			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
