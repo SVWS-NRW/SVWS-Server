@@ -9,13 +9,14 @@ import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SSchuelerSchulbesuch = () => import("~/components/schueler/schulbesuch/SSchuelerSchulbesuch.vue");
 
 export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbesuch, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
+		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN ], "schueler.schulbesuch", "schulbesuch", SSchuelerSchulbesuch, new RouteDataSchuelerSchulbesuch());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbesuch";
@@ -36,6 +37,9 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			data: this.data.daten,
 			patch: this.data.patch
 		};
