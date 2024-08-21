@@ -412,6 +412,10 @@
 		}
 		let rowStart = 0;
 		let rowEnd = 10;
+		if ((zbeginn !== null) && (zende !== null)) {
+			rowStart = (zbeginn - beginn.value) / props.zeitrasterSteps;
+			rowEnd = (zende - beginn.value) / props.zeitrasterSteps;
+		}
 		if (props.hideZeitachse) {
 			rowStart = stunde - 1;
 			rowEnd = stunde;
