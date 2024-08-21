@@ -29,7 +29,7 @@ const SLehrerApp = () => import("~/components/lehrer/SLehrerApp.vue")
 export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
+		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_ANSEHEN ], "lehrer", "lehrkraefte/:id(\\d+)?", SLehrerApp, new RouteDataLehrer());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Lehrkräfte";
