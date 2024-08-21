@@ -18,7 +18,7 @@ const SRaumStundenplan = () => import("~/components/kataloge/raeume/stundenplan/
 export class RouteRaumStundenplan extends RouteNode<RouteDataRaumStundenplan, RouteKatalogRaeume> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.raeume.stundenplan", "stundenplan", SRaumStundenplan, new RouteDataRaumStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "kataloge.raeume.stundenplan", "stundenplan", SRaumStundenplan, new RouteDataRaumStundenplan());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";

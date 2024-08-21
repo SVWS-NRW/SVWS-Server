@@ -12,7 +12,7 @@ const SStundenplanUnterrichte = () => import("~/components/stundenplan/unterrich
 export class RouteStundenplanUnterrichte extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.unterrichte", "unterrichte", SStundenplanUnterrichte);
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.unterrichte", "unterrichte", SStundenplanUnterrichte);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Unterrichte";
