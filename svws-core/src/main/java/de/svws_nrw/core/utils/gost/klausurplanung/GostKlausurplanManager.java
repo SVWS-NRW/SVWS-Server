@@ -3445,11 +3445,11 @@ public class GostKlausurplanManager {
 	 *
 	 * @param k die {@link GostKursklausur}
 	 *
-	 * @return den {@link LehrerListeEintrag} zur übergebenen {@link GostKursklausur}.
+	 * @return den {@link LehrerListeEintrag} zur übergebenen {@link GostKursklausur} oder <code>null</code> falls kein Lehrer zugeordnet ist.
 	 */
-	public @NotNull LehrerListeEintrag kursLehrerByKursklausur(final @NotNull GostKursklausur k) {
+	public LehrerListeEintrag kursLehrerByKursklausur(final @NotNull GostKursklausur k) {
 		final @NotNull KursDaten kurs = kursdatenByKursklausur(k);
-		return DeveloperNotificationException.ifMapGetIsNull(getLehrerMap(), kurs.lehrer);
+		return kurs.lehrer == null ? null : getLehrerMap().get(kurs.lehrer);
 	}
 
 
@@ -3458,10 +3458,11 @@ public class GostKlausurplanManager {
 	 *
 	 * @param k die {@link GostKursklausur}
 	 *
-	 * @return das Lehrerkürzel zur übergebenen {@link GostKursklausur}.
+	 * @return das Lehrerkürzel zur übergebenen {@link GostKursklausur} oder <code>null</code> falls kein Lehrer zugeordnet ist.
 	 */
-	public @NotNull String kursLehrerKuerzelByKursklausur(final @NotNull GostKursklausur k) {
-		return kursLehrerByKursklausur(k).kuerzel;
+	public String kursLehrerKuerzelByKursklausur(final @NotNull GostKursklausur k) {
+		final LehrerListeEintrag lle = kursLehrerByKursklausur(k);
+		return lle == null ? null : lle.kuerzel;
 	}
 
 	/**

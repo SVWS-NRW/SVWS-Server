@@ -174,7 +174,7 @@
 			if (activeVorgabe.value.idVorgabe === v.idVorgabe) {
 				cancelEdit();
 			} else {
-				activeVorgabe.value = v !== null ? v : new GostKlausurvorgabe();
+				activeVorgabe.value = v;
 			}
 		}
 	};

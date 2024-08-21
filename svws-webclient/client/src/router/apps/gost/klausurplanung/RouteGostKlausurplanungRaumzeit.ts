@@ -43,7 +43,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 		const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
 		if (idTermin === null && !terminList.isEmpty()) {
 			const termin = routeGostKlausurplanung.data.terminSelected.value !== undefined && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
-			return this.getRoute(abiturjahr, halbjahr.id,  termin.id);
+			return this.getRoute(abiturjahr, halbjahr.id, termin.id);
 		}
 		if (idTermin !== null) {
 			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idTermin);

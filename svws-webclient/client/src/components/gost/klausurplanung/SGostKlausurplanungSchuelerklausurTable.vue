@@ -11,7 +11,7 @@
 			<div v-for="schuelertermin in schuelerklausuren"
 				:key="schuelertermin.id"
 				:data="schuelertermin"
-				:draggable="onDrag && draggable(schuelertermin)"
+				:draggable="onDrag && draggable(schuelertermin, termin!)"
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row"
@@ -60,7 +60,7 @@
 		termin?: GostKlausurtermin | undefined;
 		schuelerklausuren: List<GostSchuelerklausurTermin>;
 		onDrag?: (data: GostKlausurplanungDragData) => void;
-		draggable?: (data: GostKlausurplanungDragData) => boolean;
+		draggable?: (data: GostKlausurplanungDragData, termin: GostKlausurtermin) => boolean;
 		onDrop?: (zone: GostKlausurplanungDropZone) => void;
 		selectedItems?: JavaSet<GostSchuelerklausurTermin>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;

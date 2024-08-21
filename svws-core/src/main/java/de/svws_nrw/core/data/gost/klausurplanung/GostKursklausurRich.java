@@ -59,7 +59,7 @@ public class GostKursklausurRich {
 
 	/** Die ID des Kurslehrers. */
 	@Schema(description = "die ID des Kurslehrers", example = "175")
-	public long idLehrer = -1;
+	public Long idLehrer = null;
 
 	/** Die ID des Klausurtermins, sofern schon gesetzt. */
 	@Schema(description = "die ID des Klausurtermins, sofern schon gesetzt", example = "5555")

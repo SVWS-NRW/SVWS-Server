@@ -67,7 +67,7 @@
 
 	import type { DataTableColumn } from "@ui";
 	import { GostHalbjahr, GostSchuelerklausurTermin } from "@core";
-	import { DateUtils  } from "@core";
+	import { DateUtils } from "@core";
 	import { RouteManager } from '~/router/RouteManager';
 	import type { SchuelerLernabschnittGostKlausurenProps } from "./SSchuelerLernabschnittGostKlausurenProps";
 	import { routeGostKlausurplanungNachschreiber } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber";
@@ -79,10 +79,10 @@
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
 
-	let terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
+	const terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
 
 	const createTermin = async (create: boolean) => {
-		if (create && terminSelected.value !== undefined) {
+		if (create) {
 			await props.patchSchuelerklausurTermin(terminSelected.value.id, { bemerkung: terminSelected.value.bemerkung } );
 			await props.createSchuelerklausurTermin(terminSelected.value.idSchuelerklausur);
 		}

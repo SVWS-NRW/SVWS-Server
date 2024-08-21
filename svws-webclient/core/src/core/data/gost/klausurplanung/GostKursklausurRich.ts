@@ -58,7 +58,7 @@ export class GostKursklausurRich extends JavaObject {
 	/**
 	 * Die ID des Kurslehrers.
 	 */
-	public idLehrer : number = -1;
+	public idLehrer : number | null = null;
 
 	/**
 	 * Die ID des Klausurtermins, sofern schon gesetzt.
@@ -145,9 +145,7 @@ export class GostKursklausurRich extends JavaObject {
 				result.kursSchiene[i] = obj.kursSchiene[i];
 			}
 		}
-		if (obj.idLehrer === undefined)
-			throw new Error('invalid json format, missing attribute idLehrer');
-		result.idLehrer = obj.idLehrer;
+		result.idLehrer = (obj.idLehrer === undefined) ? null : obj.idLehrer === null ? null : obj.idLehrer;
 		result.idTermin = (obj.idTermin === undefined) ? null : obj.idTermin === null ? null : obj.idTermin;
 		result.startzeit = (obj.startzeit === undefined) ? null : obj.startzeit === null ? null : obj.startzeit;
 		if (obj.schuelerIds !== undefined) {
@@ -178,7 +176,7 @@ export class GostKursklausurRich extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
+		result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer.toString()) + ',';
 		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
 		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
 		result += '"schuelerIds" : [ ';
@@ -236,7 +234,7 @@ export class GostKursklausurRich extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.idLehrer !== undefined) {
-			result += '"idLehrer" : ' + obj.idLehrer.toString() + ',';
+			result += '"idLehrer" : ' + ((!obj.idLehrer) ? 'null' : obj.idLehrer.toString()) + ',';
 		}
 		if (obj.idTermin !== undefined) {
 			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';

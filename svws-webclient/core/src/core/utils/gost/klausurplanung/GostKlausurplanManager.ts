@@ -3163,11 +3163,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @param k die {@link GostKursklausur}
 	 *
-	 * @return den {@link LehrerListeEintrag} zur übergebenen {@link GostKursklausur}.
+	 * @return den {@link LehrerListeEintrag} zur übergebenen {@link GostKursklausur} oder <code>null</code> falls kein Lehrer zugeordnet ist.
 	 */
-	public kursLehrerByKursklausur(k : GostKursklausur) : LehrerListeEintrag {
+	public kursLehrerByKursklausur(k : GostKursklausur) : LehrerListeEintrag | null {
 		const kurs : KursDaten = this.kursdatenByKursklausur(k);
-		return DeveloperNotificationException.ifMapGetIsNull(this.getLehrerMap(), kurs.lehrer);
+		return kurs.lehrer === null ? null : this.getLehrerMap().get(kurs.lehrer);
 	}
 
 	/**
@@ -3175,10 +3175,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @param k die {@link GostKursklausur}
 	 *
-	 * @return das Lehrerkürzel zur übergebenen {@link GostKursklausur}.
+	 * @return das Lehrerkürzel zur übergebenen {@link GostKursklausur} oder <code>null</code> falls kein Lehrer zugeordnet ist.
 	 */
-	public kursLehrerKuerzelByKursklausur(k : GostKursklausur) : string {
-		return this.kursLehrerByKursklausur(k).kuerzel;
+	public kursLehrerKuerzelByKursklausur(k : GostKursklausur) : string | null {
+		const lle : LehrerListeEintrag | null = this.kursLehrerByKursklausur(k);
+		return lle === null ? null : lle.kuerzel;
 	}
 
 	/**

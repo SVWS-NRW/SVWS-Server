@@ -63,7 +63,7 @@
 		if (temp === undefined || temp.order === null)
 			temp = {key: 'nachname', order: true};
 		arr.sort((a, b) => {
-			switch (temp!.key) {
+			switch (temp.key) {
 				case 'nachname':
 					return props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(a.idSchuelerklausur).idSchueler)!.nachname.localeCompare(props.kMan().getSchuelerMap().get(props.kMan().schuelerklausurGetByIdOrException(b.idSchuelerklausur).idSchueler)!.nachname, "de-DE",);
 				case 'vorname':

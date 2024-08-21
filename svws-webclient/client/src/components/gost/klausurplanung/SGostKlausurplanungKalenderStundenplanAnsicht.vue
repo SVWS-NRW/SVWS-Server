@@ -179,9 +179,7 @@
 			return props.manager().pausenzeitGetMengeBySchuelerIdAsList(props.id);
 		if (props.mode === 'lehrer')
 			return props.manager().pausenzeitGetMengeByLehrerIdAsList(props.id);
-		if (props.mode === 'klasse')
-			return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
-		throw new DeveloperNotificationException("const pausenzeiten: Unbekannter Mode " + props.mode);
+		return props.manager().pausenzeitGetMengeByKlasseIdAsList(props.id);
 	});
 
 	const gesamtzeit = computed(() => {
@@ -211,9 +209,7 @@
 			return props.manager().pausenzeitGetMengeBySchuelerIdAndWochentagAsList(props.id, wochentag.id);
 		if (props.mode === 'lehrer')
 			return props.manager().pausenzeitGetMengeByLehrerIdAndWochentagAsList(props.id, wochentag.id);
-		if (props.mode === 'klasse')
-			return props.manager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
-		throw new DeveloperNotificationException("function getPausenzeitenWochentag: Unbekannter Mode " + props.mode);
+		return props.manager().pausenzeitGetMengeByKlasseIdAndWochentagAsList(props.id, wochentag.id);
 	}
 
 	function getPausenaufsichtenPausenzeit(pause: StundenplanPausenzeit): List<StundenplanPausenaufsicht> {
@@ -222,14 +218,12 @@
 			return props.manager().pausenaufsichtGetMengeBySchuelerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 		if (props.mode === 'lehrer')
 			return props.manager().pausenaufsichtGetMengeByLehrerIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
-		if (props.mode === 'klasse')
-			return props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
-		throw new DeveloperNotificationException("function getPausenaufsichtenPausenzeit: Unbekannter Mode " + props.mode);
+		return props.manager().pausenaufsichtGetMengeByKlasseIdAndPausenzeitIdAndWochentypAndInklusive(props.id, pause.id, props.wochentyp(), true);
 	}
 
 	function posZeitraster(wochentag: Wochentag | undefined, stunde: number): string {
-		let zbeginn =  props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
-		let zende =  props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
+		let zbeginn = props.manager().zeitrasterGetMinutenMinDerStunde(stunde);
+		let zende = props.manager().zeitrasterGetMinutenMaxDerStunde(stunde);
 		if (wochentag !== undefined) {
 			const z = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde);
 			if (z !== null) {
@@ -241,10 +235,8 @@
 		}
 		let rowStart = 0;
 		let rowEnd = 10;
-		if ((zbeginn !== null) && (zende !== null)) {
-			rowStart = (zbeginn - beginn.value) / 5;
-			rowEnd = (zende - beginn.value) / 5;
-		}
+		rowStart = (zbeginn - beginn.value) / 5;
+		rowEnd = (zende - beginn.value) / 5;
 		return "grid-row-start: " + (rowStart + 1) + "; grid-row-end: " + (rowEnd + 1) + "; grid-column: 1;";
 	}
 

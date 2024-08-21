@@ -311,7 +311,7 @@
 		// 	if (konfliktfreiZuFremdtermin)
 		// 		break;
 		// }
-		const konfliktZuEigenemTermin = termin === undefined || klausur === null ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
+		const konfliktZuEigenemTermin = termin === undefined ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
 			// "svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
 			// "bg-yellow-300": !konfliktfreiZuFremdtermin,
