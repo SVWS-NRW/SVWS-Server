@@ -24,7 +24,7 @@
 								<Transition>
 									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
 										<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
-										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" />
+										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
 										<div class="flex gap-2">
@@ -86,14 +86,18 @@
 
 <script setup lang="ts">
 
-	import type { LoginProps } from "./SLoginProps";
+	import { computed, nextTick, ref, shallowRef, type Ref } from "vue";
+	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { computed, ref, shallowRef } from "vue";
 	import { ArrayList, DeveloperNotificationException } from "@core";
+	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
+	import type { LoginProps } from "./SLoginProps";
 
 	const props = defineProps<LoginProps>();
+
+	const refUsername : Ref<ComponentExposed<typeof SvwsUiTextInput> | null> = ref(null);
 
 	const firstauth = ref(true);
 	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
@@ -171,6 +175,9 @@
 		}
 		connection_failed.value = false;
 		connecting.value = false;
+		await nextTick(() => {
+			refUsername.value?.doFocus();
+		});
 	}
 
 	async function doLogin() {

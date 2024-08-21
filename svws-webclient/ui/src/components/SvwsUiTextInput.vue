@@ -115,9 +115,9 @@
 	});
 
 	const emit = defineEmits<{
-		"update:modelValue": [value: string];   // TODO use InputDataType
-		"change": [value: string];              // TODO use InputDataType
-		"blur": [value: string];                // TODO use InputDataType
+		"update:modelValue": [value: string]; // TODO use InputDataType
+		"change": [value: string]; // TODO use InputDataType
+		"blur": [value: string]; // TODO use InputDataType
 	}>();
 
 	const vFocus = {
@@ -127,7 +127,6 @@
 		}
 	};
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<InputDataType>(props.modelValue);
 
 	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
@@ -159,7 +158,7 @@
 	function updateData(value: InputDataType) {
 		if (data.value !== value) {
 			data.value = value;
-			emit("update:modelValue", String(data.value));   // TODO do not use String()
+			emit("update:modelValue", String(data.value)); // TODO do not use String()
 		}
 	}
 
@@ -195,17 +194,21 @@
 
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value));   // TODO do not use String()
-		emit("blur", String(data.value));   // TODO do not use String()
+			emit("change", String(data.value)); // TODO do not use String()
+		emit("blur", String(data.value)); // TODO do not use String()
 	}
 
 	function onKeyEnter(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value));   // TODO do not use String()
+			emit("change", String(data.value)); // TODO do not use String()
 	}
 
 	function reset() {
 		data.value = props.modelValue;
+	}
+
+	function doFocus() {
+		input.value?.focus();
 	}
 
 	const labelId = genId();
@@ -216,7 +219,8 @@
 		content: ComputedRef<InputDataType>,
 		input: Ref<HTMLInputElement | null>,
 		reset: () => void;
-	}>({ content, input, reset, });
+		doFocus: () => void;
+	}>({ content, input, reset, doFocus });
 
 </script>
 
