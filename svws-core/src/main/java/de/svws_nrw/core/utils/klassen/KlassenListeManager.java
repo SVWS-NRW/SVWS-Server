@@ -267,4 +267,54 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
+
+	/**
+	 * Erhöht, bzw. senkt die Position der Klassenleitung mit der angegebenen Lehrer-ID auf der lokalen Klassenleitungs-Liste.
+	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächst-höher-stehenden (bzw. nächst-tiefer-stehenden) Eintrag
+	 * und dem angegebenen Eintrag getauscht.
+	 *
+	 * @param klassenleitungen   die Liste der Klassenleitungen
+	 * @param lehrerId           Lehrer-ID der zu höher- bzw. tieferstellenden Klassenleitung
+	 * @param erhoehe            true, falls die Klassenleitung eine höhere Position auf der Klassenleitungs-Liste haben soll,
+	 *                           false, wenn sie eine tiefere Position auf der Klassenleitungs-Liste haben soll.
+	 *
+	 * @return true, falls Änderungen durchgeführt wurden, und ansonsten false
+	 *
+	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
+	 */
+	public static boolean updateReihenfolgeKlassenleitung(final @NotNull List<Long> klassenleitungen, final long lehrerId, final boolean erhoehe)
+			throws DeveloperNotificationException {
+		// Ist diese Klassenleitung die einzige in der Klasse, dann wird keine Änderung durchgeführt...
+		if (klassenleitungen.size() == 1)
+			return false;
+
+		// Bestimmt den Index des Lehrers in der Liste der Klassenleitungen
+		final int posLehrer = klassenleitungen.indexOf(lehrerId);
+		if (posLehrer < 0)
+			throw new DeveloperNotificationException("Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden.");
+
+		if (erhoehe) {
+			// Prüfe, ob die Klassenleitung bereits an oberster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+			if (posLehrer == 0)
+				return false;
+
+			// Dreieckstausch mit der darüberstehenden Klassenleitung
+			final long lehrerIdVorgaenger = klassenleitungen.get(posLehrer - 1);
+			klassenleitungen.set(posLehrer, lehrerIdVorgaenger);
+			klassenleitungen.set(posLehrer - 1, lehrerId);
+			return true;
+
+		}
+
+		// Prüfe, ob die Klassenleitung bereits an unterster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+		if ((posLehrer + 1) >= klassenleitungen.size())
+			return false;
+
+		// Dreieckstausch mit der darunterstehenden Klassenleitung
+		final long lehrerIdNachfolger = klassenleitungen.get(posLehrer + 1);
+		klassenleitungen.set(posLehrer, lehrerIdNachfolger);
+		klassenleitungen.set(posLehrer + 1, lehrerId);
+		return true;
+	}
+
 }

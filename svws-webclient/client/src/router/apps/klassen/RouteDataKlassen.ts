@@ -1,6 +1,6 @@
 
-import type { KlassenDaten, Schueler} from "@core";
-import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
+import type {KlassenDaten, List, Schueler, LehrerListeEintrag} from "@core";
+import {ArrayList, DeveloperNotificationException, KlassenListeManager, LehrerListeManager} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -10,11 +10,13 @@ import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { type RouteNode } from "~/router/RouteNode";
+import {routeLehrer} from "~/router/apps/lehrer/RouteLehrer";
 
 
 interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	klassenListeManager: KlassenListeManager;
+	lehrerListeManager: LehrerListeManager;
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
@@ -24,6 +26,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
 	klassenListeManager: new KlassenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
+	lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
@@ -82,7 +85,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled});
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt,
+			gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled });
 		return klassenListeManager.auswahlID();
 	}
 
@@ -128,11 +132,11 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			errorLog.add('Es wurde keine Klasse zum Löschen ausgewählt.')
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
 			if (klasse.schueler.size() > 0)
-				errorLog.add(`Klasse ${klasse.kuerzel} (ID: ${klasse.id}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
+				errorLog.add(`Klasse ${klasse.kuerzel ?? '???'} (ID: ${klasse.id.toString()}) kann nicht gelöscht werden, da ihr noch Schüler zugeordnet sind.`);
 		return [errorLog.isEmpty(), errorLog];
 	}
 
-	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]>  => {
+	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]> => {
 		const ids = new ArrayList<number>();
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
 			ids.add(klasse.id);
@@ -145,7 +149,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		for (const response of operationResponses) {
 			if (response.success && response.id) {
 				const klasse = this.klassenListeManager.liste.get(response.id);
-				logMessages.add(`Klasse ${klasse?.kuerzel} (ID: ${response.id}) wurde erfolgreich gelöscht.`);
+				logMessages.add(`Klasse ${klasse?.kuerzel ?? '???'} (ID: ${response.id.toString()}) wurde erfolgreich gelöscht.`);
 				klassenToRemove.add(klasse);
 			} else {
 				status = false;
@@ -204,6 +208,65 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	gotoSchueler = async (eintrag: Schueler) => {
 		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+	}
+
+	gotoLehrer = async (eintrag: LehrerListeEintrag) => {
+		await RouteManager.doRoute(routeLehrer.getRoute(eintrag.id));
+	}
+
+	addKlassenleitung = async (idLehrer : number, idKlasse : number) : Promise<void> => {
+		// Prüfe zunächst, ob die Lehrer-ID bereits in der Liste der Klassenleitungen vorkommt
+		if (this.klassenListeManager.daten().klassenLeitungen.contains(idLehrer))
+			throw new DeveloperNotificationException("Die Klassenleitung mit der Lehrer-ID " + idLehrer + " kommt bereits in der Klasse mit der ID " + idKlasse + "vor.");
+
+		// Erstelle die neue Klassenliste durch anhängen der neuen Lehrer-ID
+		const listKlassenleitungenNeu = new ArrayList<number>(this.klassenListeManager.daten().klassenLeitungen);
+		listKlassenleitungenNeu.add(idLehrer);
+
+		// Führe den API-Aufruf durch
+		const requestBody : Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
+		await api.server.patchKlasse(requestBody, api.schema, idKlasse);
+
+		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
+		this.klassenListeManager.daten().klassenLeitungen.add(idLehrer);
+		this.commit();
+	}
+
+	removeKlassenleitung = async (eintrag: LehrerListeEintrag) => {
+		// Bestimme die Position der Klassenleitung in der zugehörigen Liste
+		const listKlassenleitungenNeu = new ArrayList<number>(this.klassenListeManager.daten().klassenLeitungen);
+		const lehrerIndex : number = listKlassenleitungenNeu.indexOf(eintrag.id);
+		listKlassenleitungenNeu.removeElementAt(lehrerIndex);
+
+		// Führe den API-Aufruf durch
+		const requestBody : Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu }
+		const klassenId : number | null = this.klassenListeManager.auswahlID();
+		if (klassenId === null)
+			throw new DeveloperNotificationException("Keine Klasse ausgewählt, Klassenleitung kann nicht entfernt werden");
+		await api.server.patchKlasse(requestBody, api.schema, klassenId);
+
+		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
+		this.klassenListeManager.daten().klassenLeitungen = listKlassenleitungenNeu;
+		this.commit();
+	}
+
+	updateReihenfolgeKlassenleitung = async (idLehrer : number, erhoehe : boolean) : Promise<void> => {
+		const idKlasse : number | null = this.klassenListeManager.auswahlID();
+		if (idKlasse === null)
+			throw new DeveloperNotificationException("Für das Anpassen der Reihenfolge von Klassenlehrern muss eine Klasse ausgewählt sein.")
+
+		// Erstelle eine Kopie der Liste der Klassenleitungen und führe an dieser die Änderungen durch
+		const listKlassenleitungenNeu = new ArrayList<number>(this.klassenListeManager.daten().klassenLeitungen);
+		if (!KlassenListeManager.updateReihenfolgeKlassenleitung(listKlassenleitungenNeu, idLehrer, erhoehe))
+			return;
+
+		// Führe den API-Aufruf durch
+		const requestBody : Partial<KlassenDaten> = { klassenLeitungen: listKlassenleitungenNeu };
+		await api.server.patchKlasse(requestBody, api.schema, idKlasse)
+
+		// Aktualisiere die Liste der Klassenleitungen im Erfolgsfall
+		this.klassenListeManager.daten().klassenLeitungen = listKlassenleitungenNeu;
+		this.commit();
 	}
 
 	gotoGruppenprozess = async (navigate: boolean) => {

@@ -269,6 +269,42 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		return this._mapKlasseByKuerzel.get(kuerzel);
 	}
 
+	/**
+	 * Erhöht, bzw. senkt die Position der Klassenleitung mit der angegebenen Lehrer-ID auf der lokalen Klassenleitungs-Liste.
+	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächst-höher-stehenden (bzw. nächst-tiefer-stehenden) Eintrag
+	 * und dem angegebenen Eintrag getauscht.
+	 *
+	 * @param klassenleitungen   die Liste der Klassenleitungen
+	 * @param lehrerId           Lehrer-ID der zu höher- bzw. tieferstellenden Klassenleitung
+	 * @param erhoehe            true, falls die Klassenleitung eine höhere Position auf der Klassenleitungs-Liste haben soll,
+	 *                           false, wenn sie eine tiefere Position auf der Klassenleitungs-Liste haben soll.
+	 *
+	 * @return true, falls Änderungen durchgeführt wurden, und ansonsten false
+	 *
+	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
+	 */
+	public static updateReihenfolgeKlassenleitung(klassenleitungen : List<number>, lehrerId : number, erhoehe : boolean) : boolean {
+		if (klassenleitungen.size() === 1)
+			return false;
+		const posLehrer : number = klassenleitungen.indexOf(lehrerId);
+		if (posLehrer < 0)
+			throw new DeveloperNotificationException("Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden.")
+		if (erhoehe) {
+			if (posLehrer === 0)
+				return false;
+			const lehrerIdVorgaenger : number = klassenleitungen.get(posLehrer - 1).valueOf();
+			klassenleitungen.set(posLehrer, lehrerIdVorgaenger);
+			klassenleitungen.set(posLehrer - 1, lehrerId);
+			return true;
+		}
+		if ((posLehrer + 1) >= klassenleitungen.size())
+			return false;
+		const lehrerIdNachfolger : number = klassenleitungen.get(posLehrer + 1).valueOf();
+		klassenleitungen.set(posLehrer, lehrerIdNachfolger);
+		klassenleitungen.set(posLehrer + 1, lehrerId);
+		return true;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
 	}

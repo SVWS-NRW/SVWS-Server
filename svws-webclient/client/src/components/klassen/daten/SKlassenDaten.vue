@@ -52,7 +52,44 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
-				<svws-ui-table :columns="colsKlassenleitungen" :items="listeKlassenleitungen" />
+				<svws-ui-table :columns="colsKlassenleitungen" :items="listeKlassenlehrer">
+					<template #header(linkToLehrer)>
+						<span class="icon i-ri-group-line" />
+					</template>
+					<template #cell(linkToLehrer)="{rowData, rowIndex}">
+						<svws-ui-button type="icon" @click="gotoLehrer(rowData)">
+							<span class="icon i-ri-link" />
+						</svws-ui-button>
+					</template>
+					<template #cell(aktionen)="{ rowData, rowIndex }">
+						<div style="vertical-align: center; display: flex;">
+							<div class="w-6">
+								<svws-ui-button v-if="rowIndex !== 0" type="icon" @click="erhoeheReihenfolge(rowData)" >
+									<span class="icon i-ri-arrow-up-line" />
+								</svws-ui-button>
+							</div>
+							<div class="w-6">
+								<svws-ui-button v-if="rowIndex !== listeKlassenlehrer.length-1" type="icon" @click="reduziereReihenfolge(rowData)">
+									<span class="icon i-ri-arrow-down-line" />
+								</svws-ui-button>
+							</div>
+							<div class="w-6">
+								<svws-ui-button  type="icon" @click="removeKlassenleitung(rowData)">
+									<span class="icon i-ri-delete-bin-line" />
+								</svws-ui-button>
+							</div>
+						</div>
+					</template>
+					<template #footer>
+						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
+							<div style="display: flex; justify-content: flex-end">
+								<svws-ui-button type="icon" @click="openModal().value = true">
+									<span class="icon i-ri-add-line" />
+								</svws-ui-button>
+							</div>
+						</s-klassen-daten-lehrer-zuweisung-modal>
+					</template>
+				</svws-ui-table>
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Klassenliste">
@@ -77,9 +114,10 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { type DataTableColumn } from "@ui";
-	import { SchuelerStatus, type JahrgangsDaten, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen,
-		WeiterbildungskollegOrganisationsformen, type KlassenDaten, type List, ArrayList } from "@core";
+	import type { DataTableColumn } from "@ui";
+	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
+	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen,
+		ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
 	const props = defineProps<KlassenDatenProps>();
@@ -96,15 +134,23 @@
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
+	async function erhoeheReihenfolge(rowData: LehrerListeEintrag): Promise<void> {
+		await props.updateReihenfolgeKlassenleitung(rowData.id, true);
+	}
+
+	async function reduziereReihenfolge(rowData: LehrerListeEintrag) : Promise<void>{
+		await props.updateReihenfolgeKlassenleitung(rowData.id, false);
+	}
+
 	const jahrgang = computed<JahrgangsDaten | null>({
-		get: () => ((data.value === undefined) || (data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
+		get: () => ((data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
 		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
 	});
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
 		for (const jg of props.klassenListeManager().jahrgaenge.list()) {
-			if (jg.kuerzel !== "E3")  // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
+			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
 		}
 		return result;
@@ -120,13 +166,6 @@
 			void props.setFilter();
 		}
 	});
-
-
-	type Lehrer = {
-		kuerzel?: string;
-		nachname?: string;
-		vorname?: string;
-	}
 
 	const listeFolgeklassen = computed<List<KlassenDaten>>(() => {
 		const result = new ArrayList<KlassenDaten>();
@@ -172,24 +211,22 @@
 		return result;
 	});
 
-	const listeKlassenleitungen = computed<Lehrer[]>(() => {
-		const a = [];
-		for (const id of props.klassenListeManager().daten().klassenLeitungen) {
-			const lehrer = props.klassenListeManager().lehrer.get(id);
-			if (lehrer)
-				a.push({
-					kuerzel: lehrer.kuerzel,
-					nachname: lehrer.nachname,
-					vorname: lehrer.vorname,
-				});
+	const listeKlassenlehrer = computed<LehrerListeEintrag[]>(() => {
+		const a : LehrerListeEintrag[] = [];
+		for (const klassenLeitung of props.klassenListeManager().daten().klassenLeitungen) {
+			const lehrer : LehrerListeEintrag | null = props.klassenListeManager().lehrer.get(klassenLeitung);
+			if (lehrer !== null)
+				a.push(lehrer);
 		}
 		return a;
 	});
 
 	const colsKlassenleitungen: DataTableColumn[] = [
+		{ key: "linkToLehrer", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "kuerzel", label: "Kürzel", span: 1, sortable: false },
 		{ key: "nachname", label: "Nachname", span: 2, sortable: false },
 		{ key: "vorname", label: "Vorname", span: 2, sortable: false },
+		{ key: "aktionen", label: "", span: 2, sortable: false, align: "right" }
 	];
 
 
