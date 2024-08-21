@@ -14,7 +14,7 @@ const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lerna
 export class RouteSchuelerLernabschnittVersetzungAbschluss extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.versetzung", "versetzung", SSchuelerLernabschnittAllgmein);
+		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN ], "schueler.lernabschnitt.versetzung", "versetzung", SSchuelerLernabschnittAllgmein);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Versetzung/Abschluss";

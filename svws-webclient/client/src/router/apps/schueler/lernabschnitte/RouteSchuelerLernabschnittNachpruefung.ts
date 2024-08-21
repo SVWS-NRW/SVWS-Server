@@ -14,7 +14,7 @@ const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lerna
 export class RouteSchuelerLernabschnittNachpruefung extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schueler.lernabschnitt.nachpruefung", "nachpruefung", SSchuelerLernabschnittAllgmein);
+		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ANSEHEN ], "schueler.lernabschnitt.nachpruefung", "nachpruefung", SSchuelerLernabschnittAllgmein);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Nachprüfung";
