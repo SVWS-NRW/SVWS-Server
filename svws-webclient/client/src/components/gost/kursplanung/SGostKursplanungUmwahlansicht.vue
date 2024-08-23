@@ -5,7 +5,7 @@
 			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
 		</template>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
-		<div class="flex gap-12" v-if="fachbelegungen.size() > 0">
+		<div class="flex gap-12 overflow-y-auto pr-7" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
 			<!-- Übersicht über die Fachwahlen des Schülers -->
 			<div class="w-1/6 min-w-[10rem]">
 				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
