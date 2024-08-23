@@ -238,6 +238,7 @@ public final class OAuth2Client {
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofByteArray(c))
 				.header("Content-Type", "multipart/form-data;boundary=" + actualBoundary)
+				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).header("file", "file").build();
 		return send(request, handler);
 	}
@@ -265,6 +266,7 @@ public final class OAuth2Client {
 			input = keyValuePairs[i] + "=" + keyValuePairs[i + 1] + "\n";
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2))
 				.POST(BodyPublishers.ofString(input)).header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).build();
 		return send(request, handler);
 	}
@@ -285,6 +287,7 @@ public final class OAuth2Client {
 		final URI uri = URI.create(url + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
 				.POST(BodyPublishers.ofString("")).header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).build();
 		return send(request, handler);
 	}
@@ -304,6 +307,7 @@ public final class OAuth2Client {
 	public <T> HttpResponse<T> get(final String path, final BodyHandler<T> handler) throws ApiOperationException {
 		final URI uri = URI.create(url + path);
 		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
+				.header("Accept", "application/json")
 				.header("Authorization", "Bearer " + token.accessToken).build();
 		return send(request, handler);
 	}
