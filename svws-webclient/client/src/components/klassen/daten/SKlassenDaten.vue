@@ -52,7 +52,7 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
-				<svws-ui-table :columns="colsKlassenleitungen" :items="listeKlassenlehrer">
+				<svws-ui-table :columns="colsKlassenleitungen" :items="listeKlassenlehrer" clickable v-model:clicked="clickedKlassenleitung">
 					<template #header(linkToLehrer)>
 						<span class="icon i-ri-group-line" />
 					</template>
@@ -64,17 +64,7 @@
 					<template #cell(aktionen)="{ rowData, rowIndex }">
 						<div style="vertical-align: center; display: flex;">
 							<div class="w-6">
-								<svws-ui-button v-if="rowIndex !== 0" type="icon" @click="erhoeheReihenfolge(rowData)" >
-									<span class="icon i-ri-arrow-up-line" />
-								</svws-ui-button>
-							</div>
-							<div class="w-6">
-								<svws-ui-button v-if="rowIndex !== listeKlassenlehrer.length-1" type="icon" @click="reduziereReihenfolge(rowData)">
-									<span class="icon i-ri-arrow-down-line" />
-								</svws-ui-button>
-							</div>
-							<div class="w-6">
-								<svws-ui-button  type="icon" @click="removeKlassenleitung(rowData)">
+								<svws-ui-button  type="icon" @click.stop="removeKlassenleitungHandler(rowData)">
 									<span class="icon i-ri-delete-bin-line" />
 								</svws-ui-button>
 							</div>
@@ -82,10 +72,23 @@
 					</template>
 					<template #footer>
 						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
-							<div style="display: flex; justify-content: flex-end">
-								<svws-ui-button type="icon" @click="openModal().value = true">
-									<span class="icon i-ri-add-line" />
-								</svws-ui-button>
+							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
+								<div v-if="clickedKlassenleitung !== undefined" class="w-6" style="margin-right: 2pt">
+									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()" >
+										<span class="icon i-ri-arrow-up-line" />
+									</svws-ui-button>
+								</div>
+								<div v-if="clickedKlassenleitung !== undefined" class="w-6" style="margin-right: 2pt">
+									<svws-ui-button v-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge()">
+										<span class="icon i-ri-arrow-down-line" />
+									</svws-ui-button>
+								</div>
+
+								<div style="display: flex; justify-content: flex-end">
+									<svws-ui-button type="icon" @click="openModal().value = true">
+										<span class="icon i-ri-add-line" />
+									</svws-ui-button>
+								</div>
 							</div>
 						</s-klassen-daten-lehrer-zuweisung-modal>
 					</template>
@@ -113,12 +116,15 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import type { ComputedRef } from "vue";
+	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
 	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen,
 		ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
+
+	const clickedKlassenleitung = ref<LehrerListeEintrag | undefined>(undefined);
 
 	const props = defineProps<KlassenDatenProps>();
 
@@ -134,12 +140,41 @@
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
-	async function erhoeheReihenfolge(rowData: LehrerListeEintrag): Promise<void> {
-		await props.updateReihenfolgeKlassenleitung(rowData.id, true);
+	const ersteKlassenleitungId: ComputedRef<number> = computed<number>(() =>
+		listeKlassenlehrer.value[0].id
+	);
+
+	const letzteKlassenleitungId: ComputedRef<number> = computed<number>(() =>
+		listeKlassenlehrer.value[data.value.klassenLeitungen.size()-1].id
+	);
+
+	const showPfeilHoch : ComputedRef<boolean> = computed<boolean>(() =>
+		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== ersteKlassenleitungId.value)
+	);
+
+	const showPfeilRunter : ComputedRef<boolean> = computed<boolean>(() =>
+		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== letzteKlassenleitungId.value)
+	);
+
+	async function removeKlassenleitungHandler(rowData : LehrerListeEintrag) : Promise<void> {
+		await props.removeKlassenleitung(rowData);
+
+		if(clickedKlassenleitung.value !== undefined && clickedKlassenleitung.value.id === rowData.id)
+			clickedKlassenleitung.value = undefined;
 	}
 
-	async function reduziereReihenfolge(rowData: LehrerListeEintrag) : Promise<void>{
-		await props.updateReihenfolgeKlassenleitung(rowData.id, false);
+	async function erhoeheReihenfolge(): Promise<void> {
+		if (clickedKlassenleitung.value === undefined)
+			return;
+
+		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, true);
+	}
+
+	async function reduziereReihenfolge() : Promise<void> {
+		if (clickedKlassenleitung.value === undefined)
+			return;
+
+		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, false);
 	}
 
 	const jahrgang = computed<JahrgangsDaten | null>({
