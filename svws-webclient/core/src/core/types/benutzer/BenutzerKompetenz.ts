@@ -38,9 +38,9 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	public static readonly SCHUELER_INDIVIDUALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("SCHUELER_INDIVIDUALDATEN_AENDERN", 3, new BenutzerKompetenzKatalogEintrag(12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", null));
 
 	/**
-	 * Es werden Rechte zum Löschen der Schüler Individualdaten benötigt.
+	 * Es werden Rechte zum endgültigen Löschen eines Schülers benötigt.
 	 */
-	public static readonly SCHUELER_INDIVIDUALDATEN_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHUELER_INDIVIDUALDATEN_LOESCHEN", 4, new BenutzerKompetenzKatalogEintrag(13, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Löschen", null));
+	public static readonly SCHUELER_LOESCHEN : BenutzerKompetenz = new BenutzerKompetenz("SCHUELER_LOESCHEN", 4, new BenutzerKompetenzKatalogEintrag(13, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Löschen", null));
 
 	/**
 	 * Es werden Rechte zum Ändern der Schüler Vermerke benötigt.

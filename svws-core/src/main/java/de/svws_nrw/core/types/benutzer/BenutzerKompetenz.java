@@ -33,8 +33,8 @@ public enum BenutzerKompetenz {
 	SCHUELER_INDIVIDUALDATEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
 			12, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Ändern", null)),
 
-	/** Es werden Rechte zum Löschen der Schüler Individualdaten benötigt. */
-	SCHUELER_INDIVIDUALDATEN_LOESCHEN(new BenutzerKompetenzKatalogEintrag(
+	/** Es werden Rechte zum endgültigen Löschen eines Schülers benötigt. */
+	SCHUELER_LOESCHEN(new BenutzerKompetenzKatalogEintrag(
 			13, BenutzerKompetenzGruppe.SCHUELER_INDIVIDUALDATEN, "Löschen", null
 	)),
 
