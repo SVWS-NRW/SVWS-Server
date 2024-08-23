@@ -1,18 +1,20 @@
 <template>
-	<svws-ui-table :columns="cols" :items="personaldaten.lehraemter" selectable :model-value="selected" @update:model-value="selected=$event" count>
+	<svws-ui-table :columns="cols" :items="personaldaten.lehraemter" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count>
 		<template #cell(lehramt)="{ rowData }">
 			{{ getLehramt(rowData).daten.text }}
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
-			<svws-ui-select title="Anerkennungsgrund Lehramt" :model-value="getLehramtAnerkennung(rowData)" @update:model-value="anerkennung => patchLehramtAnerkennung(rowData, anerkennung ?? null)"
+			<svws-ui-select title="Anerkennungsgrund Lehramt" v-if="hatUpdateKompetenz" :model-value="getLehramtAnerkennung(rowData)"
+				@update:model-value="anerkennung => patchLehramtAnerkennung(rowData, anerkennung ?? null)"
 				:items="LehrerLehramtAnerkennung.values()" :item-text="(i: LehrerLehramtAnerkennung) => i.daten.text" headless />
+			<div v-else> {{ getLehramtAnerkennung(rowData)?.daten.text ?? '—' }} </div>
 		</template>
-		<template #actions>
+		<template #actions v-if="hatUpdateKompetenz">
 			<svws-ui-button @click="removeLehraemter(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
 			<svws-ui-button @click="showModal().value = true" type="icon" title="Lehramt hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<s-lehrer-personaldaten-lehraemter-modal-add :show="showModal" :id-lehrer="personaldaten.id" :add-lehramt="addLehramt" />
+	<s-lehrer-personaldaten-lehraemter-modal-add v-if="hatUpdateKompetenz" :show="showModal" :id-lehrer="personaldaten.id" :add-lehramt="addLehramt" />
 </template>
 
 <script setup lang="ts">
@@ -23,6 +25,7 @@
 	} from "@core";
 
 	const props = defineProps<{
+		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
 		patchLehramtAnerkennung: (eintrag: LehrerLehramtEintrag, anerkennung : LehrerLehramtAnerkennung | null) => Promise<void>;
 		addLehramt: (eintrag: LehrerLehramtEintrag) => Promise<void>;

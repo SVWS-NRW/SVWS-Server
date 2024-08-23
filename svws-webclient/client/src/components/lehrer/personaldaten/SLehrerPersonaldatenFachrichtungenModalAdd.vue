@@ -31,7 +31,7 @@
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerFachrichtungEintrag();
 		l.id = props.idLehrer;
-		l.idFachrichtung = fachrichtung.value!.daten.id;
+		l.idFachrichtung = fachrichtung.value.daten.id;
 		l.idAnerkennungsgrund = null;
 		void props.addFachrichtung(l);
 		fachrichtung.value = undefined;

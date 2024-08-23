@@ -31,7 +31,7 @@
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerLehramtEintrag();
 		l.id = props.idLehrer;
-		l.idLehramt = lehramt.value!.daten.id;
+		l.idLehramt = lehramt.value.daten.id;
 		l.idAnerkennungsgrund = null;
 		void props.addLehramt(l);
 		lehramt.value = undefined;

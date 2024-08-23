@@ -1,18 +1,20 @@
 <template>
-	<svws-ui-table :columns="cols" :items="personaldaten.fachrichtungen" selectable :model-value="selected" @update:model-value="selected=$event" count>
+	<svws-ui-table :columns="cols" :items="personaldaten.fachrichtungen" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count>
 		<template #cell(fachrichtung)="{ rowData }">
 			{{ getFachrichtung(rowData).daten.text }}
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
-			<svws-ui-select title="Anerkennungsgrund Fachrichtung" :model-value="getFachrichtungAnerkennung(rowData)" @update:model-value="anerkennung => patchFachrichtungAnerkennung(rowData, anerkennung ?? null)"
+			<svws-ui-select title="Anerkennungsgrund Fachrichtung" v-if="hatUpdateKompetenz" :model-value="getFachrichtungAnerkennung(rowData)"
+				@update:model-value="anerkennung => patchFachrichtungAnerkennung(rowData, anerkennung ?? null)"
 				:items="LehrerFachrichtungAnerkennung.values()" :item-text="(i: LehrerFachrichtungAnerkennung) => i.daten.text" headless />
+			<div v-else> {{ getFachrichtungAnerkennung(rowData)?.daten.text ?? '—' }} </div>
 		</template>
-		<template #actions>
+		<template #actions v-if="hatUpdateKompetenz">
 			<svws-ui-button @click="removeFachrichtungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
 			<svws-ui-button @click="showModal().value = true" type="icon" title="Fachrichtung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<s-lehrer-personaldaten-fachrichtungen-modal-add :show="showModal" :id-lehrer="personaldaten.id" :add-fachrichtung="addFachrichtung" />
+	<s-lehrer-personaldaten-fachrichtungen-modal-add v-if="hatUpdateKompetenz" :show="showModal" :id-lehrer="personaldaten.id" :add-fachrichtung="addFachrichtung" />
 </template>
 
 <script setup lang="ts">
@@ -23,6 +25,7 @@
 	} from "@core";
 
 	const props = defineProps<{
+		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
 		patchFachrichtungAnerkennung: (eintrag: LehrerFachrichtungEintrag, anerkennung : LehrerFachrichtungAnerkennung | null) => Promise<void>;
 		addFachrichtung: (eintrag: LehrerFachrichtungEintrag) => Promise<void>;

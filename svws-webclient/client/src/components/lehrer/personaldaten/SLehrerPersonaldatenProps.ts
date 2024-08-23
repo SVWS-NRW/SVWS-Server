@@ -1,8 +1,12 @@
-import type { LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag,
+import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag,
 	LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten,
-	LehrerPersonaldaten, List, Schuljahresabschnitt } from "@core";
+	LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, 
+	ServerMode} from "@core";
 
 export interface LehrerPersonaldatenProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	lehrerListeManager: () => LehrerListeManager;
 	aktAbschnitt: Schuljahresabschnitt;
 	patch: (data : Partial<LehrerPersonaldaten>) => Promise<void>;

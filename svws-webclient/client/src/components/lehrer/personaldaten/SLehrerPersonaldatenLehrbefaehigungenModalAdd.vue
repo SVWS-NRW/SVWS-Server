@@ -31,7 +31,7 @@
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerLehrbefaehigungEintrag();
 		l.id = props.idLehrer;
-		l.idLehrbefaehigung = lehrbefaehigung.value!.daten.id;
+		l.idLehrbefaehigung = lehrbefaehigung.value.daten.id;
 		l.idAnerkennungsgrund = null;
 		void props.addLehrbefaehigung(l);
 		lehrbefaehigung.value = undefined;

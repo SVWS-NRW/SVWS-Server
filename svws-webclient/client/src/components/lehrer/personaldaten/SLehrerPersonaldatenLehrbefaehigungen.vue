@@ -1,18 +1,20 @@
 <template>
-	<svws-ui-table :columns="cols" :items="personaldaten.lehrbefaehigungen" selectable :model-value="selected" @update:model-value="selected=$event" count>
+	<svws-ui-table :columns="cols" :items="personaldaten.lehrbefaehigungen" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count>
 		<template #cell(lehrbefaehigung)="{ rowData }">
 			{{ getLehrbefaehigung(rowData).daten.text }}
 		</template>
 		<template #cell(anerkennung)="{ rowData }">
-			<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" :model-value="getLehrbefaehigungAnerkennung(rowData)" @update:model-value="anerkennung => patchLehrbefaehigungAnerkennung(rowData, anerkennung ?? null)"
+			<svws-ui-select title="Anerkennungsgrund Lehrbefähigung" v-if="hatUpdateKompetenz" :model-value="getLehrbefaehigungAnerkennung(rowData)"
+				@update:model-value="anerkennung => patchLehrbefaehigungAnerkennung(rowData, anerkennung ?? null)"
 				:items="LehrerLehrbefaehigungAnerkennung.values()" :item-text="(i: LehrerLehrbefaehigungAnerkennung) => i.daten.text" headless />
+			<div v-else> {{ getLehrbefaehigungAnerkennung(rowData)?.daten.text ?? '—' }} </div>
 		</template>
-		<template #actions>
+		<template #actions v-if="hatUpdateKompetenz">
 			<svws-ui-button @click="removeLehrbefaehigungen(Arrays.asList(selected))" type="trash" :disabled="selected.length <= 0" />
 			<svws-ui-button @click="showModal().value = true" type="icon" title="Lehrbefähigung hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<s-lehrer-personaldaten-lehrbefaehigungen-modal-add :show="showModal" :id-lehrer="personaldaten.id" :add-lehrbefaehigung="addLehrbefaehigung" />
+	<s-lehrer-personaldaten-lehrbefaehigungen-modal-add v-if="hatUpdateKompetenz" :show="showModal" :id-lehrer="personaldaten.id" :add-lehrbefaehigung="addLehrbefaehigung" />
 </template>
 
 <script setup lang="ts">
@@ -23,6 +25,7 @@
 	} from "@core";
 
 	const props = defineProps<{
+		hatUpdateKompetenz: boolean;
 		lehrerListeManager: () => LehrerListeManager;
 		patchLehrbefaehigungAnerkennung: (eintrag: LehrerLehrbefaehigungEintrag, anerkennung : LehrerLehrbefaehigungAnerkennung | null) => Promise<void>;
 		addLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag) => Promise<void>;
