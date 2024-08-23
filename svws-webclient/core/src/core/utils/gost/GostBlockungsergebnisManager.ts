@@ -2166,7 +2166,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const menge : List<Schueler> = new ArrayList<Schueler>();
 		for (const schueler of this._parent.schuelerGetListe())
 			if (schueler.abschlussjahrgang !== this._parent.daten().abijahrgang)
-				menge.add(schueler);
+				if (!this.kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty() || !this.regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
+					menge.add(schueler);
 		return menge;
 	}
 

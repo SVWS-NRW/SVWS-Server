@@ -2352,7 +2352,10 @@ public class GostBlockungsergebnisManager {
 
 		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
 			if (schueler.abschlussjahrgang != _parent.daten().abijahrgang)
-				menge.add(schueler);
+				// Nur dann den Schüler hinzufügen, wenn es überhaupt eine Kurszuordnung oder eine Regel noch gibt.
+				if (!kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty()
+						|| !regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(SetUtils.create1(schueler.id)).listEntfernen.isEmpty())
+					menge.add(schueler);
 
 		return menge;
 	}
