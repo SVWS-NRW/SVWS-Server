@@ -271,6 +271,26 @@ public final class OAuth2Client {
 
 
 	/**
+	 * Führt ein POST-Request gegen den gegebenen Pfad aus
+	 *
+	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}
+	 * @param path      der Pfad als Teil der URL für diesen OauthClient, an den das POST geschickt wird
+	 * @param handler   der BodyHandler für den Response-Body
+	 *
+	 * @return die Response
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	public <T> HttpResponse<T> postEmpty(final String path, final BodyHandler<T> handler) throws ApiOperationException {
+		final URI uri = URI.create(url + path);
+		final HttpRequest request = HttpRequest.newBuilder().uri(uri).timeout(Duration.ofMinutes(2)).GET()
+				.POST(BodyPublishers.ofString("")).header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Authorization", "Bearer " + token.accessToken).build();
+		return send(request, handler);
+	}
+
+
+	/**
 	 * Führt ein GET-Request gegen den gegebenen Pfad aus
 	 *
 	 * @param <T>       generischer Typ des {@link HttpResponse} und {@link BodyHandler}

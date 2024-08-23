@@ -75,7 +75,7 @@ public final class DataENMDaten extends DataManager<Long> {
 
 	private static final String ENM_UPLOAD_PATH = "/api/secure/import";
 	private static final String ENM_DOWNLOAD_PATH = "/api/secure/export";
-	private static final String ENM_TRUNCATE_PATH = "/api/truncate";
+	private static final String ENM_TRUNCATE_PATH = "/api/secure/truncate";
 
 
 	/**
@@ -892,7 +892,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 */
 	public static Response truncate(final DBEntityManager conn) throws ApiOperationException {
 		final OAuth2Client client = getWenomOAuthClient(conn);
-		final HttpResponse<String> response = client.get(ENM_TRUNCATE_PATH, BodyHandlers.ofString());
+		final HttpResponse<String> response = client.postEmpty(ENM_TRUNCATE_PATH, BodyHandlers.ofString());
 		if (response.statusCode() != Status.OK.getStatusCode())
 			throw new ApiOperationException(Status.BAD_GATEWAY, response.body());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(Boolean.TRUE).build();
