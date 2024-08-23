@@ -39,8 +39,8 @@ public class KlassenDaten {
 	@Schema(description = "das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z)", example = "B")
 	public String parallelitaet;
 
-	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
-	@Schema(description = "die Sortierreihenfolge des Jahrgangslisten-Eintrags", example = "1")
+	/** Die Sortierreihenfolge des Klassenlisten-Eintrags. */
+	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
 	public int sortierung;
 
 	/** Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht. */

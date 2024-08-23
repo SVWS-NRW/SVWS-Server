@@ -1,6 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { HashMap } from '../../../java/util/HashMap';
+import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -43,6 +43,7 @@ import { AVLSet } from '../../../core/adt/set/AVLSet';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 import { Exception } from '../../../java/lang/Exception';
+import { StundenplanUnterrichtUtils } from '../../../core/utils/stundenplan/StundenplanUnterrichtUtils';
 import { BlockungsUtils } from '../../../core/utils/BlockungsUtils';
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { ListUtils } from '../../../core/utils/ListUtils';
@@ -92,13 +93,6 @@ export class StundenplanManager extends JavaObject {
 			return -1;
 		if (a.wochentyp > b.wochentyp)
 			return +1;
-		return JavaLong.compare(a.id, b.id);
-	} };
-
-	private static readonly _compKlasse : Comparator<StundenplanKlasse> = { compare : (a: StundenplanKlasse, b: StundenplanKlasse) => {
-		const result : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
-		if (result !== 0)
-			return result;
 		return JavaLong.compare(a.id, b.id);
 	} };
 
@@ -1061,7 +1055,7 @@ export class StundenplanManager extends JavaObject {
 					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, idKlasse);
 					MapUtils.addToList(this._klassenmenge_by_idPausenzeit, pausenzeit.id, klasse);
 				}
-				MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id).sort(StundenplanManager._compKlasse);
+				MapUtils.getOrCreateArrayList(this._klassenmenge_by_idPausenzeit, pausenzeit.id).sort(StundenplanUnterrichtUtils.comparatorKlassen);
 			}
 	}
 
@@ -1363,7 +1357,7 @@ export class StundenplanManager extends JavaObject {
 					const klasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, schueler.idKlasse);
 					MapUtils.addToListIfNotExists(this._klassenmenge_by_idKurs, kurs.id, klasse);
 				}
-			MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).sort(StundenplanManager._compKlasse);
+			MapUtils.getOrCreateArrayList(this._klassenmenge_by_idKurs, kurs.id).sort(StundenplanUnterrichtUtils.comparatorKlassen);
 		}
 	}
 
@@ -1416,7 +1410,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_klassenmenge() : void {
 		this._klassenmenge_sortiert = new ArrayList(this._klasse_by_id.values());
-		this._klassenmenge_sortiert.sort(StundenplanManager._compKlasse);
+		this._klassenmenge_sortiert.sort(StundenplanUnterrichtUtils.comparatorKlassen);
 	}
 
 	private update_klassenunterrichtmenge() : void {
@@ -2585,7 +2579,7 @@ export class StundenplanManager extends JavaObject {
 			const bIdKlasse : number = ListUtils.getNonNullElementAtOrException(b, i).valueOf();
 			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, aIdKlasse);
 			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, bIdKlasse);
-			const cmpKlasse : number = StundenplanManager._compKlasse.compare(aKlasse, bKlasse);
+			const cmpKlasse : number = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
 			if (cmpKlasse !== 0)
 				return cmpKlasse;
 		}
@@ -2714,7 +2708,7 @@ export class StundenplanManager extends JavaObject {
 		const comp : Comparator<StundenplanKlassenunterricht> = { compare : (a: StundenplanKlassenunterricht, b: StundenplanKlassenunterricht) => {
 			const aKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, a.idKlasse);
 			const bKlasse : StundenplanKlasse = DeveloperNotificationException.ifMapGetIsNull(this._klasse_by_id, b.idKlasse);
-			const cmpKlasse : number = StundenplanManager._compKlasse.compare(aKlasse, bKlasse);
+			const cmpKlasse : number = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
 			if (cmpKlasse !== 0)
 				return cmpKlasse;
 			const aFach : StundenplanFach = DeveloperNotificationException.ifMapGetIsNull(this._fach_by_id, a.idFach);

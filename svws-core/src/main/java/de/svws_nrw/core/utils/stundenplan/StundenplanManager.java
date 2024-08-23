@@ -102,14 +102,6 @@ public class StundenplanManager {
 				return Long.compare(a.id, b.id);
 			};
 
-	private static final @NotNull Comparator<StundenplanKlasse> _compKlasse =
-			(final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
-				final int result = a.kuerzel.compareTo(b.kuerzel);
-				if (result != 0)
-					return result;
-				return Long.compare(a.id, b.id);
-			};
-
 	private final @NotNull Comparator<StundenplanKlassenunterricht> _compKlassenunterricht;
 
 	private static final @NotNull Comparator<StundenplanKurs> _compKurs =
@@ -1092,7 +1084,7 @@ public class StundenplanManager {
 					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, idKlasse);
 					MapUtils.addToList(_klassenmenge_by_idPausenzeit, pausenzeit.id, klasse);
 				}
-				MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id).sort(_compKlasse);
+				MapUtils.getOrCreateArrayList(_klassenmenge_by_idPausenzeit, pausenzeit.id).sort(StundenplanUnterrichtUtils.comparatorKlassen);
 			}
 	}
 
@@ -1404,7 +1396,7 @@ public class StundenplanManager {
 					final @NotNull StundenplanKlasse klasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, schueler.idKlasse);
 					MapUtils.addToListIfNotExists(_klassenmenge_by_idKurs, kurs.id, klasse);
 				}
-			MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).sort(_compKlasse);
+			MapUtils.getOrCreateArrayList(_klassenmenge_by_idKurs, kurs.id).sort(StundenplanUnterrichtUtils.comparatorKlassen);
 		}
 	}
 
@@ -1468,7 +1460,7 @@ public class StundenplanManager {
 
 	private void update_klassenmenge() {
 		_klassenmenge_sortiert = new ArrayList<>(_klasse_by_id.values());
-		_klassenmenge_sortiert.sort(_compKlasse);
+		_klassenmenge_sortiert.sort(StundenplanUnterrichtUtils.comparatorKlassen);
 	}
 
 	private void update_klassenunterrichtmenge() {
@@ -2813,7 +2805,7 @@ public class StundenplanManager {
 			final long bIdKlasse = ListUtils.getNonNullElementAtOrException(b, i);
 			final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, aIdKlasse);
 			final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, bIdKlasse);
-			final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
+			final int cmpKlasse = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
 			if (cmpKlasse != 0)
 				return cmpKlasse;
 		}
@@ -2968,7 +2960,7 @@ public class StundenplanManager {
 				(final @NotNull StundenplanKlassenunterricht a, final @NotNull StundenplanKlassenunterricht b) -> {
 					final @NotNull StundenplanKlasse aKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, a.idKlasse);
 					final @NotNull StundenplanKlasse bKlasse = DeveloperNotificationException.ifMapGetIsNull(_klasse_by_id, b.idKlasse);
-					final int cmpKlasse = _compKlasse.compare(aKlasse, bKlasse);
+					final int cmpKlasse = StundenplanUnterrichtUtils.comparatorKlassen.compare(aKlasse, bKlasse);
 					if (cmpKlasse != 0)
 						return cmpKlasse;
 

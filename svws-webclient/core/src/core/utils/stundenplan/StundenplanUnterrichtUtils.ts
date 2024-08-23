@@ -74,7 +74,10 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	 * Ein Default-Comparator für den Vergleich von Klassen in Listen.
 	 */
 	public static readonly comparatorKlassen : Comparator<StundenplanKlasse> = { compare : (a: StundenplanKlasse, b: StundenplanKlasse) => {
-		const cmp : number = JavaString.compareTo(a.kuerzel, b.kuerzel);
+		let cmp : number = a.sortierung - b.sortierung;
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaString.compareTo(a.kuerzel, b.kuerzel);
 		return (cmp === 0) ? JavaLong.compare(a.id, b.id) : cmp;
 	} };
 

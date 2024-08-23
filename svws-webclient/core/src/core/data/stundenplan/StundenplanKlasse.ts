@@ -20,6 +20,11 @@ export class StundenplanKlasse extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
+	 * Die Sortierreihenfolge des Klassenlisten-Eintrags.
+	 */
+	public sortierung : number = 32000;
+
+	/**
 	 * Gibt an, ob die Klasse sichtbar ist oder nicht.
 	 */
 	public istSichtbar : boolean = true;
@@ -59,6 +64,9 @@ export class StundenplanKlasse extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (obj.sortierung === undefined)
+			throw new Error('invalid json format, missing attribute sortierung');
+		result.sortierung = obj.sortierung;
 		if (obj.istSichtbar === undefined)
 			throw new Error('invalid json format, missing attribute istSichtbar');
 		result.istSichtbar = obj.istSichtbar;
@@ -80,6 +88,7 @@ export class StundenplanKlasse extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"jahrgaenge" : [ ';
 		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
@@ -112,6 +121,9 @@ export class StundenplanKlasse extends JavaObject {
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.sortierung !== undefined) {
+			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

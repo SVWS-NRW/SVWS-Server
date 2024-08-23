@@ -52,6 +52,7 @@ public final class DataStundenplanKlassen extends DataManager<Long> {
 		daten.id = k.ID;
 		daten.kuerzel = k.Klasse;
 		daten.bezeichnung = (k.Bezeichnung == null) ? "" : k.Bezeichnung;
+		daten.sortierung = (k.Sortierung == null) ? 32000 : k.Sortierung;
 		daten.istSichtbar = k.Sichtbar;
 		return daten;
 	};

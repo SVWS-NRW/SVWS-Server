@@ -31,7 +31,7 @@ export class KlassenDaten extends JavaObject {
 	public parallelitaet : string | null = null;
 
 	/**
-	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
+	 * Die Sortierreihenfolge des Klassenlisten-Eintrags.
 	 */
 	public sortierung : number = 0;
 

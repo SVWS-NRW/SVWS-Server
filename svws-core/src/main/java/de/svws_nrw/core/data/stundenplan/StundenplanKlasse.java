@@ -29,6 +29,10 @@ public class StundenplanKlasse {
 	@Schema(description = "Die Bezeichnung der Klasse", example = "Eichhörnchen")
 	public @NotNull String bezeichnung = "";
 
+	/** Die Sortierreihenfolge des Klassenlisten-Eintrags. */
+	@Schema(description = "die Sortierreihenfolge des Klassenlisten-Eintrags", example = "1")
+	public int sortierung = 32000;
+
 	/** Gibt an, ob die Klasse sichtbar ist oder nicht. */
 	@Schema(description = "Gibt an, ob die Klasse sichtbar ist oder nicht", example = "true")
 	public boolean istSichtbar = true;

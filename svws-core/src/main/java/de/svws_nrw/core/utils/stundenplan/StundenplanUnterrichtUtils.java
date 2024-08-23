@@ -71,7 +71,10 @@ public final class StundenplanUnterrichtUtils {
 	/** Ein Default-Comparator für den Vergleich von Klassen in Listen. */
 	public static final @NotNull Comparator<StundenplanKlasse> comparatorKlassen =
 			(final @NotNull StundenplanKlasse a, final @NotNull StundenplanKlasse b) -> {
-				final int cmp = a.kuerzel.compareTo(b.kuerzel);
+				int cmp = a.sortierung - b.sortierung;
+				if (cmp != 0)
+					return cmp;
+				cmp = a.kuerzel.compareTo(b.kuerzel);
 				return (cmp == 0) ? Long.compare(a.id, b.id) : cmp;
 			};
 
