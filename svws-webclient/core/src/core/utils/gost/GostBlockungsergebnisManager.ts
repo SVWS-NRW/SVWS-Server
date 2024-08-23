@@ -21,6 +21,7 @@ import { SchuelerblockungAlgorithmus } from '../../../core/kursblockung/Schueler
 import { CollectionUtils } from '../../../core/utils/CollectionUtils';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../../core/data/schueler/Schueler';
@@ -2156,6 +2157,20 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller Schüler, deren Abiturjahrgang nicht dem der Blockung entspricht.
+	 * <br>Hinweis: Das kann passieren, wenn nach der Erstellung eines Blockungsergebnisses, ein Schüler nicht versetzt wird.
+	 *
+	 * @return eine Liste aller Schüler, deren Abiturjahrgang nicht dem der Blockung entspricht.
+	 */
+	public getOfSchuelerMengeMitAbweichendemAbijahrgang() : List<Schueler> {
+		const menge : List<Schueler> = new ArrayList<Schueler>();
+		for (const schueler of this._parent.schuelerGetListe())
+			if (schueler.abschlussjahrgang !== this._parent.daten().abijahrgang)
+				menge.add(schueler);
+		return menge;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 *
 	 * @param idSchueler        Die Datenbank-ID des Schülers.
@@ -4006,6 +4021,24 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
+	 *
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
+	 */
+	public regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(setSchuelerID : JavaSet<number>) : GostBlockungRegelUpdate {
+		const u : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
+		for (const regel of this._parent.regelGetListe()) {
+			const typ : GostKursblockungRegelTyp | null = GostKursblockungRegelTyp.fromTyp(regel.typ);
+			for (let i : number = 0; i < typ.getParamCount(); i++)
+				if ((typ.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.SCHUELER_ID as unknown) && setSchuelerID.contains(regel.parameter.get(i)))
+					u.listEntfernen.add(regel);
+		}
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
@@ -4799,6 +4832,22 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				u.regelUpdates.listEntfernen.add(regelFixiert);
 			}
 		}
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
+	 * <br>Hinweis: Es werden keine Kurs-Fixierungs-Regeln entfernt. Dafür muss die zugehörige regelupdate-Methode aufgerufen werden.
+	 *
+	 * @param schuelerIDs  Die Menge der Schüler-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
+	 */
+	public kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(schuelerIDs : JavaSet<number>) : GostBlockungsergebnisKursSchuelerZuordnungUpdate {
+		const u : GostBlockungsergebnisKursSchuelerZuordnungUpdate = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+		for (const idSchueler of schuelerIDs)
+			for (const kurs of this.getOfSchuelerKursmenge(idSchueler))
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, idSchueler));
 		return u;
 	}
 

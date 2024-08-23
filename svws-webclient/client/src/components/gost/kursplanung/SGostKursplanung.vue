@@ -44,11 +44,16 @@
 					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
-						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen="updateKursSchuelerZuordnungen" :get-ergebnismanager="getErgebnismanager" v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt ungültige Schüler/Kurs-Zuordnungen, die aufgelöst werden können">
 								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Kurszuordnungen
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-irrlaeufer>
+						<s-gost-kursplanung-kursansicht-modal-falscher-abi-jg v-if="props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().size()" :regeln-update :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
+							<svws-ui-button type="error" size="small" @click="openModal()" title="Zeigt Schüler mit ungültigem Abiturjahrgang, die entfernt werden können">
+								<span class="icon-sm i-ri-error-warning-line" /> Ungültige Abiturjahrgänge
+							</svws-ui-button>
+						</s-gost-kursplanung-kursansicht-modal-falscher-abi-jg>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-slot="{ openModal }"
 							:get-datenmanager :get-ergebnismanager :update-kurs-schueler-zuordnungen :regeln-update :allow-regeln
 							:schueler-filter :api-status :fixierte-verschieben :set-fixierte-verschieben :in-zielkurs-fixieren :set-in-zielkurs-fixieren>

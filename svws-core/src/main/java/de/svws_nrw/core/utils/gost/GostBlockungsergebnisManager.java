@@ -45,6 +45,7 @@ import de.svws_nrw.core.types.Geschlecht;
 import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
+import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.CollectionUtils;
 import de.svws_nrw.core.utils.DTOUtils;
@@ -2341,6 +2342,22 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert eine Liste aller Schüler, deren Abiturjahrgang nicht dem der Blockung entspricht.
+	 * <br>Hinweis: Das kann passieren, wenn nach der Erstellung eines Blockungsergebnisses, ein Schüler nicht versetzt wird.
+	 *
+	 * @return eine Liste aller Schüler, deren Abiturjahrgang nicht dem der Blockung entspricht.
+	 */
+	public @NotNull List<Schueler> getOfSchuelerMengeMitAbweichendemAbijahrgang() {
+		final @NotNull List<Schueler> menge = new ArrayList<>();
+
+		for (final @NotNull Schueler schueler : _parent.schuelerGetListe())
+			if (schueler.abschlussjahrgang != _parent.daten().abijahrgang)
+				menge.add(schueler);
+
+		return menge;
+	}
+
+	/**
 	 * Liefert TRUE, falls der Schüler alle definierten Kriterien erfüllt.
 	 *
 	 * @param idSchueler        Die Datenbank-ID des Schülers.
@@ -4523,6 +4540,26 @@ public class GostBlockungsergebnisManager {
 	}
 
 	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
+	 *
+	 * @param setSchuelerID  Die Menge der Schüler-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um alle Regeln einer Schülermenge zu entfernen.
+	 */
+	public @NotNull GostBlockungRegelUpdate regelupdateCreate_19_SCHUELERMENGE_ENTFERNEN(final @NotNull Set<Long> setSchuelerID) {
+		final @NotNull GostBlockungRegelUpdate u = new GostBlockungRegelUpdate();
+
+		for (final GostBlockungRegel regel : _parent.regelGetListe()) {
+			final GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
+			for (int i = 0; i < typ.getParamCount(); i++)
+				if ((typ.getParamType(i) == GostKursblockungRegelParameterTyp.SCHUELER_ID) && setSchuelerID.contains(regel.parameter.get(i)))
+					u.listEntfernen.add(regel);
+		}
+
+		return u;
+	}
+
+	/**
 	 * Liefert alle nötigen Veränderungen als {@link GostBlockungRegelUpdate}-Objekt, um eine Regel dieses Typs zu patchen.
 	 * <br>(1) Wenn die alte Regel nicht gefunden wird, passiert nichts.
 	 * <br>(2) Wenn eine Regel mit genau den selben Parametern bereits existiert, passiert nichts.
@@ -5532,6 +5569,24 @@ public class GostBlockungsergebnisManager {
 				u.regelUpdates.listEntfernen.add(regelFixiert);
 			}
 		}
+
+		return u;
+	}
+
+	/**
+	 * Liefert alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
+	 * <br>Hinweis: Es werden keine Kurs-Fixierungs-Regeln entfernt. Dafür muss die zugehörige regelupdate-Methode aufgerufen werden.
+	 *
+	 * @param schuelerIDs  Die Menge der Schüler-IDs.
+	 *
+	 * @return alle nötigen Veränderungen als {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt, um eine Schülermenge aus allen Kursen entfernen.
+	 */
+	public @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate kursSchuelerUpdate_02b_ENTFERNE_SCHUELERMENGE_AUS_ALLEN_KURSEN(final @NotNull Set<Long> schuelerIDs) {
+		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate u = new GostBlockungsergebnisKursSchuelerZuordnungUpdate();
+
+		for (final long idSchueler : schuelerIDs)
+			for (final GostBlockungsergebnisKurs kurs : getOfSchuelerKursmenge(idSchueler))
+				u.listEntfernen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.id, idSchueler));
 
 		return u;
 	}
