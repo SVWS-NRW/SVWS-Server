@@ -427,10 +427,9 @@ public class GostBlockungsdatenManager {
 			if (cmpFach != 0)
 				return cmpFach;
 
-			if (a.kursart < b.kursart)
-				return -1;
-			if (a.kursart > b.kursart)
-				return +1;
+			final int cmpKursart = Integer.compare(a.kursart, b.kursart);
+			if (cmpKursart != 0)
+				return cmpKursart;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};
@@ -440,14 +439,19 @@ public class GostBlockungsdatenManager {
 
 	private @NotNull Comparator<GostBlockungKurs> createComparatorKursKursartFachNummer() {
 		final @NotNull Comparator<GostBlockungKurs> comp = (final @NotNull GostBlockungKurs a, final @NotNull GostBlockungKurs b) -> {
-			if (a.kursart < b.kursart)
-				return -1;
-			if (a.kursart > b.kursart)
-				return +1;
+			final int k1 = (a.kursart == GostKursart.ZK.id) ? GostKursart.GK.id : a.kursart;
+			final int k2 = (b.kursart == GostKursart.ZK.id) ? GostKursart.GK.id : b.kursart;
+			final int cmpKursartGKZK = Integer.compare(k1, k2);
+			if (cmpKursartGKZK != 0)
+				return cmpKursartGKZK;
 
 			final int cmpFach = compareFach(a.fach_id, b.fach_id);
 			if (cmpFach != 0)
 				return cmpFach;
+
+			final int cmpKursart = Integer.compare(a.kursart, b.kursart);
+			if (cmpKursart != 0)
+				return cmpKursart;
 
 			return Integer.compare(a.nummer, b.nummer);
 		};

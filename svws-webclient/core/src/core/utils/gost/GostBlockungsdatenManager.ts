@@ -484,10 +484,9 @@ export class GostBlockungsdatenManager extends JavaObject {
 			const cmpFach : number = this.compareFach(a.fach_id, b.fach_id);
 			if (cmpFach !== 0)
 				return cmpFach;
-			if (a.kursart < b.kursart)
-				return -1;
-			if (a.kursart > b.kursart)
-				return +1;
+			const cmpKursart : number = JavaInteger.compare(a.kursart, b.kursart);
+			if (cmpKursart !== 0)
+				return cmpKursart;
 			return JavaInteger.compare(a.nummer, b.nummer);
 		} };
 		return comp;
@@ -495,13 +494,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	private createComparatorKursKursartFachNummer() : Comparator<GostBlockungKurs> {
 		const comp : Comparator<GostBlockungKurs> = { compare : (a: GostBlockungKurs, b: GostBlockungKurs) => {
-			if (a.kursart < b.kursart)
-				return -1;
-			if (a.kursart > b.kursart)
-				return +1;
+			const k1 : number = (a.kursart === GostKursart.ZK.id) ? GostKursart.GK.id : a.kursart;
+			const k2 : number = (b.kursart === GostKursart.ZK.id) ? GostKursart.GK.id : b.kursart;
+			const cmpKursartGKZK : number = JavaInteger.compare(k1, k2);
+			if (cmpKursartGKZK !== 0)
+				return cmpKursartGKZK;
 			const cmpFach : number = this.compareFach(a.fach_id, b.fach_id);
 			if (cmpFach !== 0)
 				return cmpFach;
+			const cmpKursart : number = JavaInteger.compare(a.kursart, b.kursart);
+			if (cmpKursart !== 0)
+				return cmpKursart;
 			return JavaInteger.compare(a.nummer, b.nummer);
 		} };
 		return comp;
