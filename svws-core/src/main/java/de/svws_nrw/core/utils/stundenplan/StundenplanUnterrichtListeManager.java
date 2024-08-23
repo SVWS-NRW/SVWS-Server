@@ -93,15 +93,15 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 				stundenplanManager.unterrichtGetMengeAsList(), StundenplanUnterrichtUtils.comparator,
 				_unterrichtToId, _unterrichtToId, Arrays.asList());
 		this.stundenplanManager = stundenplanManager;
-		this.klassen = new AttributMitAuswahl<>(stundenplanManager.klasseGetMengeAsList(), _klasseToId, StundenplanUnterrichtUtils.comparatorKlassen,
+		this.klassen = new AttributMitAuswahl<>(stundenplanManager.klasseGetMengeVerwendetAsList(), _klasseToId, StundenplanUnterrichtUtils.comparatorKlassen,
 				_eventHandlerFilterChanged);
-		this.lehrer = new AttributMitAuswahl<>(stundenplanManager.lehrerGetMengeAsList(), _lehrerToId, StundenplanUnterrichtUtils.comparatorLehrer,
+		this.lehrer = new AttributMitAuswahl<>(stundenplanManager.lehrerGetMengeVerwendetAsList(), _lehrerToId, StundenplanUnterrichtUtils.comparatorLehrer,
 				_eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl<>(stundenplanManager.schuelerGetMengeAsList(), _schuelerToId, StundenplanUnterrichtUtils.comparatorSchueler,
 				_eventHandlerFilterChanged);
-		this.faecher = new AttributMitAuswahl<>(stundenplanManager.fachGetMengeAsList(), _fachToId, StundenplanUnterrichtUtils.comparatorFaecher,
+		this.faecher = new AttributMitAuswahl<>(stundenplanManager.fachGetMengeVerwendetAsList(), _fachToId, StundenplanUnterrichtUtils.comparatorFaecher,
 				_eventHandlerFilterChanged);
-		this.kurse = new AttributMitAuswahl<>(stundenplanManager.kursGetMengeAsList(), _kursToId, StundenplanUnterrichtUtils.comparatorKurse,
+		this.kurse = new AttributMitAuswahl<>(stundenplanManager.kursGetMengeVerwendetAsList(), _kursToId, StundenplanUnterrichtUtils.comparatorKurse,
 				_eventHandlerFilterChanged);
 		this.wochentage = new AttributMitAuswahl<>(Arrays.asList(stundenplanManager.zeitrasterGetWochentageAlsEnumRange()), _wochentagToId,
 				StundenplanUnterrichtUtils.comparatorWochentage, _eventHandlerFilterChanged);
@@ -114,9 +114,9 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 			tmpWochentypen.add(w);
 		this.wochentypen =
 				new AttributMitAuswahl<>(tmpWochentypen, _wochentypToWochentyp, StundenplanUnterrichtUtils.comparatorWochentypen, _eventHandlerFilterChanged);
-		this.raeume = new AttributMitAuswahl<>(stundenplanManager.raumGetMengeAsList(), _raumToId, StundenplanUnterrichtUtils.comparatorRaeume,
+		this.raeume = new AttributMitAuswahl<>(stundenplanManager.raumGetMengeVerwendetAsList(), _raumToId, StundenplanUnterrichtUtils.comparatorRaeume,
 				_eventHandlerFilterChanged);
-		this.schienen = new AttributMitAuswahl<>(stundenplanManager.schieneGetMengeAsList(), _schieneToId, StundenplanUnterrichtUtils.comparatorSchienen,
+		this.schienen = new AttributMitAuswahl<>(stundenplanManager.schieneGetMengeVerwendetAsList(), _schieneToId, StundenplanUnterrichtUtils.comparatorSchienen,
 				_eventHandlerFilterChanged);
 		this.zeitraster = new AttributMitAuswahl<>(stundenplanManager.getListZeitraster(), _zeitrasterToId, StundenplanUnterrichtUtils.comparatorZeitraster,
 				_eventHandlerFilterChanged);
