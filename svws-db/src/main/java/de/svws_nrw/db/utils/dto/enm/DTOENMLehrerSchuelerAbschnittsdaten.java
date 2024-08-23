@@ -246,7 +246,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				FROM
 				    SchuelerLernabschnittsdaten la
 				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
-				            AND la.Schuljahresabschnitts_ID = %d
+				            AND la.Schuljahresabschnitts_ID = %d AND la.WechselNr = 0
+				        JOIN Schueler s ON la.Schueler_ID = s.ID AND s.Geloescht = '-' AND s.Status in (2, 6)
 				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID AND kl.Kuerzel = '%s'
 				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
@@ -324,7 +325,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				FROM
 				    SchuelerLernabschnittsdaten la
 				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
-				            AND la.Schuljahresabschnitts_ID = %d
+				            AND la.Schuljahresabschnitts_ID = %d AND la.WechselNr = 0
+				        JOIN Schueler s ON la.Schueler_ID = s.ID AND s.Geloescht = '-' AND s.Status in (2, 6)
 				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
