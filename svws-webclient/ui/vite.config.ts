@@ -10,6 +10,16 @@ export default defineConfig({
 			allow: [searchForWorkspaceRoot(process.cwd()),],
 		}
 	},
+	test: {
+		environment: "happy-dom",
+		reporters: ["default", "junit", "verbose"],
+		outputFile: {
+			junit: "build/testresults/junit.xml"
+		},
+		include: [
+			"src/components/*.test.ts",
+		],
+	},
 	histoire: {
 		setupFile: './src/histoire.setup.ts',
 		plugins: [

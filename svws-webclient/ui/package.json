@@ -14,6 +14,8 @@
 		"dev": "histoire dev",
 		"story:build": "histoire build",
 		"story:preview": "histoire preview",
+		"test": "vitest",
+		"test:run": "vitest run --coverage",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"files": [
@@ -33,5 +35,9 @@
 		}
 	},
 	"type": "module",
-	"types": "./dist/index.d.ts"
+	"types": "./dist/index.d.ts",
+	"devDependencies": {
+		"@vue/test-utils": "^2.4.6",
+		"happy-dom": "^15.0.0"
+	}
 }

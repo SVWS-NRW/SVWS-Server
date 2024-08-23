@@ -6,7 +6,7 @@ task assembleUi(type: NpmRun) {
 	dependsOn rootProject.npmPrepare
 	group "build"
 	args = ['build']
-	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" } 
+	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
 	outputs.dir file("$projectDir/dist")
 }
 
@@ -14,7 +14,7 @@ task assembleUiHistoire(type: NpmRun) {
 	dependsOn assembleUi
 	group "build"
 	args = ['story:build']
-	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" } 
+	inputs.files fileTree("$projectDir").matching { exclude "build", "dist", ".histoire" }
 	outputs.dir file("$projectDir/.histoire")
 }
 
@@ -47,6 +47,18 @@ task publishNpmUi(type: NpmPublish) {
 	tokenOnly = true
 }
 
+task testUi(type: NpmRun) {
+	dependsOn ':svws-webclient:ui:assemble'
+	group "testing"
+	outputs.dir file("$projectDir/build/testresults")
+	outputs.upToDateWhen { false }
+	args = [ 'test:run' ]
+	doFirst {
+		mkdir file("$projectDir/build/testresults")
+	}
+}
+
+test.dependsOn testUi
+
 publishReleaseAll.dependsOn publishNexusUi
 publishReleaseAll.dependsOn publishNpmUi
-
