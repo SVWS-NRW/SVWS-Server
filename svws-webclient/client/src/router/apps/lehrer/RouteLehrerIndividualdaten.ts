@@ -7,6 +7,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeLehrer, type RouteLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 import type { LehrerIndividualdatenProps } from "~/components/lehrer/individualdaten/SLehrerIndividualdatenProps";
+import { api } from "~/router/Api";
 
 const SLehrerIndividualdaten = () => import("~/components/lehrer/individualdaten/SLehrerIndividualdaten.vue");
 
@@ -25,6 +26,9 @@ export class RouteLehrerIndividualdaten extends RouteNode<any, RouteLehrer> {
 
 	public getProps(to: RouteLocationNormalized): LehrerIndividualdatenProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			patch: routeLehrer.data.patchStammdaten,
 			lehrerListeManager: () => routeLehrer.data.lehrerListeManager,
 			mapOrte: routeApp.data.mapOrte,
