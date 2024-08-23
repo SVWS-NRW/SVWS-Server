@@ -116,7 +116,6 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
@@ -140,45 +139,42 @@
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
-	const ersteKlassenleitungId: ComputedRef<number> = computed<number>(() =>
+	const ersteKlassenleitungId = computed<number>(() =>
 		listeKlassenlehrer.value[0].id
 	);
 
-	const letzteKlassenleitungId: ComputedRef<number> = computed<number>(() =>
+	const letzteKlassenleitungId = computed<number>(() =>
 		listeKlassenlehrer.value[data.value.klassenLeitungen.size()-1].id
 	);
 
-	const showPfeilHoch : ComputedRef<boolean> = computed<boolean>(() =>
+	const showPfeilHoch = computed<boolean>(() =>
 		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== ersteKlassenleitungId.value)
 	);
 
-	const showPfeilRunter : ComputedRef<boolean> = computed<boolean>(() =>
+	const showPfeilRunter = computed<boolean>(() =>
 		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== letzteKlassenleitungId.value)
 	);
 
 	async function removeKlassenleitungHandler(rowData : LehrerListeEintrag) : Promise<void> {
 		await props.removeKlassenleitung(rowData);
-
-		if(clickedKlassenleitung.value !== undefined && clickedKlassenleitung.value.id === rowData.id)
+		if ((clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id === rowData.id))
 			clickedKlassenleitung.value = undefined;
 	}
 
 	async function erhoeheReihenfolge(): Promise<void> {
 		if (clickedKlassenleitung.value === undefined)
 			return;
-
 		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, true);
 	}
 
 	async function reduziereReihenfolge() : Promise<void> {
 		if (clickedKlassenleitung.value === undefined)
 			return;
-
 		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, false);
 	}
 
 	const jahrgang = computed<JahrgangsDaten | null>({
-		get: () => ((data.value.idJahrgang === null)) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
+		get: () => (data.value.idJahrgang === null) ? null : props.klassenListeManager().jahrgaenge.get(data.value.idJahrgang),
 		set: (value) => void props.patch({ idJahrgang: value?.id ?? null })
 	});
 
