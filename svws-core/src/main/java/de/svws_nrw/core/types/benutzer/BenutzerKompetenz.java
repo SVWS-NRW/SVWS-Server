@@ -220,7 +220,7 @@ public enum BenutzerKompetenz {
 
 	/** Es werden Rechte zum Ansehen von Stundenplänen (funktionsbezogen) benötigt. */
 	STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundneplan ansehen (funktionsbezogen)", null
+			112, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (funktionsbezogen)", null
 	)),
 
 	/** Es werden Rechte zum Importieren von Stundenplänen benötigt. */
