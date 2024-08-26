@@ -1,9 +1,9 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden">
-		<template #modalTitle>Blockungsergebnis übertragen</template>
+	<svws-ui-modal :show="showModal" size="small" class="hidden" :type="`${hatUngueltigeKurszuordnungen ? 'danger' : 'default'}`">
+		<template #modalTitle>Blockungsergebnis {{ hatUngueltigeKurszuordnungen ? 'trotzdem':'' }} übertragen</template>
 		<template #modalDescription>
-			Soll {{ blockungsname }} übertragen werden?
+			Soll {{ blockungsname }} übertragen werden{{ hatUngueltigeKurszuordnungen ? ', obwohl ungültige Kurszuordnungen vorliegen':'' }}?
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
@@ -14,12 +14,11 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungsdatenManager } from '@core';
 	import { ref } from 'vue';
 
 	const props = defineProps<{
 		blockungsname: string;
-		getDatenmanager: () => GostBlockungsdatenManager;
+		hatUngueltigeKurszuordnungen: boolean;
 		ergebnisAktivieren: () => Promise<boolean>;
 	}>();
 

@@ -30,7 +30,7 @@
 								<span class="icon-sm i-ri-corner-right-up-line" /> Hochschreiben
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-blockung-hochschreiben>
-						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :get-datenmanager :ergebnis-aktivieren :blockungsname v-slot="{ openModal }">
+						<s-gost-kursplanung-kursansicht-modal-blockung-aktivieren v-if="!persistiert" :hat-ungueltige-kurszuordnungen="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size() > 0" :ergebnis-aktivieren :blockungsname v-slot="{ openModal }">
 							<svws-ui-button type="transparent" :disabled="!aktivieren_moeglich" size="small" @click="openModal()" title="Überträgt die Blockung in die Kurstabelle und in die Leistungsdaten der Schüler">
 								<span class="icon-sm i-ri-arrow-right-circle-line" /> Übertragen
 							</svws-ui-button>
