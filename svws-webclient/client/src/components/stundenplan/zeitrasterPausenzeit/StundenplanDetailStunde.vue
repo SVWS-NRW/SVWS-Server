@@ -52,12 +52,13 @@
 		for (const wt of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange()) {
 			const zeitraster = new StundenplanZeitraster();
 			zeitraster.wochentag = wt.id;
-			zeitraster.stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start.value);
-			zeitraster.stundenende = DateUtils.gibMinutenOfZeitAsString(ende.value);
+			zeitraster.stundenbeginn = first.value.stundenbeginn ?? 0;
+			zeitraster.stundenende = first.value.stundenende ?? 0;
 			zeitraster.unterrichtstunde = props.selected;
 			list.add(zeitraster);
 		}
 		const ignoreList = props.stundenplanManager().getListZeitrasterZuStunde(props.selected);
+		console.log(list.toArray(), ignoreList.toArray())
 		return props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList);
 	})
 
