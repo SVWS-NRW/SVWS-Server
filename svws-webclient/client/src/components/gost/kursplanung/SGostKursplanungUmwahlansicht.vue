@@ -1,11 +1,13 @@
 <template>
-	<svws-ui-content-card v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit" overflow-scroll>
-		<template #title>
-			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="-ml-3 mr-0.5"><span class="icon i-ri-link" /></svws-ui-button>
+	<div v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit h-full flex flex-col">
+		<div class="content-card--header mb-2 w-fit h-fit flex flex-row">
+			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
+				<span class="icon i-ri-link" />
+			</svws-ui-button>
 			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
-		</template>
+		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
-		<div class="flex gap-12 overflow-y-auto pr-7" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
+		<div class="flex gap-12 pr-7 overflow-y-auto h-full" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
 			<!-- Übersicht über die Fachwahlen des Schülers -->
 			<div class="w-1/6 min-w-[10rem]">
 				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
@@ -132,7 +134,7 @@
 		<div v-else class="opacity-50">
 			Keine Fachbelegungen vorhanden.
 		</div>
-	</svws-ui-content-card>
+	</div>
 </template>
 
 
