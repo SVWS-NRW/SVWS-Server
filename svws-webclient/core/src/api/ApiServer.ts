@@ -181,6 +181,7 @@ import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitr
 import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
+import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
 
 export class ApiServer extends BaseApi {
 
@@ -14126,6 +14127,198 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Liefert zu der ID den zugehörigen Wiedervorlage-Eintrag. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den WiedervorlageEintrag anzusehen.
+	 *   Code 404: Kein WiedervorlageEintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async getWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Passt den Wiedervorlage-Eintrag mit der angegebenen ID an. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in den Wiedervorlage-Eintrag integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag zu ändern.
+	 *   Code 404: Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<WiedervorlageEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Entfernt einen Wiedervorlage-Eintrag. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um dem Wiedervorlage-Eintrag zu löschen.
+	 *   Code 404: Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setWiedervorlageEintragErledigt für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}/erledigt
+	 *
+	 * Markiert den Wiedervorlage-Eintrag mit der angegebenen ID als erledigt.Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag als erledigt zu markieren.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async setWiedervorlageEintragErledigt(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}/erledigt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteWiedervorlageEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/delete/multiple
+	 *
+	 * Entfernt mehrere Wiedervorlage-Einträge. Dabei wird geprüft, ob der Benutzer auf die Einträge zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<WiedervorlageEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiedervorlage-Einträge zu entfernen.
+	 *   Code 404: Wiedervorlage-Eintrag nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 */
+	public async deleteWiedervorlageEintraege(data : List<number>, schema : string) : Promise<List<WiedervorlageEintrag>> {
+		const path = "/db/{schema}/wiedervorlage/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<WiedervorlageEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getWiedervorlageListe für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/liste
+	 *
+	 * Gibt die Liste der Wiedervorlage des angemeldeteten Benutzers zurück. Dabei werden auch die Einträge berücksichtigt, wo der angemeldete Benutzer in einer zugeordeten Benutzergruppe des Wiedervorlage-Eintrags enthalten ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste mit den Einträgen der Wiedervorlage.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<WiedervorlageEintrag>
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste mit den Einträgen der Wiedervorlage.
+	 */
+	public async getWiedervorlageListe(schema : string) : Promise<List<WiedervorlageEintrag>> {
+		const path = "/db/{schema}/wiedervorlage/liste"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<WiedervorlageEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/neu
+	 *
+	 * Erstellt einen Wiedervorlage-Eintrag.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<WiedervorlageEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async addWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/neu"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}
 
 

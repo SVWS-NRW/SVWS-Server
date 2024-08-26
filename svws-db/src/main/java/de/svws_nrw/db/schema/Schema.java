@@ -231,6 +231,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_TextExportVorlagen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Usergroups;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Users;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Versetzung;
+import de.svws_nrw.db.schema.tabellen.Tabelle_Wiedervorlage;
 import de.svws_nrw.db.schema.tabellen.Tabelle_ZuordnungReportvorlagen;
 import jakarta.validation.constraints.NotNull;
 
@@ -959,6 +960,9 @@ public final class Schema {
 
 	/** Tabelle EigeneSchule_Email */
 	public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
+
+	/** Tabelle Wiedervorlage */
+	public static final Tabelle_Wiedervorlage tab_Wiedervorlage = add(new Tabelle_Wiedervorlage());
 
 
 	/**

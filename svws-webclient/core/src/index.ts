@@ -447,6 +447,7 @@ export { SchulstufeKatalogEintrag } from './core/data/schule/SchulstufeKatalogEi
 export { SchultraegerKatalogEintrag } from './core/data/schule/SchultraegerKatalogEintrag';
 export { VerkehrsspracheKatalogEintrag } from './core/data/schule/VerkehrsspracheKatalogEintrag';
 export { VermerkartEintrag } from './core/data/schule/VermerkartEintrag';
+export { WiedervorlageEintrag } from './core/data/schule/WiedervorlageEintrag';
 export { Stundenplan } from './core/data/stundenplan/Stundenplan';
 export { StundenplanAufsichtsbereich } from './core/data/stundenplan/StundenplanAufsichtsbereich';
 export { StundenplanFach } from './core/data/stundenplan/StundenplanFach';

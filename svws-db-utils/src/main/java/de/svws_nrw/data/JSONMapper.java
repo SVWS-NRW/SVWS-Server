@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +40,10 @@ public final class JSONMapper {
 
 	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
 	public static final ObjectMapper mapper = new ObjectMapper();
+
+	/** Der Formatter für TimeStamp-Strings */
+	public static final DateTimeFormatter tsFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
+			.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
 
 
 	/**
@@ -391,6 +400,36 @@ public final class JSONMapper {
 		if (obj instanceof final Boolean b)
 			return b;
 		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Boolean");
+	}
+
+
+	/**
+	 * Konvertiert das übergeben Objekt in ein LocalDateTime, sofern es sich um ein
+	 * LocalDateTime-Objekt handelt.
+	 *
+	 * @param obj          das zu konvertierende Objekt
+	 * @param nullable     gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 *
+	 * @return das konvertierte LocalDateTime-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static LocalDateTime convertToLocalDateTime(final Object obj, final boolean nullable)
+			throws ApiOperationException {
+		if (obj == null) {
+			if (nullable)
+				return null;
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+		}
+		if (!(obj instanceof String))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein String erwartet, aber keiner übergeben.");
+		if ("".equals(obj))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer String ist hier nicht erlaubt.");
+		try {
+			return LocalDateTime.parse((String) obj, tsFormatter);
+		} catch (final DateTimeParseException dtpe) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Format des Zeitstempels ist ungültig: %s".formatted(dtpe.getMessage()));
+		}
 	}
 
 

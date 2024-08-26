@@ -70,14 +70,6 @@ public class Tabelle_SchuelerWiedervorlage extends SchemaTabelle {
 			.setJavaComment("Steuert die automatische Löschung der Einträge");
 
 
-	/** Die Definition des Fremdschlüssels SchuelerWiedervorlage_Schueler_FK */
-	public SchemaTabelleFremdschluessel fk_SchuelerWiedervorlage_Schueler_FK = addForeignKey(
-			"SchuelerWiedervorlage_Schueler_FK",
-			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
-			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
-			new Pair<>(col_Schueler_ID, Schema.tab_Schueler.col_ID)
-	);
-
 	/** Die Definition des Fremdschlüssels SchuelerWiedervorlage_Benutzer_FK */
 	public SchemaTabelleFremdschluessel fk_SchuelerWiedervorlage_Benutzer_FK = addForeignKey(
 			"SchuelerWiedervorlage_Benutzer_FK",
@@ -98,6 +90,7 @@ public class Tabelle_SchuelerWiedervorlage extends SchemaTabelle {
 		setJavaSubPackage("schild");
 		setJavaClassName("DTOSchuelerWiedervorlage");
 		setJavaComment("Einträge zur Wiedervorlage zum Schüler");
+		setVeraltet(SchemaRevisionen.REV_21);
 	}
 
 }

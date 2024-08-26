@@ -43,7 +43,6 @@ import de.svws_nrw.db.dto.current.schild.DTOSchildVerwaltung;
 import de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.current.schild.DTOSchuelerReportvorlagen;
-import de.svws_nrw.db.dto.current.schild.DTOSchuelerWiedervorlage;
 import de.svws_nrw.db.dto.current.schild.DTOTextExportVorlagen;
 import de.svws_nrw.db.dto.current.schild.DTOZuordnungReportvorlagen;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer;
@@ -212,6 +211,7 @@ import de.svws_nrw.db.dto.current.schule.DTOKAoAZusatzmerkmalKeys;
 import de.svws_nrw.db.dto.current.schule.DTONationalitaetenKeys;
 import de.svws_nrw.db.dto.current.schule.DTOReligionKeys;
 import de.svws_nrw.db.dto.current.schule.DTOSchuleEmail;
+import de.svws_nrw.db.dto.current.schule.DTOWiedervorlage;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen;
 import de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen;
@@ -292,7 +292,6 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTOSchuelerIndividuelleGruppe.class.getSimpleName(), DTOSchuelerIndividuelleGruppe.class);
              mapDTOName2DTOClass.put(DTOSchuelerIndividuelleGruppeSchueler.class.getSimpleName(), DTOSchuelerIndividuelleGruppeSchueler.class);
              mapDTOName2DTOClass.put(DTOSchuelerReportvorlagen.class.getSimpleName(), DTOSchuelerReportvorlagen.class);
-             mapDTOName2DTOClass.put(DTOSchuelerWiedervorlage.class.getSimpleName(), DTOSchuelerWiedervorlage.class);
              mapDTOName2DTOClass.put(DTOTextExportVorlagen.class.getSimpleName(), DTOTextExportVorlagen.class);
              mapDTOName2DTOClass.put(DTOZuordnungReportvorlagen.class.getSimpleName(), DTOZuordnungReportvorlagen.class);
              mapDTOName2DTOClass.put(DTOBenutzer.class.getSimpleName(), DTOBenutzer.class);
@@ -461,6 +460,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTONationalitaetenKeys.class.getSimpleName(), DTONationalitaetenKeys.class);
              mapDTOName2DTOClass.put(DTOReligionKeys.class.getSimpleName(), DTOReligionKeys.class);
              mapDTOName2DTOClass.put(DTOSchuleEmail.class.getSimpleName(), DTOSchuleEmail.class);
+             mapDTOName2DTOClass.put(DTOWiedervorlage.class.getSimpleName(), DTOWiedervorlage.class);
              mapDTOName2DTOClass.put(DTOCredentials.class.getSimpleName(), DTOCredentials.class);
              mapDTOName2DTOClass.put(DTOCredentialsLernplattformen.class.getSimpleName(), DTOCredentialsLernplattformen.class);
              mapDTOName2DTOClass.put(DTOLernplattformen.class.getSimpleName(), DTOLernplattformen.class);
@@ -544,7 +544,6 @@ public final class DTOs {
              mapTablename2DTOClass.put("SchuelerListe", DTOSchuelerIndividuelleGruppe.class);
              mapTablename2DTOClass.put("SchuelerListe_Inhalt", DTOSchuelerIndividuelleGruppeSchueler.class);
              mapTablename2DTOClass.put("SchuelerReportvorlagen", DTOSchuelerReportvorlagen.class);
-             mapTablename2DTOClass.put("SchuelerWiedervorlage", DTOSchuelerWiedervorlage.class);
              mapTablename2DTOClass.put("TextExportVorlagen", DTOTextExportVorlagen.class);
              mapTablename2DTOClass.put("ZuordnungReportvorlagen", DTOZuordnungReportvorlagen.class);
              mapTablename2DTOClass.put("Benutzer", DTOBenutzer.class);
@@ -713,6 +712,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("Nationalitaeten_Keys", DTONationalitaetenKeys.class);
              mapTablename2DTOClass.put("Religionen_Keys", DTOReligionKeys.class);
              mapTablename2DTOClass.put("EigeneSchule_Email", DTOSchuleEmail.class);
+             mapTablename2DTOClass.put("Wiedervorlage", DTOWiedervorlage.class);
              mapTablename2DTOClass.put("Credentials", DTOCredentials.class);
              mapTablename2DTOClass.put("CredentialsLernplattformen", DTOCredentialsLernplattformen.class);
              mapTablename2DTOClass.put("Lernplattformen", DTOLernplattformen.class);

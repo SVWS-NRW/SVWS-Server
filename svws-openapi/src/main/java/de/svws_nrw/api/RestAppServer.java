@@ -29,6 +29,7 @@ import de.svws_nrw.api.server.APISchild;
 import de.svws_nrw.api.server.APISchueler;
 import de.svws_nrw.api.server.APISchule;
 import de.svws_nrw.api.server.APIStundenplan;
+import de.svws_nrw.api.server.APIWiedervorlage;
 import jakarta.ws.rs.core.Application;
 
 import java.util.Set;
@@ -77,6 +78,7 @@ public final class RestAppServer extends Application {
 			APIGostKlausuren.class,
 			APIOAuth.class,
 			APIReporting.class,
+			APIWiedervorlage.class,
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 

@@ -31,6 +31,7 @@
         <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte</class>
         <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString</class>
         <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
+        <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
         <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
         <class>de.svws_nrw.db.converter.current.SchuelerStatusConverter</class>
         <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
@@ -258,7 +259,6 @@
         <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppe</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerIndividuelleGruppeSchueler</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerReportvorlagen</class>
-        <class>de.svws_nrw.db.dto.current.schild.DTOSchuelerWiedervorlage</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOTextExportVorlagen</class>
         <class>de.svws_nrw.db.dto.current.schild.DTOZuordnungReportvorlagen</class>
         <class>de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer</class>
@@ -427,6 +427,7 @@
         <class>de.svws_nrw.db.dto.current.schule.DTONationalitaetenKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOReligionKeys</class>
         <class>de.svws_nrw.db.dto.current.schule.DTOSchuleEmail</class>
+        <class>de.svws_nrw.db.dto.current.schule.DTOWiedervorlage</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOCredentialsLernplattformen</class>
         <class>de.svws_nrw.db.dto.current.svws.auth.DTOLernplattformen</class>
