@@ -512,11 +512,11 @@
 	 **/
 
 	const dragKurs = ref<GostBlockungKurs|null>(null);
-	const dragSchiene  = ref<GostBlockungSchiene|null>(null);
+	const dragSchiene = ref<GostBlockungSchiene|null>(null);
 	const dragOverKurs = ref<GostBlockungKurs|null>(null);
 	const dragOverSchiene = ref<GostBlockungSchiene|null>(null);
-	const dropKurs  = ref<GostBlockungKurs|null>(null);
-	const dropSchiene  = ref<GostBlockungSchiene|null>(null);
+	const dropKurs = ref<GostBlockungKurs|null>(null);
+	const dropSchiene = ref<GostBlockungSchiene|null>(null);
 	const dropKurs2 = ref<GostBlockungKurs|null>(null);
 	const dropSchiene2 = ref<GostBlockungSchiene|null>(null);
 	const showTooltip = ref<{kursID: number; schieneID: number;}>({kursID: -1, schieneID: -1});
@@ -778,8 +778,6 @@
 
 	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {
 		const filter = props.schuelerFilter();
-		if (filter === undefined)
-			return;
 		if (filter.fach !== fachwahl.fachwahlen.id) {
 			filter.kursart = fachwahl.kursart;
 			filter.fach = fachwahl.fachwahlen.id;
@@ -847,8 +845,6 @@
 
 	function toggle_active_fachwahl(kurs: GostBlockungKurs) {
 		const filter = props.schuelerFilter();
-		if (filter === undefined)
-			return;
 		if (filter.fach !== kurs.fach_id || filter.kursart?.id !== kurs.kursart) {
 			filter.kursart = GostKursart.fromID(kurs.kursart);
 			filter.fach = kurs.fach_id;
@@ -894,13 +890,11 @@
 	const istKursAusgewaehlt = (kurs: GostBlockungKurs) => computed<boolean>(() => {
 		const k = props.getErgebnismanager().getKursE(kurs.id);
 		const filter_kurs_id = props.schuelerFilter().kurs?.id;
-		return (k !== undefined) && (k.id === filter_kurs_id);
+		return (k.id === filter_kurs_id);
 	});
 
 	function toggleKursAusgewaehlt(kurs : GostBlockungKurs) {
 		const filter = props.schuelerFilter();
-		if (filter === undefined)
-			return;
 		if (filter.kurs?.id !== kurs.id)
 			filter.kurs = kurs;
 		else
