@@ -55,7 +55,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id !== undefined) {
+		if (to_params.id !== "") {
 			const id = parseInt(to_params.id);
 			const eintrag = this.data.mapKatalogeintraege.get(id);
 			if ((eintrag === undefined) && (this.data.auswahl !== undefined))

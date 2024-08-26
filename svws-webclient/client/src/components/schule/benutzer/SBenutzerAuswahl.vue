@@ -11,7 +11,7 @@
 		</template>
 		<template #content>
 			<svws-ui-table :clicked="auswahl()" @update:clicked="gotoBenutzer" v-model="selectedItems" :items="rowsFiltered.values()"
-				:columns="cols" clickable selectable count :unique-key="String(auswahl()?.id)" scroll>
+				:columns clickable selectable count scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -35,9 +35,9 @@
 
 	const props = defineProps<BenutzerAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
-		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
-		{ key: "name", label: "Name", sortable: true },
+	const columns: DataTableColumn[] = [
+		{ key: "anzeigename", label: "Anzeigename", span: 2 },
+		{ key: "name", label: "Benutzername" },
 	];
 
 	const search = ref<string>("");

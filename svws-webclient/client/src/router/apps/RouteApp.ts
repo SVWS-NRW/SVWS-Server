@@ -102,7 +102,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		// Prüfe, ob die View aktualisiert werden muss
 		let cur: RouteNode<any, any> = to;
 		while (cur.parent !== this)
-		  cur = cur.parent;
+			cur = cur.parent;
 		if (cur !== this.data.view)
 			this.data.setView(cur, this.children);
 	}

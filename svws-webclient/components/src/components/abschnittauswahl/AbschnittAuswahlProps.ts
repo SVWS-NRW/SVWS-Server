@@ -21,7 +21,7 @@ export interface AbschnittAuswahlDaten {
 	schule: Schuljahresabschnitt;
 
 	/** Die Methode zum Setzen des aktuellen Schuljahresabschnittes */
-	set: (abschnitt: Schuljahresabschnitt) => void;
+	set: (abschnitt: Schuljahresabschnitt) => Promise<void>;
 
 }
 
