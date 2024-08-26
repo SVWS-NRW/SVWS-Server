@@ -12,7 +12,9 @@ const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/
 export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.zeitrasterpausenzeit", "zeitrasterpausenzeit", SStundenplanZeitrasterPausenzeit);
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+		], "stundenplan.zeitrasterpausenzeit", "zeitrasterpausenzeit", SStundenplanZeitrasterPausenzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Zeitraster";

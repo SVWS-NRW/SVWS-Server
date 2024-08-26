@@ -190,12 +190,12 @@ public enum BenutzerKompetenz {
 
 	/** Es werden Rechte zum Ansehen von Lehrerdetaildaten benötigt. */
 	LEHRER_PERSONALDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			94, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ansehen", null
+			94, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ansehen", null
 	)),
 
 	/** Es werden Rechte zum Ändern von Lehrerdetaildaten benötigt. */
 	LEHRER_PERSONALDATEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
-			95, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ändern", null
+			95, BenutzerKompetenzGruppe.LEHRERDATEN, "Personaldaten ändern", null
 	)),
 
 	/** Es werden Rechte zum Ansehen von Daten des Verfahrens Schulpflichtverletzung benötigt. */

@@ -29,7 +29,10 @@ const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.v
 export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan", "stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "stundenplan", "stundenplan/:id(\\d+)?", SStundenplanApp, new RouteDataStundenplan());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";

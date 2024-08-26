@@ -12,7 +12,10 @@ const SStundenplanKalenderwochen = () => import("~/components/stundenplan/kalend
 export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.kalenderwochen", "kalenderwochen", SStundenplanKalenderwochen);
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "stundenplan.kalenderwochen", "kalenderwochen", SStundenplanKalenderwochen);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalenderwochen";
