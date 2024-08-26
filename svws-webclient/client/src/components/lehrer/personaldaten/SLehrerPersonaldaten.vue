@@ -64,7 +64,7 @@
 
 	const props = defineProps<LehrerPersonaldatenProps>();
 
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN));
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN));
 
 	const personaldaten = computed<LehrerPersonaldaten>(() => props.lehrerListeManager().personalDaten());
 	const personalabschnittsdaten = computed<LehrerPersonalabschnittsdaten | null>(() => props.lehrerListeManager().getAbschnittBySchuljahresabschnittsId(props.aktAbschnitt.id));

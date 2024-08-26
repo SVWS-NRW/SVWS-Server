@@ -189,12 +189,12 @@ public enum BenutzerKompetenz {
 	)),
 
 	/** Es werden Rechte zum Ansehen von Lehrerdetaildaten benötigt. */
-	LEHRERDATEN_DETAILDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+	LEHRER_PERSONALDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
 			94, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ansehen", null
 	)),
 
 	/** Es werden Rechte zum Ändern von Lehrerdetaildaten benötigt. */
-	LEHRERDATEN_DETAILDATEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
+	LEHRER_PERSONALDATEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
 			95, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ändern", null
 	)),
 
@@ -234,8 +234,8 @@ public enum BenutzerKompetenz {
 	)),
 
 	/** Es werden Rechte zum Erstellen von Stundenplänen benötigt. */
-	STUNDENPLAN_ERSTELLEN(new BenutzerKompetenzKatalogEintrag(
-			115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne erstellen", null
+	STUNDENPLAN_AENDERN(new BenutzerKompetenzKatalogEintrag(
+			115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne ändern", null
 	)),
 
 	/** Es werden Rechte zum Aktivieren von Stundenplänen benötigt. */

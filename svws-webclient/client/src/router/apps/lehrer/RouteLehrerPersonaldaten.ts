@@ -15,7 +15,7 @@ const SLehrerPersonaldaten = () => import("~/components/lehrer/personaldaten/SLe
 export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
+		super(Schulform.values(), [ BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN ], "lehrer.personaldaten", "personaldaten", SLehrerPersonaldaten);
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Personaldaten";

@@ -172,7 +172,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplan(conn).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -199,7 +199,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).addEmpty(idSchuljahresabschnitt),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -225,7 +225,7 @@ public class APIStundenplan {
 	public Response deleteStundenplan(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanListe(conn).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -310,7 +310,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -343,7 +343,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).patchMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -374,7 +374,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).add(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -405,7 +405,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).addMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -433,7 +433,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, null).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -465,7 +465,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanZeitraster(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -522,7 +522,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -553,7 +553,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).add(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -584,7 +584,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).addMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -611,7 +611,7 @@ public class APIStundenplan {
 	public Response deleteStundenplanRaum(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, null).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -643,7 +643,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanRaeume(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -703,7 +703,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -735,7 +735,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).add(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -767,7 +767,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).addMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -795,7 +795,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, null).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -827,7 +827,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanAufsichtsbereiche(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -885,7 +885,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanSchienen(conn, null).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -944,7 +944,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -975,7 +975,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1006,7 +1006,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1034,7 +1034,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1066,7 +1066,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenzeiten(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1125,7 +1125,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1159,7 +1159,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).patchMultipleAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1190,7 +1190,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1222,7 +1222,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).addMultipleAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1250,7 +1250,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, null).deleteAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1283,7 +1283,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanKalenderwochenzuordnung(conn, id).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1371,7 +1371,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, sid).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1403,7 +1403,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).add(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1435,7 +1435,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).addMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1463,7 +1463,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, null).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1495,7 +1495,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichten(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1527,7 +1527,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanPausenaufsichtenBereich(conn, id).update(update),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1612,7 +1612,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1645,7 +1645,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).patchMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1675,7 +1675,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).add(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1705,7 +1705,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).addMultiple(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1733,7 +1733,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, null).delete(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 
@@ -1765,7 +1765,7 @@ public class APIStundenplan {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataStundenplanUnterricht(conn, id).deleteMultiple(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.STUNDENPLAN_ERSTELLEN);
+				BenutzerKompetenz.STUNDENPLAN_AENDERN);
 	}
 
 

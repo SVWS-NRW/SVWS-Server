@@ -12,7 +12,7 @@ const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenp
 export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.daten", "daten", SStundenplanDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_AENDERN ], "stundenplan.daten", "daten", SStundenplanDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Grunddaten";

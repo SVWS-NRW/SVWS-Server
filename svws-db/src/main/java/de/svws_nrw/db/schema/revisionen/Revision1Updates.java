@@ -2586,7 +2586,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 						+ " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_LEHRERDATEN_EXPORTIEREN.daten.id + ", "
 						+ BenutzerKompetenz.ADMIN.daten.id + ")"
 						+ " UNION "
-						+ "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ERSTELLEN.daten.id
+						+ "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_AENDERN.daten.id
 						+ " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
 						+ " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
 						+ " UNION "

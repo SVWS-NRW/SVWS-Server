@@ -180,7 +180,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
 	}
 
 
@@ -212,7 +212,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonaldaten(conn).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 
@@ -238,7 +238,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_ANSEHEN);
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_ANSEHEN);
 	}
 
 
@@ -271,7 +271,7 @@ public class APILehrer {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataLehrerPersonalabschnittsdaten(conn).patch(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.LEHRERDATEN_DETAILDATEN_AENDERN);
+				BenutzerKompetenz.LEHRER_PERSONALDATEN_AENDERN);
 	}
 
 

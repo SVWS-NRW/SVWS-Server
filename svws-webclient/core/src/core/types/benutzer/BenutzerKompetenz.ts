@@ -195,12 +195,12 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zum Ansehen von Lehrerdetaildaten benötigt.
 	 */
-	public static readonly LEHRERDATEN_DETAILDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_DETAILDATEN_ANSEHEN", 35, new BenutzerKompetenzKatalogEintrag(94, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ansehen", null));
+	public static readonly LEHRER_PERSONALDATEN_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_ANSEHEN", 35, new BenutzerKompetenzKatalogEintrag(94, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ansehen", null));
 
 	/**
 	 * Es werden Rechte zum Ändern von Lehrerdetaildaten benötigt.
 	 */
-	public static readonly LEHRERDATEN_DETAILDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRERDATEN_DETAILDATEN_AENDERN", 36, new BenutzerKompetenzKatalogEintrag(95, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ändern", null));
+	public static readonly LEHRER_PERSONALDATEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("LEHRER_PERSONALDATEN_AENDERN", 36, new BenutzerKompetenzKatalogEintrag(95, BenutzerKompetenzGruppe.LEHRERDATEN, "Detaildaten ändern", null));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Daten des Verfahrens Schulpflichtverletzung benötigt.
@@ -240,7 +240,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zum Erstellen von Stundenplänen benötigt.
 	 */
-	public static readonly STUNDENPLAN_ERSTELLEN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_ERSTELLEN", 44, new BenutzerKompetenzKatalogEintrag(115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne erstellen", null));
+	public static readonly STUNDENPLAN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("STUNDENPLAN_AENDERN", 44, new BenutzerKompetenzKatalogEintrag(115, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenpläne ändern", null));
 
 	/**
 	 * Es werden Rechte zum Aktivieren von Stundenplänen benötigt.
