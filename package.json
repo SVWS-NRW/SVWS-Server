@@ -26,7 +26,6 @@
 		"autoprefixer": "^10.4.13",
 		"eslint": "^9.5.0",
 		"eslint-plugin-vue": "^9.1.1",
-		"globals": "^15.6.0",
 		"histoire": "^0.17.6",
 		"license-checker-rseidelsohn": "^4.0.0",
 		"postcss": "^8.4.16",
