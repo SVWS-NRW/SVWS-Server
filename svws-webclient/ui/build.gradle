@@ -50,8 +50,12 @@ task publishNpmUi(type: NpmPublish) {
 task testUi(type: NpmRun) {
 	dependsOn ':svws-webclient:ui:assemble'
 	group "testing"
+	inputs.files fileTree(dir: "$projectDir/src/components/", includes: ["*.{vue}{ts}"]),
+			file("$projectDir/src/test/ts/package.json"),
+			file("$projectDir/src/test/ts/tsconfig.json"),
+			file("$projectDir/src/test/ts/vueconfig.json"),
+			file("$projectDir/src/test/ts/vitest.config.ts")
 	outputs.dir file("$projectDir/build/testresults")
-	outputs.upToDateWhen { false }
 	args = [ 'test:run' ]
 	doFirst {
 		mkdir file("$projectDir/build/testresults")
