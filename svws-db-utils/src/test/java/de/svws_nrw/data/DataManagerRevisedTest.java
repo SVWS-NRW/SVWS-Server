@@ -431,6 +431,7 @@ class DataManagerRevisedTest {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void deleteAsResponse() throws ApiOperationException {
 		cut = spy(cut);
 
@@ -452,6 +453,7 @@ class DataManagerRevisedTest {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void deleteAsResponseWithIDIsNull() {
 		final Throwable result = catchThrowable(() -> cut.deleteAsResponse(null));
 
@@ -461,6 +463,7 @@ class DataManagerRevisedTest {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void deleteAsResponseWithNoEntityFound() {
 		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(null);
 
@@ -472,6 +475,7 @@ class DataManagerRevisedTest {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void deleteMultipleAsResponse() throws ApiOperationException {
 		cut = spy(cut);
 
@@ -553,7 +557,7 @@ class DataManagerRevisedTest {
 
 		@Override
 		protected void initDTO(final DTOKlassen dtoKlassen, final Long id) throws ApiOperationException {
-
+			// for testing
 		}
 
 		@Override
