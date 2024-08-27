@@ -15,7 +15,7 @@
 		"story:build": "histoire build",
 		"story:preview": "histoire preview",
 		"test": "vitest",
-		"test:run": "vitest run --coverage",
+		"test:run": "vitest run --coverage --coverage.include=src/components/*.vue --coverage.exclude=src/components/*.story.*",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"files": [
