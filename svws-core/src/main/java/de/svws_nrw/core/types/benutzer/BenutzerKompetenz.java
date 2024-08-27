@@ -213,6 +213,26 @@ public enum BenutzerKompetenz {
 			103, BenutzerKompetenzGruppe.SCHULPFLICHTVERLETZUNG, "Löschen", null
 	)),
 
+	/** Es werden Rechte zum Ansehen der Unterrichtsverteilung bis zum aktuellen Schuljahresabschnitt benötigt. */
+	UNTERRICHTSVERTEILUNG_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+			105, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ansehen", null
+	)),
+
+	/** Es werden Rechte zum Ansehen der Unterrichtsverteilung auch nach dem aktuellen Schuljahresabschnitt benötigt. */
+	UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+			106, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Planung der Unterrichtsverteilung ansehen", null
+	)),
+
+	/** Es werden Rechte zum Ändern der Unterrichtsverteilung (allgemein) benötigt. */
+	UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN(new BenutzerKompetenzKatalogEintrag(
+			107, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (allgemein)", null
+	)),
+
+	/** Es werden Rechte zum Ändern der Unterrichtsverteilung (funktionsbezogen) benötigt. */
+	UNTERRICHTSVERTEILUNG_ALLGEMEIN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+			108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null
+	)),
+
 	/** Es werden Rechte zum Ansehen von Stundenplänen (allgemein) benötigt. */
 	STUNDENPLAN_ALLGEMEIN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
 			111, BenutzerKompetenzGruppe.STUNDENPLANUNG, "Stundenplan ansehen (allgemein)", null

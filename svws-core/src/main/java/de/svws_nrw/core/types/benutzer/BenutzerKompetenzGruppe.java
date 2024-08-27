@@ -44,8 +44,11 @@ public enum BenutzerKompetenzGruppe {
 	/** Gruppe für Rechte bezüglich Lehrerdaten. */
 	LEHRERDATEN(new BenutzerKompetenzGruppenKatalogEintrag(900, "Lehrerdaten", 2, 2)),
 
-	/** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung. */
+	/** Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichtverletzung. */
 	SCHULPFLICHTVERLETZUNG(new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3)),
+
+	/** Gruppe für Rechte bezüglich der Unterrichtsverteilung */
+	UNTERRICHTSVERTEILUNG(new BenutzerKompetenzGruppenKatalogEintrag(1050, "Unterrichtsverteilung", 2, 3)),
 
 	/** Gruppe für Rechte bezüglich der Stundenplanung. */
 	STUNDENPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1)),

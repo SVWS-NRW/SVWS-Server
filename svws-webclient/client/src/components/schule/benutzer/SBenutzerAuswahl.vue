@@ -36,8 +36,8 @@
 	const props = defineProps<BenutzerAuswahlProps>();
 
 	const columns: DataTableColumn[] = [
-		{ key: "anzeigename", label: "Anzeigename", span: 2 },
-		{ key: "name", label: "Benutzername" },
+		{ key: "name", label: "Benutzername", sortable: true },
+		{ key: "anzeigename", label: "Anzeigename", sortable: true, span: 2 },
 	];
 
 	const search = ref<string>("");

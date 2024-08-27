@@ -66,64 +66,69 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	public static readonly LEHRERDATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("LEHRERDATEN", 10, new BenutzerKompetenzGruppenKatalogEintrag(900, "Lehrerdaten", 2, 2));
 
 	/**
-	 * Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichverletzung.
+	 * Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichtverletzung.
 	 */
 	public static readonly SCHULPFLICHTVERLETZUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULPFLICHTVERLETZUNG", 11, new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
 
 	/**
+	 * Gruppe für Rechte bezüglich der Unterrichtsverteilung
+	 */
+	public static readonly UNTERRICHTSVERTEILUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("UNTERRICHTSVERTEILUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1050, "Unterrichtsverteilung", 2, 3));
+
+	/**
 	 * Gruppe für Rechte bezüglich der Stundenplanung.
 	 */
-	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
+	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 13, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
 
 	/**
 	 * Gruppe für Rechte bezüglich des externen Notenmoduls.
 	 */
-	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 13, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2));
+	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 14, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2));
 
 	/**
 	 * Gruppe für Rechte bezüglich des Datenbank-Managements.
 	 */
-	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 14, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3));
+	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 15, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_LAUFBAHNPLANUNG", 15, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe - Laufbahnplanung", 5, 1));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_LAUFBAHNPLANUNG", 16, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe - Laufbahnplanung", 5, 1));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Kursplanung der Gymnasialen Oberstufe.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KURSPLANUNG", 16, new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2));
+	public static readonly OBERSTUFE_KURSPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KURSPLANUNG", 17, new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KLAUSURPLANUNG", 17, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KLAUSURPLANUNG", 18, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3));
 
 	/**
 	 * Gruppe für Rechte bezüglich des Abiturs.
 	 */
-	public static readonly ABITUR : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABITUR", 18, new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4));
+	public static readonly ABITUR : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABITUR", 19, new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4));
 
 	/**
 	 * Gruppe für Rechte bezüglich des Adressbuchs.
 	 */
-	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 19, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 20, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Kalender.
 	 */
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 20, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 21, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I.
 	 */
-	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 21, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
+	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 22, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung an berufsbildenden Schulen.
 	 */
-	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 22, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
+	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 23, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
