@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -327,7 +328,7 @@ class DataManagerRevisedTest {
 
 		final List<Map<String, Object>> input = List.of(Map.of("kuerzel", "55a"), Map.of("kuerzel", "66a"));
 
-		doNothing().when(cut).patch(anyLong(), any(Map.class));
+		doNothing().when(cut).patch(anyLong(), anyMap());
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMultipleMaps(any(InputStream.class))).thenReturn(input);
@@ -414,7 +415,7 @@ class DataManagerRevisedTest {
 		final List<Map<String, Object>> input = List.of(Map.of("kuerzel", "55a", "idJahrgang", 1), Map.of("kuerzel", "66a", "idJahrgang", 1));
 
 		when(conn.transactionGetNextID(DTOKlassen.class)).thenReturn(1L, 2L);
-		doReturn(mock(DTOKlassen.class)).when(cut).addBasic(anyLong(), any(Map.class));
+		doReturn(mock(DTOKlassen.class)).when(cut).addBasic(anyLong(), anyMap());
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMultipleMaps(any(InputStream.class))).thenReturn(input);
