@@ -8,7 +8,7 @@
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group col-span-2" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-				<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
+				<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;{{ unterricht.schienen.size() > 0 ? `(${(unterricht.schienen.toArray() as number[]).map(s => manager().schieneGetByIdOrException(s).nummer).join(', ')})`:'' }}</span>
 			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
