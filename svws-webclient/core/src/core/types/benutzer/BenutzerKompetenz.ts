@@ -390,7 +390,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt
 	 */
-	public static readonly CARDDAV_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_ERZIEHER_ANSEHEN", 74, new BenutzerKompetenzKatalogEintrag(203, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null));
+	public static readonly CARDDAV_ERZIEHER_ANSEHEN : BenutzerKompetenz = new BenutzerKompetenz("CARDDAV_ERZIEHER_ANSEHEN", 74, new BenutzerKompetenzKatalogEintrag(202, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null));
 
 	/**
 	 * Allgemeine Berechtigung zum Verwenden der CalDav API für Kalenderdaten
