@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-	import { computed, ref } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import { SvwsUiInputNumber } from "@ui";
 	import type { StundenplanManager, StundenplanPausenzeit, Wochentag } from "@core";
@@ -45,6 +45,11 @@
 	const start = ref<string>(DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0));
 	const ende = ref<string>(DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0));
 
+	watch(() => props.selected, () => {
+		start.value = DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0);
+		ende.value = DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0);
+	})
+
 	const disabled = computed<boolean>(() => (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenbeginn ?? 0) === start.value) && (DateUtils.getStringOfUhrzeitFromMinuten(first.value.stundenende ?? 0) === ende.value));
 
 	const ueberschneidung = computed<boolean>(() => {
@@ -52,8 +57,8 @@
 		for (const wt of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange()) {
 			const zeitraster = new StundenplanZeitraster();
 			zeitraster.wochentag = wt.id;
-			zeitraster.stundenbeginn = first.value.stundenbeginn ?? 0;
-			zeitraster.stundenende = first.value.stundenende ?? 0;
+			zeitraster.stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start.value);
+			zeitraster.stundenende = DateUtils.gibMinutenOfZeitAsString(ende.value);
 			zeitraster.unterrichtstunde = props.selected;
 			list.add(zeitraster);
 		}
