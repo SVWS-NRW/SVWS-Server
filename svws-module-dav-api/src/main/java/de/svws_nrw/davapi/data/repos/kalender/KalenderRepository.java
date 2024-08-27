@@ -58,10 +58,10 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 
 	@Override
 	public Optional<Kalender> getKalenderById(final String kalenderId, final CollectionRessourceQueryParameters params) {
-		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
+		if (!user.pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return Optional.empty();
 		}
-		if (user.pruefeKompetenz(BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN)
+		if (user.pruefeKompetenz(BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN)
 				&& KalenderIdUtil.isGenerated(kalenderId)) {
 			return generierteKalenderRepository.getKalenderById(kalenderId, params);
 		}
@@ -81,7 +81,7 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 
 	@Override
 	public List<Kalender> getAvailableKalender(final CollectionRessourceQueryParameters params) {
-		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
+		if (!user.pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return new ArrayList<>();
 		}
 		createEigenenKalenderIfNotExists();
@@ -107,7 +107,7 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 	 * erstellt einen eigenen Kalender für den Benutzer bei gegebener Berechtigung
 	 */
 	private void createEigenenKalenderIfNotExists() {
-		if (user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+		if (user.pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			davRepository.tryCreateOwnedCollectionIfNotExists(DavRessourceCollectionTyp.EIGENER_KALENDER);
 		}
 	}
@@ -157,10 +157,10 @@ public final class KalenderRepository implements IKalenderRepository, IKalenderE
 	@Override
 	public Optional<KalenderEintrag> getKalenderEintragByKalenderAndUID(final String kalenderId, final String kalenderEintragUID,
 			final CollectionRessourceQueryParameters params) {
-		if (!user.pruefeKompetenz(BenutzerKompetenz.KALENDER_ANSEHEN)) {
+		if (!user.pruefeKompetenz(BenutzerKompetenz.CALDAV_NUTZEN)) {
 			return Optional.empty();
 		}
-		if (user.pruefeKompetenz(BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN)
+		if (user.pruefeKompetenz(BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN)
 				&& KalenderIdUtil.isGenerated(kalenderId)) {
 			return generierteKalenderEintraegeRepository.getKalenderEintragByKalenderAndUID(kalenderId,
 					kalenderEintragUID, params);

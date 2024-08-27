@@ -162,7 +162,7 @@ public final class DavRepository implements IDavRepository {
 	 * @return ob der Nutzer die Sammlung bearbeiten darf
 	 */
 	private boolean allowUpsertCollection(final DavRessourceCollection davRessourceCollection) {
-		return !user.istAdmin() && !(user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)
+		return !user.istAdmin() && !(user.pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)
 				&& user.getId().equals(davRessourceCollection.besitzer) && (davRessourceCollection.id != null));
 	}
 
@@ -317,7 +317,7 @@ public final class DavRepository implements IDavRepository {
 
 	@Override
 	public boolean deleteRessourceCollectionACL(final long collectionId, final long benutzerId) throws DavException {
-		if (!user.istAdmin() && !user.pruefeKompetenz(BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+		if (!user.istAdmin() && !user.pruefeKompetenz(BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			throw new DavException(ErrorCode.FORBIDDEN);
 		}
 		conn.transactionBegin();

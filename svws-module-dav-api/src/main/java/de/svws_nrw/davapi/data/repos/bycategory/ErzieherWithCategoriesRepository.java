@@ -67,7 +67,7 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 	@Override
 	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId, final CollectionRessourceQueryParameters params) {
 		if (!params.includeRessources
-				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.ADRESSDATEN_ERZIEHER_ANSEHEN)) {
+				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.CARDDAV_ERZIEHER_ANSEHEN)) {
 			return new ArrayList<>();
 		}
 

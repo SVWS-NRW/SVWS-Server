@@ -378,29 +378,34 @@ public enum BenutzerKompetenz {
 			196, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
-	/** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt*/
-	ADRESSDATEN_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			201, BenutzerKompetenzGruppe.CARDDAV, "Ansehen", null
+	/** Allgemeine Berechtigung zum Verwenden der CardDav API für Addressdaten */
+	CARDDAV_NUTZEN(new BenutzerKompetenzKatalogEintrag(
+			201, BenutzerKompetenzGruppe.CARDDAV, "Addressbuch (CardDAV) nutzen", null
 	)),
 
-	/** Allgemeine Berechtigung für das Einsehen von Adressdaten über die CardDav API */
-	ADRESSDATEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			202, BenutzerKompetenzGruppe.CARDDAV, "Ansehen", null
+	/** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt */
+	CARDDAV_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
+			203, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null
 	)),
 
-	/** Allgemeine Berechtigung für den Zugriff auf die CalDav API */
-	KALENDER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			301, BenutzerKompetenzGruppe.CALDAV, "Ansehen", null
+	/** Allgemeine Berechtigung zum Verwenden der CalDav API für Kalenderdaten */
+	CALDAV_NUTZEN(new BenutzerKompetenzKatalogEintrag(
+			301, BenutzerKompetenzGruppe.CALDAV, "Kalender (CalDAV) nutzen", null
 	)),
 
 	/** Berechtigung für den Besitz und das Bearbeiten eines eigenen Kalenders über die CalDav API. */
-	EIGENEN_KALENDER_BEARBEITEN(new BenutzerKompetenzKatalogEintrag(
-			302, BenutzerKompetenzGruppe.CALDAV, "Bearbeiten", null
+	CALDAV_EIGENER_KALENDER(new BenutzerKompetenzKatalogEintrag(
+			302, BenutzerKompetenzGruppe.CALDAV, "Eigener Kalender", null
 	)),
 
-	/** Allgemeine Berechtigung zum Ansehen generierter Kalender abhängig von der Funktion des Nutzers */
-	KALENDER_FUNKTIONSBEZOGEN_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			303, BenutzerKompetenzGruppe.CALDAV, "Ansehen", null
+	/** Allgemeine Berechtigung zum Ansehen der generierten Kalenderdaten */
+	CALDAV_KALENDER_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
+			303, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Allgemein)", null
+	)),
+
+	/** Funktionsbezogene Berechtigung zum Ansehen generierter Kalender */
+	CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+			304, BenutzerKompetenzGruppe.CALDAV, "Kalender Ansehen (Funktionsbezogen)", null
 	)),
 
 	/** Berechtigung zum Ansehen von Abschlussdaten der Sekundarstufe I (allgemein). */

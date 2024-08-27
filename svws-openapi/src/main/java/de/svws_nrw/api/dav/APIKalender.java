@@ -74,8 +74,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendarCollection(@PathParam("schema") final String schema,
 			@Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
-				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 				InputStream inputStream = getInputStream(request)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, "");
@@ -106,8 +106,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response propfindOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
-				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final PropfindCalendarDispatcher dispatcher = createPropfindCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -136,8 +136,8 @@ public class APIKalender {
 	@Produces(MediaType.TEXT_XML)
 	public Response reportOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
-				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId)) {
 			final ReportCalendarDispatcher dispatcher = createReportCalendarDispatcher(conn);
 			final Object result = dispatcher.dispatch(inputStream, kalenderId);
@@ -175,8 +175,8 @@ public class APIKalender {
 			@HeaderParam("If-None-Match") final String ifNonMatchHeader, @HeaderParam("If-Match") final String ifMatchHeader,
 			@Context final HttpServletRequest request) {
 
-		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.KALENDER_ANSEHEN,
-				BenutzerKompetenz.KALENDER_FUNKTIONSBEZOGEN_ANSEHEN);
+		try (DBEntityManager conn = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE, BenutzerKompetenz.CALDAV_NUTZEN,
+				BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.CALDAV_KALENDER_ANSEHEN_FUNKTIONSBEZOGEN);
 				InputStream inputStream = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragUId=" + kalenderEintragUId,
 						"ifNonMatchHeader=" + ifNonMatchHeader, "ifMatchHeader=" + ifMatchHeader)) {
 			final PutCalendarDispatcher dispatcher = createPutCalendarDispatcher(conn);
@@ -237,7 +237,7 @@ public class APIKalender {
 			@PathParam("resourceCollectionId") final String kalenderId, @PathParam("resourceId") final String kalenderEintragUID,
 			@HeaderParam("If-Match") final String ifMatchHeader, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+				BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			try (var is = getInputStream(request, "kalenderId=" + kalenderId, "kalenderEintragId=" + kalenderEintragUID, "ifMatchHeader=" + ifMatchHeader)) {
 				// ...
 			}
@@ -273,7 +273,7 @@ public class APIKalender {
 	public Response deleteOnCalendar(@PathParam("schema") final String schema,
 			@PathParam("resourceCollectionId") final String kalenderId, @Context final HttpServletRequest request) {
 		try (DBEntityManager dbConnection = DBBenutzerUtils.getDBConnection(request, ServerMode.STABLE,
-				BenutzerKompetenz.EIGENEN_KALENDER_BEARBEITEN)) {
+				BenutzerKompetenz.CALDAV_EIGENER_KALENDER)) {
 			try (var is = getInputStream(request, "kalenderId=" + kalenderId)) {
 				// ...
 			}
