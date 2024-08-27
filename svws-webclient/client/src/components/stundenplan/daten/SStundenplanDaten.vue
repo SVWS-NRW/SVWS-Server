@@ -4,35 +4,35 @@
 			<div class="content-card">
 				<div class="content-card--header content-card--headline">Allgemein</div>
 				<div class="content-card--content content-card--content--with-title input-wrapper grid-cols-2">
-					<svws-ui-text-input placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
-					<div :class="{'flex gap-2': showExtraWTM}">
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Bezeichnung" :model-value="stundenplanManager().getBezeichnungStundenplan()" @change="bezeichnungStundenplan=>patch({ bezeichnungStundenplan })" type="text" />
+					<div v-if="hatUpdateKompetenz" :class="{'flex gap-2': showExtraWTM}">
 						<svws-ui-select title="Wochentypmodell" :items="[0,2,3,4,5]" :item-text="i=> wochenTypModell[i] || ''" :model-value="stundenplanManager().getWochenTypModell()" @update:model-value="modell => doPatch(modell)" ref="select" />
 						<svws-ui-input-number v-if="showExtraWTM" placeholder="Wochentypmodell" :model-value="stundenplanManager().getWochenTypModell() < 5 ? 5 : stundenplanManager().getWochenTypModell()" @change="modell => doPatch(modell)" :min="5" :max="100" />
 					</div>
-					<svws-ui-text-input placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
-					<svws-ui-text-input placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig ab" :model-value="stundenplanManager().getGueltigAb()" @change="gueltigAb=>patch({ gueltigAb })" type="date" />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Gültig bis" :model-value="stundenplanManager().getGueltigBis()" @change="gueltigBis=>patch({ gueltigBis })" type="date" />
 				</div>
 			</div>
 			<s-card-stundenplan-warnung-wochentypmodell v-if="wtmOK === false" :wochen-typ-modell="newWTM" @change="ok => (wtmOK = ok) && doPatch(newWTM)" :stundenplan-manager />
 			<svws-ui-action-button title="Jahrgänge" :is-active="actionJahrgaenge" @click="()=>actionJahrgaenge = !actionJahrgaenge" icon="i-ri-archive-line">
 				<svws-ui-table :items="listJahrgaenge" :no-data="false" :columns="cols">
 					<template #cell(id)="{value}">
-						<svws-ui-checkbox type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
+						<svws-ui-checkbox v-if="hatUpdateKompetenz" type="toggle" :model-value="jahrgaenge.includes(value)" headless @update:model-value="updateJahrgaenge(value)" />
 					</template>
 				</svws-ui-table>
 			</svws-ui-action-button>
 			<svws-ui-action-button title="Räume" :is-active="actionRaeume" @click="()=>actionRaeume = !actionRaeume" icon="i-ri-archive-line">
-				<svws-ui-table :columns="colsRaeume" :items="items" v-model:clicked="raum" selectable v-model="selected" count>
+				<svws-ui-table :columns="colsRaeume" :items="items" v-model:clicked="raum" :selectable="hatUpdateKompetenz" v-model="selected" count>
 					<template #cell(kuerzel)="{ rowData }">
-						<svws-ui-text-input :model-value="rowData.kuerzel" @change="kuerzel => patchRaum({kuerzel}, rowData.id)" headless required />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel => patchRaum({kuerzel}, rowData.id)" headless required />
 					</template>
 					<template #cell(groesse)="{ rowData }">
-						<svws-ui-input-number :model-value="rowData.groesse" @change="groesse => groesse && patchRaum({groesse}, rowData.id)" headless required />
+						<svws-ui-input-number :disabled="!hatUpdateKompetenz" :model-value="rowData.groesse" @change="groesse => groesse && patchRaum({groesse}, rowData.id)" headless required />
 					</template>
 					<template #cell(beschreibung)="{ rowData }">
-						<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung => patchRaum({beschreibung}, rowData.id)" headless />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.beschreibung" @change="beschreibung => patchRaum({beschreibung}, rowData.id)" headless />
 					</template>
-					<template #actions>
+					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-button @click="gotoKatalog('raeume')" type="transparent" title="Räume im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-raeume-modal v-slot="{ openModal }" :import-raeume="importRaeume" :list-raeume="raeume">
 							<svws-ui-button @click="openModal()" type="transparent" title="Räume importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
@@ -47,20 +47,20 @@
 		</div>
 		<div class="page--content-flex-column">
 			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
-				<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" selectable v-model="selectedPausenzeiten" count v-model:sort-by-and-order="sortByAndOrder">
+				<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" count v-model:sort-by-and-order="sortByAndOrder">
 					<template #cell(wochentag)="{ rowData }">
-						<svws-ui-select :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
+						<svws-ui-select :disabled="!hatUpdateKompetenz" :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
 					</template>
 					<template #cell(beginn)="{ rowData }">
-						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => patchPausenBeginn(beginn, rowData.id)" headless />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => patchPausenBeginn(beginn, rowData.id)" headless />
 					</template>
 					<template #cell(ende)="{ rowData }">
-						<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => patchPausenEnde(ende, rowData.id)" headless />
 					</template>
 					<template #cell(klassen)="{ rowData }">
-						<svws-ui-multi-select :model-value="[...rowData.klassen].sort()" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
+						<svws-ui-multi-select :disabled="!hatUpdateKompetenz" :model-value="[...rowData.klassen].sort()" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
 					</template>
-					<template #actions>
+					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten :list-pausenzeiten="listPausenzeiten()">
 							<svws-ui-button @click="openModal()" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
@@ -73,14 +73,14 @@
 				</svws-ui-table>
 			</svws-ui-action-button>
 			<svws-ui-action-button title="Aufsichtsbereiche" :is-active="actionAufsichtsbereiche" @click="()=>actionAufsichtsbereiche = !actionAufsichtsbereiche" icon="i-ri-archive-line">
-				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" selectable v-model="selectedAufsichtsbereiche" count>
+				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" :selectable="hatUpdateKompetenz" v-model="selectedAufsichtsbereiche" count>
 					<template #cell(kuerzel)="{ rowData }">
-						<svws-ui-text-input :model-value="rowData.kuerzel" @change="kuerzel=>patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.kuerzel" @change="kuerzel=>patchAufsichtsbereich({kuerzel}, rowData.id)" headless />
 					</template>
 					<template #cell(beschreibung)="{ rowData }">
-						<svws-ui-text-input :model-value="rowData.beschreibung" @change="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
+						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="rowData.beschreibung" @change="beschreibung=>patchAufsichtsbereich({beschreibung}, rowData.id)" headless />
 					</template>
-					<template #actions>
+					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-button @click="gotoKatalog('aufsichtsbereiche')" type="transparent" title="Aufsichtsbereiche im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
 						<s-card-stundenplan-import-aufsichtsbereiche-modal v-slot="{ openModal }" :list-aufsichtsbereiche="listAufsichtsbereicheRest" :import-aufsichtsbereiche="importAufsichtsbereiche">
 							<svws-ui-button @click="openModal()" type="transparent" title="Aufsichtsbereiche importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
@@ -104,10 +104,10 @@
 	import type { DataTableColumn, SortByAndOrder } from "@ui";
 	import { SvwsUiSelect } from "@ui";
 	import type { StundenplanRaum, Raum, StundenplanAufsichtsbereich, StundenplanPausenzeit } from "@core";
-	import { ArrayList, DateUtils, Wochentag } from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils, Wochentag } from "@core";
 
 	const props = defineProps<StundenplanDatenProps>();
-	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>> | null>(null);
+	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>>>();
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang", sortable: true, defaultSort: "asc", span: 0.25 },
@@ -119,6 +119,8 @@
 	const actionRaeume = ref<boolean>(true);
 	const actionPausenzeiten = ref<boolean>(false);
 	const actionAufsichtsbereiche = ref<boolean>(true);
+
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const jahrgaenge = computed(()=> {
 		const list = props.stundenplanManager().jahrgangGetMengeAsList();
@@ -140,7 +142,7 @@
 			return;
 		if (((props.stundenplanManager().stundenplanGetWochenTypModellSimulation(wochenTypModell) === 0)) || (wtmOK.value === true)) {
 			await props.patch({wochenTypModell});
-			wtmOK.value === undefined;
+			// wtmOK.value === undefined;
 			newWTM.value = -1;
 		}
 		else if (wtmOK.value === false) {

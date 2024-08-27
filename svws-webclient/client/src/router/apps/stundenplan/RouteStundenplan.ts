@@ -95,7 +95,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		return {
 			serverMode: api.mode,
 			auswahl: this.data.auswahl,
-			mapKatalogeintraege: () =>this.data.mapKatalogeintraege,
+			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			gotoEintrag: this.data.gotoEintrag,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			addEintrag: this.data.addEintrag,

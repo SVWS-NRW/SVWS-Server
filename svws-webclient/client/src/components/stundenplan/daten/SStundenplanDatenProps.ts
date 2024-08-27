@@ -1,6 +1,9 @@
-import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
+import type { BenutzerKompetenz, JahrgangsDaten, List, Raum, Schulform, ServerMode, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
 
 export interface StundenplanDatenProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patch: (daten: Partial<Stundenplan>) => Promise<void>;
 	patchRaum: (daten: Partial<StundenplanRaum>, id: number) => Promise<void>;
