@@ -1,11 +1,12 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { StundenplanKalenderwochenProps } from "~/components/stundenplan/kalenderwochen/SStundenplanKalenderwochenProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 
 import { routeApp } from "../RouteApp";
-import type { StundenplanKalenderwochenProps } from "~/components/stundenplan/kalenderwochen/SStundenplanKalenderwochenProps";
+import { api } from "~/router/Api";
 
 const SStundenplanKalenderwochen = () => import("~/components/stundenplan/kalenderwochen/SStundenplanKalenderwochen.vue");
 
@@ -35,6 +36,9 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 
 	public getProps(to: RouteLocationNormalized): StundenplanKalenderwochenProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchKalenderwochenzuordnungen: routeStundenplan.data.patchKalenderwochenzuordnungen,
 		};

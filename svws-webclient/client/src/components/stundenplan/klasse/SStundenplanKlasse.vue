@@ -11,10 +11,10 @@
 						<svws-ui-select headless title="Wochentyp" v-model="wochentypAnzeige" :items="wochentypen()" class="print:hidden" type="transparent"
 							:disabled="wochentypen().size() <= 0" :item-text="wt => stundenplanManager().stundenplanGetWochenTypAsString(wt)" />
 					</template>
-					<svws-ui-button type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
+					<svws-ui-button v-if="hatUpdateKompetenz" type="transparent" @click.stop="doppelstundenModus = !doppelstundenModus" title="Doppelstundenmodus ein- und ausschalten" class="text-black dark:text-white">
 						{{ doppelstundenModus ? 'Doppelstundenmodus' : 'Einzelstundenmodus' }}
 					</svws-ui-button>
-					<template v-if="stundenplanManager().unterrichtsgruppenMergeableGet().size()">
+					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) && hatUpdateKompetenz">
 						<span class="ml-4">Unterricht:</span>
 						<s-stundenplan-klasse-modal-merge :stundenplan-manager v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" class="ml-1" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
@@ -29,7 +29,7 @@
 			<span>Für diesen Stundenplan ist keine Klasse vorhanden.</span>
 		</template>
 		<template v-else>
-			<div @dragover="checkDropZone($event)" @drop="onDrop(undefined, -1)" class="flex flex-col justify-start mb-auto svws-table-offset h-full overflow-y-scroll overflow-x-hidden pr-4">
+			<div v-if="hatUpdateKompetenz" @dragover="checkDropZone($event)" @drop="onDrop(undefined, -1)" class="flex flex-col justify-start mb-auto svws-table-offset h-full overflow-y-scroll overflow-x-hidden pr-4">
 				<svws-ui-table :items="stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :columns="colsKlassenunterricht">
 					<template #body>
 						<div v-for="ku in stundenplanManager().klassenunterrichtGetMengeByKlasseIdAsList(klasse.id)" :key="ku.idKlasse + '/' + ku.idFach" role="row" class="svws-ui-tr"
@@ -130,7 +130,7 @@
 			</div>
 			<!-- Das Zeitraster des Stundenplans, in welches von der linken Seite die Kurs-Unterrichte oder die Klassen-Unterricht hineingezogen werden können.-->
 			<stundenplan-klasse mode-pausenaufsichten="tooltip" :id="klasse.id" :manager="stundenplanManager" :wochentyp="()=>wochentypAnzeige" :kalenderwoche="() => undefined"
-				use-drag-and-drop :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" />
+				:use-drag-and-drop="hatUpdateKompetenz" :drag-data="() => dragData" :on-drag :on-drop class="h-full overflow-scroll pr-4" />
 		</template>
 	</div>
 </template>
@@ -141,7 +141,7 @@
 	import type { List, StundenplanKlasse } from "@core";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz } from "@core";
 	import { computed, onMounted, shallowRef } from "vue";
 	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
@@ -154,6 +154,8 @@
 	const wochentypAnzeige = shallowRef<number>(0);
 	const doppelstundenModus = shallowRef<boolean>(false);
 	const schienSortierung = shallowRef<boolean>(true);
+
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
@@ -222,7 +224,7 @@
 			arr.push(stunde);
 			if (doppelstundenModus.value === true && props.stundenplanManager().klassenunterrichtGetWochenstundenREST(klasse.value.id, dragData.value.idFach) >= 2) {
 				const next = props.stundenplanManager().getZeitrasterNext(zone);
-				if (next && (wochentyp !== undefined) && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
+				if (next && props.stundenplanManager().klassenunterrichtDarfInZelle(dragData.value, zone.wochentag, next.unterrichtstunde, wochentyp))
 					arr.push({ idZeitraster: next.id, wochentyp, idKurs: null, idFach: dragData.value.idFach, klassen, lehrer: dragData.value.lehrer, schienen: dragData.value.schienen });
 			}
 			await props.addUnterrichtKlasse(arr);
@@ -233,7 +235,7 @@
 			return await props.removeUnterrichtKlasse([dragData.value]);
 		// TODO Fall StundenplanKurs -> StundenplanZeitraster
 		if ((dragData.value instanceof StundenplanKurs) && (zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(dragData.value, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
-			const klassen = new  HashSet<number>();
+			const klassen = new HashSet<number>();
 			const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(dragData.value.id);
 			for (const schueler of listSchueler)
 				klassen.add(schueler.idKlasse);
@@ -254,7 +256,7 @@
 			const arr = [];
 			for (const kurs of listStundenplanKursRaw) {
 				if ((zone instanceof StundenplanZeitraster) && (wochentyp !== undefined) && props.stundenplanManager().kursDarfInZelle(kurs, zone.wochentag, zone.unterrichtstunde, wochentyp)) {
-					const klassen = new  HashSet<number>();
+					const klassen = new HashSet<number>();
 					const listSchueler = props.stundenplanManager().schuelerGetMengeByKursIdAsListOrException(kurs.id);
 					for (const schueler of listSchueler)
 						klassen.add(schueler.idKlasse);

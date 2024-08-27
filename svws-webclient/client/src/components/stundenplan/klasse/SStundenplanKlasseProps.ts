@@ -1,6 +1,9 @@
-import type { StundenplanUnterricht, StundenplanZeitraster, StundenplanManager } from "@core";
+import type { StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 export interface StundenplanKlasseProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patchUnterricht: (unterricht: Iterable<StundenplanUnterricht>, zeitraster: StundenplanZeitraster, wochentyp: number) => Promise<void>;
 	addUnterrichtKlasse: (data: Iterable<Partial<StundenplanUnterricht>>) => Promise<void>;

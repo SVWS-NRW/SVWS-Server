@@ -1,9 +1,10 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { StundenplanKlasseProps } from "~/components/stundenplan/klasse/SStundenplanKlasseProps";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeStundenplan, type RouteStundenplan} from "~/router/apps/stundenplan/RouteStundenplan";
-import { type StundenplanKlasseProps } from "~/components/stundenplan/klasse/SStundenplanKlasseProps";
 import { routeApp } from "../RouteApp";
+import { api } from "~/router/Api";
 
 const SStundenplanKlasse = () => import("~/components/stundenplan/klasse/SStundenplanKlasse.vue");
 
@@ -27,6 +28,9 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanKlasseProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchUnterricht: routeStundenplan.data.patchUnterricht,
 			addUnterrichtKlasse: routeStundenplan.data.addUnterrichtKlasse,
