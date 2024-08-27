@@ -218,14 +218,6 @@ public final class DataUntis {
 							DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
 			} else {
 				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
-				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde };
-				if (!setKursUnterricht.add(new LongArrayKey(key))) {
-					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d hinzugefügt."
-							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde) + " Überspringe diesen Eintrag...");
-					continue;
-				}
-				// Erstelle den Kurs-Unterricht ...
-				final long uid = next_uid++;
 				int wt = 0;
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
@@ -236,6 +228,14 @@ public final class DataUntis {
 						wt = 0;
 					}
 				}
+				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
+				if (!setKursUnterricht.add(new LongArrayKey(key))) {
+					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt."
+							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
+					continue;
+				}
+				// Erstelle den Kurs-Unterricht ...
+				final long uid = next_uid++;
 				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, kurs.idFach);
 				dtoUnterricht.Kurs_ID = kurs.id;
@@ -267,6 +267,7 @@ public final class DataUntis {
 			dtoStundenplan.WochentypModell = maxWochentyp;
 			conn.transactionPersist(dtoStundenplan);
 			conn.transactionFlush();
+			// TODO Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
 		}
 	}
 
