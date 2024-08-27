@@ -385,7 +385,7 @@ public enum BenutzerKompetenz {
 
 	/** Es werden Rechte zum Ansehen der Adressdaten eines von Erziehungsberechtigten benötigt */
 	CARDDAV_ERZIEHER_ANSEHEN(new BenutzerKompetenzKatalogEintrag(
-			203, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null
+			202, BenutzerKompetenzGruppe.CARDDAV, "Erzieherdaten im Addressbuch anzeigen", null
 	)),
 
 	/** Allgemeine Berechtigung zum Verwenden der CalDav API für Kalenderdaten */
