@@ -118,7 +118,7 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ArrayList, ListUtils, StundenplanManager, ZulaessigesFach } from "@core";
+	import { ArrayList, ListUtils, ZulaessigesFach } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 

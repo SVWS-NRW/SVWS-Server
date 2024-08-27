@@ -195,6 +195,12 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 			return false;
 		if (!StundenplanUnterrichtListeManager.checkContains(this.schienen, eintrag.schienen))
 			return false;
+		const listeSchueler : List<StundenplanSchueler> = this.stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
+		const listIdSchueler : List<number> = new ArrayList<number>();
+		for (const s of listeSchueler)
+			listIdSchueler.add(s.id);
+		if (!StundenplanUnterrichtListeManager.checkContains(this.schueler, listIdSchueler))
+			return false;
 		return true;
 	}
 

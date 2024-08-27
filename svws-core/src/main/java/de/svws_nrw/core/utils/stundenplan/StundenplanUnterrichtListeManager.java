@@ -185,9 +185,12 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 			return false;
 		if (!checkContains(this.schienen, eintrag.schienen))
 			return false;
-		// final @NotNull List<StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
-		// if (!checkContains(this.schueler, listeSchueler))
-		// 	return false;
+		final @NotNull List<StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
+		final @NotNull List<Long> listIdSchueler = new ArrayList<>();
+		for (final StundenplanSchueler s : listeSchueler)
+			listIdSchueler.add(s.id);
+		if (!checkContains(this.schueler, listIdSchueler))
+			return false;
 		return true;
 	}
 
