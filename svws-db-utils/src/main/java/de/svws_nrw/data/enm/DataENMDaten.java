@@ -750,7 +750,7 @@ public final class DataENMDaten extends DataManager<Long> {
 			final List<ENMSchueler> listEnmSchueler = JsonReader.fromByteArray(enmBytes);
 			importEnmSchueler(conn, listEnmSchueler);
 		} catch (final IOException e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden.");
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden: " + e.getMessage());
 		}
 	}
 
