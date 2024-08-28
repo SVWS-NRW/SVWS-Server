@@ -35,10 +35,10 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		super(defaultState);
 	}
 
-	public async ladeFachkombinationen() {
-		if (this._state.value.gostJahrgang === undefined)
-			return;
-	}
+	// public async ladeFachkombinationen() {
+	// 	if (this._state.value.gostJahrgang === undefined)
+	// 		return;
+	// }
 
 	get auswahl(): number {
 		if (this._state.value.auswahl === undefined)
@@ -63,8 +63,6 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	}
 
 	get faechermanager(): GostFaecherManager {
-		if (this._state.value.faecherManager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return this._state.value.faecherManager;
 	}
 	set faecherManager(faecherManager: GostFaecherManager | undefined) {
@@ -95,7 +93,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 		if (art === 'gesamt')
 			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
 		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}
@@ -131,8 +129,6 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	public async ladeDaten(auswahl: number, isEntering : boolean) {
 		if ((auswahl === this._state.value.auswahl) && !isEntering)
 			return;
-		if (auswahl === undefined)
-			this.setPatchedDefaultState({});
 		else {
 			const gostJahrgang = new GostJahrgang();
 			gostJahrgang.abiturjahr = auswahl;
@@ -183,7 +179,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 				const b = this.gostJahrgangsdaten.beratungslehrer.get(i);
 				if (b.id === eintrag.id)
 					this.gostJahrgangsdaten.beratungslehrer.removeElementAt(i);
-			 }
+			}
 		}
 		this.setPatchedState({gostJahrgangsdaten: this._state.value.gostJahrgangsdaten});
 		api.status.stop();
@@ -192,4 +188,3 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 	gotoKursblockung = (halbjahr: GostHalbjahr) => RouteManager.doRoute(routeGostKursplanung.getRouteHalbjahr(this.auswahl, halbjahr.id));
 
 }
-

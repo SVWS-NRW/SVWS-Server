@@ -56,10 +56,10 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		this.setPatchedDefaultState({});
 	}
 
-	public async ladeFachkombinationen() {
-		if (this._state.value.gostJahrgang === undefined)
-			return;
-	}
+	// public async ladeFachkombinationen() {
+	// 	if (this._state.value.gostJahrgang === undefined)
+	// 		return;
+	// }
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
@@ -84,8 +84,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	get faechermanager(): GostFaecherManager {
-		if (this._state.value.faecherManager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return this._state.value.faecherManager;
 	}
 	set faecherManager(faecherManager: GostFaecherManager | undefined) {
@@ -145,7 +143,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		if (art === 'gesamt')
 			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
 		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}

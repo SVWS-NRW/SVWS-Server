@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns="cols" has-background>
+	<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns has-background>
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="columnheader" class="svws-ui-td col-span-3 svws-divider">
@@ -63,8 +63,7 @@
 		<template #body>
 			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
 				<template v-if="fachanzeigen(fach)">
-					<s-laufbahnplanung-fach :abiturdaten-manager="abiturdatenManager" :gost-jahrgangsdaten="gostJahrgangsdaten"
-						:fach="fach" :modus="modus" @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge="ignoriereSprachenfolge" />
+					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge :bearbeiten-erlaubt />
 				</template>
 			</template>
 		</template>
@@ -216,10 +215,12 @@
 		ignoriereSprachenfolge? : boolean;
 		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 		title?: string | undefined;
+		bearbeitenErlaubt?: boolean;
 	}>(), {
 		title: undefined,
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
+		bearbeitenErlaubt: true,
 	});
 
 	function fachanzeigen(fach : GostFach) : boolean {
@@ -234,7 +235,7 @@
 					return false;
 				for (const halbjahr of GostHalbjahr.values()) {
 					const fbh : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
-					if ((fbh !== null) && (fbh.kursartKuerzel !== null))
+					if ((fbh !== null))
 						return true;
 				}
 				return false;
@@ -258,7 +259,7 @@
 
 	const wst_d_q: ComputedRef<number> = computed(() => props.abiturdatenManager().getWochenstundenQualifikationsphase() / 4);
 
-	const cols: Array<DataTableColumn> = [
+	const columns: Array<DataTableColumn> = [
 		{ key: "kuerzel", label: "Kürzel", align: 'center', minWidth: 5, span: 0.75},
 		{ key: "bezeichnung", label: "Bezeichnung", align: 'center', span: 3, minWidth: 12 },
 		{ key: "wstd", label: "WS", tooltip: "Wochenstunden", align: 'center', fixedWidth: 3 },

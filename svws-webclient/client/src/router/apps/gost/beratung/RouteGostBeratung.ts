@@ -9,6 +9,7 @@ import type { GostBeratungProps } from "~/components/gost/beratung/SGostBeratung
 import { RouteDataGostBeratung } from "~/router/apps/gost/beratung/RouteDataGostBeratung";
 import { routeError } from "~/router/error/RouteError";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SGostBeratung = () => import("~/components/gost/beratung/SGostBeratung.vue");
 
@@ -45,6 +46,9 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 
 	public getProps(to: RouteLocationNormalized): GostBeratungProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			setWahl: this.data.setWahl,
@@ -53,7 +57,6 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			gostBelegpruefungErgebnis: () => this.data.gostBelegpruefungErgebnis,
 			abiturdatenManager: () => this.data.abiturdatenManager,
 			mapLehrer: this.data.mapLehrer,
-			id: this.data.id,
 			resetFachwahlen: this.data.resetFachwahlen,
 			resetFachwahlenAlle: this.data.resetFachwahlenAlle,
 			beratungslehrer: () => this.data.beratungslehrer,

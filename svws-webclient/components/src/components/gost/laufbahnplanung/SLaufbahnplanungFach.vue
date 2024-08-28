@@ -28,12 +28,15 @@
 			</template>
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
-			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium" :class="{
-				'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr), '': istMoeglich[halbjahr.id],
-				'cursor-not-allowed': !istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id],
-				'svws-disabled': !istMoeglich[halbjahr.id],
-				'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
-			}" @click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)">
+			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium"
+				:class="bearbeitenErlaubt ? {
+					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
+					'': istMoeglich[halbjahr.id],
+					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
+					'svws-disabled': !istMoeglich[halbjahr.id],
+					'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
+				} : {}"
+				@click.stop="stepper(halbjahr)" :title="getTooltipHalbjahr(halbjahr)">
 				<div class="inline-flex items-center gap-1 relative w-full">
 					<span class="w-full text-center">
 						<template v-if="wahlen[halbjahr.id] !== '' && wahlen[halbjahr.id] === '6'">0</template>
@@ -54,7 +57,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="!istMoeglich[halbjahr.id] && wahlen[halbjahr.id] !== ''">
+						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && bearbeitenErlaubt">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
 								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -69,7 +72,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="wahlen[halbjahr.id] !== '' && istBewertet(halbjahr) && noten[halbjahr.id] === null">
+						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (noten[halbjahr.id] === null) && bearbeitenErlaubt">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -94,14 +97,16 @@
 				</div>
 			</div>
 		</template>
-		<div role="cell" class="svws-ui-td svws-align-center select-none font-medium" :class="{
-			'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
-			'cursor-not-allowed': !istMoeglichAbi,
-			'svws-disabled': !istMoeglichAbi,
-			'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
-		}" @click.stop="stepperAbi()">
+		<div role="cell" class="svws-ui-td svws-align-center select-none font-medium"
+			:class="bearbeitenErlaubt ? {
+				'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
+				'cursor-not-allowed': !istMoeglichAbi,
+				'svws-disabled': !istMoeglichAbi,
+				'svws-disabled-soft': istBewertet(GostHalbjahr.Q22) && istMoeglichAbi,
+			} : {}"
+			@click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
-			<span v-if="abi_wahl && !istMoeglichAbi" class="absolute -right-0">
+			<span v-if="abi_wahl && !istMoeglichAbi && bearbeitenErlaubt" class="absolute -right-0">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small">
 						<span class="icon i-ri-close-line" @click="deleteFachwahlAbitur()" />
@@ -142,9 +147,11 @@
 		fach: GostFach;
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
+		bearbeitenErlaubt?: boolean;
 	}>(), {
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
+		bearbeitenErlaubt: true,
 	});
 
 	const emit = defineEmits<{
@@ -381,6 +388,8 @@
 	})
 
 	function stepperAbi() {
+		if (!props.bearbeitenErlaubt)
+			return;
 		if (props.modus === 'manuell') {
 			stepper_manuellAbi();
 			return;
@@ -393,6 +402,8 @@
 	}
 
 	function stepper(halbjahr: GostHalbjahr) {
+		if (!props.bearbeitenErlaubt)
+			return;
 		if (props.modus === 'manuell') {
 			stepper_manuell(halbjahr);
 			return;

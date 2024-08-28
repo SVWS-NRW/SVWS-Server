@@ -30,7 +30,7 @@
 								{{ value }}
 							</span>
 						</div>
-						<div v-if="isRemovable(rowData)" class="-my-1 ml-auto inline-flex">
+						<div v-if="isRemovable(rowData) && hatUpdateKompetenz" class="-my-1 ml-auto inline-flex">
 							<s-gost-auswahl-abiturjahrgang-remove-modal :remove-abiturjahrgang="removeAbiturjahrgang" :gost-jahrgang="rowData" v-slot="{ openModal : openRemoveModal }">
 								<svws-ui-button type="icon" @click.stop="openRemoveModal()" title="Abiturjahrgang löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
 									<span class="icon i-ri-delete-bin-line -mx-0.5" />
@@ -39,11 +39,11 @@
 						</div>
 					</div>
 				</template>
-				<template #actions>
-					<s-gost-auswahl-abiturjahrgang-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang"
+				<template #actions v-if="hatUpdateKompetenz">
+					<s-gost-auswahl-abiturjahrgang-add-modal v-slot="{ openModal }" :map-jahrgaenge-ohne-abi-jahrgang="mapJahrgaengeOhneAbiJahrgang"
 						:add-abiturjahrgang="addAbiturjahrgang" :get-abiturjahr-fuer-jahrgang="getAbiturjahrFuerJahrgang">
 						<svws-ui-button @click="openModal()" type="icon" title="Abiturjahr hinzufügen" :disabled="!mapJahrgaengeOhneAbiJahrgang().size"> <span class="icon i-ri-add-line" /> </svws-ui-button>
-					</s-gost-auswahl-abiturjahrgang-modal>
+					</s-gost-auswahl-abiturjahrgang-add-modal>
 				</template>
 			</svws-ui-table>
 			<router-view name="gost_child_auswahl" />
@@ -55,7 +55,7 @@
 
 	import { computed } from "vue";
 	import type { GostAuswahlProps } from "./SGostAuswahlProps";
-	import type { GostJahrgang } from "@core";
+	import { BenutzerKompetenz, type GostJahrgang } from "@core";
 
 	const props = defineProps<GostAuswahlProps>();
 
@@ -67,8 +67,11 @@
 	const items = computed<GostJahrgang[]>(() => {
 		const list = [...props.mapAbiturjahrgaenge().values()];
 		const filtern = props.filterNurAktuelle();
-		return list.filter(a => filtern && !a.istAbgeschlossen).sort((a, b) => (a?.bezeichnung || "") < (b?.bezeichnung || "") ? 1 : -1)
+		return list.filter(a => filtern && !a.istAbgeschlossen).sort((a, b) => (a.bezeichnung ?? "") < (b.bezeichnung ?? "") ? 1 : -1)
 	});
+
+	// TODO BenutzerKompetenz
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN));
 
 	const pending = computed<boolean>(() => props.apiStatus.pending);
 

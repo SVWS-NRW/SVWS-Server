@@ -1,31 +1,27 @@
 <template>
 	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full relative">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
 					<span class="icon-sm i-ri-loop-right-line" />
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen="resetFachwahlen" />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten()" :reset-fachwahlen />
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen v-if="jahrgangsdaten().abiturjahr !== -1" :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung="gotoKursblockung"
-			:abiturdaten-manager="abiturdatenManager" :modus="modus" :faecher-anzeigen="'alle'"
-			:gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl="setWahl" ignoriere-sprachenfolge />
+		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :bearbeiten-erlaubt="hatUpdateKompetenz"
+			:abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
-				<svws-ui-table :items="beratungslehrer()" selectable :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]">
-					<template #cell(kuerzel)="{ value }">
-						{{ value }}
-					</template>
+				<svws-ui-table :items="beratungslehrer()" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]">
 					<template #cell(name)="{ rowData: l }">
 						{{ `${l.nachname}, ${l.vorname}` }}
 					</template>
-					<template #actions>
+					<template #actions v-if="hatUpdateKompetenz">
 						<svws-ui-select :model-value="undefined" @update:model-value="lehrer => lehrer && addBeratungslehrer(lehrer.id)" headless indeterminate
 							autocomplete :item-filter="lehrer_filter" :items="lehrer" removable title="Lehrkraft hinzufügen…" :item-text="l=> `${l.nachname}, ${l.vorname} (${l.kuerzel})`" />
 						<svws-ui-button @click="removeBeratungslehrer(selected)" type="trash" :disabled="!selected.length" />
@@ -34,14 +30,13 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Textvorlagen">
 				<svws-ui-input-wrapper>
-					<svws-ui-textarea-input placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
+					<svws-ui-textarea-input :disabled="!hatUpdateKompetenz" placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
 						@change="textBeratungsbogen => patchJahrgangsdaten({ textBeratungsbogen }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
-					<svws-ui-textarea-input placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
+					<svws-ui-textarea-input :disabled="!hatUpdateKompetenz" placeholder="Mailversand" :model-value="jahrgangsdaten().textMailversand"
 						@change="textMailversand => patchJahrgangsdaten({ textMailversand }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<s-laufbahnplanung-card-status :abiturdaten-manager="abiturdatenManager"
-				:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
+			<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 		</div>
 	</div>
 </template>
@@ -49,13 +44,16 @@
 <script setup lang="ts">
 
 	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import type { GostBeratungslehrer, LehrerListeEintrag } from "@core";
+	import { BenutzerKompetenz, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { onMounted, computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
 
 	const props = defineProps<GostBeratungProps>();
 
 	const selected = ref<GostBeratungslehrer[]>([]);
+
+	// TODO BenutzerKompetenz
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN));
 
 	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
 
