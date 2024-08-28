@@ -1,6 +1,9 @@
-import type { LehrerListeEintrag, List, Schulform, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag, } from "@core";
+import type { BenutzerKompetenz, LehrerListeEintrag, List, Schulform, ServerMode, StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster, Wochentag, } from "@core";
 
 export interface StundenplanZeitrasterPausenzeitProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
@@ -12,5 +15,4 @@ export interface StundenplanZeitrasterPausenzeitProps {
 	listLehrer: List<LehrerListeEintrag>;
 	selected: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined;
 	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
-	schulform: Schulform;
 }

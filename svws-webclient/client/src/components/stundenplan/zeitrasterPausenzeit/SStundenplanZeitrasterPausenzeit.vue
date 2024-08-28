@@ -17,6 +17,8 @@
 
 	const props = defineProps<StundenplanZeitrasterPausenzeitProps>();
 
+	// const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+
 </script>
 
 <style lang="postcss" scoped>

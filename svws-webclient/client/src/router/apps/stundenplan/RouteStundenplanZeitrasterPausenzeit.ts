@@ -13,7 +13,7 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 
 	public constructor() {
 		super(Schulform.values(), [
-			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_AENDERN,
 		], "stundenplan.zeitrasterpausenzeit", "zeitrasterpausenzeit", SStundenplanZeitrasterPausenzeit);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -29,6 +29,9 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 
 	public getProps(to: RouteLocationNormalized): StundenplanZeitrasterPausenzeitProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			listLehrer: routeStundenplan.data.listLehrer,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
@@ -40,7 +43,6 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 			importZeitraster: routeStundenplan.data.importZeitraster,
 			selected: routeStundenplan.data.selected,
 			setSelection: routeStundenplan.data.setSelection,
-			schulform: api.schulform,
 		};
 	}
 

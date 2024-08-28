@@ -136,6 +136,8 @@
 
 	const wochentage = [null, 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
+	// const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
+
 	const wochentyprange = computed(() => {
 		const range = [];
 		const modell = props.stundenplanManager().stundenplanGetWochenTypModell();
@@ -301,7 +303,7 @@
 		return res;
 	}
 
-	async function patchKlassen(klassen: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht)  {
+	async function patchKlassen(klassen: (StundenplanKlasse | StundenplanRaum)[], unterricht: StundenplanUnterricht) {
 		const list = new ArrayList<number>();
 		unterricht.klassen.clear();
 		for (const k of klassen)
@@ -343,7 +345,7 @@
 	function find(items: Iterable<StundenplanKlasse | StundenplanRaum>, search: string) {
 		const list = [];
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}
@@ -352,7 +354,7 @@
 		const list = [];
 		const lcSearch = search.toLocaleLowerCase();
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(lcSearch)	|| i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch))
+			if (i.kuerzel.toLocaleLowerCase().includes(lcSearch)	|| i.nachname.toLocaleLowerCase().includes(lcSearch) || i.vorname.toLocaleLowerCase().includes(lcSearch))
 				list.push(i);
 		return list;
 	}

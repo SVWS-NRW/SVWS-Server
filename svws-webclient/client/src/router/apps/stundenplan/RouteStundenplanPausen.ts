@@ -30,6 +30,9 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanPausenProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,
