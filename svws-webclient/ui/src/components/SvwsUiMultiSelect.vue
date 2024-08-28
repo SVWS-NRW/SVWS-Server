@@ -38,7 +38,7 @@
 				@keydown.space.prevent="onSpace"
 				@keydown.tab="onTab" />
 		</div>
-		<button role="button" class="svws-dropdown-icon" tabindex="-1">
+		<button role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
 			<span class="icon i-ri-expand-up-down-line my-0.5" v-if="headless" />
 			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
 		</button>
