@@ -11,7 +11,7 @@
 					<a href="https://www.svws.nrw.de/faq/impressum"> <svws-ui-button type="secondary"> Impressum </svws-ui-button> </a>
 					<a href="#"> <svws-ui-button type="secondary"> Datenschutz </svws-ui-button> </a>
 				</div>
-				<span>{{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span>
+				<div><span>{{ version }}</span> <span v-if="version.includes('SNAPSHOT')">{{ githash.substring(0, 8) }}</span></div>
 			</div>
 		</div>
 	</div>
@@ -58,7 +58,7 @@
 	const _showModalImport = ref<boolean>(false);
 	const showModalImport = () => _showModalImport;
 
-	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== undefined);
+	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== null);
 	const faecherAnzeigen = ref<'alle'|'nur_waehlbare'|'nur_gewaehlt'>('alle');
 
 	const hatFaecherNichtWaehlbar = computed<boolean>(() => {
