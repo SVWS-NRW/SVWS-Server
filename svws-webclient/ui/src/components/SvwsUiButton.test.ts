@@ -1,11 +1,12 @@
 import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
-import SvwsUiInputWrapper from "./SvwsUiInputWrapper.vue";
+import SvwsUiButton from "./SvwsUiButton.vue";
 
-describe("SvwsUiInputWrapper", () => {
-	// Testet, ob HTML gerendert wird
-	test("Dummy Platzhalter test", () => {
-		const wrapper = mount(SvwsUiInputWrapper);
-		expect(wrapper.html()).toContain(">");
+describe("SvwsUiButton", () => {
+	describe("Komponente kann gemounted werden", () => {
+		test("HTML wird erzeugt", () => {
+			const wrapper = mount(SvwsUiButton);
+			expect(wrapper.html()).includes("text-input-component");
+		});
 	});
 });

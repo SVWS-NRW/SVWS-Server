@@ -4,7 +4,7 @@ import { mount } from "@vue/test-utils";
 import SvwsUiTextInput from "./SvwsUiTextInput.vue";
 import type { InputType, InputDataType } from "../types";
 
-describe("Componente kann gemounted werden", () => {
+describe("Komponente kann gemounted werden", () => {
 	test("HTML wird erzeugt", () => {
 		const wrapper = mount(SvwsUiTextInput);
 		expect(wrapper.html()).includes("text-input-component");
@@ -19,7 +19,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		[ "email", 'type="email"', "Type Prop as email"],
 		[ "search", 'type="search"', "Type Prop as search"],
 		[ "tel", 'type="tel"', "Type Prop as tel"],
-		[ "password", 'type="password"', "Type Prop as numpasswordber"],
+		[ "password", 'type="password"', "Type Prop as password"],
 		[ "text", 'type="text"', "Type Prop as number"],
 		[ "search", "search-icon", "Typ Prop als Suche rendert Icons"],
 		[ "search", '<span class="icon', "Typ Prop als Suche rendert Icons Klasse"],
