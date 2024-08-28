@@ -26,9 +26,7 @@
 
 	const props = defineProps<GostAppProps>();
 
-	const bezeichnung_abiturjahr = computed<string | undefined>(() => {
-		return props.auswahl?.bezeichnung ?? undefined;
-	});
+	const bezeichnung_abiturjahr = computed(() => props.auswahl?.bezeichnung);
 
 </script>
 
