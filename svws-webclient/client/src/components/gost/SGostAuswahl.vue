@@ -70,8 +70,7 @@
 		return list.filter(a => filtern && !a.istAbgeschlossen).sort((a, b) => (a.bezeichnung ?? "") < (b.bezeichnung ?? "") ? 1 : -1)
 	});
 
-	// TODO BenutzerKompetenz
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN));
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN));
 
 	const pending = computed<boolean>(() => props.apiStatus.pending);
 

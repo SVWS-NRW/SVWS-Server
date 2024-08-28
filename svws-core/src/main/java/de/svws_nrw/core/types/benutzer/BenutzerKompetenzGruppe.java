@@ -60,16 +60,7 @@ public enum BenutzerKompetenzGruppe {
 	DATENBANK(new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3)),
 
 	/** Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe. */
-	OBERSTUFE_LAUFBAHNPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe - Laufbahnplanung", 5, 1)),
-
-	/** Gruppe für Rechte bezüglich der Kursplanung der Gymnasialen Oberstufe. */
-	OBERSTUFE_KURSPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2)),
-
-	/** Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe. */
-	OBERSTUFE_KLAUSURPLANUNG(new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3)),
-
-	/** Gruppe für Rechte bezüglich des Abiturs. */
-	ABITUR(new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4)),
+	OBERSTUFE(new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe", 5, 1)),
 
 	/** Gruppe für Rechte bezüglich des Adressbuchs. */
 	CARDDAV(new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4)),

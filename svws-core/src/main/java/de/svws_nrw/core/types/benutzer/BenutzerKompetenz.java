@@ -304,78 +304,83 @@ public enum BenutzerKompetenz {
 	)),
 
 	/** Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt. */
+	OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN(new BenutzerKompetenzKatalogEintrag(
+			160, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturjahrgänge anlegen und löschen", Schulform.getMitGymOb()
+	)),
+
+	/** Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt. */
 	OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			161, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung (allgemein)", Schulform.getMitGymOb()
+			161, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zur Durchführung der Laufbahnplanung (stufenbezogen) benötigt. */
 	OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-			162, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung (funktionsbezogen)", Schulform.getMitGymOb()
+			162, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zum Import von Laufbahnpdaten aus LuPO benötigt. */
 	OBERSTUFE_LUPO_IMPORT(new BenutzerKompetenzKatalogEintrag(
-			163, BenutzerKompetenzGruppe.OBERSTUFE_LAUFBAHNPLANUNG, "Laufbahnplanung aus LuPO importieren", Schulform.getMitGymOb()
+			163, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zur Kursverwaltung - Blocken (allgemein) benötigt. */
 	OBERSTUFE_KURSPLANUNG_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			171, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blocken (allgemein)", Schulform.getMitGymOb()
+			171, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zur Kursverwaltung - Blocken (stufenbezogen) benötigt. */
 	OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-			172, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blocken (funktionsbezogen)", Schulform.getMitGymOb()
+			172, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zur Aktivierung einer Blockung benötigt. */
 	OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN(new BenutzerKompetenzKatalogEintrag(
-			173, BenutzerKompetenzGruppe.OBERSTUFE_KURSPLANUNG, "Kursverwaltung - Blockung aktivieren", Schulform.getMitGymOb()
+			173, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blockung aktivieren", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zur Bearbeitung einer Klausurplanung benötigt. */
 	OBERSTUFE_KLAUSURPLANUNG_AENDERN(new BenutzerKompetenzKatalogEintrag(
-			181, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ändern", Schulform.getMitGymOb()
+			181, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zum Ansehen einer Klausurplanung (allgemein) benötigt. */
 	OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			182, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ansehen (allgemein)", Schulform.getMitGymOb()
+			182, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Es werden Rechte zum Ansehen einer Klausurplanung (funktionsbezogen) benötigt. */
 	OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION(new BenutzerKompetenzKatalogEintrag(
-			183, BenutzerKompetenzGruppe.OBERSTUFE_KLAUSURPLANUNG, "Klausurplanung ansehen (funktionsbezogen)", Schulform.getMitGymOb()
+			183, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Ansehen von Abiturdaten der Oberstufe (allgemein). */
 	ABITUR_ANSEHEN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			191, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ansehen (allgemein)", Schulform.getMitGymOb()
+			191, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Ansehen von Abiturdaten der Oberstufe (funktionsbezogen). */
 	ABITUR_ANSEHEN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-			192, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ansehen (funktionsbezogen)", Schulform.getMitGymOb()
+			192, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Ändern aller Daten zum Abitur (allgemein). */
 	ABITUR_AENDERN_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			193, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ändern (allgemein)", Schulform.getMitGymOb()
+			193, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Ändern aller Daten zum Abitur (funktionsbezogen). */
 	ABITUR_AENDERN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-			194, BenutzerKompetenzGruppe.ABITUR, "Abiturdaten ändern (funktionsbezogen)", Schulform.getMitGymOb()
+			194, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein). */
 	ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN(new BenutzerKompetenzKatalogEintrag(
-			195, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (allgemein)", Schulform.getMitGymOb()
+			195, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (allgemein)", Schulform.getMitGymOb()
 	)),
 
 	/** Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen). */
 	ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
-			196, BenutzerKompetenzGruppe.ABITUR, "Prüfungsergebnisse eingeben (funktionsbezogen)", Schulform.getMitGymOb()
+			196, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (funktionsbezogen)", Schulform.getMitGymOb()
 	)),
 
 	/** Allgemeine Berechtigung zum Verwenden der CardDav API für Addressdaten */

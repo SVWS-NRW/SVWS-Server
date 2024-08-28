@@ -93,42 +93,27 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	/**
 	 * Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_LAUFBAHNPLANUNG", 16, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe - Laufbahnplanung", 5, 1));
-
-	/**
-	 * Gruppe für Rechte bezüglich der Kursplanung der Gymnasialen Oberstufe.
-	 */
-	public static readonly OBERSTUFE_KURSPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KURSPLANUNG", 17, new BenutzerKompetenzGruppenKatalogEintrag(1700, "Oberstufe - Kursplanung", 5, 2));
-
-	/**
-	 * Gruppe für Rechte bezüglich der Klausurplanung der Gymnasialen Oberstufe.
-	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE_KLAUSURPLANUNG", 18, new BenutzerKompetenzGruppenKatalogEintrag(1800, "Oberstufe - Klausurplanung", 5, 3));
-
-	/**
-	 * Gruppe für Rechte bezüglich des Abiturs.
-	 */
-	public static readonly ABITUR : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABITUR", 19, new BenutzerKompetenzGruppenKatalogEintrag(1900, "Abitur", 5, 4));
+	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 16, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe", 5, 1));
 
 	/**
 	 * Gruppe für Rechte bezüglich des Adressbuchs.
 	 */
-	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 20, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 17, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Kalender.
 	 */
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 21, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 18, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I.
 	 */
-	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 22, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
+	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 19, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung an berufsbildenden Schulen.
 	 */
-	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 23, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
+	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 20, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
