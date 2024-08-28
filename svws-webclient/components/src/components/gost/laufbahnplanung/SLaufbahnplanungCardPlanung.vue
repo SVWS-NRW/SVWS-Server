@@ -63,7 +63,7 @@
 		<template #body>
 			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
 				<template v-if="fachanzeigen(fach)">
-					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge :bearbeiten-erlaubt />
+					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge :bearbeiten-erlaubt :belegung-hat-immer-noten />
 				</template>
 			</template>
 		</template>
@@ -216,11 +216,13 @@
 		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 		title?: string | undefined;
 		bearbeitenErlaubt?: boolean;
+		belegungHatImmerNoten?: boolean;
 	}>(), {
 		title: undefined,
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
 		bearbeitenErlaubt: true,
+		belegungHatImmerNoten: false,
 	});
 
 	function fachanzeigen(fach : GostFach) : boolean {

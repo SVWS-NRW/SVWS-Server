@@ -31,7 +31,6 @@
 			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium"
 				:class="bearbeitenErlaubt ? {
 					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
-					'': istMoeglich[halbjahr.id],
 					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !istMoeglich[halbjahr.id],
 					'svws-disabled-soft': istBewertet(halbjahr) && istMoeglich[halbjahr.id],
@@ -72,7 +71,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (noten[halbjahr.id] === null) && bearbeitenErlaubt">
+						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (((noten[halbjahr.id] === null) || (noten[halbjahr.id] === Note.KEINE)) && !belegungHatImmerNoten) && bearbeitenErlaubt">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -148,10 +147,12 @@
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
 		bearbeitenErlaubt?: boolean;
+		belegungHatImmerNoten?: boolean;
 	}>(), {
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
 		bearbeitenErlaubt: true,
+		belegungHatImmerNoten: false,
 	});
 
 	const emit = defineEmits<{

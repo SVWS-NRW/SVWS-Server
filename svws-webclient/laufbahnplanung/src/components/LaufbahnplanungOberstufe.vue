@@ -32,9 +32,8 @@
 	</svws-ui-sub-nav>
 	<div class="page--content page--content--full page--content--laufbahnplanung">
 		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="async (halbjahr: GostHalbjahr) => {}"
-				:faecher-anzeigen="faecherAnzeigen" />
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus
+				:gost-jahrgangsdaten :set-wahl :goto-kursblockung="async (halbjahr: GostHalbjahr) => {}" :faecher-anzeigen belegung-hat-immer-noten />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-16">
@@ -68,7 +67,7 @@
 		return false;
 	});
 
-	async function switchFaecherAnzeigen() {
+	function switchFaecherAnzeigen() {
 		switch (faecherAnzeigen.value) {
 			case 'alle':
 				faecherAnzeigen.value = hatFaecherNichtWaehlbar.value ? 'nur_waehlbare' : 'nur_gewaehlt';
