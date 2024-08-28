@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content select-none">
+	<div class="page--content select-none w-full h-full grid-rows-1">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<svws-ui-button @click="modus = !modus" title="Modus wechseln" type="transparent">
@@ -8,7 +8,7 @@
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div>
+		<div class="w-full h-full flex flex-col">
 			<div v-if="hatUpdateKompetenz">Zum Ändern der Kalenderwoche die jeweilige Zeile anklicken</div>
 			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll />
 		</div>
