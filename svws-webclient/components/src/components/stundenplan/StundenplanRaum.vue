@@ -8,8 +8,11 @@
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group col-span-2" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-				<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;{{ unterricht.schienen.size() > 0 ? `(${(unterricht.schienen.toArray() as number[]).map(s => manager().schieneGetByIdOrException(s).nummer).join(', ')})`:'' }}</span>
-			</div>
+				<svws-ui-tooltip v-if="unterricht.schienen.size() > 0">
+					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
+					<template #content>{{ schienenbezeichnung(unterricht.schienen) }}</template>
+				</svws-ui-tooltip>
+				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 		</template>
@@ -39,6 +42,14 @@
 		onDrag: (data: StundenplanAnsichtDragData, event?: DragEvent) => {},
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
+
+	function schienenbezeichnung(ids: List<number>) {
+		return (ids.toArray() as number[]).map(s => props.manager().schieneGetByIdOrException(s).bezeichnung).join(', ');
+	}
+
+	function schienennummer(ids: List<number>) {
+		return (ids.toArray() as number[]).map(s => props.manager().schieneGetByIdOrException(s).nummer).join(', ');
+	}
 
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		throw new DeveloperNotificationException("Die Anzeige von Schienen wird beim der Raumansicht nicht unterstützt.");
