@@ -8,7 +8,7 @@
 		'button--trash': type === 'trash',
 		'button--small': size === 'small',
 		'button--big': size === 'big',
-	}" :disabled="disabled" @click="onClick">
+	}" :disabled="disabled">
 		<slot v-if="type !== 'trash'" />
 		<span v-if="type === 'trash'" class="button--trash-icon">
 			<span class="inline-block icon i-ri-delete-bin-line icon--line" />
@@ -24,7 +24,7 @@
 
 	import type { ButtonType } from '../types';
 
-	const props = withDefaults(defineProps<{
+	withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
 		size?: 'small' | 'normal' | 'big'
@@ -34,15 +34,6 @@
 		size: 'normal'
 	});
 
-	const emit = defineEmits<{
-		(e: 'click', event: MouseEvent): void;
-	}>();
-
-	function onClick(event: MouseEvent) {
-		if (!props.disabled) {
-			emit("click", event);
-		}
-	}
 </script>
 
 <style lang="postcss">
