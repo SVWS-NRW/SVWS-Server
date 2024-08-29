@@ -23,7 +23,7 @@ const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "klassen/:id(-?\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN ], "klassen", "klassen/:id(-?\\d+)?", SKlassenApp, new RouteDataKlassen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";

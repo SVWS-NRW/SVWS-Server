@@ -21,7 +21,7 @@ const SKurseApp = () => import("~/components/kurse/SKurseApp.vue")
 export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kurse", "kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
+		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN ], "kurse", "kurse/:id(\\d+)?", SKurseApp, new RouteDataKurse());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurse";
