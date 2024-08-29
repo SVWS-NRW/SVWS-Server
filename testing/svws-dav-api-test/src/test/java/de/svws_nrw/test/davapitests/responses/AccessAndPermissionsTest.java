@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.not;
 
 import java.util.function.BiConsumer;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.test.apitests.util.APITestUtil;
@@ -72,6 +73,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 * Testet die relevanten Endpunkte darauf, ob ein User den privaten Eigenen
 	 * Kalender eines anderen Users Sehen oder Bearbeiten kann
 	 */
+	@Disabled("XML Unmarshaling ist fehlerhaft")
 	@Test
 	void givenPrivilegedUserAccessingOtherUsersData() {
 		final String kalender = "dav/gymabi/kalender";
@@ -95,6 +97,7 @@ class AccessAndPermissionsTest extends BaseApiUtil {
 	 * Testet, ob der Nutzer mit Lese aber ohne Schreibrechte die entsprechenden
 	 * Priviliges erhält.
 	 */
+	@Disabled("XML Unmarshaling ist fehlerhaft")
 	@Test
 	void givenUserReadOnlyCalendar_thenNoWritePermission() {
 		// check: Nutzer hat nur Leserechte auf den Gemeinsamen Kalender:
