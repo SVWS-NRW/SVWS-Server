@@ -74,8 +74,7 @@ public class SchemaTabelleCoreType {
 		sql.append(_tabelle.getSpalten().stream().map(sp -> sp.name()).collect(Collectors.joining(", ", "(", ")")));
 		sql.append(valueSupplier.apply(revision).stream().collect(Collectors.joining("), (", " VALUES (", ")")));
 		sql.append(" ON DUPLICATE KEY UPDATE ");
-		sql.append(_tabelle.getSpalten().stream().filter(sp -> !sp.tabelle().istPrimaerschlusselAttribut(sp))
-				.map(sp -> sp.name() + "=VALUE(" + sp.name() + ")").collect(Collectors.joining(", ")));
+		sql.append(_tabelle.getSpalten().stream().map(sp -> sp.name() + "=VALUE(" + sp.name() + ")").collect(Collectors.joining(", ")));
 		return sql.toString();
 	}
 
