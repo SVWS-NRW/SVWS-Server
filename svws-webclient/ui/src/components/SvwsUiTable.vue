@@ -109,7 +109,7 @@
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }">
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)">
 							<slot name="row" :row="row.source">
 								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
 									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
@@ -693,6 +693,10 @@
 
 			&:not(.svws-clicked):hover {
 				@apply bg-black/5 dark:bg-white/5;
+			}
+
+			&:focus-visible {
+				@apply bg-black/10 dark:bg-white/10;
 			}
 		}
 	}
