@@ -56,7 +56,7 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="removable && type === 'date'" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" />
+		<span v-if="removable && type === 'date'" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
@@ -543,6 +543,11 @@
 
 	.text-input--inline {
 		@apply cursor-text underline decoration-dotted underline-offset-2;
+	}
+
+	.text-input-component .icon.svws-icon--remove:focus-visible {
+		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	}
 
 </style>
