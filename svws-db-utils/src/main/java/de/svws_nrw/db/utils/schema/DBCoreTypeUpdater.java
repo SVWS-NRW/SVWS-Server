@@ -301,10 +301,7 @@ public class DBCoreTypeUpdater {
 	 */
 	private static void updateCoreTypeTabelle(final DBEntityManager conn, final String tabname, final String typename, final long version,
 			final String sqlInsert) {
-		// Lösche alle Daten
-		conn.transactionNativeDelete("DELETE FROM " + tabname);
-		conn.transactionFlush();
-		// Füge die aktuellen Daten des Core-Types ein
+		// Aktualisiere die Daten des Core-Types
 		conn.transactionNativeUpdate(sqlInsert);
 		conn.transactionFlush();
 		// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
