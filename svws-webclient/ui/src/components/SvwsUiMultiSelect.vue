@@ -24,7 +24,7 @@
 				aria-autocomplete="list"
 				:aria-controls="showList ? listIdPrefix : null"
 				:aria-activedescendant="refList && refList.activeItemIndex > -1 ? `${listIdPrefix}-${refList.activeItemIndex}` : null"
-				@update:model-value="value => searchText = value"
+				@update:model-value="value => searchText = value ?? ''"
 				@click="toggleListBox"
 				@focus="onInputFocus"
 				@blur="onInputBlur"

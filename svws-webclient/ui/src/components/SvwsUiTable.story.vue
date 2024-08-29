@@ -57,7 +57,7 @@
 				<svws-ui-content-card>
 					<svws-ui-table v-model="selectedRows" :items="data" :columns="cols2" clickable>
 						<template #cell(email)="{ rowIndex }">
-							<svws-ui-text-input :model-value="1" @keyup.down="next(rowIndex)" @keyup.up="previous(rowIndex)" @keyup.enter="next(rowIndex)" :ref="(el) => itemRefs.set(rowIndex, el)" />
+							<svws-ui-text-input :model-value="'1'" @keyup.down="next(rowIndex)" @keyup.up="previous(rowIndex)" @keyup.enter="next(rowIndex)" :ref="(el) => itemRefs.set(rowIndex, el)" />
 						</template>
 					</svws-ui-table>
 				</svws-ui-content-card>

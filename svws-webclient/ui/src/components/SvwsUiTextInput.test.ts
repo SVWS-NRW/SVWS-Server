@@ -2,7 +2,9 @@ import { describe, test, expect, vi } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import SvwsUiTextInput from "./SvwsUiTextInput.vue";
-import type { InputType, InputDataType } from "../types";
+
+export type InputType = "text" | "date" | "email" | "search" | "tel" | "password";
+export type InputDataType = string | null;
 
 describe("Komponente kann gemounted werden", () => {
 	test("HTML wird erzeugt", () => {
@@ -13,7 +15,6 @@ describe("Komponente kann gemounted werden", () => {
 
 describe.concurrent("PropHandhabung läuft korrekt", () => {
 	test.each([
-		[ "number", 'type="number"', "Type Prop as number"],
 		[ "text", 'type="text"', "Type Prop as text"],
 		[ "date", 'type="date"', "Type Prop as date"],
 		[ "email", 'type="email"', "Type Prop as email"],
@@ -24,9 +25,8 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		[ "search", "search-icon", "Typ Prop als Suche rendert Icons"],
 		[ "search", '<span class="icon', "Typ Prop als Suche rendert Icons Klasse"],
 		[ "date", '<span class="svws-icon icon i-ri-calendar-line"></span>', "Typ Prop als Datum zeigt das Datumssymbol an"],
-		[ "number", "<button", "Typ Prop als number rendert Auf- und Ab-Tasten nach der Eingabe"],
 	])('Mit Props type="%s" HTML enthält "%s" | %s ', async (x, y, _) => {
-		const props = { type: x as InputType };
+		const props = { type: x as "text" | "date" | "email" | "search" | "tel" | "password" };
 
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
@@ -116,7 +116,7 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 
 describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und Emitlogik", () => {
 	test("Daten Prop werden wiedergegeben", async () => {
-		const props = { modelValue: "Lorem123" as InputType };
+		const props = { modelValue: "Lorem123" };
 
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
@@ -124,7 +124,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	});
 
 	test("Updating data Prop will be rerendered", async () => {
-		const props = { modelValue: "Lorem123" as InputType };
+		const props = { modelValue: "Lorem123" };
 
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 		await wrapper.setProps({ modelValue: "Lorem321" });
@@ -133,7 +133,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	});
 
 	test("Aktualisierung der Daten Prop wird emit updateData ausgelöst", async () => {
-		const props = { modelValue: "Lorem123" as InputType };
+		const props = { modelValue: "Lorem123" };
 
 		const wrapper = mount(SvwsUiTextInput, {
 			props: props,
@@ -152,7 +152,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	});
 
 	test("Die Aktualisierung des Eingabewerts für das v-model führt zu einem emit von updateData mit dem neuen Wert", async () => {
-		const props = { modelValue: "Lorem123" as InputType };
+		const props = { modelValue: "Lorem123" };
 
 		const wrapper = mount(SvwsUiTextInput, {
 			props: props,
@@ -173,7 +173,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	});
 
 	test("Die Aktualisierung eines Eingabewerts mit demselben Wert führt nicht zur Ausgabe von updateData", async () => {
-		const props = { modelValue: "Lorem123" as InputType };
+		const props = { modelValue: "Lorem123" };
 
 		const wrapper = mount(SvwsUiTextInput, {
 			props: props,
@@ -188,7 +188,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	})
 })
 
-describe.concurrent.skip("Unit Tests für validatorEmail()", async () => {
+describe.concurrent("Unit Tests für validatorEmail()", async () => {
 	const wrapper = mount(SvwsUiTextInput);
 
 	// extrahier die Funktion validator Email von der Komponente
@@ -198,33 +198,29 @@ describe.concurrent.skip("Unit Tests für validatorEmail()", async () => {
 
 	// [Input Parameter, Erwartungswert, Beschreibung]
 	test.each([
-		[ "fake@sadsdd.de", true, "Korrekte Email"],
-		["asdasdsadsdd.de", false, "Kein @ wird nicht akzeptiert"],
-		["test.email+alex@leetcode.com", false, "Illigale Sonderzeichen"],
-		["asdasds@ad@sdd.de", false, "Zwei @ wird nicht akzeptiert"],
-		["asdasd sdd.de", false, "Leerzeichen erzeugen Fehler"],
-		["asdasd@asdasd", false, "Fehlerhafte URL wird nicht akzeptiert"],
-		["asdasd@asdasd.d", false, "Zu kurze URL wird nicht akzeptiert"],
-		[null, false, "null wird nicht akzeptiert"],
-		[null, false, "Undefined wird nicht akzeptiert"],
-		[1, false, "Einfache Nummer wird nicht akzeptiert"],
-		[" test@test.de", false, "Leerzeichen am Anfang wird nicht akzeptiert"]
+		[ "fake@sadsdd.de", true, "Korrekte Email" ],
+		[ "asdasdsadsdd.de", true, "Kein @ ist erlaubt und bezieht sich auf \"diese\" Domain" ],
+		[ "test.email+alex@leetcode.com", true, "+ wird für tags und ähnliches verwendet" ],
+		[ "asdasds@ad@sdd.de", false, "Zwei @ wird nicht akzeptiert" ],
+		[ "asdasd sdd.de", false, "Leerzeichen erzeugen Fehler" ],
+		[ "asdasd@asdasd", false, "Fehlerhafte URL wird nicht akzeptiert" ],
+		[ "asdasd@asdasd.d", false, "Zu kurze URL wird nicht akzeptiert" ],
+		[ null, true, "null wird akzeptiert" ],
+		[ " test@test.de", false, "Leerzeichen am Anfang wird nicht akzeptiert" ]
 	])('validatorEmail(%s) => %s | %s ', (x, y, _) => {
 		expect(validatorEmail(x)).toBe(y)
 	})
 });
 
-describe.concurrent.skip("Unit Tests für computed value maxLenValid", async () => {
+describe.concurrent("Unit Tests für computed value maxLenValid", async () => {
 	test.each([
-		[10, "test", true, "Kürzeres Wort als MaxLen wird akzeptiert"],
-		[1, "test", false, "Längeres Wort als MaxLen wird nicht akzeptiert"],
-		[undefined, "test", true, "Falls MaxLength undefined ist wird jede Länge akzeptiert"],
-		[4, null, true, "Null als Wort ist nicht zu lang"],
-		[10, "", true, "Leerstring wird akzeptiert"],
-		[10, 12345, true, "Number als Input wird richtig untersucht (wird akzeptiert)"],
-		[1, 12345, false, "Number als Input wird richtig untersucht (wird nicht akzeptiert)"],
+		[ 10, "test", true, "Kürzeres Wort als MaxLen wird akzeptiert" ],
+		[ 1, "test", false, "Längeres Wort als MaxLen wird nicht akzeptiert" ],
+		[ undefined, "test", true, "Falls MaxLength undefined ist wird jede Länge akzeptiert" ],
+		[ 4, null, true, "Null als Wort ist nicht zu lang" ],
+		[ 10, "", true, "Leerstring wird akzeptiert" ],
 	])('maxLenValid {maxLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
-		const props = { maxLen: x1, modelValue: x2 };
+		const props = { maxLen: x1, modelValue: x2 as InputDataType };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 		const maxLenValid = wrapper.findComponent({
 			name: "SvwsUiTextInput",

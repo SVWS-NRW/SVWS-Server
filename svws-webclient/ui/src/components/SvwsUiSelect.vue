@@ -121,11 +121,11 @@
 		return props.itemText(selectedItem.value);
 	}
 
-	function onInput(value: string) {
+	function onInput(value: string | null) {
 		if (props.autocomplete && (refList.value === null) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
 			openListbox();
 		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
-		searchText.value = "" + value;
+		searchText.value = value ?? "";
 		if (props.autocomplete) {
 			void nextTick(() => {
 				if (refList.value !== null) {
