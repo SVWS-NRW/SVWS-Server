@@ -44,7 +44,7 @@
 <script setup lang="ts">
 
 	import type { GostBeratungProps } from "./SGostBeratungProps";
-	import { BenutzerKompetenz, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
+	import { BenutzerKompetenz, BenutzerTyp, type GostBeratungslehrer, type LehrerListeEintrag } from "@core";
 	import { onMounted, computed, ref } from "vue";
 	import { lehrer_filter } from '~/utils/helfer';
 
@@ -53,7 +53,17 @@
 	const selected = ref<GostBeratungslehrer[]>([]);
 
 	// TODO BenutzerKompetenz
-	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN));
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		let beratungslehrer = false;
+		for (const b of props.beratungslehrer())
+			if (b.id === props.benutzerdaten.id) {
+				beratungslehrer = true;
+				break;
+			}
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer)
+	});
 
 	const istAbiturjahrgang = computed<boolean>(() => (props.jahrgangsdaten().abiturjahr > 0));
 

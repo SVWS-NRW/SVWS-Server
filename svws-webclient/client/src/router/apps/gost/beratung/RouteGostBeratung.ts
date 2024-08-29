@@ -49,6 +49,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerdaten: api.benutzerdaten,
 			patchJahrgangsdaten: routeGost.data.patchJahrgangsdaten,
 			jahrgangsdaten: () => routeGost.data.jahrgangsdaten,
 			setWahl: this.data.setWahl,
