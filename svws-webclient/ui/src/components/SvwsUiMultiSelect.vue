@@ -239,8 +239,11 @@
 	}
 
 	function selectCurrentActiveItem() {
-		if (showList.value && refList.value !== null)
+		if (showList.value && refList.value !== null) {
+			if (filteredList.value.length === 0)
+				toggleListBox();
 			selectItem(filteredList.value[refList.value.activeItemIndex]);
+		}
 	}
 
 	// Arrow Navigation
@@ -259,7 +262,7 @@
 		if ((!showList.value) || (refList.value === null))
 			return openListbox();
 		const listLength = filteredList.value.length;
-		if (refList.value.activeItemIndex === 0)
+		if (refList.value.activeItemIndex <= 0)
 			refList.value.activeItemIndex = listLength - 1;
 		else if (refList.value.activeItemIndex >= 1)
 			refList.value.activeItemIndex--;
@@ -284,7 +287,7 @@
 	}
 
 	function scrollToActiveItem() {
-		refList.value?.itemRefs[refList.value.activeItemIndex].scrollIntoView();
+		refList.value?.itemRefs[refList.value.activeItemIndex]?.scrollIntoView();
 	}
 
 	const {x, y, strategy} = useFloating(
