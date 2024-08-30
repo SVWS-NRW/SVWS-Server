@@ -7045,6 +7045,54 @@ public class StundenplanManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 * <br> Problem (1): Das Zeitraster schneidet zeitlich an dem Tag ein anderes Zeitraster.
+	 * <br> Problem (2): Die Unterrichtsstunde des Vorgängers startet zeitlich später.
+	 * <br> Problem (3): Die Unterrichtsstunde des Nachfolgers startet zeitlich früher.
+	 *
+	 * @param z  Das {@link StundenplanZeitraster}-Objekt, welches überprüft werden soll.
+	 *
+	 * @return TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 */
+	public boolean zeitrasterGetIstZustandProblematisch(final @NotNull StundenplanZeitraster z) {
+		StundenplanZeitraster zPrev = null;
+		StundenplanZeitraster zNext = null;
+		for (final @NotNull StundenplanZeitraster zCurr : MapUtils.getOrCreateArrayList(_zeitrastermenge_by_wochentag, z.wochentag)) {
+			// Ignoriere das selbe Zeitraster.
+			if (z.id == zCurr.id)
+				continue;
+
+			// (1)
+			if (zeitrasterGetSchneidenSich(z.stundenbeginn, z.stundenende, zCurr.stundenbeginn, zCurr.stundenende))
+				return true;
+
+			// (2) Bestimme den größten Vorgänger.
+			final int min = (zPrev == null) ? -1000 : zPrev.unterrichtstunde;
+			if ((zCurr.unterrichtstunde < z.unterrichtstunde) && (zCurr.unterrichtstunde > min))
+				zPrev = zCurr;
+
+
+			// (2) Bestimme den kleinsten Nachfolger.
+			final int max = (zNext == null) ? +1000 : zNext.unterrichtstunde;
+			if ((zCurr.unterrichtstunde > z.unterrichtstunde) && (zCurr.unterrichtstunde < max))
+				zNext = zCurr;
+		}
+
+		if ((z.stundenbeginn != null)) {
+			// (2)
+			if ((zPrev != null) && (zPrev.stundenbeginn != null) && (zPrev.stundenbeginn > z.stundenbeginn))
+				return true;
+
+			// (3)
+			if ((zNext != null) && (zNext.stundenbeginn != null) && (zNext.stundenbeginn < z.stundenbeginn))
+				return true;
+		}
+
+		// Es wurde kein problematischer Zustand festgestellt.
+		return false;
+	}
+
+	/**
 	 * Liefert alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
 	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMin()} bis {@link #zeitrasterGetStundeMax()}.
 	 * <br>Laufzeit: O(1), da Referenz auf ein Array.

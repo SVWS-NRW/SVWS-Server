@@ -6377,6 +6377,40 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 * <br> Problem (1): Das Zeitraster schneidet zeitlich an dem Tag ein anderes Zeitraster.
+	 * <br> Problem (2): Die Unterrichtsstunde des Vorgängers startet zeitlich später.
+	 * <br> Problem (3): Die Unterrichtsstunde des Nachfolgers startet zeitlich früher.
+	 *
+	 * @param z  Das {@link StundenplanZeitraster}-Objekt, welches überprüft werden soll.
+	 *
+	 * @return TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 */
+	public zeitrasterGetIstZustandProblematisch(z : StundenplanZeitraster) : boolean {
+		let zPrev : StundenplanZeitraster | null = null;
+		let zNext : StundenplanZeitraster | null = null;
+		for (const zCurr of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z.wochentag)) {
+			if (z.id === zCurr.id)
+				continue;
+			if (this.zeitrasterGetSchneidenSich(z.stundenbeginn, z.stundenende, zCurr.stundenbeginn, zCurr.stundenende))
+				return true;
+			const min : number = (zPrev === null) ? -1000 : zPrev.unterrichtstunde;
+			if ((zCurr.unterrichtstunde < z.unterrichtstunde) && (zCurr.unterrichtstunde > min))
+				zPrev = zCurr;
+			const max : number = (zNext === null) ? +1000 : zNext.unterrichtstunde;
+			if ((zCurr.unterrichtstunde > z.unterrichtstunde) && (zCurr.unterrichtstunde < max))
+				zNext = zCurr;
+		}
+		if ((z.stundenbeginn !== null)) {
+			if ((zPrev !== null) && (zPrev.stundenbeginn !== null) && (zPrev.stundenbeginn > z.stundenbeginn))
+				return true;
+			if ((zNext !== null) && (zNext.stundenbeginn !== null) && (zNext.stundenbeginn < z.stundenbeginn))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
 	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMin()} bis {@link #zeitrasterGetStundeMax()}.
 	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
