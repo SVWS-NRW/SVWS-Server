@@ -56,6 +56,11 @@ export class BenutzerDaten extends JavaObject {
 	public kompetenzenKlassen : List<number> = new ArrayList<number>();
 
 	/**
+	 * Die Abiturjahrgänge bei denen der Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat.
+	 */
+	public kompetenzenAbiturjahrgaenge : List<number> = new ArrayList<number>();
+
+	/**
 	 * Die IDs der aktuellen Lehrer-Leitungsfunktionen, welche diesem Benutzer zugeordnet sind. Dies kann auch für funktionsbezogene Kompetenzen genutzt werden.
 	 */
 	public leitungsfunktionen : List<number> = new ArrayList<number>();
@@ -112,6 +117,11 @@ export class BenutzerDaten extends JavaObject {
 				result.kompetenzenKlassen.add(elem);
 			}
 		}
+		if (obj.kompetenzenAbiturjahrgaenge !== undefined) {
+			for (const elem of obj.kompetenzenAbiturjahrgaenge) {
+				result.kompetenzenAbiturjahrgaenge.add(elem);
+			}
+		}
 		if (obj.leitungsfunktionen !== undefined) {
 			for (const elem of obj.leitungsfunktionen) {
 				result.leitungsfunktionen.add(elem);
@@ -150,6 +160,14 @@ export class BenutzerDaten extends JavaObject {
 			const elem = obj.kompetenzenKlassen.get(i);
 			result += elem.toString();
 			if (i < obj.kompetenzenKlassen.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"kompetenzenAbiturjahrgaenge" : [ ';
+		for (let i = 0; i < obj.kompetenzenAbiturjahrgaenge.size(); i++) {
+			const elem = obj.kompetenzenAbiturjahrgaenge.get(i);
+			result += elem.toString();
+			if (i < obj.kompetenzenAbiturjahrgaenge.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -215,6 +233,16 @@ export class BenutzerDaten extends JavaObject {
 				const elem = obj.kompetenzenKlassen.get(i);
 				result += elem.toString();
 				if (i < obj.kompetenzenKlassen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.kompetenzenAbiturjahrgaenge !== undefined) {
+			result += '"kompetenzenAbiturjahrgaenge" : [ ';
+			for (let i = 0; i < obj.kompetenzenAbiturjahrgaenge.size(); i++) {
+				const elem = obj.kompetenzenAbiturjahrgaenge.get(i);
+				result += elem.toString();
+				if (i < obj.kompetenzenAbiturjahrgaenge.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

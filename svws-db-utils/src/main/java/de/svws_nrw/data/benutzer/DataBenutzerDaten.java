@@ -24,6 +24,7 @@ import de.svws_nrw.core.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerKompetenz;
@@ -389,7 +390,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 
 
 	/**
-	 * Gibt die Liste der IDs der aktuellen Leitunsfunktionen des Lehrers mit den angegebenen ID zurück.
+	 * Gibt die Liste der IDs der aktuellen Leitungsfunktionen des Lehrers mit den angegebenen ID zurück.
 	 *
 	 * @param conn          die aktuelle Datenbankverbindung
 	 * @param typBenutzer   der Typ des Benutzer
@@ -399,6 +400,28 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 */
 	public static List<Long> getLeitungsfunktionenIDs(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
 		return getLeitungsfunktionen(conn, typBenutzer, idBenutzer).stream().map(l -> l.daten.id).toList();
+	}
+
+
+	/**
+	 * Gibt die Liste der Abiturjahrgänge des Lehrers mit den angegebenen ID zurück.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die Liste der Abiturjahrgänge
+	 */
+	public static List<Integer> getBeratungslehrerAbiturjahrgaenge(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		// Nur Lehrer-Benutzer können Beratungslehrer sein.
+		if (typBenutzer != BenutzerTyp.LEHRER.id)
+			return new ArrayList<>();
+		final List<DTOGostJahrgangBeratungslehrer> dtos =
+				conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_LEHRER_ID, DTOGostJahrgangBeratungslehrer.class, idBenutzer);
+		final List<Integer> result = new ArrayList<>();
+		for (final DTOGostJahrgangBeratungslehrer dto : dtos)
+			result.add(dto.Abi_Jahrgang);
+		return result;
 	}
 
 
@@ -436,6 +459,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
 		daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
 		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(conn, daten.typ, daten.typID));
+		daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
