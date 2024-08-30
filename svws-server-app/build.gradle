@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 configurations {
-	implementation.extendsFrom(crypto, database, jetty, resteasy, swagger)
+	implementation.extendsFrom(crypto, database, jetty, jackson, resteasy, swagger)
 }
  
 dependencies {
