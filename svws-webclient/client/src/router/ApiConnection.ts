@@ -48,6 +48,9 @@ export class ApiConnection {
 	// Enthält die Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
 	protected _kompetenzenKlasse = shallowRef<Set<number> | undefined>(undefined);
 
+	// Enthält die Abiturjahrgänge, bei denen der Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
+	protected _kompetenzenAbiturjahrgaenge = shallowRef<Set<number> | undefined>(undefined);
+
 	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
 	protected _config = ref<Config | undefined>(undefined);
 
@@ -117,6 +120,13 @@ export class ApiConnection {
 		if (this._kompetenzenKlasse.value === undefined)
 			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
 		return this._kompetenzenKlasse.value;
+	}
+
+	// Die Abiturjahrgänge, auf denen der angemeldete Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
+	get kompetenzenAbiturjahrgaenge(): Set<number> {
+		if (this._kompetenzenAbiturjahrgaenge.value === undefined)
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
+		return this._kompetenzenAbiturjahrgaenge.value;
 	}
 
 	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
@@ -303,6 +313,22 @@ export class ApiConnection {
 
 
 	/**
+	 * Ermittelt, die Menge an Abiturjahrgängen, bei denen der Benutzer als Beratungslehrer
+	 * funktionsbezogene Kompetenzen hat.
+	 *
+	 * @param daten   die Daten des Benutzers
+	 *
+	 * @returns die Menge an Abiturjahrgängen
+	 */
+	protected getKompetenzenAbiturjahrgaenge(daten: BenutzerDaten): Set<number> {
+		const result = new Set<number>();
+		for (const id of daten.kompetenzenAbiturjahrgaenge)
+			result.add(id);
+		return result;
+	}
+
+
+	/**
 	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
 	 * TypeScript-Objekt.
 	 *
@@ -348,6 +374,7 @@ export class ApiConnection {
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
+			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.getConfig();
 		} catch (error) {
@@ -357,6 +384,7 @@ export class ApiConnection {
 			this._istAdmin.value = undefined;
 			this._kompetenzen.value = undefined;
 			this._kompetenzenKlasse.value = undefined;
+			this._kompetenzenAbiturjahrgaenge.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
 			this._stammdaten.value = {stammdaten: undefined};
@@ -391,6 +419,7 @@ export class ApiConnection {
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
 		this._kompetenzenKlasse.value = undefined;
+		this._kompetenzenAbiturjahrgaenge.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

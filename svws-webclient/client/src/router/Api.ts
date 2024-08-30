@@ -196,6 +196,17 @@ class Api {
 
 
 	/**
+	 * Die Menge an Abiturjahrgängen, bei denen der angemeldete Benutzer als Beratungslehrer
+	 * funktionsbezogene Kompetenzen hat.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerKompetenzenAbiturjahrgaenge(): Set<number> {
+		return this.conn.kompetenzenAbiturjahrgaenge;
+	}
+
+
+	/**
 	 * Gibt den Typ des Benutzers zurück.
 	 *
 	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig ist
@@ -207,6 +218,7 @@ class Api {
 		return typ;
 	}
 
+
 	/**
 	 * Gibt an, ob es sich bei dem Benutzer um einen Lehrer-Benutzer handelt.
 	 *
@@ -217,6 +229,7 @@ class Api {
 			throw new DeveloperNotificationException("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
 		return this.benutzerdaten.typID;
 	}
+
 
 	/// --- Die Konfiguration
 
