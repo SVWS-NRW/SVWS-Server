@@ -52,7 +52,6 @@
 
 	const selected = ref<GostBeratungslehrer[]>([]);
 
-	// TODO BenutzerKompetenz
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		let beratungslehrer = false;
 		for (const b of props.beratungslehrer())
