@@ -7,7 +7,7 @@ configurations {
 }
  
 dependencies {
-	implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
+	implementation 'org.codehaus.plexus:plexus-utils:4.0.1'
 }
 
 checkstyleMain.enabled = false

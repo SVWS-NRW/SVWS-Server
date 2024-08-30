@@ -48,7 +48,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJacksonConfiguration() {
-		def version = "2.17.1";
+		def version = "2.16.2";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -92,7 +92,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.9.Final";
+		def version = "6.2.10.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
