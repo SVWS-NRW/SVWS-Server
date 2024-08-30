@@ -73,6 +73,12 @@ public final class Benutzer {
 	 */
 	private final Set<LehrerLeitungsfunktion> _leitungsfunktionen = new HashSet<>();
 
+	/**
+	 * Enthält die Abiturjahrgänge, in welchen der Benutzer, wenn es sich um einen Lehrer handelt,
+	 * als Beratungslehrer eingetragen ist.
+	 */
+	private final Set<Integer> _abiturjahrgaenge = new HashSet<>();
+
 
 	/**
 	 * Erzeugt einen neuen Datenbank-Benutzer, wobei die für den Datenbankzugriff zu
@@ -420,6 +426,27 @@ public final class Benutzer {
 	 */
 	public Set<LehrerLeitungsfunktion> getLeitungsfunktionen() {
 		return new HashSet<>(this._leitungsfunktionen);
+	}
+
+
+	/**
+	 * Setzt die Abiturjahrgänge, in welchen der Benutzer Beratungslehrer ist.
+	 *
+	 * @param abijahrgaenge   die Abiturjahrgänge
+	 */
+	public void setAbiturjahrgaenge(final Collection<Integer> abijahrgaenge) {
+		this._abiturjahrgaenge.clear();
+		this._abiturjahrgaenge.addAll(abijahrgaenge);
+	}
+
+
+	/**
+	 * Gibt die Abiturjahrgänge, in welchen der Benutzer Beratungslehrer ist.
+	 *
+	 * @return die Abiturjahrgänge
+	 */
+	public Set<Integer> getAbiturjahrgaenge() {
+		return new HashSet<>(this._abiturjahrgaenge);
 	}
 
 }

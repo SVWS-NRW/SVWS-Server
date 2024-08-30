@@ -59,6 +59,7 @@ public final class DBBenutzerUtils {
 			if ((dbBenutzer.Typ == BenutzerTyp.LEHRER) && (dbBenutzer.TypID != null)) {
 				user.setKlassenIDs(DataBenutzerDaten.getKlassenFunktionsbezogen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
 				user.setLeitungsfunktionen(DataBenutzerDaten.getLeitungsfunktionen(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
+				user.setAbiturjahrgaenge(DataBenutzerDaten.getBeratungslehrerAbiturjahrgaenge(conn, dbBenutzer.Typ.id, dbBenutzer.TypID));
 			}
 		}
 	}
