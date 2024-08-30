@@ -50,6 +50,11 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap<string, KlassenDaten>();
 
 	/**
+	 * Die ausgewählte Klassenleitung
+	 */
+	public auswahlKlassenLeitung : LehrerListeEintrag | null = null;
+
+	/**
 	 * Das Filter-Attribut für die Jahrgänge
 	 */
 	public readonly jahrgaenge : AttributMitAuswahl<number, JahrgangsDaten>;
@@ -121,6 +126,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl(gliederungen, KlassenListeManager._schulgliederungToId, KlassenListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.initKlassen();
+		this.auswahlKlassenLeitung = null;
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
@@ -152,6 +158,10 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		let updateEintrag : boolean = false;
 		if (!JavaObject.equalsTranspiler(daten.kuerzel, (eintrag.kuerzel))) {
 			eintrag.kuerzel = daten.kuerzel;
+			updateEintrag = true;
+		}
+		if (this.auswahlKlassenLeitung !== null) {
+			this.auswahlKlassenLeitung = null;
 			updateEintrag = true;
 		}
 		this._filteredSchuelerListe = null;
@@ -255,6 +265,24 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 						this._filteredSchuelerListe.add(s);
 		}
 		return this._filteredSchuelerListe;
+	}
+
+	/**
+	 * Gibt die ausgewählte Klassenleitung zurück
+	 *
+	 * @return die ausgewählte Klassenleitung
+	 */
+	public getAuswahlKlassenLeitung() : LehrerListeEintrag | null {
+		return this.auswahlKlassenLeitung;
+	}
+
+	/**
+	 * Setzt die angegebene Lehrkraft zur ausgewählten Klassenleitung
+	 *
+	 * @param klassenLeitung neue ausgewählte Klassenleitung
+	 */
+	public setAuswahlKlassenLeitung(klassenLeitung : LehrerListeEintrag | null) : void {
+		this.auswahlKlassenLeitung = klassenLeitung;
 	}
 
 	/**

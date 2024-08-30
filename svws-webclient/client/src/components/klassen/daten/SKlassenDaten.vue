@@ -73,12 +73,12 @@
 					<template #footer>
 						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
 							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-								<div v-if="clickedKlassenleitung !== undefined" class="w-6" style="margin-right: 2pt">
+								<div v-if="clickedKlassenleitung !== null" class="w-6" style="margin-right: 2pt">
 									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()" >
 										<span class="icon i-ri-arrow-up-line" />
 									</svws-ui-button>
 								</div>
-								<div v-if="clickedKlassenleitung !== undefined" class="w-6" style="margin-right: 2pt">
+								<div v-if="clickedKlassenleitung !== null" class="w-6" style="margin-right: 2pt">
 									<svws-ui-button v-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge()">
 										<span class="icon i-ri-arrow-down-line" />
 									</svws-ui-button>
@@ -123,9 +123,25 @@
 		ArrayList } from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 
-	const clickedKlassenleitung = ref<LehrerListeEintrag | undefined>(undefined);
 
 	const props = defineProps<KlassenDatenProps>();
+
+	const localAuswahlKlassenLeitung = ref(props.klassenListeManager().getAuswahlKlassenLeitung());
+
+	const clickedKlassenleitung = computed<LehrerListeEintrag | null | undefined>({
+		get: () => {
+			localAuswahlKlassenLeitung.value = props.klassenListeManager().getAuswahlKlassenLeitung()
+			return localAuswahlKlassenLeitung.value;
+		},
+		set: (value) => {
+			if (value === undefined){
+				localAuswahlKlassenLeitung.value = null;
+			} else {
+				localAuswahlKlassenLeitung.value = value
+			}
+			props.klassenListeManager().setAuswahlKlassenLeitung(localAuswahlKlassenLeitung.value);
+		}
+	});
 
 	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
 
@@ -139,36 +155,48 @@
 		return jg.kuerzel + ' - ' + jg.bezeichnung;
 	}
 
-	const ersteKlassenleitungId = computed<number>(() =>
-		listeKlassenlehrer.value[0].id
+	const ersteKlassenleitungId = computed<number | undefined>(() =>
+		listeKlassenlehrer.value.length > 0 ? listeKlassenlehrer.value[0].id : undefined
 	);
 
-	const letzteKlassenleitungId = computed<number>(() =>
-		listeKlassenlehrer.value[data.value.klassenLeitungen.size()-1].id
+	const letzteKlassenleitungId = computed<number | undefined>(() =>
+		listeKlassenlehrer.value.length > 0 ? listeKlassenlehrer.value[data.value.klassenLeitungen.size()-1].id : undefined
 	);
 
-	const showPfeilHoch = computed<boolean>(() =>
-		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== ersteKlassenleitungId.value)
-	);
+	const showPfeilHoch = computed<boolean>(() => {
+		if (clickedKlassenleitung.value) {
+			return (listeKlassenlehrer.value.length > 0)
+				&& (clickedKlassenleitung.value.id !== ersteKlassenleitungId.value)
+				&& data.value.klassenLeitungen.contains(clickedKlassenleitung.value.id);
+		} else {
+			return false;
+		}
+	});
 
-	const showPfeilRunter = computed<boolean>(() =>
-		(clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id !== letzteKlassenleitungId.value)
-	);
+	const showPfeilRunter = computed<boolean>(() => {
+		if(clickedKlassenleitung.value){
+			return (listeKlassenlehrer.value.length > 0)
+				&& (clickedKlassenleitung.value.id !== letzteKlassenleitungId.value)
+				&& data.value.klassenLeitungen.contains(clickedKlassenleitung.value.id);
+		} else {
+			return false
+		}
+	});
 
 	async function removeKlassenleitungHandler(rowData : LehrerListeEintrag) : Promise<void> {
 		await props.removeKlassenleitung(rowData);
-		if ((clickedKlassenleitung.value !== undefined) && (clickedKlassenleitung.value.id === rowData.id))
-			clickedKlassenleitung.value = undefined;
+		if ((clickedKlassenleitung.value !== null) && (clickedKlassenleitung.value!.id === rowData.id))
+			clickedKlassenleitung.value = null;
 	}
 
 	async function erhoeheReihenfolge(): Promise<void> {
-		if (clickedKlassenleitung.value === undefined)
+		if (!clickedKlassenleitung.value)
 			return;
 		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, true);
 	}
 
 	async function reduziereReihenfolge() : Promise<void> {
-		if (clickedKlassenleitung.value === undefined)
+		if (!clickedKlassenleitung.value)
 			return;
 		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, false);
 	}

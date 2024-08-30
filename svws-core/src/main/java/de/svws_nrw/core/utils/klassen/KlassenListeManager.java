@@ -43,6 +43,9 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	private final @NotNull HashMap2D<String, Long, KlassenDaten> _mapKlasseInSchulgliederung = new HashMap2D<>();
 	private final @NotNull HashMap<String, KlassenDaten> _mapKlasseByKuerzel = new HashMap<>();
 
+	/** Die ausgewählte Klassenleitung */
+	public LehrerListeEintrag auswahlKlassenLeitung = null;
+
 	/** Das Filter-Attribut für die Jahrgänge */
 	public final @NotNull AttributMitAuswahl<Long, JahrgangsDaten> jahrgaenge;
 	private static final @NotNull Function<JahrgangsDaten, Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
@@ -101,6 +104,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		initKlassen();
+		this.auswahlKlassenLeitung = null;
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
@@ -136,6 +140,12 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		// Passe ggf. die Daten in der Klassenliste an ... (beim Patchen der Daten)
 		if (!daten.kuerzel.equals(eintrag.kuerzel)) {
 			eintrag.kuerzel = daten.kuerzel;
+			updateEintrag = true;
+		}
+
+		// Setze Klassenleitungs-Auswahl zurück, falls vorhanden
+		if (auswahlKlassenLeitung != null) {
+			auswahlKlassenLeitung = null;
 			updateEintrag = true;
 		}
 		// TODO Liste der Klassenlehrer?
@@ -249,6 +259,23 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		return this._filteredSchuelerListe;
 	}
 
+	/**
+	 * Gibt die ausgewählte Klassenleitung zurück
+	 *
+	 * @return die ausgewählte Klassenleitung
+	 */
+	public LehrerListeEintrag getAuswahlKlassenLeitung() {
+		return this.auswahlKlassenLeitung;
+	}
+
+	/**
+	 * Setzt die angegebene Lehrkraft zur ausgewählten Klassenleitung
+	 *
+	 * @param klassenLeitung neue ausgewählte Klassenleitung
+	 */
+	public void setAuswahlKlassenLeitung(final LehrerListeEintrag klassenLeitung) {
+		this.auswahlKlassenLeitung = klassenLeitung;
+	}
 
 	protected final @NotNull Runnable _eventSchuelerAuswahlChanged = () -> {
 		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird
