@@ -1,10 +1,10 @@
 <template>
 	<svws-ui-content-card title="Angebot von Zusatzkursen">
 		<svws-ui-input-wrapper :grid="4">
-			<svws-ui-checkbox type="toggle" class="my-auto" v-model="inputHatZusatzkursGE">Zusatzkurs GE</svws-ui-checkbox>
-			<svws-ui-select class="col-span-3" title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE" :items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursGE" />
-			<svws-ui-checkbox type="toggle" class="my-auto" v-model="inputHatZusatzkursSW">Zusatzkurs SW</svws-ui-checkbox>
-			<svws-ui-select class="col-span-3" title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW" :items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" :disabled="!inputHatZusatzkursSW" />
+			<svws-ui-checkbox :disabled="!hatUpdateKompetenz" type="toggle" class="my-auto" v-model="inputHatZusatzkursGE">Zusatzkurs GE</svws-ui-checkbox>
+			<svws-ui-select :disabled="!hatUpdateKompetenz || !inputHatZusatzkursGE" class="col-span-3" title="Beginn Zusatzkurs GE" v-model="inputBeginnZusatzkursGE" :items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" />
+			<svws-ui-checkbox :disabled="!hatUpdateKompetenz" type="toggle" class="my-auto" v-model="inputHatZusatzkursSW">Zusatzkurs SW</svws-ui-checkbox>
+			<svws-ui-select :disabled="!hatUpdateKompetenz || !inputHatZusatzkursSW" class="col-span-3" title="Beginn Zusatzkurs SW" v-model="inputBeginnZusatzkursSW" :items="inputBeginnZusatzkurs" :item-text="(i: GostHalbjahr) => i.kuerzel" />
 		</svws-ui-input-wrapper>
 	</svws-ui-content-card>
 </template>
@@ -20,11 +20,10 @@
 	const props = defineProps<{
 		patchJahrgangsdaten: (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => Promise<boolean>;
 		jahrgangsdaten: () => GostJahrgangsdaten;
+		hatUpdateKompetenz: boolean;
 	}>();
 
-	const inputBeginnZusatzkurs: ComputedRef<Array<GostHalbjahr>> = computed(
-		() => { return [ GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21] }
-	);
+	const inputBeginnZusatzkurs: ComputedRef<Array<GostHalbjahr>> = computed(() => [GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21]);
 
 	const inputHatZusatzkursGE: WritableComputedRef<boolean> = computed({
 		get: () => props.jahrgangsdaten().hatZusatzkursGE,

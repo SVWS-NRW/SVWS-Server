@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns="cols" has-background>
+		<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns has-background>
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
@@ -67,7 +67,7 @@
 				</div>
 			</template>
 			<template #rowCustom="{ row: fach }">
-				<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
+				<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -82,9 +82,10 @@
 		faecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
+		hatUpdateKompetenz: boolean;
 	}>();
 
-	const cols: DataTableColumn[] = [
+	const columns: DataTableColumn[] = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
 		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
 		{ key: "Neu", label: "Neu", align: 'center', span: 0.1, minWidth: 2.5 },

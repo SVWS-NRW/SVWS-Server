@@ -1,25 +1,37 @@
 <template>
 	<div class="page--content page--content--full">
-		<s-card-gost-faecher :faecher-manager="faecherManager" :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach="patchFach" />
+		<s-card-gost-faecher :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20 sticky top-8 h-fit">
-			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager="faecherManager"
-				:map-fachkombinationen="mapFachkombinationen" :patch-fachkombination="patchFachkombination"
-				:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
-			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :faecher-manager="faecherManager"
-				:map-fachkombinationen="mapFachkombinationen" :patch-fachkombination="patchFachkombination"
-				:add-fachkombination="addFachkombination" :remove-fachkombination="removeFachkombination" />
-			<s-card-gost-zusatzkurse :jahrgangsdaten="jahrgangsdaten" :patch-jahrgangsdaten="patchJahrgangsdaten" />
+			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager
+				:map-fachkombinationen :patch-fachkombination :hat-update-kompetenz :add-fachkombination :remove-fachkombination />
+			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :faecher-manager
+				:map-fachkombinationen :patch-fachkombination :hat-update-kompetenz :add-fachkombination :remove-fachkombination />
+			<s-card-gost-zusatzkurse :jahrgangsdaten :patch-jahrgangsdaten :hat-update-kompetenz />
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
-	import { GostLaufbahnplanungFachkombinationTyp } from "@core";
+	import { BenutzerKompetenz, BenutzerTyp, GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<GostFaecherProps>();
 
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+		// TODO BenutzerKompetenzen ergänzen
+		// let beratungslehrer = false;
+		// for (const b of props.beratungslehrer())
+		// 	if (b.id === props.benutzerdaten.id) {
+		// 		beratungslehrer = true;
+		// 		break;
+		// 	}
+		// return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+		// 	|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+		// 		&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer)
+	});
 </script>
 
 <style lang="postcss" scoped>

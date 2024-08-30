@@ -1,6 +1,11 @@
-import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten } from "@core";
+import type { GostFaecherManager, GostFach, GostJahrgangFachkombination, GostLaufbahnplanungFachkombinationTyp, GostJahrgangsdaten, BenutzerDaten, BenutzerKompetenz, Schulform, ServerMode, GostBeratungslehrer, List } from "@core";
 
 export interface GostFaecherProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
+	benutzerdaten: BenutzerDaten;
+	// beratungslehrer: () => List<GostBeratungslehrer>;
 	faecherManager: () => GostFaecherManager;
 	patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 	patchFachkombination: (data: Partial<GostJahrgangFachkombination>, id : number) => Promise<void>;

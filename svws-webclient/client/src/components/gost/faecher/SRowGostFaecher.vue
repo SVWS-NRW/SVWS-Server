@@ -9,10 +9,11 @@
 			<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ fach.bezeichnung }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" disabled v-model="fach.istFremdSpracheNeuEinsetzend">
+			<!-- TODO Dieses Input ist immer disabled? -->
+			<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
 		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded">
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
+			<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded">
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
 				<span class="opacity-50">/</span>
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
@@ -20,36 +21,36 @@
 			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td">
-			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-divider">
-			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
+			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
+			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q11">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q11">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q12">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q12">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q21">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q21">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q22">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q22">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_gk_moeglich}">
-			<input v-if="abi_gk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
+			<input v-if="abi_gk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_lk_moeglich}">
-			<input v-if="abi_lk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
+			<input v-if="abi_lk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
 		</div>
 	</div>
 </template>
@@ -65,6 +66,7 @@
 		abiturjahr: number;
 		fachId: number;
 		faecherManager: () => GostFaecherManager;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	async function doPatch(data: Partial<GostFach>) {
@@ -104,7 +106,7 @@
 		get: () => {
 			if (fach.value.projektKursLeitfach1ID === null)
 				return undefined;
-			let result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
+			const result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
 			return result === null ? undefined : result;
 		},
 		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
@@ -114,7 +116,7 @@
 		get: () => {
 			if (fach.value.projektKursLeitfach2ID === null)
 				return undefined;
-			let result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
+			const result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
 			return result === null ? undefined : result;
 		},
 		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })

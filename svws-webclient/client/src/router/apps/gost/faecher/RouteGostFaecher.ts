@@ -9,6 +9,7 @@ import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFa
 
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
@@ -46,6 +47,11 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 
 	public getProps(to: RouteLocationNormalized): GostFaecherProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerdaten: api.benutzerdaten,
+			// beratungslehrer: () => this.data.beratungslehrer,
 			faecherManager: () => routeGost.data.faecherManager,
 			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,
