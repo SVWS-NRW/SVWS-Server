@@ -42,12 +42,13 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
@@ -71,13 +72,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link Abiturdaten}.
  */
-public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
+public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Long, Long, Abiturdaten> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Abiturdaten}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Abiturdaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -85,29 +86,27 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		super(conn);
 	}
 
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+	private void checkFunktionsbezogeneKompetenz(final Integer abiturjahrgang) throws ApiOperationException {
+		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+				Set.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)))
+			checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(abiturjahrgang);
 	}
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response get(final Long schueler_id) throws ApiOperationException {
-		if (schueler_id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+	protected Abiturdaten map(final Long idSchueler) throws ApiOperationException {
+		if (idSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schüler-ID darf nicht null sein.");
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return DBUtilsGostLaufbahn.get(conn, idSchueler);
 	}
 
 	@Override
-	public Response patch(final Long schueler_id, final InputStream is) {
-		throw new UnsupportedOperationException();
+	public Abiturdaten getById(final Long idSchueler) throws ApiOperationException {
+		final Abiturdaten daten = map(idSchueler);
+		checkFunktionsbezogeneKompetenz(daten.abiturjahr);
+		return daten;
 	}
+
 
 	/**
 	 * Ermittelt die Fachwahl für die gymnasiale Oberstufe zu einem Fach von dem angegebenen Schüler.

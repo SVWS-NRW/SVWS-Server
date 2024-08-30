@@ -525,6 +525,24 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
+	 * Prüft, ob der Benutzer bei dem angegeben Abiturjahrgang als Beratungslehrer funktionsbezogene Rechte hat oder nicht.
+	 *
+	 * @param abijahrgang   der zu prüfende Abiturjahrgang
+	 *
+	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf den Abiturjahrgang hat (503 - FORBIDDEN).
+	 */
+	public void checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(final Integer abijahrgang) throws ApiOperationException {
+		if (abijahrgang == null)
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keinem Abiturjahrgang zugeordnet sind.");
+		final boolean hatKompetenzFuerAbijahrgang = conn.getUser().getAbiturjahrgaenge().contains(abijahrgang);
+		if (!hatKompetenzFuerAbijahrgang)
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff als Beratungslehrer auf den Abiturjahrgang " + abijahrgang);
+	}
+
+
+	/**
 	 * Methode prüft vor dem Löschen, ob alle Vorbedingungen zum Löschen erfüllt sind.
 	 * Standardmäßig hat diese Methode keine Implementierung.
 	 * Wenn eine Prüfung durchgeführt werden soll, muss diese Methode überschrieben werden.
