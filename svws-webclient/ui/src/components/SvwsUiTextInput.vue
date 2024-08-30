@@ -153,7 +153,7 @@
 	function updateData(value: string | null) {
 		if (data.value !== value) {
 			data.value = value;
-			emit("update:modelValue", String(data.value)); // TODO do not use String()
+			emit("update:modelValue", data.value);
 		}
 	}
 
@@ -171,13 +171,13 @@
 
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value)); // TODO do not use String()
-		emit("blur", String(data.value)); // TODO do not use String()
+			emit("change", data.value);
+		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value)); // TODO do not use String()
+			emit("change", data.value);
 	}
 
 	function reset() {

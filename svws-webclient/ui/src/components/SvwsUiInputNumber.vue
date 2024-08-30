@@ -108,12 +108,13 @@
 		}
 	};
 
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const data = ref<number | null>(props.modelValue);
 
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
 
 	const isValid = computed(()=>{
-		if ((props.required === true) && ((data.value === null) || (data.value === undefined)))
+		if ((props.required === true) && ((data.value === null)))
 			return false;
 		return props.valid(data.value);
 	})
