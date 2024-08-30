@@ -126,7 +126,7 @@
 										<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
 										<slot v-else name="cell" v-bind="cell">
 											<svws-ui-text-input v-if="row.isEditing && cell.column.type !== 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
-											<svws-ui-number-input v-if="row.isEditing && cell.column.type === 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
+											<svws-ui-input-number v-if="row.isEditing && cell.column.type === 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
 											<template v-else-if="cell.value">
 												{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 											</template>
