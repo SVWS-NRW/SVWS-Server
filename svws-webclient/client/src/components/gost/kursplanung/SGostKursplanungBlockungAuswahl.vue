@@ -18,7 +18,7 @@
 						</span>
 						<svws-ui-text-input v-else :model-value="row.name" headless focus
 							@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
-							@change="name => patch_blockung(name, row.id)" class="-my-0.5 w-full" />
+							@change="name => name && patch_blockung(name, row.id)" class="-my-0.5 w-full" />
 					</div>
 					<div v-else>
 						<span>{{ row.name }}&nbsp;</span>
@@ -83,8 +83,14 @@
 			<slot name="blockungAuswahlActions" />
 		</template>
 	</svws-ui-table>
-	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3">
-		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status />
+	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3 flex gap-1 items-center mb-5 px-7 3xl:px-8" :class="{'animate-pulse': !apiStatus.hasError}">
+		<template v-if="apiStatus.pending">
+			<svws-ui-spinner spinning />
+			<span class="text-button text-black/50 dark:text-white/50">Ergebnisse werden berechnet…</span>
+		</template>
+		<template v-if="apiStatus.hasError">
+			<span class="text-error font-bold">Fehler beim Berechnen der Blockung.</span>
+		</template>
 	</div>
 	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr :api-status :get-datenmanager :patch-ergebnis :remove-ergebnisse :goto-ergebnis :auswahl-ergebnis />
 </template>

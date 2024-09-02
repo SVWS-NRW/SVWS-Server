@@ -12,7 +12,11 @@ import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, Wor
  */
 export class WorkerManagerKursblockung {
 
-	/** Die maximale Anzahl der Worker-Threads zurück, die von diesem Manager genutzt werden können. */
+	/**
+	 * Die maximale Anzahl der Worker-Threads zurück, die von diesem Manager genutzt werden können.
+	 * Falls der Browser die Abfrage nicht kennt, schalten wir die Warnung bei eslint abgebrochen
+	**/
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	public static readonly MAX_WORKER = (navigator.hardwareConcurrency ?? 3) - 1; // reserviere einen Thread für die GUI
 
 	/** Die Liste der Fächer des Abiturjahrgangs */
@@ -238,7 +242,7 @@ export class WorkerManagerKursblockung {
 		this.running.value = false;
 		this.initialized.value = false;
 		for (let i = 0; i < this.worker.length; i++) {
-			if (this.worker[i] !== undefined) {
+			if (this.worker[i]) {
 				this.worker[i].onmessage = null;
 				this.worker[i].terminate();
 			}
@@ -374,7 +378,7 @@ export class WorkerManagerKursblockung {
 	 * @param index    der Index des Workers
 	 * @param e        das Ereignis für die eingehende Nachricht
 	 */
-	protected messageHandler = (index : number, e: MessageEvent<any>) => {
+	protected messageHandler = (index : number, e: MessageEvent) => {
 		const cmd: WorkerKursblockungMessageType = e.data.cmd;
 		switch (cmd) {
 			case 'init': this.handleInitReply(index, e.data); break;

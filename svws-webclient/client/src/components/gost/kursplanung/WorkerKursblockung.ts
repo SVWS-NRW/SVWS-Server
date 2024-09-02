@@ -75,7 +75,7 @@ class WorkerKursblockung {
 	 * @param message   die Nachricht
 	 */
 	protected handleInit(message : WorkerKursblockungRequestInit) {
-		if ((!this.isInitialized()) && (message.faecher !== undefined) && (message.blockungsdaten !== undefined)) {
+		if (!this.isInitialized()) {
 			const faecherListe = new ArrayList<GostFach>();
 			for (const fach of message.faecher)
 				faecherListe.add(GostFach.transpilerFromJSON(fach));
@@ -117,7 +117,7 @@ class WorkerKursblockung {
 	 *
 	 * @param event   das eingehende Message-Event
 	 */
-	public messageHandler = (event: MessageEvent<any>) : void => {
+	public messageHandler = (event: MessageEvent) : void => {
 		const cmd: WorkerKursblockungMessageType = event.data.cmd;
 		try {
 			switch (cmd) {

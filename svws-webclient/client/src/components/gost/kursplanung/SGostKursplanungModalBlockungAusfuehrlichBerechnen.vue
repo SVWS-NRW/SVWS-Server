@@ -201,7 +201,13 @@
 		return `hsl(${h},100%,75%)`;
 	}
 
-	const openModal = () => showModal().value = true;
-	const closeModal = () => (showModal().value = false) && (nachfragen.value = false);
+	function openModal() {
+		return showModal().value = true;
+	}
+
+	function closeModal() {
+		showModal().value = false;
+		nachfragen.value = false;
+	}
 
 </script>

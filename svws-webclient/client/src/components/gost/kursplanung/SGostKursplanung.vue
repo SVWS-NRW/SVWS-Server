@@ -96,7 +96,7 @@
 				</svws-ui-sub-nav>
 			</Teleport>
 			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
-				:halbjahr="halbjahr" :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :toggle-blockungstabelle
+				:halbjahr :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :toggle-blockungstabelle
 				:get-datenmanager :get-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt

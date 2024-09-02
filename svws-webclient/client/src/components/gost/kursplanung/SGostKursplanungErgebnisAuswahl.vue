@@ -108,8 +108,6 @@
 	}
 
 	async function remove_ergebnisse() {
-		if (props.halbjahr === undefined)
-			return;
 		await props.removeErgebnisse(selected_ergebnisse.value);
 		selected_ergebnisse.value = [];
 	}

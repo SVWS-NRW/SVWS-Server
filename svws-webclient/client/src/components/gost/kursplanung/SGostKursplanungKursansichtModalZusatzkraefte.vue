@@ -3,7 +3,7 @@
 		<svws-ui-modal :show="showModal" size="small" class="hidden">
 			<template #modalTitle>Lehrkräfte für Kurs {{ kursbezeichnung }}</template>
 			<template #modalContent>
-				<svws-ui-table :items="[...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)]" :columns="cols" selectable v-model="selected" count>
+				<svws-ui-table :items="[...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)]" :columns selectable v-model="selected" count>
 					<template #cell(nachname)="{ rowData }">
 						{{ rowData.nachname }}, {{ rowData.vorname }}
 					</template>
@@ -56,7 +56,7 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 	const selected = ref<GostBlockungKursLehrer[]>([]);
-	const select = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>> | null>(null);
+	const select = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
 
 	const neueLehrkraft = computed({
 		get(): LehrerListeEintrag | undefined | null {
@@ -71,7 +71,7 @@
 		}
 	});
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Lehrkraft", span: 1 },
 		{ key: "nachname", label: "", span: 3 },
 	];

@@ -30,7 +30,7 @@
 									<template #content>
 										<div class="py-2">
 											<svws-ui-text-input :model-value="s.bezeichnung" focus headless
-												@change="name => patch_schiene(s, name)"
+												@change="name => name && patch_schiene(s, name)"
 												@keyup.escape="edit_schienenname=undefined" class="text-center" />
 										</div>
 									</template>
@@ -169,7 +169,7 @@
 											<div class="flex flex-grow items-center -my-auto h-full">
 												<template v-if="kurs.id === editKursID">
 													<span class="flex-shrink-0 -my-0.5">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
-													<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => editKursOnBlur(suffix, kurs.id)" @keyup.enter="(e:any)=>e.target.blur()" focus headless class="-my-1" />
+													<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => suffix && editKursOnBlur(suffix, kurs.id)" @keyup.enter="$event.target.blur()" focus headless class="-my-1" />
 												</template>
 												<template v-else>
 													<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
