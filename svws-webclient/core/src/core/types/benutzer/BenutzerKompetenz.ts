@@ -235,7 +235,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zum Ändern der Unterrichtsverteilung (funktionsbezogen) benötigt.
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG_ALLGEMEIN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_ALLGEMEIN_FUNKTIONSBEZOGEN", 43, new BenutzerKompetenzKatalogEintrag(108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null));
+	public static readonly UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN", 43, new BenutzerKompetenzKatalogEintrag(108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null));
 
 	/**
 	 * Es werden Rechte zum Ansehen von Stundenplänen (allgemein) benötigt.

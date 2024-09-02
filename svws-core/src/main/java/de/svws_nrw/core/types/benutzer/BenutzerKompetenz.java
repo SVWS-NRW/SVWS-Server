@@ -229,7 +229,7 @@ public enum BenutzerKompetenz {
 	)),
 
 	/** Es werden Rechte zum Ändern der Unterrichtsverteilung (funktionsbezogen) benötigt. */
-	UNTERRICHTSVERTEILUNG_ALLGEMEIN_FUNKTIONSBEZOGEN(new BenutzerKompetenzKatalogEintrag(
+	UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN(new BenutzerKompetenzKatalogEintrag(
 			108, BenutzerKompetenzGruppe.UNTERRICHTSVERTEILUNG, "Unterrichtsverteilung ändern (funktionsbezogen)", null
 	)),
 
