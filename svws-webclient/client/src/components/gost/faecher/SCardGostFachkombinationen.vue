@@ -13,7 +13,7 @@
 				<s-row-gost-fachkombination :typ :kombination :faecher-manager :patch-fachkombination :remove-fachkombination :hat-update-kompetenz />
 			</template>
 			<template #actions v-if="hatUpdateKompetenz">
-				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><span class="icon i-ri-add-line" /> </svws-ui-button>
+				<svws-ui-button size="small" type="icon" @click="addFachkombination(typ)"><span class="icon i-ri-add-line" /> </svws-ui-button>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -54,10 +54,6 @@
 				result.add(kombi);
 		return result;
 	});
-
-	async function add_kurskombi() {
-		void props.addFachkombination(props.typ);
-	}
 
 	const columns = computed<DataTableColumn[]>(() => [
 		{ key: "Fach1", label: "Fach 1", span: 1, minWidth: 5 },

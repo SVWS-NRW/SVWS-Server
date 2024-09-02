@@ -33,7 +33,7 @@
 		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigQ22" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<s-row-gost-fachkombination-modal v-if="hatUpdateKompetenz" v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
+		<s-row-gost-fachkombination-modal v-if="hatUpdateKompetenz" v-slot="{openModal}" :hinweistext :kombination :patch-fachkombination>
 			<svws-ui-tooltip position="top">
 				<button role="button" class="button button--icon"><span class="icon i-ri-edit-2-line" @click="openModal" /></button>
 				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><span class="opacity-50">Klicken, um den Text zu bearbeiten</span> </template>
@@ -41,7 +41,7 @@
 		</s-row-gost-fachkombination-modal>
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<svws-ui-button v-if="hatUpdateKompetenz" type="trash" @click="del_fachkombi" />
+		<svws-ui-button v-if="hatUpdateKompetenz" type="trash" @click="removeFachkombination(kombination.id)" />
 	</div>
 </template>
 
@@ -144,9 +144,5 @@
 		const k2 = kursart2.value?.kuerzel ?? '';
 		return `${fach1.value?.kuerzel || ''} ${k1} ${typ} ${fach2.value?.kuerzel || ''} ${k2}`;
 	})
-
-	const del_fachkombi = () => {
-		void props.removeFachkombination(props.kombination.id);
-	}
 
 </script>

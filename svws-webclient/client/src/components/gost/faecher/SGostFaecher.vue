@@ -15,22 +15,14 @@
 
 	import { computed } from "vue";
 	import type { GostFaecherProps } from "./SGostFaecherProps";
-	import { BenutzerKompetenz, BenutzerTyp, GostLaufbahnplanungFachkombinationTyp } from "@core";
+	import { BenutzerKompetenz, GostLaufbahnplanungFachkombinationTyp } from "@core";
 
 	const props = defineProps<GostFaecherProps>();
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-		// TODO BenutzerKompetenzen ergänzen
-		// let beratungslehrer = false;
-		// for (const b of props.beratungslehrer())
-		// 	if (b.id === props.benutzerdaten.id) {
-		// 		beratungslehrer = true;
-		// 		break;
-		// 	}
-		// return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
-		// 	|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
-		// 		&& props.benutzerdaten.typ === BenutzerTyp.LEHRER.id && beratungslehrer)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
 	});
 </script>
 

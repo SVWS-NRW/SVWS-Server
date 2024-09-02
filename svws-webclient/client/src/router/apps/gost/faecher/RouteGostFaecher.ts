@@ -17,7 +17,10 @@ const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
 export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+		], "gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
@@ -50,8 +53,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
-			benutzerdaten: api.benutzerdaten,
-			// beratungslehrer: () => this.data.beratungslehrer,
+			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			faecherManager: () => routeGost.data.faecherManager,
 			patchFach: routeGost.data.patchFach,
 			patchFachkombination: this.data.patchFachkombination,
