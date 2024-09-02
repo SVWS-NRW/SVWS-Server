@@ -61,13 +61,15 @@
 	}
 
 	async function patchBeginn(start: string | null) {
-		if ((start === null) || (inputBeginn.value?.input === null) || (inputBeginn.value?.input === undefined))
+		if ((start === null) || (inputBeginn.value?.input === null) || (inputBeginn.value?.input === undefined) || (inputEnde.value?.input === null) || (inputEnde.value?.input === undefined))
 			return;
 		ueberschneidung.value = false;
+		const dauer = (props.selected.stundenende ?? 0) - (props.selected.stundenbeginn ?? 0);
 		const stundenbeginn = DateUtils.gibMinutenOfZeitAsString(start);
 		const zeitraster = new StundenplanZeitraster();
 		Object.assign(zeitraster, props.selected);
 		zeitraster.stundenbeginn = stundenbeginn;
+		zeitraster.stundenende = stundenbeginn + dauer;
 		const list = ListUtils.create1(zeitraster);
 		const ignoreList = ListUtils.create1(props.selected);
 		if (!props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList))
@@ -75,6 +77,7 @@
 		else
 			ueberschneidung.value = true;
 		inputBeginn.value.input.value = props.stundenplanManager().zeitrasterGetByIdStringOfUhrzeitBeginn(props.selected.id);
+		inputEnde.value.input.value = props.stundenplanManager().zeitrasterGetByIdStringOfUhrzeitEnde(props.selected.id);
 	}
 
 	async function patchEnde(ende: string | null) {

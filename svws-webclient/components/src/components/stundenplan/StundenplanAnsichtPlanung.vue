@@ -34,7 +34,7 @@
 			</div>
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': selected===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
-					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': selected===zeitrasterEintrag || selected === zeitrasterEintrag.unterrichtstunde}">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': selected===zeitrasterEintrag || selected === zeitrasterEintrag.unterrichtstunde, 'bg-highlight': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
 						<div class="svws-ui-stundenplan--unterricht">
 							<span>{{ zeitrasterEintrag.unterrichtstunde }}</span>
 							<div class="flex content-start">

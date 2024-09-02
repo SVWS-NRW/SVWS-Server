@@ -47,7 +47,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
 					if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
 						routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
-						routeSchueler.data.setFilter()
+						await routeSchueler.data.setFilter();
 						break;
 					}
 			}
