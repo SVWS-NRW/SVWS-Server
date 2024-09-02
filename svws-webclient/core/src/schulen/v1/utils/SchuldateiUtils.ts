@@ -5,15 +5,28 @@ import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 import { NumberFormatException } from '../../../java/lang/NumberFormatException';
 import { JavaString } from '../../../java/lang/JavaString';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuldateiUtils extends JavaObject {
 
 	/**
-	 * Der Zeitraum, der immer gültig ist
+	 * Das Anfangs-Schuljahr in einem Zeitraum, der abgibt, dass der Wert schon immer gültig war
 	 */
 	public static readonly _immerGueltigAb : number = 1980;
 
+	/**
+	 * Das End-Schuljahr in einem Zeitraum, der abgibt, dass der Wert in seiner Gültigkeit noch nicht eingeschränkt ist
+	 */
 	public static readonly _immerGueltigBis : number = 9999;
+
+	/**
+	 * Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge
+	 */
+	public static readonly _comparatorSchuldateieintragZeitraumDescending : Comparator<SchuldateiEintrag> = { compare : (a: SchuldateiEintrag, b: SchuldateiEintrag) => {
+		if (JavaObject.equalsTranspiler(b.gueltigab, (a.gueltigab)))
+			return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
+		return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
+	} };
 
 
 	private constructor() {
@@ -57,6 +70,8 @@ export class SchuldateiUtils extends JavaObject {
 	 * @param date		das Datum als String
 	 *
 	 * @return @NotNull INTEGER  das Schuljahr. 1980 für gilt seit immer (jahr .lte. 1980), 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
 	 */
 	public static schuljahrAusDatum(date : string) : number {
 		const dmy : Array<number> = SchuldateiUtils.splitDate(date);

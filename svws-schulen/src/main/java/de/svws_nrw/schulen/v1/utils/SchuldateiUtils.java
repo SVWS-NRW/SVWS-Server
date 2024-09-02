@@ -1,5 +1,7 @@
 package de.svws_nrw.schulen.v1.utils;
 
+import java.util.Comparator;
+
 import de.svws_nrw.schulen.v1.data.SchuldateiEintrag;
 import jakarta.validation.constraints.NotNull;
 
@@ -8,13 +10,25 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SchuldateiUtils {
 
-	/** Der Zeitraum, der immer gültig ist */
-	public static final int _immerGueltigAb = 1980;
-	public static final int _immerGueltigBis = 9999;
-
 	private SchuldateiUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
+
+
+	/** Das Anfangs-Schuljahr in einem Zeitraum, der abgibt, dass der Wert schon immer gültig war */
+	public static final int _immerGueltigAb = 1980;
+
+	/** Das End-Schuljahr in einem Zeitraum, der abgibt, dass der Wert in seiner Gültigkeit noch nicht eingeschränkt ist */
+	public static final int _immerGueltigBis = 9999;
+
+
+	/** Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge*/
+	public static final @NotNull Comparator<SchuldateiEintrag> _comparatorSchuldateieintragZeitraumDescending =
+			(final @NotNull SchuldateiEintrag a, final @NotNull SchuldateiEintrag b) -> {
+				if (b.gueltigab.equals(a.gueltigab))
+					return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
+				return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
+			};
 
 
 	/**
@@ -54,10 +68,12 @@ public final class SchuldateiUtils {
 	 * @param date		das Datum als String
 	 *
 	 * @return @NotNull INTEGER  das Schuljahr. 1980 für gilt seit immer (jahr .lte. 1980), 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
 	 */
 	public static @NotNull Integer schuljahrAusDatum(final @NotNull String date) throws IllegalArgumentException {
 		final @NotNull int[] dmy = splitDate(date);
-		@NotNull Integer jahr = dmy[2];
+		int jahr = dmy[2];
 		if (dmy[1] < 8)
 			jahr--;
 		return jahr;

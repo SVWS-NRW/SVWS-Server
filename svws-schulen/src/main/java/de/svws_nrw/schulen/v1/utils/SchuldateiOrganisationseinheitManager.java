@@ -1025,7 +1025,7 @@ public class SchuldateiOrganisationseinheitManager {
 	 *
 	 * @return boolean, ob die Kombi im betreffenden Schuljahr vorhanden ist
 	 */
-	public boolean hatMerkmalAttributInSchuljahr(@NotNull final int merkmal, final int attribut, final int schuljahr) {
+	public boolean hatMerkmalAttributInSchuljahr(final int merkmal, final int attribut, final int schuljahr) {
 		// Prüfe, ob die Merkmalsliste für das Schuljahr schon vorliegt
 		List<SchuldateiOrganisationseinheitMerkmal> listMerkmale = _mapMerkmaleBySchuljahr.get(schuljahr);
 		if (listMerkmale == null) {

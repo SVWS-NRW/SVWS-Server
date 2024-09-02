@@ -1,7 +1,6 @@
 package de.svws_nrw.schulen.v1.utils;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,15 +34,6 @@ public class SchuldateiKatalogManager {
 
 	/** Cache: Eine Map nach Schuljahren für Maps von Schlüssel auf eine Liste von SchuldateiKatalogeinträgen */
 	private final @NotNull Map<Integer, Map<String, List<SchuldateiKatalogeintrag>>> _mapKatalogEintraegeBySchuljahrAndSchluessel = new HashMap<>();
-
-
-	/** Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge*/
-	private static final @NotNull Comparator<SchuldateiKatalogeintrag> _comparatorZeitraumDesc =
-			(final @NotNull SchuldateiKatalogeintrag a, final @NotNull SchuldateiKatalogeintrag b) -> {
-				if (b.gueltigab.equals(a.gueltigab))
-					return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
-				return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
-			};
 
 
 	/**
@@ -315,10 +305,10 @@ public class SchuldateiKatalogManager {
 		final List<SchuldateiKatalogeintrag> list = getEintraegeByWert(wert);
 		if (list == null)
 			return false;
-		list.sort(_comparatorZeitraumDesc);
-		int ab = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
+		list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
+		final int ab = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
 		int bis = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
-		for (SchuldateiKatalogeintrag eintrag : list) {
+		for (final SchuldateiKatalogeintrag eintrag : list) {
 			if ((eintrag.gueltigbis == null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis)
 				return false;
 			final int vonSchuljahr = (eintrag.gueltigab == null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
@@ -382,7 +372,7 @@ public class SchuldateiKatalogManager {
 			//Laufe durch die Liste und prüfe, dass die Zeiträume gültig und disjunkt sind.
 			@NotNull SchuldateiKatalogeintrag eintrag;
 			if (list.size() > 1) {
-				list.sort(_comparatorZeitraumDesc);
+				list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
 				eintrag = list.getFirst();
 				int schuljahrBis = eintrag.gueltigbis == null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
 				int schuljahrAb  = eintrag.gueltigab  == null ? SchuldateiUtils._immerGueltigAb  : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);

@@ -8,7 +8,6 @@ import { JavaString } from '../../../java/lang/JavaString';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
-import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuldateiKatalogManager extends JavaObject {
 
@@ -46,15 +45,6 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 * Cache: Eine Map nach Schuljahren für Maps von Schlüssel auf eine Liste von SchuldateiKatalogeinträgen
 	 */
 	private readonly _mapKatalogEintraegeBySchuljahrAndSchluessel : JavaMap<number, JavaMap<string, List<SchuldateiKatalogeintrag>>> = new HashMap<number, JavaMap<string, List<SchuldateiKatalogeintrag>>>();
-
-	/**
-	 * Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge
-	 */
-	private static readonly _comparatorZeitraumDesc : Comparator<SchuldateiKatalogeintrag> = { compare : (a: SchuldateiKatalogeintrag, b: SchuldateiKatalogeintrag) => {
-		if (JavaObject.equalsTranspiler(b.gueltigab, (a.gueltigab)))
-			return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
-		return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
-	} };
 
 
 	/**
@@ -333,10 +323,10 @@ export class SchuldateiKatalogManager extends JavaObject {
 			const list : List<SchuldateiKatalogeintrag> | null = this.getEintraegeByWert(wert);
 			if (list === null)
 				return false;
-			list.sort(SchuldateiKatalogManager._comparatorZeitraumDesc);
-			let ab : number = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
+			list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
+			const ab : number = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
 			let bis : number = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
-			for (let eintrag of list) {
+			for (const eintrag of list) {
 				if ((eintrag.gueltigbis === null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis)
 					return false;
 				const vonSchuljahr : number = (eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
@@ -395,7 +385,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 		for (const list of this._mapKatalogeintraegeByWert.values()) {
 			let eintrag : SchuldateiKatalogeintrag;
 			if (list.size() > 1) {
-				list.sort(SchuldateiKatalogManager._comparatorZeitraumDesc);
+				list.sort(SchuldateiUtils._comparatorSchuldateieintragZeitraumDescending);
 				eintrag = list.getFirst();
 				let schuljahrBis : number = eintrag.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
 				let schuljahrAb : number = eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
