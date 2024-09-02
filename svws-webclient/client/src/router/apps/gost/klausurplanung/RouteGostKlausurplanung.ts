@@ -73,7 +73,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : Number(to_params.abiturjahr);
+		const abiturjahr = RouteNode.getIntParam(to_params, "abiturjahr");
 		if ((abiturjahr === undefined))
 			return routeGost.defaultChild!.getRoute(-1);
 		return true;
@@ -129,6 +129,9 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostKlausurplanungAuswahlProps {
 		return {
+			kMan: () => routeGostKlausurplanung.data.manager,
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			gotoHalbjahr: this.data.gotoHalbjahr,
 			halbjahr: this.data.halbjahr,
 			setChild: this.setChild,

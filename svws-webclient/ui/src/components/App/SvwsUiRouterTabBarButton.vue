@@ -1,7 +1,10 @@
 <template>
-	<button v-if="text" @click="select()" class="svws-ui-tab-button" :class="{'svws-active': isSelected}">
+	<button v-if="text" @click="select()" class="svws-ui-tab-button flex flex-row" :class="{'svws-active': isSelected}">
 		<span>{{ text }}</span>
 		<!--<span class="icon i-ri-loader-4-line svws-ui-spinner"v-if="isSelected" />-->
+		<template v-if="$slots.badge">
+			<slot name="badge" />
+		</template>
 	</button>
 </template>
 
