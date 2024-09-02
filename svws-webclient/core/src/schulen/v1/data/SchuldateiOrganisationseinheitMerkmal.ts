@@ -3,14 +3,14 @@ import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 
 	/**
+	 * Die Schulnummer.
+	 */
+	public schulnummer : string = "";
+
+	/**
 	 * Die ID des Merkmal-Eintrags.
 	 */
 	public id : number | null = null;
-
-	/**
-	 * Die Schulnummer.
-	 */
-	public schulnummer : number = 0;
 
 	/**
 	 * Die Nummer der Liegenschaft der Organisationseinheit
@@ -20,27 +20,27 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 	/**
 	 * Das Merkmal
 	 */
-	public merkmal : string = "";
+	public merkmal : number = 0;
 
 	/**
 	 * Die Merkmalsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)
 	 */
-	public merkmalgruppe : string = "";
+	public merkmalgruppe : number = 0;
 
 	/**
 	 * Das Attribut
 	 */
-	public attribut : string | null = null;
+	public attribut : number = 0;
 
 	/**
 	 * Die Attributsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)
 	 */
-	public attributgruppe : string | null = null;
+	public attributgruppe : number = 0;
 
 	/**
 	 * Der Wert
 	 */
-	public wert : string | null = null;
+	public wert : string = "";
 
 
 	/**
@@ -64,10 +64,10 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.liegenschaft === undefined)
 			throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
@@ -77,9 +77,15 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 		if (obj.merkmalgruppe === undefined)
 			throw new Error('invalid json format, missing attribute merkmalgruppe');
 		result.merkmalgruppe = obj.merkmalgruppe;
-		result.attribut = (obj.attribut === undefined) ? null : obj.attribut === null ? null : obj.attribut;
-		result.attributgruppe = (obj.attributgruppe === undefined) ? null : obj.attributgruppe === null ? null : obj.attributgruppe;
-		result.wert = (obj.wert === undefined) ? null : obj.wert === null ? null : obj.wert;
+		if (obj.attribut === undefined)
+			throw new Error('invalid json format, missing attribute attribut');
+		result.attribut = obj.attribut;
+		if (obj.attributgruppe === undefined)
+			throw new Error('invalid json format, missing attribute attributgruppe');
+		result.attributgruppe = obj.attributgruppe;
+		if (obj.wert === undefined)
+			throw new Error('invalid json format, missing attribute wert');
+		result.wert = obj.wert;
 		return result;
 	}
 
@@ -88,14 +94,14 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
-		result += '"schulnummer" : ' + obj.schulnummer! + ',';
-		result += '"liegenschaft" : ' + obj.liegenschaft! + ',';
-		result += '"merkmal" : ' + JSON.stringify(obj.merkmal) + ',';
-		result += '"merkmalgruppe" : ' + JSON.stringify(obj.merkmalgruppe) + ',';
-		result += '"attribut" : ' + ((!obj.attribut) ? 'null' : JSON.stringify(obj.attribut)) + ',';
-		result += '"attributgruppe" : ' + ((!obj.attributgruppe) ? 'null' : JSON.stringify(obj.attributgruppe)) + ',';
-		result += '"wert" : ' + ((!obj.wert) ? 'null' : JSON.stringify(obj.wert)) + ',';
+		result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
+		result += '"merkmal" : ' + obj.merkmal.toString() + ',';
+		result += '"merkmalgruppe" : ' + obj.merkmalgruppe.toString() + ',';
+		result += '"attribut" : ' + obj.attribut.toString() + ',';
+		result += '"attributgruppe" : ' + obj.attributgruppe.toString() + ',';
+		result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -112,29 +118,29 @@ export class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
+		if (obj.schulnummer !== undefined) {
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
-		}
 		if (obj.liegenschaft !== undefined) {
-			result += '"liegenschaft" : ' + obj.liegenschaft + ',';
+			result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
 		}
 		if (obj.merkmal !== undefined) {
-			result += '"merkmal" : ' + JSON.stringify(obj.merkmal) + ',';
+			result += '"merkmal" : ' + obj.merkmal.toString() + ',';
 		}
 		if (obj.merkmalgruppe !== undefined) {
-			result += '"merkmalgruppe" : ' + JSON.stringify(obj.merkmalgruppe) + ',';
+			result += '"merkmalgruppe" : ' + obj.merkmalgruppe.toString() + ',';
 		}
 		if (obj.attribut !== undefined) {
-			result += '"attribut" : ' + ((!obj.attribut) ? 'null' : JSON.stringify(obj.attribut)) + ',';
+			result += '"attribut" : ' + obj.attribut.toString() + ',';
 		}
 		if (obj.attributgruppe !== undefined) {
-			result += '"attributgruppe" : ' + ((!obj.attributgruppe) ? 'null' : JSON.stringify(obj.attributgruppe)) + ',';
+			result += '"attributgruppe" : ' + obj.attributgruppe.toString() + ',';
 		}
 		if (obj.wert !== undefined) {
-			result += '"wert" : ' + ((!obj.wert) ? 'null' : JSON.stringify(obj.wert)) + ',';
+			result += '"wert" : ' + JSON.stringify(obj.wert) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

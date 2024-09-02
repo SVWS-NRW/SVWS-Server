@@ -14,13 +14,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
+	/** Die Schulnummer. */
+	@Schema(description = "die Schulnummer", example = "100001")
+	public @NotNull String schulnummer = "";
+
 	/** Die ID des Adress-Eintrags. */
 	@Schema(description = "die ID des Adress-Eintrags", example = "4711")
 	public int id = 0;
-
-	/** Die Schulnummer. */
-	@Schema(description = "die Schulnummer", example = "100001")
-	public int schulnummer = 0;
 
 	/** Die Nummer der Liegenschaft der Organisationseinheit */
 	@Schema(description = "Die Nummer der Liegenschaft der Organisationseinheit", example = "1")
@@ -56,11 +56,11 @@ public class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
 	/** Der Adresstyp */
 	@Schema(description = "Adresstypid der Adresse", example = "1")
-	public Integer adresstypeid = null;
+	public @NotNull String adresstypeid = "";
 
 	/** Das Standortkennzeichen */
 	@Schema(description = "Standortkennzeichen des Teilstandorts", example = "01")
-	public int standortkennzeichen = 0;
+	public @NotNull String standortkennzeichen = "";
 
 	/** Das Adresskennzeichnen des Teilstandorts (ein Buchstabe) */
 	@Schema(description = "Adresskennzeichen des Teilstandors", example = "A")

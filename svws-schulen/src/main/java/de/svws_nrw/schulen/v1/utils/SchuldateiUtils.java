@@ -8,6 +8,10 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class SchuldateiUtils {
 
+	/** Der Zeitraum, der immer gültig ist */
+	public static final int _immerGueltigAb = 1980;
+	public static final int _immerGueltigBis = 9999;
+
 	private SchuldateiUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
@@ -45,6 +49,22 @@ public final class SchuldateiUtils {
 
 
 	/**
+	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 *
+	 * @param date		das Datum als String
+	 *
+	 * @return @NotNull INTEGER  das Schuljahr. 1980 für gilt seit immer (jahr .lte. 1980), 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 */
+	public static @NotNull Integer schuljahrAusDatum(final @NotNull String date) throws IllegalArgumentException {
+		final @NotNull int[] dmy = splitDate(date);
+		@NotNull Integer jahr = dmy[2];
+		if (dmy[1] < 8)
+			jahr--;
+		return jahr;
+	}
+
+
+	/**
 	 * Prüft, ob das Datum a früher liegt als das Datum b. Es wird eine Datumsangabe der Form
 	 * 'DD.MM.YYYY' erwartet,
 	 *
@@ -76,6 +96,36 @@ public final class SchuldateiUtils {
 			return false;
 		cmp = Integer.compare(dmyA[0], dmyB[0]);
 		return (cmp < 0);
+	}
+
+
+	/**
+	 * Gibt den Vergleichswert der beiden Daten wie bei einem Comparator zurück
+	 * Die Strings werden in der Form 'DD.MM.YYYY' erwartet
+	 *
+	 * @param a   das Datum a
+	 * @param b   das Datum b
+	 *
+	 * @return -1,0,1  wie beim Comparator
+	 *
+	 * @throws IllegalArgumentException wenn die Datumsangaben fehlerhaft sind
+	 */
+	public static int compare(final String a, final String b) throws IllegalArgumentException {
+		// Wenn a leer ist, dann wird a als unendlich spät angesehen => nicht früher
+		if ((a == null) || (a.isBlank()))
+			return 1;
+		// Wenn b leer ist, dann wird b als unendlich spät angesehen, und außerdem ist a nicht leer => früher
+		if ((b == null) || (b.isBlank()))
+			return -1;
+		final @NotNull int[] dmyA = splitDate(a);
+		final @NotNull int[] dmyB = splitDate(b);
+		int cmp = Integer.compare(dmyA[2], dmyB[2]);
+		if (cmp != 0)
+			return cmp;
+		cmp = Integer.compare(dmyA[1], dmyB[1]);
+		if (cmp != 0)
+			return cmp;
+		return Integer.compare(dmyA[0], dmyB[0]);
 	}
 
 

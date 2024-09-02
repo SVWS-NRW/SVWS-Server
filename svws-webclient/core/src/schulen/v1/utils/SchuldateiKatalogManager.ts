@@ -1,14 +1,14 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { SchuldateiKatalogeintrag } from '../../../schulen/v1/data/SchuldateiKatalogeintrag';
-import type { JavaSet } from '../../../java/util/JavaSet';
+import { SchuldateiEintrag, cast_de_svws_nrw_schulen_v1_data_SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { JavaString } from '../../../java/lang/JavaString';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
-import { HashSet } from '../../../java/util/HashSet';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuldateiKatalogManager extends JavaObject {
 
@@ -20,27 +20,41 @@ export class SchuldateiKatalogManager extends JavaObject {
 	/**
 	 * Die Liste aller Katalog-Einträge dieses Katalogs
 	 */
-	private readonly _eintraege : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
+	private readonly _katalogeintraege : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
 
 	/**
-	 * Eine Map von dem Wert der Katalog-Einträge auf diese
+	 * Eine Map von dem Wert der Katalog-Einträge auf die Liste der Katalog-Einträge mit diesem Wert
 	 */
-	private readonly _mapEintragByWert : JavaMap<string, SchuldateiKatalogeintrag> = new HashMap<string, SchuldateiKatalogeintrag>();
+	private readonly _mapKatalogeintraegeByWert : JavaMap<string, List<SchuldateiKatalogeintrag>> = new HashMap<string, List<SchuldateiKatalogeintrag>>();
 
 	/**
-	 * Eine Map von dem Wert (als Integer) der Katalog-Einträge auf diese
+	 * Eine Map von dem Schlüssel der Katalog-Einträge auf eine Liste der Katalog-Einträge mit diesem Schlüssel
 	 */
-	private readonly _mapEintragByIntegerWert : JavaMap<number, SchuldateiKatalogeintrag> = new HashMap<number, SchuldateiKatalogeintrag>();
-
-	/**
-	 * Eine Map von dem Schlüssel der Katalog-Einträge auf eine Menge von zugeordneten Katalog-Einträgen
-	 */
-	private readonly _mapEintraegeBySchluessel : JavaMap<string, JavaSet<SchuldateiKatalogeintrag>> = new HashMap<string, JavaSet<SchuldateiKatalogeintrag>>();
+	private readonly _mapKatalogeintraegeBySchluessel : JavaMap<string, List<SchuldateiKatalogeintrag>> = new HashMap<string, List<SchuldateiKatalogeintrag>>();
 
 	/**
 	 * Cache: Eine Map der Einträge anhand des Schuljahres
 	 */
 	private readonly _mapKatalogeintraegeBySchuljahr : JavaMap<number, List<SchuldateiKatalogeintrag>> = new HashMap<number, List<SchuldateiKatalogeintrag>>();
+
+	/**
+	 * Cache: Eine Map nach Schuljahren für Maps von Wert auf einen SchuldateiKatalogeintrag
+	 */
+	private readonly _mapKatalogEintraegeBySchuljahrAndWert : JavaMap<number, JavaMap<string, SchuldateiKatalogeintrag>> = new HashMap<number, JavaMap<string, SchuldateiKatalogeintrag>>();
+
+	/**
+	 * Cache: Eine Map nach Schuljahren für Maps von Schlüssel auf eine Liste von SchuldateiKatalogeinträgen
+	 */
+	private readonly _mapKatalogEintraegeBySchuljahrAndSchluessel : JavaMap<number, JavaMap<string, List<SchuldateiKatalogeintrag>>> = new HashMap<number, JavaMap<string, List<SchuldateiKatalogeintrag>>>();
+
+	/**
+	 * Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge
+	 */
+	private static readonly _comparatorZeitraumDesc : Comparator<SchuldateiKatalogeintrag> = { compare : (a: SchuldateiKatalogeintrag, b: SchuldateiKatalogeintrag) => {
+		if (JavaObject.equalsTranspiler(b.gueltigab, (a.gueltigab)))
+			return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
+		return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
+	} };
 
 
 	/**
@@ -54,26 +68,23 @@ export class SchuldateiKatalogManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt einen neuen Eintrag zum Manager hinzu.
+	 * Fügt diesem Katalog einen neuen Eintrag hinzu.
+	 * Einträge eines Kataloges werden in der Schuldatei über die Eigenschaft "wert" referenziert.
+	 * Es können mehrere Einträge eines Kataloges mit demselben Wert vorkommen, wobei sich der Zeitraum unterscheiden muss.
+	 * Die entsprechende Überprüfung führt die Methode validate aus, die auch die Liste der Einträge in _mapEintraegeByWert sortiert.
 	 *
 	 * @param eintrag   der Eintrag
 	 */
 	addEintrag(eintrag : SchuldateiKatalogeintrag) : void {
-		this._eintraege.add(eintrag);
-		if (this._mapEintragByWert.containsKey(eintrag.wert))
-			throw new IllegalArgumentException("Katalog " + this._name + ": Es existiert bereits ein anderer Katalog-Eintrag mit dem angegebenen Wert " + eintrag.wert + ".")
-		this._mapEintragByWert.put(eintrag.wert, eintrag);
-		try {
-			this._mapEintragByIntegerWert.put(JavaInteger.parseInt(eintrag.wert), eintrag);
-		} catch(nfe) {
-			// empty block
+		this._katalogeintraege.add(eintrag);
+		const eintraegeByWert : List<SchuldateiKatalogeintrag> | null = this._mapKatalogeintraegeByWert.computeIfAbsent(eintrag.wert, { apply : (k: string) => new ArrayList<SchuldateiKatalogeintrag>() });
+		if (eintraegeByWert !== null)
+			eintraegeByWert.add(eintrag);
+		if (!JavaString.isBlank(eintrag.schluessel)) {
+			const eintraegeBySchluessel : List<SchuldateiKatalogeintrag> | null = this._mapKatalogeintraegeBySchluessel.computeIfAbsent(eintrag.schluessel, { apply : (k: string) => new ArrayList<SchuldateiKatalogeintrag>() });
+			if (eintraegeBySchluessel !== null)
+				eintraegeBySchluessel.add(eintrag);
 		}
-		let tmpSetEintraege : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(eintrag.schluessel);
-		if (tmpSetEintraege === null) {
-			tmpSetEintraege = new HashSet<SchuldateiKatalogeintrag>();
-			this._mapEintraegeBySchluessel.put(eintrag.schluessel, tmpSetEintraege);
-		}
-		tmpSetEintraege.add(eintrag);
 	}
 
 	/**
@@ -86,44 +97,114 @@ export class SchuldateiKatalogManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt alle Katalog-Einträge zurück
+	 *
+	 * @return die Liste mit allen Katalog-Einträgen
+	 */
+	public getEintraege() : List<SchuldateiKatalogeintrag> {
+		return this._katalogeintraege;
+	}
+
+	/**
+	 * Gibt die Katalog-Einträge für das angegebene Schuljahr zurück
+	 *
+	 * @param schuljahr    das Schuljahr, zu dem die Werte geliefert werden
+	 *
+	 * @return die Liste der Katalog-Einträge, die in dem Schuljahr gültig sind
+	 */
+	public getEintraegeBySchuljahr(schuljahr : number) : List<SchuldateiKatalogeintrag> {
+		const list : List<SchuldateiKatalogeintrag> | null = this._mapKatalogeintraegeBySchuljahr.get(schuljahr);
+		if (list !== null)
+			return list;
+		const listEintraege : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
+		for (const eintrag of this._katalogeintraege)
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+				listEintraege.add(eintrag);
+		this._mapKatalogeintraegeBySchuljahr.put(schuljahr, listEintraege);
+		return listEintraege;
+	}
+
+	/**
+	 * Gibt die Katalog-Einträge zu dem Wert zurück, sofern der Wert gültig ist.
+	 * Es werden mehrere Einträge zurückgegeben, wenn für verschiedene Zeiträume entsprechende Einträge im Katalog sind.
+	 *
+	 * @param wert   der Wert des gesuchten Katalog-Eintrags
+	 *
+	 * @return die Katalog-Einträge oder null, wenn es keinen für den Wert gibt.
+	 */
+	public getEintraegeByWert(wert : string | null) : List<SchuldateiKatalogeintrag> | null {
+		return this._mapKatalogeintraegeByWert.get(wert);
+	}
+
+	/**
+	 * Gibt die Katalog-Einträge zu dem Wert zurück, sofern der Wert gültig ist.
+	 *
+	 * @param wert   der Wert des gesuchten Katalog-Eintrags
+	 *
+	 * @return die Katalog-Einträge oder null, wenn es keinen für den Wert gibt.
+	 */
+	public getEintraegeByIntegerWert(wert : number) : List<SchuldateiKatalogeintrag> | null {
+		return this.getEintraegeByWert("" + wert);
+	}
+
+	/**
+	 * Gibt den Katalog-Eintrag für das Schuljahr und den Wert zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param wert        der Wert
+	 *
+	 * @return der Katalog-Eintrag für das Schuljahr und den Wert falls er existiert und ansonsten null.
+	 */
+	public getEintragBySchuljahrAndWert(schuljahr : number, wert : string | null) : SchuldateiKatalogeintrag | null {
+		return this.getCacheBySchuljahrAndWert(schuljahr).get(wert);
+	}
+
+	/**
+	 * Gibt den Katalog-Eintrag für das Schuljahr und den numerischen Wert zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param wert        der numerische Wert
+	 *
+	 * @return der Katalog-Eintrag für das Schuljahr und den numerischen Wert falls er existiert und ansonsten null.
+	 */
+	public getEintragBySchuljahrAndIntegerWert(schuljahr : number, wert : number) : SchuldateiKatalogeintrag | null {
+		return this.getEintragBySchuljahrAndWert(schuljahr, "" + wert);
+	}
+
+	/**
 	 * Gibt die Katalog-Einträge zu dem Schlüssel zurück, sofern der Schlüssel gültig ist.
 	 *
 	 * @param schluessel   der Schlüssel der gesuchten Katalog-Einträge
 	 *
-	 * @return die Liste der Katalog-Eintrag für den Schlüssel existiert der Schlüssel nicht,
-	 *         so wird eine leere Menge zurückgegeben
+	 * @return die Liste der Katalog-Einträge für den Schlüssel existiert der Schlüssel nicht, so wird null zurückgegeben
 	 */
-	public getEintraege(schluessel : string | null) : JavaSet<SchuldateiKatalogeintrag>;
+	public getEintraegeBySchluessel(schluessel : string | null) : List<SchuldateiKatalogeintrag> | null {
+		return this._mapKatalogeintraegeBySchluessel.get(schluessel);
+	}
 
 	/**
-	 * Gibt die Katalogwerte für das angegebene Schuljahr zurück
+	 * Gibt die Katalog-Einträge zu dem Schlüssel für ein bestimmtes Schuljahr zurück, sofern der Schlüssel gültig ist.
 	 *
-	 * @param schuljahr    das Schuljahr, zu dem die Werte geliefert werden
+	 * @param schuljahr   das Schuljahr
+	 * @param schluessel   der Schlüssel der gesuchten Katalog-Einträge
 	 *
-	 * @return die Liste der Katalogwerte, die in dem Schuljahr gültig sind
+	 * @return die Liste der Katalog-Eintrag für den Schlüssel existiert der Schlüssel nicht, so wird null zurückgegeben
 	 */
-	public getEintraege(schuljahr : number) : List<SchuldateiKatalogeintrag>;
-
-	/**
-	 * Implementation for method overloads of 'getEintraege'
-	 */
-	public getEintraege(__param0 : null | number | string) : JavaSet<SchuldateiKatalogeintrag> | List<SchuldateiKatalogeintrag> {
-		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
-			const schluessel : string | null = __param0;
-			const tmp : JavaSet<SchuldateiKatalogeintrag> | null = this._mapEintraegeBySchluessel.get(schluessel);
-			return (tmp === null) ? new HashSet<SchuldateiKatalogeintrag>() : tmp;
-		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
-			const schuljahr : number = __param0 as number;
-			const list : List<SchuldateiKatalogeintrag> | null = this._mapKatalogeintraegeBySchuljahr.get(schuljahr);
-			if (list !== null)
-				return list;
-			const listEintraege : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>();
-			for (const eintrag of this._eintraege)
-				if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
-					listEintraege.add(eintrag);
-			this._mapKatalogeintraegeBySchuljahr.put(schuljahr, listEintraege);
-			return listEintraege;
-		} else throw new Error('invalid method overload');
+	public getEintraegeBySchuljahrAndSchluessel(schuljahr : number, schluessel : string | null) : List<SchuldateiKatalogeintrag> | null {
+		if ((schluessel === null) || (!this._mapKatalogeintraegeBySchluessel.containsKey(schluessel)))
+			return null;
+		const map : JavaMap<string, List<SchuldateiKatalogeintrag>> | null = this._mapKatalogEintraegeBySchuljahrAndSchluessel.get(schuljahr);
+		if (map !== null)
+			return map.get(schluessel);
+		const neueMap : JavaMap<string, List<SchuldateiKatalogeintrag>> = new HashMap<string, List<SchuldateiKatalogeintrag>>();
+		for (const eintrag of this._katalogeintraege)
+			if ((!JavaString.isBlank(eintrag.schluessel)) && (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))) {
+				const eintraegeBySchluessel : List<SchuldateiKatalogeintrag> | null = neueMap.computeIfAbsent(eintrag.schluessel, { apply : (k: string) => new ArrayList<SchuldateiKatalogeintrag>() });
+				if (eintraegeBySchluessel !== null)
+					eintraegeBySchluessel.add(eintrag);
+			}
+		this._mapKatalogEintraegeBySchuljahrAndSchluessel.put(schuljahr, neueMap);
+		return neueMap.get(schluessel);
 	}
 
 	/**
@@ -133,7 +214,7 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hatEintrag(wert : string | null) : boolean;
+	public hasEintrag(wert : string | null) : boolean;
 
 	/**
 	 * Gibt zurück, ob ein Katalog-Eintrag für den Wert existiert.
@@ -142,92 +223,199 @@ export class SchuldateiKatalogManager extends JavaObject {
 	 *
 	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public hatEintrag(wert : number) : boolean;
+	public hasEintrag(wert : number) : boolean;
 
 	/**
-	 * Implementation for method overloads of 'hatEintrag'
+	 * Implementation for method overloads of 'hasEintrag'
 	 */
-	public hatEintrag(__param0 : null | number | string) : boolean {
+	public hasEintrag(__param0 : null | number | string) : boolean {
 		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
 			const wert : string | null = __param0;
 			if (wert === null)
 				return false;
-			return this._mapEintragByWert.containsKey(wert);
+			return this._mapKatalogeintraegeByWert.containsKey(wert);
 		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
 			const wert : number = __param0 as number;
-			return this._mapEintragByIntegerWert.containsKey(wert);
+			return this.hasEintrag("" + wert);
 		} else throw new Error('invalid method overload');
 	}
 
 	/**
-	 * Gibt den Katalog-Eintrag zu dem Wert zurück, sofern der Wert gültig ist.
+	 * Gibt zurück, ob ein Katalog-Eintrag für den Wert in einem Schuljahr existiert.
 	 *
-	 * @param wert   der Wert des gesuchten Katalog-Eintrags
+	 * @param schuljahr   das Schuljahr
+	 * @param wert        der zu prüfende Wert
 	 *
-	 * @return der Katalog-Eintrag oder null, wenn es keinen für den Wert gibt.
+	 * @return true, falls ein Katalog-Eintrag im angegebenen Schuljahr existiert und ansonsten false.
 	 */
-	public getEintrag(wert : string | null) : SchuldateiKatalogeintrag | null;
+	public hasEintragBySchuljahr(schuljahr : number, wert : string) : boolean;
 
 	/**
-	 * Gibt den Katalog-Eintrag zu dem Wert zurück, sofern der Wert gültig ist.
+	 * Gibt zurück, ob ein Katalog-Eintrag für den numerischen Wert existiert.
 	 *
-	 * @param wert   der Wert des gesuchten Katalog-Eintrags
+	 * @param schuljahr   das Schuljahr
+	 * @param wert        der zu prüfende Wert
 	 *
-	 * @return der Katalog-Eintrag oder null, wenn es keinen für den Wert gibt.
+	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
 	 */
-	public getEintrag(wert : number) : SchuldateiKatalogeintrag | null;
+	public hasEintragBySchuljahr(schuljahr : number, wert : number) : boolean;
 
 	/**
-	 * Implementation for method overloads of 'getEintrag'
+	 * Implementation for method overloads of 'hasEintragBySchuljahr'
 	 */
-	public getEintrag(__param0 : null | number | string) : SchuldateiKatalogeintrag | null {
-		if (((__param0 !== undefined) && (typeof __param0 === "string") || (__param0 === null))) {
-			const wert : string | null = __param0;
-			return this._mapEintragByWert.get(wert);
-		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
-			const wert : number = __param0 as number;
-			return this._mapEintragByIntegerWert.get(wert);
+	public hasEintragBySchuljahr(__param0 : number, __param1 : number | string) : boolean {
+		if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && (typeof __param1 === "string"))) {
+			const schuljahr : number = __param0 as number;
+			const wert : string = __param1;
+			return this.getCacheBySchuljahrAndWert(schuljahr).containsKey(wert);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number")) {
+			const schuljahr : number = __param0 as number;
+			const wert : number = __param1 as number;
+			return this.hasEintragBySchuljahr(schuljahr, ("" + wert));
 		} else throw new Error('invalid method overload');
 	}
 
 	/**
-	 * Gibt die Bezeichnung des Katalog-Eintrag zu dem Wert zurück, sofern
+	 * Gibt zurück, ob ein Katalog-Eintrag für den Wert in einem Zeitraum existiert.
+	 *
+	 * @param abBis  Der Schuldateieintrag, der den Zeitraum definiert, für den der Eintrag komplett vorliegen muss.
+	 * @param wert   der zu prüfende Wert
+	 *
+	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
+	 */
+	public hasEintragInZeitraum(abBis : SchuldateiEintrag | null, wert : string | null) : boolean;
+
+	/**
+	 * Gibt zurück, ob ein Katalog-Eintrag für den numerischen Wert in einem Zeitraum existiert.
+	 *
+	 * @param abBis  Der Schuldateieintrag, der den Zeitraum definiert, für den der Eintrag komplett vorliegen muss.
+	 * @param wert   der zu prüfende Wert
+	 *
+	 * @return true, falls ein Katalog-Eintrag existiert und ansonsten false.
+	 */
+	public hasEintragInZeitraum(abBis : SchuldateiEintrag | null, wert : number) : boolean;
+
+	/**
+	 * Prüft ob ein Katalog-Eintrag für den Wert in einem Zeitraum existiert
+	 * Ist der Parameter mitTeilgueltigkeit auf TRUE reicht es wenn der Wert nur teilweise im Zeitraum existiert
+	 * Ist er auf FALSE muss der Wert im gesamten Zeitraum definiert sein.
+	 *
+	 * @param schuljahrAb			das erste Schuljahr
+	 * @param schuljahrBis			das letzte Schuljahr
+	 * @param wert                  der Wert, auf den geprüft wird
+	 * @param mitTeilgueltigkeit	wenn true, reichts es, wenn der Wert nicht im gesamten Zeitraum definiert ist.
+	 *
+	 * @return boolean, true wenn Eintrag entsprechend vorliegt, sonst false
+	 */
+	public hasEintragInZeitraum(schuljahrAb : number, schuljahrBis : number, wert : string | null, mitTeilgueltigkeit : boolean) : boolean;
+
+	/**
+	 * Implementation for method overloads of 'hasEintragInZeitraum'
+	 */
+	public hasEintragInZeitraum(__param0 : SchuldateiEintrag | null | number, __param1 : null | number | string, __param2? : null | string, __param3? : boolean) : boolean {
+		if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.schulen.v1.data.SchuldateiEintrag'))) || (__param0 === null)) && ((__param1 !== undefined) && (typeof __param1 === "string") || (__param1 === null)) && (__param2 === undefined) && (__param3 === undefined)) {
+			const abBis : SchuldateiEintrag | null = cast_de_svws_nrw_schulen_v1_data_SchuldateiEintrag(__param0);
+			const wert : string | null = __param1;
+			if (wert === null)
+				return false;
+			const ab : number = abBis.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(abBis.gueltigab);
+			const bis : number = abBis.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(abBis.gueltigbis);
+			return this.hasEintragInZeitraum(ab, bis, wert, false);
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.schulen.v1.data.SchuldateiEintrag'))) || (__param0 === null)) && ((__param1 !== undefined) && typeof __param1 === "number") && (__param2 === undefined) && (__param3 === undefined)) {
+			const abBis : SchuldateiEintrag | null = cast_de_svws_nrw_schulen_v1_data_SchuldateiEintrag(__param0);
+			const wert : number = __param1 as number;
+			return this.hasEintragInZeitraum(abBis, "" + wert);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && typeof __param1 === "number") && ((__param2 !== undefined) && (typeof __param2 === "string") || (__param2 === null)) && ((__param3 !== undefined) && typeof __param3 === "boolean")) {
+			const schuljahrAb : number = __param0 as number;
+			const schuljahrBis : number = __param1 as number;
+			const wert : string | null = __param2;
+			const mitTeilgueltigkeit : boolean = __param3 as boolean;
+			const list : List<SchuldateiKatalogeintrag> | null = this.getEintraegeByWert(wert);
+			if (list === null)
+				return false;
+			list.sort(SchuldateiKatalogManager._comparatorZeitraumDesc);
+			let ab : number = schuljahrAb < SchuldateiUtils._immerGueltigAb ? SchuldateiUtils._immerGueltigAb : schuljahrAb;
+			let bis : number = schuljahrBis > SchuldateiUtils._immerGueltigBis ? SchuldateiUtils._immerGueltigBis : schuljahrBis;
+			for (let eintrag of list) {
+				if ((eintrag.gueltigbis === null) || SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis) < bis)
+					return false;
+				const vonSchuljahr : number = (eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab));
+				if (vonSchuljahr <= bis) {
+					if (mitTeilgueltigkeit || (vonSchuljahr <= ab))
+						return true;
+					bis = vonSchuljahr - 1;
+				}
+			}
+			return false;
+		} else throw new Error('invalid method overload');
+	}
+
+	/**
+	 * Gibt die Bezeichnung des Katalog-Eintrag zu dem Wert im angegebenen Schuljahr zurück, sofern
 	 * der Wert gültig ist.
 	 *
-	 * @param wert   der Wert des Katalog-Eintrags
+	 * @param schuljahr	das Schuljahr
+	 * @param wert   	der Wert des Katalog-Eintrags
 	 *
-	 * @return die Bezeichnung
-	 *
-	 * @throws IllegalArgumentException   falls der Wert ungültig ist
+	 * @return die Bezeichnung oder null, wenn sie nicht gültig ist
 	 */
-	public getBezeichnung(wert : string | null) : string {
-		const eintrag : SchuldateiKatalogeintrag | null = this.getEintrag(wert);
+	public getBezeichnung(schuljahr : number, wert : string | null) : string | null {
+		const eintrag : SchuldateiKatalogeintrag | null = this.getEintragBySchuljahrAndWert(schuljahr, wert);
 		if (eintrag === null)
-			throw new IllegalArgumentException("Es konnte kein Katalog-Eintrag für den Wert " + wert! + " gefunden werden.")
+			return null;
 		return eintrag.bezeichnung;
 	}
 
 	/**
-	 * Gibt die Katalogwerte für einen Schuljahresbereich zurück
+	 * gibt die Daten aus dem Cache zurück und baut ihn ggfs. auf, wenn er noch nicht existiert
 	 *
-	 * @param schuljahrVon			das erste Schuljahr
-	 * @param schuljahrBis			das letzte Schuljahr
-	 * @param mitTeilgueltigkeit	wenn true, werden auch die Einträge geliefert, die nicht im gesamten Zeitraum gültig sind
+	 * @param schuljahr   das Schuljahr
 	 *
-	 * @return die Liste mit den gültigen Einträgen
+	 * @return Der gefüllte Cache für das übergebene Schuljahr
 	 */
-	public getEintraegeBereich(schuljahrVon : number, schuljahrBis : number, mitTeilgueltigkeit : boolean) : List<SchuldateiKatalogeintrag> {
-		const listEintraege : List<SchuldateiKatalogeintrag> = this.getEintraege(schuljahrVon);
-		const setEintraege : JavaSet<SchuldateiKatalogeintrag> = new HashSet<SchuldateiKatalogeintrag>(listEintraege);
-		for (let jahr : number = schuljahrVon + 1; jahr <= schuljahrBis; jahr++) {
-			const list : List<SchuldateiKatalogeintrag> = this.getEintraege(jahr);
-			if (mitTeilgueltigkeit)
-				setEintraege.addAll(list);
-			else
-				setEintraege.retainAll(list);
+	private getCacheBySchuljahrAndWert(schuljahr : number) : JavaMap<string, SchuldateiKatalogeintrag> {
+		const map : JavaMap<string, SchuldateiKatalogeintrag> | null = this._mapKatalogEintraegeBySchuljahrAndWert.get(schuljahr);
+		if (map !== null)
+			return map;
+		const neueMap : JavaMap<string, SchuldateiKatalogeintrag> = new HashMap<string, SchuldateiKatalogeintrag>();
+		for (const eintrag of this._katalogeintraege)
+			if (SchuldateiUtils.pruefeSchuljahr(schuljahr, eintrag))
+				neueMap.put(eintrag.wert, eintrag);
+		this._mapKatalogEintraegeBySchuljahrAndWert.put(schuljahr, neueMap);
+		return neueMap;
+	}
+
+	/**
+	 * sortiert die Listen in _mapKatalogeintraegeByWert und prüft, dass die Werte nicht überlappend sind.
+	 * (Die Liste wird absteigend sortiert!)
+	 *
+	 * @throws IllegalArgumentException   falls eine Überlappung festgestellt wird.
+	 */
+	public validate() : void {
+		for (const list of this._mapKatalogeintraegeByWert.values()) {
+			let eintrag : SchuldateiKatalogeintrag;
+			if (list.size() > 1) {
+				list.sort(SchuldateiKatalogManager._comparatorZeitraumDesc);
+				eintrag = list.getFirst();
+				let schuljahrBis : number = eintrag.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
+				let schuljahrAb : number = eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
+				for (let i : number = 1; i < list.size(); i++) {
+					if (schuljahrBis < schuljahrAb)
+						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+					eintrag = list.get(i);
+					schuljahrBis = eintrag.gueltigbis === null ? SchuldateiUtils._immerGueltigBis : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigbis);
+					if (schuljahrBis >= schuljahrAb)
+						throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat überlappende Gültigkeitszeiträume.")
+					schuljahrAb = eintrag.gueltigab === null ? SchuldateiUtils._immerGueltigAb : SchuldateiUtils.schuljahrAusDatum(eintrag.gueltigab);
+				}
+				if (schuljahrBis < schuljahrAb)
+					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+			} else {
+				eintrag = list.getFirst();
+				if (SchuldateiUtils.istFrueher(eintrag.gueltigbis, eintrag.gueltigab))
+					throw new IllegalArgumentException("Dieser Katalogeintrag Katalog='" + eintrag.katalog + "', Wert='" + eintrag.wert + "' hat einen ungültigen Gültigkeitszeitraum.")
+			}
 		}
-		const liste : List<SchuldateiKatalogeintrag> = new ArrayList<SchuldateiKatalogeintrag>(setEintraege);
-		return liste;
 	}
 
 	transpilerCanonicalName(): string {

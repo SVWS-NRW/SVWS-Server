@@ -47,6 +47,11 @@ export class SchuldateiManager extends JavaObject {
 	public readonly katalogErreichbarkeiten : SchuldateiKatalogManager;
 
 	/**
+	 * Der Katalog der Foerderschwerpunkte
+	 */
+	public readonly katalogFoerderschwerpunkte : SchuldateiKatalogManager;
+
+	/**
 	 * Der Katalog der Gliederung
 	 */
 	public readonly katalogGliederungen : SchuldateiKatalogManager;
@@ -97,19 +102,9 @@ export class SchuldateiManager extends JavaObject {
 	public readonly katalogRechtsstatus : SchuldateiKatalogManager;
 
 	/**
-	 * Der Katalog der Schließungsgründe
-	 */
-	public readonly katalogSchliessungsGruende : SchuldateiKatalogManager;
-
-	/**
 	 * Der Katalog der Schularten
 	 */
 	public readonly katalogSchularten : SchuldateiKatalogManager;
-
-	/**
-	 * Der Katalog der Schulaufsichten
-	 */
-	public readonly katalogSchulaufsicht : SchuldateiKatalogManager;
 
 	/**
 	 * Der Katalog der Schulformen
@@ -124,7 +119,7 @@ export class SchuldateiManager extends JavaObject {
 	/**
 	 * Eine Map mit den Managern für alle Organisationseinheiten, welche den Schulnummern ihrer Organisationseinheiten zugeordnet sind
 	 */
-	private readonly _mapOrganisationseinheitManagerBySchulnummer : JavaMap<number, SchuldateiOrganisationseinheitManager> = new HashMap<number, SchuldateiOrganisationseinheitManager>();
+	private readonly _mapOrganisationseinheitManagerBySchulnummer : JavaMap<string, SchuldateiOrganisationseinheitManager> = new HashMap<string, SchuldateiOrganisationseinheitManager>();
 
 
 	/**
@@ -147,6 +142,7 @@ export class SchuldateiManager extends JavaObject {
 		this.katalogAttribute = this.getKatalogFromMap("Attribut");
 		this.katalogSchulbetriebsschluessel = this.getKatalogFromMap("Betriebsschluessel");
 		this.katalogErreichbarkeiten = this.getKatalogFromMap("Erreichbarkeit");
+		this.katalogFoerderschwerpunkte = this.getKatalogFromMap("Foerderschwerpunkt");
 		this.katalogGliederungen = this.getKatalogFromMap("Gliederung");
 		this.katalogHauptstandort = this.getKatalogFromMap("Hauptstandortadresse");
 		this.katalogHeimInternat = this.getKatalogFromMap("HeimInternat");
@@ -157,11 +153,27 @@ export class SchuldateiManager extends JavaObject {
 		this.katalogOrganisationseinheitarten = this.getKatalogFromMap("OrganisationseinheitArt");
 		this.katalogQualitaetenVerortung = this.getKatalogFromMap("QualitaetVerortung");
 		this.katalogRechtsstatus = this.getKatalogFromMap("Rechtsstatus");
-		this.katalogSchliessungsGruende = this.getKatalogFromMap("SchliessungGrund");
 		this.katalogSchularten = this.getKatalogFromMap("Schulart");
-		this.katalogSchulaufsicht = this.getKatalogFromMap("Schulaufsicht");
 		this.katalogSchulformen = this.getKatalogFromMap("Schulform");
 		this.katalogArtDerTraegerschaft = this.getKatalogFromMap("Traeger");
+		this.katalogAddressarten.validate();
+		this.katalogAttribute.validate();
+		this.katalogSchulbetriebsschluessel.validate();
+		this.katalogErreichbarkeiten.validate();
+		this.katalogFoerderschwerpunkte.validate();
+		this.katalogGliederungen.validate();
+		this.katalogHauptstandort.validate();
+		this.katalogHeimInternat.validate();
+		this.katalogKommunikationsgruppen.validate();
+		this.katalogLiegenschaftsarten.validate();
+		this.katalogMerkmale.validate();
+		this.katalogOergangisationseinheitEigenschaften.validate();
+		this.katalogOrganisationseinheitarten.validate();
+		this.katalogQualitaetenVerortung.validate();
+		this.katalogRechtsstatus.validate();
+		this.katalogSchularten.validate();
+		this.katalogSchulformen.validate();
+		this.katalogArtDerTraegerschaft.validate();
 		for (const organisationseinheit of schuldatei.organisationseinheit) {
 			if (this._mapOrganisationseinheitManagerBySchulnummer.containsKey(organisationseinheit.schulnummer))
 				throw new IllegalArgumentException("Die Liste mit den Organisationseinheiten enthält mindestens einen doppelten Eintrag (Schulnummer " + organisationseinheit.schulnummer + ")")
@@ -204,7 +216,7 @@ export class SchuldateiManager extends JavaObject {
 	 *
 	 * @return der Manager für die Organisationseinheit
 	 */
-	public getOrganisationsheinheitManager(schulnummer : number) : SchuldateiOrganisationseinheitManager | null {
+	public getOrganisationsheinheitManager(schulnummer : string) : SchuldateiOrganisationseinheitManager | null {
 		return this._mapOrganisationseinheitManagerBySchulnummer.get(schulnummer);
 	}
 

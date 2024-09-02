@@ -21,31 +21,39 @@ public class SchuldateiOrganisationseinheit {
 
 	/** Die Schulnummer der Organisationseinheit. */
 	@Schema(description = "die Schulnummer der Organisationseinheit", example = "100001")
-	public int schulnummer = 0;
+	public @NotNull String schulnummer = "";
 
 	/** Die Bundeslandkennung (NRW) */
 	@Schema(description = "die Bundeslandkennung", example = "NRW")
-	public String bundeslandkennung;
+	public @NotNull String bundeslandkennung = "";
 
 	/** Die eindeutige Identifier für das XSCHULE-Format */
 	@Schema(description = "der Identifier der Schule für XSCHULE", example = "NRW_123456")
-	public String xscid;
+	public @NotNull String xscid = "";
 
 	/** Die Art der Organisationseinheit */
 	@Schema(description = "die Art der Organisationseinheit", example = "1")
-	public String oeart;
+	public @NotNull String oeart = "";
 
 	/** Die Amtsbezeichnung der Organisationseinheit */
-	@Schema(description = "die amtliche Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
-	public @NotNull String amtsbez = "";
+	@Schema(description = "Teil1 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez1 = "";
+
+	/** Die Amtsbezeichnung der Organisationseinheit */
+	@Schema(description = "Teil2 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez2 = "";
+
+	/** Die Amtsbezeichnung der Organisationseinheit */
+	@Schema(description = "Teil3 der amtlichen Bezeichnung der Organisationseinheit", example = "Städt. Gymnasium ....")
+	public @NotNull String amtsbez3 = "";
 
 	/** Das Errichtungsdatum der Schule. */
 	@Schema(description = "das Errichtungsdatum der Schule", example = "01.08.1973")
-	public String errichtung;
+	public @NotNull String errichtung = "";
 
 	/** Das Aufloesungsdatum der Schule. */
 	@Schema(description = "das Auflösungsdatum der Schule", example = "01.08.1973")
-	public String aufloesung;
+	public @NotNull String aufloesung = "";
 
 	/** Die Grunddaten der Organisationseinheit (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitGrunddaten.class))
@@ -63,13 +71,13 @@ public class SchuldateiOrganisationseinheit {
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitErreichbarkeit.class))
 	public final @NotNull List<SchuldateiOrganisationseinheitErreichbarkeit> erreichbarkeiten = new ArrayList<>();
 
-	/** Die Eigenschaften der Organisationseinheit */
-	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitEigenschaft.class))
-	public final @NotNull List<SchuldateiOrganisationseinheitEigenschaft> oe_eigenschaften = new ArrayList<>();
-
 	/** Die Gliederungen der Organisationseinheit-Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitGliederung.class))
 	public final @NotNull List<SchuldateiOrganisationseinheitGliederung> gliederung = new ArrayList<>();
+
+	/** Die Eigenschaften der Organisationseinheit */
+	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitEigenschaft.class))
+	public final @NotNull List<SchuldateiOrganisationseinheitEigenschaft> oeEigenschaften = new ArrayList<>();
 
 
 	/**

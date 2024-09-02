@@ -13,37 +13,37 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuldateiOrganisationseinheitMerkmal extends SchuldateiEintrag {
 
+	/** Die Schulnummer. */
+	@Schema(description = "die Schulnummer", example = "100001")
+	public @NotNull String schulnummer = "";
+
 	/** Die ID des Merkmal-Eintrags. */
 	@Schema(description = "die ID des Merkmal-Eintrags", example = "4711")
 	public Integer id;
 
-	/** Die Schulnummer. */
-	@Schema(description = "die Schulnummer", example = "100001")
-	public @NotNull Integer schulnummer = 0;
-
 	/** Die Nummer der Liegenschaft der Organisationseinheit */
 	@Schema(description = "Die Nummer der Liegenschaft der Organisationseinheit", example = "1")
-	public @NotNull Integer liegenschaft = 0;
+	public int liegenschaft = 0;
 
 	/** Das Merkmal */
 	@Schema(description = "das Merkmal", example = "32")
-	public @NotNull String merkmal = "";
+	public int merkmal = 0;
 
 	/** Die Merkmalsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)*/
 	@Schema(description = "die Merkmalsgruppe", example = "2")
-	public @NotNull String merkmalgruppe = "";
+	public int merkmalgruppe = 0;
 
 	/** Das Attribut*/
 	@Schema(description = "Das Attribut", example = "55")
-	public String attribut;
+	public int attribut = 0;
 
 	/** Die Attributsgruppe (hat zur Zeit 25.07.24 keine Bedeutung)*/
 	@Schema(description = "Die Attributsgruppe", example = "-1")
-	public String attributgruppe;
+	public int attributgruppe = 0;
 
 	/** Der Wert*/
 	@Schema(description = "Der Wert", example = "G01")
-	public String wert;
+	public @NotNull String wert = "";
 
 
 	/**

@@ -5,12 +5,12 @@ export class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 	/**
 	 * Die ID des Schulform-Eintrages.
 	 */
-	public id : number | null = null;
+	public id : string | null = null;
 
 	/**
 	 * Die Schulnummer.
 	 */
-	public schulnummer : number = 0;
+	public schulnummer : string = "";
 
 	/**
 	 * Schulformcode
@@ -62,8 +62,8 @@ export class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
-		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
+		result += '"id" : ' + ((!obj.id) ? 'null' : JSON.stringify(obj.id)) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"schulformcode" : ' + JSON.stringify(obj.schulformcode) + ',';
 		result += '"schulformwert" : ' + JSON.stringify(obj.schulformwert) + ',';
 		result = result.slice(0, -1);
@@ -83,10 +83,10 @@ export class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+			result += '"id" : ' + ((!obj.id) ? 'null' : JSON.stringify(obj.id)) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		}
 		if (obj.schulformcode !== undefined) {
 			result += '"schulformcode" : ' + JSON.stringify(obj.schulformcode) + ',';

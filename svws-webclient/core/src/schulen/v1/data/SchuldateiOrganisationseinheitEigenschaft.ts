@@ -3,14 +3,14 @@ import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag {
 
 	/**
+	 * Die Schulnummer.
+	 */
+	public schulnummer : string = "";
+
+	/**
 	 * Die ID des Eigenschafts-Eintrags.
 	 */
 	public id : number | null = null;
-
-	/**
-	 * Die Schulnummer.
-	 */
-	public schulnummer : number = 0;
 
 	/**
 	 * Die Eigenschaftsnummer
@@ -20,12 +20,12 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 	/**
 	 * Beschreibung
 	 */
-	public Beschreibung : string | null = null;
+	public beschreibung : string = "";
 
 	/**
 	 * Detail
 	 */
-	public detail : string | null = null;
+	public detail : string = "";
 
 
 	/**
@@ -49,15 +49,19 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.eigenschaft === undefined)
 			throw new Error('invalid json format, missing attribute eigenschaft');
 		result.eigenschaft = obj.eigenschaft;
-		result.Beschreibung = (obj.Beschreibung === undefined) ? null : obj.Beschreibung === null ? null : obj.Beschreibung;
-		result.detail = (obj.detail === undefined) ? null : obj.detail === null ? null : obj.detail;
+		if (obj.beschreibung === undefined)
+			throw new Error('invalid json format, missing attribute beschreibung');
+		result.beschreibung = obj.beschreibung;
+		if (obj.detail === undefined)
+			throw new Error('invalid json format, missing attribute detail');
+		result.detail = obj.detail;
 		return result;
 	}
 
@@ -66,11 +70,11 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
-		result += '"schulnummer" : ' + obj.schulnummer! + ',';
 		result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';
-		result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
-		result += '"detail" : ' + ((!obj.detail) ? 'null' : JSON.stringify(obj.detail)) + ',';
+		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
+		result += '"detail" : ' + JSON.stringify(obj.detail) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -87,20 +91,20 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
+		if (obj.schulnummer !== undefined) {
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
-		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
 		}
 		if (obj.eigenschaft !== undefined) {
 			result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';
 		}
-		if (obj.Beschreibung !== undefined) {
-			result += '"Beschreibung" : ' + ((!obj.Beschreibung) ? 'null' : JSON.stringify(obj.Beschreibung)) + ',';
+		if (obj.beschreibung !== undefined) {
+			result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		}
 		if (obj.detail !== undefined) {
-			result += '"detail" : ' + ((!obj.detail) ? 'null' : JSON.stringify(obj.detail)) + ',';
+			result += '"detail" : ' + JSON.stringify(obj.detail) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

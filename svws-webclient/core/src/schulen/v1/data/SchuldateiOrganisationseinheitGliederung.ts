@@ -3,24 +3,24 @@ import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag {
 
 	/**
+	 * Die Schulnummer.
+	 */
+	public schulnummer : string = "";
+
+	/**
 	 * Die ID des Gliederungs-Eintrages.
 	 */
 	public id : number | null = null;
 
 	/**
-	 * Die Schulnummer.
-	 */
-	public schulnummer : number = 0;
-
-	/**
 	 * Die Gliederung
 	 */
-	public gliederung : string | null = null;
+	public gliederung : string = "";
 
 	/**
 	 * Der Förderschwerpunkt
 	 */
-	public foerderschwerpunkt : string | null = null;
+	public foerderschwerpunkt : string = "";
 
 
 	/**
@@ -44,12 +44,16 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
-		result.gliederung = (obj.gliederung === undefined) ? null : obj.gliederung === null ? null : obj.gliederung;
-		result.foerderschwerpunkt = (obj.foerderschwerpunkt === undefined) ? null : obj.foerderschwerpunkt === null ? null : obj.foerderschwerpunkt;
+		result.id = (obj.id === undefined) ? null : obj.id === null ? null : obj.id;
+		if (obj.gliederung === undefined)
+			throw new Error('invalid json format, missing attribute gliederung');
+		result.gliederung = obj.gliederung;
+		if (obj.foerderschwerpunkt === undefined)
+			throw new Error('invalid json format, missing attribute foerderschwerpunkt');
+		result.foerderschwerpunkt = obj.foerderschwerpunkt;
 		return result;
 	}
 
@@ -58,10 +62,10 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
-		result += '"schulnummer" : ' + obj.schulnummer! + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
-		result += '"foerderschwerpunkt" : ' + ((!obj.foerderschwerpunkt) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
+		result += '"gliederung" : ' + JSON.stringify(obj.gliederung) + ',';
+		result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -78,17 +82,17 @@ export class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag 
 		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
+		if (obj.schulnummer !== undefined) {
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
 		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer + ',';
-		}
 		if (obj.gliederung !== undefined) {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
+			result += '"gliederung" : ' + JSON.stringify(obj.gliederung) + ',';
 		}
 		if (obj.foerderschwerpunkt !== undefined) {
-			result += '"foerderschwerpunkt" : ' + ((!obj.foerderschwerpunkt) ? 'null' : JSON.stringify(obj.foerderschwerpunkt)) + ',';
+			result += '"foerderschwerpunkt" : ' + JSON.stringify(obj.foerderschwerpunkt) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
