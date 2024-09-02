@@ -45,4 +45,8 @@ public class GostKlausurenCollectionAllData {
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull GostKlausurenCollectionRaumData raumdata = new GostKlausurenCollectionRaumData();
 
+	/** Die Liste der Schülerklausuren. */
+	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	public GostKlausurenCollectionAllData fehlend = null;
+
 }

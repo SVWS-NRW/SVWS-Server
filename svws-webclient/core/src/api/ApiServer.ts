@@ -56,7 +56,6 @@ import { GostJahrgangFachwahlen } from '../core/data/gost/GostJahrgangFachwahlen
 import { GostJahrgangFachwahlenHalbjahr } from '../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionAllData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionAllData';
-import { GostKlausurenCollectionRaumData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
 import { GostKlausurenCollectionSkrsKrsData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';
 import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
@@ -5134,62 +5133,6 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostKlausurenSchuelerraumstundenSktids für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden
-	 *
-	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
-	 *   Code 404: Der Termin-ID wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async getGostKlausurenSchuelerraumstundenSktids(data : List<number>, schema : string) : Promise<GostKlausurenCollectionRaumData> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenSchuelerraumstundenTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/{termin : -?\d+}
-	 *
-	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
-	 *   Code 404: Der Termin-ID wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} termin - der Pfad-Parameter termin
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionRaumData> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostKlausurenCollectionBySchuelerid für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schueler/{sid : -?\d+}/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
 	 *
 	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
@@ -5271,6 +5214,63 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/delete
+	 *
+	 * Löscht Gost-Klausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Long>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 */
+	public async deleteGostKlausurenSchuelerklausuren(data : List<number>, schema : string) : Promise<List<number>> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/delete"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<number>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/new
+	 *
+	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<GostSchuelerklausur>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
+	 */
+	public async createGostKlausurenSchuelerklausuren(data : List<Partial<GostSchuelerklausur>>, schema : string) : Promise<GostKlausurenCollectionAllData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<GostSchuelerklausur>).map(d => GostSchuelerklausur.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
 	}
 
 

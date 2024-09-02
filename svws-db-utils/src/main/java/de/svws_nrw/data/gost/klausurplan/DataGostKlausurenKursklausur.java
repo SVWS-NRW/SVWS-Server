@@ -220,8 +220,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final GostKlausurenCollectionAllData data = new GostKlausurenCollectionAllData();
 		data.vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, halbjahr, ganzesSchuljahr);
 		data.kursklausuren = getKursklausurenZuVorgaben(conn, data.vorgaben);
-		data.schuelerklausuren = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn, data.kursklausuren);
-		data.schuelerklausurtermine = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, data.schuelerklausuren);
+		data.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(data.kursklausuren);
+		data.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(data.schuelerklausuren);
 		data.termine = DataGostKlausurenTermin.getKlausurtermine(conn, abiturjahr, halbjahr, ganzesSchuljahr, data.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 		return data;
 	}
@@ -342,9 +342,8 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		final DTOGostKlausurenKursklausuren dto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final List<GostSchuelerklausur> sks = DataGostKlausurenSchuelerklausur.getSchuelerKlausurenZuKursklausuren(conn,
-				ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper.apply(dto)));
-		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausuren(conn, sks);
+		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(ListUtils.create1(DataGostKlausurenKursklausur.dtoMapper.apply(dto)));
+		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(sks);
 		final List<Long> skts_ids = skts.stream().map(skt -> skt.id).toList();
 		GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 		for (final Entry<String, Object> entry : map.entrySet()) {

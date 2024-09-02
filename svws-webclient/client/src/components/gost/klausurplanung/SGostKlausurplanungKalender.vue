@@ -141,7 +141,7 @@
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
-	import { computed, ref, onMounted } from "vue";
+	import { ref, onMounted } from "vue";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 	const showMoreKonflikte = ref(false);

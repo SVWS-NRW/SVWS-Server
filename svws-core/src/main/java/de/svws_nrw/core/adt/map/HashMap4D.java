@@ -223,8 +223,10 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 	 * @param key3 Der 3. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 * @param key4 Der 4. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 *
+	 * @return der dem Mapping vor dem Entfernen zugeordnete Wert, falls vorhanden.
+	 *
 	 */
-	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
+	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) {
 		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
@@ -241,7 +243,7 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!");
 
 		// Mapping-Baum abschneiden.
-		map4.remove(key4);
+		final V value = map4.remove(key4);
 		if (map4.isEmpty()) {
 			map3.remove(key3);
 			if (map3.isEmpty()) {
@@ -251,6 +253,8 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 				}
 			}
 		}
+
+		return DeveloperNotificationException.ifNull("Wert kann nicht null sein.", value);
 
 	}
 

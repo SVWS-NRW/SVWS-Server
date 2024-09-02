@@ -1,5 +1,5 @@
 
-import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostSchuelerklausur, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile } from "@core";
+import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur} from "@core";
 import { GostKlausurenCollectionAllData, ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin } from "@core";
 import { GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
@@ -223,7 +223,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung) => {
-		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + "" + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
 	gotoTermin = async (idtermin: number | undefined) => {
@@ -264,6 +264,27 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			terminIds.add(termin.id);
 		await api.server.deleteGostKlausurenKlausurtermine(terminIds, api.schema);
 		this.manager.terminRemoveAll(termine);
+		this.commit();
+		api.status.stop();
+	}
+
+	erzeugeSchuelerklausuren = async (klausuren: List<Partial<GostSchuelerklausur>>) => {
+		api.status.start();
+		for (const klausur of klausuren)
+			delete klausur.id;
+		const dtos = await api.server.createGostKlausurenSchuelerklausuren(klausuren, api.schema);
+		this.manager.addKlausurData(dtos);
+		this.commit();
+		api.status.stop();
+	}
+
+	loescheSchuelerklausuren = async (klausuren: List<GostSchuelerklausur>) => {
+		api.status.start();
+		const ids = new ArrayList<number>();
+		for (const klausur of klausuren)
+			ids.add(klausur.id);
+		await api.server.deleteGostKlausurenSchuelerklausuren(ids, api.schema);
+		this.manager.schuelerklausurRemoveAll(klausuren);
 		this.commit();
 		api.status.stop();
 	}
@@ -389,20 +410,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.stop();
 		return true;
 	}
-
-	// erzeugeKlausurraummanager = async (termin: GostKlausurtermin | List<number>) => {
-	// 	api.status.start();
-	// 	if (termin instanceof GostKlausurtermin) {
-	// 		if (!this.manager.hasRaumdataZuTermin(termin)) {
-	// 			const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenTermin(api.schema, termin.id);
-	// 			this.manager.addRaumData(krsCollection);
-	// 		}
-	// 	} else {
-	// 		const krsCollection = await api.server.getGostKlausurenSchuelerraumstundenSktids(termin, api.schema);
-	// 		this.manager.addRaumData(krsCollection);
-	// 	}
-	// 	api.status.stop();
-	// }
 
 	setzeRaumZuSchuelerklausuren = async (rRaeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean): Promise<GostKlausurenCollectionSkrsKrsData> => {
 		if (this._state.value.abschnitt === undefined)

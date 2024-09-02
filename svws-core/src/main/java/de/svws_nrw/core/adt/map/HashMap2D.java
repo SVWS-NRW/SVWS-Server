@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
@@ -215,6 +216,15 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull Set<K1> getKeySet() {
 		return this._map.keySet();
+	}
+
+	/**
+	 * Liefert das EntrySet des 1. Schlüssels.
+	 *
+	 * @return das EntrySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<Entry<K1, Map<K2, V>>> getEntrySet() {
+		return this._map.entrySet();
 	}
 
 	/**

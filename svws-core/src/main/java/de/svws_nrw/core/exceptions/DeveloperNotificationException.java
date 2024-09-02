@@ -7,6 +7,8 @@ import java.util.Set;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
+import de.svws_nrw.core.adt.map.HashMap4D;
+import de.svws_nrw.core.adt.map.HashMap5D;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -228,6 +230,110 @@ public class DeveloperNotificationException extends RuntimeException {
 			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits "
 					+ map.getOrException(key1, key2) + " zugeordnet ist!");
 		map.put(key1, key2, value);
+	}
+
+	/**
+	 * Fügt das Mapping (K1, K2, K3, K4) --> V der Map hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 *
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <K4>   der Typ des 4. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map     die Map.
+	 * @param key1    der 1. Schlüssel.
+	 * @param key2    der 2. Schlüssel.
+	 * @param key3    der 3. Schlüssel.
+	 * @param key4    der 4. Schlüssel.
+	 * @param value   der zugeordnete Wert.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static <K1, K2, K3, K4, V> void ifMap4DPutOverwrites(final @NotNull HashMap4D<K1, K2, K3, K4, V> map,
+			final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull V value) throws DeveloperNotificationException {
+		if (map.contains(key1, key2, key3, key4))
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ") --> " + value + " fehlgeschlagen, da bereits "
+					+ map.getOrException(key1, key2, key3, key4) + " zugeordnet ist!");
+		map.put(key1, key2, key3, key4, value);
+	}
+
+	/**
+	 * Fügt das Mapping (K1, K2, K3, K4, K5) --> V der Map hinzu. <br>
+	 * Wirft eine DeveloperNotificationException, falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 *
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <K4>   der Typ des 4. Schlüssels.
+	 * @param <K5>   der Typ des 5. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map     die Map.
+	 * @param key1    der 1. Schlüssel.
+	 * @param key2    der 2. Schlüssel.
+	 * @param key3    der 3. Schlüssel.
+	 * @param key4    der 4. Schlüssel.
+	 * @param key5    der 5. Schlüssel.
+	 * @param value   der zugeordnete Wert.
+	 *
+	 * @throws DeveloperNotificationException falls dem Schlüssel K bereits etwas zugeordnet ist.
+	 */
+	public static <K1, K2, K3, K4, K5, V> void ifMap5DPutOverwrites(final @NotNull HashMap5D<K1, K2, K3, K4, K5, V> map,
+			final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5, final @NotNull V value) throws DeveloperNotificationException {
+		if (map.contains(key1, key2, key3, key4, key5))
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ", " + key3 + ", " + key4 + ", " + key5 + ") --> " + value + " fehlgeschlagen, da bereits "
+					+ map.getOrException(key1, key2, key3, key4, key5) + " zugeordnet ist!");
+		map.put(key1, key2, key3, key4, key5, value);
+	}
+
+	/**
+	 * Versucht des Mapping (K1, K2, K3, K4) zu löschen.
+	 * Wirft eine DeveloperNotificationException, falls das Mapping(K1, K2) nicht existiert.
+	 *
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <K4>   der Typ des 4. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map    die Map.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
+	 * @param key3    der 3. Schlüssel.
+	 * @param key4    der 4. Schlüssel.
+	 *
+	 * @return den vor dem Löschen zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
+	 * @throws DeveloperNotificationException falls das Mapping(K1, K2, K3, K4, K5) nicht existiert.
+	 */
+	public static <K1, K2, K3, K4, V> @NotNull V ifMap4DRemoveFailes(final @NotNull HashMap4D<K1, K2, K3, K4, V> map,
+			final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4) throws DeveloperNotificationException {
+		return map.removeOrException(key1, key2, key3, key4);
+	}
+
+	/**
+	 * Versucht des Mapping (K1, K2, K3, K4, K5) zu löschen.
+	 * Wirft eine DeveloperNotificationException, falls das Mapping(K1, K2) nicht existiert.
+	 *
+	 * @param <K1>   der Typ des 1. Schlüssels.
+	 * @param <K2>   der Typ des 2. Schlüssels.
+	 * @param <K3>   der Typ des 3. Schlüssels.
+	 * @param <K4>   der Typ des 4. Schlüssels.
+	 * @param <K5>   der Typ des 5. Schlüssels.
+	 * @param <V>    der Typ des zugeordneten Wertes.
+	 * @param map    die Map.
+	 * @param key1   der 1. Schlüssel.
+	 * @param key2   der 2. Schlüssel.
+	 * @param key3    der 3. Schlüssel.
+	 * @param key4    der 4. Schlüssel.
+	 * @param key5    der 5. Schlüssel.
+	 *
+	 * @return den vor dem Löschen zugeordneten (nicht NULL) Wert des übergebenen Schlüssels.
+	 *
+	 * @throws DeveloperNotificationException falls das Mapping(K1, K2, K3, K4, K5) nicht existiert.
+	 */
+	public static <K1, K2, K3, K4, K5, V> @NotNull V ifMap5DRemoveFailes(final @NotNull HashMap5D<K1, K2, K3, K4, K5, V> map,
+			final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) throws DeveloperNotificationException {
+		return map.removeOrException(key1, key2, key3, key4, key5);
 	}
 
 

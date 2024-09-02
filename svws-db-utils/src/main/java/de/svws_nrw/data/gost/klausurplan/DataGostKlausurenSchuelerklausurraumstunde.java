@@ -27,6 +27,9 @@ import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
+import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
+import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
@@ -236,14 +239,14 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 			// Neue Schülerklausuren ermitteln
 			final List<GostSchuelerklausurTermin> listSchuelerklausurtermineNeu =
-					DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, pair.schuelerklausurterminIDs);
+					new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(pair.schuelerklausurterminIDs);
 
 			// Schon im Raum existente Schülerklausuren ermitteln
 			final List<GostSchuelerklausurterminraumstunde> listSchuelerklausurtermineSchonImRaumRaumstunden =
 					getSchuelerklausurterminraumstundenZuRaumid(conn, idRaum);
 
-			final List<GostSchuelerklausurTermin> listSchuelerklausurtermine = new ArrayList<>(DataGostKlausurenSchuelerklausurTermin
-					.getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(conn, listSchuelerklausurtermineSchonImRaumRaumstunden));
+			final List<GostSchuelerklausurTermin> listSchuelerklausurtermine = new ArrayList<>(new DataGostKlausurenSchuelerklausurTermin(conn)
+					.getSchuelerklausurtermineZuSchuelerklausurterminraumstunden(listSchuelerklausurtermineSchonImRaumRaumstunden));
 
 			if (pair.id != -1) // überarbeiten! -1 bedeutet: Zeit der Kursklausur wird neu gesetzt, nicht
 								// null bedeutet: Raum wird Schülerklausuren zugewiesen
@@ -251,7 +254,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 
 			final List<GostSchuelerklausur> listSchuelerklausuren =
-					DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, listSchuelerklausurtermine);
+					new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(listSchuelerklausurtermine);
 
 			final List<GostKursklausur> listKursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSchuelerklausuren);
 
@@ -265,8 +268,9 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			manager.raumAdd(raum);
 			manager.raumstundeAddAll(listRaumstunden);
 			final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);
+
 			final StundenplanManager stundenplanManager =
-					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), new ArrayList<>(), new ArrayList<>(), null);
+					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id), DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id), DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
 			manager.setStundenplanManager(stundenplanManager);
 
 			// Zeitraster_min und _max ermitteln
@@ -465,7 +469,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		if (idSkts.isEmpty())
 			return retCollection;
 
-		final List<GostSchuelerklausurTermin> skts = DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuSchuelerklausurterminids(conn, idSkts);
+		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(idSkts);
 		if (includeSelbesDatum) {
 			final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
 			final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);

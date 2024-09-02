@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
@@ -203,6 +204,15 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	 */
 	public getKeySet() : JavaSet<K1> {
 		return this._map.keySet();
+	}
+
+	/**
+	 * Liefert das EntrySet des 1. Schlüssels.
+	 *
+	 * @return das EntrySet der SubMap des 1. Schlüssels.
+	 */
+	public getEntrySet() : JavaSet<JavaMapEntry<K1, JavaMap<K2, V>>> {
+		return this._map.entrySet();
 	}
 
 	/**

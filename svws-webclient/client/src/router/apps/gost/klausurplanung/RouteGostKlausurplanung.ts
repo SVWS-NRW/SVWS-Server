@@ -22,6 +22,7 @@ import { routeError } from "~/router/error/RouteError";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
+import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -47,6 +48,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			routeGostKlausurplanungDetailAnsicht,
 			routeGostKlausurplanungNachschreiber,
 			routeGostKlausurplanungNachschreibAnsicht,
+			routeGostKlausurplanungProbleme,
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		api.config.addElements([

@@ -194,12 +194,14 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key3 Der 3. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key4 Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key5 Der 5. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
+	 *
+	 * @return der dem Mapping vor dem Entfernen zugeordnete Wert, falls vorhanden.
 	 */
-	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4, key5 : K5) : void {
+	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4, key5 : K5) : V {
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
-		map2.removeOrException(key2, key3, key4, key5);
+		return map2.removeOrException(key2, key3, key4, key5);
 	}
 
 	/**

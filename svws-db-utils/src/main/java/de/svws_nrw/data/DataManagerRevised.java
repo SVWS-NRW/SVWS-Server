@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -184,6 +185,22 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @return das neu erstellte Core-DTO
 	 */
 	protected abstract CoreDTO map(DatabaseDTO dto) throws ApiOperationException;
+
+	/**
+	 * Wandelt die Datenbank-DTOs in der übergebenen Collection in Core-DTOs und gibt die Liste dieser umgewandelten DTOs zurück.
+	 *
+	 * @param dtos   die Collection der Datenbank-DTOs
+	 *
+	 * @return die Liste der Core-DTOs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<CoreDTO> mapList(final Collection<DatabaseDTO> dtos) throws ApiOperationException {
+		final List<CoreDTO> daten = new ArrayList<>();
+		for (final DatabaseDTO dto : dtos)
+			daten.add(map(dto));
+		return daten;
+	}
 
 
 	/**
@@ -403,6 +420,20 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response addMultipleAsResponse(final InputStream is) throws ApiOperationException {
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(addMultiple(is)).build();
+	}
+
+	/**
+	 * Fügt mehrere neue DTOs in die Datenbank hinzu, indem in der Datenbank jeweils eine neue ID
+	 * abgefragt wird und die Attribute des JSON-Objektes gemäß dem Attribut-Mapper integriert werden.
+	 *
+	 * @param is   der Input-Stream
+	 *
+	 * @return die Liste mit den Core-DTOs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<CoreDTO> addMultiple(final InputStream is) throws ApiOperationException {
 		// initiale Attribute der anzulegenden DTOs durchlaufen
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		final List<CoreDTO> daten = new ArrayList<>();
@@ -411,8 +442,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			newID = getNextID(newID, attributeMap);
 			daten.add(this.addBasic(newID, attributeMap));
 		}
-
-		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 
@@ -615,6 +645,22 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		saveDatabaseDTO(dto);
 	}
 
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param initAttributes  die Map mit den initialen Attributen für das neue DTO
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public CoreDTO add(final Map<String, Object> initAttributes) throws ApiOperationException {
+		return addBasic(getNextID(null, initAttributes), initAttributes);
+	}
 
 	/**
 	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
@@ -651,6 +697,25 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			saveDatabaseDTO(dto);
 		}
 		return getById(newID);
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param is   der Input-Stream
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public CoreDTO addFromStream(final InputStream is) throws ApiOperationException {
+		// Prüfe, ob alle relevanten Attribute für das Erstellen des DTOs übergeben wurden
+		final Map<String, Object> initAttributes = JSONMapper.toMap(is);
+		return this.addBasic(getNextID(null, initAttributes), initAttributes);
 	}
 
 

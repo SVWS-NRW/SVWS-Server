@@ -68,7 +68,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 					Map.entry("nachschreiberZugelassen", (conn, dto, value, map) -> {
 						final boolean newValue = JSONMapper.convertToBoolean(value, false);
 						if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen.booleanValue() && !newValue
-								&& !DataGostKlausurenSchuelerklausurTermin.getSchuelerklausurtermineZuTerminids(conn, ListUtils.create1(dto.ID)).isEmpty())
+								&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminids(ListUtils.create1(dto.ID)).isEmpty())
 							throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
 						dto.NachschreiberZugelassen = newValue;
 					}));
@@ -134,7 +134,7 @@ public final class DataGostKlausurenTermin extends DataManager<Long> {
 		final List<GostSchuelerklausurTermin> schuelerklausurTermineNullTermin = schuelerklausurTermine.stream().filter(skt -> skt.folgeNr == 0).toList();
 		if (!schuelerklausurTermineNullTermin.isEmpty()) {
 			final List<GostSchuelerklausur> schuelerklausurNullTermin =
-					DataGostKlausurenSchuelerklausur.getSchuelerklausurenZuSchuelerklausurterminen(conn, schuelerklausurTermineNullTermin);
+					new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(schuelerklausurTermineNullTermin);
 			final List<GostKursklausur> kursklausurNullTermin =
 					DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, schuelerklausurNullTermin);
 			ergebnis.addAll(DataGostKlausurenTermin.getKlausurtermineZuKursklausuren(conn, kursklausurNullTermin));

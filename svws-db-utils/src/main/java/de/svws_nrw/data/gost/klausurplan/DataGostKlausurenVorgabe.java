@@ -8,16 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.ObjLongConsumer;
-import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
-import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
@@ -29,13 +25,8 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausuren;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
-import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response;
@@ -70,114 +61,7 @@ public final class DataGostKlausurenVorgabe extends DataManager<Long> {
 		return this.getList();
 	}
 
-	/**
-	 * Erzeugt die Gost-Kursklausuren und Gost-Schülerklausuren aus den Klausurvorlagen einer Jahrgangsstufe
-	 * im übergebenen Gost-Halbjahr für die existierenden Kurse.
-	 *
-	 * @param hj      das Gost-Halbjahr
-	 * @param quartal das Quartal
-	 *
-	 * @return die Anzahl der erzeugten Kursklausuren
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public GostKlausurenCollectionAllData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
-		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
-		final List<GostKlausurvorgabe> vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, _abiturjahr, hj, false);
-		if (vorgaben.isEmpty())
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
-
-		final GostKlausurplanManager manager = new GostKlausurplanManager(vorgaben);
-
-		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
-		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
-				.collect(Collectors.groupingBy(k -> k.idKurs, Collectors.toMap(k -> k.idVorgabe, Function.identity())));
-
-		final List<DTOSchuljahresabschnitte> sjaList =
-				conn.query("SELECT s FROM DTOSchuljahresabschnitte s WHERE s.Jahr = :jahr AND s.Abschnitt = :abschnitt", DTOSchuljahresabschnitte.class)
-						.setParameter("jahr", halbjahr.getSchuljahrFromAbiturjahr(_abiturjahr))
-						.setParameter("abschnitt", (halbjahr.id % 2) + 1)
-						.getResultList();
-		if ((sjaList == null) || (sjaList.size() != 1))
-			throw new ApiOperationException(Status.NOT_FOUND, "Noch kein Schuljahresabschnitt für dieses Halbjahr definiert.");
-
-		final DTOSchuljahresabschnitte sja = sjaList.get(0);
-		// Kurse ermitteln
-		final List<DTOKurs> kurse =
-				conn.query("SELECT k FROM DTOKurs k WHERE k.Schuljahresabschnitts_ID = :sja AND k.ASDJahrgang = :jg", DTOKurs.class).setParameter("sja", sja.ID)
-						.setParameter("jg", halbjahr.jahrgang).getResultList(); // TODO Quartalsmodus
-
-		final List<DTOGostKlausurenKursklausuren> kursklausuren = new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausuren> schuelerklausuren = new ArrayList<>();
-		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
-		for (final DTOKurs kurs : kurse) {
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(hj, kurs);
-			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(_abiturjahr, halbjahr, quartal,
-					GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
-			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
-				//TODO Fehlermeldung an Client, dass es zu diesem Kurs/Fach keine Vorgaben gibt
-				throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für diesen Kurs definiert: " + kurs.KurzBez);
-			for (final GostKlausurvorgabe vorgabe : listKursVorgaben) {
-				if (!(mapKursidVorgabeIdKursklausur.containsKey(kurs.ID) && mapKursidVorgabeIdKursklausur.get(kurs.ID).containsKey(vorgabe.idVorgabe))) {
-					final DTOGostKlausurenKursklausuren kursklausur = new DTOGostKlausurenKursklausuren(idNextKursklausur, vorgabe.idVorgabe, kurs.ID);
-					final List<DTOGostKlausurenSchuelerklausuren> listSk = createSchuelerklausurenZuKursklausur(kursklausur, laDaten);
-					if (!listSk.isEmpty()) {
-						idNextKursklausur++;
-						kursklausuren.add(kursklausur);
-						schuelerklausuren.addAll(listSk);
-					}
-				}
-			}
-		}
-		// ID in Schülerklausuren einfügen
-		long idNextSchuelerklausur = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausuren.class);
-		for (final DTOGostKlausurenSchuelerklausuren sk : schuelerklausuren)
-			sk.ID = idNextSchuelerklausur++;
-
-		// SchülerklausurTermine erstellen und ID in SchülerklausurTermine einfügen
-		final List<DTOGostKlausurenSchuelerklausurenTermine> sktermine = createSchuelerklausurenTermineZuSchuelerklausuren(schuelerklausuren);
-		long idNextSchuelerklausurTermin = conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class);
-		for (final DTOGostKlausurenSchuelerklausurenTermine skt : sktermine)
-			skt.ID = idNextSchuelerklausurTermin++;
-
-		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-		final GostKlausurenCollectionAllData retKlausuren = new GostKlausurenCollectionAllData();
-		retKlausuren.kursklausuren = DTOMapper.mapList(kursklausuren, DataGostKlausurenKursklausur.dtoMapper);
-		retKlausuren.schuelerklausuren = DTOMapper.mapList(schuelerklausuren, DataGostKlausurenSchuelerklausur.dtoMapper);
-		retKlausuren.schuelerklausurtermine = DTOMapper.mapList(sktermine, DataGostKlausurenSchuelerklausurTermin.dtoMapper);
-		return retKlausuren;
-	}
-
-	private static List<DTOGostKlausurenSchuelerklausuren> createSchuelerklausurenZuKursklausur(final DTOGostKlausurenKursklausuren kursklausur,
-			final List<DTOSchuelerLernabschnittsdaten> lernDaten) {
-		final List<DTOGostKlausurenSchuelerklausuren> listSchuelerklausuren = new ArrayList<>();
-		for (final DTOSchuelerLernabschnittsdaten lad : lernDaten) {
-			listSchuelerklausuren.add(new DTOGostKlausurenSchuelerklausuren(-1L, kursklausur.ID, lad.Schueler_ID));
-		}
-		return listSchuelerklausuren;
-	}
-
-	private static List<DTOGostKlausurenSchuelerklausurenTermine> createSchuelerklausurenTermineZuSchuelerklausuren(
-			final List<DTOGostKlausurenSchuelerklausuren> sks) {
-		final List<DTOGostKlausurenSchuelerklausurenTermine> listSchuelerklausurenTermine = new ArrayList<>();
-		for (final DTOGostKlausurenSchuelerklausuren sk : sks) {
-			listSchuelerklausurenTermine.add(new DTOGostKlausurenSchuelerklausurenTermine(-1L, sk.ID, 0));
-		}
-		return listSchuelerklausurenTermine;
-	}
-
-	private List<DTOSchuelerLernabschnittsdaten> getLernabschnittsdatenZuKurs(final int hj, final DTOKurs kurs) {
-		final SchuelerStatus[] validStatus = { SchuelerStatus.AKTIV, SchuelerStatus.EXTERN };
-		return conn.query(
-				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID WHERE sld.Kurs_ID = :kursid AND sld.Kursart IN :kursart AND s.Status IN :sstatus AND s.Geloescht = :sgeloescht",
-				DTOSchuelerLernabschnittsdaten.class).setParameter("kursid", kurs.ID)
-				.setParameter("kursart", Arrays.asList((hj == 5) ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
-				.setParameter("sstatus", Arrays.asList(validStatus))
-				.setParameter("sgeloescht", false)
-				.getResultList();
-	}
 
 	/**
 	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs
