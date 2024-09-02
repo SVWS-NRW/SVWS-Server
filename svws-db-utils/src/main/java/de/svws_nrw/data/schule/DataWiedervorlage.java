@@ -63,11 +63,11 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 			case ERZIEHER -> dto.Erzieher_ID;
 		};
 		daten.bemerkung = dto.Bemerkung;
-		daten.tsAngelegt = null;
-		daten.tsWiedervorlage = null;
-		daten.tsErledigt = null;
-		daten.idBenutzerErledigt = null;
-		daten.automatischErledigt = false;
+		daten.tsAngelegt = dto.tsAngelegt;
+		daten.tsWiedervorlage = dto.tsWiedervorlage;
+		daten.tsErledigt = dto.tsErledigt;
+		daten.idBenutzerErledigt = dto.Benutzer_ID_Erledigt;
+		daten.automatischErledigt = (dto.AutomatischErledigt != null) && dto.AutomatischErledigt;
 		return daten;
 	}
 
