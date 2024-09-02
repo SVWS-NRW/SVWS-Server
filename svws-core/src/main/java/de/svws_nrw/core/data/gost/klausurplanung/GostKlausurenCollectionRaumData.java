@@ -33,4 +33,16 @@ public class GostKlausurenCollectionRaumData {
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull List<Long> idsKlausurtermine = new ArrayList<>();
 
+	/**
+	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 *
+	 * @param addData dd
+	 */
+	public void addAll(final @NotNull GostKlausurenCollectionRaumData addData) {
+		raeume.addAll(addData.raeume);
+		raumstunden.addAll(addData.raumstunden);
+		sktRaumstunden.addAll(addData.sktRaumstunden);
+		idsKlausurtermine.addAll(addData.idsKlausurtermine);
+	}
+
 }

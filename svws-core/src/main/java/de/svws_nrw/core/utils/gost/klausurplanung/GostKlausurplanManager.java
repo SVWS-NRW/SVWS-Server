@@ -149,55 +149,37 @@ public class GostKlausurplanManager {
 		return Long.compare(a.id, b.id);
 	};
 
-//	private final @NotNull Comparator<GostSchuelerklausurTermin> _compSchuelerklausurTermin = (
-//			a, b) -> {
-//		if (a.idSchuelerklausur == b.idSchuelerklausur) {
-//			return Integer.compare(a.folgeNr, b.folgeNr);
-//		}
-//		final @NotNull GostSchuelerklausur kA = schuelerklausurBySchuelerklausurtermin(a);
-//		final @NotNull GostSchuelerklausur kB = schuelerklausurBySchuelerklausurtermin(b);
-//		if ((_schuelerMap != null) && (kA.idSchueler != kB.idSchueler)) {
-//			final SchuelerListeEintrag sA = getSchuelerMap().get(kA.idSchueler);
-//			final SchuelerListeEintrag sB = getSchuelerMap().get(kB.idSchueler);
-//			if ((sA != null) && (sB != null))
-//				return (sA.nachname + "," + sA.vorname).compareTo(sB.nachname + "," + sB.vorname);
-//		}
-//		return Long.compare(a.id, b.id);
-//	};
-
 	private final @NotNull Comparator<GostSchuelerklausurTermin> _compSchuelerklausurTermin = (
 			final @NotNull GostSchuelerklausurTermin a, final @NotNull GostSchuelerklausurTermin b) -> {
-    	if (a == b || a.id == b.id)
-    		return 0;
-	    // Zuerst prüfen, ob es sich um die gleiche Schuelerklausur handelt
-//	    if (a.idSchuelerklausur != b.idSchuelerklausur) {
-//	        final @NotNull GostSchuelerklausur kA = schuelerklausurBySchuelerklausurtermin(a);
-//	        final @NotNull GostSchuelerklausur kB = schuelerklausurBySchuelerklausurtermin(b);
-//
-//	        // Wenn _schuelerMap existiert und unterschiedliche Schüler, nach Name sortieren
-//	        if (_schuelerMap != null && (kA.idSchueler != kB.idSchueler)) {
-//	            final SchuelerListeEintrag sA = _schuelerMap.get(kA.idSchueler);
-//	            final SchuelerListeEintrag sB = _schuelerMap.get(kB.idSchueler);
-//
-//	            if (sA != null && sB != null) {
-//	                int nameComparison = (sA.nachname + "," + sA.vorname).compareTo(sB.nachname + "," + sB.vorname);
-//	                if (nameComparison != 0) {
-//	                    return nameComparison;
-//	                }
-//	            }
-//	        }
-//	    }
+		if ((a == b) || (a.id == b.id))
+			return 0;
+		// Zuerst prüfen, ob es sich um die gleiche Schuelerklausur handelt
+		if (a.idSchuelerklausur != b.idSchuelerklausur) {
+			final @NotNull GostSchuelerklausur kA = schuelerklausurBySchuelerklausurtermin(a);
+			final @NotNull GostSchuelerklausur kB = schuelerklausurBySchuelerklausurtermin(b);
 
-	    // Wenn es sich um die gleiche Schuelerklausur handelt, nach FolgeNr sortieren
-	    if (a.idSchuelerklausur == b.idSchuelerklausur) {
-	        int folgeNrComparison = Integer.compare(a.folgeNr, b.folgeNr);
-	        if (folgeNrComparison != 0) {
-	            return folgeNrComparison;
-	        }
-	    }
+			// Wenn _schuelerMap existiert und unterschiedliche Schüler, nach Name sortieren
+			if ((_schuelerMap != null) && (kA.idSchueler != kB.idSchueler)) {
+				final SchuelerListeEintrag sA = _schuelerMap.get(kA.idSchueler);
+				final SchuelerListeEintrag sB = _schuelerMap.get(kB.idSchueler);
 
-	    // Als letzte Instanz nach der ID des Termins sortieren
-	    return Long.compare(a.id, b.id);
+				if ((sA == null) || (sB == null))
+					throw new DeveloperNotificationException("Schüler muss in SchuelerMap enthalten sein.");
+				int nameComparison = (sA.nachname + "," + sA.vorname).compareTo(sB.nachname + "," + sB.vorname);
+				if (nameComparison != 0)
+					return nameComparison;
+			}
+		}
+
+		// Wenn es sich um die gleiche Schuelerklausur handelt, nach FolgeNr sortieren
+		if (a.idSchuelerklausur == b.idSchuelerklausur) {
+			int folgeNrComparison = Integer.compare(a.folgeNr, b.folgeNr);
+			if (folgeNrComparison != 0)
+				return folgeNrComparison;
+		}
+
+		// Als letzte Instanz nach der ID des Termins sortieren
+		return Long.compare(a.id, b.id);
 	};
 
 	private static final @NotNull Comparator<GostKlausurraum> _compRaum =
@@ -258,7 +240,8 @@ public class GostKlausurplanManager {
 	private final @NotNull HashMap4D<Integer, Integer, Integer, Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin =
 			new HashMap4D<>();
 	private final @NotNull HashMap2D<Long, Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminmenge_by_idRaum_and_idTermin = new HashMap2D<>();
-	private final @NotNull HashMap2D<Long, Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur = new HashMap2D<>();
+	private final @NotNull HashMap2D<Long, Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur =
+			new HashMap2D<>();
 	private final @NotNull HashMap3D<Integer, Integer, Long, List<GostSchuelerklausurTermin>> _schuelerklausurterminaktuellmenge_by_abijahr_and_kw_and_schuelerId =
 			new HashMap3D<>();
 
@@ -1027,7 +1010,8 @@ public class GostKlausurplanManager {
 
 	private void vorgabefehlendAddAllOhneUpdate(final @NotNull List<GostKlausurvorgabe> list) {
 		for (final @NotNull GostKlausurvorgabe vorgabe : list)
-			DeveloperNotificationException.ifMap5DPutOverwrites(_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach, vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
+			DeveloperNotificationException.ifMap5DPutOverwrites(_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach,
+					vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, vorgabe.kursart, vorgabe.idFach, vorgabe);
 	}
 
 	/**
@@ -1052,7 +1036,8 @@ public class GostKlausurplanManager {
 	}
 
 	private void vorgabefehlendRemoveOhneUpdate(final @NotNull GostKlausurvorgabe vorgabe) {
-		_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, vorgabe.kursart, vorgabe.idFach);
+		_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal,
+				vorgabe.kursart, vorgabe.idFach);
 	}
 
 	/**
@@ -1248,7 +1233,8 @@ public class GostKlausurplanManager {
 	private void kursklausurfehlendAddAllOhneUpdate(final @NotNull List<GostKursklausur> list) {
 		for (final @NotNull GostKursklausur klausur : list) {
 			final @NotNull GostKlausurvorgabe v = vorgabeByKursklausur(klausur);
-			DeveloperNotificationException.ifMap4DPutOverwrites(_kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs, v.abiJahrgang, v.halbjahr, v.quartal, klausur.idKurs, klausur);
+			DeveloperNotificationException.ifMap4DPutOverwrites(_kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs, v.abiJahrgang, v.halbjahr,
+					v.quartal, klausur.idKurs, klausur);
 		}
 	}
 
@@ -1557,7 +1543,8 @@ public class GostKlausurplanManager {
 
 	private void update_schuelerklausurfehlendmenge() {
 		_schuelerklausurfehlendmenge.clear();
-		_schuelerklausurfehlendmenge.addAll(_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesAsList());
+		_schuelerklausurfehlendmenge
+				.addAll(_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesAsList());
 	}
 
 	/**
@@ -1575,7 +1562,9 @@ public class GostKlausurplanManager {
 		for (final @NotNull GostSchuelerklausur klausur : list) {
 			final @NotNull GostKursklausur kursklausur = kursklausurBySchuelerklausur(klausur);
 			final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(kursklausur);
-			DeveloperNotificationException.ifMap5DPutOverwrites(_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur, vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, klausur.idSchueler, kursklausur.id, klausur);
+			DeveloperNotificationException.ifMap5DPutOverwrites(
+					_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur, vorgabe.abiJahrgang, vorgabe.halbjahr,
+					vorgabe.quartal, klausur.idSchueler, kursklausur.id, klausur);
 		}
 	}
 
@@ -1603,7 +1592,8 @@ public class GostKlausurplanManager {
 	private void schuelerklausurfehlendRemoveOhneUpdate(final @NotNull GostSchuelerklausur klausur) {
 		final @NotNull GostKursklausur kursklausur = kursklausurBySchuelerklausur(klausur);
 		final @NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(kursklausur);
-		_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, klausur.idSchueler, kursklausur.id);
+		_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.remove(vorgabe.abiJahrgang, vorgabe.halbjahr,
+				vorgabe.quartal, klausur.idSchueler, kursklausur.id);
 	}
 
 	/**
@@ -3255,7 +3245,6 @@ public class GostKlausurplanManager {
 
 
 
-
 	/**
 	 * Liefert die {@link GostKlausurvorgabe} zu einer {@link GostKursklausur}.
 	 *
@@ -4170,7 +4159,8 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Liste der GostKursklausuren
 	 */
-	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaumAndKursklausur(final @NotNull GostKlausurraum raum, final @NotNull GostKursklausur kursklausur) {
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaumAndKursklausur(final @NotNull GostKlausurraum raum,
+			final @NotNull GostKursklausur kursklausur) {
 		return DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur, raum.id, kursklausur.id);
 	}
 
@@ -4228,7 +4218,8 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
 	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk, final GostKlausurtermin termin) {
-		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException.ifMap2DGetIsNull(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin != null ? termin.id : kk.idTermin, kk.id)) {
+		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException
+				.ifMap2DGetIsNull(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin != null ? termin.id : kk.idTermin, kk.id)) {
 			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -4246,7 +4237,8 @@ public class GostKlausurplanManager {
 	public boolean isTerminAlleSchuelerklausurenVerplant(final @NotNull GostKlausurtermin t) {
 		if (!_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.containsKey1(t.id))
 			return true;
-		for (final @NotNull GostSchuelerklausurTermin sk : ListUtils.getFlatted(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getNonNullValuesOfKey1AsList(t.id))) {
+		for (final @NotNull GostSchuelerklausurTermin sk : ListUtils
+				.getFlatted(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getNonNullValuesOfKey1AsList(t.id))) {
 			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
 				return false;
 		}
@@ -4566,7 +4558,8 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, falls die {@link GostKursklausur} schon eine Raumzuweisung an einem {@link GostKlausurtermin} hat.
 	 */
 	public boolean hatRaumzuteilungByKursklausur(final @NotNull GostKursklausur klausur) {
-		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(terminOrExceptionByKursklausur(klausur), klausur)) {
+		for (final @NotNull GostSchuelerklausurTermin skt : schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(terminOrExceptionByKursklausur(klausur),
+				klausur)) {
 			final List<GostKlausurraumstunde> stunden = _raumstundenmenge_by_idSchuelerklausurtermin.get(skt.id);
 			if (stunden != null && !stunden.isEmpty())
 				return true;
@@ -4671,8 +4664,10 @@ public class GostKlausurplanManager {
 	public @NotNull List<GostSchuelerklausur> schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
 			final int quartal) {
 		if (quartal == 0)
-			return _schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesOfMap3AsList(abiJahrgang, halbjahr.id);
-		return _schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesOfMap4AsList(abiJahrgang, halbjahr.id, quartal);
+			return _schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesOfMap3AsList(abiJahrgang,
+					halbjahr.id);
+		return _schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.getNonNullValuesOfMap4AsList(abiJahrgang,
+				halbjahr.id, quartal);
 	}
 
 	/**
@@ -4684,12 +4679,33 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public int anzahlProblemeByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+	public int planungsfehlerGetAnzahlByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
 			final int quartal) {
 		int anzahl = 0;
 		anzahl += vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		return anzahl;
+	}
+
+	/**
+	 * Liefert die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
+	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
+	 * @param halbjahr das {@link GostHalbjahr}
+	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
+	 */
+	public int planungshinweiseGetAnzahlByHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+			final int quartal) {
+		int anzahl = 0;
 		anzahl += kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
@@ -4726,7 +4742,8 @@ public class GostKlausurplanManager {
 	 *
 	 * @return eine Liste von {@link GostKlausurtermin}en, bei denen die Raumzuweisung noch unvollständig ist zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public @NotNull List<GostKlausurtermin> terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+	public @NotNull List<GostKlausurtermin> terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang,
+			final @NotNull GostHalbjahr halbjahr,
 			final int quartal) {
 		final @NotNull List<GostKlausurtermin> ergebnis = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))
@@ -4744,7 +4761,8 @@ public class GostKlausurplanManager {
 	 *
 	 * @return eine Liste von {@link GostKlausurtermin}en, bei denen die Platzkapazität nicht ausreichend ist zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public @NotNull List<GostKlausurtermin> terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr,
+	public @NotNull List<GostKlausurtermin> terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(final int abiJahrgang,
+			final @NotNull GostHalbjahr halbjahr,
 			final int quartal) {
 		final @NotNull List<GostKlausurtermin> ergebnis = new ArrayList<>();
 		for (final @NotNull GostKlausurtermin termin : terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal))

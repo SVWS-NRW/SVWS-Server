@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-checkbox class="-mt-3 mb-5" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
+	<svws-ui-checkbox class="mb-2" v-if="selectedItems !== undefined && !schuelerklausuren.isEmpty()" :model-value="selectedItems.containsAll(schuelerklausuren)" @update:model-value="selectedItems.containsAll(schuelerklausuren) ? selectedItems.clear() : selectedItems.addAll(schuelerklausuren)">Alle auswählen</svws-ui-checkbox>
 	<svws-ui-table :columns="cols" :disable-header="!$slots.tableTitle">
 		<template #noData>
 			<slot name="noData">
@@ -78,14 +78,14 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "nachname", label: "Nachame", minWidth: 15 },
-			{ key: "vorname", label: "Vorname", minWidth: 8 },
-			{ key: "stufe", label: "Jg.", fixedWidth: 2 },
-			{ key: "kurs", label: "Kurs", fixedWidth: 6 },
-			{ key: "datum", label: "Datum", fixedWidth: 8 },
-			{ key: "kuerzel", label: "Lehrkraft", fixedWidth: 4},
-			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", fixedWidth: 3},
-			{ key: "actions", label: "Aktionen", span: 0.5, align: "right", fixedWidth: 3},
+			{ key: "nachname", label: "Nachame", span: 15 },
+			{ key: "vorname", label: "Vorname", span: 8 },
+			{ key: "stufe", label: "Jg.", span: 2 },
+			{ key: "kurs", label: "Kurs", span: 8 },
+			{ key: "datum", label: "Datum", span: 11 },
+			{ key: "kuerzel", label: "Lehrkraft", span: 4},
+			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
+			{ key: "actions", label: "Aktionen", span: 2, align: "right" },
 		];
 
 		return cols;

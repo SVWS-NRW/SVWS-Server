@@ -61,8 +61,9 @@
 	</svws-ui-modal>
 
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card title="In Planung">
-			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+		<div class="content-card h-full flex flex-col">
+			<div class="content-card--headline mb-4">In Planung</div>
+			<div class="content-card--content flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man="kMan"
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 					:on-drag="onDrag"
@@ -76,7 +77,7 @@
 					</template>
 				</s-gost-klausurplanung-schuelerklausur-table>
 			</div>
-		</svws-ui-content-card>
+		</div>
 		<svws-ui-content-card>
 			<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
 				<template #title>

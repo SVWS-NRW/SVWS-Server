@@ -32,6 +32,18 @@ export class GostKlausurenCollectionRaumData extends JavaObject {
 		super();
 	}
 
+	/**
+	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 *
+	 * @param addData dd
+	 */
+	public addAll(addData : GostKlausurenCollectionRaumData) : void {
+		this.raeume.addAll(addData.raeume);
+		this.raumstunden.addAll(addData.raumstunden);
+		this.sktRaumstunden.addAll(addData.sktRaumstunden);
+		this.idsKlausurtermine.addAll(addData.idsKlausurtermine);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData';
 	}

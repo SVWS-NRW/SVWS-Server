@@ -4,8 +4,8 @@ import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostK
 import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../../java/util/HashMap';
 import { ArrayList } from '../../../../java/util/ArrayList';
-import { JavaString } from '../../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
+import { JavaString } from '../../../../java/lang/JavaString';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { DateUtils } from '../../../../core/utils/DateUtils';
 import { GostKlausurenUpdate } from '../../../../core/data/gost/klausurplanung/GostKlausurenUpdate';
@@ -145,13 +145,25 @@ export class GostKlausurplanManager extends JavaObject {
 	} };
 
 	private readonly _compSchuelerklausurTermin : Comparator<GostSchuelerklausurTermin> = { compare : (a: GostSchuelerklausurTermin, b: GostSchuelerklausurTermin) => {
-		if (a as unknown === b as unknown || a.id === b.id)
+		if ((a as unknown === b as unknown) || (a.id === b.id))
 			return 0;
+		if (a.idSchuelerklausur !== b.idSchuelerklausur) {
+			const kA : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(a);
+			const kB : GostSchuelerklausur = this.schuelerklausurBySchuelerklausurtermin(b);
+			if ((this._schuelerMap !== null) && (kA.idSchueler !== kB.idSchueler)) {
+				const sA : SchuelerListeEintrag | null = this._schuelerMap.get(kA.idSchueler);
+				const sB : SchuelerListeEintrag | null = this._schuelerMap.get(kB.idSchueler);
+				if ((sA === null) || (sB === null))
+					throw new DeveloperNotificationException("Schüler muss in SchuelerMap enthalten sein.")
+				let nameComparison : number = JavaString.compareTo((sA.nachname + "," + sA.vorname), sB.nachname + "," + sB.vorname);
+				if (nameComparison !== 0)
+					return nameComparison;
+			}
+		}
 		if (a.idSchuelerklausur === b.idSchuelerklausur) {
 			let folgeNrComparison : number = JavaInteger.compare(a.folgeNr, b.folgeNr);
-			if (folgeNrComparison !== 0) {
+			if (folgeNrComparison !== 0)
 				return folgeNrComparison;
-			}
 		}
 		return JavaLong.compare(a.id, b.id);
 	} };
@@ -4327,11 +4339,31 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
 	 */
-	public anzahlProblemeByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+	public planungsfehlerGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
 		let anzahl : number = 0;
 		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		return anzahl;
+	}
+
+	/**
+	 * Liefert die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
+	 *
+	 * @param abiJahrgang der Abitur-Jahrgang
+	 * @param halbjahr das {@link GostHalbjahr}
+	 * @param quartal die Nummer des Quartals, 0 für alle Quartale
+	 *
+	 * @return die Anzahl möglicher Probleme in der aktuellen Klausurplanung zum übergebenen {@link GostHalbjahr} und Quartal
+	 */
+	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
+		let anzahl : number = 0;
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();

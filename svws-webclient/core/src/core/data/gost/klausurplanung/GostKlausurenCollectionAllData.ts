@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
+import type { JavaSet } from '../../../../java/util/JavaSet';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostKlausurenCollectionMetaData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionMetaData';
 import { ArrayList } from '../../../../java/util/ArrayList';
@@ -8,6 +9,7 @@ import type { List } from '../../../../java/util/List';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
+import { HashSet } from '../../../../java/util/HashSet';
 
 export class GostKlausurenCollectionAllData extends JavaObject {
 
@@ -54,6 +56,29 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 *
+	 * @param addData dd
+	 */
+	public addAll(addData : GostKlausurenCollectionAllData) : void {
+		this.vorgaben.addAll(addData.vorgaben);
+		this.kursklausuren.addAll(addData.kursklausuren);
+		this.schuelerklausuren.addAll(addData.schuelerklausuren);
+		this.schuelerklausurtermine.addAll(addData.schuelerklausurtermine);
+		const terminMenge : JavaSet<GostKlausurtermin> | null = new HashSet<GostKlausurtermin>(this.termine);
+		terminMenge.addAll(addData.termine);
+		this.termine = new ArrayList(terminMenge);
+		this.metadata.addAll(addData.metadata);
+		this.raumdata.addAll(addData.raumdata);
+		if (addData.fehlend !== null) {
+			if (this.fehlend === null)
+				this.fehlend = addData.fehlend;
+			else
+				this.fehlend.addAll(addData.fehlend);
+		}
 	}
 
 	transpilerCanonicalName(): string {

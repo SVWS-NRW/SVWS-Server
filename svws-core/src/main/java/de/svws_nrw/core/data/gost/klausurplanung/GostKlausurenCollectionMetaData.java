@@ -1,7 +1,9 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.kurse.KursDaten;
@@ -36,5 +38,19 @@ public class GostKlausurenCollectionMetaData {
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull List<KursDaten> kurse = new ArrayList<>();
+
+	/**
+	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 *
+	 * @param addData dd
+	 */
+	public void addAll(final @NotNull GostKlausurenCollectionMetaData addData) {
+		faecher.addAll(addData.faecher);
+		final Set<SchuelerListeEintrag> schuelerMenge = new HashSet<>(schueler);
+		schuelerMenge.addAll(addData.schueler);
+		schueler = new ArrayList<>(schuelerMenge);
+		lehrer.addAll(addData.lehrer);
+		kurse.addAll(addData.kurse);
+	}
 
 }

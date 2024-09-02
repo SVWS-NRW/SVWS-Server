@@ -1,7 +1,9 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,5 +50,31 @@ public class GostKlausurenCollectionAllData {
 	/** Die Liste der Schülerklausuren. */
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public GostKlausurenCollectionAllData fehlend = null;
+
+	/**
+	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 *
+	 * @param addData dd
+	 */
+	public void addAll(final @NotNull GostKlausurenCollectionAllData addData) {
+		vorgaben.addAll(addData.vorgaben);
+		kursklausuren.addAll(addData.kursklausuren);
+		schuelerklausuren.addAll(addData.schuelerklausuren);
+		schuelerklausurtermine.addAll(addData.schuelerklausurtermine);
+		final Set<GostKlausurtermin> terminMenge = new HashSet<>(termine);
+		terminMenge.addAll(addData.termine);
+		termine = new ArrayList<>(terminMenge);
+
+		metadata.addAll(addData.metadata);
+		raumdata.addAll(addData.raumdata);
+
+		if (addData.fehlend != null) {
+			if (fehlend == null)
+				fehlend = addData.fehlend;
+			else
+				fehlend.addAll(addData.fehlend);
+		}
+
+	}
 
 }
