@@ -87,7 +87,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Lo
 	}
 
 	private void checkFunktionsbezogeneKompetenz(final Integer abiturjahrgang) throws ApiOperationException {
-		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 				Set.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)))
 			checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(abiturjahrgang);
 	}

@@ -349,7 +349,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 
 
 	private void checkFunktionsbezogeneKompetenzAufKlasse(final List<Long> idsKlassen) throws ApiOperationException {
-		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
 			for (final Long idKlasse : idsKlassen)
 				checkBenutzerFunktionsbezogeneKompetenzKlasse(idKlasse);

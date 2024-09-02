@@ -144,7 +144,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	 * @throws ApiOperationException   im Fehlerfall, wenn der Benutzer nicht alle Rechte zum Zugriff hat (503 - FORBIDDEN)
 	 */
 	private void checkFunktionsbezogeneKompetenzAufAktuellenLernabschnitt() throws ApiOperationException {
-		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
 			final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 			if (dtoSchueler == null)

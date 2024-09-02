@@ -219,7 +219,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 	 * @throws ApiOperationException   im Fehlerfall, wenn der Benutzer nicht alle Rechte zum Zugriff auf die übergebene Lernabschnitte hat (503 - FORBIDDEN)
 	 */
 	private void checkFunktionsbezogeneKompetenzAufLernabschnitt(final List<Long> idsLernabschnitte) throws ApiOperationException {
-		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, idsLernabschnitte);
 			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte)

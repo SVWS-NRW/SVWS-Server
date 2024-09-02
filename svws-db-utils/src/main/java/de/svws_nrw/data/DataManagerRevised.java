@@ -21,6 +21,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -512,44 +513,59 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Prüft, ob der Benutzer den Zugriff nur über eine funktionsbezogene Kompetenz erhalten hat und nicht (auch) durch
-	 * eine nicht funktionsbezogene Kompetenz.
+	 * Prüft, ob der Benutzer ausschließlich eine funktionsbezogene Kompetenz besitzt und nicht noch zusätzlich eine übergreifende Kompetenz.
 	 *
 	 * @param kompetenzFunktionsbezogen   die zu prüfende funktionsbezogene Kompetenz
-	 * @param kompetenzenAndere   die zu prüfenden anderen Kompetenzen, die ggf. einen nicht funktionsbezogenen Zugang zu den Daten erlauben
+	 * @param kompetenzenUebergreifend   die zu prüfenden übergreifenden Kompetenzen
 	 *
-	 * @return true, wenn der Zugriff über die funktionsbezogene Kompetenz erfolgt, und ansonsten false
+	 * @return <code>true</code>, wenn der Benutzer ausschließlich die funktionsbezogene Kompetenz besitzt.
+	 * Ansonsten <code>false</code> wenn der Benutzer eine übergreifende Kompetenz besitzt,
+	 * bei der eine weiterführende Prüfung nicht mehr notwendig ist.
+	 * <br>
+	 * Throws {@link IllegalArgumentException} wenn einer der Methodenparameter fehlt.
 	 */
-	public boolean checkBenutzerFunktionsbezogeneKompetenz(final BenutzerKompetenz kompetenzFunktionsbezogen, final Set<BenutzerKompetenz> kompetenzenAndere) {
+	public boolean hatBenutzerNurFunktionsbezogeneKompetenz(final @NotNull BenutzerKompetenz kompetenzFunktionsbezogen,
+			final @NotNull Set<BenutzerKompetenz> kompetenzenUebergreifend) {
+		if ((kompetenzFunktionsbezogen == null) || (kompetenzenUebergreifend == null) || kompetenzenUebergreifend.isEmpty())
+			throw new IllegalArgumentException("Die Parameter kompetenzFunktionsbezogen und kompetenzenUebergreifend dürfen nicht null oder leer sein.");
+
 		final Benutzer user = conn.getUser();
-		if (user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen)) {
-			for (final BenutzerKompetenz andere : kompetenzenAndere)
-				if (user.hatVerwendeteKompetenz(andere))
-					return false;
-			return true;
-		}
-		return false;
+		final boolean hatUebergreifendeKompetenz = kompetenzenUebergreifend.stream().anyMatch(user::hatVerwendeteKompetenz);
+		if (hatUebergreifendeKompetenz)
+			return false;
+
+		return user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen);
 	}
 
 
 	/**
-	 * Prüft, ob der Benutzer auf die angegeben Klasse funktionsbezogene Rechte hat oder nicht.
+	 * Prüft, ob der Benutzer für die angegebene Klasse funktionsbezogene Rechte hat oder nicht.
 	 *
 	 * @param idKlasse   die ID der zu prüfenden Klasse
 	 *
-	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (503 - FORBIDDEN).
+	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (403 - FORBIDDEN).
 	 */
 	public void checkBenutzerFunktionsbezogeneKompetenzKlasse(final Long idKlasse) throws ApiOperationException {
 		if (idKlasse == null)
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
+
 		final boolean hatKompetenzFuerKlasse = conn.getUser().getKlassenIDs().contains(idKlasse);
 		if (!hatKompetenzFuerKlasse) {
 			final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
-			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+			DTOSchuljahresabschnitte schuljahresabschnitt = null;
+			if (klasse != null) {
+				schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+			}
+
+			final String kuerzel = (klasse != null) ? klasse.Klasse : "N/A";
+			final String jahrUndAbschnitt = (schuljahresabschnitt != null)
+					? (schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt)
+					: "N/A";
+
 			throw new ApiOperationException(Status.FORBIDDEN,
-					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse %s des Schuljahresabschnittes %s.%s (ID %d)"
-							.formatted(klasse.Klasse, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idKlasse));
+					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse %s (ID: %d) des Schuljahresabschnittes %s"
+							.formatted(kuerzel, idKlasse, jahrUndAbschnitt));
 		}
 	}
 

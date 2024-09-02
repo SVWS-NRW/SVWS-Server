@@ -1,13 +1,20 @@
 package de.svws_nrw.data;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,12 +23,18 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static de.svws_nrw.core.types.benutzer.BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN;
+import static de.svws_nrw.core.types.benutzer.BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +43,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -536,6 +550,112 @@ class DataManagerRevisedTest {
 		assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 		assertThat(result.getMediaType()).isEqualTo(MediaType.APPLICATION_JSON_TYPE);
 	}
+
+	private static Stream<Arguments> hatBenutzerNurFunktionsbezogeneKompetenz() {
+		return Stream.of(
+				Arguments.of(Set.of(SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN), false),
+				Arguments.of(Set.of(SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN, SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN), false),
+				Arguments.of(Collections.emptySet(), false),
+				Arguments.of(Set.of(SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN), true)
+		);
+	}
+
+	@MethodSource
+	@ParameterizedTest
+	void hatBenutzerNurFunktionsbezogeneKompetenz(final Set<BenutzerKompetenz> givenUserKompetenzen, final boolean expectedResult)
+			throws IllegalAccessException {
+		final Benutzer userMock = mock(Benutzer.class);
+		final Field kompetenzField = ReflectionUtils.findFields(Benutzer.class, f -> f.getName().equals("_kompetenzenVerwendet"),
+				ReflectionUtils.HierarchyTraversalMode.TOP_DOWN).getFirst();
+		kompetenzField.setAccessible(true);
+		kompetenzField.set(userMock, givenUserKompetenzen);
+
+		doCallRealMethod().when(userMock).hatVerwendeteKompetenz(any(BenutzerKompetenz.class));
+		when(conn.getUser()).thenReturn(userMock);
+
+		final boolean result = cut.hatBenutzerNurFunktionsbezogeneKompetenz(SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+				Set.of(SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN));
+
+		assertThat(result).isEqualTo(expectedResult);
+	}
+
+	private static Stream<Arguments> hatBenutzerNurFunktionsbezogeneKompetenzWithMissingParameter() {
+		return Stream.of(
+				Arguments.of(null, Set.of(SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN)),
+				Arguments.of(SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN, null),
+				Arguments.of(SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN, Collections.emptySet()),
+				Arguments.of(null, null),
+				Arguments.of(null, Collections.emptySet())
+		);
+	}
+
+	@MethodSource
+	@ParameterizedTest
+	void hatBenutzerNurFunktionsbezogeneKompetenzWithMissingParameter(final BenutzerKompetenz givenKompetenzFunktionsbezogen,
+			final Set<BenutzerKompetenz> givenKompetenzenUebergreifend) {
+		final Throwable result =
+				catchThrowable(() -> cut.hatBenutzerNurFunktionsbezogeneKompetenz(givenKompetenzFunktionsbezogen, givenKompetenzenUebergreifend));
+
+		assertThat(result).isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Die Parameter kompetenzFunktionsbezogen und kompetenzenUebergreifend dürfen nicht null oder leer sein.");
+	}
+
+	@Test
+	void checkBenutzerFunktionsbezogeneKompetenzKlasseWithVorhandenerKompetenz() throws ApiOperationException {
+		final Benutzer userMock = mock(Benutzer.class);
+
+		when(conn.getUser()).thenReturn(userMock);
+		when(userMock.getKlassenIDs()).thenReturn(Set.of(1L));
+
+		cut.checkBenutzerFunktionsbezogeneKompetenzKlasse(1L);
+
+		verify(userMock, times(1)).getKlassenIDs();
+	}
+
+	@Test
+	void checkBenutzerFunktionsbezogeneKompetenzKlasseWithFehlenderKompetenzAndOhneWeitereLogInformationen() {
+		final Benutzer userMock = mock(Benutzer.class);
+
+		when(conn.getUser()).thenReturn(userMock);
+		when(userMock.getKlassenIDs()).thenReturn(Collections.emptySet());
+
+		final Throwable result = catchThrowable(() -> cut.checkBenutzerFunktionsbezogeneKompetenzKlasse(1L));
+
+		assertThat(result).isInstanceOf(ApiOperationException.class)
+				.hasMessage(
+						"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse N/A (ID: 1) des Schuljahresabschnittes N/A")
+				.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+	}
+
+	@Test
+	void checkBenutzerFunktionsbezogeneKompetenzKlasseWithFehlenderKompetenzAndWeitereLogInformationen() {
+		final Benutzer userMock = mock(Benutzer.class);
+		final DTOKlassen klasseMock = new DTOKlassen(1L, 10L, "5a");
+		final DTOSchuljahresabschnitte schuljahresabschnittMock = new DTOSchuljahresabschnitte(10L, 2024, 1);
+
+		when(conn.getUser()).thenReturn(userMock);
+		when(userMock.getKlassenIDs()).thenReturn(Collections.emptySet());
+
+		when(conn.queryByKey(DTOKlassen.class, 1L)).thenReturn(klasseMock);
+		when(conn.queryByKey(DTOSchuljahresabschnitte.class, 10L)).thenReturn(schuljahresabschnittMock);
+
+		final Throwable result = catchThrowable(() -> cut.checkBenutzerFunktionsbezogeneKompetenzKlasse(1L));
+
+		assertThat(result).isInstanceOf(ApiOperationException.class)
+				.hasMessage(
+						"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse 5a (ID: 1) des Schuljahresabschnittes 2024.1")
+				.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+	}
+
+	@Test
+	void checkBenutzerFunktionsbezogeneKompetenzKlasseWithKlassenIDIsNull() {
+		final Throwable result = catchThrowable(() -> cut.checkBenutzerFunktionsbezogeneKompetenzKlasse(null));
+
+		assertThat(result).isInstanceOf(ApiOperationException.class)
+				.hasMessage("Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.")
+				.hasFieldOrPropertyWithValue("status", Response.Status.FORBIDDEN);
+	}
+
 
 	/**
 	 * Diese Klasse dient als Mock um die Funktionalitäten des DataManagerRevised testen zu können. Der Mock orientiert sich dabei an den Implementierungen
