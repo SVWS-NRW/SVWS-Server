@@ -1,7 +1,11 @@
-import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, List, Schuljahresabschnitt, ServerMode, GostBlockungsergebnis, GostBlockungsergebnisManager } from "@core";
+import type { GostHalbjahr, GostJahrgangsdaten, GostBlockungsdaten, GostBlockungListeneintrag, GostBlockungsdatenManager, List, Schuljahresabschnitt, ServerMode, GostBlockungsergebnis, GostBlockungsergebnisManager, BenutzerKompetenz, Schulform } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
 
 export interface GostKursplanungAuswahlProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
+	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	setHalbjahr: (value: GostHalbjahr) => Promise<void>;
 	halbjahr: GostHalbjahr;
 	jahrgangsdaten: () => GostJahrgangsdaten | undefined;

@@ -75,12 +75,12 @@
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
+	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const aufgeklappt = ref<boolean>(![GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE].includes(props.regelTyp));
 
 	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());
 
-	const regeln = computed(()=> {
+	const regeln = computed(() => {
 		const list: List<GostBlockungRegel> = new ArrayList();
 		if (props.nurRegelverletzungen) {
 			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))

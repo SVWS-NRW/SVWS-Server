@@ -28,7 +28,7 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
 		if (this.parent === undefined)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (to_params.abiturjahr === undefined)
+		if (!to_params.abiturjahr)
 			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein"));
 		const abiturjahr = parseInt(to_params.abiturjahr);
 		try {

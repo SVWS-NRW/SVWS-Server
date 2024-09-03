@@ -257,14 +257,14 @@
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, List , Schueler, GostFach} from "@core";
-	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, GostKursart, SetUtils,
-		GostBlockungRegelUpdate, DeveloperNotificationException } from "@core";
+	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, GostKursart, SetUtils, GostBlockungRegelUpdate, DeveloperNotificationException } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		apiStatus: ApiStatus;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	const nurRegelverletzungen = ref<boolean>(false);
@@ -273,7 +273,7 @@
 
 	const schueler = computed<List<Schueler>>(() => props.getDatenmanager().schuelerGetListe());
 
-	const disabled = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
+	const disabled = computed<boolean>(() => !props.hatUpdateKompetenz || (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1));
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 

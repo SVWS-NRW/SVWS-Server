@@ -2,7 +2,7 @@
 	<div v-if="!blockungstabelleVisible" />
 	<div v-else class="content-card mr-16 h-full">
 		<div class="h-full flex flex-col">
-			<svws-ui-table :items="GostKursart.values()" :columns="cols" disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''" class="pr-4">
+			<svws-ui-table :items="GostKursart.values()" :columns disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''" class="pr-4">
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
 						<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
@@ -29,22 +29,22 @@
 									<span class="opacity-50 border-b border-transparent">{{ s.nummer }}</span>
 									<template #content>
 										<div class="py-2">
-											<svws-ui-text-input :model-value="s.bezeichnung" focus headless
-												@change="name => name && patch_schiene(s, name)"
-												@keyup.escape="edit_schienenname=undefined" class="text-center" />
+											<svws-ui-text-input :model-value="s.bezeichnung" focus headless @change="name => name && patch_schiene(s, name)" @keyup.escape="edit_schienenname=undefined" class="text-center" />
 										</div>
 									</template>
 								</svws-ui-tooltip>
 								<template v-else-if="zeigeSchienenbezeichnungen()">
 									<div>
-										<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allowRegeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">
+										<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allowRegeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center"
+											:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">
 											{{ s.bezeichnung }}
 										</span>
 										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 									</div>
 								</template>
 								<template v-else>
-									<span :class="{ 'border-b border-dotted hover:border-transparent': allowRegeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center" :title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
+									<span :class="{ 'border-b border-dotted hover:border-transparent': allowRegeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
+										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
 									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 								</template>
 							</div>
@@ -141,7 +141,7 @@
 									</div>
 									<div role="cell" class="svws-ui-td" />
 									<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
-										<svws-ui-button type="transparent" @click="add_kurs(fachwahl)" title="Kurs anlegen">
+										<svws-ui-button :disabled="hatUpdateKompetenz" type="transparent" @click="hatUpdateKompetenz && add_kurs(fachwahl)" title="Kurs anlegen">
 											<span class="inline-flex items-center text-button -mr-0.5">
 												<span class="icon i-ri-book-2-line" />
 												<span class="icon-sm i-ri-add-line -ml-0.5 text-sm" />
@@ -172,7 +172,7 @@
 													<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => suffix && editKursOnBlur(suffix, kurs.id)" @keyup.enter="$event.target.blur()" focus headless class="-my-1" />
 												</template>
 												<template v-else>
-													<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="editKursID=kurs.id">
+													<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="hatUpdateKompetenz && (editKursID=kurs.id)">
 														{{ props.getDatenmanager().kursGetName(kurs.id) }}
 													</span>
 												</template>
@@ -188,7 +188,7 @@
 											</template>
 										</div>
 										<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
-											<svws-ui-checkbox headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
+											<svws-ui-checkbox :disabled="!allowRegeln" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
 										</div>
 										<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
@@ -223,27 +223,29 @@
 												@dragover.prevent="setDragOver(kurs, schiene)"
 												@drop="setDrop(kurs, schiene)">
 												<!-- Ist der Kurs der aktuellen Schiene zugeordnet, so ist er draggable, es sei denn, er ist fixiert ... -->
-												<div v-if="istZugeordnetKursSchiene(kurs, schiene).value" :draggable="!istKursFixiertInSchiene(kurs, schiene).value"
+												<div v-if="istZugeordnetKursSchiene(kurs, schiene).value"
+													:draggable="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value"
 													@dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag" @click="toggleKursAusgewaehlt(kurs)"
-													class="select-none w-full h-full rounded-sm flex justify-between items-center group text-black p-px"
+													class="select-none w-full h-full rounded-sm flex justify-around items-center group text-black p-px"
 													:class="{
 														'bg-white text-black font-bold': istKursAusgewaehlt(kurs).value,
 														'bg-white/50': !istKursAusgewaehlt(kurs).value,
 														'cursor-grab': !isDragging,
 													}">
-													<span class="icon-sm" :class="istKursFixiertInSchiene(kurs, schiene).value ? ['invisible'] : ['group-hover:bg-white rounded-sm i-ri-draggable -my-0.5 opacity-40 group-hover:opacity-100 px-1.5']" />
+													<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm group-hover:bg-white rounded-sm i-ri-draggable -my-0.5 opacity-40 group-hover:opacity-100 px-1.5" />
 													<svws-ui-tooltip v-if="getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)">
 														<span class="whitespace-nowrap">{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }}<span class="font-bold">*</span></span>
 														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }} zusätzliche Kursteilnehmer</template>
 													</svws-ui-tooltip>
 													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
-													<div class="group" @click.stop="toggleRegelFixiereKursInSchiene(kurs, schiene)">
+													<div v-if="allowRegeln || istKursFixiertInSchiene(kurs, schiene).value" class="group" @click.stop="hatUpdateKompetenz && toggleRegelFixiereKursInSchiene(kurs, schiene)">
 														<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill inline-block opacity-75 group-hover:opacity-100 -my-0.5" />
 														<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
 													</div>
 												</div>
 												<!-- ... ansonsten ist er nicht draggable -->
-												<div v-else class="w-full h-full flex items-center justify-center relative group" @click="toggleRegelSperreKursInSchiene(kurs, schiene)"
+												<div v-else class="w-full h-full flex items-center justify-center relative group"
+													@click="hatUpdateKompetenz && toggleRegelSperreKursInSchiene(kurs, schiene)"
 													draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 													:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 													<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
@@ -279,18 +281,18 @@
 									</div>
 									<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
 									<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetailAnzeigen === kurs.id && allowRegeln" :bg-color="bgColor(fachwahl)" :anzahl-spalten="6 + getDatenmanager().schieneGetAnzahl()"
-										:kurs="kurs" :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager="getDatenmanager" :api-status="apiStatus"
-										:get-ergebnismanager="getErgebnismanager" :map-lehrer="mapLehrer" :regeln-update="regelnUpdate" :add-lehrer-regel="addLehrerRegel"
-										:add-kurs="addKurs" :remove-kurse="removeKurse" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer"
-										:add-schiene-kurs="addSchieneKurs" :remove-schiene-kurs="removeSchieneKurs" :split-kurs="splitKurs" :combine-kurs="combineKurs" />
+										:kurs :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager :api-status
+										:get-ergebnismanager :map-lehrer :regeln-update :add-lehrer-regel
+										:add-kurs :remove-kurse :add-kurs-lehrer :remove-kurs-lehrer
+										:add-schiene-kurs :remove-schiene-kurs :split-kurs :combine-kurs />
 								</template>
 							</template>
 						</template>
 					</template>
 				</template>
 			</svws-ui-table>
-			<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnis-manager="getErgebnismanager" :regeln-update="regelnUpdate" ref="modalRegelKursartSchienen" />
-			<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager="getDatenmanager" :combine-kurs="combineKurs" ref="modal_combine_kurse" />
+			<s-gost-kursplanung-kursansicht-modal-regel-schienen :getErgebnismanager :regeln-update ref="modalRegelKursartSchienen" />
+			<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager :combine-kurs ref="modal_combine_kurse" />
 		</div>
 		<svws-ui-modal :show="() => toRef((fehlermeldungen.size() > 0) && !fehlerIgnore)" type="danger" size="medium">
 			<template #modalTitle>Achtung</template>
@@ -354,6 +356,7 @@
 		zeigeSchienenbezeichnungen: () => boolean;
 		setZeigeSchienenbezeichnungen: (value: boolean) => void;
 		apiStatus: ApiStatus;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	const edit_schienenname = ref<number|undefined>(undefined);
@@ -366,9 +369,10 @@
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
-	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+	// BenutzerKompetenz: Wenn man die Regeln bearbeiten darf, dann ist es in der Regel eine Eingabe, die BenutzerKompetenz wird mit angehängt
+	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1) && props.hatUpdateKompetenz);
 
-	const cols = computed<DataTableColumn[]>(() => {
+	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
 		if (allowRegeln.value)

@@ -47,10 +47,10 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
-		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const idBlockung = (to_params.idblockung === undefined) ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = (to_params.idergebnis === undefined) ? undefined : parseInt(to_params.idergebnis);
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
+		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
+		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
 		if (abiturjahr === undefined)
 			return { name: routeGost.name, params: { } };
 		if ((halbjahr === undefined) || (idBlockung === undefined))
@@ -64,10 +64,10 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idblockung instanceof Array || to_params.idergebnis instanceof Array || to_params.idschueler instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein");
 		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung und des Ergebnisses
-		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		const idBlockung = (to_params.idblockung === undefined) ? undefined : parseInt(to_params.idblockung);
-		const idErgebnis = (to_params.idergebnis === undefined) ? undefined : parseInt(to_params.idergebnis);
+		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
+		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
+		const idBlockung = !to_params.idblockung ? undefined : parseInt(to_params.idblockung);
+		const idErgebnis = !to_params.idergebnis ? undefined : parseInt(to_params.idergebnis);
 		if ((abiturjahr === undefined) || (halbjahr === undefined))
 			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		if ((abiturjahr !== routeGostKursplanung.data.abiturjahr) || (halbjahr !== routeGostKursplanung.data.halbjahr) || (idBlockung === undefined))
@@ -80,7 +80,7 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 			else
 				routeGostKursplanung.getRouteErgebnis(abiturjahr, halbjahr.id, idBlockung, idErgebnis);
 		}
-		const idSchueler = (to_params.idschueler === undefined) ? undefined : parseInt(to_params.idschueler);
+		const idSchueler = !to_params.idschueler ? undefined : parseInt(to_params.idschueler);
 		// ... wurde die ID des Schülers auf undefined setzt, so prüfe, ob die Schülerliste leer ist und wähle ggf. das erste Element aus
 		if (idSchueler === undefined) {
 			if (routeGostKursplanung.data.datenmanager.schuelerGetAnzahl() > 0) {
@@ -135,6 +135,10 @@ export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKurspl
 
 	public getProps(to: RouteLocationNormalized): GostKursplanungUmwahlansichtProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			hatBlockung: routeGostKursplanung.data.hatBlockung && routeGostKursplanung.data.hatErgebnis,
 			hatErgebnis: routeGostKursplanung.data.hatErgebnis,
 			regelnUpdate: routeGostKursplanung.data.regelnUpdate,

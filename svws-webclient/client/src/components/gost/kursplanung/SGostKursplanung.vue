@@ -19,7 +19,7 @@
 							Tabelle ausblenden
 						</template>
 					</svws-ui-button>
-					<div class="flex gap-0.5 items-center leading-none">
+					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Ergebnis:</div>
 						<svws-ui-button type="transparent" @click.stop="ergebnisAbleiten()" title="Eine neue Blockung auf Grundlage dieses Ergebnisses erstellen." class="text-black dark:text-white">
@@ -41,7 +41,7 @@
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-ergebnis-synchronisieren>
 					</div>
-					<div class="flex gap-0.5 items-center leading-none">
+					<div v-if="hatUpdateKompetenz" class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Kurse:</div>
 						<s-gost-kursplanung-kursansicht-modal-irrlaeufer v-if="props.getErgebnismanager().getOfSchuelerMapIDzuUngueltigeKurse().size()" :update-kurs-schueler-zuordnungen :get-ergebnismanager v-slot="{ openModal }">
@@ -100,7 +100,7 @@
 				:get-datenmanager :get-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
-				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs />
+				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
@@ -110,7 +110,7 @@
 							<span>Regeln zur Blockung</span>
 							<svws-ui-button type="transparent" @click="onToggle"> Schließen </svws-ui-button>
 						</h2>
-						<s-gost-kursplanung-regelansicht :get-datenmanager :faecher-manager :regeln-update :get-ergebnismanager :api-status />
+						<s-gost-kursplanung-regelansicht :get-datenmanager :faecher-manager :regeln-update :get-ergebnismanager :api-status :hat-update-kompetenz />
 					</div>
 				</aside>
 			</Teleport>
@@ -118,7 +118,7 @@
 		<div v-else class="col-span-full">
 			<div class="p-3 border-2 border-dashed border-black/10 dark:border-white/10 rounded-lg max-w-xl">
 				<div class="text-headline-md mb-5">Keine Blockung ausgewählt</div>
-				<div class="opacity-75 leading-tight flex flex-col gap-2">
+				<div v-if="hatUpdateKompetenz" class="opacity-75 leading-tight flex flex-col gap-2">
 					<div>
 						<svws-ui-button type="icon" class="inline align-middle" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
 							<span class="icon inline-block i-ri-add-line" />
@@ -141,16 +141,22 @@
 	import { computed, ref, onMounted } from "vue";
 	import type { GostKursplanungProps } from "./SGostKursplanungProps";
 	import type { DownloadPDFTypen } from "./DownloadPDFTypen";
-	import { GostHalbjahr, HashSet, SetUtils } from "@core";
+	import { BenutzerKompetenz, GostHalbjahr, HashSet, SetUtils } from "@core";
 
 	const props = defineProps<GostKursplanungProps>();
+
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
+	});
 
 	const aktuellesHalbjahr = computed<GostHalbjahr | null>(() => GostHalbjahr.fromJahrgangUndHalbjahr(props.jahrgangsdaten().jahrgang, props.jahrgangsdaten().halbjahr));
 
 	const collapsed = ref<boolean>(true);
 	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
 	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
-	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+	const allowRegeln = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 	const vergangenheit = computed<boolean>(() => {
 		const jgdaten = props.jahrgangsdaten();
 		if (jgdaten.istAbgeschlossen)
@@ -161,18 +167,19 @@
 	});
 	const persistiert = computed<boolean>(() => props.jahrgangsdaten().istBlockungFestgelegt[props.halbjahr.id]);
 	const hatNoten = computed<boolean>(() => props.jahrgangsdaten().existierenNotenInLeistungsdaten[props.halbjahr.id]);
-	const aktivieren_moeglich = computed<boolean>(() => {
-		return !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt;
-	});
-	const synchronisieren_moeglich = computed<boolean>(() => {
-		return !vergangenheit.value && !hatNoten.value && persistiert.value;
-	});
+	const aktivieren_moeglich = computed<boolean>(() => !vergangenheit.value && !persistiert.value && props.existiertSchuljahresabschnitt);
+	const synchronisieren_moeglich = computed<boolean>(() => !vergangenheit.value && !hatNoten.value && persistiert.value);
 
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	const onToggle = () => collapsed.value = !collapsed.value;
-	const toggleBlockungstabelle = () => props.setBlockungstabelleHidden(!props.blockungstabelleHidden());
+	function onToggle() {
+		return collapsed.value = !collapsed.value;
+	}
+
+	function toggleBlockungstabelle() {
+		return props.setBlockungstabelleHidden(!props.blockungstabelleHidden());
+	}
 
 	const dropdownList = [
 		{ text: "Schülerliste markierte Kurse", action: () => downloadPDF("Schülerliste markierte Kurse"), default: true },
