@@ -5,293 +5,263 @@
 	<Teleport to=".router-tab-bar--subnav" v-if="isMounted">
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
-	<div class="page--content page--content--full">
-		<div class="flex flex-col space-y-10">
+	<div class="page--content">
 
-			<svws-ui-content-card title="Fehlende Klausurvorgaben" v-if="!vorgaben().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
-					<template #cell(idFach)="{ value }">
-						<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
-					</template>
-					<template #cell(quartal)="{value}">
-						{{ value }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Fehlende Klausurvorgaben"
+			:description="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'"
+			v-if="!vorgaben().isEmpty()"
+			:is-active="currentAction === 'vorgaben_fehlend'"
+			@click="toggleAction('vorgaben_fehlend')"
+			action-label="Zur Vorgabenansicht"
+			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			class="border-error"
+			icon="i-ri-draft-line">
+			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
+				<template #cell(idFach)="{ value }">
+					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
+				</template>
+				<template #cell(quartal)="{value}">
+					{{ value }}
+				</template>
+				<template #actions>
+					<svws-ui-button class="-mr-3" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))" title="Zur Vorgabenansicht"><span class="icon i-ri-upload-2-line" />Zur Vorgabenansicht</svws-ui-button>
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Fehlende Kursklausuren" v-if="!kursklausuren().isEmpty()" class="border border-error rounded-lg p-5">
-				<svws-ui-table :items="kursklausuren()"
-					:columns="colsKursklausuren">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(linkToSchueler)="{ rowData }">
-					</template>
-					<template #cell(kurs)="{rowData}">
-						{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
-					</template>
-					<template #cell(lehrer)="{rowData}">
-						{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ kMan().vorgabeByKursklausur(rowData).quartal }}.
-					</template>
-					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Fehlende Kursklausuren"
+			:description="kursklausuren().size() + ' fehlende Kursklausuren gefunden.'"
+			v-if="!kursklausuren().isEmpty()"
+			:is-active="currentAction === 'kursklausuren_fehlend'"
+			@click="toggleAction('kursklausuren_fehlend')"
+			action-label="Fehlende Kursklausuren erstellen"
+			:action-function="erzeugeKursklausurenAusVorgabenOrModal"
+			class="border-error"
+			icon="i-ri-book-2-line">
+			<svws-ui-table :items="kursklausuren()"
+				:columns="colsKursklausuren">
+				<template #cell(kurs)="{rowData}">
+					{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
+				</template>
+				<template #cell(lehrer)="{rowData}">
+					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Abweichende Schülerklausurmenge" v-if="!schuelerklausuren().isEmpty()" class="border border-error rounded-lg p-5">
-				<svws-ui-table :items="schuelerklausuren()"
-					:columns="colsSchuelerklausuren">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(linkToSchueler)="{ rowData }">
-					</template>
-					<template #cell(status)="{rowData}">
-						<svws-ui-button v-if="rowData.id == -1" type="transparent" @click="erzeugeSchuelerklausuren(ListUtils.create1(rowData))" title="Schülerklausur anlegen"><span class="icon i-ri-add-line" /> Schülerklausur anlegen</svws-ui-button>
-						<svws-ui-button v-else type="transparent" @click="loescheSchuelerklausuren(ListUtils.create1(rowData))" title="Schülerklausur löschen"><span class="icon i-ri-delete-bin-line" /> Schülerklausur löschen</svws-ui-button>
-					</template>
-					<template #cell(name)="{rowData}">
-						{{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).vorname }}
-					</template>
-					<template #cell(kurs)="{rowData}">
-						{{ kMan().kursdatenBySchuelerklausur(rowData).kuerzel }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Abweichende Schülerklausurmenge"
+			:description="schuelerklausuren().size() + ' Abweichungen gefunden.'"
+			v-if="!schuelerklausuren().isEmpty()"
+			:is-active="currentAction === 'schuelerklausurmenge_abweichend'"
+			@click="toggleAction('schuelerklausurmenge_abweichend')"
+			action-disabled
+			class="border-error"
+			icon="i-ri-group-line">
+			<svws-ui-table :items="schuelerklausuren()"
+				:columns="addStatusColumn(colsSchuelerklausuren)">
+				<template #cell(status)="{rowData}">
+					<svws-ui-button v-if="rowData.id == -1" type="transparent" @click="erzeugeSchuelerklausuren(ListUtils.create1(rowData))" title="hinzufügen"><span class="icon i-ri-add-line" /> hinzufügen</svws-ui-button>
+					<svws-ui-button v-else type="transparent" @click="loescheSchuelerklausuren(ListUtils.create1(rowData))" title="löschen"><span class="icon i-ri-delete-bin-line" /> löschen</svws-ui-button>
+				</template>
+				<template #cell(name)="{rowData}">
+					{{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).vorname }}
+				</template>
+				<template #cell(kurs)="{rowData}">
+					{{ kMan().kursdatenBySchuelerklausur(rowData).kuerzel }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ kMan().vorgabeBySchuelerklausur(rowData).quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Nicht verteilte Kursklausuren" v-if="!kursklausurenNichtVerteilt().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="kursklausurenNichtVerteilt()"
-					:columns="colsKursklausuren">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(linkToSchueler)="{ rowData }">
-					</template>
-					<template #cell(kurs)="{rowData}">
-						{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
-					</template>
-					<template #cell(lehrer)="{rowData}">
-						{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ kMan().vorgabeByKursklausur(rowData).quartal }}.
-					</template>
-					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))" title="Zur Schienenansicht"><span class="icon i-ri-upload-2-line" />Zur Schienenansicht</svws-ui-button>
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Nicht verteilte Kursklausuren"
+			:description="kursklausurenNichtVerteilt().size() + ' nicht verteilte Kursklausuren gefunden.'"
+			v-if="!kursklausurenNichtVerteilt().isEmpty()"
+			:is-active="currentAction === 'kursklausuren_nicht_verteilt'"
+			@click="toggleAction('kursklausuren_nicht_verteilt')"
+			action-label="Zur Schienenansicht"
+			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			class="border-error"
+			icon="i-ri-book-2-line">
+			<svws-ui-table :items="kursklausurenNichtVerteilt()"
+				:columns="colsKursklausuren">
+				<template #cell(kurs)="{rowData}">
+					{{ kMan().kursKurzbezeichnungByKursklausur(rowData) }}
+				</template>
+				<template #cell(lehrer)="{rowData}">
+					{{ kMan().kursLehrerKuerzelByKursklausur(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ kMan().vorgabeByKursklausur(rowData).quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Klausurtermine ohne Datum" v-if="!termineOhneDatum().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="termineOhneDatum()"
-					:columns="colsTermine">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(status)="{rowData}">
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( rowData.abijahr, rowData.halbjahr, undefined, rowData.id ))" title="Datum setzen" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
-					</template>
-					<template #cell(kurse)="{rowData}">
-						{{ terminBezeichnung(rowData) }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ rowData.quartal }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Klausurtermine ohne Datum"
+			:description="termineOhneDatum().size() + ' Klausurtermine ohne Datum gefunden.'"
+			v-if="!termineOhneDatum().isEmpty()"
+			:is-active="currentAction === 'termine_ohne_datum'"
+			@click="toggleAction('termine_ohne_datum')"
+			action-disabled
+			class="border-yellow-300"
+			icon="i-ri-calendar-event-line">
+			<svws-ui-table :items="termineOhneDatum()"
+				:columns="addStatusColumn(colsTermine)">
+				<template #cell(status)="{rowData}">
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( rowData.abijahr, rowData.halbjahr, undefined, rowData.id ))" title="Datum setzen" size="small"><span class="icon i-ri-link" /> datieren</svws-ui-button>
+				</template>
+				<template #cell(kurse)="{rowData}">
+					{{ terminBezeichnung(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ rowData.quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Klausurtermine mit Schülerkonflikten" v-if="!termineMitKonflikten().isEmpty()" class="border border-error rounded-lg p-5">
-				<svws-ui-table :columns="colsTermine">
-					<template #body>
-						<div v-for="termin in termineMitKonflikten()"
-							:key="termin.abijahr"
-							class="svws-ui-tr" role="row">
-							<div class="svws-ui-td" role="cell">
-								{{ terminBezeichnung(termin) }}
-							</div>
-							<div class="svws-ui-td" role="cell">
-								{{ termin.quartal }}.
-							</div>
-						</div>
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Klausurtermine mit Schülerkonflikten"
+			:description="termineMitKonflikten().size() + ' Klausurtermine mit Schülerkonflikten gefunden.'"
+			v-if="!termineMitKonflikten().isEmpty()"
+			:is-active="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
+			@click="toggleAction('klausurtermine_mit_schuelerkonflikten')"
+			action-label="Zur Schienenansicht"
+			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			class="border-error"
+			icon="i-ri-alert-line">
+			<svws-ui-table :items="termineMitKonflikten()"
+				:columns="colsTermine">
+				<template #cell(kurse)="{rowData}">
+					{{ terminBezeichnung(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ rowData.quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Klausurtermine mit unvollständiger Raumplanung" v-if="!termineUnvollstaendigeRaumzuweisung().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()"
-					:columns="colsTermine">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(status)="{rowData}">
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
-					</template>
-					<template #cell(kurse)="{rowData}">
-						{{ terminBezeichnung(rowData) }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ rowData.quartal }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Klausurtermine mit unvollständiger Raumplanung"
+			:description="termineUnvollstaendigeRaumzuweisung().size() + ' Klausurtermine mit unvollständiger Raumplanung gefunden.'"
+			v-if="!termineUnvollstaendigeRaumzuweisung().isEmpty()"
+			:is-active="currentAction === 'termine_ohne_raumplanung'"
+			@click="toggleAction('termine_ohne_raumplanung')"
+			action-disabled
+			class="border-yellow-300"
+			icon="i-ri-team-line">
+			<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()"
+				:columns="addStatusColumn(colsTermine)">
+				<template #cell(status)="{rowData}">
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Planung</svws-ui-button>
+				</template>
+				<template #cell(kurse)="{rowData}">
+					{{ terminBezeichnung(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ rowData.quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Raumkapazität überschritten" v-if="!raumkapazitaetUeberschritten().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="raumkapazitaetUeberschritten()"
-					:columns="colsTermine">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(status)="{rowData}">
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
-					</template>
-					<template #cell(kurse)="{rowData}">
-						{{ terminBezeichnung(rowData) }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ rowData.quartal }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Raumkapazität überschritten"
+			:description="raumkapazitaetUeberschritten().size() + ' Klausurtermine mit überschrittener Raumkapazität gefunden.'"
+			v-if="!raumkapazitaetUeberschritten().isEmpty()"
+			:is-active="currentAction === 'termine_raumkapazität'"
+			@click="toggleAction('termine_raumkapazität')"
+			action-disabled
+			class="border-yellow-300"
+			icon="i-ri-team-line">
+			<svws-ui-table :items="raumkapazitaetUeberschritten()"
+				:columns="addStatusColumn(colsTermine)">
+				<template #cell(status)="{rowData}">
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+				</template>
+				<template #cell(kurse)="{rowData}">
+					{{ terminBezeichnung(rowData) }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ rowData.quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Nicht zugewiesene Nachschreibklausuren" v-if="!nachschreibklausurenNichtZugewiesen().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()"
-					:columns="colsSchuelerklausuren">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(status)="{rowData}">
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute( kMan().vorgabeBySchuelerklausurTermin(rowData).abiJahrgang, kMan().vorgabeBySchuelerklausurTermin(rowData).halbjahr ))" title="Termin zuweisen" size="small"><span class="icon i-ri-link" /> Termin zuweisen</svws-ui-button>
-					</template>
-					<template #cell(name)="{rowData}">
-						<span>{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).vorname }}</span>
-					</template>
-					<template #cell(kurs)="{rowData}">
-						{{ kMan().kursdatenBySchuelerklausurTermin(rowData).kuerzel }}
-					</template>
-					<template #cell(quartal)="{rowData}">
-						{{ kMan().vorgabeBySchuelerklausurTermin(rowData).quartal }}.
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Nicht zugewiesene Nachschreibklausuren"
+			:description="nachschreibklausurenNichtZugewiesen().size() + ' nicht zugewiesene Nachschreibklausuren gefunden.'"
+			v-if="!nachschreibklausurenNichtZugewiesen().isEmpty()"
+			:is-active="currentAction === 'nachschreibklausuren_nicht_zugewiesen'"
+			@click="toggleAction('nachschreibklausuren_nicht_zugewiesen')"
+			action-label="Zur Nachschreiberansicht"
+			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			class="border-yellow-300"
+			icon="i-ri-spam-3-line">
+			<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()"
+				:columns="colsSchuelerklausuren">
+				<template #cell(name)="{rowData}">
+					<span>{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).vorname }}</span>
+				</template>
+				<template #cell(kurs)="{rowData}">
+					{{ kMan().kursdatenBySchuelerklausurTermin(rowData).kuerzel }}
+				</template>
+				<template #cell(quartal)="{rowData}">
+					{{ kMan().vorgabeBySchuelerklausurTermin(rowData).quartal }}
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Schüler mit drei Klausuren in einer Woche" v-if="!klausurenProKwWarning().isEmpty()" class="border border-yellow-300 rounded-lg p-5">
-				<svws-ui-table :items="klausurenProKwWarning()"
-					:columns="colsKwKonflikte">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(kw)="{rowData}">
-						<!-- TODO: kw <=9 um führende 0 ergänzen -->
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
-					</template>
-					<template #cell(schueler)="{rowData}">
-						{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}
-					</template>
-					<template #cell(klausuren)="{rowData}">
-						<template v-for="(klausur, index) in rowData.b"><template v-if="index > 0">, </template>{{ kMan().kursdatenBySchuelerklausurTermin(klausur).kuerzel }}</template>
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Schüler mit drei Klausuren in einer Woche"
+			:description="klausurenProKwWarning().size() + ' Probleme mit Schülern mit drei Klausuren in einer Woche gefunden.'"
+			v-if="!klausurenProKwWarning().isEmpty()"
+			:is-active="currentAction === 'konflikt_drei_wochenklausuren'"
+			@click="toggleAction('konflikt_drei_wochenklausuren')"
+			action-disabled
+			class="border-yellow-300"
+			icon="i-ri-alert-line">
+			<svws-ui-table :items="klausurenProKwWarning()"
+				:columns="colsKwKonflikte">
+				<template #cell(kw)="{rowData}">
+					<!-- TODO: kw <=9 um führende 0 ergänzen -->
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+				</template>
+				<template #cell(schueler)="{rowData}">
+					{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}
+				</template>
+				<template #cell(klausuren)="{rowData}">
+					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
+						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum!) }}</span>
+					</span>
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-			<svws-ui-content-card title="Schüler mit vier oder mehr Klausuren in einer Woche" v-if="!klausurenProKwError().isEmpty()" class="border border-error rounded-lg p-5">
-				<svws-ui-table :items="klausurenProKwError()"
-					:columns="colsKwKonflikte">
-					<template #header(linkToSchueler)>
-						<span class="icon i-ri-group-line" />
-					</template>
-					<template #header(ergebnis)>
-						<svws-ui-tooltip class="w-6">
-							<span class="icon i-ri-alert-line -my-1 -mx-0.5" />
-							<template #content>
-								Anzahl der Fehler insgesamt
-							</template>
-						</svws-ui-tooltip>
-					</template>
-					<template #cell(kw)="{rowData}">
-						<!-- TODO: kw <=9 um führende 0 ergänzen -->
-						<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
-					</template>
-					<template #cell(schueler)="{rowData}">
-						{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}
-					</template>
-					<template #cell(klausuren)="{rowData}">
-						<template v-for="(klausur, index) in rowData.b"><template v-if="index > 0">, </template>{{ kMan().kursdatenBySchuelerklausurTermin(klausur).kuerzel }}</template>
-					</template>
-				</svws-ui-table>
-			</svws-ui-content-card>
+		<svws-ui-action-button title="Schüler mit vier oder mehr Klausuren in einer Woche"
+			:description="klausurenProKwError().size() + ' Probleme mit Schülern mit vier oder mehr Klausuren in einer Woche gefunden.'"
+			v-if="!klausurenProKwError().isEmpty()"
+			:is-active="currentAction === 'konflikt_vier_wochenklausuren'"
+			@click="toggleAction('konflikt_vier_wochenklausuren')"
+			action-disabled
+			class="border-error"
+			icon="i-ri-alert-fill">
+			<svws-ui-table :items="klausurenProKwError()"
+				:columns="colsKwKonflikte">
+				<template #cell(kw)="{rowData}">
+					<!-- TODO: kw <=9 um führende 0 ergänzen -->
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+				</template>
+				<template #cell(schueler)="{rowData}">
+					<span >{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}</span>
+				</template>
+				<template #cell(klausuren)="{rowData}">
+					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
+						<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
+						<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum!) }}</span>
+					</span>
+				</template>
+			</svws-ui-table>
+		</svws-ui-action-button>
 
-		</div>
 	</div>
 
 	<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
@@ -303,10 +273,11 @@
 	import { ref, onMounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
-	import { ListUtils, OpenApiError} from "@core";
+	import { DateUtils, ListUtils, OpenApiError} from "@core";
 	import { ZulaessigesFach} from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 	import { RouteManager } from '~/router/RouteManager';
+	import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
 	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
 	import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
 	import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
@@ -326,6 +297,11 @@
 	const klausurenProKwWarning = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, 3, true);
 	const klausurenProKwError = () => props.kMan().klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value, 4, false);
 
+	const currentAction = ref<string>('');
+	function toggleAction(action: string) {
+		currentAction.value = action;
+	}
+
 	// Check if component is mounted
 	const isMounted = ref(false);
 	onMounted(() => {
@@ -335,33 +311,37 @@
 	const colsVorgaben: DataTableColumn[] = [
 		{key: 'idFach', label: 'Fach', span: 1.25, sortable: true},
 		{key: 'kursart', label: 'Kursart', span: 0.5, sortable: true},
-		{key: 'quartal', label: 'Quartal', span: 0.5, sortable: true},
+		{key: 'quartal', label: 'Quartal', span: 0.1, align: 'center'},
 	];
 
 	const colsKursklausuren: DataTableColumn[] = [
 		{key: 'kurs', label: 'Kurs', span: 1.25, sortable: true},
-		{key: 'lehrer', label: 'Lehrer', span: 0.5, sortable: true},
-		{key: 'quartal', label: 'Quartal', span: 0.25, sortable: true},
+		{key: 'lehrer', label: 'Lehrer', span: 0.25, sortable: true},
+		{key: 'quartal', label: 'Quartal', span: 0.1, align: 'center'},
 	];
 
 	const colsSchuelerklausuren: DataTableColumn[] = [
-		{key: 'name', label: 'Name', span: 1.25, sortable: true},
-		{key: 'kurs', label: 'Kurs', span: 0.5, sortable: true},
-		{key: 'quartal', label: 'Quartal', span: 0.25, sortable: true},
-		{key: 'status', label: 'Korrektur', span: 0.45, sortable: true},
+		{key: 'name', label: 'Name', span: 1.5, sortable: true},
+		{key: 'kurs', label: 'Kurs', span: 0.4, sortable: true},
+		{key: 'quartal', label: 'Quartal', span: 0.1, align: 'center'},
 	];
 
 	const colsTermine: DataTableColumn[] = [
 		{key: 'kurse', label: 'Titel', span: 1.25, sortable: true},
-		{key: 'quartal', label: 'Quartal', span: 0.25, sortable: true},
-		{key: 'status', label: 'Korrektur', span: 0.25, sortable: true},
+		{key: 'quartal', label: 'Quartal', span: 0.1, align: 'center'},
 	];
 
 	const colsKwKonflikte: DataTableColumn[] = [
 		{key: 'kw', label: 'KW', span: 0.25, sortable: true},
 		{key: 'schueler', label: 'Schüler', span: 0.75, sortable: true},
-		{key: 'klausuren', label: 'Klausuren', span: 2.25, sortable: true},
+		{key: 'klausuren', label: 'Klausuren', sortable: true},
 	];
+
+	function addStatusColumn(columns: DataTableColumn[]) {
+		const newColumns = Array.from(columns);
+		newColumns.push({key: 'status', label: 'Korrektur', span: 0.5, align: 'right'});
+		return newColumns;
+	}
 
 	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
 
@@ -395,9 +375,3 @@
 
 </script>
 
-<style lang="postcss" scoped>
-.page--content {
-  @apply grid;
-  grid-template-columns: 1fr minmax(20rem, 0.25fr);
-}
-</style>

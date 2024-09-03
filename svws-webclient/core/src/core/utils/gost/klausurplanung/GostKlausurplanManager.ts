@@ -3053,7 +3053,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return <code>true</code>, falls die {@link GostKlausurvorgabe} verwendet wird, sonst <code>false</code>
 	 */
 	public istVorgabeVerwendetByKursklausur(vorgabe : GostKlausurvorgabe) : boolean {
-		const klausuren : List<GostKursklausur> | null = this._kursklausur_by_idVorgabe_and_idKurs.getNonNullValuesOfKey1AsList(vorgabe.idVorgabe);
+		const klausuren : List<GostKursklausur> | null = this._kursklausur_by_idVorgabe_and_idKurs.getNonNullValuesOfKey1AsListOrNull(vorgabe.idVorgabe);
 		return (klausuren !== null) && !klausuren.isEmpty();
 	}
 
@@ -3234,11 +3234,10 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public schuelerklausurterminAktuellGetMengeByTermin(termin : GostKlausurtermin) : List<GostSchuelerklausurTermin> {
 		const ergebnis : List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>();
-		if (this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.containsKey1(termin.id)) {
-			const lists : List<List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getNonNullValuesOfKey1AsList(termin.id);
+		const lists : List<List<GostSchuelerklausurTermin>> | null = this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getNonNullValuesOfKey1AsListOrNull(termin.id);
+		if (lists !== null)
 			for (const list of lists)
 				ergebnis.addAll(list);
-		}
 		return ergebnis;
 	}
 
@@ -3463,9 +3462,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die {@link GostSchuelerklausur}en zur übergebenen {@link GostKursklausur}
 	 */
 	public schuelerklausurGetMengeByKursklausur(kursklausur : GostKursklausur) : List<GostSchuelerklausur> {
-		if (!this._schuelerklausur_by_idKursklausur_and_idSchueler.containsKey1(kursklausur.id))
-			return new ArrayList();
-		return this._schuelerklausur_by_idKursklausur_and_idSchueler.getNonNullValuesOfKey1AsList(kursklausur.id);
+		const ergebnis : List<GostSchuelerklausur> | null = this._schuelerklausur_by_idKursklausur_and_idSchueler.getNonNullValuesOfKey1AsListOrNull(kursklausur.id);
+		return ergebnis === null ? new ArrayList() : ergebnis;
 	}
 
 	/**
@@ -4343,13 +4341,10 @@ export class GostKlausurplanManager extends JavaObject {
 		let anzahl : number = 0;
 		anzahl += this.vorgabefehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.schuelerklausurfehlendGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 4, false).size();
 		return anzahl;
 	}
 
@@ -4364,12 +4359,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public planungshinweiseGetAnzahlByHalbjahrAndQuartal(abiJahrgang : number, halbjahr : GostHalbjahr, quartal : number) : number {
 		let anzahl : number = 0;
-		anzahl += this.kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
-		anzahl += this.terminMitKonfliktGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnvollstaendigeRaumzuweisungGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.terminUnzureichendePlatzkapazitaetGetMengeByAbijahrAndHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
 		anzahl += this.schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(abiJahrgang, halbjahr, quartal).size();
+		anzahl += this.klausurenProSchueleridExceedingKWThresholdByAbijahrAndHalbjahrAndThreshold(abiJahrgang, halbjahr, quartal, 3, true).size();
 		return anzahl;
 	}
 

@@ -37,7 +37,7 @@ public class GostSchuelerklausur {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
+		return (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
 	}
 
 	/**

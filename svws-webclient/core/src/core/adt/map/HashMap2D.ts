@@ -185,6 +185,18 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller Values des 1. Keys in dieser Map.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return eine Liste aller Values des 1. Keys in dieser Map.
+	 */
+	public getNonNullValuesOfKey1AsListOrNull(key1 : K1) : List<V> | null {
+		const map1 : JavaMap<K2, V> | null = this.getSubMapOrNull(key1);
+		return map1 === null ? null : new ArrayList(map1.values());
+	}
+
+	/**
 	 * Liefert eine Liste aller Values in dieser Map.
 	 *
 	 * @return eine Liste aller Values in dieser Map.

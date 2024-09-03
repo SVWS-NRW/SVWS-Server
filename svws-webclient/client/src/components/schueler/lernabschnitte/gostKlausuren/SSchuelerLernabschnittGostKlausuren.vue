@@ -5,7 +5,7 @@
 				Grund für Fehlen angeben
 			</template>
 			<template #modalContent>
-				<svws-ui-text-input focus placeholder="z.B. Krankheit" @change="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
+				<svws-ui-text-input focus placeholder="z.B. Krankheit" @update:modelValue="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="createTermin(false)"> Abbrechen </svws-ui-button>
