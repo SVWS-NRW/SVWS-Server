@@ -14,7 +14,11 @@ const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+		], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";

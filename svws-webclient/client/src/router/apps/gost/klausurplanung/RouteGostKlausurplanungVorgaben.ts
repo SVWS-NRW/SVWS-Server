@@ -12,7 +12,11 @@ const SGostKlausurplanungVorgaben = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungVorgaben extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.vorgaben", "vorgaben", SGostKlausurplanungVorgaben);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+		], "gost.klausurplanung.vorgaben", "vorgaben", SGostKlausurplanungVorgaben);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vorgaben";

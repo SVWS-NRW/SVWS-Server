@@ -12,7 +12,11 @@ const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanu
 export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.kalender", "kalender/:kw(\\d+)?/:idtermin(\\d+)?", SGostKlausurplanungKalender);
+		super(Schulform.getMitGymOb(), [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+		], "gost.klausurplanung.kalender", "kalender/:kw(\\d+)?/:idtermin(\\d+)?", SGostKlausurplanungKalender);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kalender";
