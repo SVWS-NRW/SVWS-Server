@@ -29,7 +29,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			}
 
 			// Erstellt den parent "component" für die Konfiguration
-			Node codeStyleXml = new Node(null, 'codeStyleXml', [name: 'ProjectCodeStyleConfiguration'])
+			Node codeStyleXml = new Node(null, 'component', [name: 'ProjectCodeStyleConfiguration'])
 			Node configParsed = new XmlParser().parse(configXml)
 
 			codeStyleXml.append(configParsed)
