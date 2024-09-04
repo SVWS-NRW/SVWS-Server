@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 
-	import { computed, type WritableComputedRef } from 'vue';
+	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue?: 'ef1'|'gesamt'|'auto';
@@ -22,14 +22,9 @@
 		(e: 'update:modelValue', value: 'ef1'|'gesamt'|'auto'): void,
 	}>();
 
-	const art: WritableComputedRef<string> = computed({
+	const art = computed<'ef1'|'gesamt'|'auto'>({
 		get: () => props.modelValue,
-		set: (value) => {
-			const tmp = value;
-			if (tmp === null)
-				throw new Error("Unerwarteter Fehler in Komponente: Ungültige Option ausgewählt: " + value);
-			emit('update:modelValue', tmp);
-		}
+		set: (value) => emit('update:modelValue', value)
 	});
 
 </script>
