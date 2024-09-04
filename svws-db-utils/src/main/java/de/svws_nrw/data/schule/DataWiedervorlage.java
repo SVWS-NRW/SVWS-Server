@@ -111,7 +111,7 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 					throw new ApiOperationException(Status.NOT_FOUND, "Für die ID %d konnte kein Erzieher gefunden werden.".formatted(id));
 				dto.Lehrer_ID = null;
 				dto.Schueler_ID = null;
-				dto.Erzieher_ID = null;
+				dto.Erzieher_ID = erzieher.ID;
 			}
 		}
 	}
