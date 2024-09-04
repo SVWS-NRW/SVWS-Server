@@ -9,10 +9,12 @@ import type {
 	GostKursklausur,
 	GostKlausurplanManager,
 	List,
+	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungRaumzeitProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	gotoTermin: (value: number) => Promise<void>;

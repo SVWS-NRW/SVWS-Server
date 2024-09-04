@@ -3889,10 +3889,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
 	public isKursklausurAlleSchuelerklausurenVerplant(kk : GostKursklausur, termin : GostKlausurtermin | null) : boolean {
-		for (const sk of DeveloperNotificationException.ifMap2DGetIsNull(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin !== null ? termin.id : kk.idTermin, kk.id)) {
-			if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
-				return false;
-		}
+		const skts : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(termin !== null ? termin.id : DeveloperNotificationException.ifNull(JavaString.format("idTermin der Kursklausur %d", kk.id), kk.idTermin), kk.id);
+		if (skts !== null)
+			for (const sk of skts)
+				if (!this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
+					return false;
 		return true;
 	}
 

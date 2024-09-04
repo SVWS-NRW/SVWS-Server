@@ -10,6 +10,7 @@
 			<div class="svws-raum-title flex justify-between">
 				<svws-ui-select :title="raum.idStundenplanRaum ? 'Raum' : 'Raum auswählen...'"
 					:model-value="raum.idStundenplanRaum === null ? undefined : kMan().stundenplanraumGetByKlausurraum(raum)"
+					:disabled="!hatKompetenzUpdate"
 					headless
 					class="flex-grow"
 					@update:model-value="(value : StundenplanRaum | undefined) => void patchKlausurraum(raum.id, { idStundenplanRaum: value !== undefined ? value.id : null })"
@@ -33,9 +34,9 @@
 			<svws-ui-table :items="[]" :columns="cols" :no-data="klausurenImRaum().size() === 0" no-data-text="Noch keine Klausuren zugewiesen." class="mt-6">
 				<template #header><span /></template>
 				<template #body>
-					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="true" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
+					<div v-for="klausur of klausurenImRaum()" :key="klausur.id" class="svws-ui-tr cursor-grab" role="row" :data="klausur" :draggable="hatKompetenzUpdate" @dragstart="onDrag(klausur)"	@dragend="onDrag(undefined)">
 						<div class="svws-ui-td" role="cell">
-							<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+							<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
@@ -73,14 +74,15 @@
 					</span>
 					<span>{{ anzahlRaumstunden }} Raumstunden benötigt</span>
 				</div>
-				<svws-ui-button type="icon" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id)"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
+				<svws-ui-button type="icon" :disabled="!hatKompetenzUpdate" size="small" class="-mr-1" @click="loescheKlausurraum(raum.id)"><span class="icon i-ri-delete-bin-line" /></svws-ui-button>
 			</span>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
-	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin } from '@core';
+	import type { StundenplanRaum, GostKlausurplanManager, GostKlausurenCollectionSkrsKrsData, GostKlausurraum, GostKlausurtermin} from '@core';
+	import { BenutzerKompetenz } from '@core';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 	import type { DataTableColumn } from "@ui";
 	import { GostKursklausur, GostHalbjahr } from '@core';
@@ -91,6 +93,7 @@
 
 
 	const props = defineProps<{
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		raum: GostKlausurraum;
 		kMan: () => GostKlausurplanManager;
 		patchKlausurraum: (id: number, raum: Partial<GostKlausurraum>) => Promise<boolean>;
@@ -103,6 +106,8 @@
 		terminSelected: GostKlausurtermin;
 		// terminStartzeit?: string;
 	}>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const raumHatFehler = () => props.raum.idStundenplanRaum && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse || props.raum.idStundenplanRaum === null;
 
@@ -134,8 +139,8 @@
 			event.preventDefault();
 	}
 
-	async function patchKlausurbeginn(event: string | number, klausur: GostKursklausur) {
-		if (typeof event === 'number')
+	async function patchKlausurbeginn(event: string | null, klausur: GostKursklausur) {
+		if (event === null)
 			return;
 		try {
 			const startzeit = event.trim().length > 0 ? DateUtils.gibMinutenOfZeitAsString(event) : null;

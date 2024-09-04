@@ -1,6 +1,7 @@
 <template>
 	<div class="flex flex-col bg-white dark:bg-black rounded-xl cursor-pointer" @drop="onDrop(termin())" @dragover="checkDropZone($event, termin())" :class="dragData === undefined || isDropZone(termin()) ? '' : 'opacity-35'">
 		<s-gost-klausurplanung-termin :termin="termin()"
+			:benutzer-kompetenzen
 			:k-man
 			:termin-selected="terminSelected || false"
 			:draggable
@@ -19,7 +20,7 @@
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
+				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!hatKompetenzUpdate || !terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
 					<template v-if="termin().quartal > 0">
 						<span class="icon i-ri-lock-line opacity-25 group-hover:opacity-75" />{{ termin().quartal }}. Quartal
 					</template>
@@ -29,7 +30,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
+				<svws-ui-button :disabled="!hatKompetenzUpdate" v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="(termin().istHaupttermin ? updateKlausurblockung(kMan().patchKlausurterminNachschreiberZuglassenFalse(termin())) : loescheKlausurtermine(Arrays.asList([termin()])));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
@@ -38,11 +39,13 @@
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
+	import { BenutzerKompetenz} from "@core";
 	import { GostKursklausur} from "@core";
 	import { type GostKlausurplanManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: () => GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
@@ -60,6 +63,8 @@
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,
 	});
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const klausuren = () => props.kMan().kursklausurGetMengeByTermin(props.termin());
 	const terminTitel = () => kurzBezeichnungenShort;

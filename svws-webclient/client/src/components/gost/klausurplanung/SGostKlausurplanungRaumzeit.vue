@@ -18,7 +18,7 @@
 					<li v-for="termin in termine()"
 						:key="termin.id"
 						@click="chooseTermin(termin)"
-						:draggable="isDraggable(termin)"
+						:draggable="isDraggable(undefined, termin)"
 						@dragstart="onDrag(termin)"
 						@dragend="onDrag(undefined)"
 						@dragover="checkDropZone($event)"
@@ -29,6 +29,7 @@
 							'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
 						}">
 						<s-gost-klausurplanung-termin :termin
+							:benutzer-kompetenzen
 							:k-man
 							:on-drag
 							:draggable="isDraggable"
@@ -49,6 +50,7 @@
 			</svws-ui-content-card>
 			<template v-else>
 				<s-gost-klausurplanung-raumzeit-termin :termin="terminSelected.value"
+					:benutzer-kompetenzen
 					:k-man
 					:create-klausurraum
 					:loesche-klausurraum
@@ -68,14 +70,16 @@
 
 <script setup lang="ts">
 	import type { List} from '@core';
-	import { ArrayList, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
+	import { ArrayList, BenutzerKompetenz, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, computed } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
 		await props.setRaumTermin(termin);
@@ -95,7 +99,9 @@
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
-	function isDraggable(object: any, termin: GostKlausurtermin) : boolean {
+	const isDraggable = (object: any, termin: GostKlausurtermin) => {
+		if (!hatKompetenzUpdate.value)
+			return false;
 		if (object instanceof GostKursklausur) {
 			//if (object.idTermin === props.terminauswahl.value.id)
 			return !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(object, termin);

@@ -8,6 +8,7 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreiberProps";
 import { routeError } from "~/router/error/RouteError";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SGostKlausurplanungNachschreiber = () => import("~/components/gost/klausurplanung/SGostKlausurplanungNachschreiber.vue");
 
@@ -45,6 +46,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungNachschreiberProps {
 		return {
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => routeGostKlausurplanung.data.manager,

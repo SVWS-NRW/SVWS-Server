@@ -34,13 +34,13 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, undefined, termin.id ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
+									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, undefined, termin.id ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<template v-else>
 								<span class="opacity-50 inline-flex items-center gap-1">
 									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
-									<svws-ui-button v-if="!hideButtonRaeumePlanen" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 								</span>
 							</template>
 						</slot>
@@ -81,7 +81,7 @@
 										}
 									]">
 									<div class="svws-ui-td" role="cell">
-										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
+										<span class="icon i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
 									</div>
 									<div class="svws-ui-td" :class="{'-ml-2': inTooltip}" role="cell">
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
@@ -139,6 +139,7 @@
 <script setup lang="ts">
 
 	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
+	import { BenutzerKompetenz} from "@core";
 	import { GostHalbjahr} from "@core";
 	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
 	import type {DataTableColumn} from "@ui";
@@ -150,6 +151,7 @@
 
 
 	const props = withDefaults(defineProps<{
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
@@ -184,6 +186,8 @@
 		hideButtonRaeumePlanen: false,
 		inTooltip: false,
 	});
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTermin(props.termin, props.showKursklausurenNachschreiber);
 	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminNtGetMengeByTermin(props.termin);

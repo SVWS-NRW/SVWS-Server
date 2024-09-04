@@ -6,10 +6,12 @@ import type {
 	GostKlausurplanManager,
 	StundenplanKalenderwochenzuordnung,
 	StundenplanManager,
+	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungKalenderProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;

@@ -10,10 +10,12 @@ import type {
 	GostKlausurenUpdate,
 	GostJahrgangsdaten,
 	Schuljahresabschnitt,
+	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungNachschreiberProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;

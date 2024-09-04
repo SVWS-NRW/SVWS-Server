@@ -31,10 +31,11 @@
 									'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
 									'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
-								<s-gost-klausurplanung-termin :termin="termin"
-									:k-man="kMan"
+								<s-gost-klausurplanung-termin :termin
+									:benutzer-kompetenzen
+									:k-man
 									:compact="terminSelected.value?.id !== termin.id"
-									:quartalsauswahl="quartalsauswahl"
+									:quartalsauswahl
 									:show-last-klausurtermin="true"
 									drag-icon>
 									<template #datum><span /></template>
@@ -46,7 +47,7 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card class="svws-card-stundenplan">
 				<template v-if="kalenderwoche.value">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
 						:manager="() => kMan().getStundenplanManager()" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
 						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge :kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
@@ -137,13 +138,16 @@
 </template>
 
 <script setup lang="ts">
-	import { ref, onMounted } from "vue";
+	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
-	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
+	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList, BenutzerKompetenz} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+
 	const showMoreKonflikte = ref(false);
 	const showMoreWarnungen = ref(false);
 	const kursklausurMouseOver = ref<GostKursklausur | undefined>(undefined);
@@ -223,7 +227,7 @@
 	}
 
 	function isDraggable(object: any) : boolean {
-		return true;
+		return hatKompetenzUpdate.value;
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => {

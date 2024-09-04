@@ -6,6 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungKalenderProps } from "~/components/gost/klausurplanung/SGostKlausurplanungKalenderProps";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
@@ -61,6 +62,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungKalenderProps {
 		return {
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => routeGostKlausurplanung.data.manager,

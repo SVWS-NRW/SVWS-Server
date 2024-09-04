@@ -85,7 +85,7 @@
 									: ''
 								)"
 							:data="termin"
-							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
+							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
 							<div class="bg-white/40 dark:bg-black bg-highlight border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
@@ -93,7 +93,7 @@
 									'bg-light border-black/20 dark:border-white/25': dragData !== undefined,
 									'shadow border-black/10 dark:border-white/10': dragData === undefined,
 								}">
-								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
+								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
 								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
@@ -102,9 +102,10 @@
 										<span class="line-clamp-4">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
-										<s-gost-klausurplanung-termin :termin="termin"
+										<s-gost-klausurplanung-termin :termin
+											:benutzer-kompetenzen
 											in-tooltip
-											:k-man="kMan">
+											:k-man>
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
 									</template>
@@ -122,7 +123,7 @@
 <script setup lang="ts">
 
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr} from "@core";
+	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 	import { routeApp } from "~/router/apps/RouteApp";
@@ -136,6 +137,7 @@
 		dragData: () => undefined,
 	});
 
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {
 		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)

@@ -13,8 +13,6 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 
 	public constructor() {
 		super(Schulform.getMitGymOb(), [
-			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
-			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
 		], "gost.klausurplanung.probleme", "probleme", SGostKlausurplanungProbleme);
 		super.mode = ServerMode.STABLE;

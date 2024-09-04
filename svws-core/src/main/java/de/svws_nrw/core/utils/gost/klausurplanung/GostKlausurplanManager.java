@@ -4216,11 +4216,11 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
 	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk, final GostKlausurtermin termin) {
-		for (final @NotNull GostSchuelerklausurTermin sk : DeveloperNotificationException
-				.ifMap2DGetIsNull(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur, termin != null ? termin.id : kk.idTermin, kk.id)) {
-			if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
-				return false;
-		}
+		final List<GostSchuelerklausurTermin> skts = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(termin != null ? termin.id : DeveloperNotificationException.ifNull("idTermin der Kursklausur %d".formatted(kk.id), kk.idTermin), kk.id);
+		if (skts != null)
+			for (final @NotNull GostSchuelerklausurTermin sk : skts)
+				if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
+					return false;
 		return true;
 	}
 

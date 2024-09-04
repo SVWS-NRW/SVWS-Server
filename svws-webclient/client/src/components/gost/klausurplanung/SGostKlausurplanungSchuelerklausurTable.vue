@@ -17,7 +17,7 @@
 				class="svws-ui-tr" role="row"
 				:class="[klausurCssClasses === undefined ? '' : klausurCssClasses(schuelertermin, termin)]">
 				<div class="svws-ui-td" role="cell">
-					<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
+					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
 					{{ kMan().getSchuelerMap().get(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
@@ -38,11 +38,11 @@
 				</div>
 				<div class="svws-ui-td svws-align-left" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausurTermin(schuelertermin)) }}</div>
 				<div class="svws-ui-td svws-align-center" role="cell">{{ kMan().vorgabeBySchuelerklausurTermin(schuelertermin).dauer }}</div>
-				<div class="svws-ui-td svws-align-center" role="cell">
+				<!-- <div class="svws-ui-td svws-align-center" role="cell">
 					<slot name="actions">
 						<svws-ui-button v-if="patchKlausur !== undefined" type="icon" size="small" class="-mr-1" @click="patchKlausur(schuelertermin, {idTermin: null});$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
 					</slot>
-				</div>
+				</div> -->
 			</div>
 		</template>
 	</svws-ui-table>
@@ -85,8 +85,8 @@
 			{ key: "datum", label: "Datum", span: 11 },
 			{ key: "kuerzel", label: "Lehrkraft", span: 4},
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 2, align: "right"},
-			{ key: "actions", label: "Aktionen", span: 2, align: "right" },
 		];
+		// { key: "actions", label: "Aktionen", span: 2, align: "right" },
 
 		return cols;
 	}

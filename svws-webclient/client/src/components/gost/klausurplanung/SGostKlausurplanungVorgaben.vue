@@ -7,7 +7,7 @@
 	</Teleport>
 	<div class="page--content page--content--full">
 		<svws-ui-content-card title="Klausurvorgaben">
-			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" clickable @click="startEdit" :no-data="vorgaben().isEmpty()" :no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
+			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" :clickable="hatKompetenzUpdate" @click="startEdit" :no-data="vorgaben().isEmpty()" :no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
 				<template #cell(idFach)="{ value }">
 					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
 				</template>
@@ -37,13 +37,13 @@
 					<span v-if="value !== null && value.trim().length > 0" class="line-clamp-1 leading-tight -my-0.5">{{ value }}</span>
 				</template>
 				<template #actions>
-					<svws-ui-button type="transparent" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1"><span class="icon i-ri-upload-2-line" />Aus Vorlage importieren</svws-ui-button>
-					<svws-ui-button type="transparent" @click="erzeugeDefaultKlausurvorgaben(quartalsauswahl.value)" v-else><span class="icon i-ri-upload-2-line" />Standard-Vorlagen anlegen</svws-ui-button>
-					<svws-ui-button type="icon" @click="neueVorgabe" :disabled="selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><span class="icon i-ri-add-line" /></svws-ui-button>
+					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="erzeugeVorgabenAusVorlage(quartalsauswahl.value)" v-if="jahrgangsdaten?.abiturjahr !== -1"><span class="icon i-ri-upload-2-line" />Aus Vorlage importieren</svws-ui-button>
+					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="erzeugeDefaultKlausurvorgaben(quartalsauswahl.value)" v-else><span class="icon i-ri-upload-2-line" />Standard-Vorlagen anlegen</svws-ui-button>
+					<svws-ui-button type="icon" @click="neueVorgabe" :disabled="!hatKompetenzUpdate || selectedVorgabeRow !== undefined" title="Neue Vorgabe erstellen"><span class="icon i-ri-add-line" /></svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-content-card>
-		<svws-ui-content-card id="vorgabenEdit" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-8 -ml-2">
+		<svws-ui-content-card id="vorgabenEdit" v-if="hatKompetenzUpdate" :title="activeVorgabe.idVorgabe === 0 ? 'Neue Vorgabe erstellen' : (activeVorgabe.idVorgabe > 0 ? 'Vorgabe bearbeiten' : 'Bearbeiten')" class="sticky top-8 -ml-2">
 			<template #actions v-if="activeVorgabe.idVorgabe > 0">
 				<svws-ui-button type="danger" @click="loescheKlausurvorgabe" :disabled="activeVorgabe.idVorgabe < 0 || activeVorgabe.idFach === -1 || activeVorgabe.kursart === '' || activeVorgabe.quartal === -1 || (kMan().istVorgabeVerwendetByKursklausur(activeVorgabe))"><span class="icon i-ri-delete-bin-line" />Löschen</svws-ui-button>
 			</template>
@@ -61,8 +61,8 @@
 							<svws-ui-radio-option v-for="quartal in formQuartale" :key="quartal" :value="quartal+''" name="formQuartale" :label="quartal+'. Quartal'" :model-value="activeVorgabe.quartal+''" @click="activeVorgabe.quartal = quartal" :disabled="activeVorgabe.idVorgabe !== 0" />
 						</svws-ui-radio-group>
 						<svws-ui-spacing />
-						<svws-ui-text-input placeholder="Dauer (Minuten)" type="number" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({dauer: parseInt(dauer)}, activeVorgabe.idVorgabe) : activeVorgabe.dauer = parseInt(dauer)" :disabled="activeVorgabe.idVorgabe < 0" />
-						<svws-ui-text-input placeholder="Auswahlzeit (Minuten)" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({auswahlzeit: parseInt(auswahlzeit)}, activeVorgabe.idVorgabe) : activeVorgabe.auswahlzeit = parseInt(auswahlzeit)" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-input-number placeholder="Dauer (Minuten)" :model-value="activeVorgabe.dauer" @change="dauer => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({dauer: dauer!}, activeVorgabe.idVorgabe) : activeVorgabe.dauer = dauer!" :disabled="activeVorgabe.idVorgabe < 0" />
+						<svws-ui-input-number placeholder="Auswahlzeit (Minuten)" type="number" :model-value="activeVorgabe.auswahlzeit" @change="auswahlzeit => activeVorgabe.idVorgabe !== 0 ? patchKlausurvorgabe({auswahlzeit: auswahlzeit!}, activeVorgabe.idVorgabe) : activeVorgabe.auswahlzeit = auswahlzeit!" :disabled="activeVorgabe.idVorgabe < 0" />
 						<svws-ui-spacing />
 						<div>
 							<label class="sr-only" for="rbgMdlPruefung">Mündliche Prüfung: </label>
@@ -108,10 +108,12 @@
 	import { computed, ref, onMounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostFach } from "@core";
-	import {ArrayList, GostKlausurvorgabe, ZulaessigesFach} from "@core";
+	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, ZulaessigesFach } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const vorgaben = () => props.kMan().vorgabeGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 
