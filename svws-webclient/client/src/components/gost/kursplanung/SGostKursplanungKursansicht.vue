@@ -141,7 +141,7 @@
 									</div>
 									<div role="cell" class="svws-ui-td" />
 									<div role="cell" class="svws-ui-td svws-align-center" :style="{'gridColumn': 'span ' + getDatenmanager().schieneGetListe().size()}">
-										<svws-ui-button :disabled="hatUpdateKompetenz" type="transparent" @click="hatUpdateKompetenz && add_kurs(fachwahl)" title="Kurs anlegen">
+										<svws-ui-button :disabled="!hatUpdateKompetenz" type="transparent" @click="hatUpdateKompetenz && add_kurs(fachwahl)" title="Kurs anlegen">
 											<span class="inline-flex items-center text-button -mr-0.5">
 												<span class="icon i-ri-book-2-line" />
 												<span class="icon-sm i-ri-add-line -ml-0.5 text-sm" />
