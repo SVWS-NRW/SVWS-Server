@@ -27,15 +27,15 @@
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
 								:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-								@update:model-value="(value : FachDaten) => void patchFach(value, leistung)"
-								class="w-full" headless />
+								@update:model-value="(value : FachDaten | null) => void patchFach(value, leistung)"
+								class="w-full" headless use-null />
 							<div v-else>{{ manager().fachGetByLeistungIdOrException(leistung.id)?.bezeichnung ?? '—' }}</div>
 						</div>
 						<div class="svws-ui-td" role="cell">
 							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
 								:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="(value : KursDaten) => void patchKurs(value, leistung)"
-								class="w-full" headless removable />
+								@update:model-value="(value : KursDaten | null) => void patchKurs(value, leistung)"
+								class="w-full" headless removable use-null />
 							<div v-else>{{ manager().kursGetByLeistungIdOrNull(leistung.id)?.kuerzel ?? '—' }}</div>
 						</div>
 						<div class="svws-ui-td" role="cell">
@@ -236,9 +236,9 @@
 		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
 	});
 
-	async function patchFach(fach: FachDaten, leistung: SchuelerLeistungsdaten) {
+	async function patchFach(fach: FachDaten | null, leistung: SchuelerLeistungsdaten) {
 		// Fach-Eintrag bei den Leistungsdaten wird entfernt
-		if ((fach === null) || (fach === undefined)) {
+		if (fach === null) {
 			await props.patchLeistung({ fachID: -1, kursID: null }, leistung.id);
 			return;
 		}
@@ -256,9 +256,9 @@
 		}
 	}
 
-	async function patchKurs(kurs: KursDaten, leistung: SchuelerLeistungsdaten) {
-		if ((kurs === null) || (kurs === undefined)) {
-			await props.patchLeistung({ kursID: null }, leistung.id);
+	async function patchKurs(kurs: KursDaten | null, leistung: SchuelerLeistungsdaten) {
+		if (kurs === null) {
+			await props.patchLeistung({ kursID: null, kursart: ZulaessigeKursart.PUK.daten.kuerzel, abifach: null }, leistung.id);
 			return;
 		}
 		const kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
