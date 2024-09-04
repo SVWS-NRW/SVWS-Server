@@ -23,14 +23,14 @@
 
 <script setup lang="ts">
 
+	import { computed } from 'vue';
 	import type { Schuljahresabschnitt } from '../../../../core/src/core/data/schule/Schuljahresabschnitt';
 	import type { AbschnittAuswahlProps } from './AbschnittAuswahlProps';
 
 	const props = defineProps<AbschnittAuswahlProps>();
 
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const abschnitt = props.daten().abschnitte.get(props.daten().schule.id);
-	const aktBezeichnung = abschnitt ? `${abschnitt.schuljahr}.${abschnitt.abschnitt}` : 'Abschnitt ungültig';
+	const abschnitt = computed(() => props.daten().abschnitte.get(props.daten().schule.id));
+	const aktBezeichnung = abschnitt.value ? `${abschnitt.value.schuljahr}.${abschnitt.value.abschnitt}` : 'Abschnitt ungültig';
 
 	const item_sort = (a: Schuljahresabschnitt, b: Schuljahresabschnitt) => b.schuljahr + b.abschnitt * 0.1 - (a.schuljahr + a.abschnitt * 0.1);
 	const item_text = (item: Schuljahresabschnitt) => item.schuljahr ? `${item.schuljahr}/${(item.schuljahr + 1) % 100}.${item.abschnitt}` : "Abschnitt";

@@ -75,7 +75,7 @@
 		(e: 'update:modelValue', v: GostBlockungRegel | undefined): void;
 	}>()
 
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
+	// eslint-Regel wird verletzt. props.regelTyp wird aber nicht geändert, es gibt für jede Regel eine Komponente
 	const aufgeklappt = ref<boolean>(![GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE, GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE].includes(props.regelTyp));
 
 	const verletzungen = computed(() => props.getErgebnismanager().regelGetMap_regelID_to_verletzungString());

@@ -84,7 +84,7 @@
 	}>(), {
 		placeholder: "",
 		statistics: false,
-		valid: ()=>true,
+		valid: () => true,
 		disabled: false,
 		required: false,
 		readonly: false,
@@ -108,7 +108,6 @@
 		}
 	};
 
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 	const data = ref<number | null>(props.modelValue);
 
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });

@@ -32,8 +32,7 @@
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	}>();
 
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const selected = shallowRef<Schueler[]>(props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().toArray() as Schueler[]);
+	const selected = shallowRef<Schueler[]>([]);
 	const _showModal = shallowRef<boolean>(false);
 	const showModal = () => _showModal;
 
@@ -51,7 +50,7 @@
 		selected.value = [];
 	}
 
-	const openModal = () => {
+	function openModal() {
 		selected.value = props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().toArray() as Schueler[];
 		showModal().value = true;
 	}
