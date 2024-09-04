@@ -80,7 +80,6 @@
 		"blur": [value: InputDataType];
 	}>();
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<InputDataType>(props.modelValue);
 
 	const dataOrEmpty = computed<string>({

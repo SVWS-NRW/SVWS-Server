@@ -137,25 +137,21 @@
 </template>
 
 <script setup lang="ts">
-	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
-	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
 	import { ref, onMounted } from "vue";
+	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
+	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 	const showMoreKonflikte = ref(false);
 	const showMoreWarnungen = ref(false);
 	const kursklausurMouseOver = ref<GostKursklausur | undefined>(undefined);
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	//const kwAuswahl = ref<StundenplanKalenderwochenzuordnung>(props.stundenplanmanager().kalenderwochenzuordnungGetByDatum(new Date().toISOString()));
-
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
 		return props.kMan().getStundenplanManager().kalenderwochenzuordnungGetMengeAsList();
 	}
 
-	// const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
 
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {

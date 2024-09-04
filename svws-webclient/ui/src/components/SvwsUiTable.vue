@@ -362,7 +362,6 @@
 		return null;
 	}
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const internalSortByAndOrder = ref<SortByAndOrder>(props.sortByAndOrder)
 
 	function toggleSorting(column: DataTableColumnInternal) {
@@ -482,7 +481,6 @@
 
 	const noDataCalculated = computed(() => (sortedRows.value.length === 0));
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<Set<string>>(props.hiddenColumns);
 
 	watch(() => props.hiddenColumns, (value: Set<string>) => updateHiddenColumnsSet(value), { immediate: false });

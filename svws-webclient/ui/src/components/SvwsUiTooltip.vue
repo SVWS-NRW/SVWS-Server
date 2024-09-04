@@ -83,13 +83,11 @@
 	if ((props.keepOpen === true) || (props.initOpen === true))
 		isOpen.value = true;
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const { placement, middlewareData, floatingStyles } = useFloating(
 		reference,
 		floating,
 		{
 			placement: props.position,
-			// eslint-disable-next-line vue/no-setup-props-destructure
 			middleware: [flip(), shift(), offset(props.showArrow ? 6 : 2), arrow({element: floatingArrow})],
 			whileElementsMounted: autoUpdate,
 		}

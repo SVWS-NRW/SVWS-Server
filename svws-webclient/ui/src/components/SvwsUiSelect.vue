@@ -145,7 +145,6 @@
 		}
 	}
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = shallowRef<SelectDataType>(props.modelValue);
 
 	watch(() => props.modelValue, (value: SelectDataType) => {

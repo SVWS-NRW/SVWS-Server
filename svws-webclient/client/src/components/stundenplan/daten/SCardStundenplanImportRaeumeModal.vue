@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 
-	import type { List, Raum } from "@core";
 	import { ref } from "vue";
+	import type { List, Raum } from "@core";
 
 	const props = defineProps<{
 		importRaeume: (raeume: Raum[]) => Promise<void>;
@@ -30,8 +30,7 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const selected = ref<Raum[]>([...props.listRaeume]);
+	const selected = ref<Raum[]>([]);
 	const raum = ref<Raum>()
 
 	const cols = [
@@ -40,7 +39,8 @@
 		{key: 'groesse', label: 'Größe', span: 1},
 	]
 
-	const openModal = () => {
+	function openModal() {
+		selected.value = [...props.listRaeume];
 		showModal().value = true;
 	}
 

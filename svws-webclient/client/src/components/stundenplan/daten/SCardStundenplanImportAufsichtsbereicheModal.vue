@@ -19,8 +19,8 @@
 
 <script setup lang="ts">
 
-	import type { List, StundenplanAufsichtsbereich } from "@core";
 	import { ref } from "vue";
+	import type { List, StundenplanAufsichtsbereich } from "@core";
 
 	const props = defineProps<{
 		importAufsichtsbereiche: (s: StundenplanAufsichtsbereich[]) => Promise<void>;
@@ -30,11 +30,11 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const selected = ref<StundenplanAufsichtsbereich[]>([...props.listAufsichtsbereiche]);
+	const selected = ref<StundenplanAufsichtsbereich[]>([]);
 	const aufsichtsbereich = ref<StundenplanAufsichtsbereich>()
 
-	const openModal = () => {
+	function openModal() {
+		selected.value = [...props.listAufsichtsbereiche];
 		showModal().value = true;
 	}
 

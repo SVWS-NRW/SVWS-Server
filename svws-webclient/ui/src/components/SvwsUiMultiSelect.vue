@@ -54,7 +54,7 @@
 <script setup lang="ts" generic="Item">
 
 	import type { ComputedRef, Ref } from "vue";
-	import { computed, nextTick, ref, shallowRef, watch, Teleport, toRaw, onMounted } from "vue";
+	import { computed, nextTick, ref, shallowRef, watch, onMounted } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
@@ -136,7 +136,6 @@
 		return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
 	}
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = shallowRef<Set<Item>>(new Set(props.modelValue));
 
 	watch(() => props.modelValue, (value) => updateData(new Set(value)), { immediate: false });

@@ -31,12 +31,13 @@
 	const props = defineProps<{
 		showDeleteIcon: boolean;
 		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
-		// eslint-disable-next-line vue/prop-name-casing
 		deleteBenutzergruppe_n : () => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);
-	const showModal = () => _showModal;
+	function showModal() {
+		return _showModal;
+	}
 
 	const bezeichnung = ref();
 	const inputbgIstAdmin=ref(false);
