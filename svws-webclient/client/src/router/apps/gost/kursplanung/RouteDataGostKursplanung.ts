@@ -803,9 +803,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingParameter, api.schema);
-			default:
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}
 	})
 
