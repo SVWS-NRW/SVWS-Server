@@ -21,7 +21,7 @@ public final class PersonTypNullableConverter extends DBAttributeConverter<Perso
 
 	@Override
 	public PersonTyp convertToEntityAttribute(final String dbData) {
-		return PersonTyp.getByKuerzel(dbData);
+		return (dbData == null) ? null : PersonTyp.getByKuerzel(dbData);
 	}
 
 	@Override
