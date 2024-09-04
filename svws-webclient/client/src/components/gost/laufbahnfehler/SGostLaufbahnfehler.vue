@@ -1,15 +1,15 @@
 <template>
 	<div class="page--content">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung importieren" @click="showModalImport().value = true"><span class="icon i-ri-download-2-line" /> Importieren…</svws-ui-button>
-				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung="importLaufbahnplanung" />
+				<s-laufbahnplanung-import-modal :show="showModalImport" multiple :import-laufbahnplanung />
 				<svws-ui-button :disabled="apiStatus.pending" type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon i-ri-upload-2-line" />Exportiere {{ auswahl.length > 0 ? 'Auswahl':'alle' }}</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
-			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList" :disabled="apiStatus.pending">
+			<svws-ui-button-select type="secondary" :dropdown-actions :disabled="apiStatus.pending">
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
@@ -22,7 +22,7 @@
 				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
 			</div>
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
-				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns="cols" selectable v-model="auswahl">
+				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns selectable v-model="auswahl">
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
 				</template>
@@ -74,15 +74,21 @@
 
 <script setup lang="ts">
 
-	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import { computed, ref, toRaw, onMounted } from 'vue';
 	import type { GostLaufbahnfehlerProps } from "./SGostLaufbahnfehlerProps";
 	import type { DataTableColumn } from '@ui';
-	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse } from '@core';
-	import { computed, ref, toRaw, onMounted } from 'vue';
+	import type { List, GostBelegpruefungErgebnisFehler, GostBelegpruefungErgebnis} from '@core';
+	import { ArrayList, GostBelegpruefungsArt, GostBelegungsfehlerArt, SchuelerStatus, GostBelegpruefungsErgebnisse, BenutzerKompetenz } from '@core';
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 
-	const cols: DataTableColumn[] = [
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
+	});
+
+	const columns: DataTableColumn[] = [
 		{key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center"},
 		{key: 'name', label: 'Name, Vorname', span: 2},
 		{key: 'hinweise', label: 'K/WS', tooltip: 'Gibt an, ob Hinweise zu der Anzahl von Kursen oder Wochenstunden vorliegen', fixedWidth: 3.5, align: 'center'},
@@ -150,7 +156,7 @@
 		return res;
 	}
 
-	const dropdownList = computed(() => {
+	const dropdownActions = computed(() => {
 		return [
 			{ text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false), default: true },
 			{ text: `Laufbahnwahlbogen (einzeln)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, true) },
@@ -161,10 +167,6 @@
 			{ text: `Ergebnisliste (vollständig)`, action: () => downloadPDF("Ergebnisliste Laufbahnwahlen", 2, false) },
 		];
 	});
-
-	// const dropdownDefault = computed(() => {
-	// 	return { text: `Laufbahnwahlbogen (gesamt)`, action: () => downloadPDF("Laufbahnwahlbogen", 1, false) };
-	// });
 
 	async function downloadPDF(title: string, detaillevel: number, einzelpdfs: boolean) {
 		const list = new ArrayList<number>();
@@ -200,9 +202,7 @@
 	}
 
 	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
+	onMounted(() => isMounted.value = true);
 
 </script>
 
