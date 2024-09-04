@@ -25,7 +25,6 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		super(Schulform.getMitGymOb(), [
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
-			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN,
 		], "gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);

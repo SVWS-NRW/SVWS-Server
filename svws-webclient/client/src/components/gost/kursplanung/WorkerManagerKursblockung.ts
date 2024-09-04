@@ -12,12 +12,8 @@ import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, Wor
  */
 export class WorkerManagerKursblockung {
 
-	/**
-	 * Die maximale Anzahl der Worker-Threads zurück, die von diesem Manager genutzt werden können.
-	 * Falls der Browser die Abfrage nicht kennt, schalten wir die Warnung bei eslint abgebrochen
-	**/
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	public static readonly MAX_WORKER = (navigator.hardwareConcurrency ?? 3) - 1; // reserviere einen Thread für die GUI
+	/** Die maximale Anzahl der Worker-Threads zurück, die von diesem Manager genutzt werden können. **/
+	public static readonly MAX_WORKER = (navigator.hardwareConcurrency > 1) ? (navigator.hardwareConcurrency - 1) : 1; // reserviere einen Thread für die GUI
 
 	/** Die Liste der Fächer des Abiturjahrgangs */
 	protected faecherListe: List<GostFach>;
