@@ -74,13 +74,13 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "3.0.0";
-		def openHtmlToPdfVersion = "1.1.4";
+		def version = "3.0.3";
+		def openHtmlToPdfVersion = "1.1.22";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
 	}
 
 
