@@ -38,23 +38,22 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			const idKlasse = RouteNode.getIntParam(to_params, "id");
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
 			const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (neueIdKlasse && neueIdKlasse !== idKlasse)
+			if (neueIdKlasse && neueIdKlasse !== id)
 				return routeKlasseDaten.getRoute(neueIdKlasse);
 
 			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-			if (this.isGruppenprozessRoute(to) && idKlasse !== undefined)
+			if (this.isGruppenprozessRoute(to) && id !== undefined)
 				return routeKlasseGruppenprozesse.getRoute();
 
 			if (this.isGruppenprozessRoute(to))
 				await this.data.gotoGruppenprozess(false);
 			else
-				await this.data.gotoEintrag(idKlasse)
+				await this.data.gotoEintrag(id)
 
 			if (to.name === this.name)
 				return this.getChildRoute(this.data.klassenListeManager.daten().id, from);

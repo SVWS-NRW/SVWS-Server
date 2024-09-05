@@ -26,7 +26,7 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 		try {
 			if (!routeLehrer.data.lehrerListeManager.hasDaten())
 				return routeLehrer.getRoute();
-			const id = RouteNode.getIntParam(to_params, "id");
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (id !== routeLehrer.data.lehrerListeManager.personalDaten().id))
 				await routeLehrer.data.loadPersonaldaten();
 		} catch (e) {

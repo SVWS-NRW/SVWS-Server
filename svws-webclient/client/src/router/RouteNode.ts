@@ -613,17 +613,21 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * angegebenen Namen zu bestimmen und als Integer-Wert zu interpretieren.
 	 *
 	 * @param params   die Parameter der Route
-	 * @param name     der Name des Parameters
+	 * @param names[]  der Namen der Parameter
 	 *
-	 * @returns der Integer-Wert, undefined
+	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
 	 */
-	protected static getIntParam(params: RouteParams, name: string) : number | undefined {
-		const value = params[name];
-		if (!value || (value.toString().trim().length === 0))
-			return undefined;
-		if (value instanceof Array)
-			throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
-		return parseInt(value);
+	protected static getIntParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], number | undefined> {
+		const res: Record<string, number | undefined> = {};
+		for (const name of names) {
+			const value = params[name];
+			if (value instanceof Array)
+				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
+			else if (!value || value.toString().trim().length === 0)
+				res[name] = undefined;
+			else res[name] = parseInt(value);
+		}
+		return res;
 	}
 
 }

@@ -41,10 +41,9 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 		try {
 			if (isEntering)
 				await this.data.ladeListe();
-			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			const { id, idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["id", "idSchuljahresabschnitt"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			const id = RouteNode.getIntParam(to_params, "id");
 			const eintrag = (id !== undefined) ? this.data.raumListeManager.liste.get(id) : null;
 			this.data.setEintrag(eintrag);
 			if (!this.data.raumListeManager.hasDaten()) {

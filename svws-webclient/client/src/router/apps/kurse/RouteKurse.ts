@@ -34,10 +34,9 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			const id = RouteNode.getIntParam(to_params, "id");
 			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
 				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 				if (id !== undefined) {

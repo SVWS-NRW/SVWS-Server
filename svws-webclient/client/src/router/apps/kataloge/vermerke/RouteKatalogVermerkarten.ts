@@ -36,7 +36,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const idVermerkart = RouteNode.getIntParam(to_params, "id");
+			const { idVermerkart } = RouteNode.getIntParams(to_params, ["idVermerkart"]);
 			if (idVermerkart === undefined) {
 				await this.data.ladeListe();
 			} else {

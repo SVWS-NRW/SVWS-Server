@@ -92,7 +92,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		try {
 			if (isEntering)
 				await this.data.init();
-			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
 			if (idSchuljahresabschnitt === undefined)
 				return this.getRoute(this.data.aktAbschnitt.value.id);
