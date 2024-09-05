@@ -36,44 +36,44 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
-			const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (id !== undefined) {
-				if (neueID === null)
-					return this.getRoute(id);
-				const params = { ... to_params};
-				params.id = String(neueID);
-				const locationRaw : RouteLocationRaw = {};
-				locationRaw.name = to.name;
-				locationRaw.params = params;
-				return locationRaw;
+		try {
+			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			const id = RouteNode.getIntParam(to_params, "id");
+			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
+				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+				if (id !== undefined) {
+					if (neueID === null)
+						return this.getRoute(id);
+					const params = { ... to_params};
+					params.id = String(neueID);
+					const locationRaw : RouteLocationRaw = {};
+					locationRaw.name = to.name;
+					locationRaw.params = params;
+					return locationRaw;
+				}
 			}
-		}
-		const eintrag = (id !== undefined) ? this.data.fachListeManager.liste.get(id) : null;
-		await this.data.setEintrag(eintrag);
-		if (!this.data.fachListeManager.hasDaten()) {
-			if (id === undefined) {
-				const listFiltered = this.data.fachListeManager.filtered();
-				if (listFiltered.isEmpty())
-					return;
-				return this.getRoute(this.data.fachListeManager.filtered().get(0).id);
+			const eintrag = (id !== undefined) ? this.data.fachListeManager.liste.get(id) : null;
+			await this.data.setEintrag(eintrag);
+			if (!this.data.fachListeManager.hasDaten()) {
+				if (id === undefined) {
+					const listFiltered = this.data.fachListeManager.filtered();
+					if (listFiltered.isEmpty())
+						return;
+					return this.getRoute(this.data.fachListeManager.filtered().get(0).id);
+				}
+				return this.getRoute();
 			}
-			return this.getRoute();
+			if (to.name === this.name)
+				return this.getChildRoute(this.data.fachListeManager.daten().id, from);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.fachListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {

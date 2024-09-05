@@ -73,10 +73,14 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		const abiturjahr = RouteNode.getIntParam(to_params, "abiturjahr");
-		if ((abiturjahr === undefined))
-			return routeGost.defaultChild!.getRoute(-1);
-		return true;
+		try {
+			const abiturjahr = RouteNode.getIntParam(to_params, "abiturjahr");
+			if ((abiturjahr === undefined))
+				return routeGost.defaultChild!.getRoute(-1);
+			return true;
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {

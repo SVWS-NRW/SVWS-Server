@@ -8,7 +8,9 @@ import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@
 
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
-import { type RouteData } from "./RouteData";
+import type { RouteData } from "./RouteData";
+
+type ValueOf<T> = T extends any[] ? T[number] : T[keyof T]
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -613,14 +615,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param params   die Parameter der Route
 	 * @param name     der Name des Parameters
 	 *
-	 * @returns der Integer-Wert, undefined oder ein Error
+	 * @returns der Integer-Wert, undefined
 	 */
-	protected static getIntParam(params: RouteParams, name: string) : number | undefined | Error {
+	protected static getIntParam(params: RouteParams, name: string) : number | undefined {
 		const value = params[name];
-		if ((value === undefined) || value.toString().trim().length === 0)
+		if (!value || (value.toString().trim().length === 0))
 			return undefined;
 		if (value instanceof Array)
-			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+			throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
 		return parseInt(value);
 	}
 

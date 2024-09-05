@@ -35,25 +35,20 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id === undefined) {
-			await this.data.ladeListe();
-		} else {
-			if (!this.data.vermerkartenManager.hasDaten())
-				await this.data.ladeListe();
-
+		try {
 			const idVermerkart = RouteNode.getIntParam(to_params, "id");
-
-			if (idVermerkart instanceof Error)
-				return routeError.getRoute(idVermerkart);
-
-			if (idVermerkart === undefined)
-				return routeError.getRoute(idVermerkart);
-
-			const eintrag = this.data.vermerkartenManager.liste.get(idVermerkart)
-
-			if (eintrag) {
-				return this.data.setEintrag(eintrag);
+			if (idVermerkart === undefined) {
+				await this.data.ladeListe();
+			} else {
+				if (!this.data.vermerkartenManager.hasDaten())
+					await this.data.ladeListe();
+				const eintrag = this.data.vermerkartenManager.liste.get(idVermerkart)
+				if (eintrag) {
+					return await this.data.setEintrag(eintrag);
+				}
 			}
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 
 		if ((to.name === this.name)) {
@@ -106,7 +101,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
 		const manager = this.data.vermerkartenManager;
-		const id = (manager.auswahlID === null) ? undefined : manager.auswahlID.toString();
+		const id = (manager.auswahlID() === null) ? undefined : manager.auswahlID.toString();
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id } });
 		this.data.setView(node, this.children);
 	}

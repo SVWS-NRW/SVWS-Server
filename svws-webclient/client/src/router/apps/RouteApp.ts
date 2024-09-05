@@ -89,22 +89,24 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.init();
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
-		if (idSchuljahresabschnitt === undefined)
-			return this.getRoute(this.data.aktAbschnitt.value.id);
-		// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
-		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-		// Prüfe, ob die View aktualisiert werden muss
-		let cur: RouteNode<any, any> = to;
-		while (cur.parent !== this)
-			cur = cur.parent;
-		if (cur !== this.data.view)
-			this.data.setView(cur, this.children);
+		try {
+			if (isEntering)
+				await this.data.init();
+			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
+			if (idSchuljahresabschnitt === undefined)
+				return this.getRoute(this.data.aktAbschnitt.value.id);
+			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
+			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			// Prüfe, ob die View aktualisiert werden muss
+			let cur: RouteNode<any, any> = to;
+			while (cur.parent !== this)
+				cur = cur.parent;
+			if (cur !== this.data.view)
+				this.data.setView(cur, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {

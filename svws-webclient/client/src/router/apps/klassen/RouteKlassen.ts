@@ -37,36 +37,34 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
+		try {
+			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			const idKlasse = RouteNode.getIntParam(to_params, "id");
+			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
+			const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if (neueIdKlasse && neueIdKlasse !== idKlasse)
+				return routeKlasseDaten.getRoute(neueIdKlasse);
 
-		const idKlasse = RouteNode.getIntParam(to_params, "id");
-		if (idKlasse instanceof Error)
-			return routeError.getRoute(idKlasse);
+			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
+			if (this.isGruppenprozessRoute(to) && idKlasse !== undefined)
+				return routeKlasseGruppenprozesse.getRoute();
 
-		// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
-		const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-		if (neueIdKlasse && neueIdKlasse !== idKlasse)
-			return routeKlasseDaten.getRoute(neueIdKlasse);
+			if (this.isGruppenprozessRoute(to))
+				await this.data.gotoGruppenprozess(false);
+			else
+				await this.data.gotoEintrag(idKlasse)
 
-		// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-		if (this.isGruppenprozessRoute(to) && idKlasse !== undefined)
-			return routeKlasseGruppenprozesse.getRoute();
-
-		if (this.isGruppenprozessRoute(to))
-			await this.data.gotoGruppenprozess(false);
-		else
-			await this.data.gotoEintrag(idKlasse)
-
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
+			if (to.name === this.name)
+				return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {

@@ -38,32 +38,32 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteA
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		const eintrag = (id !== undefined) ? this.data.raumListeManager.liste.get(id) : null;
-		this.data.setEintrag(eintrag);
-		if (!this.data.raumListeManager.hasDaten()) {
-			if (id === undefined) {
-				if (this.data.raumListeManager.filtered().isEmpty())
-					return;
-				return this.getRoute(this.data.raumListeManager.filtered().get(0).id);
+		try {
+			if (isEntering)
+				await this.data.ladeListe();
+			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			const id = RouteNode.getIntParam(to_params, "id");
+			const eintrag = (id !== undefined) ? this.data.raumListeManager.liste.get(id) : null;
+			this.data.setEintrag(eintrag);
+			if (!this.data.raumListeManager.hasDaten()) {
+				if (id === undefined) {
+					if (this.data.raumListeManager.filtered().isEmpty())
+						return;
+					return this.getRoute(this.data.raumListeManager.filtered().get(0).id);
+				}
+				return this.getRoute();
 			}
-			return this.getRoute();
+			if (to.name === this.name)
+				return this.getChildRoute(this.data.raumListeManager.daten().id, from);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.raumListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
 	}
 
 

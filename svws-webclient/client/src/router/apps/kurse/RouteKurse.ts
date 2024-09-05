@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { type KursDaten , BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -33,44 +33,44 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
-			const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (id !== undefined) {
-				if (neueID === null)
-					return this.getRoute();
-				const params = { ... to_params};
-				params.id = String(neueID);
-				const locationRaw : RouteLocationRaw = {};
-				locationRaw.name = to.name;
-				locationRaw.params = params;
-				return locationRaw;
+		try {
+			const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			const id = RouteNode.getIntParam(to_params, "id");
+			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
+				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+				if (id !== undefined) {
+					if (neueID === null)
+						return this.getRoute();
+					const params = { ... to_params};
+					params.id = String(neueID);
+					const locationRaw : RouteLocationRaw = {};
+					locationRaw.name = to.name;
+					locationRaw.params = params;
+					return locationRaw;
+				}
 			}
-		}
-		const eintrag = (id !== undefined) ? this.data.kursListeManager.liste.get(id) : null;
-		await this.data.setEintrag(eintrag);
-		if (!this.data.kursListeManager.hasDaten()) {
-			if (id === undefined) {
-				const listFiltered = this.data.kursListeManager.filtered();
-				if (listFiltered.isEmpty())
-					return;
-				return this.getChildRoute(listFiltered.get(0).id, from);
+			const eintrag = (id !== undefined) ? this.data.kursListeManager.liste.get(id) : null;
+			await this.data.setEintrag(eintrag);
+			if (!this.data.kursListeManager.hasDaten()) {
+				if (id === undefined) {
+					const listFiltered = this.data.kursListeManager.filtered();
+					if (listFiltered.isEmpty())
+						return;
+					return this.getChildRoute(listFiltered.get(0).id, from);
+				}
+				return this.getRoute();
 			}
-			return this.getRoute();
+			if (to.name === this.name)
+				return this.getChildRoute(this.data.kursListeManager.daten().id, from);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.kursListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {

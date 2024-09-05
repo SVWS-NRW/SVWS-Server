@@ -1,5 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
+import type { DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
@@ -22,13 +23,15 @@ export class RouteLehrerPersonaldaten extends RouteNode<any, RouteLehrer> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (!routeLehrer.data.lehrerListeManager.hasDaten())
-			return routeLehrer.getRoute();
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (id !== routeLehrer.data.lehrerListeManager.personalDaten().id))
-			await routeLehrer.data.loadPersonaldaten();
+		try {
+			if (!routeLehrer.data.lehrerListeManager.hasDaten())
+				return routeLehrer.getRoute();
+			const id = RouteNode.getIntParam(to_params, "id");
+			if ((!routeLehrer.data.lehrerListeManager.hasPersonalDaten()) || (id !== routeLehrer.data.lehrerListeManager.personalDaten().id))
+				await routeLehrer.data.loadPersonaldaten();
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
