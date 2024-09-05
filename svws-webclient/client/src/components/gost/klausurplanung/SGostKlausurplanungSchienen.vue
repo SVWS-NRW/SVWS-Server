@@ -30,7 +30,7 @@
 
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
-			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+			<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
 				<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">

@@ -63,7 +63,7 @@
 	<div class="page--content page--content--full relative">
 		<div class="content-card h-full flex flex-col">
 			<div class="content-card--headline mb-4">In Planung</div>
-			<div class="content-card--content flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+			<div class="content-card--content flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
 				<s-gost-klausurplanung-schuelerklausur-table :k-man
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
 					:on-drag

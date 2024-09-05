@@ -12,7 +12,8 @@
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 						@drop="onDrop(undefined)"
 						@dragover="checkDropZoneTerminAuswahl"
-						class="h-full">
+						class="h-full"
+						:class="[(terminSelected.value !== undefined && terminSelected.value.datum !== null) ? 'p-4 border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
 						<div>
 							<div class="leading-tight flex flex-col gap-0.5" v-if="kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).isEmpty()">
 								<span>Aktuell keine Klausuren zu planen.</span>
