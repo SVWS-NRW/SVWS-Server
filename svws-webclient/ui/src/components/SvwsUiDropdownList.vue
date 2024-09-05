@@ -1,6 +1,6 @@
 <template>
 	<div class="svws-ui-dropdown-list" id="svws-ui-dropdown-list-id"
-		:class="{'svws-statistik': statistics, 'svws-type-tags': tags}"
+		:class="{'svws-statistik': statistics}"
 		:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 		ref="floating">
 		<ul :id="listIdPrefix"
@@ -42,16 +42,15 @@
 
 	import type { Strategy } from "@floating-ui/vue";
 	import type { Ref, ShallowRef } from "vue";
-	import { ref, shallowRef, toRef, computed } from "vue";
+	import { ref, shallowRef, computed } from "vue";
 	import { genId } from "../utils";
 
 	const props = withDefaults(defineProps<{
 		statistics?: boolean;
 		selectedItemList?: Set<Item>;
-		tags?: boolean;
 		filteredList: Item[] | Iterable<Item>;
 		itemText?: (item: Item) => string;
-		selectItem?: (item: Item | null | undefined) => void;
+		selectItem?: (item: Item) => void;
 		strategy: Strategy;
 		floatingLeft: string;
 		floatingTop: string;
@@ -59,16 +58,14 @@
 		highlightItem?: Item;
 	}>(),{
 		statistics: false,
-		tags: false,
 		itemText: (item: Item) => "",
-		selectItem: (item: Item | undefined | null) => undefined,
+		selectItem: (item: Item) => undefined,
 		searchText: "",
 		selectedItemList: () => new Set<Item>(),
 		highlightItem: undefined,
 	})
 
 	const floating = ref(null);
-	const tags = toRef(props, 'tags');
 
 	const listIdPrefix = genId();
 
@@ -76,8 +73,6 @@
 	const activeItemIndex = ref(-1);
 
 	const listEmpty = computed(()=> {
-		if (props.filteredList === undefined)
-			return true;
 		for (const _ of props.filteredList)
 			return false;
 		return true;

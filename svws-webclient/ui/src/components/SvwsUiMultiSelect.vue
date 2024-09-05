@@ -13,9 +13,9 @@
 				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
 				:readonly="!autocomplete"
 				:placeholder="label || title"
-				:statistics="statistics"
-				:headless="headless"
-				:disabled="disabled"
+				:statistics
+				:headless
+				:disabled
 				:debounce-ms="0"
 				role="combobox"
 				:aria-label="label || title"
@@ -44,9 +44,7 @@
 		</button>
 	</div>
 	<Teleport to="body">
-		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :tags="true" :filtered-list="filteredList" :item-text="itemText"
-			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
-			:select-item="selectItem" ref="refList" />
+		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list :select-item ref="refList" />
 	</Teleport>
 </template>
 
