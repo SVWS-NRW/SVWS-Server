@@ -1,5 +1,5 @@
 <template>
-	<label class="input-number-component"
+	<div class="input-number-component"
 		:class="{
 			'input-number--filled': (data !== null) && (data !== undefined),
 			'input-number--invalid': (isValid === false),
@@ -11,7 +11,8 @@
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
-		<input ref="input"
+		<label :for="id" />
+		<input ref="input" :name="id"
 			v-focus
 			:class="{
 				'input-number--control': !headless,
@@ -53,13 +54,14 @@
 			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><span class="icon i-ri-subtract-line inline-block" /></button>
 			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
-	</label>
+
+	</div>
 </template>
 
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, type ComputedRef, type Ref } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, useId } from "vue";
 	import { genId } from "../utils";
 
 	defineOptions({
@@ -67,6 +69,7 @@
 	});
 
 	const input = ref<null | HTMLInputElement>(null);
+	const id = useId();
 
 	const props = withDefaults(defineProps<{
 		modelValue: number | null;
@@ -176,7 +179,7 @@
 	.input-number-component {
 		@apply flex;
 		@apply relative;
-		@apply w-full;
+		@apply w-full min-w-16;
 		@apply overflow-hidden whitespace-nowrap text-base;
 
 		input::placeholder {
