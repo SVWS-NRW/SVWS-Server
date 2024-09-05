@@ -15,7 +15,6 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 	public constructor() {
 		super(Schulform.values(), [
 			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
-			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN
 		], "stundenplan.daten", "daten", SStundenplanDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
