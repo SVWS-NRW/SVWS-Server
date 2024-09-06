@@ -52,20 +52,21 @@
 							<div class="font-bold px-2 py-1" :class="{'bg-svws/20': lehrerAufsichten.get(pause.id)}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center text-center w-full h-full">
+							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht font-bold h-full justify-start" :style="`grid-template-columns: minmax(min-content, 0.5fr) minmax(min-content, 0.5fr) repeat(${wochentypen.size()-1}, minmax(min-content, 1fr))`">
 								<div>Bereich</div>
-								<div v-for="typ in wochentypen" :key="typ" class="w-full h-full rounded-sm" :class="{'bg-success/20': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
+								<div v-for="typ in wochentypen" :key="typ" class="h-full rounded-sm pl-5" :class="{'bg-success/20': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
 									{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}
 								</div>
 							</div>
-							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht"
 								:class="{
 									'bg-svws/20': !isDraggingOver(pause.id, aufsichtsbereich.id).value && mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
 									'bg-error/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt(pause.id, aufsichtsbereich.id).value,
-									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}">
+									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}"
+								:style="`grid-template-columns: minmax(min-content, 0.5fr) minmax(min-content, 0.5fr) repeat(${wochentypen.size()-1}, minmax(min-content, 1fr))`">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
-									@drop.stop="onDrop" class="w-full h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
+									@drop.stop="onDrop" class="h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
 									:class="{'bg-success/20': mapAufsichtBereichTyp.getOrNull(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id, typ)}">
 									<div v-for="lehrer in stundenplanManager().lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(pause.id, aufsichtsbereich.id, typ, false)"
 										:key="lehrer.id" class="rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer && hatUpdateKompetenz, 'hover:bg-slate-100': hatUpdateKompetenz}"
@@ -279,7 +280,7 @@
 		@apply grid auto-cols-fr border-none pt-0;
 		grid-template-columns: initial;
 		.svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pausen-aufsicht {
-			@apply gap-0
+			@apply gap-0;
 		}
 	}
 
