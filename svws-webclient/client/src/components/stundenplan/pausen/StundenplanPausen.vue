@@ -19,7 +19,15 @@
 								@dragstart="onDrag(lehrer)" @dragend="dragEnd" draggable="true">
 								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 								<span class="truncate grow p-1"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
-								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}/{{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}</span>
+								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()">
+									<svws-ui-tooltip>
+										{{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}/{{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}
+										<template #content>
+											Gesamtdauer der Aufsichten in Minuten: {{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}
+											<br>Anzahl der Aufsichten: {{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}
+										</template>
+									</svws-ui-tooltip>
+								</span>
 							</div>
 						</div>
 					</div>
