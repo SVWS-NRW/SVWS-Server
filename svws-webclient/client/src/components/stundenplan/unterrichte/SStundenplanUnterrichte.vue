@@ -13,7 +13,7 @@
 				</template>
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
-						<div class="svws-ui-td svws-divider svws-align-center cursor-pointer" role="columnheader" @click="filterReset(true)"><span class="icon-sm i-ri-arrow-go-back-line inline-block w-full" /></div>
+						<div class="svws-ui-td svws-divider svws-align-center cursor-pointer" role="columnheader" @click="filterReset(false)"><span class="icon-sm i-ri-arrow-go-back-line inline-block w-full" /></div>
 						<div v-for="wochentag in stundenplanManager().zeitrasterGetWochentageAlsEnumRange()" :key="wochentag.id" class="svws-ui-td cursor-pointer svws-divider svws-align-center" role="columnheader"
 							@click="filterWochentag(wochentag)"
 							:class="{ 'svws-selected bg-success/20': (stundenplanUnterrichtListeManager().wochentage.auswahlHas(wochentag)) }">
@@ -168,14 +168,14 @@
 			|| props.stundenplanUnterrichtListeManager().raeume.auswahlExists()
 			|| props.stundenplanUnterrichtListeManager().schienen.auswahlExists()
 			|| props.stundenplanUnterrichtListeManager().schueler.auswahlExists()
-			|| props.stundenplanUnterrichtListeManager().wochentypen.auswahlExists();
-		// || props.stundenplanUnterrichtListeManager().wochentage.auswahlExists()
-		// || props.stundenplanUnterrichtListeManager().stunden.auswahlExists()
-		// || props.stundenplanUnterrichtListeManager().zeitraster.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().wochentypen.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().wochentage.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().stunden.auswahlExists()
+			|| props.stundenplanUnterrichtListeManager().zeitraster.auswahlExists();
 	})
 
-	async function filterReset(table?: true) {
-		if (!table) {
+	async function filterReset(table = true) {
+		if (table) {
 			props.stundenplanUnterrichtListeManager().klassen.auswahlClear();
 			props.stundenplanUnterrichtListeManager().faecher.auswahlClear();
 			props.stundenplanUnterrichtListeManager().kurse.auswahlClear();
