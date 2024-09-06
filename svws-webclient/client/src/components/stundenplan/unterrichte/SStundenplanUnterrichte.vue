@@ -147,13 +147,13 @@
 	})
 
 	const columns = [
-		{key: 'idZeitraster', label: 'Stunde'},
-		...(wochentyprange.value.length > 1 ? [{key: 'wochentyp', label: 'Wochentyp'}] : []),
-		{key: 'idKurs', label: 'Kurs oder Fach', span: 2},
-		{key: 'lehrer', label: 'Lehrer'},
-		{key: 'klassen', label: 'Klassen'},
-		{key: 'raeume', label: 'Räume'},
-		{key: 'schienen', label: 'Schienen'}
+		{key: 'idZeitraster', label: 'Stunde', sortable: true},
+		...(wochentyprange.value.length > 1 ? [{key: 'wochentyp', label: 'Wochentyp', sortable: true}] : []),
+		{key: 'idKurs', label: 'Kurs oder Fach', span: 2, sortable: true},
+		{key: 'lehrer', label: 'Lehrer', sortable: true},
+		{key: 'klassen', label: 'Klassen', sortable: true},
+		{key: 'raeume', label: 'Räume', sortable: true},
+		{key: 'schienen', label: 'Schienen', sortable: true}
 	];
 
 	function getBgColor(kuerzel: string | null) {
