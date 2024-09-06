@@ -410,16 +410,8 @@
 					zende = z.stundenende;
 			}
 		}
-		let rowStart = 0;
-		let rowEnd = 10;
-		if ((zbeginn !== null) && (zende !== null)) {
-			rowStart = (zbeginn - beginn.value) / props.zeitrasterSteps;
-			rowEnd = (zende - beginn.value) / props.zeitrasterSteps;
-		}
-		if (props.hideZeitachse) {
-			rowStart = stunde - 1;
-			rowEnd = stunde;
-		}
+		const rowStart = props.hideZeitachse ? (stunde -1) : (zbeginn - beginn.value) / props.zeitrasterSteps;
+		const rowEnd = props.hideZeitachse ? stunde : (zende - beginn.value) / props.zeitrasterSteps;
 
 		return "grid-row-start: " + (Math.round(rowStart) + 1) + "; grid-row-end: " + (Math.round(rowEnd) + 1) + "; grid-column: 1;";
 	}
