@@ -29,7 +29,7 @@
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
-	const wochentage = ref<Wochentag[]>([Wochentag.MONTAG]);
+	const wochentage = ref<Wochentag[]>(props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
 	const klassen = ref<number[]>([]);
 
 	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });
