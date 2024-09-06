@@ -132,6 +132,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 	}
 
 	private setTab = async (value: AuswahlChildData) => {
+		this.data.autofocus = true;
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
@@ -139,6 +140,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.schuelerListeManager.auswahlID() ?? undefined } });
 		this.data.setView(node, this.children);
+		this.data.autofocus = false;
 	}
 
 }

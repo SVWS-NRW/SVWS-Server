@@ -6,4 +6,5 @@ export interface SchuelerSchulbesuchProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	data: SchuelerSchulbesuchsdaten;
 	patch: (data : Partial<SchuelerSchulbesuchsdaten>) => Promise<void>;
+	autofocus: boolean;
 }

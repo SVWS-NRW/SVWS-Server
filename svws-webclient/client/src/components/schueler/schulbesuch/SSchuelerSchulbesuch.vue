@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Vor der Aufnahme besucht">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Name der Schule" :model-value="data.vorigeSchulnummer" @change="vorigeSchulnummer=>patch({ vorigeSchulnummer })" type="text" />
+				<svws-ui-text-input v-autofocus placeholder="Name der Schule" :model-value="data.vorigeSchulnummer" @change="vorigeSchulnummer=>patch({ vorigeSchulnummer })" type="text" />
 				<svws-ui-text-input placeholder="allgemeine Herkunft" :model-value="data.vorigeAllgHerkunft" @change="vorigeAllgHerkunft=>patch({ vorigeAllgHerkunft })" type="text" />
 				<svws-ui-text-input placeholder="Entlassen am" :model-value="data.vorigeEntlassdatum" @change="vorigeEntlassdatum=>patch({ vorigeEntlassdatum })" type="date" />
 				<svws-ui-text-input placeholder="Entlassjahrgang" :model-value="data.vorigeEntlassjahrgang" @change="vorigeEntlassjahrgang=>patch({ vorigeEntlassjahrgang })" type="text" />

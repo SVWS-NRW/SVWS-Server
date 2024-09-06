@@ -2,7 +2,7 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Nachname" :disabled="!hatKompetenzUpdate" :model-value="data.nachname" @change="nachname => patch({ nachname })" type="text" />
+				<svws-ui-text-input v-autofocus placeholder="Nachname" :disabled="!hatKompetenzUpdate" :model-value="data.nachname" @change="nachname => patch({ nachname })" type="text" />
 				<svws-ui-text-input placeholder="Rufname" :disabled="!hatKompetenzUpdate" :model-value="data.vorname" @change="vorname => patch({ vorname })" type="text" />
 				<svws-ui-text-input placeholder="Alle Vornamen" :disabled="!hatKompetenzUpdate" :model-value="data.alleVornamen" @change="alleVornamen => patch({ alleVornamen })" type="text" />
 				<svws-ui-spacing />

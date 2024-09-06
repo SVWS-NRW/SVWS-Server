@@ -17,6 +17,14 @@ app.mixin({
 		}
 	}
 });
+
+app.directive('autofocus', {
+	mounted: (el: HTMLInputElement, binding) => {
+		if (binding.instance?.$props.autofocus)
+			el.focus();
+	}
+});
+
 router.isReady()
 	.then(() => app.mount("#app"))
-	.catch(e => { throw e });
+	.catch((e: unknown) => { throw e });

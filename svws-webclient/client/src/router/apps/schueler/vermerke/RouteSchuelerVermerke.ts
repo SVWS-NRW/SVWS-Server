@@ -52,6 +52,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			add: this.data.add,
 			remove: this.data.remove,
 			apiStatus: api.status,
+			autofocus: routeSchueler.data.autofocus
 		};
 	}
 

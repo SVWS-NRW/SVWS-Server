@@ -4,7 +4,7 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
+import { routeSchueler, type RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { RouteDataSchuelerSchulbesuch } from "~/router/apps/schueler/schulbesuch/RouteDataSchuelerSchulbesuch";
 
 import type { SchuelerSchulbesuchProps } from "~/components/schueler/schulbesuch/SSchuelerSchulbesuchProps";
@@ -41,7 +41,8 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			data: this.data.daten,
-			patch: this.data.patch
+			patch: this.data.patch,
+			autofocus: routeSchueler.data.autofocus
 		};
 	}
 
