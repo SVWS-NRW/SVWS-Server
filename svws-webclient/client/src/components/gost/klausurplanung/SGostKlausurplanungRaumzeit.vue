@@ -116,22 +116,23 @@
 	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
+		const data = dragData.value;
 		if (zone instanceof GostKlausurraum) {
 			const rRaum = new GostKlausurraumRich(zone, null);
-			if (dragData.value instanceof GostKursklausur)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.kMan().terminGetByIdOrException(zone.idTermin), dragData.value));
-			else if (dragData.value instanceof GostKlausurtermin && props.terminSelected.value)
+			if (data instanceof GostKursklausur && data.idTermin !== null)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.kMan().terminGetByIdOrException(data.idTermin), data));
+			else if (data instanceof GostKlausurtermin && props.terminSelected.value)
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value));
-			else if (dragData.value instanceof GostSchuelerklausurTermin)
-				rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+			else if (data instanceof GostSchuelerklausurTermin)
+				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
 			if (!rRaum.schuelerklausurterminIDs.isEmpty())
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), false);
 		} else if (zone instanceof GostKlausurtermin) {
 			const rRaum = new GostKlausurraumRich();
-			if (dragData.value instanceof GostKursklausur && props.terminSelected.value)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, dragData.value));
-			else if (dragData.value instanceof GostSchuelerklausurTermin)
-				rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+			if (data instanceof GostKursklausur && props.terminSelected.value)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, data));
+			else if (data instanceof GostSchuelerklausurTermin)
+				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
 			if (!rRaum.schuelerklausurterminIDs.isEmpty())
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), true);
 		}
