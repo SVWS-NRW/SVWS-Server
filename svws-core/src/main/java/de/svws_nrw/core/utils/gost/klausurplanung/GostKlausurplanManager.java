@@ -317,13 +317,7 @@ public class GostKlausurplanManager {
 	 * @param listSchuelerklausuren die Liste der {@link GostSchuelerklausur}en
 	 * @param listSchuelerklausurtermine die Liste der {@link GostSchuelerklausurTermin}e
 	 */
-<<<<<<< Upstream, based on dev
 	public GostKlausurplanManager(final int schuljahr, final @NotNull List<GostKlausurvorgabe> listVorgaben, final @NotNull List<GostKursklausur> listKlausuren,
-=======
-	public GostKlausurplanManager(
-			final @NotNull List<GostKlausurvorgabe> listVorgaben,
-			final @NotNull List<GostKursklausur> listKlausuren,
->>>>>>> 4e0a7c0 Verschieben von Terminen, die Teil einer jahrgangsübergreifenden Planung sind
 			final @NotNull List<GostKlausurtermin> listTermine,
 			final @NotNull List<GostSchuelerklausur> listSchuelerklausuren,
 			final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {

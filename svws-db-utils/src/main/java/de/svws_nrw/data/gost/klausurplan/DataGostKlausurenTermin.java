@@ -26,6 +26,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -315,7 +316,8 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(terminIDs);
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(skts);
 		final List<GostKursklausur> kks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(sks);
-		final GostKlausurplanManager manager = new GostKlausurplanManager(
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, _idSchuljahresAbschnitt);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.Jahr,
 				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kks),
 				kks,
 				termine,
