@@ -107,6 +107,8 @@ public final class ReportingFactory {
 	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das Dokument oder die ZIP-Datei.
 	 *     Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 *
+	 * @throws ApiOperationException	Im Fehlerfall
 	 */
 	public Response createReportResponse() throws ApiOperationException {
 

@@ -66,6 +66,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 		reportingSchueler.sort(Comparator.comparing(ReportingSchueler::nachname, colGerman)
 				.thenComparing(ReportingSchueler::vorname, colGerman)
+				.thenComparing(ReportingSchueler::vornamen, colGerman)
 				.thenComparing(ReportingSchueler::id));
 
 		schueler = new ArrayList<>();
@@ -108,6 +109,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 		final List<SchuelerStammdaten> sortierteSchueler = mapSchueler.values().stream()
 				.sorted(Comparator.comparing((final SchuelerStammdaten s) -> s.nachname, colGerman)
 						.thenComparing((final SchuelerStammdaten s) -> s.vorname, colGerman)
+						.thenComparing((final SchuelerStammdaten s) -> s.alleVornamen, colGerman)
 						.thenComparing((final SchuelerStammdaten s) -> s.id))
 				.toList();
 		final List<Long> sortierteSchuelerIDs = sortierteSchueler.stream().map(s -> s.id).toList();
@@ -123,23 +125,13 @@ public final class HtmlContextSchueler extends HtmlContext {
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();
 		context.setVariable("Schueler", schueler);
-		context.setVariable("Parameter", reportingRepository.reportingParameter());
 
 		super.setContext(context);
 	}
 
-	/**
-	 * Eine interne Liste des Contexts mit den Daten der Schüler.
-	 *
-	 * @return	Liste mit den Daten Schüler.
-	 */
-	public List<ReportingSchueler> getSchueler() {
-		return schueler;
-	}
-
 
 	/**
-	 * Teil diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
+	 * Teile diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten.
 	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */

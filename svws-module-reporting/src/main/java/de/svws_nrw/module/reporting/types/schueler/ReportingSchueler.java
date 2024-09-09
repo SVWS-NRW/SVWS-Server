@@ -7,6 +7,7 @@ import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
@@ -87,11 +88,14 @@ public class ReportingSchueler {
 	/** Daten der Abiturdaten der GOSt. */
 	protected ReportingSchuelerGostAbitur gostAbitur = null;
 
-	/** Daten der GOSt-Laufbahnplanung. */
-	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
+	/** Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert. */
+	protected List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren;
 
 	/** Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert. */
 	protected List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen;
+
+	/** Daten der GOSt-Laufbahnplanung. */
+	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
 
 	/** Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers. */
 	protected Long haltestelleID;
@@ -209,6 +213,7 @@ public class ReportingSchueler {
 	 * @param geburtsort Der Geburtsort des Schülers.
 	 * @param geschlecht Das Geschlecht des Schülers.
 	 * @param gostAbitur Daten der Abiturdaten der GOSt.
+	 * @param gostKlausurplanungSchuelerklausuren Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
 	 * @param gostKursplanungKursbelegungen Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
 	 * @param gostLaufbahnplanung Daten der GOSt-Laufbahnplanung.
 	 * @param haltestelleID Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers.
@@ -248,7 +253,8 @@ public class ReportingSchueler {
 			final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr,
 			final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter,
 			final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
-			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
+			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
+			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
 			final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id,
 			final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig,
@@ -278,6 +284,7 @@ public class ReportingSchueler {
 		this.geburtsort = geburtsort;
 		this.geschlecht = geschlecht;
 		this.gostAbitur = gostAbitur;
+		this.gostKlausurplanungSchuelerklausuren = gostKlausurplanungSchuelerklausuren;
 		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
 		this.gostLaufbahnplanung = gostLaufbahnplanung;
 		this.haltestelleID = haltestelleID;
@@ -481,7 +488,7 @@ public class ReportingSchueler {
 	 * Die Abiturdaten der GOSt.
 	 * @return Inhalt des Feldes gostAbitur
 	 */
-	public ReportingSchuelerGostAbitur gostAbitur()  {
+	public ReportingSchuelerGostAbitur gostAbitur() {
 		return gostAbitur;
 	}
 
@@ -491,6 +498,14 @@ public class ReportingSchueler {
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		return gostLaufbahnplanung;
+	}
+
+	/**
+	 * Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
+	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren() {
+		return gostKlausurplanungSchuelerklausuren;
 	}
 
 	/**

@@ -17,7 +17,7 @@
 		<table class="fixed-layout-100 no-space-pad">
 			<thead>
 				<tr>
-					<td class="bob-grey"><h2 th:text="'Kursplanung ' + ${Blockungsergebnis.gostHalbjahr().kuerzel} + ' - Übersicht der Kurse mit statistischen Werten'">Kursplanung Q2.1 - Übersicht der Kurse mit statistischen Werten</h2></td>
+					<td class="bob-grey"><h2 th:text="'Kursplanung ' + ${GostBlockungsergebnis.gostHalbjahr().kuerzel} + ' - Übersicht der Kurse mit statistischen Werten'">Kursplanung Q2.1 - Übersicht der Kurse mit statistischen Werten</h2></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -60,7 +60,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(Parameter.idsDetaildaten)}" th:classappend="${itStatKurs.odd} ? 'bg-lightgrey'">
+				<tr th:each="Kurs,itStatKurs : ${GostBlockungsergebnis.kurseGefiltert(Parameter.idsDetaildaten)}" th:classappend="${itStatKurs.odd} ? 'bg-lightgrey'">
 					<td class="bob-grey pad-1001 small tc-grey" th:text="${#numbers.formatInteger(itStatKurs.count,2)} + '.'">Nr.</td>
 					<td class="bob-grey pad-1001 ta-l" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
 					<td class="bob-grey pad-1001 ta-l" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>

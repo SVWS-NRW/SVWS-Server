@@ -102,17 +102,17 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * @return Die Liste der Kurse, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
-	public List<ReportingGostKursplanungKurs> getKurseGefiltert(final List<Long> idsKurseFilter) {
+	public List<ReportingGostKursplanungKurs> kurseGefiltert(final List<Long> idsKurseFilter) {
 		return kurse.stream().filter(k -> idsKurseFilter.contains(k.id())).toList();
 	}
 
 	/**
-	 * Gibt eine Liste mit Kursen zurück, deren IDs in der Filterliste enthalten sind.
+	 * Gibt eine Liste mit Schülern zurück, deren IDs in der Filterliste enthalten sind.
 	 * @param idsSchuelerFilter Die IDs der Schüler, die zurückgegebenen werden sollen.
 	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
-	public List<ReportingSchueler> getSchuelerFiltert(final List<Long> idsSchuelerFilter) {
+	public List<ReportingSchueler> schuelerGefiltert(final List<Long> idsSchuelerFilter) {
 		return schueler.stream().filter(s -> idsSchuelerFilter.contains(s.id())).toList();
 	}
 

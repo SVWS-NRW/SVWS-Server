@@ -84,6 +84,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
 				null,
 				new ArrayList<>(),
+				new ArrayList<>(),
 				null,
 				schuelerStammdaten.haltestelleID,
 				schuelerStammdaten.hatMasernimpfnachweis,

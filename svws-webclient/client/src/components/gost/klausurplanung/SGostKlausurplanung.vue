@@ -23,9 +23,13 @@
 		{ text: "Klausurplan (Kurse)", action: () => downloadPDF("Klausurplan (Kurse)")},
 		{ text: "Klausurplan (Kurse und Nachschreiber)", action: () => downloadPDF("Klausurplan (Kurse und Nachschreiber)") },
 		{ text: "Klausurplan (detailliert)", action: () => downloadPDF("Klausurplan (detailliert)"), default: true },
+		{ text: "Schüler-Klausurplan (gesamt)", action: () => downloadPDF("Schüler-Klausurplan (gesamt)") },
+		{ text: "Schüler-Klausurplan (einzeln)", action: () => downloadPDF("Schüler-Klausurplan (einzeln)") },
 		{ text: "Klausurplan alle Jgst. (Kurse)", action: () => downloadPDF("Klausurplan alle Jgst. (Kurse)") },
 		{ text: "Klausurplan alle Jgst. (Kurse und Nachschreiber)", action: () => downloadPDF("Klausurplan alle Jgst. (Kurse und Nachschreiber)") },
 		{ text: "Klausurplan alle Jgst. (detailliert)", action: () => downloadPDF("Klausurplan alle Jgst. (detailliert)") },
+		{ text: "Schüler-Klausurplan alle Jgst. (gesamt)", action: () => downloadPDF("Schüler-Klausurplan alle Jgst. (gesamt)") },
+		{ text: "Schüler-Klausurplan alle Jgst. (einzeln)", action: () => downloadPDF("Schüler-Klausurplan alle Jgst. (einzeln)") },
 	];
 
 	async function downloadPDF(title: DownloadPDFTypen) {

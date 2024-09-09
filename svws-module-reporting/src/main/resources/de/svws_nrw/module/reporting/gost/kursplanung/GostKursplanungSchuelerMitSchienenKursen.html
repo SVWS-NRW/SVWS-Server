@@ -9,19 +9,19 @@
 	<body>
 		<div th:switch="${Parameter.idsDetaildaten.size()}">
 			<div th:case="0">
-				<div th:with="zeigeExtDummy = ${(Blockungsergebnis.anzahlExterne() > 0 || Blockungsergebnis.anzahlDummy() > 0)}">
+				<div th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}">
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Blockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${Blockungsergebnis.gostHalbjahr()}">Q1.2</span><br/>Gesamt: <span th:text="${Blockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${Blockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${Blockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr()}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
 					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-					<div class="pageBottomCenter" th:text="${Blockungsergebnis.bezeichnung() + ' (Erg-ID ' + Blockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
+					<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
 					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
 					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
 					<table class="fixed-layout-100 no-space-pad">
 						<tr>
-							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + Blockungsergebnis.abiturjahr() + ' - ' + Blockungsergebnis.gostHalbjahr()}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></td>
+							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr()}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></td>
 						</tr>
 						<tr style="height: 3px;">
 							<td></td>
@@ -31,8 +31,8 @@
 					<!--Definiere eine Tabelle mit der Kurse-Schienen-Zuordnung. Um ein lesbares Layout zu erhalten definiere zwei Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
 					<table class="fixed-layout-100 no-space-pad"
 						th:with="
-							maxKurse = ${Blockungsergebnis.anzahlMaxKurseProSchiene()},
-							anzSchienen = ${Blockungsergebnis.schienen().size()},
+							maxKurse = ${GostBlockungsergebnis.anzahlMaxKurseProSchiene()},
+							anzSchienen = ${GostBlockungsergebnis.schienen().size()},
 							spaltenzahl = ${maxKurse <= 9 ? 9 : maxKurse},
 							spaltenbreite = ${100/(spaltenzahl + 1)},
 							schriftgroesse = ${(anzSchienen <= 13 && spaltenzahl <= 11) ? '7.5pt' : '6.5pt'}
@@ -40,7 +40,7 @@
 						<colgroup>
 							<col th:each="i : ${#numbers.sequence(0, spaltenzahl)}" th:style="${'width: ' + spaltenbreite + ';'}" />
 						</colgroup>
-						<tr th:each="Schiene : ${Blockungsergebnis.schienen()}">
+						<tr th:each="Schiene : ${GostBlockungsergebnis.schienen()}">
 							<td class="bo-grey" th:style="${Schiene.hatKollisionen() ? 'background-color: red;' : 'background-color: white;'}">
 								<p class="no-mt f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
 								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne() + ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
@@ -61,14 +61,14 @@
 			</div>
 			<div th:case="*">
 				<div class="start-new-page"
-					th:with="zeigeExtDummy = ${(Blockungsergebnis.anzahlExterne() > 0 || Blockungsergebnis.anzahlDummy() > 0)}"
-					th:each="schueler,iterStatSchueler : ${Blockungsergebnis.getSchuelerFiltert(Parameter.idsDetaildaten)}">
+					th:with="zeigeExtDummy = ${(GostBlockungsergebnis.anzahlExterne() > 0 || GostBlockungsergebnis.anzahlDummy() > 0)}"
+					th:each="schueler,iterStatSchueler : ${GostBlockungsergebnis.schuelerGefiltert(Parameter.idsDetaildaten)}">
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${Blockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${Blockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${Blockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${Blockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${Blockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
 					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-					<div class="pageBottomCenter" th:text="${Blockungsergebnis.bezeichnung() + ' (Erg-ID ' + Blockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
+					<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
 					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
 					<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
@@ -84,8 +84,8 @@
 					<!--Definiere pro Schüler eine Tabelle mit der Kurse-Schienen-Zuordnung. Um ein ruhigeres und lesbares Layout zu erhalten definiere zwei Standard-Spalten-Anzahlen und die passende Schriftgrößen. -->
 					<table class="fixed-layout-100 no-space-pad"
 						th:with="
-							maxKurse = ${Blockungsergebnis.anzahlMaxKurseProSchiene()},
-							anzSchienen = ${Blockungsergebnis.schienen().size()},
+							maxKurse = ${GostBlockungsergebnis.anzahlMaxKurseProSchiene()},
+							anzSchienen = ${GostBlockungsergebnis.schienen().size()},
 							spaltenzahl = ${maxKurse <= 9 ? 9 : maxKurse},
 							spaltenbreite = ${100/(spaltenzahl + 1)},
 							schriftgroesse = ${(anzSchienen <= 13 && spaltenzahl <= 11) ? '7.5pt' : '6.5pt'}
@@ -93,7 +93,7 @@
 						<colgroup>
 							<col th:each="i : ${#numbers.sequence(0, spaltenzahl)}" th:style="${'width: ' + spaltenbreite + ';'}" />
 						</colgroup>
-						<tr th:each="Schiene : ${Blockungsergebnis.schienen()}">
+						<tr th:each="Schiene : ${GostBlockungsergebnis.schienen()}">
 							<td class="bo-grey" th:style="${#lists.contains(Schiene.idsSchuelerMitKollisionen(), schueler.id()) ? 'background-color: red;' : 'background-color: white;'}">
 								<p class="f-bold" th:style="${'font-size: ' + schriftgroesse + ';'}" th:text="${Schiene.bezeichnung()}">Schiene 1</p>
 								<p class="no-mt" style="font-size: 6pt;" th:utext="${Schiene.kurse().size() + (Schiene.kurse().size() == 1 ? ' Kurs' : ' Kurse' ) + '<br/>' + Schiene.anzahlSchueler() + ' S.' + (zeigeExtDummy ? ' (' + Schiene.anzahlExterne()+ ',' + Schiene.anzahlDummy() + ')' : '')}">5 Kurse<br/>98 S. (2,5)</p>
@@ -105,7 +105,7 @@
 								<p th:if="${!istBelegt}" class="no-mt" style="font-size: 6pt;" th:text="${Kurs.gostKursart().kuerzel}">GK</p>
 								<div th:if="${istBelegt}" th:each="Kursbelegung : ${schueler.gostKursplanungKursbelegungen()}">
 									<p th:if="${Kursbelegung.kurs().id() == Kurs.id()}" class="no-mt" style="font-size: 6pt;"
-										th:utext="${Kurs.gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
+										th:utext="${Kurs.gostKursart().kuerzel + '-' + (Kursbelegung.istSchriftlich() ? 's' : 'm') + ((Kursbelegung.abiturfach() == null || Kursbelegung.abiturfach().isEmpty() || #strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0))) ? '' : ' Abifach ' + Kursbelegung.abiturfach())}">
 										GK-s Abifach 3
 									</p>
 								</div>

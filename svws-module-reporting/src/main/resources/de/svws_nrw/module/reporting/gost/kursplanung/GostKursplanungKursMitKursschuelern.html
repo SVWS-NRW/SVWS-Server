@@ -7,7 +7,7 @@
 	</head>
 
 	<body>
-		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(Parameter.idsDetaildaten)}">
+		<div class="start-new-page" th:each="Kurs,itStatKurs : ${GostBlockungsergebnis.kurseGefiltert(Parameter.idsDetaildaten)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
 			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung()} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefteAuflistung()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
@@ -105,7 +105,7 @@
 						<td class="bob-grey pad-1001" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
 						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
 						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
+						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
 						<td class="bob-grey pad-1001 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
 						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
 					</tr>

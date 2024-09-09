@@ -128,7 +128,7 @@ public class HtmlFactory {
 								.formatted(reportingParameter.idsHauptdaten.getFirst(), htmlTemplateDefinition.name()));
 				final HtmlContextGostKursplanungBlockungsergebnis htmlContextGostBlockung =
 						new HtmlContextGostKursplanungBlockungsergebnis(reportingRepository);
-				mapHtmlContexts.put("Blockungsergebnis", htmlContextGostBlockung);
+				mapHtmlContexts.put("GostBlockungsergebnis", htmlContextGostBlockung);
 				break;
 			case "GOST_KLAUSURPLANUNG":
 				// GOSt-Klausurplanung-Klausurplan-Context ist Hauptdatenquelle
@@ -137,7 +137,9 @@ public class HtmlFactory {
 				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
 						"Erzeuge Datenkontext Gost-Klausurplanung für die html-Generierung mit Template %s.".formatted(htmlTemplateDefinition.name()));
 				final HtmlContextGostKlausurplanungKlausurplan htmlContextGostKlausurplan =
-						new HtmlContextGostKlausurplanungKlausurplan(reportingRepository);
+						new HtmlContextGostKlausurplanungKlausurplan(reportingRepository,
+								htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_") ? reportingParameter.idsDetaildaten
+										: new ArrayList<>());
 				mapHtmlContexts.put("GostKlausurplan", htmlContextGostKlausurplan);
 				break;
 			default:
@@ -171,7 +173,7 @@ public class HtmlFactory {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine html-Generierung.");
 			final List<HtmlBuilder> htmlBuilders = getHtmlBuilders();
 			if (!htmlBuilders.isEmpty()) {
-				if (!reportingParameter.einzelausgabeHauptdaten || (htmlBuilders.size() == 1)) {
+				if (htmlBuilders.size() == 1) {
 					final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(htmlBuilders.getFirst().getDateiname(), StandardCharsets.UTF_8);
 
 					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine html-Generierung.");
@@ -212,7 +214,7 @@ public class HtmlFactory {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der html-Builder.");
 		final List<HtmlBuilder> htmlBuilders = new ArrayList<>();
 
-		if (!reportingParameter.einzelausgabeHauptdaten) {
+		if (!reportingParameter.einzelausgabeHauptdaten && !reportingParameter.einzelausgabeDetaildaten) {
 			// Dateiname der Dateien aus den Daten erzeugen.
 			final String dateiname = getDateiname(mapHtmlContexts);
 
@@ -222,22 +224,52 @@ public class HtmlFactory {
 							"Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
 			htmlBuilders.add(
 					new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(), dateiname));
-		} else if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
-			// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Kontexte für jeden Schüler, da einzelne Dateien angefordert wurden.");
-			final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelSchuelerContexts();
+		} else if (reportingParameter.einzelausgabeHauptdaten) {
+			// Die Hauptdatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden.
+			if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
+				// Zerlege den Gesamt-Schüler-Context in einzelne Contexts mit jeweils einen Schüler
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Erzeuge einzelne Haupt-Kontexte für jeden Schüler, da einzelne Dateien angefordert "
+						+ "wurden.");
+				final List<HtmlContextSchueler> schuelerContexts = ((HtmlContextSchueler) mapHtmlContexts.get("Schueler")).getEinzelSchuelerContexts();
 
-			reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
-					"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(htmlTemplateDefinition.name()));
-			for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
-				mapHtmlContexts.put("Schueler", schuelerContext);
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextSchueler schuelerContext : schuelerContexts) {
+					mapHtmlContexts.put("Schueler", schuelerContext);
 
-				// Dateiname der Dateien aus den Daten erzeugen.
-				final String dateiname = getDateiname(mapHtmlContexts);
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
 
-				// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
-				htmlBuilders.add(new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
-						dateiname));
+					// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
+					htmlBuilders.add(
+							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
+									dateiname));
+				}
+			}
+		} else {
+			// Die Detaildatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden. Die Hauptdatenquelle ist dabeii für alle Einzelkontexte gleich.
+			if (htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_")) {
+				// Zerlege den Klausurplan-Context gemäß der anzuzeigenden Schüler in einzelne Contexts mit jeweils einen Schüler. Die Plandaten sind bei allen SuS gleich.
+				reportingRepository.logger().logLn(
+						LogLevel.DEBUG, 4, "Erzeuge einzelne Detail-Kontexte des Klausurplans für jeden Schüler, da einzelne Dateien angefordert wurden.");
+				final List<HtmlContextGostKlausurplanungKlausurplan> klausurplanSchuelerContexts =
+						((HtmlContextGostKlausurplanungKlausurplan) mapHtmlContexts.get("GostKlausurplan")).getEinzelSchuelerContexts();
+
+				reportingRepository.logger().logLn(LogLevel.DEBUG, 4,
+						"Verarbeite Template (%s) und Daten aus den einzelnen Kontexten zu finalen html-Dateiinhalten.".formatted(
+								htmlTemplateDefinition.name()));
+				for (final HtmlContextGostKlausurplanungKlausurplan klausurplanSchuelerContext : klausurplanSchuelerContexts) {
+					mapHtmlContexts.put("GostKlausurplan", klausurplanSchuelerContext);
+
+					// Dateiname der Dateien aus den Daten erzeugen.
+					final String dateiname = getDateiname(mapHtmlContexts);
+
+					// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
+					htmlBuilders.add(
+							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
+									dateiname));
+				}
 			}
 		}
 

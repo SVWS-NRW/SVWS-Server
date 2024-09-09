@@ -30,11 +30,11 @@ public class ReportingParameter {
 
 	/** Die Bezeichnung des auszugebenden Reports gemäß Definition im CoreType {@link ReportingReportvorlage} */
 	@Schema(description = "Die Bezeichnung der Vorlage des auszugebenden Reports gemäß Definition im Core Type ReportingReportvorlage",
-			example = "GostKlausurplanung-KlausurtermineMitKursen")
+			example = "GostKlausurplanung-SchuelerMitKlausuren")
 	public @NotNull String reportvorlage = "";
 
 	/** Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF. */
-	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2019,5,2020,3]")
+	@Schema(description = "Eine Liste von IDs für die Hauptdatenquelle des zu erstellenden PDF.", example = "[2019,5,2020,3,2021,1]")
 	public @NotNull List<Long> idsHauptdaten = new ArrayList<>();
 
 	/** Legt fest, ob pro Datensatz der Hauptdaten eine einzelne PDF-Datei erzeugt werden soll. */

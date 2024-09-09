@@ -34,8 +34,24 @@ public enum HtmlTemplateDefinition {
 			"""
 			        <p th:text="${'GOSt-Klausurplanung-Klausurtermine-Kurse_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
 			""",
-			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
+					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)),
+
+	/** Report-Vorlage: GOSt - Klausurplanung - Schueler - Klausuren */
+	GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN(
+			ReportingReportvorlage.GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN,
+			"de/svws_nrw/module/reporting/gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.html",
+			"de/svws_nrw/module/reporting/gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.css",
+			"GOSt-Klausurplanung-Schueler-Klausuren",
+			"""
+			        <p th:if="${GostKlausurplan.schuelerGefiltert().isEmpty()}" th:text="${'GOSt-Klausurplanung-Schueler-Klausuren_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        <th:block th:if="${!GostKlausurplan.schuelerGefiltert().isEmpty()}" th:each="schueler,iterState : ${GostKlausurplan.schuelerGefiltert()}">
+			            <p th:if="${iterState.first && (GostKlausurplan.schuelerGefiltert().size() == 1)}" th:text="${'GOSt-Klausurplanung-Schueler-Klausuren_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-') + '_' + #strings.replace(schueler.nachname(), ' ', '_') + '__' + #strings.replace(schueler.vorname(), ' ', '_') + '_(' + schueler.id() + ')_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			            <p th:if="${iterState.first && (GostKlausurplan.schuelerGefiltert().size() > 1)}" th:text="${'GOSt-Klausurplanung-Schueler-Klausuren_' + #strings.replace(#strings.replace(Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz(), '.', ''), '/', '-')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN,
+					BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION)),
 
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs - Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN(
@@ -44,7 +60,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKursMitKursschuelern.css",
 			"GOSt-Blockungsergebnis-Kurs-Schueler",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Kurs-Schueler_Abi' + GostBlockungsergebnis.abiturjahr() + '_' + #strings.replace(GostBlockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + GostBlockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -56,7 +72,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungKurseMitStatistikwerten.css",
 			"GOSt-Blockungsergebnis-Kurse-Statistikwerte",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Kurse-Statistikwerte_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Kurse-Statistikwerte_Abi' + GostBlockungsergebnis.abiturjahr() + '_' + #strings.replace(GostBlockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + GostBlockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -68,7 +84,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitKursen.css",
 			"GOSt-Blockungsergebnis-Schueler-Kurse",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Kurse_Abi' + GostBlockungsergebnis.abiturjahr() + '_' + #strings.replace(GostBlockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + GostBlockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
@@ -80,7 +96,7 @@ public enum HtmlTemplateDefinition {
 			"de/svws_nrw/module/reporting/gost/kursplanung/GostKursplanungSchuelerMitSchienenKursen.css",
 			"GOSt-Blockungsergebnis-Schueler-Schienen-Kurse",
 			"""
-			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abi' + Blockungsergebnis.abiturjahr() + '_' + #strings.replace(Blockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + Blockungsergebnis.id() + ')'}"></p>
+			        <p th:text="${'GOSt-Blockungsergebnis-Schueler-Schienen-Kurse_Abi' + GostBlockungsergebnis.abiturjahr() + '_' + #strings.replace(GostBlockungsergebnis.gostHalbjahr().kuerzel, '.', '') + '_(Erg-ID-' + GostBlockungsergebnis.id() + ')'}"></p>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),

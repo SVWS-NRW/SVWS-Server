@@ -25,6 +25,7 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurtermin;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKursklausur;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
+import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
@@ -62,16 +63,42 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt anhand des Abiturjahres und des Gost-Halbjahres.
+	 * Erstellt ein neues Reporting-Objekt auf Basis der übergebenen Elemente.
+	 * @param reportingRepository	Repository für die Reporting.
+	 * @param klausurtermine		Eine Liste, die alle Termine des Klausurplanes beinhaltet.
+	 * @param kurse 				Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
+	 * @param kursklausuren 		Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
+	 * @param schueler 				Eine Liste, die alle Schüler des Klausurplanes beinhaltet.
+	 * @param schuelerklausuren 	Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
+	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 */
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository,
+			final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
+			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilterSchueler) {
+		super(klausurtermine, kurse, kursklausuren, schueler, schuelerklausuren, idsFilterSchueler);
+		this.reportingRepository = reportingRepository;
+		this.gostKlausurplanManager = null;
+	}
+
+
+
+	/**
+	 * Erstellt ein neues Reporting-Objekt anhand des GostKlausurplanManagers.
 	 *
 	 * @param reportingRepository		Repository für die Reporting.
 	 * @param gostKlausurplanManager 	Der Manager der Klausuren zu diesem Klausurplan
+	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
-	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager) {
-		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+	public ProxyReportingGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final GostKlausurplanManager gostKlausurplanManager,
+			final List<Long> idsFilterSchueler) {
+		super(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), idsFilterSchueler);
 
 		this.reportingRepository = reportingRepository;
 		this.gostKlausurplanManager = gostKlausurplanManager;
+
+		if (this.gostKlausurplanManager == null)
+			return;
 
 		// 1. Schülerstammdaten der Schüler aus den Schülerklausuren ermitteln und in Listen und Maps einfügen.
 		initSchueler();
@@ -111,18 +138,26 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
-				.thenComparing(sk -> sk.schueler().id()));
+				.thenComparing(sk -> sk.schueler().id())
+				.thenComparing(sk -> ((sk.klausurtermin() != null) && (sk.klausurtermin().datum() != null)) ? sk.klausurtermin().datum() : "yyyy-MM-dd"));
 		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(Comparator
 				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
-				.thenComparing(sk -> sk.schueler().id())));
+				.thenComparing(sk -> sk.schueler().id())
+				.thenComparing(sk -> ((sk.klausurtermin() != null) && (sk.klausurtermin().datum() != null)) ? sk.klausurtermin().datum() : "yyyy-MM-dd")));
+
+		// 8. Ergänze die Schülerklausuren in der Liste der KLausuren des Schülers.
+		super.schuelerklausuren.forEach(sk -> sk.schueler().gostKlausurplanungSchuelerklausuren().add(sk));
 	}
 
 	/**
 	 * Initialisiert die Schüler für die später zu erstellenden Schülerklausuren.
 	 */
 	private void initSchueler() {
+		if (this.gostKlausurplanManager == null)
+			return;
+
 		final List<SchuelerStammdaten> schuelerStammdaten = new ArrayList<>();
 		final List<Long> fehlendeSchueler = new ArrayList<>();
 
@@ -152,6 +187,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Initialisiert die Raumdaten und Unterrichtsstunden der Klausurräume. Das Ergebnis wird in den übergebenen Listen gespeichert.
 	 */
 	private void initKlausurraeume() {
+		if (this.gostKlausurplanManager == null)
+			return;
+
 		// Durchlaufe alle Klausurtermine und weise ihnen die ReportingKlausurräume zu, die aus den Daten erzeugt werden.
 		for (final ReportingGostKlausurplanungKlausurtermin termin : super.klausurtermine) {
 			// Einem Termin können mehrere Räume zugewiesen worden sein. Ermittle sie gemäß TerminID.
@@ -171,6 +209,8 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 	 * Initialsiert die Schülerklausuren mit allen Informationen (auch individuelle Raumdaten, Zeit oder Klausurdaten).
 	 */
 	private void initSchuelerklausuren() {
+		if (this.gostKlausurplanManager == null)
+			return;
 
 		// Listen und Maps mit Daten aus den vorherigen Schritten, um nicht erneut auf die DB zugreifen zu müssen.
 		final Map<Long, ReportingGostKlausurplanungKlausurtermin> mapKlausurtermine =

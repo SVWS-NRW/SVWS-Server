@@ -1,5 +1,7 @@
 package de.svws_nrw.module.reporting.proxytypes.schule;
 
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
@@ -56,7 +58,7 @@ public class ProxyReportingSchule extends ReportingSchule {
 				reportingRepository.schulstammdaten().hausnummerZusatz,
 				reportingRepository.schulstammdaten().ort,
 				reportingRepository.schulstammdaten().plz,
-				null,
+				new ArrayList<>(),
 				reportingRepository.schulstammdaten().schulform,
 				null,
 				reportingRepository.schulstammdaten().schulNr,

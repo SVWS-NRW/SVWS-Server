@@ -33,7 +33,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
 	protected boolean istHaupttermin;
 
-	/** Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur. */
+	/** Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur. */
 	protected final List<ReportingGostKlausurplanungKlausurraum> klausurraeume;
 
 	/** Die Liste von Kursklausuren zu diesem Klausurtermin */
@@ -123,10 +123,10 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	}
 
 	/**
-	 * Erstellt eine Liste der Klausurräume mit Stunden für den KLausurtermin.
+	 * Erstellt eine Liste der Klausurräume mit Stunden für den Klausurtermin.
 	 * @return Die Angaben zu Räumen und Stunden.
 	 */
-	public String rauemeUndStunden() {
+	public String raeumeUndStunden() {
 		final List<String> tempList = new ArrayList<>();
 		for (final ReportingGostKlausurplanungKlausurraum raum : klausurraeume) {
 			String temp = "";
@@ -201,7 +201,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	}
 
 	/**
-	 * Die Klausurräume dieses Termines, inkluse der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * Die Klausurräume dieses Termines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 * @return Inhalt des Feldes klausurraeume
 	 */
 	public List<ReportingGostKlausurplanungKlausurraum> klausurraeume() {

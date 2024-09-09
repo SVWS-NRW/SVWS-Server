@@ -86,7 +86,7 @@ public class PdfFactory {
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 			final List<PdfBuilder> pdfBuilders = getPdfBuilders();
 			if (!pdfBuilders.isEmpty()) {
-				if (!reportingParameter.einzelausgabeHauptdaten || (pdfBuilders.size() == 1)) {
+				if (pdfBuilders.size() == 1) {
 					reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der Response einer API-Anfrage für eine PDF-Generierung.");
 					return pdfBuilders.getFirst().getPdfResponse();
 				}
@@ -149,9 +149,9 @@ public class PdfFactory {
 				}
 				zipData = byteArrayOutputStream.toByteArray();
 			}
-		} catch (@SuppressWarnings("unused") final IOException e) {
+		} catch (final IOException e) {
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
 					"FEHLER: Die erzeugten PDF-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 		}
 		return zipData;
