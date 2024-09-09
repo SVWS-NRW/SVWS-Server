@@ -73,7 +73,7 @@
 									:draggable="onDrag !== undefined && draggable(klausur, termin)"
 									@dragstart="onDrag && onDrag(klausur);$event.stopPropagation()"
 									@dragend="onDrag && onDrag(undefined);$event.stopPropagation()"
-									class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')"
+									class="svws-ui-tr" role="row"
 									:class="[
 										props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 										{
@@ -101,7 +101,12 @@
 											<span :class="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 										</div>
-										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>
+										<svws-ui-tooltip :hover="true" :indicator="false">
+											<template #content>
+												Kurs enthält externe Schüler
+											</template>
+											<svws-ui-badge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</svws-ui-badge>
+										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td svws-align-right" :class="{'pr-3': inTooltip}" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
 									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
