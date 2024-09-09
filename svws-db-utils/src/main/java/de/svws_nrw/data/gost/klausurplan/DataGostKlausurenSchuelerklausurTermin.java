@@ -143,6 +143,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 		conn.transactionRemoveAll(raumstunden);
 
 		final Map<String, Object> initAttributes = new HashMap<>();
+		initAttributes.put("idSchuelerklausur", id);
 		initAttributes.put("folgeNr", lastTermin.Folge_Nr + 1);
 		return addFromMapAsResponse(initAttributes);
 	}
@@ -263,7 +264,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 			final boolean includeAbwesend) throws ApiOperationException {
 		if (terminIds.isEmpty())
 			return new ArrayList<>();
-		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
+		final List<GostKursklausur> kursklausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuTerminids(terminIds);
 		final List<GostSchuelerklausur> schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(kursklausuren);
 		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
 		String skFilter = "";
@@ -318,18 +319,14 @@ public final class DataGostKlausurenSchuelerklausurTermin
 
 		final List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
 		listSktsManager.addAll(config.schuelerklausurtermine);
-<<<<<<< Upstream, based on dev
 		listSktsManager
 				.addAll(new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuTerminIds(config.termine.stream().map(t -> t.id).toList(), true));
-=======
-		listSktsManager.addAll(getSchuelerklausurtermineZuTerminIds(config.termine.stream().map(t -> t.id).toList(), true));
->>>>>>> 4e0a7c0 Verschieben von Terminen, die Teil einer jahrgangsübergreifenden Planung sind
 
 		final List<GostSchuelerklausur> listSks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(listSktsManager);
-		final List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
+		final List<GostKursklausur> listKks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(listSks);
 
 		final GostKlausurplanManager kMan = new GostKlausurplanManager(schuljahresabschnitt.Jahr,
-				DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKks), listKks, config.termine, listSks, listSktsManager);
+				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKks), listKks, config.termine, listSks, listSktsManager);
 
 		final KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
 

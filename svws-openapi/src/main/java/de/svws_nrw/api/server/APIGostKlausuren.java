@@ -87,7 +87,7 @@ public class APIGostKlausuren {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
-						.entity(DataGostKlausurenVorgabe.getKlausurvorgaben(conn, abiturjahr, -1, false)).build(),
+						.entity(new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(abiturjahr, -1, false)).build(),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
@@ -118,7 +118,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Post für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurvorgabe.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn, -1).create(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).addAsResponse(is),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -150,7 +150,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Patch für die Klausurvorgabe-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurvorgabe.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn, -1).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -175,7 +175,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostKlausurenVorgabe(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn, -1).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenVorgabe(conn).deleteAsResponse(id),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -238,7 +238,7 @@ public class APIGostKlausuren {
 			@PathParam("quartal") final int quartal, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
-						.entity(DataGostKlausurenVorgabe.createDefaultVorgaben(conn, GostHalbjahr.fromIDorException(halbjahr), quartal)).build(),
+						.entity(new DataGostKlausurenVorgabe(conn).createDefaultVorgaben(GostHalbjahr.fromIDorException(halbjahr), quartal)).build(),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -271,7 +271,7 @@ public class APIGostKlausuren {
 			@PathParam("abschnittid") final long abschnittid, @RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKursklausur.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKursklausur(conn, -1, abschnittid).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKursklausur(conn, -1, abschnittid).patchAsResponse(id, is),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -660,7 +660,7 @@ public class APIGostKlausuren {
 					array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> DataGostKlausurenSchuelerklausurraumstunde.setzeRaumZuSchuelerklausuren(conn, raumSchuelerZuteilung, abschnittid),
+				conn -> new DataGostKlausurenSchuelerklausurraumstunde(conn).setzeRaumZuSchuelerklausuren(raumSchuelerZuteilung, abschnittid),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -689,7 +689,7 @@ public class APIGostKlausuren {
 					array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> DataGostKlausurenSchuelerklausurraumstunde.loescheRaumZuSchuelerklausuren(conn, raumSchuelerZuteilung),
+				conn -> new DataGostKlausurenSchuelerklausurraumstunde(conn).loescheRaumZuSchuelerklausuren(raumSchuelerZuteilung),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -718,7 +718,7 @@ public class APIGostKlausuren {
 					schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(DataGostKlausurenKursklausur.blocken(conn, blockungDaten)).build(),
+				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new DataGostKlausurenKursklausur(conn).blocken(blockungDaten)).build(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}

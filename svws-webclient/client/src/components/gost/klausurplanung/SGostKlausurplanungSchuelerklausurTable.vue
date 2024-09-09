@@ -11,7 +11,7 @@
 			<div v-for="schuelertermin in schuelerklausuren"
 				:key="schuelertermin.id"
 				:data="schuelertermin"
-				:draggable="onDrag && draggable(schuelertermin, termin!)"
+				:draggable="draggable(schuelertermin, termin!)"
 				@dragstart="onDrag!(schuelertermin);$event.stopPropagation()"
 				@dragend="onDrag!(undefined);$event.stopPropagation()"
 				class="svws-ui-tr" role="row"

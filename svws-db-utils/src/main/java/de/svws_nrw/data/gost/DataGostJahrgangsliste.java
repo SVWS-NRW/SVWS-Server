@@ -340,7 +340,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		}
 
 		// Kopiere die Informationen zu Gost-Klausurvorgaben aus der Vorlage
-		DataGostKlausurenVorgabe.copyVorgabenToJahrgang(conn, abiturjahr, null, 0);
+		new DataGostKlausurenVorgabe(conn).copyVorgabenToJahrgang(abiturjahr, null, 0);
 
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}

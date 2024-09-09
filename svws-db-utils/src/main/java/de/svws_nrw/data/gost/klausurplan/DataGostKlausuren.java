@@ -1,6 +1,5 @@
 package de.svws_nrw.data.gost.klausurplan;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +20,6 @@ import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DBUtilsGost;
@@ -47,9 +45,10 @@ import jakarta.ws.rs.core.Response.Status;
 /**
  * Data-Manager für die Klausuren der gymnasialen Oberstufe
  */
-public final class DataGostKlausuren extends DataManager<Long> {
+public final class DataGostKlausuren {
 
 	private final int _abiturjahr;
+	private final DBEntityManager conn;
 
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
@@ -59,7 +58,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
 	 */
 	public DataGostKlausuren(final DBEntityManager conn, final int abiturjahr) {
-		super(conn);
+		this.conn = conn;
 		_abiturjahr = abiturjahr;
 	}
 
@@ -104,7 +103,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		final GostKlausurenCollectionAllData data = new GostKlausurenCollectionAllData();
 		data.fehlend = new GostKlausurenCollectionAllData();
 		for (final Pair<Integer, Integer> jg : jgs) {
-			final GostKlausurenCollectionAllData klausuren = DataGostKlausurenKursklausur.getKlausurDataCollection(conn, jg.a, jg.b, true);
+			final GostKlausurenCollectionAllData klausuren = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(jg.a, jg.b, true);
 			klausuren.metadata.faecher = DataGostFaecher.getFaecherManager(conn, jg.a).faecher();
 
 			if (jg.a != -1) {
@@ -131,7 +130,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 
 		data.metadata.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
 		data.raumdata =
-				DataGostKlausurenSchuelerklausurraumstunde.getSchuelerklausurraumstundenByTerminids(conn, data.termine.stream().map(t -> t.id).toList());
+				new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(data.termine.stream().map(t -> t.id).toList());
 		return data;
 	}
 
@@ -157,13 +156,13 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, _abiturjahr);
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
-		final List<GostKlausurvorgabe> vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, _abiturjahr, hj, false);
+		final List<GostKlausurvorgabe> vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(_abiturjahr, hj, false);
 		if (vorgaben.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
 		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahr, vorgaben);
 
-		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
+		final List<GostKursklausur> existingKlausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuVorgaben(vorgaben);
 		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
 				.collect(Collectors.groupingBy(k -> k.idKurs, Collectors.toMap(k -> k.idVorgabe, Function.identity())));
 
@@ -222,7 +221,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		final GostKlausurenCollectionAllData retKlausuren = new GostKlausurenCollectionAllData();
-		retKlausuren.kursklausuren = DTOMapper.mapList(kursklausuren, DataGostKlausurenKursklausur.dtoMapper);
+		retKlausuren.kursklausuren = new DataGostKlausurenKursklausur(conn).mapList(kursklausuren);
 		retKlausuren.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).mapList(schuelerklausuren);
 		retKlausuren.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).mapList(sktermine);
 		return retKlausuren;
@@ -262,28 +261,6 @@ public final class DataGostKlausuren extends DataManager<Long> {
 				.setParameter("sstatus", Arrays.asList(validStatus))
 				.setParameter("sgeloescht", false)
 				.getResultList();
-	}
-
-
-
-	@Override
-	public Response getAll() {
-		return this.getList();
-	}
-
-	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response get(final Long id) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response patch(final Long id, final InputStream is) {
-		throw new UnsupportedOperationException();
 	}
 
 	private static void getFehlendeKlausuren(final DBEntityManager conn, final Pair<Integer, GostHalbjahr> abijahr, final Schuljahresabschnitt sja,

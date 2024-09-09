@@ -150,6 +150,12 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		}
 	}
 
+	@Override
+	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
+		patchFromStream(id, is);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
+	}
+
 	/**
 	 * Gibt die Liste der Klausurtermine zu den übergebenen Kursklausuren zurück.
 	 *
@@ -186,7 +192,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			final List<GostSchuelerklausur> schuelerklausurNullTermin =
 					new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(schuelerklausurTermineNullTermin);
 			final List<GostKursklausur> kursklausurNullTermin =
-					DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, schuelerklausurNullTermin);
+					new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(schuelerklausurNullTermin);
 			ergebnis.addAll(getKlausurtermineZuKursklausuren(kursklausurNullTermin));
 		}
 
@@ -301,22 +307,16 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		return conn.queryByKeyList(DTOGostKlausurenTermine.class, listIds);
 	}
 
-	@Override
-	public Response patchAsResponse(final Long id, final InputStream is) throws ApiOperationException {
-		patchFromStream(id, is);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(raumDataChanged).build();
-	}
-
 	private void copyRaumzuweisungenBeiTerminverschiebung(final DTOGostKlausurenTermine dtoCopyRaeume) throws ApiOperationException {
-		final GostKlausurenCollectionRaumData ergebnis = DataGostKlausurenSchuelerklausurraumstunde.getSchuelerklausurraumstundenByTerminids(conn, ListUtils.create1(dtoCopyRaeume.ID));
+		final GostKlausurenCollectionRaumData ergebnis = new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(ListUtils.create1(dtoCopyRaeume.ID));
 		final GostKlausurtermin termin = map(dtoCopyRaeume);
 		final List<GostKlausurtermin> termine = new DataGostKlausurenTermin(conn).getKlausurterminmengeSelbesDatumZuTerminMenge(ListUtils.create1(termin));
 		final List<Long> terminIDs = termine.stream().map(t -> t.id).toList();
 		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(terminIDs);
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(skts);
-		final List<GostKursklausur> kks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, sks);
+		final List<GostKursklausur> kks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(sks);
 		final GostKlausurplanManager manager = new GostKlausurplanManager(
-				DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, kks),
+				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kks),
 				kks,
 				termine,
 				sks,
@@ -355,7 +355,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			}
 		}
 		if (!raumListeNeu.isEmpty()) {
-			raumDataChanged.raumdata = DataGostKlausurenSchuelerklausurraumstunde.transactionSetzeRaumZuSchuelerklausuren(conn, raumListeNeu, _idSchuljahresAbschnitt).raumdata;
+			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu, _idSchuljahresAbschnitt).raumdata;
 			raumDataChanged.raumdata.raeume = raumListe;
 		}
 	}
