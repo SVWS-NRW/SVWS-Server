@@ -373,6 +373,21 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param id              die ID des zu patchenden DTOs
+	 * @param is              der Input-Stream
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public void patchFromStream(final ID id, final InputStream is) throws ApiOperationException {
+		patch(id, JSONMapper.toMap(is));
+		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
+	}
+
 
 	/**
 	 * Passt die Informationen der Datenbank-DTOs mithilfe des
@@ -642,7 +657,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
+	public void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
 		// Prüfe, ob benötigte Parameter übergeben wurden
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
@@ -676,6 +691,24 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public CoreDTO add(final Map<String, Object> initAttributes) throws ApiOperationException {
 		return addBasic(getNextID(null, initAttributes), initAttributes);
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param initAttributes  die Map mit den initialen Attributen für das neue DTO
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response addFromMapAsResponse(final Map<String, Object> initAttributes) throws ApiOperationException {
+		final CoreDTO dto = addBasic(getNextID(null, initAttributes), initAttributes);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(dto).build();
 	}
 
 	/**
