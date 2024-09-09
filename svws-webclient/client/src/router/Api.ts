@@ -257,7 +257,7 @@ class Api {
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		const schulform = Schulform.getByKuerzel(this.conn.schuleStammdaten.schulform);
+		const schulform = Schulform.data().getWertByKuerzel(this.conn.schuleStammdaten.schulform);
 		if (schulform === null)
 			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
 		return schulform;
@@ -270,7 +270,7 @@ class Api {
 	 * @returns eine Liste mit den Schulgliederungen
 	 */
 	public get schulgliederungen(): List<Schulgliederung> {
-		return Schulgliederung.get(this.schulform);
+		return Schulgliederung.getBySchuljahrAndSchulform(this.abschnitt.schuljahr, this.schulform);
 	}
 
 	/**
@@ -435,7 +435,7 @@ class Api {
 	 *
 	 * @returns die Rückgabe der API-Funktion
 	 */
-	public call = <T extends Array<any>, U>(func: (...params: T) => U, data?: ApiPendingData) => {
+	public call = <T extends Array<any>, U>(func: (...params: T) => Promise<U>, data?: ApiPendingData) => {
 		return async (...params: T): Promise<Awaited<U>> => {
 			this.status.start(data);
 			try {

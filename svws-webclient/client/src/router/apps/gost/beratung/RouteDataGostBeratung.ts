@@ -22,7 +22,7 @@ const defaultState = <RouteStateDataGostBeratung> {
 	auswahl: undefined,
 	abiturdaten: undefined,
 	abiturdatenManager: undefined,
-	faecherManager: new GostFaecherManager(),
+	faecherManager: new GostFaecherManager(-1),
 	gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 	gostJahrgang: new GostJahrgang(),
 	gostJahrgangsdaten: new GostJahrgangsdaten(),
@@ -137,7 +137,7 @@ export class RouteDataGostBeratung extends RouteData<RouteStateDataGostBeratung>
 				const abiturdaten = await api.server.getGostAbiturjahrgangLaufbahnplanung(api.schema, auswahl);
 				const gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, gostJahrgang.abiturjahr);
 				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
-				const faecherManager = new GostFaecherManager(listGostFaecher);
+				const faecherManager = new GostFaecherManager(gostJahrgang.abiturjahr - 1, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
 				const listLehrer = await api.server.getLehrer(api.schema);

@@ -1,8 +1,9 @@
 package de.svws_nrw.db.schema.tabellen;
 
 import java.util.Arrays;
+import java.util.Collection;
 
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -31,8 +32,9 @@ public class Tabelle_SchuelerStatus_Keys extends SchemaTabelle {
 		setJavaSubPackage("schueler");
 		setJavaClassName("DTOSchuelerStatus");
 		setJavaComment("Tabelle für die Schlüsselwerte des Core-Types SchuelerStatus");
-		setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.VERSION,
-				rev -> Arrays.stream(SchuelerStatus.values()).map(s -> "" + s.id).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, SchuelerStatus.class, SchuelerStatus.data().getVersion(),
+				rev -> Arrays.stream(SchuelerStatus.values())
+					.map(s -> s.historie().stream().map(h -> "" + h.id).toList()).flatMap(Collection::stream).toList()));
 	}
 
 }

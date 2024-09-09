@@ -1,11 +1,10 @@
 package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.fach.BilingualeSpracheKatalogEintrag;
-import de.svws_nrw.core.types.fach.BilingualeSprache;
+import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
+import de.svws_nrw.asd.types.fach.BilingualeSprache;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -34,7 +33,7 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
 		for (final BilingualeSprache gruppe : BilingualeSprache.values())
-			daten.addAll(Arrays.asList(gruppe.historie));
+			daten.addAll(gruppe.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -43,12 +42,13 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final var sprachen = BilingualeSprache.get(schule.Schulform);
-		if (sprachen == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
 		final ArrayList<BilingualeSpracheKatalogEintrag> daten = new ArrayList<>();
-		for (final BilingualeSprache sprache : sprachen)
-			daten.addAll(Arrays.asList(sprache.historie));
+		for (final BilingualeSprache sprache : BilingualeSprache.values())
+			for (final BilingualeSpracheKatalogEintrag eintrag : sprache.historie())
+				if (eintrag.schulformen.contains(schule.SchulformKuerzel))
+					daten.add(eintrag);
+		if (daten.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -56,7 +56,7 @@ public final class DataKatalogBilingualeSprachen extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final BilingualeSpracheKatalogEintrag daten = BilingualeSprache.getKatalogEintragByID(id);
+		final BilingualeSpracheKatalogEintrag daten = BilingualeSprache.data().getEintragByID(id);
 		if (daten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

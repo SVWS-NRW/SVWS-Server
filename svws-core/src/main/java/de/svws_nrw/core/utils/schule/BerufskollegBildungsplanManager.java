@@ -15,7 +15,8 @@ import de.svws_nrw.core.data.bk.BKFachklassenSchluessel;
 import de.svws_nrw.core.data.bk.BKLernfeld;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.Map3DUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -143,9 +144,12 @@ public class BerufskollegBildungsplanManager {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public List<BKBildungsplan> getLehrplaeneBySchulgliederungSchuljahr(final @NotNull Schulgliederung gliederung, final int schuljahr) {
-		if (gliederung.daten.bkIndex == null)
-			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.");
-		return getLehrplaeneByIndexSchuljahr(gliederung.daten.bkIndex, schuljahr);
+		final SchulgliederungKatalogEintrag sglke = gliederung.daten(schuljahr);
+		if (sglke == null)
+			throw new IllegalArgumentException("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.".formatted(gliederung.name(), schuljahr));
+		if (sglke.bkIndex == null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.");
+		return getLehrplaeneByIndexSchuljahr(sglke.bkIndex, schuljahr);
 	}
 
 
@@ -182,9 +186,12 @@ public class BerufskollegBildungsplanManager {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public List<BKBildungsplan> getLehrplaeneBySchulgliederungSchuljahrAll(final @NotNull Schulgliederung gliederung, final int schuljahr) {
-		if (gliederung.daten.bkIndex == null)
-			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.");
-		return getLehrplaeneByIndexSchuljahrAll(gliederung.daten.bkIndex, schuljahr);
+		final SchulgliederungKatalogEintrag sglke = gliederung.daten(schuljahr);
+		if (sglke == null)
+			throw new IllegalArgumentException("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.".formatted(gliederung.name(), schuljahr));
+		if (sglke.bkIndex == null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.");
+		return getLehrplaeneByIndexSchuljahrAll(sglke.bkIndex, schuljahr);
 	}
 
 
@@ -282,7 +289,7 @@ public class BerufskollegBildungsplanManager {
 	 *
 	 * @return die Liste aller bekannten Bündelfächer
 	 */
-	public List<BKFBFach> getFaecherByFachklassenschuesselSchuljahr() {
+	public List<BKFBFach> getFaecherAll() {
 		final @NotNull List<BKFBFach> faecher = new ArrayList<>();
 		faecher.addAll(_mapFachByKuerzel.values());
 		return faecher;

@@ -164,7 +164,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Lehrämtern noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 
@@ -191,7 +191,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Lehrbefähigungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 
@@ -218,7 +218,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		// TODO API-Aufruf mit idAnerkennungsgrund ...
 		console.log("Anpassen von Fachrichtungen noch nicht implementiert");
-		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten.id ?? null });
+		Object.assign(eintrag, { idAnerkennungsgrund: anerkennung?.daten(this.lehrerListeManager.getSchuljahr())?.id ?? null });
 		this.commit();
 	}
 

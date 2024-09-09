@@ -1,17 +1,18 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../../RouteApp";
 import { routeSchuleDatenaustauschUntis, type RouteSchuleDatenaustauschUntis } from "~/router/apps/schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 
 import type { SchuleDatenaustauschUntisBlockungenProps } from "~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisBlockungenProps";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SSchuleDatenaustauschUntisBlockungen = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisBlockungen.vue");
 
 export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, RouteSchuleDatenaustauschUntis> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
+		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Blockungen";

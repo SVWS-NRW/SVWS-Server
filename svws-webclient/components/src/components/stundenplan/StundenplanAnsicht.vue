@@ -176,7 +176,7 @@
 	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
 	import type { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
-	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
+	import { Fach } from "../../../../core/src/asd/types/fach/Fach";
 	import { ArrayList, cast_java_util_ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { HashMap } from "../../../../core/src/java/util/HashMap";
 	import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
@@ -440,7 +440,7 @@
 	}
 
 	function getBgColor(fach: string): string {
-		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+		return Fach.data().getWertBySchluessel(fach)?.getHMTLFarbeRGB(props.manager().getSchuljahr()) ?? 'rgb(220,220,220)';
 	}
 
 	const draggable = computed<boolean>(() => props.useDragAndDrop);

@@ -9,10 +9,11 @@ import { KlausurblockungNachschreiberAlgorithmusBewertung } from '../../../../co
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostNachschreibterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostNachschreibterminblockungKonfiguration';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
-import { Pair } from '../../../../core/adt/Pair';
+import { Pair } from '../../../../asd/adt/Pair';
 import { HashSet } from '../../../../java/util/HashSet';
 
 export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
@@ -161,6 +162,8 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungNachschreiberAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus');
 
 }
 

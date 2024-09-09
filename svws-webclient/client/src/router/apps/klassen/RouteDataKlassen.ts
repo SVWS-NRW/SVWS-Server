@@ -1,6 +1,6 @@
 
-import type {KlassenDaten, List, Schueler, LehrerListeEintrag} from "@core";
-import {ArrayList, DeveloperNotificationException, KlassenListeManager, LehrerListeManager} from "@core";
+import type { KlassenDaten, Schueler, LehrerListeEintrag } from "@core";
+import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -10,13 +10,12 @@ import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { type RouteNode } from "~/router/RouteNode";
-import {routeLehrer} from "~/router/apps/lehrer/RouteLehrer";
+import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 
 
 interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
-	klassenListeManager: KlassenListeManager;
-	lehrerListeManager: LehrerListeManager;
+	klassenListeManager: KlassenListeManager | undefined;
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
@@ -25,8 +24,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 
 const defaultState = <RouteStateKlassen> {
 	idSchuljahresabschnitt: -1,
-	klassenListeManager: new KlassenListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
-	lehrerListeManager: new LehrerListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
+	klassenListeManager: undefined,
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlasseDaten,
@@ -41,6 +39,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	get klassenListeManager(): KlassenListeManager {
+		if (this._state.value.klassenListeManager === undefined)
+			throw new DeveloperNotificationException("Zugriff auf den Klassen-Liste-Manager, bevor dieser initialisiert wurde.");
 		return this._state.value.klassenListeManager;
 	}
 
@@ -78,7 +78,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		klassenListeManager.setFilterNurSichtbar(false);
 
 		// Versuche die ausgewählte Klasse von vorher zu laden
-		const vorherigeAuswahl = this.klassenListeManager.hasDaten() ? this.klassenListeManager.auswahl() : null;
+		const vorherigeAuswahl = ((this._state.value.klassenListeManager !== undefined) && this.klassenListeManager.hasDaten()) ? this.klassenListeManager.auswahl() : null;
 		if ((vorherigeAuswahl !== null) && (vorherigeAuswahl.kuerzel !== null)) {
 			const auswahl = klassenListeManager.getByKuerzelOrNull(vorherigeAuswahl.kuerzel);
 			klassenListeManager.setDaten(auswahl ?? klassenListeManager.liste.list().get(0));
@@ -158,8 +158,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		if (!klassenToRemove.isEmpty()) {
-			this._state.value.klassenListeManager.liste.auswahlClear();
-			this._state.value.klassenListeManager.setDaten(null);
+			this.klassenListeManager.liste.auswahlClear();
+			this.klassenListeManager.setDaten(null);
 			await this.ladeSchuljahresabschnitt(this._state.value.idSchuljahresabschnitt);
 		}
 
@@ -187,20 +187,20 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	gotoEintrag = async (eintragId?: number | null) => {
 		if ((eintragId !== null) && (eintragId !== undefined)) {
 			// Deaktivieren des Gruppenprozess Modus falls noch aktiv
-			this._state.value.klassenListeManager.liste.auswahlClear()
+			this.klassenListeManager.liste.auswahlClear()
 			this._state.value.gruppenprozesseEnabled = false;
 
 			const view = this._state.value.view === routeKlasseGruppenprozesse ? routeKlasseDaten : this.view;
-			if (this._state.value.klassenListeManager.liste.has(eintragId)){
+			if (this.klassenListeManager.liste.has(eintragId)){
 				await RouteManager.doRoute(view.getRoute(eintragId));
-				await this.setEintrag(this._state.value.klassenListeManager.liste.get(eintragId))
+				await this.setEintrag(this.klassenListeManager.liste.get(eintragId))
 				return
 			}
 		}
 
-		const filtered = this._state.value.klassenListeManager.filtered();
+		const filtered = this.klassenListeManager.filtered();
 		if (!filtered.isEmpty()) {
-			const klasse = this._state.value.klassenListeManager.filtered().getFirst();
+			const klasse = this.klassenListeManager.filtered().getFirst();
 			await RouteManager.doRoute(routeKlasseDaten.getRoute(klasse.id));
 			await this.setEintrag(klasse);
 		}
@@ -282,7 +282,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute());
 
 		this._state.value.view = routeKlasseGruppenprozesse;
-		this._state.value.klassenListeManager.setDaten(null);
+		this.klassenListeManager.setDaten(null);
 	}
 
 	setFilter = async () => {

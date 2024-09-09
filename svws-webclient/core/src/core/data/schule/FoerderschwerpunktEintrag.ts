@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class FoerderschwerpunktEintrag extends JavaObject {
 
@@ -39,6 +40,8 @@ export class FoerderschwerpunktEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag'].includes(name);
 	}
+
+	public static class = new Class<FoerderschwerpunktEintrag>('de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag');
 
 	public static transpilerFromJSON(json : string): FoerderschwerpunktEintrag {
 		const obj = JSON.parse(json) as Partial<FoerderschwerpunktEintrag>;

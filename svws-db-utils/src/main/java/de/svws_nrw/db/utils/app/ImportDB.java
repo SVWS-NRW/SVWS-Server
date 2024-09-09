@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -70,6 +71,7 @@ public class ImportDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);

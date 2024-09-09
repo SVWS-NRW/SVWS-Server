@@ -3,6 +3,7 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 import { NumberFormatException } from '../../../java/lang/NumberFormatException';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -59,7 +60,7 @@ export class SchuldateiUtils extends JavaObject {
 				throw new NumberFormatException("Die Angabe des Monats ist fehlerhaft.")
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
-		} catch(nfe) {
+		} catch(nfe : any) {
 			throw new IllegalArgumentException("Der Datumswert '" + date! + "' ist fehlerhaft.")
 		}
 	}
@@ -188,6 +189,8 @@ export class SchuldateiUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiUtils'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiUtils>('de.svws_nrw.schulen.v1.utils.SchuldateiUtils');
 
 }
 

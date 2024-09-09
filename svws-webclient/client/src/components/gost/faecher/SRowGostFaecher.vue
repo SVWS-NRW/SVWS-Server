@@ -59,7 +59,7 @@
 	import type { List, GostFach, GostFaecherManager} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
+	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
@@ -68,6 +68,8 @@
 		faecherManager: () => GostFaecherManager;
 		hatUpdateKompetenz: boolean;
 	}>();
+
+	const schuljahr = computed<number>(() => props.faecherManager().getSchuljahr());
 
 	async function doPatch(data: Partial<GostFach>) {
 		await props.patchFach(data, props.fachId);
@@ -81,7 +83,7 @@
 	})
 
 	function istPJK(fach: GostFach) : boolean {
-		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
+		return Fach.data().getWertBySchluessel(fach.kuerzel)?.getFachgruppe(schuljahr.value) === Fachgruppe.FG_PX;
 	}
 
 	const leitfaecher1: ComputedRef<List<GostFach>> = computed(() => {
@@ -127,29 +129,28 @@
 	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(fach.value));
 
 	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
 		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
 	});
 
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB());
-	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);*/
+	const bgColor: ComputedRef<string> = computed(() => Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)');
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
 		return !((fg === Fachgruppe.FG_ME) || (fg === Fachgruppe.FG_PX));
 	});
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 
 	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
-		const f = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel);
-		if ((f.getJahrgangAb() === Jahrgaenge.JG_EF) ||
+		const f = Fach.data().getWertBySchluessel(fach.value.kuerzel);
+		if ((f?.getJahrgangAb(schuljahr.value) === Jahrgaenge.EF) ||
 			((fach.value.biliSprache !== null) && (fach.value.biliSprache !== "D")))
 			return false;
-		const fg = f.getFachgruppe();
+		const fg = f?.getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 

@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -89,7 +88,7 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
-		await this.data.setView(node, this.menu);
+		this.data.setView(node, this.menu);
 	}
 
 	returnToKataloge = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });

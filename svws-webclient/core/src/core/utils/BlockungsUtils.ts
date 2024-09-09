@@ -4,6 +4,7 @@ import { GostBlockungListeneintrag } from '../../core/data/gost/GostBlockungList
 import { StringUtils } from '../../core/utils/StringUtils';
 import { JavaLong } from '../../java/lang/JavaLong';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { JavaString } from '../../java/lang/JavaString';
 import type { Comparator } from '../../java/util/Comparator';
 
@@ -120,6 +121,8 @@ export class BlockungsUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.BlockungsUtils'].includes(name);
 	}
+
+	public static class = new Class<BlockungsUtils>('de.svws_nrw.core.utils.BlockungsUtils');
 
 }
 

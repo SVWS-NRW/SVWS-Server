@@ -65,7 +65,7 @@
 	import type { GostFachwahlenProps } from "./SGostFachwahlenProps";
 	import type { DataTableColumn } from "@ui";
 	import type { GostStatistikFachwahl } from "@core";
-	import { ZulaessigesFach, GostHalbjahr } from "@core";
+	import { Fach, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenProps>();
 
@@ -73,8 +73,12 @@
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
-	function getBgColor(row: GostStatistikFachwahl) {
-		return ZulaessigesFach.getByKuerzelASD(row.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
+
+	function getBgColor(fws: GostStatistikFachwahl) : string {
+		if (fws.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(fws.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
 	}
 
 	async function selectData(row: GostStatistikFachwahl | undefined, bereich: string) {

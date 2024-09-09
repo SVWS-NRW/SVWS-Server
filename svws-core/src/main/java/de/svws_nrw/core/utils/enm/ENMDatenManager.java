@@ -4,6 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFoerderschwerpunkt;
@@ -16,10 +22,6 @@ import de.svws_nrw.core.data.enm.ENMNote;
 import de.svws_nrw.core.data.enm.ENMSchueler;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
-import de.svws_nrw.core.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -117,17 +119,22 @@ public class ENMDatenManager {
 
 	/**
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 */
-	public void addNoten() {
+	public void addNoten(final int schuljahr) {
 		if (!daten.noten.isEmpty())
 			return;
-		final @NotNull Note @NotNull [] noten = Note.values();
-		for (final @NotNull @NotNull Note note : noten) {
+		final @NotNull List<Note> noten = Note.data().getWerteBySchuljahr(schuljahr);
+		for (final @NotNull Note note : noten) {
+			final NoteKatalogEintrag nke = note.daten(schuljahr);
+			if (nke == null)
+				continue;
 			final @NotNull ENMNote enmNote = new ENMNote();
-			enmNote.id = note.id;
-			enmNote.kuerzel = note.kuerzel;
-			enmNote.notenpunkte = note.notenpunkte;
-			enmNote.text = note.text;
+			enmNote.id = (int) nke.id;
+			enmNote.kuerzel = nke.kuerzel;
+			enmNote.notenpunkte = nke.notenpunkte;
+			enmNote.text = nke.text;
 			daten.noten.add(enmNote);
 		}
 	}
@@ -137,19 +144,22 @@ public class ENMDatenManager {
 	 * Fügt alle Förderschwerpunkte des Core-Type {@link Foerderschwerpunkt} zu dem
 	 * Förderschwerpunkt-Katalog der ENM-Datei hinzu.
 	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 * @param schulform   die Schulform, für welche die zulässigen Förderschwerpunkte
 	 *                    zurückgegeben werden
 	 */
-	public void addFoerderschwerpunkte(final @NotNull Schulform schulform) {
+	public void addFoerderschwerpunkte(final int schuljahr, final @NotNull Schulform schulform) {
 		if (!daten.foerderschwerpunkte.isEmpty())
 			return;
-		final @NotNull List<Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.get(schulform);
-		for (int i = 0; i < foerderschwerpunkte.size(); i++) {
-			final Foerderschwerpunkt foerderschwerpunkt = foerderschwerpunkte.get(i);
+		final @NotNull List<Foerderschwerpunkt> foerderschwerpunkte = Foerderschwerpunkt.getBySchuljahrAndSchulform(schuljahr, schulform);
+		for (final Foerderschwerpunkt foerderschwerpunkt : foerderschwerpunkte) {
+			final FoerderschwerpunktKatalogEintrag fske = foerderschwerpunkt.daten(schuljahr);
+			if (fske == null)
+				continue;
 			final ENMFoerderschwerpunkt enmFoerderschwerpunkt = new ENMFoerderschwerpunkt();
-			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
-			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
-			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
+			enmFoerderschwerpunkt.id = fske.id;
+			enmFoerderschwerpunkt.kuerzel = fske.kuerzel;
+			enmFoerderschwerpunkt.beschreibung = fske.text;
 			daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
 		}
 	}

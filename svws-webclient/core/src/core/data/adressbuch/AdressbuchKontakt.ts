@@ -2,6 +2,7 @@ import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintr
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Telefonnummer } from '../../../core/data/adressbuch/Telefonnummer';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class AdressbuchKontakt extends AdressbuchEintrag {
 
@@ -92,6 +93,8 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.adressbuch.AdressbuchKontakt', 'de.svws_nrw.core.data.adressbuch.AdressbuchEintrag'].includes(name);
 	}
+
+	public static class = new Class<AdressbuchKontakt>('de.svws_nrw.core.data.adressbuch.AdressbuchKontakt');
 
 	public static transpilerFromJSON(json : string): AdressbuchKontakt {
 		const obj = JSON.parse(json) as Partial<AdressbuchKontakt>;

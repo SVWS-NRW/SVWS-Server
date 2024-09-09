@@ -7,13 +7,14 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 import type { GostKlausurplanungVorgabenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungVorgabenProps";
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungVorgaben = () => import("~/components/gost/klausurplanung/SGostKlausurplanungVorgaben.vue");
 
 export class RouteGostKlausurplanungVorgaben extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN

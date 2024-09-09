@@ -22,10 +22,7 @@
 			</template>
 			<template #body>
 				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
-					<s-benutzer-kompetenzgruppe :kompetenzgruppe="kompetenzgruppe" :get-benutzer-manager="getBenutzerManager"
-						:add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz"
-						:add-benutzer-kompetenz-gruppe="addBenutzerKompetenzGruppe"
-						:remove-benutzer-kompetenz-gruppe="removeBenutzerKompetenzGruppe" :benutzer-kompetenzen="benutzerKompetenzen" />
+					<s-benutzer-kompetenzgruppe :kompetenzgruppe :get-benutzer-manager :add-kompetenz :remove-kompetenz :add-benutzer-kompetenz-gruppe :remove-benutzer-kompetenz-gruppe :benutzer-kompetenzen />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -34,10 +31,9 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerKompetenz, BenutzerManager, List } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
-	import { BenutzerKompetenzGruppe } from "@core";
 	import { computed } from "vue";
+	import type { BenutzerKompetenz, BenutzerManager, List } from "@core";
+	import { BenutzerKompetenzGruppe } from "@core";
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;
@@ -49,9 +45,9 @@
 		benutzerKompetenzen : ( kompetenz : BenutzerKompetenzGruppe ) => List<BenutzerKompetenz>;
 	}>();
 
-	const kompetenzgruppen: ComputedRef<BenutzerKompetenzGruppe[]> = computed(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
+	const kompetenzgruppen = computed<BenutzerKompetenzGruppe[]>(() => BenutzerKompetenzGruppe.values().filter(gr => gr.daten.id >= 0));
 
-	const inputIstAdmin: WritableComputedRef<boolean> = computed({
+	const inputIstAdmin = computed<boolean>({
 		get: () => props.getBenutzerManager().istAdmin(),
 		set: (value) => {
 			if (value === props.getBenutzerManager().istAdmin())

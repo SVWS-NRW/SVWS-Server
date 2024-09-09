@@ -1,11 +1,10 @@
 package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLeitungsfunktionenEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.data.lehrer.LehrerLeitungsfunktionKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link LehrerKatalogLeitungsfunktionenEintrag}.
+ * Core-DTO {@link LehrerLeitungsfunktionKatalogEintrag}.
  */
 public final class DataKatalogLehrerLeitungsfunktionen extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogLeitungsfunktionenEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerLeitungsfunktionKatalogEintrag}.
 	 */
 	public DataKatalogLehrerLeitungsfunktionen() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKatalogLehrerLeitungsfunktionen extends DataManager<Long>
 
 	@Override
 	public Response getAll() {
-		final ArrayList<LehrerKatalogLeitungsfunktionenEintrag> daten = new ArrayList<>();
+		final ArrayList<LehrerLeitungsfunktionKatalogEintrag> daten = new ArrayList<>();
 		for (final LehrerLeitungsfunktion slf : LehrerLeitungsfunktion.values())
-			daten.addAll(Arrays.asList(slf.historie));
+			daten.addAll(slf.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

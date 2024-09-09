@@ -1,10 +1,8 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
-import de.svws_nrw.db.converter.current.SprachreferenzniveauConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -87,16 +85,12 @@ public class Tabelle_SchuelerSprachpruefungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Referenzniveau */
 	public SchemaTabelleSpalte col_Referenzniveau = add("Referenzniveau", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
-			.setConverter(SprachreferenzniveauConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Das Sprachreferenzniveau der Sprachprüfung gemäß GeR");
 
 	/** Die Definition der Tabellenspalte NotePruefung */
 	public SchemaTabelleSpalte col_NotePruefung = add("NotePruefung", SchemaDatentypen.INT, false)
-			.setConverter(NoteConverterFromInteger.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment(
-					"Note der Sprachprüfung, die herangezogen werden kann, falls die Note der Sprachprüfung an die Stelle einer" + " Fremdsprachennote tritt");
+					"Note der Sprachprüfung, die herangezogen werden kann, falls die Note der Sprachprüfung an die Stelle einer Fremdsprachennote tritt");
 
 
 	/** Die Definition des Fremdschlüssels SchuelerSprachpruefungen_Schueler_FK */

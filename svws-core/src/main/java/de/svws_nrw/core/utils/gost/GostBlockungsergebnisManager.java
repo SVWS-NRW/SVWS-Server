@@ -8,13 +8,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.Map.Entry;
 
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.adt.LongArrayKey;
-import de.svws_nrw.core.adt.Pair;
-import de.svws_nrw.core.adt.PairNN;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -41,8 +43,6 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostSchriftlichkeit;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
@@ -2291,7 +2291,9 @@ public class GostBlockungsergebnisManager {
 	 * @return TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
 	 */
 	private boolean getOfSchuelerHatStatusExtern(final @NotNull Long idSchueler) {
-		return getSchuelerG(idSchueler).status == SchuelerStatus.EXTERN.id;
+		final int idStatus = getSchuelerG(idSchueler).status;
+		final SchuelerStatus status = SchuelerStatus.data().getWertByID(idStatus);
+		return (status == SchuelerStatus.EXTERN);
 	}
 
 	/**

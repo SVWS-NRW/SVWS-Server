@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.SchuleInfo;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
@@ -199,10 +199,11 @@ public final class DBSchemaStatus {
 			info.schulNr = (result[1] instanceof final String str) ? Integer.parseInt(str) : -1;
 			if (info.schulNr < 0)
 				return null;
-			final Schulform sf = (result[2] instanceof final String str) ? Schulform.getByKuerzel(str) : null;
+			final String sfKuerzel = (result[2] instanceof final String str) ? str : null;
+			final Schulform sf = (sfKuerzel == null) ? null : Schulform.data().getWertByKuerzel(sfKuerzel);
 			if (sf == null)
 				return null;
-			info.schulform = sf.daten.kuerzel;
+			info.schulform = sfKuerzel;
 			info.bezeichnung = (result[3] instanceof final String str) ? str : "???";
 			if (result[4] instanceof final String str)
 				info.bezeichnung += "\n" + str;

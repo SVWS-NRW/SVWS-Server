@@ -110,7 +110,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
-		await this.data.setView(node, this.children);
+		this.data.setView(node, this.children);
 	}
 
 

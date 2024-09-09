@@ -2,6 +2,7 @@ import { SchuelerblockungOutput } from '../../core/data/kursblockung/Schuelerblo
 import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
 import { Random } from '../../java/util/Random';
 import { Service } from '../../core/Service';
+import { Class } from '../../java/lang/Class';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { SchuelerblockungDynDaten } from '../../core/kursblockung/SchuelerblockungDynDaten';
 
@@ -31,6 +32,8 @@ export class SchuelerblockungAlgorithmus extends Service<SchuelerblockungInput, 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus'].includes(name);
 	}
+
+	public static class = new Class<SchuelerblockungAlgorithmus>('de.svws_nrw.core.kursblockung.SchuelerblockungAlgorithmus');
 
 }
 

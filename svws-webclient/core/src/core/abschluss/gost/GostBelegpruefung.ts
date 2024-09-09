@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { AbiturdatenManager } from '../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../core/abschluss/gost/GostBelegungsfehler';
 
@@ -141,6 +142,8 @@ export abstract class GostBelegpruefung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<GostBelegpruefung>('de.svws_nrw.core.abschluss.gost.GostBelegpruefung');
 
 }
 

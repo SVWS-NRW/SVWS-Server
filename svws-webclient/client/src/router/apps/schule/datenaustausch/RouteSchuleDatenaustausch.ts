@@ -83,7 +83,7 @@ export class RouteSchuleDatenaustausch extends RouteNode<RouteDataSchuleDatenaus
 	}
 
 	private setChild = async (value: AuswahlChildData) => {
-		if (value.name === this.data.view?.name)
+		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)

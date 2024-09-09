@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -33,7 +33,7 @@ public class BenutzerKompetenzKatalogEintrag {
 
 	/** Die Schulformen. */
 	@Schema(description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
-	public List<Long> nurSchulformen = null;
+	public List<String> nurSchulformen = null;
 
 
 	/**
@@ -59,7 +59,7 @@ public class BenutzerKompetenzKatalogEintrag {
 		if (schulformen != null) {
 			this.nurSchulformen = new ArrayList<>();
 			for (final @NotNull Schulform schulform : schulformen)
-				this.nurSchulformen.add(schulform.daten.id);
+				this.nurSchulformen.add(schulform.name());
 		}
 	}
 

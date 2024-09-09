@@ -7,7 +7,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -16,12 +15,10 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
 
 /**
@@ -44,6 +41,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 		this.abijahr = abijahr;
 	}
 
+
 	/**
 	 * Bestimmt die Liste der Fächer der gymnasialen Oberstufe für den
 	 * spezifizierten Abiturjahrgang.
@@ -56,10 +54,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static GostFaecherManager getFaecherManager(final DBEntityManager conn, final int abijahr) throws ApiOperationException {
-		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-		if ((schule.Schulform == null) || (schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
-			return null;
-		return DBUtilsFaecherGost.getFaecherManager(conn, abijahr);
+		return DBUtilsFaecherGost.getFaecherManager(DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahr), conn, abijahr);
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public final class DataGostFaecher extends DataManager<Long> {
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahr);
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		if (faecher == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -84,12 +79,12 @@ public final class DataGostFaecher extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		GostFach daten = null;
 		if (abijahr == -1) {
-			daten = DBUtilsFaecherGost.mapFromDTOFach(fach, faecher);
+			daten = DBUtilsFaecherGost.mapFromDTOFach(schuljahr, fach, faecher);
 		} else {
 			if (conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr) == null)
 				throw new ApiOperationException(Status.NOT_FOUND);
 			final DTOGostJahrgangFaecher jf = conn.queryByKey(DTOGostJahrgangFaecher.class, abijahr, id);
-			daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(id, jf, faecher);
+			daten = DBUtilsFaecherGost.mapFromDTOGostJahrgangFaecher(schuljahr, id, jf, faecher);
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

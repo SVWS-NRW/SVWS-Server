@@ -2,6 +2,7 @@ import { SchuldateiOrganisationseinheitSchulform } from '../../../schulen/v1/dat
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag {
 
@@ -100,6 +101,8 @@ export class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitGrunddaten'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiOrganisationseinheitGrunddaten>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitGrunddaten');
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitGrunddaten {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitGrunddaten>;

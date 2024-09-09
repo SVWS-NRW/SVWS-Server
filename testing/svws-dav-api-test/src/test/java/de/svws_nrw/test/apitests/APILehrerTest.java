@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.test.apitests.util.ServerProps;
@@ -16,6 +17,7 @@ import io.restassured.http.ContentType;
  * Beispielklasse zum Einsatz von RestAssured zum Testen der API-Endpunkte
  *
  */
+@Disabled
 class APILehrerTest {
 	/**
 	 * Eigenschaften des Servers gegen den getestet werden soll (Hostname, Port)

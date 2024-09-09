@@ -1,11 +1,12 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchulformSchulgliederung } from '../../../core/data/schule/SchulformSchulgliederung';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { SchulformSchulgliederung } from '../../../asd/data/schule/SchulformSchulgliederung';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
-import { Pair } from '../../../core/adt/Pair';
+import { Class } from '../../../java/lang/Class';
+import { Pair } from '../../../asd/adt/Pair';
 
 export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 
@@ -78,12 +79,9 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 			if (zulaessig !== null) {
 				for (const zul of zulaessig) {
 					const sfsgl : SchulformSchulgliederung | null = new SchulformSchulgliederung();
-					const sf : Schulform = zul.a;
-					if (sf.daten === null)
-						continue;
-					sfsgl.schulform = sf.daten.kuerzel;
+					sfsgl.schulform = zul.a.name();
 					const sgl : Schulgliederung | null = zul.b;
-					sfsgl.gliederung = ((sgl === null) || (sgl.daten === null)) ? null : sgl.daten.kuerzel;
+					sfsgl.gliederung = (sgl === null) ? null : sgl.name();
 					this.zulaessig.add(sfsgl);
 				}
 			}
@@ -99,6 +97,8 @@ export class HerkunftsschulnummerKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<HerkunftsschulnummerKatalogEintrag>('de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): HerkunftsschulnummerKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<HerkunftsschulnummerKatalogEintrag>;

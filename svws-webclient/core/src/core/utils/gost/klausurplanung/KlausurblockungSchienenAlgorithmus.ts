@@ -14,6 +14,7 @@ import { KlausurblockungSchienenAlgorithmusAbstract } from '../../../../core/uti
 import { KlausurblockungSchienenAlgorithmusGreedy2b } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenAlgorithmusGreedy2b';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class KlausurblockungSchienenAlgorithmus extends JavaObject {
@@ -83,6 +84,8 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungSchienenAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmus');
 
 }
 

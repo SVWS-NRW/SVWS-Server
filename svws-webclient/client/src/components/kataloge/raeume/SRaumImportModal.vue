@@ -37,7 +37,7 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files) {
 			file.value = target.files[0];
 		}
 		loading.value = false;

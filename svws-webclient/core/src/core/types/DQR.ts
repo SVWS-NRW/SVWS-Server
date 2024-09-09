@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
+import { Class } from '../../java/lang/Class';
 
 export class DQR extends JavaEnum<DQR> {
 
@@ -100,6 +101,8 @@ export class DQR extends JavaEnum<DQR> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.DQR', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<DQR>('de.svws_nrw.core.types.DQR');
 
 }
 

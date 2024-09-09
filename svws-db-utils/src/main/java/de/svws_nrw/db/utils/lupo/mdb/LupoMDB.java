@@ -22,14 +22,14 @@ import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.SchuelerStatus;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
@@ -242,7 +242,7 @@ public class LupoMDB {
 					.setParameter("jahrgang", jahrgang)
 					.getResultList();
 			final List<Long> schuelerIDs = dtoSchueler.stream().map(s -> s.ID).toList();
-			final Map<Long, GostLeistungen> gostLeistungen = DBUtilsGost.getLeistungsdaten(conn, schuelerIDs);
+			final Map<Long, GostLeistungen> gostLeistungen = DBUtilsGost.getLeistungsdaten(schuljahresabschnitt.Jahr, conn, schuelerIDs);
 			final Map<Long, DTOGostSchueler> dtoLupoSchueler = conn.queryAll(DTOGostSchueler.class).stream()
 					.collect(Collectors.toMap(s -> s.Schueler_ID, s -> s));
 			final Map<Long, DTOLehrer> mapLehrer = conn.queryAll(DTOLehrer.class).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
@@ -650,7 +650,7 @@ public class LupoMDB {
 	public Schulform retrieveSchulform() {
 		if (schuldaten.size() != 1)
 			return null;
-		return Schulform.getByKuerzel(schuldaten.get(0).SchulformKrz);
+		return Schulform.data().getWertByKuerzel(schuldaten.get(0).SchulformKrz);
 	}
 
 
@@ -729,7 +729,7 @@ public class LupoMDB {
 			abidaten.bilingualeSprache = lupoSchueler.Bilingual;
 
 			abidaten.besondereLernleistung = GostBesondereLernleistung.fromKuerzel(lupoSchueler.BLL_Art).kuerzel;
-			abidaten.besondereLernleistungNotenKuerzel = Note.fromNotenpunkte(lupoSchueler.BLL_Punkte).kuerzel;
+			abidaten.besondereLernleistungNotenKuerzel = Note.fromNotenpunkte(lupoSchueler.BLL_Punkte).daten(abidaten.schuljahrAbitur).kuerzel;
 			try {
 				abidaten.block1AnzahlKurse = Integer.parseInt(lupoSchueler.AnzK_Summe);
 			} catch (@SuppressWarnings("unused") final NumberFormatException e) {
@@ -752,7 +752,7 @@ public class LupoMDB {
 			if (lupoFach == null)
 				continue; // ignoriere Belegungen, wo das Fach nicht korrekt definiert ist
 
-			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(lupoFach.StatistikKrz);
+			final Fach zulFach = Fach.data().getWertBySchluessel(lupoFach.StatistikKrz);
 			if (zulFach == null)
 				continue; // ignoriere unzulässige Fächer
 
@@ -771,7 +771,8 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[0], lupoSchuelerFach.Kursart_E1, fachKursart, lupoFach.Q_WStd, false);
 				fachbelegung.letzteKursart = fachbelegung.belegungen[0].kursartKuerzel;
 				fachbelegung.belegungen[0].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[0].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E1);
+				fachbelegung.belegungen[0].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E1).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (lupoSchuelerFach.Kursart_E2 != null) {
 				fachbelegung.belegungen[1] = new AbiturFachbelegungHalbjahr();
@@ -779,7 +780,8 @@ public class LupoMDB {
 				setFachbelegung(fachbelegung.belegungen[1], lupoSchuelerFach.Kursart_E2, fachKursart, lupoFach.Q_WStd, false);
 				fachbelegung.letzteKursart = fachbelegung.belegungen[1].kursartKuerzel;
 				fachbelegung.belegungen[1].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[1].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E2);
+				fachbelegung.belegungen[1].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_E2).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (lupoSchuelerFach.Kursart_Q1 != null) {
 				fachbelegung.belegungen[2] = new AbiturFachbelegungHalbjahr();
@@ -788,7 +790,8 @@ public class LupoMDB {
 						"J".equals(lupoSchuelerFach.Markiert_Q1));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[2].kursartKuerzel;
 				fachbelegung.belegungen[2].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[2].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q1);
+				fachbelegung.belegungen[2].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q1).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (lupoSchuelerFach.Kursart_Q2 != null) {
 				fachbelegung.belegungen[3] = new AbiturFachbelegungHalbjahr();
@@ -797,7 +800,8 @@ public class LupoMDB {
 						"J".equals(lupoSchuelerFach.Markiert_Q2));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[3].kursartKuerzel;
 				fachbelegung.belegungen[3].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[3].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q2);
+				fachbelegung.belegungen[3].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q2).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (lupoSchuelerFach.Kursart_Q3 != null) {
 				fachbelegung.belegungen[4] = new AbiturFachbelegungHalbjahr();
@@ -806,7 +810,8 @@ public class LupoMDB {
 						"J".equals(lupoSchuelerFach.Markiert_Q3));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[4].kursartKuerzel;
 				fachbelegung.belegungen[4].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[4].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q3);
+				fachbelegung.belegungen[4].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q3).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (lupoSchuelerFach.Kursart_Q4 != null) {
 				fachbelegung.belegungen[5] = new AbiturFachbelegungHalbjahr();
@@ -815,15 +820,16 @@ public class LupoMDB {
 						"J".equals(lupoSchuelerFach.Markiert_Q4));
 				fachbelegung.letzteKursart = fachbelegung.belegungen[5].kursartKuerzel;
 				fachbelegung.belegungen[5].biliSprache = lupoFach.Unterichtssprache;
-				fachbelegung.belegungen[5].notenkuerzel = getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q4);
+				fachbelegung.belegungen[5].notenkuerzel =
+						getNotenkuerzelFromLupoNotenpunkte(lupoSchuelerFach.Punkte_Q4).daten(abidaten.schuljahrAbitur).kuerzel;
 			}
 			if (fachKursart == GostKursart.PJK) {
 				abidaten.projektkursLeitfach1Kuerzel = lupoFach.Leitfach;
 				abidaten.projektkursLeitfach2Kuerzel = lupoFach.Leitfach2;
 			}
-			if ((lupoSchuelerFach.FS_BeginnJg != null) && (lupoSchuelerFach.Sprachenfolge != null) && zulFach.daten.istFremdsprache) {
+			if ((lupoSchuelerFach.FS_BeginnJg != null) && (lupoSchuelerFach.Sprachenfolge != null) && zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache) {
 				final Sprachbelegung sprachbelegung = new Sprachbelegung();
-				sprachbelegung.sprache = zulFach.daten.kuerzel;
+				sprachbelegung.sprache = zulFach.daten(abidaten.schuljahrAbitur).kuerzel;
 				try {
 					sprachbelegung.reihenfolge = Integer.parseInt(lupoSchuelerFach.Sprachenfolge);
 				} catch (@SuppressWarnings("unused") final NumberFormatException e) {
@@ -852,13 +858,14 @@ public class LupoMDB {
 			if (lupoFach == null)
 				continue; // ignoriere Belegungen, wo das Fach nicht korrekt definiert ist
 
-			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(lupoFach.StatistikKrz);
+			final Fach zulFach = Fach.data().getWertBySchluessel(lupoFach.StatistikKrz);
 			if (zulFach == null)
 				continue; // ignoriere unzulässige Fächer
 
-			if ((lupoSchuelerSprachenfolge.JahrgangVon != null) && (lupoSchuelerSprachenfolge.Reihenfolge != null) && zulFach.daten.istFremdsprache) {
+			if ((lupoSchuelerSprachenfolge.JahrgangVon != null) && (lupoSchuelerSprachenfolge.Reihenfolge != null)
+					&& zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache) {
 				final Sprachbelegung sprachbelegung = new Sprachbelegung();
-				sprachbelegung.sprache = zulFach.daten.kuerzel;
+				sprachbelegung.sprache = zulFach.daten(abidaten.schuljahrAbitur).kuerzel;
 				try {
 					sprachbelegung.reihenfolge = Integer.parseInt(lupoSchuelerSprachenfolge.Reihenfolge);
 				} catch (@SuppressWarnings("unused") final NumberFormatException e) {
@@ -877,29 +884,29 @@ public class LupoMDB {
 	}
 
 
-	private static String getNotenkuerzelFromLupoNotenpunkte(final String lupoNotenpunkte) {
+	private static Note getNotenkuerzelFromLupoNotenpunkte(final String lupoNotenpunkte) {
 		if (lupoNotenpunkte == null)
 			return null;
 		return switch (lupoNotenpunkte) {
-			case "E1" -> Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN.kuerzel;
-			case "E2" -> Note.E2_MIT_ERFOLG_TEILGENOMMEN.kuerzel;
-			case "E3" -> Note.E3_TEILGENOMMEN.kuerzel;
-			case "00", "0" -> Note.UNGENUEGEND.kuerzel;
-			case "01", "1" -> Note.MANGELHAFT_MINUS.kuerzel;
-			case "02", "2" -> Note.MANGELHAFT.kuerzel;
-			case "03", "3" -> Note.MANGELHAFT_PLUS.kuerzel;
-			case "04", "4" -> Note.AUSREICHEND_MINUS.kuerzel;
-			case "05", "5" -> Note.AUSREICHEND.kuerzel;
-			case "06", "6" -> Note.AUSREICHEND_PLUS.kuerzel;
-			case "07", "7" -> Note.BEFRIEDIGEND_MINUS.kuerzel;
-			case "08", "8" -> Note.BEFRIEDIGEND.kuerzel;
-			case "09", "9" -> Note.BEFRIEDIGEND_PLUS.kuerzel;
-			case "10" -> Note.GUT_MINUS.kuerzel;
-			case "11" -> Note.GUT.kuerzel;
-			case "12" -> Note.GUT_PLUS.kuerzel;
-			case "13" -> Note.SEHR_GUT_MINUS.kuerzel;
-			case "14" -> Note.SEHR_GUT.kuerzel;
-			case "15" -> Note.SEHR_GUT_PLUS.kuerzel;
+			case "E1" -> Note.E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN;
+			case "E2" -> Note.E2_MIT_ERFOLG_TEILGENOMMEN;
+			case "E3" -> Note.E3_TEILGENOMMEN;
+			case "00", "0" -> Note.UNGENUEGEND;
+			case "01", "1" -> Note.MANGELHAFT_MINUS;
+			case "02", "2" -> Note.MANGELHAFT;
+			case "03", "3" -> Note.MANGELHAFT_PLUS;
+			case "04", "4" -> Note.AUSREICHEND_MINUS;
+			case "05", "5" -> Note.AUSREICHEND;
+			case "06", "6" -> Note.AUSREICHEND_PLUS;
+			case "07", "7" -> Note.BEFRIEDIGEND_MINUS;
+			case "08", "8" -> Note.BEFRIEDIGEND;
+			case "09", "9" -> Note.BEFRIEDIGEND_PLUS;
+			case "10" -> Note.GUT_MINUS;
+			case "11" -> Note.GUT;
+			case "12" -> Note.GUT_PLUS;
+			case "13" -> Note.SEHR_GUT_MINUS;
+			case "14" -> Note.SEHR_GUT;
+			case "15" -> Note.SEHR_GUT_PLUS;
 			default -> null;
 		};
 	}

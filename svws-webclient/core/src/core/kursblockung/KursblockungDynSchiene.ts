@@ -3,6 +3,7 @@ import { AVLSet } from '../../core/adt/set/AVLSet';
 import { KursblockungDynStatistik } from '../../core/kursblockung/KursblockungDynStatistik';
 import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
 import { LogLevel } from '../../core/logger/LogLevel';
@@ -146,6 +147,8 @@ export class KursblockungDynSchiene extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchiene'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynSchiene>('de.svws_nrw.core.kursblockung.KursblockungDynSchiene');
 
 }
 

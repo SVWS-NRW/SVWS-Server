@@ -12,20 +12,21 @@ import { GostKlausurenUpdate } from '../../../../core/data/gost/klausurplanung/G
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../../java/util/Comparator';
 import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
-import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
 import { cast_java_util_List } from '../../../../java/util/List';
 import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
 import { HashMap5D } from '../../../../core/adt/map/HashMap5D';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 import { HashSet } from '../../../../java/util/HashSet';
+import { Fach } from '../../../../asd/types/fach/Fach';
 import { MapUtils } from '../../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../../core/utils/Map2DUtils';
 import { StundenplanRaum } from '../../../../core/data/stundenplan/StundenplanRaum';
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { GostSchuelerklausurTerminRich } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTerminRich';
-import { PairNN } from '../../../../core/adt/PairNN';
+import { PairNN } from '../../../../asd/adt/PairNN';
 import { JavaLong } from '../../../../java/lang/JavaLong';
+import { Class } from '../../../../java/lang/Class';
 import type { JavaMap } from '../../../../java/util/JavaMap';
 import { GostKlausurenCollectionSkrsKrsData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';
 import { HashMap4D } from '../../../../core/adt/map/HashMap4D';
@@ -51,6 +52,8 @@ import { ListUtils } from '../../../../core/utils/ListUtils';
 import { Map4DUtils } from '../../../../core/utils/Map4DUtils';
 
 export class GostKlausurplanManager extends JavaObject {
+
+	private readonly _schuljahr : number;
 
 	private _faecherManager : GostFaecherManager | null = null;
 
@@ -155,13 +158,13 @@ export class GostKlausurplanManager extends JavaObject {
 				const sB : SchuelerListeEintrag | null = this._schuelerMap.get(kB.idSchueler);
 				if ((sA === null) || (sB === null))
 					throw new DeveloperNotificationException("Schüler muss in SchuelerMap enthalten sein.")
-				let nameComparison : number = JavaString.compareTo((sA.nachname + "," + sA.vorname), sB.nachname + "," + sB.vorname);
+				const nameComparison : number = JavaString.compareTo((sA.nachname + "," + sA.vorname), sB.nachname + "," + sB.vorname);
 				if (nameComparison !== 0)
 					return nameComparison;
 			}
 		}
 		if (a.idSchuelerklausur === b.idSchuelerklausur) {
-			let folgeNrComparison : number = JavaInteger.compare(a.folgeNr, b.folgeNr);
+			const folgeNrComparison : number = JavaInteger.compare(a.folgeNr, b.folgeNr);
 			if (folgeNrComparison !== 0)
 				return folgeNrComparison;
 		}
@@ -279,68 +282,83 @@ export class GostKlausurplanManager extends JavaObject {
 
 	/**
 	 * Erstellt einen leeren Manager.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 */
-	public constructor();
+	public constructor(schuljahr : number);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param listVorgaben die Liste der {@link GostKlausurvorgabe}n
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>);
+	public constructor(schuljahr : number, listVorgaben : List<GostKlausurvorgabe>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n und dem übergebenen {@link GostFaecherManager}
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param faecherManager der GostFaecherManager
 	 * @param listVorgaben 	die Liste der GostKlausurvorgaben
 	 */
-	public constructor(faecherManager : GostFaecherManager | null, listVorgaben : List<GostKlausurvorgabe>);
+	public constructor(schuljahr : number, faecherManager : GostFaecherManager | null, listVorgaben : List<GostKlausurvorgabe>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausur}en, {@link GostKlausurtermin}en,
 	 * {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param listVorgaben 			die Liste der {@link GostKlausurvorgabe}n
 	 * @param listKlausuren         die Liste der {@link GostKursklausur}en
 	 * @param listTermine           die Liste der {@link GostKlausurtermin}e
 	 * @param listSchuelerklausuren die Liste der {@link GostSchuelerklausur}en
 	 * @param listSchuelerklausurtermine die Liste der {@link GostSchuelerklausurTermin}e
 	 */
-	public constructor(listVorgaben : List<GostKlausurvorgabe>, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>, listSchuelerklausuren : List<GostSchuelerklausur>, listSchuelerklausurtermine : List<GostSchuelerklausurTermin>);
+	public constructor(schuljahr : number, listVorgaben : List<GostKlausurvorgabe>, listKlausuren : List<GostKursklausur>, listTermine : List<GostKlausurtermin>, listSchuelerklausuren : List<GostSchuelerklausur>, listSchuelerklausurtermine : List<GostSchuelerklausurTermin>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen {@link GostKlausurenCollectionAllData} enthaltenen Daten
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param allData            das {@link GostKlausurenCollectionAllData}-Objekt, das alle Informationen enthält
 	 */
-	public constructor(allData : GostKlausurenCollectionAllData);
+	public constructor(schuljahr : number, allData : GostKlausurenCollectionAllData);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : GostFaecherManager | GostKlausurenCollectionAllData | List<GostKlausurvorgabe> | null, __param1? : List<GostKlausurvorgabe> | List<GostKursklausur>, __param2? : List<GostKlausurtermin>, __param3? : List<GostSchuelerklausur>, __param4? : List<GostSchuelerklausurTermin>) {
+	public constructor(__param0 : number, __param1? : GostFaecherManager | GostKlausurenCollectionAllData | List<GostKlausurvorgabe> | null, __param2? : List<GostKlausurvorgabe> | List<GostKursklausur>, __param3? : List<GostKlausurtermin>, __param4? : List<GostSchuelerklausur>, __param5? : List<GostSchuelerklausurTermin>) {
 		super();
-		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
-			// empty method body
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
-			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
-			this.vorgabeAddAll(listVorgaben);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
-			const faecherManager : GostFaecherManager | null = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param0);
+		if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined)) {
+			const schuljahr : number = __param0 as number;
+			this._schuljahr = schuljahr;
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined)) {
+			const schuljahr : number = __param0 as number;
 			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
+			this._schuljahr = schuljahr;
+			this.vorgabeAddAll(listVorgaben);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined)) {
+			const schuljahr : number = __param0 as number;
+			const faecherManager : GostFaecherManager | null = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
+			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param2);
+			this._schuljahr = schuljahr;
 			this._faecherManager = faecherManager;
 			this.vorgabeAddAll(listVorgaben);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null))) {
-			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param0);
-			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param1);
-			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param2);
-			const listSchuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param3);
-			const listSchuelerklausurtermine : List<GostSchuelerklausurTermin> = cast_java_util_List(__param4);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null)) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && ((__param4 instanceof JavaObject) && (__param4.isTranspiledInstanceOf('java.util.List'))) || (__param4 === null)) && ((__param5 !== undefined) && ((__param5 instanceof JavaObject) && (__param5.isTranspiledInstanceOf('java.util.List'))) || (__param5 === null))) {
+			const schuljahr : number = __param0 as number;
+			const listVorgaben : List<GostKlausurvorgabe> = cast_java_util_List(__param1);
+			const listKlausuren : List<GostKursklausur> = cast_java_util_List(__param2);
+			const listTermine : List<GostKlausurtermin> = cast_java_util_List(__param3);
+			const listSchuelerklausuren : List<GostSchuelerklausur> = cast_java_util_List(__param4);
+			const listSchuelerklausurtermine : List<GostSchuelerklausurTermin> = cast_java_util_List(__param5);
+			this._schuljahr = schuljahr;
 			this.addKlausurDataOhneUpdate(listVorgaben, listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
 			this.update_all();
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData')))) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
-			const allData : GostKlausurenCollectionAllData = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionAllData(__param0);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData')))) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined) && (__param5 === undefined)) {
+			const schuljahr : number = __param0 as number;
+			const allData : GostKlausurenCollectionAllData = cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionAllData(__param1);
+			this._schuljahr = schuljahr;
 			this.addAllData(allData);
 		} else throw new Error('invalid method overload');
 	}
@@ -386,7 +404,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private initMetadata(meta : GostKlausurenCollectionMetaData) : void {
-		this._faecherManager = (meta.faecher !== null && !meta.faecher.isEmpty()) ? new GostFaecherManager(meta.faecher) : null;
+		this._faecherManager = (meta.faecher !== null && !meta.faecher.isEmpty()) ? new GostFaecherManager(this._schuljahr, meta.faecher) : null;
 		this._kursManager = (meta.kurse !== null && !meta.kurse.isEmpty()) ? new KursManager(meta.kurse) : null;
 		if (meta.kurse !== null && !meta.kurse.isEmpty())
 			this.setKursManager(new KursManager(meta.kurse));
@@ -442,6 +460,15 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public hasRaumdataZuTermin(termin : GostKlausurtermin) : boolean {
 		return this._terminidmenge_manager_enthaelt_raumdata.contains(termin.id);
+	}
+
+	/**
+	 * Gibt das Schuljahr zurück, auf welches sich der Manager bezieht.
+	 *
+	 * @return das Schuljahr
+	 */
+	public getSchuljahr() : number {
+		return this._schuljahr;
 	}
 
 	/**
@@ -1202,7 +1229,7 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	private kursklausurfehlendRemoveOhneUpdate(kursklausur : GostKursklausur) : void {
-		let vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(kursklausur);
+		const vorgabe : GostKlausurvorgabe = this.vorgabeByKursklausur(kursklausur);
 		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, kursklausur.idKurs);
 	}
 
@@ -3602,12 +3629,12 @@ export class GostKlausurplanManager extends JavaObject {
 	 * Gibt die HTML-Farbe des zulässigen Faches zur übergebenen {@link GostKursklausur} als Aufruf der rgba-Funktion
 	 * mit der Transparenz 1.0 zurück.
 	 *
-	 * @param k die {@link GostKursklausur}
+	 * @param k           die {@link GostKursklausur}
 	 *
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public fachHTMLFarbeRgbaByKursklausur(k : GostKursklausur) : string {
-		return ZulaessigesFach.getByKuerzelASD(this.fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(1.0);
+		return Fach.data().getWertBySchluesselOrException(this.fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(this._schuljahr, 1.0);
 	}
 
 	/**
@@ -4262,7 +4289,7 @@ export class GostKlausurplanManager extends JavaObject {
 		if (sksMap === null || sksMap.isEmpty())
 			return ergebnis;
 		for (const sk of sksMap.entrySet()) {
-			let schueler : SchuelerListeEintrag | null = this.getSchuelerMap().get(sk.getKey());
+			const schueler : SchuelerListeEintrag | null = this.getSchuelerMap().get(sk.getKey());
 			if (!sk.getValue().isEmpty() && (schueler === null || schueler.abiturjahrgang !== abijahrgang))
 				ergebnis.addAll(sk.getValue());
 		}
@@ -4426,6 +4453,8 @@ export class GostKlausurplanManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurplanManager>('de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager');
 
 }
 

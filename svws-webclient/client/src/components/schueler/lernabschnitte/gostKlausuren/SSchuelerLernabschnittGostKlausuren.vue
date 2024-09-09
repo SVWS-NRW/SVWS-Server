@@ -55,7 +55,11 @@
 					{{ kMan().kursLehrerKuerzelByKursklausur(kMan().kursklausurBySchuelerklausur(rowData)) }}
 				</template>
 			</svws-ui-table>
-			<div v-if="GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt) !== null" class="mt-2 flex"><svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(manager().schuelerGet().abiturjahrgang!, GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt)!.id ))" :title="`Planung öffnen`" size="small"><span class="icon i-ri-link" /> Planung öffnen</svws-ui-button></div>
+			<div v-if="GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(manager().schuelerGet().abiturjahrgang!, manager().schuljahresabschnittGet().schuljahr, manager().schuljahresabschnittGet().abschnitt) !== null"
+				class="mt-2 flex">
+				<svws-ui-button type="transparent" size="small" @click="gotoPlanung">
+					<span class="icon i-ri-link" /> Planung öffnen
+				</svws-ui-button></div>
 		</svws-ui-content-card>
 		<div v-else>
 			Kein Gost-Lernabschnitt ausgewählt.
@@ -65,21 +69,18 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { DataTableColumn } from "@ui";
+	import type { SchuelerLernabschnittGostKlausurenProps } from "./SSchuelerLernabschnittGostKlausurenProps";
 	import { GostHalbjahr, GostSchuelerklausurTermin } from "@core";
 	import { DateUtils } from "@core";
-	import { RouteManager } from '~/router/RouteManager';
-	import type { SchuelerLernabschnittGostKlausurenProps } from "./SSchuelerLernabschnittGostKlausurenProps";
-	import { routeGostKlausurplanungNachschreiber } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber";
-	import type { Ref} from "vue";
-	import { ref } from "vue";
 
 	const props = defineProps<SchuelerLernabschnittGostKlausurenProps>();
 
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
 
-	const terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
+	const terminSelected = ref<GostSchuelerklausurTermin>(new GostSchuelerklausurTermin());
 
 	const createTermin = async (create: boolean) => {
 		if (create) {

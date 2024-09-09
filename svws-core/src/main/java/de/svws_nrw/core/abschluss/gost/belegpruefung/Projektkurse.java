@@ -12,7 +12,7 @@ import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -232,8 +232,8 @@ public final class Projektkurse extends GostBelegpruefung {
 				if (lf == null)
 					throw new DeveloperNotificationException(
 							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
-				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
-				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
+				final Fach zf = Fach.data().getWertBySchluessel(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 					addFehler(GostBelegungsfehler.PF_19);
 				continue;
 			}
@@ -243,8 +243,8 @@ public final class Projektkurse extends GostBelegpruefung {
 				if (lf == null)
 					throw new DeveloperNotificationException(
 							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
-				final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
-				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf.equals(ZulaessigesFach.PX) || zf.equals(ZulaessigesFach.VX))))
+				final Fach zf = Fach.data().getWertBySchluessel(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 					addFehler(GostBelegungsfehler.PF_19);
 				continue;
 			}

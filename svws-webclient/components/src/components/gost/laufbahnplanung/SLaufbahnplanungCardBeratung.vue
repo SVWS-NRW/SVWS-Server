@@ -85,7 +85,5 @@
 		return items.filter(i => (i.istSichtbar === true) && (i.kuerzel.includes(search.toLocaleLowerCase()) || i.nachname?.toLocaleLowerCase().includes(search.toLocaleLowerCase())));
 	};
 
-</script>import { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
-import { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
-import { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+</script>
 

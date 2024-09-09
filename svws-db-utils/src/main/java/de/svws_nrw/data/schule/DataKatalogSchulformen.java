@@ -1,14 +1,13 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 
@@ -31,7 +30,7 @@ public final class DataKatalogSchulformen extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<SchulformKatalogEintrag> daten = new ArrayList<>();
 		for (final Schulform schulform : Schulform.values())
-			daten.addAll(Arrays.asList(schulform.historie));
+			daten.addAll(schulform.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

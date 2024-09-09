@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbiturFachbelegungHalbjahr } from '../../../core/data/gost/AbiturFachbelegungHalbjahr';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../java/lang/Class';
 
 export class AbiturFachbelegung extends JavaObject {
 
@@ -96,6 +97,8 @@ export class AbiturFachbelegung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.AbiturFachbelegung'].includes(name);
 	}
+
+	public static class = new Class<AbiturFachbelegung>('de.svws_nrw.core.data.gost.AbiturFachbelegung');
 
 	public static transpilerFromJSON(json : string): AbiturFachbelegung {
 		const obj = JSON.parse(json) as Partial<AbiturFachbelegung>;

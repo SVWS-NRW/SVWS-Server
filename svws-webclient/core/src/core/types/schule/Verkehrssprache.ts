@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { VerkehrsspracheKatalogEintrag } from '../../../core/data/schule/VerkehrsspracheKatalogEintrag';
+import { Class } from '../../../java/lang/Class';
 
 export class Verkehrssprache extends JavaEnum<Verkehrssprache> {
 
@@ -2482,6 +2483,8 @@ export class Verkehrssprache extends JavaEnum<Verkehrssprache> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Verkehrssprache', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Verkehrssprache>('de.svws_nrw.core.types.schule.Verkehrssprache');
 
 }
 

@@ -2,8 +2,8 @@ package de.svws_nrw.core.data.schueler;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 

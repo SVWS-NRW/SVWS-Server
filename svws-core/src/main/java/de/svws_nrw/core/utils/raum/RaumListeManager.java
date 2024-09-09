@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.schule.Raum;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AuswahlManager;
 
 import jakarta.validation.constraints.NotNull;

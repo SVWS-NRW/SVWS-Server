@@ -3,18 +3,19 @@
 		<svws-ui-content-card title="Sprachenfolge">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachen.length" class="w-1/4 mb-4">
 				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegen(sprache)"
-					:items="verfuegbareSprachen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`"
+					:items="verfuegbareSprachen" :item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`"
 					ref="selectSprachen" />
 			</div>
 			<svws-ui-table v-if="sprachbelegungen().size()" :items="sprachbelegungen()" :columns="colsSprachenfolge" :selectable="hatUpdateKompetenz" v-model="auswahl">
-				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
 				<template #cell(reihenfolge)="{ rowData }">
 					<svws-ui-input-number v-if="hatUpdateKompetenz" title="Reihenfolge" headless :model-value="rowData.reihenfolge"
 						@update:model-value="reihenfolge=>reihenfolge && patchSprachbelegung({reihenfolge}, rowData.sprache)" :min="1" :max="9" />
 					<span v-else> {{ rowData.reihenfolge ?? "-" }} </span>
 				</template>
 				<template #cell(belegungVonAbschnitt)="{ rowData }">
-					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
+					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer"
+						@click="patchSprachbelegung({belegungVonAbschnitt: rowData.belegungVonAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungVonAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungVonAbschnitt === 1}">2</span>
@@ -22,13 +23,14 @@
 					<div v-else> {{ rowData.belegungVonAbschnitt ?? "?" }} </div>
 				</template>
 				<template #cell(belegungVonJahrgang)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Von Jahrgang" headless :model-value="Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)"
-						@update:model-value="jahrgang => jahrgang?.daten.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten.kuerzel, sprache: rowData.sprache}, rowData.sprache)"
-						:items="sprachJahrgaengeVon" :item-text="i => i?.daten.kuerzel || ''" />
-					<div v-else> {{ Jahrgaenge.getByKuerzel(rowData.belegungVonJahrgang)?.daten.kuerzel ?? "" }} </div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Von Jahrgang" headless :model-value="(rowData.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungVonJahrgang)"
+						@update:model-value="jahrgang => jahrgang?.daten(schuljahr)?.kuerzel && patchSprachbelegung({belegungVonJahrgang: jahrgang.daten(schuljahr)!.kuerzel, sprache: rowData.sprache}, rowData.sprache)"
+						:items="sprachJahrgaengeVon" :item-text="i => i?.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else> {{ (rowData.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungVonJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
 				</template>
 				<template #cell(belegungBisAbschnitt)="{ rowData }">
-					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer" @click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungBisAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
+					<div v-if="hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded cursor-pointer"
+						@click="patchSprachbelegung({belegungBisAbschnitt: rowData.belegungBisAbschnitt === 1 ? 2 : 1}, rowData.sprache)">
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 1, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 2}">1</span>
 						<span class="opacity-50">|</span>
 						<span :class="{ 'opacity-100 font-bold': rowData.belegungBisAbschnitt === 2, 'opacity-25 hover:opacity-100 font-medium': rowData.belegungBisAbschnitt === 1}">2</span>
@@ -36,10 +38,10 @@
 					<div v-else> {{ rowData.belegungBisAbschnitt ?? "?" }} </div>
 				</template>
 				<template #cell(belegungBisJahrgang)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Bis Jahrgang" headless removable :model-value="Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)"
-						@update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)"
-						:items="sprachJahrgaengeBis(rowData).value" :item-text="i=>i?.daten.kuerzel || ''" />
-					<div v-else> {{ Jahrgaenge.getByKuerzel(rowData.belegungBisJahrgang)?.daten.kuerzel ?? "" }} </div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Bis Jahrgang" headless removable :model-value="(rowData.belegungBisJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungBisJahrgang)"
+						@update:model-value="jahrgang => patchSprachbelegung({belegungBisJahrgang: jahrgang?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:items="sprachJahrgaengeBis(rowData).value" :item-text="i=>i?.daten(schuljahr)?.kuerzel || '—'" />
+					<div v-else> {{ (rowData.belegungBisJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungBisJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
 					<template v-if="rowData.sprache === 'G'" >
@@ -57,9 +59,10 @@
 						<div v-else> {{ latinum?.text ?? '-' }} </div>
 					</template>
 					<template v-else>
-						<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)"
-							@update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten.kuerzel ?? null}, rowData.sprache)"
-							:items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
+						<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
+							:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
+							@update:model-value="referenzniveau => patchSprachbelegung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+							:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
 						<div v-else> {{ rowData.referenzniveau }} </div>
 					</template>
 				</template>
@@ -72,31 +75,47 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Herkunftsprachlicher Unterricht">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)" :items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache=> hinzufuegenPruefung(sprache, true)"
+					:items="verfuegbareSprachenPruefungen" :item-text="i=> `${i} - ${ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—' }`"
+					ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenHSU.length" :items="sprachpruefungenHSU" :columns="colsSprachpruefungenHSU" :selectable="hatUpdateKompetenz" v-model="auswahlPrHSU">
-				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text }} </template>
 				<template #cell(kannBelegungAlsFortgefuehrteSpracheErlauben)="{ rowData }">
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="rowData.kannBelegungAlsFortgefuehrteSpracheErlauben" @update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, rowData.sprache)" headless />
+					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="rowData.kannBelegungAlsFortgefuehrteSpracheErlauben"
+						@update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, rowData.sprache)"
+						headless />
 				</template>
 				<template #cell(jahrgang)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Jahrgang" headless removable :model-value="Jahrgaenge.getByKuerzel(rowData.jahrgang)" @update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)" :items="sprachJahrgaengeVon" :item-text="i=>i?.daten.kuerzel || ''" />
-					<div v-else>{{ Jahrgaenge.getByKuerzel(rowData.jahrgang)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Jahrgang" headless removable
+						:model-value="(rowData.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.jahrgang)"
+						@update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:items="sprachJahrgaengeVon" :item-text="i => i?.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else>{{ (rowData.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.jahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(anspruchsniveauId)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Sprachpruefungniveau" headless removable :model-value="Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)" @update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)" :items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
-					<div v-else>{{ Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Sprachpruefungniveau" headless removable :model-value="Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)"
+						@update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)"
+						:items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
+					<div v-else>{{ Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)?.daten.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(note)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" :items="Note.getNotenOhneTendenz()" :item-text="i => i.kuerzel" :model-value="Note.fromNoteSekI(rowData.note)" @update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI() }, rowData.sprache)" headless removable />
-					<div v-else>{{ Note.fromNoteSekI(rowData.note)?.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" :items="Note.getNotenOhneTendenz()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'"
+						:model-value="Note.fromNoteSekI(rowData.note)"
+						@update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI(schuljahr) }, rowData.sprache)"
+						headless removable />
+					<div v-else>{{ Note.fromNoteSekI(rowData.note)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten.kuerzel ?? null}, rowData.sprache)" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
-					<div v-else>{{ Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
+						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
+						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else>{{ (rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)?.daten(schuljahr)?.kuerzel ?? '-' }}</div>
 				</template>
 				<template #cell(pruefungsdatum)="{ rowData }">
-					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsdatum" :model-value="rowData.pruefungsdatum" @change="pruefungsdatum => pruefungsdatum && patchSprachpruefung({pruefungsdatum}, rowData.sprache)" type="date" headless />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsdatum" :model-value="rowData.pruefungsdatum"
+						@change="pruefungsdatum => pruefungsdatum && patchSprachpruefung({pruefungsdatum}, rowData.sprache)" type="date" headless />
 				</template>
 				<template #actions v-if="hatUpdateKompetenz">
 					<svws-ui-button @click="removePruefungen(true)" type="trash" :disabled="auswahlPrHSU.length === 0" />
@@ -105,10 +124,11 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sprachprüfungen – Feststellungsprüfungen">
 			<div v-if="hatUpdateKompetenz && verfuegbareSprachenPruefungen.length" class="w-1/4 mb-4">
-				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen" :item-text="i => `${i} - ${ZulaessigesFach.getFremdspracheByKuerzelAtomar(i).daten.bezeichnung}`" ref="selectSprachenPruefung" />
+				<svws-ui-select title="Hinzufügen..." removable :model-value="undefined" @update:model-value="sprache => hinzufuegenPruefung(sprache, false)" :items="verfuegbareSprachenPruefungen"
+					:item-text="i => `${i} - ${Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(i)?.daten(schuljahr)?.text ?? '—'}`" ref="selectSprachenPruefung" />
 			</div>
 			<svws-ui-table v-if="sprachpruefungenFP.length" :items="sprachpruefungenFP" :columns="colsSprachpruefungenFP" :selectable="hatUpdateKompetenz" v-model="auswahlPrFP">
-				<template #cell(sprache)="{ value: kuerzel }">{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(kuerzel).daten.bezeichnung }} </template>
+				<template #cell(sprache)="{ value: kuerzel }">{{ Fach.getMapFremdsprachenKuerzelAtomar(schuljahr).get(kuerzel)?.daten(schuljahr)?.text ?? '—' }} </template>
 				<template #cell(ersetzt)="{ rowData }">
 					<svws-ui-select v-if="hatUpdateKompetenz" title="Ersetzt" headless :items="ersetzt" :item-text="i=> i.key" removable
 						:model-value="rowData.kannErstePflichtfremdspracheErsetzen ? ersetzt[0] : rowData.kannZweitePflichtfremdspracheErsetzen ? ersetzt[1] : rowData.kannWahlpflichtfremdspracheErsetzen ? ersetzt[2] : undefined"
@@ -116,26 +136,39 @@
 					<div v-else class="text-ellipsis text-nowrap"> {{ (rowData.kannErstePflichtfremdspracheErsetzen ? ersetzt[0] : rowData.kannZweitePflichtfremdspracheErsetzen ? ersetzt[1] : rowData.kannWahlpflichtfremdspracheErsetzen ? ersetzt[2] : undefined)?.key ?? '-' }} </div>
 				</template>
 				<template #cell(kannBelegungAlsFortgefuehrteSpracheErlauben)="{ rowData }">
-					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="rowData.kannBelegungAlsFortgefuehrteSpracheErlauben" @update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, rowData.sprache)" headless />
+					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="rowData.kannBelegungAlsFortgefuehrteSpracheErlauben"
+						@update:model-value="kannBelegungAlsFortgefuehrteSpracheErlauben => patchSprachpruefung({kannBelegungAlsFortgefuehrteSpracheErlauben}, rowData.sprache)" headless />
 				</template>
 				<template #cell(jahrgang)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Jahrgang" headless removable :model-value="Jahrgaenge.getByKuerzel(rowData.jahrgang)" @update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten.kuerzel ?? null}, rowData.sprache)" :items="sprachJahrgaengeVon" :item-text="i=>i?.daten.kuerzel || ''" />
-					<div v-else>{{ Jahrgaenge.getByKuerzel(rowData.jahrgang)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Jahrgang" headless removable
+						:model-value="(rowData.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.jahrgang)"
+						@update:model-value="jahrgang => patchSprachpruefung({jahrgang: jahrgang?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)" :items="sprachJahrgaengeVon"
+						:item-text="i => i?.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else>{{ (rowData.jahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.jahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(anspruchsniveauId)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Sprachpruefungniveau" headless removable :model-value="Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)" @update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)" :items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Sprachpruefungniveau" headless removable :model-value="Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)"
+						@update:model-value="anspruchsniveau => patchSprachpruefung({anspruchsniveauId: anspruchsniveau?.daten.id || null}, rowData.sprache)"
+						:items="Sprachpruefungniveau.values()" :item-text="i => i.daten.kuerzel" />
 					<div v-else>{{ Sprachpruefungniveau.getByID(rowData.anspruchsniveauId)?.daten.kuerzel ?? '-' }}</div>
 				</template>
 				<template #cell(note)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" :items="Note.getNotenOhneTendenz()" :item-text="i => i.kuerzel" :model-value="Note.fromNoteSekI(rowData.note)" @update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI() }, rowData.sprache)" headless removable />
-					<div v-else>{{ Note.fromNoteSekI(rowData.note)?.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" :items="Note.getNotenOhneTendenz()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'"
+						:model-value="Note.fromNoteSekI(rowData.note)"
+						@update:model-value="note => patchSprachpruefung({ note: ((note === null) || (note === undefined)) ? null : note.getNoteSekI(schuljahr) }, rowData.sprache)"
+						headless removable />
+					<div v-else>{{ Note.fromNoteSekI(rowData.note)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
-					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable :model-value="Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)" @update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten.kuerzel ?? null}, rowData.sprache)" :items="Sprachreferenzniveau.values()" :item-text="i => i.daten.kuerzel" />
-					<div v-else>{{ Sprachreferenzniveau.getByKuerzel(rowData.referenzniveau)?.daten.kuerzel ?? '-' }}</div>
+					<svws-ui-select v-if="hatUpdateKompetenz" title="Referenzniveau" headless removable
+						:model-value="(rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)"
+						@update:model-value="referenzniveau => patchSprachpruefung({referenzniveau: referenzniveau?.daten(schuljahr)?.kuerzel ?? null}, rowData.sprache)"
+						:items="Sprachreferenzniveau.values()" :item-text="i => i.daten(schuljahr)?.kuerzel ?? '—'" />
+					<div v-else>{{ (rowData.referenzniveau === null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(rowData.referenzniveau)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 				</template>
 				<template #cell(pruefungsdatum)="{ rowData }">
-					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsdatum" :model-value="rowData.pruefungsdatum" @change="pruefungsdatum => pruefungsdatum && patchSprachpruefung({pruefungsdatum}, rowData.sprache)" type="date" headless />
+					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsdatum" :model-value="rowData.pruefungsdatum"
+						@change="pruefungsdatum => pruefungsdatum && patchSprachpruefung({pruefungsdatum}, rowData.sprache)" type="date" headless />
 				</template>
 				<template #actions v-if="hatUpdateKompetenz">
 					<svws-ui-button @click="removePruefungen(false)" type="trash" :disabled="auswahlPrFP.length === 0" />
@@ -153,7 +186,7 @@
 	import type { SchuelerSprachenProps } from './SchuelerSprachenProps';
 	import type { DataTableColumn, SvwsUiSelect } from "@ui";
 	import type { Sprachbelegung , Sprachpruefung} from '@core';
-	import { Schulform, Sprachreferenzniveau, ZulaessigesFach, Jahrgaenge, Note, Schulgliederung, Sprachpruefungniveau, ServerMode, BenutzerKompetenz } from '@core';
+	import { Schulform, Sprachreferenzniveau, Fach, Jahrgaenge, Note, Schulgliederung, Sprachpruefungniveau, ServerMode, BenutzerKompetenz } from '@core';
 
 	const props = defineProps<SchuelerSprachenProps>();
 
@@ -163,6 +196,8 @@
 				&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse));
 	});
 
+	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
+
 	const auswahl = ref([]);
 	const auswahlPrHSU = ref([]);
 	const auswahlPrFP = ref([]);
@@ -170,7 +205,7 @@
 	const selectSprachenPruefung = ref<ComponentExposed<typeof SvwsUiSelect<string[]>>>();
 
 	const colsSprachenfolge = computed<DataTableColumn[]>(() => {
-		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
+		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", span: 2 },
 			{ key: "reihenfolge", label: "Reihenfolge", tooltip: "Reihenfolge", divider: true },
 			...(([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung))))
@@ -184,7 +219,7 @@
 	);
 
 	const colsSprachpruefungenHSU = computed<DataTableColumn[]>(() => {
-		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
+		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
 			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4 },
 			...([Schulform.BK, Schulform.SB].includes(props.schuelerListeManager().schulform()) && !(schulgliederung && ([Schulgliederung.D01, Schulgliederung.D02].includes(schulgliederung)))
@@ -196,7 +231,7 @@
 		]
 	});
 	const colsSprachpruefungenFP = computed<DataTableColumn[]>(() => {
-		const schulgliederung = Schulgliederung.getByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
+		const schulgliederung = Schulgliederung.data().getWertByKuerzel(props.schuelerListeManager().auswahl().schulgliederung);
 		return [{ key: "sprache", label: "Sprache", tooltip: "Kürzel der Sprache", minWidth: 4 },
 			{ key: "ersetzt", label: "Ersetzt", minWidth: 4 },
 			{ key: "kannBelegungAlsFortgefuehrteSpracheErlauben", label: "Fortgef. Fs. GOSt", tooltip: "Durch die Prüfung kann die Sprache als fortgeführte Fremdsprache in der GOSt belegt werden", align: 'center', minWidth: 4 },
@@ -214,9 +249,10 @@
 		const sprachen = [];
 		for (const b of props.sprachbelegungen())
 			belegungen.add(b.sprache);
-		for (const k of ZulaessigesFach.getListFremdsprachenKuerzelAtomar()) {
-			const sprache = ZulaessigesFach.getFremdspracheByKuerzelAtomar(k);
-			if (!sprache.daten.istErsatzPflichtFS && !sprache.daten.istHKFS && !sprache.daten.istAusRegUFach && !belegungen.has(k))
+		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
+			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
+			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
+			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
@@ -227,9 +263,10 @@
 		const sprachen = [];
 		for (const p of props.sprachpruefungen())
 			belegungen.add(p.sprache);
-		for (const k of ZulaessigesFach.getListFremdsprachenKuerzelAtomar()) {
-			const sprache = ZulaessigesFach.getFremdspracheByKuerzelAtomar(k);
-			if (!sprache.daten.istErsatzPflichtFS && !sprache.daten.istHKFS && !sprache.daten.istAusRegUFach && !belegungen.has(k))
+		for (const k of Fach.getListFremdsprachenKuerzelAtomar(schuljahr.value)) {
+			const sprache = Fach.getMapFremdsprachenKuerzelAtomar(schuljahr.value).get(k);
+			const spracheEintrag = sprache?.daten(schuljahr.value) ?? null;
+			if ((spracheEintrag !== null) && !spracheEintrag.istErsatzPflichtFS && !spracheEintrag.istHKFS && !spracheEintrag.istAusRegUFach && !belegungen.has(k))
 				sprachen.push(k);
 		}
 		return sprachen;
@@ -254,17 +291,19 @@
 	const sprachJahrgaengeVon = computed(() => {
 		const schulform = props.schuelerListeManager().schulform();
 		if ((schulform === Schulform.BK) || (schulform === Schulform.SB))
-			return Jahrgaenge.get(Schulform.GE);
-		return Jahrgaenge.get(schulform);
+			return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE);
+		return Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform);
 	});
 
 	const sprachJahrgaengeBis = (sprachbelegung: Sprachbelegung) => computed(() => {
 		const schulform = props.schuelerListeManager().schulform();
-		const jahrgangVon = Jahrgaenge.getByKuerzel(sprachbelegung.belegungVonJahrgang);
-		const jahrgaenge_list = ((schulform === Schulform.BK) || (schulform === Schulform.SB)) ? Jahrgaenge.get(Schulform.GE) : Jahrgaenge.get(schulform);
+		const jahrgangVon = (sprachbelegung.belegungVonJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(sprachbelegung.belegungVonJahrgang);
+		const jahrgaenge_list = ((schulform === Schulform.BK) || (schulform === Schulform.SB))
+			? Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, Schulform.GE)
+			: Jahrgaenge.getListBySchuljahrAndSchulform(schuljahr.value, schulform);
 		const jahrgaenge = [];
 		for (const jahrgang of jahrgaenge_list)
-			if (jahrgangVon && (jahrgang.ordinal() > jahrgangVon.ordinal()))
+			if ((jahrgangVon !== null) && (jahrgang.ordinal() > jahrgangVon.ordinal()))
 				jahrgaenge.push(jahrgang)
 		return jahrgaenge;
 	});

@@ -4,8 +4,8 @@ import de.svws_nrw.core.Service;
 import de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend;
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -49,7 +49,7 @@ public class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 		logger.logLn(LogLevel.INFO, " erreicht.");
 
 		// HSA wird automatisch vergeben, wenn BSA erworben wurde, für einen höheren Abschluss ist ein GeR-Niveau von mind. B1 nötig
-		if ((input.englischGeR == null) || (Sprachreferenzniveau.B1.vergleiche(input.englischGeR) < 0)) {
+		if ((input.englischGeR == null) || (Sprachreferenzniveau.B1.compareByKuerzel(input.englischGeR) < 0)) {
 			if (input.englischGeR == null) {
 				logger.logLn(LogLevel.INFO, "Das Sprachreferenzniveau in Englisch wurde nicht angegeben. Eine Prüfung auf MSA ist daher nicht möglich.");
 			} else {

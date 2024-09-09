@@ -181,7 +181,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			const blockungsdatenBlob = await new Response(blockungsdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 			const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(await blockungsdatenBlob.text());
 			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.abiturjahrgang.abiturjahr);
-			const faecherManager = new GostFaecherManager(listFaecher);
+			const faecherManager = new GostFaecherManager(this.abiturjahrgang.abiturjahr, listFaecher);
 			const getDatenmanager = new GostBlockungsdatenManager(blockungsdaten, faecherManager);
 			const ergebnisse = getDatenmanager.ergebnisGetListeSortiertNachBewertung();
 			this.mapErgebnisse.set(blockung.id, ergebnisse);
@@ -228,8 +228,8 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	}
 
 	exportUntisBlockungenZIP = async (formData: FormData): Promise<ApiFile> => {
-		const ergebnisID = formData.get('ergebnisID');
-		const unterrichtID = formData.get('unterrichtID');
+		const ergebnisID = formData.get('ergebnisID')?.toString();
+		const unterrichtID = formData.get('unterrichtID')?.toString();
 		if (typeof ergebnisID === 'string' && typeof unterrichtID === 'string')
 			return await api.server.exportUntisKursblockungAsZip(api.schema, parseInt(ergebnisID), parseInt(unterrichtID));
 		throw new DeveloperNotificationException(`Es konnte keine Exportdatei für die ergebnisID ${ergebnisID} und unterrichtID ${unterrichtID} erstellt werden`);

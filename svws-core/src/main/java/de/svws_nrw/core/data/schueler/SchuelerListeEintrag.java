@@ -3,7 +3,7 @@ package de.svws_nrw.core.data.schueler;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;

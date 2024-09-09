@@ -4,6 +4,7 @@ import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import { ArrayMapEntry, cast_de_svws_nrw_core_adt_map_ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
 export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIterator<JavaMapEntry<K, V>> {
@@ -75,6 +76,8 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySetIterator');
 
 }
 

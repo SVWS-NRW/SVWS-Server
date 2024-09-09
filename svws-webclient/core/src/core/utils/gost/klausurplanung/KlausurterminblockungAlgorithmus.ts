@@ -18,6 +18,7 @@ import { KlausurterminblockungModusQuartale } from '../../../../core/types/gost/
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
 import { KlausurterminblockungAlgorithmusGreedy2b } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusGreedy2b';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class KlausurterminblockungAlgorithmus extends JavaObject {
@@ -189,6 +190,8 @@ export class KlausurterminblockungAlgorithmus extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus'].includes(name);
 	}
+
+	public static class = new Class<KlausurterminblockungAlgorithmus>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus');
 
 }
 

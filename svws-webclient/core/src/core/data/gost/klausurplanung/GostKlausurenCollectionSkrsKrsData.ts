@@ -3,6 +3,7 @@ import { GostKlausurenCollectionRaumData } from '../../../../core/data/gost/klau
 import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostKursklausur';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 
 export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
@@ -44,6 +45,8 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionSkrsKrsData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionSkrsKrsData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionSkrsKrsData>;

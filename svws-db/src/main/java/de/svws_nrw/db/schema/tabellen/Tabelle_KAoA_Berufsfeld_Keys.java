@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
+import de.svws_nrw.asd.types.kaoa.KAOABerufsfeld;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -30,12 +30,9 @@ public class Tabelle_KAoA_Berufsfeld_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoABerufsfeldKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Berufsfeldern");
-		setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.VERSION, rev -> Arrays
-				.stream(KAOABerufsfeld.values())
-				.map(a -> Arrays.stream(a.historie)
-						.map(h -> "" + h.id)
-						.toList()
-				).flatMap(Collection::stream).toList()));
+		setCoreType(new SchemaTabelleCoreType(this, KAOABerufsfeld.class, KAOABerufsfeld.data().getVersion(),
+				rev -> Arrays.stream(KAOABerufsfeld.values())
+						.map(a -> a.historie().stream().map(h -> "" + h.id).toList()).flatMap(Collection::stream).toList()));
 	}
 
 }

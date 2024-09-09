@@ -1,10 +1,9 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
-import de.svws_nrw.db.converter.current.statkue.SchulformKuerzelConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -29,8 +28,7 @@ public class Tabelle_EigeneSchule extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SchulformKrz */
 	public SchemaTabelleSpalte col_SchulformKrz = add("SchulformKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-			.setJavaName("Schulform")
-			.setConverter(SchulformKuerzelConverter.class)
+			.setJavaName("SchulformKuerzel")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Schulformkürzel der eigenen Schule (Statkue IT.NRW)");
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostLaufbahnplanungDatenFachbelegung } from '../../../core/data/gost/GostLaufbahnplanungDatenFachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class GostLaufbahnplanungDatenSchueler extends JavaObject {
@@ -63,6 +64,8 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler'].includes(name);
 	}
+
+	public static class = new Class<GostLaufbahnplanungDatenSchueler>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenSchueler');
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenSchueler {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenSchueler>;

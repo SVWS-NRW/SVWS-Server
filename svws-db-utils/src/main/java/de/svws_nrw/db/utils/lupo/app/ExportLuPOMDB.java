@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -69,8 +70,8 @@ public class ExportLuPOMDB {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static void main(final String[] args) throws ApiOperationException {
-		// TODO Auto-generated method stub
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);

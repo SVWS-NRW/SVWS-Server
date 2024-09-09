@@ -3,14 +3,17 @@ import type { JavaSet } from '../../../java/util/JavaSet';
 import { HashMap } from '../../../java/util/HashMap';
 import { BKLernfeld } from '../../../core/data/bk/BKLernfeld';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Map3DUtils } from '../../../core/utils/Map3DUtils';
 import { BKFBFach } from '../../../core/data/bk/BKFBFach';
 import { BKBildungsplan } from '../../../core/data/bk/BKBildungsplan';
 import { BKBildungsplanKatalog } from '../../../core/data/bk/BKBildungsplanKatalog';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
-import { BKFachklassenSchluessel, cast_de_svws_nrw_core_data_bk_BKFachklassenSchluessel } from '../../../core/data/bk/BKFachklassenSchluessel';
+import { Class } from '../../../java/lang/Class';
+import { BKFachklassenSchluessel } from '../../../core/data/bk/BKFachklassenSchluessel';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { UserNotificationException } from '../../../core/exceptions/UserNotificationException';
@@ -143,9 +146,12 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public getLehrplaeneBySchulgliederungSchuljahr(gliederung : Schulgliederung, schuljahr : number) : List<BKBildungsplan> | null {
-		if (gliederung.daten.bkIndex === null)
-			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.")
-		return this.getLehrplaeneByIndexSchuljahr(gliederung.daten.bkIndex, schuljahr);
+		const sglke : SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+		if (sglke.bkIndex === null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+		return this.getLehrplaeneByIndexSchuljahr(sglke.bkIndex, schuljahr);
 	}
 
 	/**
@@ -178,9 +184,12 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 * @return Eine Liste der Lehrpläne eines Gliederungsindex für das angegebene Schuljahr
 	 */
 	public getLehrplaeneBySchulgliederungSchuljahrAll(gliederung : Schulgliederung, schuljahr : number) : List<BKBildungsplan> | null {
-		if (gliederung.daten.bkIndex === null)
-			throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Schulgliederungs-Index.")
-		return this.getLehrplaeneByIndexSchuljahrAll(gliederung.daten.bkIndex, schuljahr);
+		const sglke : SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+		if (sglke.bkIndex === null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Schulgliederungs-Index.")
+		return this.getLehrplaeneByIndexSchuljahrAll(sglke.bkIndex, schuljahr);
 	}
 
 	/**
@@ -267,32 +276,10 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 *
 	 * @return die Liste aller bekannten Bündelfächer
 	 */
-	public getFaecherByFachklassenschuesselSchuljahr() : List<BKFBFach> | null;
-
-	/**
-	 * Gibt die Bündelfächer zu einem Fachklassenschlüssel in einem (Einschulungs-)Schuljahr zurück.
-	 * Es wird davon ausgegangen, dass der Bildungsgang im 1. Jahrgang aufgenommen wird.
-	 *
-	 * @param schluessel   der Fachklassenschlüssel
-	 * @param schuljahr    das Schuljahr, für welches der Bildungsplan bestimmt werden sollen
-	 *
-	 * @return die Liste der Bündelfächer für die Fachklasse und Schuljahr oder null falls keine Bildungsplan für Fachklasse vorhanden ist.
-	 */
-	public getFaecherByFachklassenschuesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : List<BKFBFach> | null;
-
-	/**
-	 * Implementation for method overloads of 'getFaecherByFachklassenschuesselSchuljahr'
-	 */
-	public getFaecherByFachklassenschuesselSchuljahr(__param0? : BKFachklassenSchluessel, __param1? : number) : List<BKFBFach> | null {
-		if ((__param0 === undefined) && (__param1 === undefined)) {
-			const faecher : List<BKFBFach> = new ArrayList<BKFBFach>();
-			faecher.addAll(this._mapFachByKuerzel.values());
-			return faecher;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.bk.BKFachklassenSchluessel')))) && ((__param1 !== undefined) && typeof __param1 === "number")) {
-			const schluessel : BKFachklassenSchluessel = cast_de_svws_nrw_core_data_bk_BKFachklassenSchluessel(__param0);
-			const schuljahr : number = __param1 as number;
-			return this.getFaecherByIndexFachklasseSchuljahr(schluessel.index, schluessel.schluessel, schuljahr);
-		} else throw new Error('invalid method overload');
+	public getFaecherAll() : List<BKFBFach> | null {
+		const faecher : List<BKFBFach> = new ArrayList<BKFBFach>();
+		faecher.addAll(this._mapFachByKuerzel.values());
+		return faecher;
 	}
 
 	/**
@@ -304,6 +291,19 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	 */
 	public getFachByKuerzel(kuerzel : string) : BKFBFach | null {
 		return this._mapFachByKuerzel.get(kuerzel);
+	}
+
+	/**
+	 * Gibt die Bündelfächer zu einem Fachklassenschlüssel in einem (Einschulungs-)Schuljahr zurück.
+	 * Es wird davon ausgegangen, dass der Bildungsgang im 1. Jahrgang aufgenommen wird.
+	 *
+	 * @param schluessel   der Fachklassenschlüssel
+	 * @param schuljahr    das Schuljahr, für welches der Bildungsplan bestimmt werden sollen
+	 *
+	 * @return die Liste der Bündelfächer für die Fachklasse und Schuljahr oder null falls keine Bildungsplan für Fachklasse vorhanden ist.
+	 */
+	public getFaecherByFachklassenschuesselSchuljahr(schluessel : BKFachklassenSchluessel, schuljahr : number) : List<BKFBFach> | null {
+		return this.getFaecherByIndexFachklasseSchuljahr(schluessel.index, schluessel.schluessel, schuljahr);
 	}
 
 	/**
@@ -441,6 +441,8 @@ export class BerufskollegBildungsplanManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager'].includes(name);
 	}
+
+	public static class = new Class<BerufskollegBildungsplanManager>('de.svws_nrw.core.utils.schule.BerufskollegBildungsplanManager');
 
 }
 

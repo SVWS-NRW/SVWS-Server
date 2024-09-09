@@ -23,7 +23,7 @@
 <script setup lang="ts">
 
 	import type { SchuleAppProps } from "./SSchuleAppProps";
-	import { type AuswahlChildData } from "../AuswahlChildData";
+	import type { AuswahlChildData } from "../AuswahlChildData";
 
 	const props = defineProps<SchuleAppProps>();
 

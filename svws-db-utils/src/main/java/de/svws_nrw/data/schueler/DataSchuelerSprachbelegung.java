@@ -2,8 +2,11 @@ package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
+import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -53,7 +56,9 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 
 
 	@Override
-	protected Sprachbelegung map(final DTOSchuelerSprachenfolge dto) throws ApiOperationException {
+	public Sprachbelegung map(final DTOSchuelerSprachenfolge dto) throws ApiOperationException {
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachbelegung daten = new Sprachbelegung();
 		daten.sprache = dto.Sprache;
 		daten.reihenfolge = dto.ReihenfolgeNr;
@@ -61,7 +66,9 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 		daten.belegungVonAbschnitt = dto.AbschnittVon;
 		daten.belegungBisJahrgang = dto.ASDJahrgangBis;
 		daten.belegungBisAbschnitt = dto.AbschnittBis;
-		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
+		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(dto.Referenzniveau);
+		final SprachreferenzniveauKatalogEintrag niveauEintrag = (niveau == null) ? null : niveau.daten(abschnitt.schuljahr);
+		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.kuerzel;
 		daten.hatKleinesLatinum = (dto.KleinesLatinumErreicht != null) && dto.KleinesLatinumErreicht;
 		daten.hatLatinum = (dto.LatinumErreicht != null) && dto.LatinumErreicht;
 		daten.hatGraecum = (dto.GraecumErreicht != null) && dto.GraecumErreicht;
@@ -73,6 +80,8 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 	@Override
 	protected void mapAttribute(final DTOSchuelerSprachenfolge dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		switch (name) {
 			case "sprache" -> {
 				final String patchSprache = JSONMapper.convertToString(value, false, false, 2);
@@ -87,10 +96,14 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 				if (kuerzel == null) {
 					dto.ASDJahrgangVon = null;
 				} else {
-					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					final Jahrgaenge jg = Jahrgaenge.data().getWertByKuerzel(kuerzel);
 					if (jg == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-					dto.ASDJahrgangVon = jg.daten.kuerzel;
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Jahrgangs-Kürzel %s ist ungültig.".formatted(kuerzel));
+					final JahrgaengeKatalogEintrag jgke = jg.daten(abschnitt.schuljahr);
+					if (jgke == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Jahrgangs-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
+					dto.ASDJahrgangVon = jgke.kuerzel;
 				}
 			}
 			case "belegungVonAbschnitt" -> {
@@ -104,10 +117,14 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 				if (kuerzel == null) {
 					dto.ASDJahrgangBis = null;
 				} else {
-					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					final Jahrgaenge jg = Jahrgaenge.data().getWertByKuerzel(kuerzel);
 					if (jg == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-					dto.ASDJahrgangBis = jg.daten.kuerzel;
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Jahrgangs-Kürzel %s ist ungültig.".formatted(kuerzel));
+					final JahrgaengeKatalogEintrag jgke = jg.daten(abschnitt.schuljahr);
+					if (jgke == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Jahrgangs-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
+					dto.ASDJahrgangBis = jgke.kuerzel;
 				}
 			}
 			case "belegungBisAbschnitt" -> {
@@ -121,10 +138,14 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 				if (kuerzel == null) {
 					dto.Referenzniveau = null;
 				} else {
-					final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertByKuerzel(kuerzel);
 					if (niveau == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
-					dto.Referenzniveau = niveau;
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(kuerzel));
+					final SprachreferenzniveauKatalogEintrag niveauEintrag = niveau.daten(abschnitt.schuljahr);
+					if (niveauEintrag == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
+					dto.Referenzniveau = niveauEintrag.kuerzel;
 				}
 			}
 			case "hatKleinesLatinum" -> dto.KleinesLatinumErreicht = JSONMapper.convertToBoolean(value, false);

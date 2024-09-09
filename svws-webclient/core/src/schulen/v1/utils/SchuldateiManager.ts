@@ -5,6 +5,7 @@ import { Schuldatei } from '../../../schulen/v1/data/Schuldatei';
 import { SchuldateiOrganisationseinheitManager } from '../../../schulen/v1/utils/SchuldateiOrganisationseinheitManager';
 import { SchuldateiOrganisationseinheit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheit';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { SchuldateiKatalogManager } from '../../../schulen/v1/utils/SchuldateiKatalogManager';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -227,6 +228,8 @@ export class SchuldateiManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiManager'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiManager>('de.svws_nrw.schulen.v1.utils.SchuldateiManager');
 
 }
 

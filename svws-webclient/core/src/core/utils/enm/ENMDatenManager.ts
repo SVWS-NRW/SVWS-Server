@@ -1,22 +1,25 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
-import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
 import { ENMLeistung } from '../../../core/data/enm/ENMLeistung';
 import { ENMFach } from '../../../core/data/enm/ENMFach';
-import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import type { List } from '../../../java/util/List';
+import { FoerderschwerpunktKatalogEintrag } from '../../../asd/data/schule/FoerderschwerpunktKatalogEintrag';
+import { Geschlecht } from '../../../asd/types/Geschlecht';
+import { ENMNote } from '../../../core/data/enm/ENMNote';
+import { Foerderschwerpunkt } from '../../../asd/types/schule/Foerderschwerpunkt';
+import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
+import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
+import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
 import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
-import { Note } from '../../../core/types/Note';
-import type { List } from '../../../java/util/List';
+import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
+import { Note } from '../../../asd/types/Note';
 import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
-import { Geschlecht } from '../../../core/types/Geschlecht';
-import { ENMNote } from '../../../core/data/enm/ENMNote';
-import { Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class ENMDatenManager extends JavaObject {
@@ -135,17 +138,22 @@ export class ENMDatenManager extends JavaObject {
 
 	/**
 	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 */
-	public addNoten() : void {
+	public addNoten(schuljahr : number) : void {
 		if (!this.daten.noten.isEmpty())
 			return;
-		const noten : Array<Note> = Note.values();
+		const noten : List<Note> = Note.data().getWerteBySchuljahr(schuljahr);
 		for (const note of noten) {
+			const nke : NoteKatalogEintrag | null = note.daten(schuljahr);
+			if (nke === null)
+				continue;
 			const enmNote : ENMNote = new ENMNote();
-			enmNote.id = note.id;
-			enmNote.kuerzel = note.kuerzel;
-			enmNote.notenpunkte = note.notenpunkte;
-			enmNote.text = note.text;
+			enmNote.id = nke.id as number;
+			enmNote.kuerzel = nke.kuerzel;
+			enmNote.notenpunkte = nke.notenpunkte;
+			enmNote.text = nke.text;
 			this.daten.noten.add(enmNote);
 		}
 	}
@@ -154,19 +162,22 @@ export class ENMDatenManager extends JavaObject {
 	 * Fügt alle Förderschwerpunkte des Core-Type {@link Foerderschwerpunkt} zu dem
 	 * Förderschwerpunkt-Katalog der ENM-Datei hinzu.
 	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 * @param schulform   die Schulform, für welche die zulässigen Förderschwerpunkte
 	 *                    zurückgegeben werden
 	 */
-	public addFoerderschwerpunkte(schulform : Schulform) : void {
+	public addFoerderschwerpunkte(schuljahr : number, schulform : Schulform) : void {
 		if (!this.daten.foerderschwerpunkte.isEmpty())
 			return;
-		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
-		for (let i : number = 0; i < foerderschwerpunkte.size(); i++) {
-			const foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
+		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.getBySchuljahrAndSchulform(schuljahr, schulform);
+		for (const foerderschwerpunkt of foerderschwerpunkte) {
+			const fske : FoerderschwerpunktKatalogEintrag | null = foerderschwerpunkt.daten(schuljahr);
+			if (fske === null)
+				continue;
 			const enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
-			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
-			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
-			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
+			enmFoerderschwerpunkt.id = fske.id;
+			enmFoerderschwerpunkt.kuerzel = fske.kuerzel;
+			enmFoerderschwerpunkt.beschreibung = fske.text;
 			this.daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
 		}
 	}
@@ -583,6 +594,8 @@ export class ENMDatenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.enm.ENMDatenManager'].includes(name);
 	}
+
+	public static class = new Class<ENMDatenManager>('de.svws_nrw.core.utils.enm.ENMDatenManager');
 
 }
 

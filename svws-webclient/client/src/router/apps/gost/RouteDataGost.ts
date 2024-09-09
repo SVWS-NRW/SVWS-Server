@@ -26,7 +26,7 @@ const defaultState = <RouteStateGost> {
 	idSchuljahresabschnitt: -1,
 	auswahl: undefined,
 	jahrgangsdaten: undefined,
-	faecherManager: new GostFaecherManager(new ArrayList()),
+	faecherManager: new GostFaecherManager(-1, new ArrayList()),
 	mapAbiturjahrgaenge: new Map(),
 	mapJahrgaenge: new Map(),
 	mapJahrgaengeOhneAbiJahrgang: new Map(),
@@ -77,13 +77,16 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return map;
 	}
 
-	private async ladeJahrgaenge(): Promise<Map<number, JahrgangsDaten>> {
+	private async ladeJahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, JahrgangsDaten>> {
 		// Lade die Liste der Jahrgänge, für welche Abiturjahrgänge ggf. angelegt werden können.
+		let schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
+		if (schuljahresabschnitt === undefined)
+			schuljahresabschnitt = api.abschnitt;
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const mapJahrgaenge = new Map<number, JahrgangsDaten>();
 		for (const j of listJahrgaenge) {
-			const jg : Jahrgaenge | null = Jahrgaenge.getByKuerzel(j.kuerzelStatistik);
-			if ((jg !== null) && (jg.hasSchulform(api.schulform)))
+			const jg : Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(j.kuerzelStatistik);
+			if ((jg !== null) && (jg.hatSchulform(schuljahresabschnitt.schuljahr, api.schulform)))
 				mapJahrgaenge.set(j.id, j);
 		}
 		return mapJahrgaenge;
@@ -99,7 +102,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		if (auswahl === undefined)
 			return;
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, auswahl.abiturjahr);
-		return new GostFaecherManager(listFaecher);
+		return new GostFaecherManager(auswahl.abiturjahr - 1, listFaecher);
 	}
 
 
@@ -107,7 +110,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
 		const mapAbiturjahrgaenge = await this.ladeAbiturjahrgaenge();
 		const auswahl = this.firstAbiturjahrgang(mapAbiturjahrgaenge);
-		const mapJahrgaenge = await this.ladeJahrgaenge();
+		const mapJahrgaenge = await this.ladeJahrgaenge(idSchuljahresabschnitt);
 		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);
 		const jahrgangsdaten = await this.ladeJahrgangsdaten(undefined);
 		const faecherManager = await this.ladeFaecherManager(undefined);
@@ -242,7 +245,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const jahrgang = mapJahrgaenge.get(idJahrgang);
 		if (jahrgang === undefined)
 			throw new DeveloperNotificationException("Konnte den Jahrgang für die ID " + idJahrgang + " nicht bestimmen.");
-		const schulgliederung: Schulgliederung | null = Schulgliederung.getByKuerzel(jahrgang.kuerzelSchulgliederung);
+		const schulgliederung: Schulgliederung | null = (jahrgang.kuerzelSchulgliederung === null) ? null : Schulgliederung.data().getWertByKuerzel(jahrgang.kuerzelSchulgliederung);
 		if (schulgliederung === null)
 			throw new DeveloperNotificationException("Dem Jahrgang mit der ID " + idJahrgang + " ist eine unbekannte Schulgliederung " + jahrgang.kuerzelSchulgliederung + " zugeordnet.");
 		const abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(api.schulform, schulgliederung, routeApp.data.aktAbschnitt.value.schuljahr, jahrgang.kuerzelStatistik);

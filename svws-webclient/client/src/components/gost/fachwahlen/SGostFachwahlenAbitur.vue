@@ -59,8 +59,8 @@
 
 	import type { DataTableColumn } from "@ui";
 	import type { GostFachwahlenAbiturProps } from "./SGostFachwahlenAbiturProps";
-	import { ref } from "vue";
-	import { GostAbiturFach, ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
+	import { computed, ref } from "vue";
+	import { GostAbiturFach, Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenAbiturProps>();
 
@@ -72,7 +72,13 @@
 		{ key: "AB4", label: "Ab4", span: 1 },
 	];
 
-	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
+
+	function getBgColor(fws: GostStatistikFachwahl) : string {
+		if (fws.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(fws.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+	}
 
 	function onClick(fws: GostStatistikFachwahl): void {
 		aktuell.value = (aktuell.value?.id === fws.id) ? undefined : fws;

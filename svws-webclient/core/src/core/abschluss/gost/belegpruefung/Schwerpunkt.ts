@@ -1,6 +1,7 @@
 import { Naturwissenschaften, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Naturwissenschaften } from '../../../../core/abschluss/gost/belegpruefung/Naturwissenschaften';
 import { Fremdsprachen, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Fremdsprachen } from '../../../../core/abschluss/gost/belegpruefung/Fremdsprachen';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -63,6 +64,8 @@ export class Schwerpunkt extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt'].includes(name);
 	}
+
+	public static class = new Class<Schwerpunkt>('de.svws_nrw.core.abschluss.gost.belegpruefung.Schwerpunkt');
 
 }
 

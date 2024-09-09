@@ -1,19 +1,15 @@
 import type { TranspiledObject } from './TranspiledObject';
 
 
-export class Class<T extends TranspiledObject> implements TranspiledObject {
+export class Class<T> implements TranspiledObject {
 
 	protected simplename : string;
 	protected canonicalname : string;
 
-	public constructor(obj : T) {
-		if (obj instanceof Class)
-			this.simplename = Object.getPrototypeOf(this);
-		else if (obj instanceof Object)
-			this.simplename = Object.getPrototypeOf(obj);
-		else
-			this.simplename = typeof obj;
-		this.canonicalname = this.transpilerCanonicalName();
+	public constructor(canonicalname : string) {
+		this.canonicalname = canonicalname;
+		const period = canonicalname.lastIndexOf('.');
+		this.simplename = canonicalname.substring(period + 1);
 	}
 
 
@@ -57,7 +53,7 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
 	}
 
 	public hashCode() : number {
-		return Class._hashCode(JSON.stringify(this.simplename));
+		return Class._hashCode(this.canonicalname);
 	}
 
 
@@ -65,18 +61,19 @@ export class Class<T extends TranspiledObject> implements TranspiledObject {
 		if (typeof obj !== "object")
 			return false;
 		if (obj instanceof Class)
-			return obj.simplename === this.simplename;
+			return obj.canonicalname === this.canonicalname;
 		return false;
 	}
 
 	public clone() : TranspiledObject {
-		const result = new Class(this);
+		const result = this.getClass();
 		result.simplename = this.simplename;
+		result.canonicalname = this.canonicalname;
 		return result;
 	}
 
 	public getClass<T extends TranspiledObject>() : Class<T> {
-		return new Class(this);
+		return new Class(this.transpilerCanonicalName());
 	}
 
 }

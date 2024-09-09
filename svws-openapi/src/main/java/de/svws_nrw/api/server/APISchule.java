@@ -2,40 +2,39 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.schule.Schulleitung;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
 import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag;
 import de.svws_nrw.core.data.schule.Aufsichtsbereich;
-import de.svws_nrw.core.data.schule.BerufskollegAnlageKatalogEintrag;
+import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegBerufsebeneKatalogEintrag;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalog;
 import de.svws_nrw.core.data.schule.EinschulungsartKatalogEintrag;
 import de.svws_nrw.core.data.schule.Einwilligungsart;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
-import de.svws_nrw.core.data.schule.FoerderschwerpunktKatalogEintrag;
+import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
-import de.svws_nrw.core.data.schule.KindergartenbesuchKatalogEintrag;
+import de.svws_nrw.asd.data.schule.KindergartenbesuchKatalogEintrag;
 import de.svws_nrw.core.data.schule.NationalitaetenKatalogEintrag;
-import de.svws_nrw.core.data.schule.NotenKatalogEintrag;
-import de.svws_nrw.core.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.core.data.schule.PruefungsordnungKatalogEintrag;
 import de.svws_nrw.core.data.schule.Raum;
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
-import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchuelerstatusKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.ReligionKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulabschlussAllgemeinbildendKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchulgliederungKatalogEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.data.schule.Schulleitung;
-import de.svws_nrw.core.data.schule.SchulstufeKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.core.data.schule.SchultraegerKatalogEintrag;
 import de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenzeit;
@@ -80,7 +79,6 @@ import de.svws_nrw.data.schule.DataSchuelerStatus;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.data.schule.DataSchulen;
 import de.svws_nrw.data.schule.DataSchulleitung;
-import de.svws_nrw.data.schule.DataSchulstufen;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -1288,32 +1286,6 @@ public class APISchule {
 	}
 
 
-
-
-	/**
-	 * Die OpenAPI-Methode für die Abfrage des Katalogs der gültigen Schulstufen.
-	 *
-	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
-	 * @param request   die Informationen zur HTTP-Anfrage
-	 *
-	 * @return der Katalog der gültigen Schulstufen
-	 */
-	@GET
-	@Path("/allgemein/schulstufen")
-	@Operation(summary = "Gibt den Katalog der gültigen Schulstufen zurück.",
-			description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Schulstufen. "
-					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
-	@ApiResponse(responseCode = "200", description = "Eine Liste von Schulstufen-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchulstufeKatalogEintrag.class))))
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
-	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
-	public Response getSchulstufen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.run(() -> (new DataSchulstufen()).getList(),
-				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
-	}
-
-
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Schulen-Kataloges.
 	 *
@@ -1376,7 +1348,7 @@ public class APISchule {
 			description = "Die Liste der Einträge aus dem Katalog Schüler-Status. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerstatusKatalogEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SchuelerStatusKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogSchuelerStatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -1523,7 +1495,7 @@ public class APISchule {
 			description = "Gibt den Noten-Katalog zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Noten-Katalog.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NotenKatalogEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NoteKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
 	@ApiResponse(responseCode = "404", description = "Keine Noten-Einträge gefunden.")
 	public Response getKatalogNoten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {

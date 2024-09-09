@@ -9,6 +9,7 @@ import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFach
 
 import type { GostFachwahlenAbiturProps } from "~/components/gost/fachwahlen/SGostFachwahlenAbiturProps";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 
 const SGostFachwahlenAbitur = () => import("~/components/gost/fachwahlen/SGostFachwahlenAbitur.vue");
@@ -16,7 +17,7 @@ const SGostFachwahlenAbitur = () => import("~/components/gost/fachwahlen/SGostFa
 export class RouteGostFachwahlenAbitur extends RouteNode<any, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

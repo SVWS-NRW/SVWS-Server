@@ -14,14 +14,14 @@
 </template>
 
 <script setup lang="ts">
-	import type { BenutzerManager } from "@core";
 	import { ref } from "vue";
+	import type { BenutzerManager } from "@core";
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;
-		setAnzeigename: (anzeigename: string) => Promise<void>;
-		setAnmeldename: (anzeigename: string) => Promise<void>;
-		setPassword: (passwort: string) => Promise<boolean|undefined>;
+		setAnzeigename: (anzeigename: string | null) => Promise<void>;
+		setAnmeldename: (anzeigename: string | null) => Promise<void>;
+		setPassword: (passwort: string) => Promise<void>;
 	}>();
 
 	const kennwort1 = ref();

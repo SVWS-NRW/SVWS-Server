@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -181,6 +182,7 @@ public class SQLGenerator {
 	 */
 	public static void main(final String[] args) throws IOException {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
 		try {
 			cmdLine.addOption(new CommandLineOption("o", "output", true,

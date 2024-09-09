@@ -1,4 +1,5 @@
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
@@ -87,6 +88,8 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitAdresse'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiOrganisationseinheitAdresse>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitAdresse');
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitAdresse {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitAdresse>;

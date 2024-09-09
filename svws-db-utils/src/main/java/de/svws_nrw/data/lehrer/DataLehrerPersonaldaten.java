@@ -4,9 +4,11 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.function.Function;
 
-import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.core.types.lehrer.LehrerAbgangsgrund;
-import de.svws_nrw.core.types.lehrer.LehrerZugangsgrund;
+import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerAbgangsgrund;
+import de.svws_nrw.asd.types.lehrer.LehrerZugangsgrund;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -108,10 +110,15 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 				if (strData == null) {
 					lehrer.GrundZugang = null;
 				} else {
-					final LehrerZugangsgrund zg = LehrerZugangsgrund.getByKuerzel(strData);
+					final int schuljahr = conn.getUser().schuleGetSchuljahr();
+					final LehrerZugangsgrund zg = LehrerZugangsgrund.data().getWertByKuerzel(strData);
 					if (zg == null)
 						throw new ApiOperationException(Status.NOT_FOUND);
-					lehrer.GrundZugang = zg.daten.kuerzel;
+					final LehrerZugangsgrundKatalogEintrag eintrag = zg.daten(schuljahr);
+					if (eintrag == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Der Zugangsgrund mit dem Kürzel %s ist im Schuljahr %d nicht gültig.".formatted(strData, schuljahr));
+					lehrer.GrundZugang = eintrag.kuerzel;
 				}
 			}),
 			Map.entry("abgangsdatum", (conn, lehrer, value, map) -> {
@@ -123,10 +130,15 @@ public final class DataLehrerPersonaldaten extends DataManager<Long> {
 				if (strData == null) {
 					lehrer.GrundAbgang = null;
 				} else {
-					final LehrerAbgangsgrund ag = LehrerAbgangsgrund.getByKuerzel(strData);
+					final int schuljahr = conn.getUser().schuleGetSchuljahr();
+					final LehrerAbgangsgrund ag = LehrerAbgangsgrund.data().getWertByKuerzel(strData);
 					if (ag == null)
 						throw new ApiOperationException(Status.NOT_FOUND);
-					lehrer.GrundAbgang = ag.daten.kuerzel;
+					final LehrerAbgangsgrundKatalogEintrag eintrag = ag.daten(schuljahr);
+					if (eintrag == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Der Abgangsgrund mit dem Kürzel %s ist im Schuljahr %d nicht gültig.".formatted(strData, schuljahr));
+					lehrer.GrundAbgang = eintrag.kuerzel;
 				}
 			}));
 

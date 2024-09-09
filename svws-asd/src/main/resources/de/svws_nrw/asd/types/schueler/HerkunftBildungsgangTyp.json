@@ -1,0 +1,100 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "AG",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000,
+			"kuerzel": "AG",
+			"schluessel": "AG",
+			"text": "ABENDGYMNASIUM",
+			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AR",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"kuerzel": "AR",
+			"schluessel": "AR",
+			"text": "ABENDREALSCHULE",
+			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KL",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"kuerzel": "KL",
+			"schluessel": "KL",
+			"text": "KOLLEG",
+			"zulaessig": [ {"schulform": "WB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BF",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 10000,
+			"kuerzel": "BF",
+			"schluessel": "BF",
+			"text": "BERUFSFACHSCHULE",
+			"zulaessig": [ {"schulform": "BK", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BS",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 11000,
+			"kuerzel": "BS",
+			"schluessel": "BS",
+			"text": "BERUFSSCHULE",
+			"zulaessig": [ {"schulform": "BK", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BY",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 12000,
+			"kuerzel": "BY",
+			"schluessel": "BY",
+			"text": "BERUFLICHES_GYMNASIUM",
+			"zulaessig": [ {"schulform": "BK", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FO",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 13000,
+			"kuerzel": "FO",
+			"schluessel": "FO",
+			"text": "FACHOBERSCHULE",
+			"zulaessig": [ {"schulform": "BK", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FS",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 14000,
+			"kuerzel": "FS",
+			"schluessel": "FS",
+			"text": "FACHSCHULE",
+			"zulaessig": [ {"schulform": "BK", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuldateiKatalogeintrag } from '../../../schulen/v1/data/SchuldateiKatalogeintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiKataloge extends JavaObject {
 
@@ -25,6 +26,8 @@ export class SchuldateiKataloge extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiKataloge'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiKataloge>('de.svws_nrw.schulen.v1.data.SchuldateiKataloge');
 
 	public static transpilerFromJSON(json : string): SchuldateiKataloge {
 		const obj = JSON.parse(json) as Partial<SchuldateiKataloge>;

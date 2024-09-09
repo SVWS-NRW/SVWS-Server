@@ -7,8 +7,8 @@
 		<template #content>
 			<svws-ui-table clickable :clicked="kursListeManager().hasDaten() ? kursListeManager().auswahl() : null" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
@@ -37,7 +37,9 @@
 
 	const props = defineProps<KurseAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
 		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
@@ -95,7 +97,7 @@
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten.kuerzel;
+		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
 	const filterNurSichtbare = computed<boolean>({

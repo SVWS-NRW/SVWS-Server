@@ -1,0 +1,2414 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "DEFAULT",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"kuerzel": "***",
+			"schluessel": "***",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"G",
+				"GE",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Standard für diese Schulform",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A01",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1001000,
+			"kuerzel": "A01",
+			"schluessel": "A01",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen (BS; TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "01",
+			"bkIndex": 10,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A02",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 1002000,
+			"kuerzel": "A02",
+			"schluessel": "A02",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen/Fachhochschulreife (BS/FHR; TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "02",
+			"bkIndex": 10,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A03",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 1003000,
+			"kuerzel": "A03",
+			"schluessel": "A03",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen/erweiterte Zusatzqualifikation (BS/ZQ; TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "03",
+			"bkIndex": 10,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A04",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 1004000,
+			"kuerzel": "A04",
+			"schluessel": "A04",
+			"istBK": true,
+			"schulformen": [
+				"BK", 
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen mit erweitertem Stützunterricht (BS/Stütz; TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "04",
+			"bkIndex": 10,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BS", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A05",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 1005000,
+			"kuerzel": "A05",
+			"schluessel": "A05",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsorientierungsjahr (BV; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "05",
+			"bkIndex": 20,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2015
+		}]
+	}, {
+		"bezeichner": "A06",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 1006000,
+			"kuerzel": "A06",
+			"schluessel": "A06",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsgrundschuljahr (BG; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "06",
+			"bkIndex": 30,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2015
+		}]
+	}, {
+		"bezeichner": "A07",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 1007000,
+			"kuerzel": "A07",
+			"schluessel": "A07",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Klassen für Schüler/innen ohne Ausbildungsverhältnis (BS 1j; TZ) bzw. Werkstattjahr (BS 1j;TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "07",
+			"bkIndex": 40,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2015
+		}]
+	}, {
+		"bezeichner": "A08",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 1008000,
+			"kuerzel": "A08",
+			"schluessel": "A08",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Vorpraktikum (VP)",
+			"bkAnlage": "A",
+			"bkTyp": "08",
+			"bkIndex": 50,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		}]
+	}, {
+		"bezeichner": "A09",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 1009000,
+			"kuerzel": "A09",
+			"schluessel": "A09",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Klassen für Schüler/-innen ohne Ausbildungsverhältnis (BS 1j; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "09",
+			"bkIndex": 55,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2015
+		}]
+	}, {
+		"bezeichner": "A10",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 1010000,
+			"kuerzel": "A10",
+			"schluessel": "A10",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "10",
+			"bkIndex": 56,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": 2016,
+			"gueltigBis": 2019
+		}]
+	}, {
+		"bezeichner": "A11",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 1011000,
+			"kuerzel": "A11",
+			"schluessel": "A11",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Fachhochschulreife (BKAZVO) (BAB/FHR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "11",
+			"bkIndex": 56,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": 2016,
+			"gueltigBis": 2019
+		}]
+	}, {
+		"bezeichner": "A12",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 1012000,
+			"kuerzel": "A12",
+			"schluessel": "A12",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Ausbildungsvorbereitung (BS 1j; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "12",
+			"bkIndex": 57,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AZBK", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AZBK", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AZBK", "allgemeinbildend": "HA9_FOE", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": 2016,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A13",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 1013000,
+			"kuerzel": "A13",
+			"schluessel": "A13",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Ausbildungsvorbereitung (BS 1j; TZ)",
+			"bkAnlage": "A",
+			"bkTyp": "13",
+			"bkIndex": 58,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AZBK", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AZBK", "allgemeinbildend": "HA9A", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": 2016,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A14",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 1014000,
+			"kuerzel": "A14",
+			"schluessel": "A14",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss (BAB/FOR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "14",
+			"bkIndex": 59,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": 2017,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A15",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 1015000,
+			"kuerzel": "A15",
+			"schluessel": "A15",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife (BAB/FHR; VZ)",
+			"bkAnlage": "A",
+			"bkTyp": "15",
+			"bkIndex": 59,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": 2017,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "A16",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 1016000,
+			"kuerzel": "A16",
+			"schluessel": "A16",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachklassen (nach §2 BKAZVO) BAB; VZ",
+			"bkAnlage": "A",
+			"bkTyp": "16",
+			"bkIndex": 59,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": 2017,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "AB",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 90001000,
+			"kuerzel": "AB",
+			"schluessel": "AB",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Schule für Kranke: Allgemeinbildend",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B01",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 2001000,
+			"kuerzel": "B01",
+			"schluessel": "B01",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsabschluss/Fachoberschulreife (BAB/FOR 2j; VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "01",
+			"bkIndex": 60,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B02",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 2002000,
+			"kuerzel": "B02",
+			"schluessel": "B02",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsgrundbildung/Fachoberschulreife (BG/FOR 2j; VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "02",
+			"bkIndex": 70,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B03",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 2003000,
+			"kuerzel": "B03",
+			"schluessel": "B03",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsgrundbildung (für Schüler mit FOR) (BG 1j; VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "03",
+			"bkIndex": 80,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B04",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 2004000,
+			"kuerzel": "B04",
+			"schluessel": "B04",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsabschluss/Fachoberschulreife (BAB/FOR; VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "04",
+			"bkIndex": 90,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B05",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 2005000,
+			"kuerzel": "B05",
+			"schluessel": "B05",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufsabschluss/Fachhochschulreife (BAB/FHR; VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "05",
+			"bkIndex": 90,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B06",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 2006000,
+			"kuerzel": "B06",
+			"schluessel": "B06",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "06",
+			"bkIndex": 91,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 2006001,
+			"kuerzel": "B06",
+			"schluessel": "B06",
+			"istBK": true,
+			"schulformen": [
+                "BK",
+				"SB"
+            ],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (BK/EESA; 1j. VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "06",
+			"bkIndex": 91,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B07",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 2007000,
+			"kuerzel": "B07",
+			"schluessel": "B07",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufliche Kenntnisse/Mittlerer Schulabschluss (BK/FOR; 1j. VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "07",
+			"bkIndex": 92,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B08",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 2008000,
+			"kuerzel": "B08",
+			"schluessel": "B08",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "08",
+			"bkIndex": 93,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 2008001,
+			"kuerzel": "B08",
+			"schluessel": "B08",
+			"istBK": true,
+			"schulformen": [
+                "BK",
+				"SB"
+            ],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 2j. VZ)",
+			"bkAnlage": "B",
+			"bkTyp": "08",
+			"bkIndex": 93,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B09",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 2009000,
+			"kuerzel": "B09",
+			"schluessel": "B09",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)",
+			"bkAnlage": "B",
+			"bkTyp": "09",
+			"bkIndex": 93,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 2009001,
+			"kuerzel": "B09",
+			"schluessel": "B09",
+			"istBK": true,
+			"schulformen": [
+                "BK",
+				"SB"
+            ],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 3j. TZ)",
+			"bkAnlage": "B",
+			"bkTyp": "09",
+			"bkIndex": 93,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "B10",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 2010000,
+			"kuerzel": "B10",
+			"schluessel": "B10",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ)",
+			"bkAnlage": "B",
+			"bkTyp": "10",
+			"bkIndex": 93,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 2010001,
+			"kuerzel": "B10",
+			"schluessel": "B10",
+			"istBK": true,
+			"schulformen": [
+                "BK",
+				"SB"
+            ],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschl./Erweiterter Erster Schulabschluss oder Mittl. Schulab. (BAB/EESA-FOR, 4j. TZ)",
+			"bkAnlage": "B",
+			"bkTyp": "10",
+			"bkIndex": 93,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "BT",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 90002000,
+			"kuerzel": "BT",
+			"schluessel": "BT",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Schule für Kranke: Berufsbildend (Teilzeit)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "BV",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 90003000,
+			"kuerzel": "BV",
+			"schluessel": "BV",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Schule für Kranke: Berufsbildend (Vollzeit)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C01",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 3001000,
+			"kuerzel": "C01",
+			"schluessel": "C01",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum) BAB/FHR 3j; VZ BFS",
+			"bkAnlage": "C",
+			"bkTyp": "01",
+			"bkIndex": 100,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C02",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 3002000,
+			"kuerzel": "C02",
+			"schluessel": "C02",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss f. Hochschulzugangsberechtigte (BAB 2j; VZ) BFS",
+			"bkAnlage": "C",
+			"bkTyp": "02",
+			"bkIndex": 110,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C03",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 3003000,
+			"kuerzel": "C03",
+			"schluessel": "C03",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufliche Kenntnisse/FHR (BK/FHR 2j; VZ) HBFS",
+			"bkAnlage": "C",
+			"bkTyp": "03",
+			"bkIndex": 120,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BK", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C04",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 3004000,
+			"kuerzel": "C04",
+			"schluessel": "C04",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufliche Kenntnisse/Sonderform für Abiturienten (BK 1j; VZ) HBFS",
+			"bkAnlage": "C",
+			"bkTyp": "04",
+			"bkIndex": 130,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C05",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 3005000,
+			"kuerzel": "C05",
+			"schluessel": "C05",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachoberschule Kl. 11 (BK/FHR 1j; TZ)",
+			"bkAnlage": "C",
+			"bkTyp": "05",
+			"bkIndex": 140,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VERS", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VERS", "allgemeinbildend": "VS_11", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C06",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 3006000,
+			"kuerzel": "C06",
+			"schluessel": "C06",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachoberschule Kl. 12S (BK/FHR 1j; VZ)",
+			"bkAnlage": "C",
+			"bkTyp": "06",
+			"bkIndex": 140,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BK", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C07",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 3007000,
+			"kuerzel": "C07",
+			"schluessel": "C07",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB",
+				"WB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachoberschule Kl. 12B (BK/FHR 2j; TZ)",
+			"bkAnlage": "C",
+			"bkTyp": "07",
+			"bkIndex": 140,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C08",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 3008000,
+			"kuerzel": "C08",
+			"schluessel": "C08",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachoberschule Kl. 12B (BK/FHR 1j; VZ)",
+			"bkAnlage": "C",
+			"bkTyp": "08",
+			"bkIndex": 140,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C09",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 3009000,
+			"kuerzel": "C09",
+			"schluessel": "C09",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum Erzieher/innen (Vollzeit) (BP/Erz 1j; VZ)",
+			"bkAnlage": "C",
+			"bkTyp": "09",
+			"bkIndex": 150,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C10",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 3010000,
+			"kuerzel": "C10",
+			"schluessel": "C10",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ)",
+			"bkAnlage": "C",
+			"bkTyp": "10",
+			"bkIndex": 150,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C11",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 3011000,
+			"kuerzel": "C11",
+			"schluessel": "C11",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachoberschule Kl. 12B (BK/FHR 3j; TZ)",
+			"bkAnlage": "C",
+			"bkTyp": "11",
+			"bkIndex": 141,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C12",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 3012000,
+			"kuerzel": "C12",
+			"schluessel": "C12",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Fachhochschulreife (mit  Berufspraktikum) BAB/FHR 3,5j; VZ",
+			"bkAnlage": "C",
+			"bkTyp": "12",
+			"bkIndex": 145,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "C13",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 3013000,
+			"kuerzel": "C13",
+			"schluessel": "C13",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Fachhochschulreife (gestuft) (BAB/FHR 3j; VZ)",
+			"bkAnlage": "C",
+			"bkTyp": "13",
+			"bkIndex": 146,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BK", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BK", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BK", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D01",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 4001000,
+			"kuerzel": "D01",
+			"schluessel": "D01",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum) (BAB/AHR 4j; VZ)",
+			"bkAnlage": "D",
+			"bkTyp": "01",
+			"bkIndex": 160,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "OA", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BK", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BK", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BAB", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D02",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 4002000,
+			"kuerzel": "D02",
+			"schluessel": "D02",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufl. Kenntnisse/Allg. Hochschulreife (BK/AHR 3j; VZ)",
+			"bkAnlage": "D",
+			"bkTyp": "02",
+			"bkIndex": 170,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "HA10", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "MSA_Q", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "OA", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BK", "allgemeinbildend": "FHR_S", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BK", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D03",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 4003000,
+			"kuerzel": "D03",
+			"schluessel": "D03",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum (Vollzeit) (BP 1j; VZ)",
+			"bkAnlage": "D",
+			"bkTyp": "03",
+			"bkIndex": 180,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D04",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 4004000,
+			"kuerzel": "D04",
+			"schluessel": "D04",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ)",
+			"bkAnlage": "D",
+			"bkTyp": "04",
+			"bkIndex": 190,
+			"istVZ": false,
+			"abschluesse": [
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D05",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 4005000,
+			"kuerzel": "D05",
+			"schluessel": "D05",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "AHR (gem. § 2 Abs. 3 Anlage D) (AHR 1j; VZ) FOS13",
+			"bkAnlage": "D",
+			"bkTyp": "05",
+			"bkIndex": 200,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "FGHR", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "D06",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 4006000,
+			"kuerzel": "D06",
+			"schluessel": "D06",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "AHR (gem. § 2 Abs. 3 Anlage D) (AHR 2j; TZ) FOS13",
+			"bkAnlage": "D",
+			"bkTyp": "06",
+			"bkIndex": 200,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "ABITUR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "VBK", "allgemeinbildend": "FGHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E01",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 5001000,
+			"kuerzel": "E01",
+			"schluessel": "E01",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule Vollzeit (BW 2j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "01",
+			"bkIndex": 210,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BW", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BW", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E02",
+		"idHistorie": 51,
+		"historie": [ {
+			"id": 5002000,
+			"kuerzel": "E02",
+			"schluessel": "E02",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule Teilzeit (BW 4j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "02",
+			"bkIndex": 210,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BW", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "BW", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_04", "jahrgangBis": "JAHRGANG_04"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_04"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E03",
+		"idHistorie": 52,
+		"historie": [ {
+			"id": 5003000,
+			"kuerzel": "E03",
+			"schluessel": "E03",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule (verkürzt) Vollzeit (BW 1j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "03",
+			"bkIndex": 220,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "AUFB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_01"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E04",
+		"idHistorie": 53,
+		"historie": [ {
+			"id": 5004000,
+			"kuerzel": "E04",
+			"schluessel": "E04",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule (verkürzt) Teilzeit (BW 2j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "04",
+			"bkIndex": 220,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "AUFB", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_02"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_02"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E05",
+		"idHistorie": 54,
+		"historie": [ {
+			"id": 5005000,
+			"kuerzel": "E05",
+			"schluessel": "E05",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 3j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "05",
+			"bkIndex": 230,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_02", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E06",
+		"idHistorie": 55,
+		"historie": [ {
+			"id": 5006000,
+			"kuerzel": "E06",
+			"schluessel": "E06",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 1j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "06",
+			"bkIndex": 240,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E07",
+		"idHistorie": 56,
+		"historie": [ {
+			"id": 5007000,
+			"kuerzel": "E07",
+			"schluessel": "E07",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 6j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "07",
+			"bkIndex": 230,
+			"istVZ": false,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_06"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_06", "jahrgangBis": "JAHRGANG_06"},
+				{"berufsbildend": "BW", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_06", "jahrgangBis": "JAHRGANG_06"},
+				{"berufsbildend": "BW", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_06", "jahrgangBis": "JAHRGANG_06"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_06"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E08",
+		"idHistorie": 57,
+		"historie": [ {
+			"id": 5008000,
+			"kuerzel": "E08",
+			"schluessel": "E08",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 2j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "08",
+			"bkIndex": 240,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E09",
+		"idHistorie": 58,
+		"historie": [ {
+			"id": 5009000,
+			"kuerzel": "E09",
+			"schluessel": "E09",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Fachschule (Sonderform) Vollzeit (BW 3j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "09",
+			"bkIndex": 250,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E10",
+		"idHistorie": 59,
+		"historie": [ {
+			"id": 5010000,
+			"kuerzel": "E10",
+			"schluessel": "E10",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Fachschule (Sonderform) Teilzeit (BW 6j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "10",
+			"bkIndex": 260,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E11",
+		"idHistorie": 60,
+		"historie": [ {
+			"id": 5011000,
+			"kuerzel": "E11",
+			"schluessel": "E11",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum Erzieher/innen (FS/BP/Erz 1j; VZ)",
+			"bkAnlage": "E",
+			"bkTyp": "11",
+			"bkIndex": 270,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E12",
+		"idHistorie": 61,
+		"historie": [ {
+			"id": 5012000,
+			"kuerzel": "E12",
+			"schluessel": "E12",
+			"istBK": true,
+			"schulformen": [
+				"BK",
+				"SB"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "Berufspraktikum Erzieher/innen (FS/BP/Erz 2j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "12",
+			"bkIndex": 270,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "E13",
+		"idHistorie": 62,
+		"historie": [ {
+			"id": 5013000,
+			"kuerzel": "E13",
+			"schluessel": "E13",
+			"istBK": true,
+			"schulformen": [
+				"BK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Fachschule Teilzeit (BW 3j; TZ)",
+			"bkAnlage": "E",
+			"bkTyp": "13",
+			"bkIndex": 210,
+			"istVZ": true,
+			"abschluesse": [
+				{"berufsbildend": "OA", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "MSA", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "BW", "allgemeinbildend": "FHR", "jahrgangVon": "JAHRGANG_03", "jahrgangBis": "JAHRGANG_03"},
+				{"berufsbildend": "WECHSEL", "allgemeinbildend": "OA", "jahrgangVon": "JAHRGANG_01", "jahrgangBis": "JAHRGANG_03"}
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		}]
+	}, {
+		"bezeichner": "ER",
+		"idHistorie": 63,
+		"historie": [ {
+			"id": 14001000,
+			"kuerzel": "ER",
+			"schluessel": "ER",
+			"istBK": false,
+			"schulformen": [
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "kooperative Form: Erweiterungsebene",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EVB",
+		"idHistorie": 64,
+		"historie": [ {
+			"id": 80001000,
+			"kuerzel": "EVB",
+			"schluessel": "EVB",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Evangelische Bekenntnisschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "G01",
+		"idHistorie": 65,
+		"historie": [ {
+			"id": 60001000,
+			"kuerzel": "G01",
+			"schluessel": "G01",
+			"istBK": false,
+			"schulformen": [
+				"GY"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Aufbaugymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "G02",
+		"idHistorie": 66,
+		"historie": [ {
+			"id": 18001000,
+			"kuerzel": "G02",
+			"schluessel": "G02",
+			"istBK": false,
+			"schulformen": [
+				"WB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Abendgymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GGS",
+		"idHistorie": 67,
+		"historie": [ {
+			"id": 15001000,
+			"kuerzel": "GGS",
+			"schluessel": "GGS",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Gemeinschaftsschule (auslaufend) integrierte Form",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GGY",
+		"idHistorie": 68,
+		"historie": [ {
+			"id": 15002000,
+			"kuerzel": "GGY",
+			"schluessel": "GGY",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Gemeinschaftsschule (auslaufend) Gymnasialbildungsgang",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GMS",
+		"idHistorie": 69,
+		"historie": [ {
+			"id": 80002000,
+			"kuerzel": "GMS",
+			"schluessel": "GMS",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Gemeinschaftsschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GR",
+		"idHistorie": 70,
+		"historie": [ {
+			"id": 15003000,
+			"kuerzel": "GR",
+			"schluessel": "GR",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "kooperative Form: Grundebene",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GRH",
+		"idHistorie": 71,
+		"historie": [ {
+			"id": 15004000,
+			"kuerzel": "GRH",
+			"schluessel": "GRH",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Gemeinschaftsschule auslaufend: teilintegrierte Form",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GS",
+		"idHistorie": 72,
+		"historie": [ {
+			"id": 50001000,
+			"kuerzel": "GS",
+			"schluessel": "GS",
+			"istBK": false,
+			"schulformen": [
+				"GM"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "integrierte Form (Binnendifferenzierung)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GY",
+		"idHistorie": 73,
+		"historie": [ {
+			"id": 15005000,
+			"kuerzel": "GY",
+			"schluessel": "GY",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"GM",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Gymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GY8",
+		"idHistorie": 74,
+		"historie": [ {
+			"id": 60002000,
+			"kuerzel": "GY8",
+			"schluessel": "GY8",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"GY"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang G8-Gymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 60002001,
+			"kuerzel": "GY8",
+			"schluessel": "GY8",
+			"istBK": false,
+			"schulformen": [
+                "GY"
+            ],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang G8-Gymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+ 		} ]
+	}, {
+		"bezeichner": "GY9",
+		"idHistorie": 75,
+		"historie": [ {
+			"id": 60003000,
+			"kuerzel": "GY9",
+			"schluessel": "GY9",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"GY"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang G9-Gymnasium",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "H",
+		"idHistorie": 76,
+		"historie": [ {
+			"id": 10001000,
+			"kuerzel": "H",
+			"schluessel": "H",
+			"istBK": false,
+			"schulformen": [
+				"GM",
+				"R",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Hauptschule",
+			"bkAnlage": null,
+			"bkTyp": "  ",
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "H01",
+		"idHistorie": 77,
+		"historie": [ {
+			"id": 17001000,
+			"kuerzel": "H01",
+			"schluessel": "H01",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsgrundbildung (Jahrgang 07 bis 10)",
+			"bkAnlage": "H",
+			"bkTyp": "01",
+			"bkIndex": 980,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "H02",
+		"idHistorie": 78,
+		"historie": [ {
+			"id": 17002000,
+			"kuerzel": "H02",
+			"schluessel": "H02",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Berufsausbildung (Jahrgang 11 und 12)",
+			"bkAnlage": "H",
+			"bkTyp": "02",
+			"bkIndex": 940,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "K02",
+		"idHistorie": 79,
+		"historie": [ {
+			"id": 18002000,
+			"kuerzel": "K02",
+			"schluessel": "K02",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"WB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Kolleg",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "R",
+		"idHistorie": 80,
+		"historie": [ {
+			"id": 10002000,
+			"kuerzel": "R",
+			"schluessel": "R",
+			"istBK": false,
+			"schulformen": [
+				"GM",
+				"H",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Realschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "R00",
+		"idHistorie": 81,
+		"historie": [ {
+			"id": 10003000,
+			"kuerzel": "R00",
+			"schluessel": "R00",
+			"istBK": false,
+			"schulformen": [
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Realschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "R01",
+		"idHistorie": 82,
+		"historie": [ {
+			"id": 10004000,
+			"kuerzel": "R01",
+			"schluessel": "R01",
+			"istBK": false,
+			"schulformen": [
+				"R"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Aufbaurealschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "R02",
+		"idHistorie": 83,
+		"historie": [ {
+			"id": 18003000,
+			"kuerzel": "R02",
+			"schluessel": "R02",
+			"istBK": false,
+			"schulformen": [
+				"WB"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Abendrealschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RH",
+		"idHistorie": 84,
+		"historie": [ {
+			"id": 10005000,
+			"kuerzel": "RH",
+			"schluessel": "RH",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"GM",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "teilintegrierte Form",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RKB",
+		"idHistorie": 85,
+		"historie": [ {
+			"id": 80003000,
+			"kuerzel": "RKB",
+			"schluessel": "RKB",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Katholische  Bekenntnisschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SRH",
+		"idHistorie": 86,
+		"historie": [ {
+			"id": 10006000,
+			"kuerzel": "SRH",
+			"schluessel": "SRH",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Sekundarschule, teilintegrierte Form (auslaufend)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SSI",
+		"idHistorie": 87,
+		"historie": [ {
+			"id": 10007000,
+			"kuerzel": "SSI",
+			"schluessel": "SSI",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": true,
+			"istAusgelaufen": false,
+			"text": "Sekundarschule, integrierte Form (auslaufend)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "Y8",
+		"idHistorie": 88,
+		"historie": [ {
+			"id": 10008000,
+			"kuerzel": "Y8",
+			"schluessel": "Y8",
+			"istBK": false,
+			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Lehrplan G8",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

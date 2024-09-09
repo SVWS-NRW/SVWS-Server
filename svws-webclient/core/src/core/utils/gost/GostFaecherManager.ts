@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostFach, cast_de_svws_nrw_core_data_gost_GostFach } from '../../../core/data/gost/GostFach';
-import { Fachgruppe } from '../../../core/types/fach/Fachgruppe';
+import { Fach } from '../../../asd/types/fach/Fach';
+import { Fachgruppe } from '../../../asd/types/fach/Fachgruppe';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JavaString } from '../../../java/lang/JavaString';
@@ -9,10 +10,11 @@ import { GostLaufbahnplanungFachkombinationTyp } from '../../../core/types/gost/
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { GostJahrgangFachkombination, cast_de_svws_nrw_core_data_gost_GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
-import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
+import { FachKatalogEintrag } from '../../../asd/data/fach/FachKatalogEintrag';
 
 export class GostFaecherManager extends JavaObject {
 
@@ -20,6 +22,11 @@ export class GostFaecherManager extends JavaObject {
 	 * Sortiert die Fächer anhand ihrer konfigurierten Sortierung
 	 */
 	public static readonly comp : Comparator<GostFach | null> = { compare : (a: GostFach | null, b: GostFach | null) => GostFachbereich.compareGostFach(a, b) };
+
+	/**
+	 * das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
+	 */
+	private readonly schuljahr : number;
 
 	/**
 	 * Die Liste der Fächer, die im Manager vorhanden sind.
@@ -64,47 +71,65 @@ export class GostFaecherManager extends JavaObject {
 
 	/**
 	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
+	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 */
-	public constructor();
+	public constructor(schuljahr : number);
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Fächern.
 	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher   die Liste mit den Fächern
 	 */
-	public constructor(faecher : List<GostFach>);
+	public constructor(schuljahr : number, faecher : List<GostFach>);
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Fächern und den
 	 * übergebenen geforderten und nicht erlaubten Fächerkombinationen.
 	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher      die Liste mit den Fächern
 	 * @param fachkombis   die Liste mit den Fächerkombinationen
 	 */
-	public constructor(faecher : List<GostFach>, fachkombis : List<GostJahrgangFachkombination>);
+	public constructor(schuljahr : number, faecher : List<GostFach>, fachkombis : List<GostJahrgangFachkombination>);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : List<GostFach>, __param1? : List<GostJahrgangFachkombination>) {
+	public constructor(__param0 : number, __param1? : List<GostFach>, __param2? : List<GostJahrgangFachkombination>) {
 		super();
-		if ((__param0 === undefined) && (__param1 === undefined)) {
-			// empty method body
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && (__param1 === undefined)) {
-			const faecher : List<GostFach> = cast_java_util_List(__param0);
+		if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined) && (__param2 === undefined)) {
+			const schuljahr : number = __param0 as number;
+			this.schuljahr = schuljahr;
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && (__param2 === undefined)) {
+			const schuljahr : number = __param0 as number;
+			const faecher : List<GostFach> = cast_java_util_List(__param1);
+			this.schuljahr = schuljahr;
 			this.addAll(faecher);
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('java.util.List'))) || (__param0 === null)) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null))) {
-			const faecher : List<GostFach> = cast_java_util_List(__param0);
-			const fachkombis : List<GostJahrgangFachkombination> = cast_java_util_List(__param1);
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('java.util.List'))) || (__param1 === null)) && ((__param2 !== undefined) && ((__param2 instanceof JavaObject) && (__param2.isTranspiledInstanceOf('java.util.List'))) || (__param2 === null))) {
+			const schuljahr : number = __param0 as number;
+			const faecher : List<GostFach> = cast_java_util_List(__param1);
+			const fachkombis : List<GostJahrgangFachkombination> = cast_java_util_List(__param2);
+			this.schuljahr = schuljahr;
 			this.addAll(faecher);
 			this.addFachkombinationenAll(fachkombis);
 		} else throw new Error('invalid method overload');
 	}
 
 	/**
+	 * Gibt das Schuljahr des Managers zurück, d.h. das Schuljahr, für welches die Fächer der Oberstufe verwaltet werden.
+	 *
+	 * @return das Schuljahr
+	 */
+	public getSchuljahr() : number {
+		return this.schuljahr;
+	}
+
+	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu. Die interne Sortierung wird nicht korrigiert.
 	 *
-	 * @param fach   das hinzuzufügende Fach
+	 * @param fach        das hinzuzufügende Fach
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 *
@@ -114,25 +139,30 @@ export class GostFaecherManager extends JavaObject {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
 		if (this._map.containsKey(fach.id))
 			return false;
+		const zf : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
+		if (zf === null)
+			return false;
+		const fke : FachKatalogEintrag | null = zf.daten(this.schuljahr);
+		if (fke === null)
+			return false;
 		this._map.put(fach.id, fach);
-		const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		let listForKuerzel : List<GostFach> | null = this._mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel === null) {
 			listForKuerzel = new ArrayList();
 			this._mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
-		if (fach.istFremdsprache && zf.daten.istFremdsprache) {
-			let listForSprachkuerzel : List<GostFach> | null = this._mapBySprachkuerzel.get(zf.daten.kuerzel);
+		if (fach.istFremdsprache && fke.istFremdsprache) {
+			let listForSprachkuerzel : List<GostFach> | null = this._mapBySprachkuerzel.get(fke.kuerzel);
 			if (listForSprachkuerzel === null) {
 				listForSprachkuerzel = new ArrayList();
-				this._mapBySprachkuerzel.put(zf.daten.kuerzel, listForSprachkuerzel);
+				this._mapBySprachkuerzel.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
 		}
 		const added : boolean = this._faecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
-			const fg : Fachgruppe | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+			const fg : Fachgruppe | null = Fach.data().getWertBySchluesselOrException(fach.kuerzel).getFachgruppe(this.schuljahr);
 			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown))
 				this._leitfaecher.add(fach);
 		}
@@ -321,8 +351,8 @@ export class GostFaecherManager extends JavaObject {
 	public getFaecherSchriftlichMoeglich() : List<GostFach> {
 		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this._faecher) {
-			const zf : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-			if ((zf as unknown === ZulaessigesFach.PX as unknown) || (zf as unknown === ZulaessigesFach.VX as unknown) || (zf as unknown === ZulaessigesFach.VO as unknown) || (zf as unknown === ZulaessigesFach.IN as unknown))
+			const zf : Fach | null = Fach.data().getWertBySchluesselOrException(f.kuerzel);
+			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown))
 				continue;
 			faecherSchriftlichMoeglich.add(f);
 		}
@@ -413,6 +443,8 @@ export class GostFaecherManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFaecherManager'].includes(name);
 	}
+
+	public static class = new Class<GostFaecherManager>('de.svws_nrw.core.utils.gost.GostFaecherManager');
 
 }
 

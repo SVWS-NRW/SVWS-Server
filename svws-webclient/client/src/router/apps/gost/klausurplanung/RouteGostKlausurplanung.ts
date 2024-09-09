@@ -3,6 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
+import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
@@ -31,7 +32,7 @@ const SGostKlausurplanungAuswahl = () => import("~/components/gost/klausurplanun
 export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanung, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN

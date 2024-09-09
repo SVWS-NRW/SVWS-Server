@@ -1,6 +1,6 @@
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { StundenplanKlasse } from '../../../core/data/stundenplan/StundenplanKlasse';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanManager } from '../../../core/utils/stundenplan/StundenplanManager';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
@@ -15,9 +15,10 @@ import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSc
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Wochentag } from '../../../core/types/Wochentag';
 import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class StundenplanUnterrichtListeManager extends AuswahlManager<number, StundenplanUnterricht, StundenplanUnterricht> {
 
@@ -211,6 +212,8 @@ export class StundenplanUnterrichtListeManager extends AuswahlManager<number, St
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtListeManager'].includes(name);
 	}
+
+	public static class = new Class<StundenplanUnterrichtListeManager>('de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtListeManager');
 
 }
 

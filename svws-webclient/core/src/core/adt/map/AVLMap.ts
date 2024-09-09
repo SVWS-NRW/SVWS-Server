@@ -17,6 +17,7 @@ import type { SortedMap } from '../../../java/util/SortedMap';
 import { cast_java_util_SortedMap } from '../../../java/util/SortedMap';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { cast_java_util_Map } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -1226,6 +1227,8 @@ export class AVLMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMap', 'java.util.SequencedMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}
+
+	public static class = new Class<AVLMap<any, any>>('de.svws_nrw.core.adt.map.AVLMap');
 
 	public reversed() : NavigableMap<K, V> {
 		return this.descendingMap();

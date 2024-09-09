@@ -3,6 +3,7 @@ import { GostBlockungsergebnisSchiene } from '../../../core/data/gost/GostBlocku
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { GostBlockungsergebnisBewertung } from '../../../core/data/gost/GostBlockungsergebnisBewertung';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungsergebnis extends JavaObject {
 
@@ -53,6 +54,8 @@ export class GostBlockungsergebnis extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnis'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnis>('de.svws_nrw.core.data.gost.GostBlockungsergebnis');
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnis {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnis>;

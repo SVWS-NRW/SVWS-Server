@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 
@@ -22,6 +23,8 @@ export class GostJahrgangFachwahlenHalbjahr extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr'].includes(name);
 	}
+
+	public static class = new Class<GostJahrgangFachwahlenHalbjahr>('de.svws_nrw.core.data.gost.GostJahrgangFachwahlenHalbjahr');
 
 	public static transpilerFromJSON(json : string): GostJahrgangFachwahlenHalbjahr {
 		const obj = JSON.parse(json) as Partial<GostJahrgangFachwahlenHalbjahr>;

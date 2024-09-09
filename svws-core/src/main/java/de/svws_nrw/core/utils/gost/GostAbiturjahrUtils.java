@@ -2,9 +2,10 @@ package de.svws_nrw.core.utils.gost;
 
 import java.util.Comparator;
 
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.gost.GostJahrgang;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -47,7 +48,8 @@ public final class GostAbiturjahrUtils {
 	 */
 	public static Integer getGostAbiturjahr(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
 			final int aktuellesSchuljahr, final @NotNull String jahrgang) {
-		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
+		final SchulformKatalogEintrag sfke = schulform.daten(aktuellesSchuljahr);
+		if ((sfke == null) || (!sfke.hatGymOb))
 			return null;
 		Integer restjahre = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre == null)
@@ -72,7 +74,8 @@ public final class GostAbiturjahrUtils {
 	 */
 	public static String getGostAbiturjahrJahrgang(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung,
 			final int schuljahr, final int abiturjahr) {
-		if ((schulform.daten == null) || (!schulform.daten.hatGymOb))
+		final SchulformKatalogEintrag sfke = schulform.daten(schuljahr);
+		if ((sfke == null) || (!sfke.hatGymOb))
 			return null;
 		final int restlicheJahre = abiturjahr - schuljahr;
 		if (restlicheJahre <= 1)

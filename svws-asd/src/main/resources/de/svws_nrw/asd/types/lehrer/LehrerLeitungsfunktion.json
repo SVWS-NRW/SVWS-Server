@@ -1,0 +1,26 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "SL",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "SL",
+			"kuerzel": "SL",
+			"text": "Schulleitung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SL_STV",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "Stv. SL",
+			"kuerzel": "Stv. SL",
+			"text": "Stellvertretende Schulleitung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

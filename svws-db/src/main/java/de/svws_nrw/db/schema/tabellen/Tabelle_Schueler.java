@@ -1,15 +1,13 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
 import de.svws_nrw.db.converter.current.GeschlechtConverter;
 import de.svws_nrw.db.converter.current.NationalitaetenConverter;
-import de.svws_nrw.db.converter.current.SchuelerStatusConverter;
 import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
-import de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -49,7 +47,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Status */
 	public SchemaTabelleSpalte col_Status = add("Status", SchemaDatentypen.INT, false)
-			.setConverter(SchuelerStatusConverter.class)
+			.setJavaName("idStatus")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Status des Schüler steuert die Einordnung in die Kästen Aktiv Neuaufnahme Abschluss usw.");
 
@@ -231,8 +229,7 @@ public class Tabelle_Schueler extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ASDSchulform */
 	public SchemaTabelleSpalte col_ASDSchulform = add("ASDSchulform", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 			.setVeraltet(SchemaRevisionen.REV_1)
-			.setJavaName("Schulgliederung")
-			.setConverter(SchulgliederungKuerzelConverter.class)
+			.setJavaName("SchulgliederungKuerzel")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("DEPRECATED: ASD-Kürzel der Schulgliederung - Spalte fehlerhaft benannt! - verschoben nach SchuelerLernabschittsdaten");
 

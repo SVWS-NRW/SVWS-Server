@@ -28,23 +28,23 @@
 						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
 					<svws-ui-spacing />
-					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="Schulgliederung.getByID(data.idSchulgliederung)"
-						@update:model-value="value => patch({ idSchulgliederung: value?.daten.id ?? -1 })"
-						:items="schulgliederungen" :item-text="f => f.daten.kuerzel + ' - ' + f.daten.beschreibung" />
+					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="Schulgliederung.data().getWertByID(data.idSchulgliederung)"
+						@update:model-value="value => patch({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })"
+						:items="schulgliederungen" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<!-- TODO Auswahl der Prüfungsordnungen und :disabled="!hatKompetenzUpdate" -->
 					<svws-ui-text-input placeholder="Prüfungsordnung" disabled :model-value="data.pruefungsordnung" type="text" />
-					<svws-ui-select title="Klassenart" :disabled="!hatKompetenzUpdate" :model-value="Klassenart.getByID(data.idKlassenart)"
-						@update:model-value="value => patch({ idKlassenart: value?.daten.id ?? -1 })"
-						:items="Klassenart.get(schulform)" :item-text="f => f.daten.kuerzel + ' - ' + f.daten.bezeichnung" />
-					<svws-ui-select v-if="data.idAllgemeinbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="AllgemeinbildendOrganisationsformen.getByID(data.idAllgemeinbildendOrganisationsform)"
-						@update:model-value="value => patch({ idAllgemeinbildendOrganisationsform: value?.daten.id ?? -1 })"
-						:items="AllgemeinbildendOrganisationsformen.values()" :item-text="f => f.daten.kuerzel + ' - ' + f.daten.beschreibung" />
-					<svws-ui-select v-if="data.idBerufsbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="BerufskollegOrganisationsformen.getByID(data.idBerufsbildendOrganisationsform)"
-						@update:model-value="value => patch({ idBerufsbildendOrganisationsform: value?.daten.id ?? -1 })"
-						:items="BerufskollegOrganisationsformen.values()" :item-text="f => f.daten.kuerzel + ' - ' + f.daten.beschreibung" />
-					<svws-ui-select v-if="data.idWeiterbildungOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="WeiterbildungskollegOrganisationsformen.getByID(data.idWeiterbildungOrganisationsform)"
-						@update:model-value="value => patch({ idWeiterbildungOrganisationsform: value?.daten.id ?? -1 })"
-						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f => f.daten.kuerzel + ' - ' + f.daten.beschreibung" />
+					<svws-ui-select title="Klassenart" :disabled="!hatKompetenzUpdate" :model-value="Klassenart.data().getWertByID(data.idKlassenart)"
+						@update:model-value="value => patch({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })"
+						:items="Klassenart.data().getWerteBySchuljahr(schuljahr)" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
+					<svws-ui-select v-if="data.idAllgemeinbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="AllgemeinbildendOrganisationsformen.data().getWertByID(data.idAllgemeinbildendOrganisationsform)"
+						@update:model-value="value => patch({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						:items="AllgemeinbildendOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
+					<svws-ui-select v-if="data.idBerufsbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="BerufskollegOrganisationsformen.data().getWertByID(data.idBerufsbildendOrganisationsform)"
+						@update:model-value="value => patch({ idBerufsbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						:items="BerufskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
+					<svws-ui-select v-if="data.idWeiterbildungOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="WeiterbildungskollegOrganisationsformen.data().getWertByID(data.idWeiterbildungOrganisationsform)"
+						@update:model-value="value => patch({ idWeiterbildungOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f =>  (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="1">
@@ -98,10 +98,10 @@
 			</svws-ui-content-card>
 		</div>
 		<svws-ui-content-card title="Klassenliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenListeManager().schuelerstatus.list()" :item-text="status => status.bezeichnung" class="col-span-full" />
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-table :columns="colsSchueler" :items="klassenListeManager().getSchuelerListe()">
 				<template #cell(status)="{ value } : { value: number}">
-					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
+					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr) || "" }}</span>
 				</template>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
@@ -120,14 +120,13 @@
 
 	import { computed, ref } from "vue";
 	import type { DataTableColumn } from "@ui";
-	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
-	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen,
-		ArrayList, 
-		BenutzerKompetenz} from "@core";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
-
+	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
+	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz} from "@core";
 
 	const props = defineProps<KlassenDatenProps>();
+
+	const schuljahr = computed<number>(() => props.klassenListeManager().getSchuljahr());
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));

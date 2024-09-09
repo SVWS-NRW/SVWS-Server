@@ -146,11 +146,13 @@
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
 	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
-	import { BenutzerKompetenz, DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
+	import { BenutzerKompetenz, DTOUtils, GostBlockungRegelUpdate, SetUtils, Fach } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostKursplanungUmwahlansichtProps>();
+
+	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
 	const idSchueler = computed<number>(() => props.schueler === undefined ? -1 : props.schueler.id);
 
@@ -250,8 +252,8 @@
 		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs)) {
 			const k = props.getDatenmanager().kursGet(idKurs);
 			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
-			const zf = ZulaessigesFach.getByKuerzelASD(f?.kuerzel || null)
-			return zf.getHMTLFarbeRGB();
+			const zf = (f === null) ? null : Fach.data().getWertBySchluessel(f.kuerzel);
+			return zf?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
 		}
 		return "";
 	}
@@ -320,7 +322,7 @@
 		if (fwKurszuordnung !== undefined)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
-		return ZulaessigesFach.getByKuerzelASD(f.kuerzel).getHMTLFarbeRGB();
+		return Fach.data().getWertBySchluessel(f.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,200)';
 	}
 
 	function getFachwahlKursname(idFach: number): string {

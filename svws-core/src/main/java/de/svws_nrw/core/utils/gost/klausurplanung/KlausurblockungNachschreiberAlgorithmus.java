@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;

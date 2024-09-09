@@ -1,6 +1,7 @@
 import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusK, cast_de_svws_nrw_core_kursblockung_KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 
@@ -68,6 +69,8 @@ export class KursblockungAlgorithmusKFachwahlmatrix extends KursblockungAlgorith
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusK'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmusKFachwahlmatrix>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusKFachwahlmatrix');
 
 }
 

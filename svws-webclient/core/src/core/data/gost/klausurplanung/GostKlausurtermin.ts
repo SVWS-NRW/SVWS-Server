@@ -1,5 +1,6 @@
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurtermin extends JavaObject {
 
@@ -84,6 +85,8 @@ export class GostKlausurtermin extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurtermin>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin');
 
 	public static transpilerFromJSON(json : string): GostKlausurtermin {
 		const obj = JSON.parse(json) as Partial<GostKlausurtermin>;

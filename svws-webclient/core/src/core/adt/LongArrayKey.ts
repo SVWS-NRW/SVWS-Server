@@ -1,5 +1,6 @@
 import type { Comparable } from '../../java/lang/Comparable';
 import { JavaObject } from '../../java/lang/JavaObject';
+import { Class } from '../../java/lang/Class';
 
 export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey> {
 
@@ -67,6 +68,8 @@ export class LongArrayKey extends JavaObject implements Comparable<LongArrayKey>
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.adt.LongArrayKey'].includes(name);
 	}
+
+	public static class = new Class<LongArrayKey>('de.svws_nrw.core.adt.LongArrayKey');
 
 }
 

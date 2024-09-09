@@ -28,22 +28,6 @@
 	import type { List, LehrerListeEintrag} from "@core";
 	import type { SKlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/SKlassenDatenLehrerZuweisungModalProps";
 
-	const _showModal = ref<boolean>(false);
-	const showModal = () => {
-		// Benötigt damit der X Button oben das Modal zurücksetzt
-		if (_showModal.value === false) {
-			search.value = "";
-			clickedRow.value = undefined;
-		}
-		return _showModal
-	};
-
-	const closeModal = () => {
-		search.value = "";
-		clickedRow.value = undefined;
-		_showModal.value = false;
-	}
-
 	const props = defineProps<SKlassenDatenLehrerZuweisungModalProps>();
 
 	const clickedRow = ref<LehrerListeEintrag | undefined>(undefined);
@@ -66,6 +50,23 @@
 	});
 
 	const auswaehlenDeaktiviert = computed<boolean>(() => clickedRow.value === undefined)
+
+	const _showModal = ref<boolean>(false);
+
+	function showModal() {
+		// Benötigt damit der X Button oben das Modal zurücksetzt
+		if (_showModal.value === false) {
+			search.value = "";
+			clickedRow.value = undefined;
+		}
+		return _showModal;
+	}
+
+	function closeModal() {
+		search.value = "";
+		clickedRow.value = undefined;
+		_showModal.value = false;
+	}
 
 	async function add() {
 		const klassenId = props.klassenListeManager().auswahl().id;

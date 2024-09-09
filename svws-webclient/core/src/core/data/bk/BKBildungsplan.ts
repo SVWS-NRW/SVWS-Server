@@ -3,6 +3,7 @@ import { BKFBFach } from '../../../core/data/bk/BKFBFach';
 import { BKLernfeld } from '../../../core/data/bk/BKLernfeld';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { BKFachklassenSchluessel } from '../../../core/data/bk/BKFachklassenSchluessel';
 
 export class BKBildungsplan extends JavaObject {
@@ -54,6 +55,8 @@ export class BKBildungsplan extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplan'].includes(name);
 	}
+
+	public static class = new Class<BKBildungsplan>('de.svws_nrw.core.data.bk.BKBildungsplan');
 
 	public static transpilerFromJSON(json : string): BKBildungsplan {
 		const obj = JSON.parse(json) as Partial<BKBildungsplan>;

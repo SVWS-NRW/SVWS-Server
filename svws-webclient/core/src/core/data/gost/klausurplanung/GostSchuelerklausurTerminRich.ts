@@ -2,6 +2,7 @@ import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostK
 import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/GostKlausurvorgabe';
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 import { GostSchuelerklausurTermin, cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurplanManager, cast_de_svws_nrw_core_utils_gost_klausurplanung_GostKlausurplanManager } from '../../../../core/utils/gost/klausurplanung/GostKlausurplanManager';
 
@@ -122,6 +123,8 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich'].includes(name);
 	}
+
+	public static class = new Class<GostSchuelerklausurTerminRich>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTerminRich');
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurTerminRich {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausurTerminRich>;

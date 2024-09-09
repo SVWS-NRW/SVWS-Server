@@ -6,13 +6,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungProblemeProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProblemeProps";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungProbleme = () => import("~/components/gost/klausurplanung/SGostKlausurplanungProbleme.vue");
 
 export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
 		], "gost.klausurplanung.probleme", "probleme", SGostKlausurplanungProbleme);
 		super.mode = ServerMode.STABLE;

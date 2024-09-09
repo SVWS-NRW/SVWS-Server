@@ -1,9 +1,11 @@
 package de.svws_nrw.data.schueler;
 
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.core.types.schule.Verkehrssprache;
 import de.svws_nrw.data.DataBasicMapper;
@@ -87,7 +89,7 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		daten.geburtslandVater = (schueler.GeburtslandVater == null) ? null : schueler.GeburtslandVater.daten.iso3;
 		daten.geburtslandMutter = (schueler.GeburtslandMutter == null) ? null : schueler.GeburtslandMutter.daten.iso3;
 		// Statusdaten
-		daten.status = schueler.Status.id;
+		daten.status = schueler.idStatus;
 		daten.istDuplikat = schueler.Duplikat;
 		daten.externeSchulNr = schueler.ExterneSchulNr;
 		daten.fahrschuelerArtID = schueler.Fahrschueler_ID;
@@ -304,10 +306,15 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 
 			// Statusdaten
 			Map.entry("status", (conn, schueler, value, map) -> {
-				final SchuelerStatus s = SchuelerStatus.fromID(JSONMapper.convertToInteger(value, false));
+				final int status = JSONMapper.convertToInteger(value, false);
+				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schueler.Schuljahresabschnitts_ID);
+				final SchuelerStatus s = SchuelerStatus.data().getWertBySchluessel("" + status);
 				if (s == null)
 					throw new ApiOperationException(Status.BAD_REQUEST);
-				schueler.Status = s;
+				final SchuelerStatusKatalogEintrag ske = s.daten(abschnitt.schuljahr);
+				if (ske == null)
+					throw new ApiOperationException(Status.BAD_REQUEST);
+				schueler.idStatus = status;
 			}),
 			Map.entry("externeSchulNr", (conn, schueler, value, map) -> {
 				final String externeSchulNr = JSONMapper.convertToString(value, true, true, 6);

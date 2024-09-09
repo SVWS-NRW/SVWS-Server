@@ -25,6 +25,7 @@
 
 	const props = defineProps<{
 		addEintrag: (religion: ReligionEintrag) => Promise<void>;
+		schuljahr: number;
 	}>();
 
 	const _showModal = ref<boolean>(false);
@@ -35,9 +36,9 @@
 	const list: ReligionEintrag[] = [];
 	for (const r of Religion.values()) {
 		const re = new ReligionEintrag();
-		re.kuerzel = r.daten.kuerzel;
-		re.text = r.daten.bezeichnung;
-		re.textZeugnis = r.daten.bezeichnung;
+		re.kuerzel = r.daten(props.schuljahr)?.kuerzel ?? '—';
+		re.text = r.daten(props.schuljahr)?.text ?? '—';
+		re.textZeugnis = r.daten(props.schuljahr)?.text ?? '—';
 		list.push(re);
 	}
 

@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerKopplung, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -111,6 +112,8 @@ export class StundenplanblockungManagerKopplungMenge extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerKopplungMenge>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerKopplungMenge');
 
 }
 

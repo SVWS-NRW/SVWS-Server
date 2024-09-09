@@ -11,7 +11,8 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
@@ -74,6 +75,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	private static List<StundenplanKlassenunterricht> getKlassenunterrichteFuerKlassen(final @NotNull DBEntityManager conn, final long idSchuljahresabschnitt,
 			final Map<Long, DTOKlassen> mapKlassen) {
 		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(idSchuljahresabschnitt);
 		// Bestimme alle Schüler-Lernabschnitte, welche der Klasse zugeordnet sind
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID IN ?2 AND e.WechselNr = 0",
@@ -95,7 +97,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 			// Bestimme die Leistungsdaten zu den Lernabschnitten, welche keine Kurse sind, d.h. wo der Kurseintrag null, leer oder die Kursart PUK ist
 			final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
 					"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')"
-							.formatted(ZulaessigeKursart.PUK.daten.kuerzel),
+							.formatted(ZulaessigeKursart.PUK.daten(schuljahresabschnitt.schuljahr).kuerzel),
 					DTOSchuelerLeistungsdaten.class, lernabschnittIDs);
 			if (leistungsdaten.isEmpty())
 				continue;
@@ -172,13 +174,14 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 	 */
 	public static StundenplanKlassenunterricht getKlassenunterrichtFuerFach(final @NotNull DBEntityManager conn, final long idKlasse, final long idFach)
 			throws ApiOperationException {
+		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
 		final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
 		if (klasse == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse mit der ID %d gefunden.".formatted(idKlasse));
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Fach mit der ID %d gefunden.".formatted(idFach));
-		// TODO Man könnte die Daten des Klassenunterrichtes auch aus der Vorlage beziehen, wenn noch keine Lernabschnitte oder Leistungsdaten vorliegen
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(klasse.Schuljahresabschnitts_ID);
 		// Bestimme die Daten anhand der Leistungsdaten, die einem Lernabschnitt der Klasse zugeordnet sind.
 		final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klassen_ID = ?2 AND e.WechselNr = 0",
@@ -189,7 +192,7 @@ public final class DataStundenplanKlassenunterricht extends DataManager<Long> {
 		final Map<Long, Long> mapLernabschnittSchuelerID = lernabschnitte.stream().collect(Collectors.toMap(la -> la.ID, la -> la.Schueler_ID));
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
 				"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND e.Fach_ID = ?2 AND e.Kurs_ID IS NULL AND (e.Kursart IS NULL OR e.Kursart = '' OR e.Kursart = '%s')"
-						.formatted(ZulaessigeKursart.PUK.daten.kuerzel),
+						.formatted(ZulaessigeKursart.PUK.daten(schuljahresabschnitt.schuljahr).kuerzel),
 				DTOSchuelerLeistungsdaten.class, lernabschnittIDs, fach.ID);
 		if (leistungsdaten.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND,

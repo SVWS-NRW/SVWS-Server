@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.kaoa.KAOAKategorie;
+import de.svws_nrw.asd.types.kaoa.KAOAKategorie;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -30,12 +30,9 @@ public class Tabelle_KAoA_Kategorie_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoAKategorieKeys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Kategorien");
-		setCoreType(new SchemaTabelleCoreType(this, KAOAKategorie.class, KAOAKategorie.VERSION, rev -> Arrays
+		setCoreType(new SchemaTabelleCoreType(this, KAOAKategorie.class, KAOAKategorie.data().getVersion(), rev -> Arrays
 				.stream(KAOAKategorie.values())
-				.map(a -> Arrays.stream(a.historie)
-						.map(h -> "" + h.id)
-						.toList()
-				).flatMap(Collection::stream).toList()));
+				.map(a -> a.historie().stream().map(h -> "" + h.id).toList()).flatMap(Collection::stream).toList()));
 	}
 
 }

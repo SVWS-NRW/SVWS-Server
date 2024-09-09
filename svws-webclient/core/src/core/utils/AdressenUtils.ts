@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
+import { Class } from '../../java/lang/Class';
 import { JavaString } from '../../java/lang/JavaString';
 
 export class AdressenUtils extends JavaObject {
@@ -66,6 +67,8 @@ export class AdressenUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AdressenUtils'].includes(name);
 	}
+
+	public static class = new Class<AdressenUtils>('de.svws_nrw.core.utils.AdressenUtils');
 
 }
 

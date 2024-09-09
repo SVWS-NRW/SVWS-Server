@@ -2,25 +2,25 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import de.svws_nrw.core.data.lehrer.LehrerKatalogAbgangsgrundEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogAnrechnungsgrundEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogBeschaeftigungsartEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogEinsatzstatusEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungAnerkennungEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLehramtAnerkennungEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLehramtEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLehrbefaehigungAnerkennungEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLehrbefaehigungEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLeitungsfunktionenEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogMehrleistungsartEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogMinderleistungsartEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogRechtsverhaeltnisEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerKatalogZugangsgrundEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerAbgangsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerAnrechnungsgrundKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerEinsatzstatusKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLeitungsfunktionKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerMehrleistungsartKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerMinderleistungsartKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerRechtsverhaeltnisKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerZugangsgrundKatalogEintrag;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
-import de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdaten;
-import de.svws_nrw.core.data.lehrer.LehrerPersonaldaten;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonaldaten;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -290,7 +290,7 @@ public class APILehrer {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen",
 			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLeitungsfunktionenEintrag.class))))
+					array = @ArraySchema(schema = @Schema(implementation = LehrerLeitungsfunktionKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden")
 	public Response getLehrerLeitungsfunktionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -314,7 +314,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerzugangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogZugangsgrundEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerZugangsgrundKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrerzugangsgrund-Katalog-Einträge gefunden")
 	public Response getLehrerZugangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -338,7 +338,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrerabgangsgründe unter Angabe der ID, der Bezeichnung und des Statistikschlüssels. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAbgangsgrundEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerAbgangsgrundKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrerabgangsgrund-Katalog-Einträge gefunden")
 	public Response getLehrerAbgangsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -362,7 +362,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Beschäftigungsarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Beschäftigungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogBeschaeftigungsartEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerBeschaeftigungsartKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Beschäftigungsart-Katalog-Einträge gefunden")
 	public Response getLehrerBeschaeftigungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -386,7 +386,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Einsatzstatusarten unter Angabe der ID, eines Kürzels und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogEinsatzstatusEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerEinsatzstatusKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Einsatzstatus-Katalog-Einträge gefunden")
 	public Response getLehrerEinsatzstatus(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -410,7 +410,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Fachrichtungen von Lehrern. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Fachrichtungens-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerFachrichtungKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Fachrichtungs-Katalog-Einträge gefunden")
 	public Response getLehrerFachrichtungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -434,7 +434,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Fachrichtungen für Lehrer. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogFachrichtungAnerkennungEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerFachrichtungAnerkennungKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
 	public Response getLehrerFachrichtungAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -458,7 +458,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrämter. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehramt-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = LehrerLehramtKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehramt-Katalog-Einträge gefunden")
 	public Response getLehrerLehraemter(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -482,7 +482,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller Anerkennungen von Lehrämtern. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Anerkennungs-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehramtAnerkennungEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerLehramtAnerkennungKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
 	public Response getLehrerLehramtAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -506,7 +506,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Lehrbefähigungen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Lehrbefähigung-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerLehrbefaehigungKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Lehrbefähigung-Katalog-Einträge gefunden")
 	public Response getLehrerLehrbefaehigungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -530,7 +530,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Anerkennungen von Lehrbefähigungen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Einsatzstatus-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogLehrbefaehigungAnerkennungEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerLehrbefaehigungAnerkennungKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Anerkennungs-Katalog-Einträge gefunden")
 	public Response getLehrerLehrbefaehigungenAnerkennungen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -554,7 +554,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden die Arten von Mehrleistungen durch Lehrer. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Mehrleistungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMehrleistungsartEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerMehrleistungsartKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Mehrleistungsart-Katalog-Einträge gefunden")
 	public Response getLehrerMehrleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -578,7 +578,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Arten von Minderleistungen durch Lehrer. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Minderleistungsart-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogMinderleistungsartEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerMinderleistungsartKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Minderleistungsart-Katalog-Einträge gefunden")
 	public Response getLehrerMinderleistungsarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -602,7 +602,7 @@ public class APILehrer {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden Rechtsverhältnisse unter Angabe der ID, eines Kürzels und der Bezeichnung. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Rechtsverhältnis-Katalog-Einträgen", content = @Content(mediaType = "application/json",
-			array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogRechtsverhaeltnisEintrag.class))))
+			array = @ArraySchema(schema = @Schema(implementation = LehrerRechtsverhaeltnisKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Rechtsverhältnis-Katalog-Einträge gefunden")
 	public Response getLehrerRechtsverhaeltnisse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -627,7 +627,7 @@ public class APILehrer {
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern",
 			content = @Content(mediaType = "application/json",
-					array = @ArraySchema(schema = @Schema(implementation = LehrerKatalogAnrechnungsgrundEintrag.class))))
+					array = @ArraySchema(schema = @Schema(implementation = LehrerAnrechnungsgrundKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getLehrerAnrechnungsgruende(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {

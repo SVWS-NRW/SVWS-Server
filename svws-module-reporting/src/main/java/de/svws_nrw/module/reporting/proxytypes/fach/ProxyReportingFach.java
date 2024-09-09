@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.proxytypes.fach;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
@@ -67,7 +67,7 @@ public class ProxyReportingFach extends ReportingFach {
 		this.reportingRepository = reportingRepository;
 
 		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, ZulaessigesFach.getByKuerzelASD(fachDaten.kuerzelStatistik));
+			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, Fach.data().getWertBySchluessel(fachDaten.kuerzelStatistik));
 			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
 

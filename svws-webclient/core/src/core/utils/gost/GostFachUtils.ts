@@ -3,6 +3,7 @@ import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 
 export class GostFachUtils extends JavaObject {
@@ -145,6 +146,8 @@ export class GostFachUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFachUtils'].includes(name);
 	}
+
+	public static class = new Class<GostFachUtils>('de.svws_nrw.core.utils.gost.GostFachUtils');
 
 }
 

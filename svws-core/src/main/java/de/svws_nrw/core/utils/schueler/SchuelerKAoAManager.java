@@ -8,19 +8,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmalKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.kaoa.KAOAAnschlussoption;
-import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
-import de.svws_nrw.core.types.kaoa.KAOAEbene4;
-import de.svws_nrw.core.types.kaoa.KAOAKategorie;
-import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
-import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.kaoa.KAOAAnschlussoptionen;
+import de.svws_nrw.asd.types.kaoa.KAOABerufsfeld;
+import de.svws_nrw.asd.types.kaoa.KAOAEbene4;
+import de.svws_nrw.asd.types.kaoa.KAOAKategorie;
+import de.svws_nrw.asd.types.kaoa.KAOAMerkmal;
+import de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.MapUtils;
@@ -36,24 +41,44 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 */
 	private static final @NotNull Function<SchuelerKAoADaten, Long> _kaoaToId =
 			(final @NotNull SchuelerKAoADaten kaoa) -> kaoa.id;
-	private static final @NotNull Function<KAOAKategorie, Long> _kategorieToId =
-			(final @NotNull KAOAKategorie kategorie) -> kategorie.daten.id;
+	private final @NotNull Function<KAOAKategorie, Long> _kategorieToId = (final @NotNull KAOAKategorie kategorie) -> {
+		final KAOAKategorieKatalogEintrag ke = kategorie.daten(getSchuljahr());
+		if (ke == null)
+			throw new IllegalArgumentException("Die KAOA-Kategorie %s ist in dem Schuljahr %d nicht gültig.".formatted(kategorie.name(), getSchuljahr()));
+		return ke.id;
+	};
 	private static final @NotNull Comparator<KAOAKategorie> _comparatorKategorie =
 			(final @NotNull KAOAKategorie a, final @NotNull KAOAKategorie b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<KAOAMerkmal, Long> _merkmalToId =
-			(final @NotNull KAOAMerkmal merkmal) -> merkmal.daten.id;
+	private final @NotNull Function<KAOAMerkmal, Long> _merkmalToId = (final @NotNull KAOAMerkmal merkmal) -> {
+		final KAOAMerkmalKatalogEintrag ke = merkmal.daten(getSchuljahr());
+		if (ke == null)
+			throw new IllegalArgumentException("Die KAOA-Merkmal %s ist in dem Schuljahr %d nicht gültig.".formatted(merkmal.name(), getSchuljahr()));
+		return ke.id;
+	};
 	private static final @NotNull Comparator<KAOAMerkmal> _comparatorMerkmal =
 			(final @NotNull KAOAMerkmal a, final @NotNull KAOAMerkmal b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<KAOAZusatzmerkmal, Long> _zusatzmerkmalToId =
-			(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) -> zusatzmerkmal.daten.id;
+	private final @NotNull Function<KAOAZusatzmerkmal, Long> _zusatzmerkmalToId = (final @NotNull KAOAZusatzmerkmal zusatzmerkmal) -> {
+		final KAOAZusatzmerkmalKatalogEintrag ke = zusatzmerkmal.daten(getSchuljahr());
+		if (ke == null)
+			throw new IllegalArgumentException("Die KAOA-Zusatzmerkmal %s ist in dem Schuljahr %d nicht gültig.".formatted(zusatzmerkmal.name(), getSchuljahr()));
+		return ke.id;
+	};
 	private static final @NotNull Comparator<KAOAZusatzmerkmal> _comparatorZusatzmerkmal =
 			(final @NotNull KAOAZusatzmerkmal a, final @NotNull KAOAZusatzmerkmal b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<KAOAAnschlussoption, Long> _anschlussoptionToId =
-			(final @NotNull KAOAAnschlussoption anschlussoption) -> anschlussoption.daten.id;
-	private static final @NotNull Comparator<KAOAAnschlussoption> _comparatorAnschlussoptionen =
-			(final @NotNull KAOAAnschlussoption a, final @NotNull KAOAAnschlussoption b) -> a.ordinal() - b.ordinal();
-	private static final @NotNull Function<KAOAEbene4, Long> _ebene4ToId =
-			(final @NotNull KAOAEbene4 ebene4) -> ebene4.daten.id;
+	private final @NotNull Function<KAOAAnschlussoptionen, Long> _anschlussoptionToId = (final @NotNull KAOAAnschlussoptionen anschlussoption) -> {
+		final KAOAAnschlussoptionenKatalogEintrag ke = anschlussoption.daten(getSchuljahr());
+		if (ke == null)
+			throw new IllegalArgumentException("Die KAOA-Anschlussoption %s ist in dem Schuljahr %d nicht gültig.".formatted(anschlussoption.name(), getSchuljahr()));
+		return ke.id;
+	};
+	private static final @NotNull Comparator<KAOAAnschlussoptionen> _comparatorAnschlussoptionen =
+			(final @NotNull KAOAAnschlussoptionen a, final @NotNull KAOAAnschlussoptionen b) -> a.ordinal() - b.ordinal();
+	private final @NotNull Function<KAOAEbene4, Long> _ebene4ToId = (final @NotNull KAOAEbene4 ebene4) -> {
+		final KAOAEbene4KatalogEintrag ke = ebene4.daten(getSchuljahr());
+		if (ke == null)
+			throw new IllegalArgumentException("Die KAOA-Ebene 4 %s ist in dem Schuljahr %d nicht gültig.".formatted(ebene4.name(), getSchuljahr()));
+		return ke.id;
+	};
 	private static final @NotNull Comparator<KAOAEbene4> _comparatorEbene4 =
 			(final @NotNull KAOAEbene4 a, final @NotNull KAOAEbene4 b) -> a.ordinal() - b.ordinal();
 	private static final @NotNull Comparator<KAOABerufsfeld> _comparatorBerufsfelder =
@@ -69,7 +94,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	public final @NotNull AttributMitAuswahl<Long, KAOAZusatzmerkmal> _zusatzmerkmale;
 
 	/** Das Filter-Attribut für die Anschlussoptionen */
-	public final @NotNull AttributMitAuswahl<Long, KAOAAnschlussoption> _anschlussoptionen;
+	public final @NotNull AttributMitAuswahl<Long, KAOAAnschlussoptionen> _anschlussoptionen;
 
 	/** Das Filter-Attribut für die Ebene4 */
 	public final @NotNull AttributMitAuswahl<Long, KAOAEbene4> _ebene4;
@@ -85,7 +110,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	private final @NotNull Map<Long, List<SchuelerKAoADaten>> _mapKAoABySchueler = new HashMap<>();
 	private final @NotNull Map<String, List<KAOAMerkmal>> _mapMerkmalByKategorie = new HashMap<>();
 	private final @NotNull Map<String, List<KAOAZusatzmerkmal>> _mapZusatzmerkmalByMerkmal = new HashMap<>();
-	private final @NotNull Map<String, List<KAOAAnschlussoption>> _mapAnschlussoptionByZusatzmerkmal = new HashMap<>();
+	private final @NotNull Map<String, List<KAOAAnschlussoptionen>> _mapAnschlussoptionByZusatzmerkmal = new HashMap<>();
 	private final @NotNull Map<String, List<KAOAEbene4>> _mapEbene4ByZusatzmerkmal = new HashMap<>();
 
 
@@ -113,7 +138,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 				_eventHandlerFilterChanged);
 		this._zusatzmerkmale = new AttributMitAuswahl<>(Arrays.asList(KAOAZusatzmerkmal.values()), _zusatzmerkmalToId, _comparatorZusatzmerkmal,
 				_eventHandlerFilterChanged);
-		this._anschlussoptionen = new AttributMitAuswahl<>(Arrays.asList(KAOAAnschlussoption.values()), _anschlussoptionToId,
+		this._anschlussoptionen = new AttributMitAuswahl<>(Arrays.asList(KAOAAnschlussoptionen.values()), _anschlussoptionToId,
 				_comparatorAnschlussoptionen, _eventHandlerFilterChanged);
 		this._berufsfelder = Arrays.asList(KAOABerufsfeld.values());
 		this._berufsfelder.sort(_comparatorBerufsfelder);
@@ -124,37 +149,52 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 
 	private void initKAoA() {
 		for (final @NotNull KAOAKategorie kategorie : this._kategorien.list()) {
+			final KAOAKategorieKatalogEintrag kategorieEintrag = kategorie.daten(getSchuljahr());
+			if (kategorieEintrag == null)
+				continue;
 			final @NotNull List<KAOAMerkmal> merkmaleOfKategorie = new ArrayList<>();
 			for (final @NotNull KAOAMerkmal merkmal : this._merkmale.list()) {
-				if (merkmal.daten.kategorie.equals(kategorie.daten.kuerzel))
+				final KAOAMerkmalKatalogEintrag merkmalEintrag = merkmal.daten(getSchuljahr());
+				if (merkmalEintrag == null)
+					continue;
+				if (merkmalEintrag.kategorie.equals(kategorieEintrag.kuerzel))
 					merkmaleOfKategorie.add(merkmal);
-
 				final @NotNull List<KAOAZusatzmerkmal> zusatzmerkmaleOfMerkmal = new ArrayList<>();
 				for (final @NotNull KAOAZusatzmerkmal zusatzmerkmal : this._zusatzmerkmale.list()) {
-					if (zusatzmerkmal.daten.merkmal.equals(merkmal.daten.kuerzel))
+					final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag = zusatzmerkmal.daten(getSchuljahr());
+					if (zusatzmerkmalEintrag == null)
+						continue;
+					if (zusatzmerkmalEintrag.merkmal.equals(merkmalEintrag.kuerzel))
 						zusatzmerkmaleOfMerkmal.add(zusatzmerkmal);
-
-					processZusatzmerkmal(zusatzmerkmal);
+					processZusatzmerkmal(zusatzmerkmalEintrag);
 				}
-				this._mapZusatzmerkmalByMerkmal.put(merkmal.daten.kuerzel, zusatzmerkmaleOfMerkmal);
+				this._mapZusatzmerkmalByMerkmal.put(merkmalEintrag.kuerzel, zusatzmerkmaleOfMerkmal);
 			}
-			this._mapMerkmalByKategorie.put(kategorie.daten.kuerzel, merkmaleOfKategorie);
+			this._mapMerkmalByKategorie.put(kategorieEintrag.kuerzel, merkmaleOfKategorie);
 		}
 	}
 
-	private void processZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
-		final @NotNull List<KAOAAnschlussoption> anschlussoptionOfZusatzmerkmal = new ArrayList<>();
-		for (final @NotNull KAOAAnschlussoption anschlussoption : this._anschlussoptionen.list())
-			for (final @NotNull String anzeigeMerkmal : anschlussoption.daten.anzeigeZusatzmerkmal)
-				if (anzeigeMerkmal.equals(zusatzmerkmal.daten.kuerzel))
+	private void processZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
+		final @NotNull List<KAOAAnschlussoptionen> anschlussoptionOfZusatzmerkmal = new ArrayList<>();
+		for (final @NotNull KAOAAnschlussoptionen anschlussoption : this._anschlussoptionen.list()) {
+			final KAOAAnschlussoptionenKatalogEintrag anschlussoptionEintrag = anschlussoption.daten(getSchuljahr());
+			if (anschlussoptionEintrag == null)
+				continue;
+			for (final @NotNull String anzeigeMerkmal : anschlussoptionEintrag.anzeigeZusatzmerkmal)
+				if (anzeigeMerkmal.equals(zusatzmerkmalEintrag.kuerzel))
 					anschlussoptionOfZusatzmerkmal.add(anschlussoption);
-		this._mapAnschlussoptionByZusatzmerkmal.put(zusatzmerkmal.daten.kuerzel, anschlussoptionOfZusatzmerkmal);
+		}
+		this._mapAnschlussoptionByZusatzmerkmal.put(zusatzmerkmalEintrag.kuerzel, anschlussoptionOfZusatzmerkmal);
 
 		final @NotNull List<KAOAEbene4> ebene4OfZusatzmerkmal = new ArrayList<>();
-		for (final @NotNull KAOAEbene4 ebene4 : this._ebene4.list())
-			if (ebene4.daten.zusatzmerkmal.equals(zusatzmerkmal.daten.kuerzel))
+		for (final @NotNull KAOAEbene4 ebene4 : this._ebene4.list()) {
+			final KAOAEbene4KatalogEintrag ebene4Eintrag = ebene4.daten(getSchuljahr());
+			if (ebene4Eintrag == null)
+				continue;
+			if (ebene4Eintrag.zusatzmerkmal.equals(zusatzmerkmalEintrag.kuerzel))
 				ebene4OfZusatzmerkmal.add(ebene4);
-		this._mapEbene4ByZusatzmerkmal.put(zusatzmerkmal.daten.kuerzel, ebene4OfZusatzmerkmal);
+		}
+		this._mapEbene4ByZusatzmerkmal.put(zusatzmerkmalEintrag.kuerzel, ebene4OfZusatzmerkmal);
 	}
 
 	private void initSchuelerKAoA() {
@@ -261,7 +301,10 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 * @return Die KAoA Merkmale
 	 */
 	public @NotNull List<KAOAMerkmal> getKAOAMerkmaleByKategorie(final @NotNull KAOAKategorie kategorie) {
-		return MapUtils.getOrCreateArrayList(_mapMerkmalByKategorie, kategorie.daten.kuerzel);
+		final KAOAKategorieKatalogEintrag kategorieEintrag = kategorie.daten(getSchuljahr());
+		if (kategorieEintrag == null)
+			return new ArrayList<>();
+		return MapUtils.getOrCreateArrayList(_mapMerkmalByKategorie, kategorieEintrag.kuerzel);
 	}
 
 	/**
@@ -272,7 +315,10 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 * @return Die Zusatzmerkmale
 	 */
 	public @NotNull List<KAOAZusatzmerkmal> getKAOAZusatzmerkmaleByMerkmal(final @NotNull KAOAMerkmal merkmal) {
-		return MapUtils.getOrCreateArrayList(_mapZusatzmerkmalByMerkmal, merkmal.daten.kuerzel);
+		final KAOAMerkmalKatalogEintrag merkmalEintrag = merkmal.daten(getSchuljahr());
+		if (merkmalEintrag == null)
+			return new ArrayList<>();
+		return MapUtils.getOrCreateArrayList(_mapZusatzmerkmalByMerkmal, merkmalEintrag.kuerzel);
 	}
 
 	/**
@@ -283,8 +329,11 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die Anschlussoptionen
 	 */
-	public @NotNull List<KAOAAnschlussoption> getKAOAAnschlussoptionByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
-		return MapUtils.getOrCreateArrayList(_mapAnschlussoptionByZusatzmerkmal, zusatzmerkmal.daten.kuerzel);
+	public @NotNull List<KAOAAnschlussoptionen> getKAOAAnschlussoptionenByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
+		final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag = zusatzmerkmal.daten(getSchuljahr());
+		if (zusatzmerkmalEintrag == null)
+			return new ArrayList<>();
+		return MapUtils.getOrCreateArrayList(_mapAnschlussoptionByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel);
 	}
 
 	/**
@@ -295,7 +344,10 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 * @return Die Ebene4 Optionen
 	 */
 	public @NotNull List<KAOAEbene4> getKAOAEbene4ByZusatzmerkmal(final @NotNull KAOAZusatzmerkmal zusatzmerkmal) {
-		return MapUtils.getOrCreateArrayList(_mapEbene4ByZusatzmerkmal, zusatzmerkmal.daten.kuerzel);
+		final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag = zusatzmerkmal.daten(getSchuljahr());
+		if (zusatzmerkmalEintrag == null)
+			return new ArrayList<>();
+		return MapUtils.getOrCreateArrayList(_mapEbene4ByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel);
 	}
 
 	/**

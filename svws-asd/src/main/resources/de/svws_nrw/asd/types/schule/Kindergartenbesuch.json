@@ -1,0 +1,59 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINER",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "kein Kindergarten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MAX_1_JAHR",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "unter 1 Jahr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MAX_2_JAHRE",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "1 bis unter 2 Jahre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MAX_3_JAHRE",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "2 bis unter 3 Jahre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MIN_3_JAHRE",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "4",
+			"kuerzel": "4",
+			"text": "3 Jahre und mehr Jahre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

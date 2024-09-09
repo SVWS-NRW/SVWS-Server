@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.core.abschluss.AbschlussManager;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
@@ -135,17 +135,17 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 					final GELeistungsdifferenzierteKursart kursart = "E".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.E
 							: ("G".equals(l.Kursart) ? GELeistungsdifferenzierteKursart.G : GELeistungsdifferenzierteKursart.Sonstige);
 					final boolean istFremdsprache = (fach.IstFremdsprache != null) && fach.IstFremdsprache;
-					final Note note = l.NotenKrz;
+					final Note note = Note.data().getWertByKuerzel(l.NotenKrz);
 					if (note == null)
 						return null;
-					final Integer noteSekI = note.getNoteSekI();
+					final Integer noteSekI = note.getNoteSekI(abschnitt.Jahr);
 					if (noteSekI == null)
 						return null;
 					// Erkenne das WP-Fach anhand der Kursart bei den Leistungsdaten
 					if ("WPI".equals(l.KursartAllg)) {
 						return AbschlussManager.erstelleAbschlussFach("WP", fach.Kuerzel, noteSekI, kursart, istFremdsprache);
 					}
-					String kuerzel = fach.StatistikFach.daten.kuerzelASD;
+					String kuerzel = fach.StatistikKuerzel;
 					if ("E5".equals(kuerzel))
 						kuerzel = "E";
 					if ((("M".equals(kuerzel)) || ("D".equals(kuerzel)) || ("E".equals(kuerzel))) && (kursart == GELeistungsdifferenzierteKursart.Sonstige))
@@ -156,12 +156,12 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 				.collect(Collectors.toList());
 
 		// Füge die Lernabschnittsnoten hinzu - sofern sie definiert wurden
-		final Integer noteNW = (lernabschnitt.Gesamtnote_NW == null) ? null : lernabschnitt.Gesamtnote_NW.getNoteSekI();
+		final Note noteNW = Note.fromNoteSekI(lernabschnitt.Gesamtnote_NW);
 		if (noteNW != null)
-			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBNW", "LBNW", noteNW, GELeistungsdifferenzierteKursart.Sonstige, false));
-		final Integer noteAL = (lernabschnitt.Gesamtnote_GS == null) ? null : lernabschnitt.Gesamtnote_GS.getNoteSekI();
+			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBNW", "LBNW", lernabschnitt.Gesamtnote_NW, GELeistungsdifferenzierteKursart.Sonstige, false));
+		final Note noteAL = Note.fromNoteSekI(lernabschnitt.Gesamtnote_GS);
 		if (noteAL != null)
-			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBAL", "LBAL", noteAL, GELeistungsdifferenzierteKursart.Sonstige, false));
+			daten.faecher.add(AbschlussManager.erstelleAbschlussFach("LBAL", "LBAL", lernabschnitt.Gesamtnote_GS, GELeistungsdifferenzierteKursart.Sonstige, false));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

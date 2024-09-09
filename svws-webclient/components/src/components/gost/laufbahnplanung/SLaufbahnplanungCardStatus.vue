@@ -6,7 +6,7 @@
 		<div class="print:hidden">
 			<s-laufbahnplanung-fehler :fehlerliste="fehlerliste" :belegpruefungs-art="() => abiturdatenManager().getPruefungsArt()" />
 			<s-laufbahnplanung-informationen :fehlerliste="fehlerliste" />
-			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
+			<s-laufbahnplanung-sprachpruefungen v-if="sprachendaten" :schuljahr="schuljahr" :sprachendaten="() => abiturdatenManager().getSprachendaten()" />
 			<s-laufbahnplanung-fachkombinationen :abiturdaten-manager="abiturdatenManager" />
 		</div>
 	</svws-ui-content-card>
@@ -26,6 +26,8 @@
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';
 	}>();
+
+	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 
 	const emit = defineEmits<{
 		(e: 'update:gost-belegpruefungs-art', value: 'ef1'|'gesamt'|'auto'): void,

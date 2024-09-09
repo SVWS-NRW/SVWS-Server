@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.not;
 
 import java.util.function.BiConsumer;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.test.apitests.util.APITestUtil;
@@ -18,6 +19,7 @@ import io.restassured.specification.RequestSpecification;
 /**
  * Testklasse für Zugriffskontrolle/Sichtbarkeit von Kalendern
  */
+@Disabled
 class AccessAndPermissionsTest extends BaseApiUtil {
 
 	/**

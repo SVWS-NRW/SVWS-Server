@@ -1,0 +1,578 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "A01",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "A01",
+			"kuerzel": "A01",
+			"text": "Berufsschule, Fachklassen (Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A02",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "A02",
+			"kuerzel": "A02",
+			"text": "Berufsschule, Fachklassen/Fachhochschulreife (Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A03",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "A03",
+			"kuerzel": "A03",
+			"text": "Berufsschule, Fachklassen/erweiterte Zusatzqualifikation (Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A04",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "A04",
+			"kuerzel": "A04",
+			"text": "Berufsschule, Fachklassen mit erweitertem Stützunterricht (Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A10",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "A10",
+			"kuerzel": "A10",
+			"text": "Berufsfachschule, Berufsabschluss/mittlerer Schulabschluss (nach BKAZVO, BBiG/HwO/ in Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A11",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6000,
+			"schluessel": "A11",
+			"kuerzel": "A11",
+			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A12",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7000,
+			"schluessel": "A12",
+			"kuerzel": "A12",
+			"text": "Berufsschule, Ausbildungsvorbereitung (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A13",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8000,
+			"schluessel": "A13",
+			"kuerzel": "A13",
+			"text": "Berufsschule, Ausbildungsvorbereitung (1-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A14",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9000,
+			"schluessel": "A14",
+			"kuerzel": "A14",
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Mittlerer Schulabschluss",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A15",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10000,
+			"schluessel": "A15",
+			"kuerzel": "A15",
+			"text": "Berufsabschluss (nach §50 BBiG/§40 HwO)/Fachhochschulreife",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A16",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11000,
+			"schluessel": "A16",
+			"kuerzel": "A16",
+			"text": "Fachklassen (nach §2 BKAZVO)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B01",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 20000,
+			"schluessel": "B01",
+			"kuerzel": "B01",
+			"text": "Berufsfachschule, Berufsabschluss/Fachoberschulreife (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B02",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 21000,
+			"schluessel": "B02",
+			"kuerzel": "B02",
+			"text": "Berufsfachschule, Berufsgrundbildung/Fachoberschulreife (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B04",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 22000,
+			"schluessel": "B04",
+			"kuerzel": "B04",
+			"text": "Berufsfachschule, Berufsabschluss/Fachoberschulreife (nach BKAZVO, BBiG/HwO, in Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B05",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 23000,
+			"schluessel": "B05",
+			"kuerzel": "B05",
+			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (nach BKAZVO, BBiG/HwO in Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B06",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 24000,
+			"schluessel": "B06",
+			"kuerzel": "B06",
+			"text": "Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B07",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 25000,
+			"schluessel": "B07",
+			"kuerzel": "B07",
+			"text": "Berufsfachschule, Berufliche Kenntnisse/Mittlerer Schulabschluss (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B08",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 26000,
+			"schluessel": "B08",
+			"kuerzel": "B08",
+			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B09",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 27000,
+			"schluessel": "B09",
+			"kuerzel": "B09",
+			"text": "Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B10",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 28000,
+			"schluessel": "B10",
+			"kuerzel": "B10",
+			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C01",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 40000,
+			"schluessel": "C01",
+			"kuerzel": "C01",
+			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum, 3-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C02",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 41000,
+			"schluessel": "C02",
+			"kuerzel": "C02",
+			"text": "Berufsfachschule, Berufsabschluss (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C03",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 42000,
+			"schluessel": "C03",
+			"kuerzel": "C03",
+			"text": "Berufsfachschule, Berufliche Kenntnisse/FHR (HBFS) (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C05",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 43000,
+			"schluessel": "C05",
+			"kuerzel": "C05",
+			"text": "Fachoberschule, Fachoberschule Kl. 11 (1-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C06",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 44000,
+			"schluessel": "C06",
+			"kuerzel": "C06",
+			"text": "Fachoberschule, Fachoberschule Kl. 12S (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C07",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 45000,
+			"schluessel": "C07",
+			"kuerzel": "C07",
+			"text": "Fachoberschule, Fachoberschule Kl. 12B (2-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C08",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 46000,
+			"schluessel": "C08",
+			"kuerzel": "C08",
+			"text": "Fachoberschule, Fachoberschule Kl. 12B (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C11",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 47000,
+			"schluessel": "C11",
+			"kuerzel": "C11",
+			"text": "Fachoberschule, Fachoberschule Kl. 12B (3-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C12",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 48000,
+			"schluessel": "C12",
+			"kuerzel": "C12",
+			"text": "Berufsfachschule, Berufsabschluss/Fachhochschulreife (mit Berufspraktikum; 3,5 -jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C13",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 49000,
+			"schluessel": "C13",
+			"kuerzel": "C13",
+			"text": "Berufsabschluss/FHR (gestuft), (3jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D01",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 60000,
+			"schluessel": "D01",
+			"kuerzel": "D01",
+			"text": "Berufliches Gymnasium, Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum; 4-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D02",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 61000,
+			"schluessel": "D02",
+			"kuerzel": "D02",
+			"text": "Berufliches Gymnasium, Berufliche Kenntnisse/Allg. Hochschulreife",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D05",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 62000,
+			"schluessel": "D05",
+			"kuerzel": "D05",
+			"text": "Fachoberschule, Fachoberschule Kl. 13 (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D06",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 63000,
+			"schluessel": "D06",
+			"kuerzel": "D06",
+			"text": "Fachoberschule, Fachoberschule Kl. 13 (2-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E01",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 80000,
+			"schluessel": "E01",
+			"kuerzel": "E01",
+			"text": "Fachschule (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E02",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 81000,
+			"schluessel": "E02",
+			"kuerzel": "E02",
+			"text": "Fachschule (4-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E03",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 82000,
+			"schluessel": "E03",
+			"kuerzel": "E03",
+			"text": "Fachschule (verkürzt/1-jährig, Vollzeit/Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E04",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 83000,
+			"schluessel": "E04",
+			"kuerzel": "E04",
+			"text": "Fachschule (verkürzt/2-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E05",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 84000,
+			"schluessel": "E05",
+			"kuerzel": "E05",
+			"text": "Fachschule für Sozialwesen (mit Berufspraktikum/3-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E07",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 85000,
+			"schluessel": "E07",
+			"kuerzel": "E07",
+			"text": "Fachschule für Sozialwesen (mit Berufspraktikum/6-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E13",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 86000,
+			"schluessel": "E13",
+			"kuerzel": "E13",
+			"text": "Fachschule (3-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

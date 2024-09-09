@@ -3,6 +3,7 @@ import { GostKursklausur } from '../../../../core/data/gost/klausurplanung/GostK
 import { GostKlausurterminblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungKonfiguration';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 
 export class GostKlausurterminblockungDaten extends JavaObject {
@@ -34,6 +35,8 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurterminblockungDaten>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten');
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungDaten {
 		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungDaten>;

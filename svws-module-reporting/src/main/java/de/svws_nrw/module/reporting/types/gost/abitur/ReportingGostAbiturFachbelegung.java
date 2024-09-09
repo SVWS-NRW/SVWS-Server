@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.types.gost.abitur;
 
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 

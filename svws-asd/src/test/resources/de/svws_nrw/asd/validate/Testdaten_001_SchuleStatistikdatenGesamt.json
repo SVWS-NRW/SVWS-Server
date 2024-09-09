@@ -1,0 +1,164 @@
+{
+  "stammdaten": {
+    "schulNr": 168890,
+    "schulform": "GY",
+    "bezeichnung1": "Gymnasium",
+    "bezeichnung2": "",
+    "bezeichnung3": "",
+    "strassenname": "Rosenweg",
+    "hausnummer": "52",
+    "hausnummerZusatz": "a",
+    "plz": "32657",
+    "ort": "Lemgo",
+    "telefon": "0226194700",
+    "fax": "02261947017",
+    "email": "none@schule.nrw.de",
+    "webAdresse": null,
+    "idSchuljahresabschnitt": 1,
+    "anzJGS_Jahr": 1,
+    "schuleAbschnitte": {
+      "anzahlAbschnitte": 2,
+      "abschnittBez": "Halbjahr",
+      "bezAbschnitte": [
+        "1. Hj.",
+        "2. Hj."
+      ]
+    },
+    "dauerUnterrichtseinheit": 45,
+    "abschnitte": [
+      {
+        "id": 16,
+        "schuljahr": 2010,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": null,
+        "idFolgeAbschnitt": 18
+      },
+      {
+        "id": 18,
+        "schuljahr": 2010,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 16,
+        "idFolgeAbschnitt": 15
+      },
+      {
+        "id": 15,
+        "schuljahr": 2011,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 18,
+        "idFolgeAbschnitt": 17
+      },
+      {
+        "id": 17,
+        "schuljahr": 2011,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 15,
+        "idFolgeAbschnitt": 12
+      },
+      {
+        "id": 12,
+        "schuljahr": 2012,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 17,
+        "idFolgeAbschnitt": 14
+      },
+      {
+        "id": 14,
+        "schuljahr": 2012,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 12,
+        "idFolgeAbschnitt": 8
+      },
+      {
+        "id": 8,
+        "schuljahr": 2013,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 14,
+        "idFolgeAbschnitt": 13
+      },
+      {
+        "id": 13,
+        "schuljahr": 2013,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 8,
+        "idFolgeAbschnitt": 9
+      },
+      {
+        "id": 9,
+        "schuljahr": 2014,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 13,
+        "idFolgeAbschnitt": 5
+      },
+      {
+        "id": 5,
+        "schuljahr": 2014,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 9,
+        "idFolgeAbschnitt": 10
+      },
+      {
+        "id": 10,
+        "schuljahr": 2015,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 5,
+        "idFolgeAbschnitt": 6
+      },
+      {
+        "id": 6,
+        "schuljahr": 2015,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 10,
+        "idFolgeAbschnitt": 11
+      },
+      {
+        "id": 11,
+        "schuljahr": 2016,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 6,
+        "idFolgeAbschnitt": 2
+      },
+      {
+        "id": 2,
+        "schuljahr": 2016,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 11,
+        "idFolgeAbschnitt": 3
+      },
+      {
+        "id": 3,
+        "schuljahr": 2017,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 2,
+        "idFolgeAbschnitt": 4
+      },
+      {
+        "id": 4,
+        "schuljahr": 2017,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 3,
+        "idFolgeAbschnitt": 7
+      },
+      {
+        "id": 7,
+        "schuljahr": 2018,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 4,
+        "idFolgeAbschnitt": 1
+      },
+      {
+        "id": 1,
+        "schuljahr": 2018,
+        "abschnitt": 2,
+        "idVorigerAbschnitt": 7,
+        "idFolgeAbschnitt": 19
+      },
+      {
+        "id": 19,
+        "schuljahr": 2019,
+        "abschnitt": 1,
+        "idVorigerAbschnitt": 1,
+        "idFolgeAbschnitt": null
+      }
+    ]
+  }
+}

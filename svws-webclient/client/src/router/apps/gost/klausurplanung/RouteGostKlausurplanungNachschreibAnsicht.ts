@@ -7,13 +7,14 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
 import type { GostKlausurplanungNachschreibAnsichtProps } from "~/components/gost/klausurplanung/SGostKlausurplanungNachschreibAnsichtProps";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungNachschreibAnsicht = () => import("~/components/gost/klausurplanung/SGostKlausurplanungNachschreibAnsicht.vue");
 
 export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 		], "gost.klausurplanung.nachschreibansicht", "nachschreibansicht", SGostKlausurplanungNachschreibAnsicht);

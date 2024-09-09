@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
+import { Class } from '../../java/lang/Class';
 import { JavaString } from '../../java/lang/JavaString';
 
 export class ServerMode extends JavaEnum<ServerMode> {
@@ -108,6 +109,8 @@ export class ServerMode extends JavaEnum<ServerMode> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.ServerMode', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<ServerMode>('de.svws_nrw.core.types.ServerMode');
 
 }
 

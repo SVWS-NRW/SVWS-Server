@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
@@ -16,14 +17,14 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
+import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
@@ -112,7 +113,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 				// Schüler nachladen, die in der Klausurplanung vorkommen, aber zu keinem Oberstufenjahrgang gehören
 				final List<Long> missingSchuelerIds = klausuren.schuelerklausuren.stream().map(sk -> sk.idSchueler)
 						.filter(item -> !klausuren.metadata.schueler.stream().map(s -> s.id).toList().contains(item)).toList();
-				klausuren.metadata.schueler.addAll(ladeSchuelerByIds(conn, missingSchuelerIds));
+				klausuren.metadata.schueler.addAll(ladeSchuelerByIds(jg.a - 1, conn, missingSchuelerIds));
 
 				for (final GostHalbjahr gj : GostHalbjahr.values()) {
 					final Schuljahresabschnitt sja =
@@ -134,11 +135,11 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		return data;
 	}
 
-	private static List<SchuelerListeEintrag> ladeSchuelerByIds(final DBEntityManager conn, final List<Long> schuelerIds) {
+	private static List<SchuelerListeEintrag> ladeSchuelerByIds(final int schuljahr, final DBEntityManager conn, final List<Long> schuelerIds) {
 		if (schuelerIds.isEmpty())
 			return new ArrayList<>();
 		final List<DTOSchueler> schuelerListe = conn.queryList(DTOSchueler.QUERY_LIST_BY_ID, DTOSchueler.class, schuelerIds);
-		return schuelerListe.stream().map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, null, null, null)).toList();
+		return schuelerListe.stream().map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, schuljahr, null, null, null)).toList();
 	}
 
 	/**
@@ -153,13 +154,14 @@ public final class DataGostKlausuren extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public GostKlausurenCollectionAllData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
+		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, _abiturjahr);
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
 		final List<GostKlausurvorgabe> vorgaben = DataGostKlausurenVorgabe.getKlausurvorgaben(conn, _abiturjahr, hj, false);
 		if (vorgaben.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(vorgaben);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahr, vorgaben);
 
 		final List<GostKursklausur> existingKlausuren = DataGostKlausurenKursklausur.getKursklausurenZuVorgaben(conn, vorgaben);
 		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
@@ -187,7 +189,7 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
 
 		for (final DTOKurs kurs : kurse) {
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, kurs);
+			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, manager.getSchuljahr(), kurs);
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(_abiturjahr, halbjahr, quartal,
 					GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
 			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
@@ -244,10 +246,17 @@ public final class DataGostKlausuren extends DataManager<Long> {
 		return listSchuelerklausurenTermine;
 	}
 
-	private static List<DTOSchuelerLernabschnittsdaten> getLernabschnittsdatenZuKurs(final DBEntityManager conn, final DTOKurs kurs) {
-		final SchuelerStatus[] validStatus = { SchuelerStatus.AKTIV, SchuelerStatus.EXTERN };
+	private static List<DTOSchuelerLernabschnittsdaten> getLernabschnittsdatenZuKurs(final DBEntityManager conn, final int schuljahr, final DTOKurs kurs) {
+		final Integer[] validStatus = {
+				Integer.parseInt(SchuelerStatus.AKTIV.daten(schuljahr).kuerzel),
+				Integer.parseInt(SchuelerStatus.EXTERN.daten(schuljahr).kuerzel)
+		};
 		return conn.query(
-				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s ON lad.Schueler_ID = s.ID JOIN DTOSchuljahresabschnitte sla ON sla.ID = lad.Schuljahresabschnitts_ID WHERE sld.Kurs_ID = :kursid AND ((( lad.ASDJahrgang IN ('EF', 'Q1') OR (lad.ASDJahrgang = 'Q2' AND sla.Abschnitt = 1)) AND sld.Kursart IN ('LK1', 'LK2', 'AB3', 'AB4', 'GKS')) OR (lad.ASDJahrgang = 'Q2' AND sla.Abschnitt = 2 AND sld.Kursart IN ('LK1', 'LK2', 'AB3'))) AND s.Status IN :sstatus AND s.Geloescht = :sgeloescht",
+				"SELECT lad FROM DTOSchuelerLernabschnittsdaten lad JOIN DTOSchuelerLeistungsdaten sld ON sld.Abschnitt_ID = lad.ID JOIN DTOSchueler s"
+				+ " ON lad.Schueler_ID = s.ID JOIN DTOSchuljahresabschnitte sla ON sla.ID = lad.Schuljahresabschnitts_ID WHERE sld.Kurs_ID = :kursid"
+				+ " AND ((( lad.ASDJahrgang IN ('EF', 'Q1') OR (lad.ASDJahrgang = 'Q2' AND sla.Abschnitt = 1)) AND"
+				+ " sld.Kursart IN ('LK1', 'LK2', 'AB3', 'AB4', 'GKS')) OR (lad.ASDJahrgang = 'Q2' AND sla.Abschnitt = 2 AND"
+				+ " sld.Kursart IN ('LK1', 'LK2', 'AB3'))) AND s.idStatus IN :sstatus AND s.Geloescht = :sgeloescht",
 				DTOSchuelerLernabschnittsdaten.class).setParameter("kursid", kurs.ID)
 //				.setParameter("kursart", Arrays.asList((hj == 5) ? new String[] { "LK1", "LK2", "AB3" } : new String[] { "LK1", "LK2", "AB3", "AB4", "GKS" }))
 				.setParameter("sstatus", Arrays.asList(validStatus))
@@ -287,11 +296,11 @@ public final class DataGostKlausuren extends DataManager<Long> {
 						.setParameter("sja", sja.id)
 						.getResultList();
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(allData);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(abijahr.a - 1, allData);
 
 		for (final DTOKurs kurs : kurse) {
 			final GostKursart kursart = GostKursart.fromKuerzelOrException(kurs.KursartAllg);
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, kurs);
+			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, manager.getSchuljahr(), kurs);
 
 			for (final int quartal : new int[] { 1, 2 }) {
 				final GostKlausurvorgabe vorgabe =

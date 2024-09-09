@@ -6,6 +6,7 @@ import { GostKlausurvorgabe } from '../../../../core/data/gost/klausurplanung/Go
 import { GostKlausurenCollectionMetaData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionMetaData';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostSchuelerklausur } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausur';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
@@ -88,6 +89,8 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionAllData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionAllData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionAllData>;

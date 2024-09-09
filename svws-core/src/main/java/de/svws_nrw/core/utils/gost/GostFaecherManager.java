@@ -9,8 +9,9 @@ import java.util.List;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.fach.Fachgruppe;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.svws_nrw.transpiler.annotations.AllowNull;
@@ -25,6 +26,8 @@ public class GostFaecherManager {
 	/** Sortiert die Fächer anhand ihrer konfigurierten Sortierung */
 	public static final @NotNull Comparator<@AllowNull GostFach> comp = (a, b) -> GostFachbereich.compareGostFach(a, b);
 
+	/** das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet */
+	private final int schuljahr;
 
 	/** Die Liste der Fächer, die im Manager vorhanden sind. */
 	private final @NotNull List<GostFach> _faecher = new ArrayList<>();
@@ -53,18 +56,22 @@ public class GostFaecherManager {
 
 	/**
 	 * Erstelle einen neuen Manager mit einer leeren Fächerliste
+	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 */
-	public GostFaecherManager() {
-		// do nothing...
+	public GostFaecherManager(final int schuljahr) {
+		this.schuljahr = schuljahr;
 	}
 
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen Fächern.
 	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher   die Liste mit den Fächern
 	 */
-	public GostFaecherManager(final @NotNull List<GostFach> faecher) {
+	public GostFaecherManager(final int schuljahr, final @NotNull List<GostFach> faecher) {
+		this.schuljahr = schuljahr;
 		addAll(faecher);
 	}
 
@@ -73,49 +80,66 @@ public class GostFaecherManager {
 	 * Erstellt einen neuen Manager mit den übergebenen Fächern und den
 	 * übergebenen geforderten und nicht erlaubten Fächerkombinationen.
 	 *
+	 * @param schuljahr    das Schuljahr, für welches der Fächer-Manager die Fächer verwaltet
 	 * @param faecher      die Liste mit den Fächern
 	 * @param fachkombis   die Liste mit den Fächerkombinationen
 	 */
-	public GostFaecherManager(final @NotNull List<GostFach> faecher, final @NotNull List<GostJahrgangFachkombination> fachkombis) {
+	public GostFaecherManager(final int schuljahr, final @NotNull List<GostFach> faecher, final @NotNull List<GostJahrgangFachkombination> fachkombis) {
+		this.schuljahr = schuljahr;
 		addAll(faecher);
 		addFachkombinationenAll(fachkombis);
 	}
 
 
 	/**
+	 * Gibt das Schuljahr des Managers zurück, d.h. das Schuljahr, für welches die Fächer der Oberstufe verwaltet werden.
+	 *
+	 * @return das Schuljahr
+	 */
+	public int getSchuljahr() {
+		return schuljahr;
+	}
+
+
+	/**
 	 * Fügt das übergebene Fach zu diesem Manager hinzu. Die interne Sortierung wird nicht korrigiert.
 	 *
-	 * @param fach   das hinzuzufügende Fach
+	 * @param fach        das hinzuzufügende Fach
 	 *
 	 * @return true, falls das Fach hinzugefügt wurde
 	 *
 	 * @throws DeveloperNotificationException Falls die ID des Faches negativ ist.
 	 */
 	private boolean addFachInternal(final @NotNull GostFach fach) throws DeveloperNotificationException {
-		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist...
+		// Füge das Fach hinzu, wenn es nicht bereits vorhanden ist und gültig ist...
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
 		if (_map.containsKey(fach.id))
 			return false;
+		final Fach zf = Fach.data().getWertBySchluessel(fach.kuerzel);
+		if (zf == null)
+			return false;
+		final FachKatalogEintrag fke = zf.daten(schuljahr);
+		if (fke == null)
+			return false;
 		_map.put(fach.id, fach);
-		final @NotNull ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
 		List<GostFach> listForKuerzel = _mapByKuerzel.get(fach.kuerzel);
 		if (listForKuerzel == null) {
 			listForKuerzel = new ArrayList<>();
 			_mapByKuerzel.put(fach.kuerzel, listForKuerzel);
 		}
 		listForKuerzel.add(fach);
-		if (fach.istFremdsprache && zf.daten.istFremdsprache) {
-			List<GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(zf.daten.kuerzel);
+		if (fach.istFremdsprache && fke.istFremdsprache) {
+			List<GostFach> listForSprachkuerzel = _mapBySprachkuerzel.get(fke.kuerzel);
 			if (listForSprachkuerzel == null) {
 				listForSprachkuerzel = new ArrayList<>();
-				_mapBySprachkuerzel.put(zf.daten.kuerzel, listForSprachkuerzel);
+				_mapBySprachkuerzel.put(fke.kuerzel, listForSprachkuerzel);
 			}
 			listForSprachkuerzel.add(fach);
 		}
 		final boolean added = _faecher.add(fach);
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
-			final Fachgruppe fg = ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe();
+			final Fachgruppe fg = Fach.data().getWertBySchluesselOrException(fach.kuerzel).getFachgruppe(schuljahr);
 			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX))
 				_leitfaecher.add(fach);
 		}
@@ -309,8 +333,8 @@ public class GostFaecherManager {
 	public @NotNull List<GostFach> getFaecherSchriftlichMoeglich() {
 		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : _faecher) {
-			final ZulaessigesFach zf = ZulaessigesFach.getByKuerzelASD(f.kuerzel);
-			if ((zf == ZulaessigesFach.PX) || (zf == ZulaessigesFach.VX) || (zf == ZulaessigesFach.VO) || (zf == ZulaessigesFach.IN))
+			final Fach zf = Fach.data().getWertBySchluesselOrException(f.kuerzel);
+			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN))
 				continue;
 			faecherSchriftlichMoeglich.add(f);
 		}

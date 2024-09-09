@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { EinschulungsartKatalogEintrag } from '../../../core/data/schule/EinschulungsartKatalogEintrag';
+import { Class } from '../../../java/lang/Class';
 
 export class Einschulungsart extends JavaEnum<Einschulungsart> {
 
@@ -130,6 +131,8 @@ export class Einschulungsart extends JavaEnum<Einschulungsart> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.Einschulungsart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Einschulungsart>('de.svws_nrw.core.types.schueler.Einschulungsart');
 
 }
 

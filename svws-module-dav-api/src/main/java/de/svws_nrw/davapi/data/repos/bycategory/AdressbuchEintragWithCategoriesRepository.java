@@ -1,7 +1,7 @@
 package de.svws_nrw.davapi.data.repos.bycategory;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.utils.schule.SchuljahresAbschnittsManager;
 import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
 import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;

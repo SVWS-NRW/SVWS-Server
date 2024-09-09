@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 
 export class StundenplanblockungKopplung extends JavaObject {
@@ -32,6 +33,8 @@ export class StundenplanblockungKopplung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungKopplung'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungKopplung>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungKopplung');
 
 	public static transpilerFromJSON(json : string): StundenplanblockungKopplung {
 		const obj = JSON.parse(json) as Partial<StundenplanblockungKopplung>;

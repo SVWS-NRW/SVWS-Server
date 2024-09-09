@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanListeEintrag } from '../../../core/data/stundenplan/StundenplanListeEintrag';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 
 export class StundenplanListUtils extends JavaObject {
@@ -40,6 +41,8 @@ export class StundenplanListUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanListUtils'].includes(name);
 	}
+
+	public static class = new Class<StundenplanListUtils>('de.svws_nrw.core.utils.stundenplan.StundenplanListUtils');
 
 }
 

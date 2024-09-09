@@ -2,6 +2,7 @@ package de.svws_nrw.db.utils.app;
 
 import java.util.Scanner;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -68,6 +69,7 @@ public class ExportDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);

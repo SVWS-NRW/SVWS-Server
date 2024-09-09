@@ -4,6 +4,7 @@ import { ArrayList } from '../../../../java/util/ArrayList';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -44,6 +45,8 @@ export class Sport extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Sport'].includes(name);
 	}
+
+	public static class = new Class<Sport>('de.svws_nrw.core.abschluss.gost.belegpruefung.Sport');
 
 }
 

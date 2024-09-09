@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMLehrer extends JavaObject {
 
@@ -44,6 +45,8 @@ export class ENMLehrer extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLehrer'].includes(name);
 	}
+
+	public static class = new Class<ENMLehrer>('de.svws_nrw.core.data.enm.ENMLehrer');
 
 	public static transpilerFromJSON(json : string): ENMLehrer {
 		const obj = JSON.parse(json) as Partial<ENMLehrer>;

@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.CoreType;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -1489,8 +1490,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Kurse
 		);
-		final String alleSchulgliederungen = Arrays.stream(Schulgliederung.values())
-				.map(sgl -> Arrays.stream(sgl.historie).toList()).flatMap(List::stream)
+		final String alleSchulgliederungen = Arrays.stream(Schulgliederung.values()).map(CoreType::historie).flatMap(List::stream)
 				.map(h -> h.kuerzel).distinct().collect(Collectors.joining("','", "('", "')"));
 		add("Überprüfung der Schulgliederung",
 				"UPDATE EigeneSchule_Jahrgaenge SET SGL = '***' WHERE SGL NOT IN " + alleSchulgliederungen,

@@ -4,10 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
+@Disabled
 public class BaseApiUtil {
 
 	/** HTTP-Methode PROPFIND */

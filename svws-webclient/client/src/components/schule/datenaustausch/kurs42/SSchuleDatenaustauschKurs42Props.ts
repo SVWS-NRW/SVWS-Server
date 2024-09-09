@@ -1,4 +1,4 @@
-import { type AuswahlChildData } from "~/components/AuswahlChildData";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface SchuleDatenaustauschKurs42Props {
 	setTab: (value: AuswahlChildData) => Promise<void>;

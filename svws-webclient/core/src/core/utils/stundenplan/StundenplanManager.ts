@@ -27,6 +27,7 @@ import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum'
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { Collection } from '../../../java/util/Collection';
+import { Class } from '../../../java/lang/Class';
 import { Wochentag } from '../../../core/types/Wochentag';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { StundenplanKomplett, cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett } from '../../../core/data/stundenplan/StundenplanKomplett';
@@ -499,6 +500,10 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanSchuljahresAbschnittID : number;
 
+	private readonly _stundenplanSchuljahr : number;
+
+	private readonly _stundenplanAbschnitt : number;
+
 	private readonly _stundenplanGueltigAb : string;
 
 	private readonly _stundenplanGueltigBis : string;
@@ -519,17 +524,17 @@ export class StundenplanManager extends JavaObject {
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param daten                 liefert die Grund-Daten des Stundenplanes.
-	 * @param unterrichte           liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
-	 * @param pausenaufsichten      liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
-	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
+	 * @param daten                  liefert die Grund-Daten des Stundenplanes.
+	 * @param unterrichte            liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
+	 * @param pausenaufsichten       liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
+	 * @param unterrichtsverteilung  liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
 	public constructor(daten : Stundenplan, unterrichte : List<StundenplanUnterricht>, pausenaufsichten : List<StundenplanPausenaufsicht>, unterrichtsverteilung : StundenplanUnterrichtsverteilung | null);
 
 	/**
 	 * Dieser Manager baut mit Hilfe des {@link StundenplanKomplett}-Objektes eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param stundenplanKomplett  Beinhaltet alle relevanten Daten für einen Stundenplan.
+	 * @param stundenplanKomplett    Beinhaltet alle relevanten Daten für einen Stundenplan.
 	 */
 	public constructor(stundenplanKomplett : StundenplanKomplett);
 
@@ -548,6 +553,8 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanID = daten.id;
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
+			this._stundenplanSchuljahr = daten.schuljahr;
+			this._stundenplanAbschnitt = daten.abschnitt;
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
@@ -570,6 +577,8 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanID = stundenplanKomplett.daten.id;
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
+			this._stundenplanSchuljahr = stundenplanKomplett.daten.schuljahr;
+			this._stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 			this._stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
 			this._stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
@@ -584,7 +593,7 @@ export class StundenplanManager extends JavaObject {
 			try {
 				DateUtils.extractFromDateISO8601(gueltigBis);
 				return gueltigBis;
-			} catch(ex) {
+			} catch(ex : any) {
 				// empty block
 			}
 		}
@@ -4857,6 +4866,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das Schuljahr, für welches der Stundenplan gültig ist
+	 *
+	 * @return das Schuljahr, für welches der Stundenplan gültig ist
+	 */
+	public getSchuljahr() : number {
+		return this._stundenplanSchuljahr;
+	}
+
+	/**
+	 * Liefert den Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 *
+	 * @return der Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 */
+	public getAbschnitt() : number {
+		return this._stundenplanAbschnitt;
+	}
+
+	/**
 	 * Liefert das Datum, ab dem der Stundenplan gültig ist.
 	 *
 	 * @return das Datum, ab dem der Stundenplan gültig ist.
@@ -6832,6 +6859,8 @@ export class StundenplanManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}
+
+	public static class = new Class<StundenplanManager>('de.svws_nrw.core.utils.stundenplan.StundenplanManager');
 
 }
 

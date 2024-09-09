@@ -2,7 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schueler.sprachen;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingStatistikFach;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
@@ -55,7 +55,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 		);
 		this.reportingRepository = reportingRepository;
 		if (sprachbelegung.referenzniveau != null)
-			super.referenzniveau = Sprachreferenzniveau.getByKuerzel(sprachbelegung.referenzniveau);
+			super.referenzniveau = Sprachreferenzniveau.data().getWertByKuerzel(sprachbelegung.referenzniveau);
 		super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, sprachbelegung.sprache);
 	}
 

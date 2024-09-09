@@ -3,9 +3,12 @@ package de.svws_nrw.data.stundenplan;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.data.RGBFarbe;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
@@ -40,22 +43,23 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFach} in einen Core-DTO {@link StundenplanFach}.
-	 */
-	private static final Function<DTOFach, StundenplanFach> dtoMapper = (final DTOFach f) -> {
+	private static StundenplanFach map(final DBEntityManager conn, final DTOFach f) {
 		final StundenplanFach daten = new StundenplanFach();
 		daten.id = f.ID;
 		daten.kuerzel = f.Kuerzel;
-		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
+		daten.kuerzelStatistik = f.StatistikKuerzel;
 		daten.bezeichnung = f.Bezeichnung;
 		if (f.SortierungAllg != null)
 			daten.sortierung = f.SortierungAllg;
 		else
 			daten.sortierung = ((f.SortierungSekII == null) ? 32000 : f.SortierungSekII);
-		daten.farbe = f.StatistikFach.getFarbe();
+		final Fach fach = (f.StatistikKuerzel == null) ? null : Fach.data().getWertBySchluessel(f.StatistikKuerzel);
+		final FachKatalogEintrag fke = (fach == null) ? null : fach.daten(conn.getUser().schuleGetSchuljahr());
+		final Fachgruppe fg = ((fke == null) || (fke.fachgruppe == null)) ? null : Fachgruppe.data().getWertByBezeichner(fke.fachgruppe);
+		final RGBFarbe farbe = (fg == null) ? null : fg.getFarbe(conn.getUser().schuleGetSchuljahr());
+		daten.farbe = (farbe == null) ? new RGBFarbe() : farbe;
 		return daten;
-	};
+	}
 
 
 
@@ -100,7 +104,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		final List<DTOFach> faecherListe = conn.queryByKeyList(DTOFach.class, faecherIDs);
 		final ArrayList<StundenplanFach> daten = new ArrayList<>();
 		for (final DTOFach f : faecherListe) {
-			final StundenplanFach fach = dtoMapper.apply(f);
+			final StundenplanFach fach = map(conn, f);
 			daten.add(fach);
 		}
 		return daten;
@@ -127,7 +131,7 @@ public final class DataStundenplanFaecher extends DataManager<Long> {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, id);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Fach mit der ID %d gefunden.".formatted(id));
-		final StundenplanFach daten = dtoMapper.apply(fach);
+		final StundenplanFach daten = map(conn, fach);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

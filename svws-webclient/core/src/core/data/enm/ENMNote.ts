@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMNote extends JavaObject {
 
@@ -34,6 +35,8 @@ export class ENMNote extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMNote'].includes(name);
 	}
+
+	public static class = new Class<ENMNote>('de.svws_nrw.core.data.enm.ENMNote');
 
 	public static transpilerFromJSON(json : string): ENMNote {
 		const obj = JSON.parse(json) as Partial<ENMNote>;

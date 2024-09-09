@@ -12,8 +12,9 @@ import type { JavaFunction } from '../../../../java/util/function/JavaFunction';
 import type { Runnable } from '../../../../java/lang/Runnable';
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { Arrays } from '../../../../java/util/Arrays';
-import { Pair } from '../../../../core/adt/Pair';
+import { Pair } from '../../../../asd/adt/Pair';
 
 export class VermerkartenManager extends AuswahlManager<number, VermerkartEintrag, VermerkartEintrag> {
 
@@ -98,6 +99,8 @@ export class VermerkartenManager extends AuswahlManager<number, VermerkartEintra
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.kataloge.vermerkart.VermerkartenManager'].includes(name);
 	}
+
+	public static class = new Class<VermerkartenManager>('de.svws_nrw.core.utils.kataloge.vermerkart.VermerkartenManager');
 
 }
 

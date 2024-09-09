@@ -5,6 +5,7 @@ import java.security.Principal;
 
 import jakarta.ws.rs.core.Response.Status;
 import de.svws_nrw.config.SVWSKonfiguration;
+import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
@@ -202,6 +203,11 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 			// Erzeuge nach erfolgreicher Prüfung den Benutzer-spezifischen AES-Schlüssel
 			user.setAES();
+
+			// Lese die Stammdaten der Schule ein und setze diese beim Benutzer-Objekt
+			try (DBEntityManager conn = user.getEntityManager()) {
+				user.schuleSetStammdaten(DataSchuleStammdaten.getStammdaten(conn));
+			}
 
 			// Lese die Benutzerkompetenzen aus der Datenbank
 			DBBenutzerUtils.leseKompetenzen(user);

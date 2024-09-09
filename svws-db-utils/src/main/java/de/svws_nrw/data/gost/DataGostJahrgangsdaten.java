@@ -8,7 +8,8 @@ import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -86,6 +87,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	 */
 	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -110,8 +112,9 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		if (daten.abiturjahr >= 0) {
 			final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-				Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
-				if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+				Integer jahrgangRestjahre =
+						JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
+				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
 					jahrgangRestjahre += 3;
 				if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 					daten.jahrgang = jahrgang.ASDJahrgang;

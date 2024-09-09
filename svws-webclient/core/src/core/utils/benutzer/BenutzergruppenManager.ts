@@ -3,6 +3,7 @@ import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompeten
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten, cast_de_svws_nrw_core_data_benutzer_BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { HashSet } from '../../../java/util/HashSet';
 
@@ -197,6 +198,8 @@ export class BenutzergruppenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzergruppenManager'].includes(name);
 	}
+
+	public static class = new Class<BenutzergruppenManager>('de.svws_nrw.core.utils.benutzer.BenutzergruppenManager');
 
 }
 

@@ -2,17 +2,9 @@ package de.svws_nrw.db.utils.dto.enm;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelSerializer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
-import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -33,19 +25,13 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	public long leistungID;
 
 	/** Die erteilte Note */
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note note;
+	public String noteKuerzel;
 
 	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
 	public String tsNote;
 
 	/** Die erteilte Quartals-Note */
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note noteQuartal;
+	public String noteKuerzelQuartal;
 
 	/** Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note */
 	public String tsNoteQuartal;
@@ -115,12 +101,10 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	public String BilingualerZweig;
 
 	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
-	@Convert(converter = NoteConverterFromInteger.class)
-	public Note lernbereich1note;
+	public String lernbereich1notenKuerzel;
 
 	/** Lernbereichnote Naturwissenschaft HA10 */
-	@Convert(converter = NoteConverterFromInteger.class)
-	public Note lernbereich2note;
+	public String lernbereich2notenKuerzel;
 
 	/** Das Kürzel des Hauptförderschwerpunktes */
 	public String foerderschwerpunkt1Kuerzel;
@@ -203,8 +187,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-				    la.Gesamtnote_GS as lernbereich1note,
-				    la.Gesamtnote_NW as lernbereich2note,
+				    la.Gesamtnote_GS as lernbereich1notenKuerzel,
+				    la.Gesamtnote_NW as lernbereich2notenKuerzel,
 				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 				    la.ZieldifferentesLernen as ZieldifferentesLernen,
@@ -224,9 +208,9 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,
-				    ld.NotenKrz as note,
+				    ld.NotenKrz as noteKuerzel,
 				    enmld.tsNotenKrz as tsNote,
-				    ld.NotenKrzQuartal as noteQuartal,
+				    ld.NotenKrzQuartal as noteKuerzelQuartal,
 				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
@@ -282,8 +266,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-				    la.Gesamtnote_GS as lernbereich1note,
-				    la.Gesamtnote_NW as lernbereich2note,
+				    la.Gesamtnote_GS as lernbereich1notenKuerzel,
+				    la.Gesamtnote_NW as lernbereich2notenKuerzel,
 				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 				    la.ZieldifferentesLernen as ZieldifferentesLernen,
@@ -303,9 +287,9 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,
-				    ld.NotenKrz as note,
+				    ld.NotenKrz as noteKuerzel,
 				    enmld.tsNotenKrz as tsNote,
-				    ld.NotenKrzQuartal as noteQuartal,
+				    ld.NotenKrzQuartal as noteKuerzelQuartal,
 				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
@@ -357,10 +341,10 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 		result = (prime * result) + ((kursart == null) ? 0 : kursart.hashCode());
 		result = (prime * result) + (int) (kursID ^ (kursID >>> 32));
 		result = (prime * result) + (int) (leistungID ^ (leistungID >>> 32));
-		result = (prime * result) + ((lernbereich1note == null) ? 0 : lernbereich1note.hashCode());
-		result = (prime * result) + ((lernbereich2note == null) ? 0 : lernbereich2note.hashCode());
-		result = (prime * result) + ((note == null) ? 0 : note.hashCode());
-		result = (prime * result) + ((noteQuartal == null) ? 0 : noteQuartal.hashCode());
+		result = (prime * result) + ((lernbereich1notenKuerzel == null) ? 0 : lernbereich1notenKuerzel.hashCode());
+		result = (prime * result) + ((lernbereich2notenKuerzel == null) ? 0 : lernbereich2notenKuerzel.hashCode());
+		result = (prime * result) + ((noteKuerzel == null) ? 0 : noteKuerzel.hashCode());
+		result = (prime * result) + ((noteKuerzelQuartal == null) ? 0 : noteKuerzelQuartal.hashCode());
 		result = (prime * result) + ((pruefungsordnung == null) ? 0 : pruefungsordnung.hashCode());
 		result = (prime * result) + ((BilingualerZweig == null) ? 0 : BilingualerZweig.hashCode());
 		return result;
@@ -424,20 +408,25 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 			return false;
 		if (leistungID != other.leistungID)
 			return false;
-		if (lernbereich1note == null) {
-			if (other.lernbereich1note != null)
+		if (lernbereich1notenKuerzel == null) {
+			if (other.lernbereich1notenKuerzel != null)
 				return false;
-		} else if (!lernbereich1note.equals(other.lernbereich1note))
+		} else if (!lernbereich1notenKuerzel.equals(other.lernbereich1notenKuerzel))
 			return false;
-		if (lernbereich2note == null) {
-			if (other.lernbereich2note != null)
+		if (lernbereich2notenKuerzel == null) {
+			if (other.lernbereich2notenKuerzel != null)
 				return false;
-		} else if (!lernbereich2note.equals(other.lernbereich2note))
+		} else if (!lernbereich2notenKuerzel.equals(other.lernbereich2notenKuerzel))
 			return false;
-		if (note == null) {
-			if (other.note != null)
+		if (noteKuerzel == null) {
+			if (other.noteKuerzel != null)
 				return false;
-		} else if (!note.equals(other.note))
+		} else if (!noteKuerzel.equals(other.noteKuerzel))
+			return false;
+		if (noteKuerzelQuartal == null) {
+			if (other.noteKuerzelQuartal != null)
+				return false;
+		} else if (!noteKuerzelQuartal.equals(other.noteKuerzelQuartal))
 			return false;
 		if (pruefungsordnung == null) {
 			if (other.pruefungsordnung != null)
@@ -470,11 +459,12 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	@Override
 	public String toString() {
-		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", notenKrzQuartal=" + noteQuartal
+		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + noteKuerzel
+				+ ", notenKrzQuartal=" + noteKuerzelQuartal
 				+ ", kursart=" + kursart + ", AbiturFach=" + AbiturFach + ", fehlstundenGesamt=" + fehlstundenGesamt
 				+ ", fehlstundenUnentschuldigt=" + fehlstundenUnentschuldigt + ", fachbezogeneBemerkungen="
 				+ fachbezogeneBemerkungen + ", abschnittID=" + abschnittID + ", klasse=" + klasse + ", pruefungsordnung=" + pruefungsordnung
-				+ ", lernbereich1note=" + lernbereich1note + ", lernbereich2note=" + lernbereich2note
+				+ ", lernbereich1notenKuerzel=" + lernbereich1notenKuerzel + ", lernbereich2notenKuerzel=" + lernbereich2notenKuerzel
 				+ ", foerderschwerpunkt1Kuerzel=" + foerderschwerpunkt1Kuerzel + ", foerderschwerpunkt2Kuerzel="
 				+ foerderschwerpunkt2Kuerzel + "]";
 	}

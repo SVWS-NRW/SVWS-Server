@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { JavaLong } from '../../java/lang/JavaLong';
+import { Class } from '../../java/lang/Class';
 import { Arrays } from '../../java/util/Arrays';
 import { JavaMath } from '../../java/lang/JavaMath';
 import { System } from '../../java/lang/System';
@@ -432,6 +433,8 @@ export class KursblockungMatrix extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungMatrix'].includes(name);
 	}
+
+	public static class = new Class<KursblockungMatrix>('de.svws_nrw.core.kursblockung.KursblockungMatrix');
 
 }
 

@@ -1,0 +1,59 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "NEU",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "NEU",
+			"text": "Neueintritt in den Schuldienst mit abgelegter 2. Staatsprüfung oder anderweitig erfüllter Eingangsvoraussetzung",
+			"schluessel": "1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AndBuLand",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "AndBuLand",
+			"text": "Übertritt aus dem Schuldienst eines anderen Bundeslandes",
+			"schluessel": "2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WECHSEL",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"kuerzel": "WECHSEL",
+			"text": "Wechsel innerhalb des Landes von einer anderen Schule an die berichtende Schule",
+			"schluessel": "3",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WIEDER",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"kuerzel": "WIEDER",
+			"text": "Wiedereintritt in den Schuldienst",
+			"schluessel": "4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SONSTIG",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"kuerzel": "SONSTIG",
+			"text": "Sonstige Zugänge",
+			"schluessel": "5",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

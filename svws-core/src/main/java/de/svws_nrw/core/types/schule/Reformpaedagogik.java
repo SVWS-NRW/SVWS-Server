@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 
@@ -122,7 +124,7 @@ public enum Reformpaedagogik {
 	private static final @NotNull HashMap<Long, Reformpaedagogik> _schulgliederungenID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Reformpädagogik vorkommt */
-	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<String> @NotNull [] schulformen;
 
 
 	/**
@@ -135,14 +137,11 @@ public enum Reformpaedagogik {
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
 		// Erzeuge ein zweites Array mit der Schulformzuordnung für die Historie
-		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
-			for (final @NotNull String kuerzel : historie[i].schulformen) {
-				final Schulform sf = Schulform.getByKuerzel(kuerzel);
-				if (sf != null)
-					this.schulformen[i].add(sf);
-			}
+			for (final @NotNull String kuerzel : historie[i].schulformen)
+				this.schulformen[i].add(kuerzel);
 		}
 	}
 
@@ -209,7 +208,7 @@ public enum Reformpaedagogik {
 	 * @return eine Liste der Schulformen
 	 */
 	@JsonIgnore
-	public @NotNull List<Schulform> getSchulformen() {
+	public @NotNull List<String> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -217,17 +216,18 @@ public enum Reformpaedagogik {
 	/**
 	 * Liefert alle möglichen Reformpädagogik-Einträge für die angegeben Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
-	public static @NotNull List<Reformpaedagogik> get(final Schulform schulform) {
+	public static @NotNull List<Reformpaedagogik> get(final int schuljahr, final Schulform schulform) {
 		final @NotNull ArrayList<Reformpaedagogik> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Reformpaedagogik @NotNull [] gliederungen = Reformpaedagogik.values();
 		for (final @NotNull Reformpaedagogik gliederung : gliederungen) {
-			if (gliederung.hasSchulform(schulform))
+			if (gliederung.hasSchulform(schuljahr, schulform))
 				result.add(gliederung);
 		}
 		return result;
@@ -259,17 +259,21 @@ public enum Reformpaedagogik {
 	/**
 	 * Prüft, ob bei der Schulform diese Reformpädagogik vorkommen kann oder nicht.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
 	@JsonIgnore
-	public boolean hasSchulform(final Schulform schulform) {
-		if ((schulform == null) || (schulform.daten == null))
+	public boolean hasSchulform(final int schuljahr, final Schulform schulform) {
+		if (schulform == null)
+			return false;
+		final SchulformKatalogEintrag sfe = schulform.daten(schuljahr);
+		if (sfe == null)
 			return false;
 		if (daten.schulformen != null) {
 			for (final @NotNull String sfKuerzel : daten.schulformen) {
-				if (sfKuerzel.equals(schulform.daten.kuerzel))
+				if (sfKuerzel.equals(sfe.kuerzel))
 					return true;
 			}
 		}

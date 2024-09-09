@@ -1,7 +1,8 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 
 import java.util.ArrayList;
@@ -182,7 +183,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean projektkursVorhanden() {
 		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && "PX".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.filter(f -> ((f != null) && (Fachgruppe.FG_PX == f.fach().fachgruppe())))
 				.toList()
 				.isEmpty();
 	}
@@ -194,7 +195,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean religionVorhanden() {
 		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && "RE".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.filter(f -> ((f != null) && (Fachgruppe.FG_RE == f.fach().fachgruppe())))
 				.toList()
 				.isEmpty();
 	}
@@ -206,7 +207,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean vertiefungskursVorhanden() {
 		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse =
-				this.fachbelegungen.stream().filter(f -> "VX".equals(f.fach().fachgruppe().daten.kuerzel)).toList();
+				this.fachbelegungen.stream().filter(f -> (Fachgruppe.FG_VX == f.fach().fachgruppe())).toList();
 		if (listVertiefungskurse.isEmpty())
 			return false;
 

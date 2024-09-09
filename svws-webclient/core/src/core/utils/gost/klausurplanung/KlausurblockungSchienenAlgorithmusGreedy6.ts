@@ -2,6 +2,7 @@ import { KlausurblockungSchienenAlgorithmusAbstract } from '../../../../core/uti
 import { KlausurblockungSchienenDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenDynDaten';
 import { Random } from '../../../../java/util/Random';
 import { LinkedCollection } from '../../../../core/adt/collection/LinkedCollection';
+import { Class } from '../../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 import { System } from '../../../../java/lang/System';
 
@@ -69,6 +70,8 @@ export class KlausurblockungSchienenAlgorithmusGreedy6 extends KlausurblockungSc
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy6', 'de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungSchienenAlgorithmusGreedy6>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusGreedy6');
 
 }
 

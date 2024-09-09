@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.schema.Schema;

@@ -1,7 +1,4 @@
-import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag,
-	LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten,
-	LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, 
-	ServerMode} from "@core";
+import type { BenutzerKompetenz, LehrerFachrichtungAnerkennung, LehrerFachrichtungEintrag, LehrerLehramtAnerkennung, LehrerLehramtEintrag, LehrerLehrbefaehigungAnerkennung, LehrerLehrbefaehigungEintrag, LehrerListeManager, LehrerPersonalabschnittsdaten, LehrerPersonaldaten, List, Schulform, Schuljahresabschnitt, ServerMode} from "@core";
 
 export interface LehrerPersonaldatenProps {
 	schulform: Schulform;

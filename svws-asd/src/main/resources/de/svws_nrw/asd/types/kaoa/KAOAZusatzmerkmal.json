@@ -1,0 +1,1525 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "SBO_2_1_1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 13,
+			"kuerzel": "SBO 2.1.1",
+			"text": "Schulisches individuelles Beratungsgespräch durchgeführt",
+			"schluessel": "SBO 2.1.1",
+			"merkmal": "SBO_2_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_1_2",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 14,
+			"kuerzel": "SBO 2.1.2",
+			"text": "Schulisches individuelles Beratungsgespräch nicht durchgeführt",
+			"schluessel": "SBO 2.1.2",
+			"merkmal": "SBO_2_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_2_1",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 15,
+			"kuerzel": "SBO 2.2.1",
+			"text": "Teilnahme an einem berufsorientierenden Angebote der Berufsberatung",
+			"schluessel": "SBO 2.2.1",
+			"merkmal": "SBO_2_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_2_2",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 16,
+			"kuerzel": "SBO 2.2.2",
+			"text": "Keine Teilnahme an einem berufsorientierenden Angebote der Berufsberatung",
+			"schluessel": "SBO 2.2.2",
+			"merkmal": "SBO_2_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_1",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 17,
+			"kuerzel": "SBO 2.3.1",
+			"text": "Berufsberatung der Agentur für Arbeit (BA)",
+			"schluessel": "SBO 2.3.1",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_2",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 18,
+			"kuerzel": "SBO 2.3.2",
+			"text": "Beratungsgespräch der Jugendberufsagentur",
+			"schluessel": "SBO 2.3.2",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_3",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 19,
+			"kuerzel": "SBO 2.3.3",
+			"text": "Beratungsgespräch des Jobcenters",
+			"schluessel": "SBO 2.3.3",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_4",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 20,
+			"kuerzel": "SBO 2.3.4",
+			"text": "Beratungsgespräch Jugendsozialarbeit",
+			"schluessel": "SBO 2.3.4",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_5",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 21,
+			"kuerzel": "SBO 2.3.5",
+			"text": "Beratungsgespräch eines anderen außerschulischen Partners",
+			"schluessel": "SBO 2.3.5",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3_6",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 22,
+			"kuerzel": "SBO 2.3.6",
+			"text": "Kein Beratungskontakt zu einem außerschulischen Partner",
+			"schluessel": "SBO 2.3.6",
+			"merkmal": "SBO_2_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_4_1",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 23,
+			"kuerzel": "SBO 2.4.1",
+			"text": "STAR - Berufswegekonferenz durchgeführt",
+			"schluessel": "SBO 2.4.1",
+			"merkmal": "SBO_2_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_4_2",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 24,
+			"kuerzel": "SBO 2.4.2",
+			"text": "STAR - Berufswegekonferenz nicht durchgeführt",
+			"schluessel": "SBO 2.4.2",
+			"merkmal": "SBO_2_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_5_1",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 25,
+			"kuerzel": "SBO 2.5.1",
+			"text": "Teilnahme der Eltern bzw. Erziehungsberechtigten an Beratungs- und Informationsveranstaltungen",
+			"schluessel": "SBO 2.5.1",
+			"merkmal": "SBO_2_5",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_5_2",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 26,
+			"kuerzel": "SBO 2.5.2",
+			"text": "Keine Teilnahme der Eltern bzw. Erziehungsberechtigten an Beratungs- und Informationsveranstaltungen",
+			"schluessel": "SBO 2.5.2",
+			"merkmal": "SBO_2_5",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_6_1",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 27,
+			"kuerzel": "SBO 2.6.1",
+			"text": "Teilnahme der Eltern bzw. Erziehungsberechtigten an STAR - Beratungs- und Informationsveranstaltungen",
+			"schluessel": "SBO 2.6.1",
+			"merkmal": "SBO_2_6",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_6_2",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 28,
+			"kuerzel": "SBO 2.6.2",
+			"text": "Keine Teilnahme der Eltern bzw. Erziehungsberechtigten an STAR - Beratungs- und Informationsveranstaltungen",
+			"schluessel": "SBO 2.6.2",
+			"merkmal": "SBO_2_6",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4_1",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 29,
+			"kuerzel": "SBO 3.4.1",
+			"text": "Berufwahlpass NRW SekI/II erhalten",
+			"schluessel": "SBO 3.4.1",
+			"merkmal": "SBO_3_4",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4_2",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 30,
+			"kuerzel": "SBO 3.4.2",
+			"text": "Berufwahlpass NRW Leichte Sprache erhalten",
+			"schluessel": "SBO 3.4.2",
+			"merkmal": "SBO_3_4",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4_3",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 31,
+			"kuerzel": "SBO 3.4.3",
+			"text": "Berufswahlpass NRW kompakt erhalten",
+			"schluessel": "SBO 3.4.3",
+			"merkmal": "SBO_3_4",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4_4",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 32,
+			"kuerzel": "SBO 3.4.4",
+			"text": "anderes Portfolioinstrument  erhalten",
+			"schluessel": "SBO 3.4.4",
+			"merkmal": "SBO_3_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4_5",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 33,
+			"kuerzel": "SBO 3.4.5",
+			"text": "kein Portfolioinstrument erhalten",
+			"schluessel": "SBO 3.4.5",
+			"merkmal": "SBO_3_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_1_1",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 34,
+			"kuerzel": "SBO 4.1.1",
+			"text": "An der Potenzialanalyse teilgenommen",
+			"schluessel": "SBO 4.1.1",
+			"merkmal": "SBO_4_1",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_1_2",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 35,
+			"kuerzel": "SBO 4.1.2",
+			"text": "Keine Teilnahme an der Potenzialanalyse",
+			"schluessel": "SBO 4.1.2",
+			"merkmal": "SBO_4_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_2_1",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 36,
+			"kuerzel": "SBO 4.2.1",
+			"text": "An der Potenzialanalyse teilgenommen",
+			"schluessel": "SBO 4.2.1",
+			"merkmal": "SBO_4_2",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_2_2",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 37,
+			"kuerzel": "SBO 4.2.2",
+			"text": "Keine Teilnahme an der Potenzialanalyse",
+			"schluessel": "SBO 4.2.2",
+			"merkmal": "SBO_4_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_3_1",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 38,
+			"kuerzel": "SBO 4.3.1",
+			"text": "An der STAR-Potenzialanalyse teilgenommen",
+			"schluessel": "SBO 4.3.1",
+			"merkmal": "SBO_4_3",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_3_2",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 39,
+			"kuerzel": "SBO 4.3.2",
+			"text": "Keine Teilnahme an der Potenzialanalyse",
+			"schluessel": "SBO 4.3.2",
+			"merkmal": "SBO_4_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_4_1",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 40,
+			"kuerzel": "SBO 4.4.1",
+			"text": "An der Festellung des funktionalen Sehvermögens teilgenommen",
+			"schluessel": "SBO 4.4.1",
+			"merkmal": "SBO_4_4",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_4_2",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 41,
+			"kuerzel": "SBO 4.4.2",
+			"text": "Keine Teilnahme an der Feststellung des funktionalen Sehrvermögens",
+			"schluessel": "SBO 4.4.2",
+			"merkmal": "SBO_4_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_5_1",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 42,
+			"kuerzel": "SBO 4.5.1",
+			"text": "An der STAR-Potenzialanalyse teilgenommen",
+			"schluessel": "SBO 4.5.1",
+			"merkmal": "SBO_4_5",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_5_2",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 43,
+			"kuerzel": "SBO 4.5.2",
+			"text": "Keine Teilnahme an der Potenzialanalyse",
+			"schluessel": "SBO 4.5.2",
+			"merkmal": "SBO_4_5",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_1",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 44,
+			"kuerzel": "SBO 5.1.1",
+			"text": "An der betrieblichen Berufsfelderkundung teilgenommen - 1. Tag",
+			"schluessel": "SBO 5.1.1",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_2",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 45,
+			"kuerzel": "SBO 5.1.2",
+			"text": "An der betrieblichen Berufsfelderkundung teilgenommen - 2. Tag",
+			"schluessel": "SBO 5.1.2",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_3",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 46,
+			"kuerzel": "SBO 5.1.3",
+			"text": "An der betrieblichen Berufsfelderkundung teilgenommen - 3. Tag",
+			"schluessel": "SBO 5.1.3",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_4",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 47,
+			"kuerzel": "SBO 5.1.4",
+			"text": "An der betrieblichen Berufsfelderkundung teilgenommen - mehr als drei Tage",
+			"schluessel": "SBO 5.1.4",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_5",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 48,
+			"kuerzel": "SBO 5.1.5",
+			"text": "An der trägergestützten Berufsfelderkundung teilgenommen - 1. Tag",
+			"schluessel": "SBO 5.1.5",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_6",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 49,
+			"kuerzel": "SBO 5.1.6",
+			"text": "An der trägergestützten Berufsfelderkundung teilgenommen - 2. Tag",
+			"schluessel": "SBO 5.1.6",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_7",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 50,
+			"kuerzel": "SBO 5.1.7",
+			"text": "An der trägergestützten Berufsfelderkundung teilgenommen - 3. Tag",
+			"schluessel": "SBO 5.1.7",
+			"merkmal": "SBO_5_1",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1_8",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 51,
+			"kuerzel": "SBO 5.1.8",
+			"text": "Keine Teilnahme an den betrieblichen oder trägergestütztenBerufsfelderkundungen",
+			"schluessel": "SBO 5.1.8",
+			"merkmal": "SBO_5_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_1",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 52,
+			"kuerzel": "SBO 5.2.1",
+			"text": "An der betrieblichen STAR - Berufsfelderkundung teilgenommen - 1. Tag",
+			"schluessel": "SBO 5.2.1",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_2",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 53,
+			"kuerzel": "SBO 5.2.2",
+			"text": "An der betrieblichen STAR - Berufsfelderkundung teilgenommen - 2. Tag",
+			"schluessel": "SBO 5.2.2",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_3",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 54,
+			"kuerzel": "SBO 5.2.3",
+			"text": "An der betrieblichen STAR - Berufsfelderkundung teilgenommen - 3. Tag",
+			"schluessel": "SBO 5.2.3",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_4",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 55,
+			"kuerzel": "SBO 5.2.4",
+			"text": "An der betrieblichen STAR - Berufsfelderkundung teilgenommen - weitere Tage",
+			"schluessel": "SBO 5.2.4",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_5",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 56,
+			"kuerzel": "SBO 5.2.5",
+			"text": "An der trägergestützten STAR - Berufsfelderkundung teilgenommen - 1. Tag",
+			"schluessel": "SBO 5.2.5",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_6",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 57,
+			"kuerzel": "SBO 5.2.6",
+			"text": "An der trägergestützten STAR - Berufsfelderkundung teilgenommen - 2. Tag",
+			"schluessel": "SBO 5.2.6",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_7",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 58,
+			"kuerzel": "SBO 5.2.7",
+			"text": "An der trägergestützten STAR - Berufsfelderkundung teilgenommen - 3. Tag",
+			"schluessel": "SBO 5.2.7",
+			"merkmal": "SBO_5_2",
+			"optionsart": "BERUFSFELD",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2_8",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 59,
+			"kuerzel": "SBO 5.2.8",
+			"text": "Keine Teilnahme an den betrieblichen oder trägergestützten STAR - Berufsfelderkundungen",
+			"schluessel": "SBO 5.2.8",
+			"merkmal": "SBO_5_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_3_1",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 60,
+			"kuerzel": "SBO 5.3.1",
+			"text": "Am STAR - Arbeitsplatzbezogenes Kommunikationstraining I teilgenommen",
+			"schluessel": "SBO 5.3.1",
+			"merkmal": "SBO_5_3",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_3_2",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 61,
+			"kuerzel": "SBO 5.3.2",
+			"text": "Keine Teilnahme am STAR - Arbeitsplatzbezogenes Kommunikationstraining I",
+			"schluessel": "SBO 5.3.2",
+			"merkmal": "SBO_5_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_4_1",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 62,
+			"kuerzel": "SBO 5.4.1",
+			"text": "Am STAR - Berufsorientierungsseminar teilgenommen",
+			"schluessel": "SBO 5.4.1",
+			"merkmal": "SBO_5_4",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_4_2",
+		"idHistorie": 51,
+		"historie": [ {
+			"id": 63,
+			"kuerzel": "SBO 5.4.2",
+			"text": "Keine Teilnahme am STAR - Berufsorientierungsseminar",
+			"schluessel": "SBO 5.4.2",
+			"merkmal": "SBO_5_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1_1",
+		"idHistorie": 52,
+		"historie": [ {
+			"id": 64,
+			"kuerzel": "SBO 6.1.1",
+			"text": "Am Betriebspraktikum teilgenommen - 1 Woche",
+			"schluessel": "SBO 6.1.1",
+			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1_2",
+		"idHistorie": 53,
+		"historie": [ {
+			"id": 65,
+			"kuerzel": "SBO 6.1.2",
+			"text": "Am Betriebspraktikum teilgenommen - 2 Wochen",
+			"schluessel": "SBO 6.1.2",
+			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1_3",
+		"idHistorie": 54,
+		"historie": [ {
+			"id": 66,
+			"kuerzel": "SBO 6.1.3",
+			"text": "Am Betriebspraktikum Sek I teilgenommen - mehr als zwei Wochen",
+			"schluessel": "SBO 6.1.3",
+			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1_4",
+		"idHistorie": 55,
+		"historie": [ {
+			"id": 67,
+			"kuerzel": "SBO 6.1.4",
+			"text": "Zusätzliche Praktika wie z. B. Schnupperpraktika",
+			"schluessel": "SBO 6.1.4",
+			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1_5",
+		"idHistorie": 56,
+		"historie": [ {
+			"id": 68,
+			"kuerzel": "SBO 6.1.5",
+			"text": "Keine Teilnahme am Betriebspraktikum",
+			"schluessel": "SBO 6.1.5",
+			"merkmal": "SBO_6_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_2_2",
+		"idHistorie": 57,
+		"historie": [ {
+			"id": 69,
+			"kuerzel": "SBO 6.2.2",
+			"text": "Keine Teilnahme am Intensivtraining TASK",
+			"schluessel": "SBO 6.2.2",
+			"merkmal": "SBO_6_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_1",
+		"idHistorie": 58,
+		"historie": [ {
+			"id": 70,
+			"kuerzel": "SBO 6.3.1",
+			"text": "Am STAR - Betriebspraktikum im Block - eine Woche teilgenommen",
+			"schluessel": "SBO 6.3.1",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_2",
+		"idHistorie": 59,
+		"historie": [ {
+			"id": 71,
+			"kuerzel": "SBO 6.3.2",
+			"text": "Am STAR - Betriebspraktikum im Block - zwei Wochen teilgenommen",
+			"schluessel": "SBO 6.3.2",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_3",
+		"idHistorie": 60,
+		"historie": [ {
+			"id": 72,
+			"kuerzel": "SBO 6.3.3",
+			"text": "Am STAR - Betriebspraktikum im Block - drei Wochen teilgenommen",
+			"schluessel": "SBO 6.3.3",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_4",
+		"idHistorie": 61,
+		"historie": [ {
+			"id": 73,
+			"kuerzel": "SBO 6.3.4",
+			"text": "Am STAR - Betriebspraktikum im Block - vier Wochen teilgenommen",
+			"schluessel": "SBO 6.3.4",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_5",
+		"idHistorie": 62,
+		"historie": [ {
+			"id": 74,
+			"kuerzel": "SBO 6.3.5",
+			"text": "Am STAR - Betriebspraktikum im Block - fünf Wochen teilgenommen",
+			"schluessel": "SBO 6.3.5",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_6",
+		"idHistorie": 63,
+		"historie": [ {
+			"id": 75,
+			"kuerzel": "SBO 6.3.6",
+			"text": "Am STAR - Betriebspraktikum im Block - sechs Wochen teilgenommen",
+			"schluessel": "SBO 6.3.6",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3_7",
+		"idHistorie": 64,
+		"historie": [ {
+			"id": 76,
+			"kuerzel": "SBO 6.3.7",
+			"text": "Keine Teilnahme am STAR - Betriebspraktikum im Block",
+			"schluessel": "SBO 6.3.7",
+			"merkmal": "SBO_6_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_4_1",
+		"idHistorie": 65,
+		"historie": [ {
+			"id": 77,
+			"kuerzel": "SBO 6.4.1",
+			"text": "An trägergestützten Praxiskursen teilgenommen",
+			"schluessel": "SBO 6.4.1",
+			"merkmal": "SBO_6_4",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_4_2",
+		"idHistorie": 66,
+		"historie": [ {
+			"id": 78,
+			"kuerzel": "SBO 6.4.2",
+			"text": "An betrieblichen Praxiskursen teilgenommen",
+			"schluessel": "SBO 6.4.2",
+			"merkmal": "SBO_6_4",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_4_3",
+		"idHistorie": 67,
+		"historie": [ {
+			"id": 79,
+			"kuerzel": "SBO 6.4.3",
+			"text": "Keine Teilnahme an Praxiskursen",
+			"schluessel": "SBO 6.4.3",
+			"merkmal": "SBO_6_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_5_1",
+		"idHistorie": 68,
+		"historie": [ {
+			"id": 80,
+			"kuerzel": "SBO 6.5.1",
+			"text": "Am Langzeitpraktikum teilgenommen",
+			"schluessel": "SBO 6.5.1",
+			"merkmal": "SBO_6_5",
+			"optionsart": "SBO_EBENE_4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_5_2",
+		"idHistorie": 69,
+		"historie": [ {
+			"id": 81,
+			"kuerzel": "SBO 6.5.2",
+			"text": "Langzeitpraktikum abgebrochen",
+			"schluessel": "SBO 6.5.2",
+			"merkmal": "SBO_6_5",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_6_1",
+		"idHistorie": 70,
+		"historie": [ {
+			"id": 82,
+			"kuerzel": "SBO 6.6.1",
+			"text": "Am STAR - Betriebspraktikum in Langzeit 1-tägig teilgenommen",
+			"schluessel": "SBO 6.6.1",
+			"merkmal": "SBO_6_6",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_6_2",
+		"idHistorie": 71,
+		"historie": [ {
+			"id": 83,
+			"kuerzel": "SBO 6.6.2",
+			"text": "Am STAR - Betriebspraktikum in Langzeit 2-tägig teilgenommen",
+			"schluessel": "SBO 6.6.2",
+			"merkmal": "SBO_6_6",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_6_3",
+		"idHistorie": 72,
+		"historie": [ {
+			"id": 84,
+			"kuerzel": "SBO 6.6.3",
+			"text": "STAR - Betriebspraktikum in Langzeit abgebrochen",
+			"schluessel": "SBO 6.6.3",
+			"merkmal": "SBO_6_6",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1",
+		"idHistorie": 73,
+		"historie": [ {
+			"id": 85,
+			"kuerzel": "SBO 7.1.1",
+			"text": "An KAoA-kompakt teilgenommen",
+			"schluessel": "SBO 7.1.1",
+			"merkmal": "SBO_7_1",
+			"optionsart": "SBO_EBENE_4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_2",
+		"idHistorie": 74,
+		"historie": [ {
+			"id": 86,
+			"kuerzel": "SBO 7.1.2",
+			"text": "Keine Teilnahme an KAoA-kompakt",
+			"schluessel": "SBO 7.1.2",
+			"merkmal": "SBO_7_1",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_1_1",
+		"idHistorie": 75,
+		"historie": [ {
+			"id": 87,
+			"kuerzel": "SBO 8.1.1",
+			"text": "Am Workshop \"Standortbestimmung Reflexionsworkshop Sek. II\" teilgenommen",
+			"schluessel": "SBO 8.1.1",
+			"merkmal": "SBO_8_1",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_1_2",
+		"idHistorie": 76,
+		"historie": [ {
+			"id": 88,
+			"kuerzel": "SBO 8.1.2",
+			"text": "Keine Teilnahme am Workshop \"Standortbestimmung Reflexionsworkshop Sek. II\"",
+			"schluessel": "SBO 8.1.2",
+			"merkmal": "SBO_8_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_2_1",
+		"idHistorie": 77,
+		"historie": [ {
+			"id": 89,
+			"kuerzel": "SBO 8.2.1",
+			"text": "Am Workshop \"Stärkung der Entscheidungskompetenz I - Sek. II\" teilgenommen",
+			"schluessel": "SBO 8.2.1",
+			"merkmal": "SBO_8_2",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_2_2",
+		"idHistorie": 78,
+		"historie": [ {
+			"id": 90,
+			"kuerzel": "SBO 8.2.2",
+			"text": "Keine Teilnahme am Workshop \"Stärkung der Entscheidungskompetenz I - Sek. II\"",
+			"schluessel": "SBO 8.2.2",
+			"merkmal": "SBO_8_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1",
+		"idHistorie": 79,
+		"historie": [ {
+			"id": 91,
+			"kuerzel": "SBO 9.1.1",
+			"text": "An Praxiselementen in Betrieben, Hochschulen, Institutionen teilgenommen",
+			"schluessel": "SBO 9.1.1",
+			"merkmal": "SBO_9_1",
+			"optionsart": "SBO_EBENE_4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_2",
+		"idHistorie": 80,
+		"historie": [ {
+			"id": 92,
+			"kuerzel": "SBO 9.1.2",
+			"text": "Keine Teilnahme an den Praxiselementen",
+			"schluessel": "SBO 9.1.2",
+			"merkmal": "SBO_9_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_3",
+		"idHistorie": 81,
+		"historie": [ {
+			"id": 93,
+			"kuerzel": "SBO 9.1.3",
+			"text": "Am Betriebspraktikum teilgenommen - 1 Woche (Sek II) ",
+			"schluessel": "SBO 9.1.3",
+			"merkmal": "SBO_9_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_4",
+		"idHistorie": 82,
+		"historie": [ {
+			"id": 94,
+			"kuerzel": "SBO 9.1.4",
+			"text": "Am Betriebspraktikum teilgenommen - 2 Wochen (Sek II) ",
+			"schluessel": "SBO 9.1.4",
+			"merkmal": "SBO_9_1",
+			"optionsart": "FREITEXT_BERUF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1",
+		"idHistorie": 83,
+		"historie": [ {
+			"id": 95,
+			"kuerzel": "SBO 9.2.1",
+			"text": "Teilnahme an den Veranstaltungen zur Studienorientierung",
+			"schluessel": "SBO 9.2.1",
+			"merkmal": "SBO_9_2",
+			"optionsart": "SBO_EBENE_4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_2",
+		"idHistorie": 84,
+		"historie": [ {
+			"id": 96,
+			"kuerzel": "SBO 9.2.2",
+			"text": "Keine Teilnahme an den Veranstaltungen zur Studienorientierung",
+			"schluessel": "SBO 9.2.2",
+			"merkmal": "SBO_9_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_3_1",
+		"idHistorie": 85,
+		"historie": [ {
+			"id": 97,
+			"kuerzel": "SBO 9.3.1",
+			"text": "Am Workshop \"Stärkung der Entscheidungskompetenz II - Sek II\" teilgenommen",
+			"schluessel": "SBO 9.3.1",
+			"merkmal": "SBO_9_3",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_3_2",
+		"idHistorie": 86,
+		"historie": [ {
+			"id": 98,
+			"kuerzel": "SBO 9.3.2",
+			"text": "Keine Teilnahme am Workshop \"Stärkung der Entscheidungskompetenz II - Sek II\"",
+			"schluessel": "SBO 9.3.2",
+			"merkmal": "SBO_9_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_1_1",
+		"idHistorie": 87,
+		"historie": [ {
+			"id": 99,
+			"kuerzel": "SBO 10.1.1",
+			"text": "Bewerbungstraining wurde durchgeführt",
+			"schluessel": "SBO 10.1.1",
+			"merkmal": "SBO_10_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_1_2",
+		"idHistorie": 88,
+		"historie": [ {
+			"id": 100,
+			"kuerzel": "SBO 10.1.2",
+			"text": "Keine Teilnahme an einem Bewerbungstraining",
+			"schluessel": "SBO 10.1.2",
+			"merkmal": "SBO_10_1",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_2_1",
+		"idHistorie": 89,
+		"historie": [ {
+			"id": 101,
+			"kuerzel": "SBO 10.2.1",
+			"text": "Am STAR - Arbeitsplatzbezogenen Kommunikationstraining II teilgenommen",
+			"schluessel": "SBO 10.2.1",
+			"merkmal": "SBO_10_2",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_2_2",
+		"idHistorie": 90,
+		"historie": [ {
+			"id": 102,
+			"kuerzel": "SBO 10.2.2",
+			"text": "Keine Teilnahme am STAR - Arbeitsplatzbezogenen Kommunikationstraining II",
+			"schluessel": "SBO 10.2.2",
+			"merkmal": "SBO_10_2",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_3_1",
+		"idHistorie": 91,
+		"historie": [ {
+			"id": 103,
+			"kuerzel": "SBO 10.3.1",
+			"text": "Am STAR - Bewerbungstraining teilgenommen",
+			"schluessel": "SBO 10.3.1",
+			"merkmal": "SBO_10_3",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_3_2",
+		"idHistorie": 92,
+		"historie": [ {
+			"id": 104,
+			"kuerzel": "SBO 10.3.2",
+			"text": "Keine Teilnahme am STAR - Bewerbungstraining",
+			"schluessel": "SBO 10.3.2",
+			"merkmal": "SBO_10_3",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_1",
+		"idHistorie": 93,
+		"historie": [ {
+			"id": 105,
+			"kuerzel": "SBO 10.4.1",
+			"text": "durch die Jugendhilfe",
+			"schluessel": "SBO 10.4.1",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_2",
+		"idHistorie": 94,
+		"historie": [ {
+			"id": 106,
+			"kuerzel": "SBO 10.4.2",
+			"text": "durch die Schulsozialarbeit",
+			"schluessel": "SBO 10.4.2",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_3",
+		"idHistorie": 95,
+		"historie": [ {
+			"id": 107,
+			"kuerzel": "SBO 10.4.3",
+			"text": "durch die Berufseinstiegsbegleitung",
+			"schluessel": "SBO 10.4.3",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_4",
+		"idHistorie": 96,
+		"historie": [ {
+			"id": 108,
+			"kuerzel": "SBO 10.4.4",
+			"text": "durch die Einstiegsbegleitung über die Kommune finanziert",
+			"schluessel": "SBO 10.4.4",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_5",
+		"idHistorie": 97,
+		"historie": [ {
+			"id": 109,
+			"kuerzel": "SBO 10.4.5",
+			"text": "durch eine ehrenamtlich tätige Person",
+			"schluessel": "SBO 10.4.5",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4_6",
+		"idHistorie": 98,
+		"historie": [ {
+			"id": 110,
+			"kuerzel": "SBO 10.4.6",
+			"text": "durch andere Institution",
+			"schluessel": "SBO 10.4.6",
+			"merkmal": "SBO_10_4",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_5_1",
+		"idHistorie": 99,
+		"historie": [ {
+			"id": 111,
+			"kuerzel": "SBO 10.5.1",
+			"text": "Eine STAR - Übergangsbegleitung durch den Integrationsfachdienst (IFD) findet statt",
+			"schluessel": "SBO 10.5.1",
+			"merkmal": "SBO_10_5",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_5_2",
+		"idHistorie": 100,
+		"historie": [ {
+			"id": 112,
+			"kuerzel": "SBO 10.5.2",
+			"text": "Keine STAR - Übergangsbegleitung durch den Integrationsfachdienst (IFD)",
+			"schluessel": "SBO 10.5.2",
+			"merkmal": "SBO_10_5",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_6_1",
+		"idHistorie": 101,
+		"historie": [ {
+			"id": 113,
+			"kuerzel": "SBO 10.6.1",
+			"text": "Die Anschlussvereinbarung Sek. I ist ausgefüllt worden",
+			"schluessel": "SBO 10.6.1",
+			"merkmal": "SBO_10_6",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_6_2",
+		"idHistorie": 102,
+		"historie": [ {
+			"id": 114,
+			"kuerzel": "SBO 10.6.2",
+			"text": "Die Anschlussvereinbarung Sek. I ist nicht ausgefüllt worden",
+			"schluessel": "SBO 10.6.2",
+			"merkmal": "SBO_10_6",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_6_3",
+		"idHistorie": 103,
+		"historie": [ {
+			"id": 115,
+			"kuerzel": "SBO 10.6.3",
+			"text": "Die Anschlussvereinbarung Sek. II ist ausgefüllt worden",
+			"schluessel": "SBO 10.6.3",
+			"merkmal": "SBO_10_6",
+			"optionsart": "KEINE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_6_4",
+		"idHistorie": 104,
+		"historie": [ {
+			"id": 116,
+			"kuerzel": "SBO 10.6.4",
+			"text": "Die Anschlussvereinbarung Sek. II ist nicht ausgefüllt worden",
+			"schluessel": "SBO 10.6.4",
+			"merkmal": "SBO_10_6",
+			"optionsart": "FREITEXT",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_1",
+		"idHistorie": 105,
+		"historie": [ {
+			"id": 117,
+			"kuerzel": "SBO 10.7.1",
+			"text": "Anschlüsse bei einem Abgangszeugnis für Schüler/innen mit sonderpädagogischem Unterstützungsbedarf",
+			"schluessel": "SBO 10.7.1",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_2",
+		"idHistorie": 106,
+		"historie": [ {
+			"id": 118,
+			"kuerzel": "SBO 10.7.2",
+			"text": "Anschlüsse bei einem Abgangszeugnis",
+			"schluessel": "SBO 10.7.2",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_3",
+		"idHistorie": 107,
+		"historie": [ {
+			"id": 119,
+			"kuerzel": "SBO 10.7.3",
+			"text": "Anschlüsse bei einem Abschlusszeugnis im Bildungsgang Geistige Entwicklung",
+			"schluessel": "SBO 10.7.3",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_4",
+		"idHistorie": 108,
+		"historie": [ {
+			"id": 120,
+			"kuerzel": "SBO 10.7.4",
+			"text": "Anschlüsse bei einem Abschlusszeugnis im Bildungsgang Lernen",
+			"schluessel": "SBO 10.7.4",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_5",
+		"idHistorie": 109,
+		"historie": [ {
+			"id": 121,
+			"kuerzel": "SBO 10.7.5",
+			"text": "Anschlüsse bei einem Hauptschulabschluss (HA9) oder diesem gleichwertig",
+			"schluessel": "SBO 10.7.5",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_6",
+		"idHistorie": 110,
+		"historie": [ {
+			"id": 122,
+			"kuerzel": "SBO 10.7.6",
+			"text": "Anschlüsse bei einem Hauptschulabschluss nach Klasse 10 oder diesem gleichwertig",
+			"schluessel": "SBO 10.7.6",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_7",
+		"idHistorie": 111,
+		"historie": [ {
+			"id": 123,
+			"kuerzel": "SBO 10.7.7",
+			"text": "Anschlüsse bei einem Mittlerem Schulabschluss (FOR)",
+			"schluessel": "SBO 10.7.7",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_8",
+		"idHistorie": 112,
+		"historie": [ {
+			"id": 124,
+			"kuerzel": "SBO 10.7.8",
+			"text": "Anschlüsse bei einem Mittlerem Schulabschluss (FOR) mit der Qualifikation für die Oberstufe",
+			"schluessel": "SBO 10.7.8",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_9",
+		"idHistorie": 113,
+		"historie": [ {
+			"id": 125,
+			"kuerzel": "SBO 10.7.9",
+			"text": "Anschlüsse bei einem Hauptschulabschluss (HA9) mit der Qualifikation für die Oberstufe",
+			"schluessel": "SBO 10.7.9",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_10",
+		"idHistorie": 114,
+		"historie": [ {
+			"id": 126,
+			"kuerzel": "SBO 10.7.10",
+			"text": "Anschlüsse bei einem Hauptschulabschluss nach Klasse 10 mit der Qualifikation für die Oberstufe",
+			"schluessel": "SBO 10.7.10",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_11",
+		"idHistorie": 115,
+		"historie": [ {
+			"id": 127,
+			"kuerzel": "SBO 10.7.11",
+			"text": "Anschlüsse bei dem schulischen Teil der Fachhochschulreife",
+			"schluessel": "SBO 10.7.11",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_12",
+		"idHistorie": 116,
+		"historie": [ {
+			"id": 128,
+			"kuerzel": "SBO 10.7.12",
+			"text": "Anschlüsse mit der Fachhochschulreife",
+			"schluessel": "SBO 10.7.12",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7_13",
+		"idHistorie": 117,
+		"historie": [ {
+			"id": 129,
+			"kuerzel": "SBO 10.7.13",
+			"text": "Anschlüsse mit der allgemeinen Hochschulreife",
+			"schluessel": "SBO 10.7.13",
+			"merkmal": "SBO_10_7",
+			"optionsart": "ANSCHLUSSOPTION",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

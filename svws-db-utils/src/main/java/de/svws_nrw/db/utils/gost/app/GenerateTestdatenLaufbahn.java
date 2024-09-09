@@ -15,6 +15,8 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -41,6 +43,7 @@ import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -92,6 +95,7 @@ public class GenerateTestdatenLaufbahn {
 	 */
 	public static void main(final String[] args) throws ApiOperationException {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -130,7 +134,13 @@ public class GenerateTestdatenLaufbahn {
 
 				// Prüfe die Schulform
 				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-				if ((schule.Schulform.daten == null) || (!schule.Schulform.daten.hatGymOb))
+				if (schule == null)
+					throw new DeveloperNotificationException("Keine Schule angelegt.");
+				final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+				if (schuljahresabschnitt == null)
+					throw new DeveloperNotificationException("Keine gültiger Schuljahresabschnitt vorhanden.");
+				final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+				if ((schulform.daten(schuljahresabschnitt.Jahr) == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb))
 					throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
 				final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
@@ -144,7 +154,7 @@ public class GenerateTestdatenLaufbahn {
 				for (final DTOGostJahrgangsdaten jahrgang : jahrgaenge) {
 					try {
 						final @NotNull GostJahrgangsdaten gostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, jahrgang.Abi_Jahrgang);
-						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, jahrgang.Abi_Jahrgang);
+						final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(schuljahresabschnitt.Jahr, conn, jahrgang.Abi_Jahrgang);
 						if (gostFaecher.isEmpty())
 							continue; // Lasse Jahrgänge ohne Fächerdaten aus
 						final @NotNull List<@NotNull GostJahrgangFachkombination> gostFaecherkombinationen =

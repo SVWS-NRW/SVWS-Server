@@ -1,0 +1,328 @@
+{
+	"version": 1,
+	"daten": [ {	
+		"bezeichner": "HAUSFRUEERZIEHUNG",
+		"idHistorie": 27,
+		"historie": [ {
+			"id" : 100000,
+			"schluessel": "90",
+			"kuerzel": "90",
+			"text": "Hausfrüherziehung für Hör- bzw. Sehgeschädigte",
+			"schulformen": [ "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_00",
+		"idHistorie": 20,
+		"historie": [ {
+			"id" : 0,
+			"schluessel": "00", 
+			"kuerzel": "00", 
+			"text": "Frühkindliche Förderung, Förderschulkindergarten", 
+			"schulformen": [ "S", "KS" ],
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VORKURS_SEMESTER_1",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 200000,
+			"schluessel": "91",
+			"kuerzel": "91",
+			"text": "Vorkurs (1. Semester)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VORKURS_SEMESTER_2",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 300000,
+			"schluessel": "92",
+			"kuerzel": "92",
+			"text": "Vorkurs (2. Semester)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_01",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000000,
+			"schluessel": "01",
+			"kuerzel": "01",
+			"text": "1. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "PS", "S", "KS", "V" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_02",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000000,
+			"schluessel": "02",
+			"kuerzel": "02",
+			"text": "2. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "PS", "S", "KS", "V" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_03",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000000,
+			"schluessel": "03",
+			"kuerzel": "03",
+			"text": "3. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "PS", "S", "KS", "V" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_04",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000000,
+			"schluessel": "04",
+			"kuerzel": "04",
+			"text": "4. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "G", "PS", "S", "KS", "V" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_05",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000000,
+			"schluessel": "05",
+			"kuerzel": "05",
+			"text": "5. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_06",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6000000,
+			"schluessel": "06",
+			"kuerzel": "06",
+			"text": "6. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_07",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7000000,
+			"schluessel": "07",
+			"kuerzel": "07",
+			"text": "7. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_08",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8000000,
+			"schluessel": "08",
+			"kuerzel": "08",
+			"text": "8. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_09",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9000000,
+			"schluessel": "09",
+			"kuerzel": "09",
+			"text": "9. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_10",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10000000,
+			"schluessel": "10",
+			"kuerzel": "10",
+			"text": "10. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_11",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11000000,
+			"schluessel": "11",
+			"kuerzel": "11",
+			"text": "11. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_12",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12000000,
+			"schluessel": "12",
+			"kuerzel": "12",
+			"text": "12. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JAHRGANG_13",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13000000,
+			"schluessel": "13",
+			"kuerzel": "13",
+			"text": "13. Jahrgang",
+			"schulformen": [ "FW", "WF" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EF",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 21000000,
+			"schluessel": "EF",
+			"kuerzel": "EF",
+			"text": "Einführungsphase",
+			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "Q1",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 22000000,
+			"schluessel": "Q1",
+			"kuerzel": "Q1",
+			"text": "Qualifikationsphase 1. Jahr",
+			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "Q2",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 23000000,
+			"schluessel": "Q2",
+			"kuerzel": "Q2",
+			"text": "Qualifikationsphase 2. Jahr",
+			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BERUFSPRAXISSTUFE",
+		"idHistorie": 17,
+		"historie": [ {
+			"id" : 30000000,
+			"schluessel": "85,86",
+			"kuerzel": "BP",
+			"text": "Berufspraxisstufe der Förderschulen für Geistige Entwicklung",
+			"schulformen": [ "FW", "WF", "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_01",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 1500000,
+			"schluessel": "201",
+			"kuerzel": "S1",
+			"text": "1. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_02",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 2500000,
+			"schluessel": "202",
+			"kuerzel": "S2",
+			"text": "2. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_03",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 3500000,
+			"schluessel": "203",
+			"kuerzel": "S3",
+			"text": "3. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_04",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 4500000,
+			"schluessel": "204",
+			"kuerzel": "S4",
+			"text": "4. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_05",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 5500000,
+			"schluessel": "205",
+			"kuerzel": "S5",
+			"text": "5. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SEMESTER_06",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 6500000,
+			"schluessel": "206",
+			"kuerzel": "S6",
+			"text": "6. Semester",
+			"schulformen": [ "HI", "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

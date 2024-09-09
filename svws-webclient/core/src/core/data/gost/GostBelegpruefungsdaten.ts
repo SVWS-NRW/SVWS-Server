@@ -4,6 +4,7 @@ import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgan
 import { GostJahrgangsdaten } from '../../../core/data/gost/GostJahrgangsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Abiturdaten } from '../../../core/data/gost/Abiturdaten';
 
 export class GostBelegpruefungsdaten extends JavaObject {
@@ -40,6 +41,8 @@ export class GostBelegpruefungsdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsdaten'].includes(name);
 	}
+
+	public static class = new Class<GostBelegpruefungsdaten>('de.svws_nrw.core.data.gost.GostBelegpruefungsdaten');
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungsdaten {
 		const obj = JSON.parse(json) as Partial<GostBelegpruefungsdaten>;

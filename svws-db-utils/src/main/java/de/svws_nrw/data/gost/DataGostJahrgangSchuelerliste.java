@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
@@ -14,6 +15,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
@@ -64,6 +66,10 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 	 */
 	public List<SchuelerListeEintrag> getAllSchueler() throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		// Bestimme die Schuljahresabschnitte
+		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte =
+				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 
 		// Bestimme alle Schüler-IDs für den Abiturjahrgang der Blockung
 		final List<DTOSchueler> schuelerListe = getSchuelerDTOs();
@@ -86,7 +92,9 @@ public final class DataGostJahrgangSchuelerliste extends DataManager<Integer> {
 		// Erstelle die Schülerliste
 		return schuelerListe.stream()
 				.map(s -> {
-					final SchuelerListeEintrag sle = DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAktAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform);
+					final SchuelerListeEintrag sle = DataSchuelerliste.erstelleSchuelerlistenEintrag(s,
+							mapSchuljahresabschnitte.get(mapAktAbschnitte.get(s.ID).Schuljahresabschnitts_ID).Jahr, mapAktAbschnitte.get(s.ID), mapJahrgaenge,
+							schulform);
 					sle.abiturjahrgang = this.abijahrgang;
 					return sle;
 				})

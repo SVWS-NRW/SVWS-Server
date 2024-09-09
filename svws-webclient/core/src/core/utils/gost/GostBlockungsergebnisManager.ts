@@ -25,7 +25,8 @@ import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblock
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../../core/data/schueler/Schueler';
-import { PairNN } from '../../../core/adt/PairNN';
+import { PairNN } from '../../../asd/adt/PairNN';
+import { Class } from '../../../java/lang/Class';
 import { DTOUtils } from '../../../core/utils/DTOUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -38,13 +39,13 @@ import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { GostBlockungsergebnisKurs } from '../../../core/data/gost/GostBlockungsergebnisKurs';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
 import { Logger } from '../../../core/logger/Logger';
-import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
+import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnungUpdate } from '../../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnungUpdate';
 import { GostSchriftlichkeit } from '../../../core/types/gost/GostSchriftlichkeit';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
-import { Geschlecht } from '../../../core/types/Geschlecht';
-import { Pair } from '../../../core/adt/Pair';
+import { Geschlecht } from '../../../asd/types/Geschlecht';
+import { Pair } from '../../../asd/adt/Pair';
 import { GostFach } from '../../../core/data/gost/GostFach';
 import { SchuelerblockungOutput } from '../../../core/data/kursblockung/SchuelerblockungOutput';
 import { GostBlockungsdatenManager, cast_de_svws_nrw_core_utils_gost_GostBlockungsdatenManager } from '../../../core/utils/gost/GostBlockungsdatenManager';
@@ -2109,7 +2110,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
 	 */
 	private getOfSchuelerHatStatusExtern(idSchueler : number) : boolean {
-		return this.getSchuelerG(idSchueler!).status === SchuelerStatus.EXTERN.id;
+		const idStatus : number = this.getSchuelerG(idSchueler!).status;
+		const status : SchuelerStatus | null = SchuelerStatus.data().getWertByID(idStatus);
+		return (status as unknown === SchuelerStatus.EXTERN as unknown);
 	}
 
 	/**
@@ -2590,7 +2593,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
 				if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
 					summe++;
-			} catch(dne) {
+			} catch(dne : any) {
 				// empty block
 			}
 		}
@@ -2611,7 +2614,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3))
 					summe++;
-			} catch(dne) {
+			} catch(dne : any) {
 				// empty block
 			}
 		}
@@ -2632,7 +2635,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4))
 					summe++;
-			} catch(dne) {
+			} catch(dne : any) {
 				// empty block
 			}
 		}
@@ -5623,6 +5626,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnisManager>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager');
 
 }
 

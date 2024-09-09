@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbteilungKlassenzuordnung } from '../../../core/data/schule/AbteilungKlassenzuordnung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class Abteilung extends JavaObject {
 
@@ -62,6 +63,8 @@ export class Abteilung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.Abteilung'].includes(name);
 	}
+
+	public static class = new Class<Abteilung>('de.svws_nrw.core.data.schule.Abteilung');
 
 	public static transpilerFromJSON(json : string): Abteilung {
 		const obj = JSON.parse(json) as Partial<Abteilung>;

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
 import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;
@@ -99,7 +99,7 @@ public final class SchuelerWithCategoriesRepository implements IAdressbuchKontak
 		final Map<Long, List<Telefonnummer>> telefonnummerBySchuelerId = queryTelefonNummernBySchuelerIds(schuelerIds, conn);
 
 		final Map<Long, SchuelerStatus> schuelerStatusById = filteredDtoSchuelers.stream()
-				.collect(Collectors.toMap(s -> s.ID, s -> s.Status));
+				.collect(Collectors.toMap(s -> s.ID, s -> SchuelerStatus.data().getWertByKuerzel("" + s.idStatus)));
 		final Map<Long, Set<String>> categoriesBySchuelerId = getCategoriesBySchuelerId(schuelerStatusById);
 		return filteredDtoSchuelers.stream()
 				.map(s -> IAdressbuchKontaktRepository.mapDTOSchuelerToKontakt(s, telefonnummerBySchuelerId.get(s.ID),

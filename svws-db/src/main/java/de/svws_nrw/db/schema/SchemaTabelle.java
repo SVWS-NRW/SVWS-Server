@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.DBDriver;
 
 /**

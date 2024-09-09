@@ -158,7 +158,7 @@ public final class AbiFaecher extends GostBelegpruefung {
 		final GostFach lk1fach = manager.getFach(lk1);
 		final AbiturFachbelegung ab3 = (mapAbiturFachbelegungen == null) ? null : mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		final GostFach ab3fach = manager.getFach(ab3);
-		if (((lk1fach != null) && (GostFachbereich.SPORT.hat(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hat(ab3fach.kuerzel))))
+		if (((lk1fach != null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach != null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel))))
 			addFehler(GostBelegungsfehler.ABI_15);
 	}
 

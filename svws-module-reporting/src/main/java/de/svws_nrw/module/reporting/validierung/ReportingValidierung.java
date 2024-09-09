@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;

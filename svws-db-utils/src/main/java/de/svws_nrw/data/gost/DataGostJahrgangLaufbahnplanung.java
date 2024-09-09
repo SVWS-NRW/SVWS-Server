@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.data.DataManager;
@@ -119,7 +119,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
 				|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
-				|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
+				|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
 		if (!valid)
 			throw new ApiOperationException(Status.CONFLICT);
 		return fw;
@@ -197,15 +197,16 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 *
 	 * Hinweis: Es muss eine Transaktion auf der Datenbankverbindung aktiv sein
 	 *
-	 * @param conn   die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
+	 * @param schuljahr   das Schuljahr für den Zugriff auf die Statistikdaten
+	 * @param conn        die zu nutzende Datenbank-Verbindung mit einer aktiven Transaktion
 	 *
 	 * @throws ApiOperationException   falls ein Fehler auftritt und die Operation abgebrochen werden sollte.
 	 */
-	public static void transactionResetJahrgangVorlage(final DBEntityManager conn) throws ApiOperationException {
-		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, -1);
+	public static void transactionResetJahrgangVorlage(final int schuljahr, final DBEntityManager conn) throws ApiOperationException {
+		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(schuljahr, conn, -1);
 		conn.transactionExecuteDelete("DELETE FROM DTOGostJahrgangFachbelegungen e WHERE e.Abi_Jahrgang = -1");
 		// Setze Default-Einträge für die Fächer Deutsch, Mathematik und Sport und für die Sprachenfolge bei Englisch
-		final @NotNull List<@NotNull GostFach> d = faecherManager.getByKuerzel(ZulaessigesFach.D.daten.kuerzelASD);
+		final @NotNull List<@NotNull GostFach> d = faecherManager.getByKuerzel(Fach.D.daten(schuljahr).schluessel);
 		if (d.size() == 1) {
 			final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(-1, d.get(0).id);
 			fw.EF1_Kursart = "S";
@@ -216,7 +217,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			fw.Q22_Kursart = "M";
 			conn.transactionPersist(fw);
 		}
-		final @NotNull List<@NotNull GostFach> m = faecherManager.getByKuerzel(ZulaessigesFach.M.daten.kuerzelASD);
+		final @NotNull List<@NotNull GostFach> m = faecherManager.getByKuerzel(Fach.M.daten(schuljahr).schluessel);
 		if (m.size() == 1) {
 			final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(-1, m.get(0).id);
 			fw.EF1_Kursart = "S";
@@ -227,7 +228,7 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 			fw.Q22_Kursart = "M";
 			conn.transactionPersist(fw);
 		}
-		final @NotNull List<@NotNull GostFach> sp = faecherManager.getByKuerzel(ZulaessigesFach.SP.daten.kuerzelASD);
+		final @NotNull List<@NotNull GostFach> sp = faecherManager.getByKuerzel(Fach.SP.daten(schuljahr).schluessel);
 		if (sp.size() == 1) {
 			final DTOGostJahrgangFachbelegungen fw = new DTOGostJahrgangFachbelegungen(-1, sp.get(0).id);
 			fw.EF1_Kursart = "M";
@@ -347,12 +348,12 @@ public final class DataGostJahrgangLaufbahnplanung extends DataManager<Integer> 
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response reset(final Integer abijahr) throws ApiOperationException {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahr);
 		final DTOGostJahrgangsdaten jahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abijahr);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		if (abijahr == -1)
-			transactionResetJahrgangVorlage(conn);
+			transactionResetJahrgangVorlage(schuljahr, conn);
 		else
 			transactionResetJahrgang(conn, jahrgang);
 		return Response.status(Status.NO_CONTENT).build();

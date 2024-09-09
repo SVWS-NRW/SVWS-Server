@@ -7,11 +7,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
@@ -104,7 +104,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
-				SchuelerStatus.fromID(schuelerStammdaten.status),
+				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				schuelerStammdaten.strassenname,
 				schuelerStammdaten.telefon,
 				schuelerStammdaten.telefonMobil,

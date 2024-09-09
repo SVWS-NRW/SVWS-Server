@@ -1,0 +1,125 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "AR",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "AR",
+			"kuerzel": "AR",
+			"text": "alevitisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ER",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "ER",
+			"kuerzel": "ER",
+			"text": "evangelisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HR",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "HR",
+			"kuerzel": "HR",
+			"text": "jüdisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IR",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "IR",
+			"kuerzel": "IR",
+			"text": "islamisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KR",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "KR",
+			"kuerzel": "KR",
+			"text": "katholisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ME",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6000,
+			"schluessel": "ME",
+			"kuerzel": "ME",
+			"text": "mennonitische BG NRW",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OH",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7000,
+			"schluessel": "OH",
+			"kuerzel": "OH",
+			"text": "ohne Bekenntnis",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OR",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8000,
+			"schluessel": "OR",
+			"kuerzel": "OR",
+			"text": "griechisch-orthodox",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SO",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9000,
+			"schluessel": "SO",
+			"kuerzel": "SO",
+			"text": "syrisch-orthodox",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XO",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10000,
+			"schluessel": "XO",
+			"kuerzel": "XO",
+			"text": "sonstige orthodoxe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XR",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11000,
+			"schluessel": "XR",
+			"kuerzel": "XR",
+			"text": "andere Religionen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}]
+}

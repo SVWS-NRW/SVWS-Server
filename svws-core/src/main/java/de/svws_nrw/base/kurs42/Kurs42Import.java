@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.function.Function;
 
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.base.CsvReader;
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;

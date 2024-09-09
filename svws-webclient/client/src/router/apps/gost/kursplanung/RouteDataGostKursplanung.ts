@@ -44,7 +44,7 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 const defaultState: RouteStateGostKursplanung = {
 	abiturjahr: undefined,
 	jahrgangsdaten: undefined,
-	faecherManager: new GostFaecherManager(),
+	faecherManager: new GostFaecherManager(-1),
 	mapFachwahlStatistik: new Map(),
 	mapLehrer: new Map(),
 	halbjahr: GostHalbjahr.EF1,
@@ -93,7 +93,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
-		const faecherManager = new GostFaecherManager(listFaecher);
+		const faecherManager = new GostFaecherManager(abiturjahr - 1, listFaecher);
 		// Lade die Lehrerliste
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
@@ -423,7 +423,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.mapBlockungen.set(result.id, result);
 		// Lade die Fächer des Abiturjahrgangs auch neu, da diese eventuell beim Wiederherstellen der Blockung angepasst wurden.
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.jahrgangsdaten.abiturjahr);
-		const faecherManager = new GostFaecherManager(listFaecher);
+		const faecherManager = new GostFaecherManager(this.jahrgangsdaten.abiturjahr - 1, listFaecher);
 		// Aktualisiere den State
 		this.setPatchedState({
 			faecherManager,

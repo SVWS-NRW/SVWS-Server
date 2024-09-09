@@ -139,7 +139,7 @@
 								<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
 							</template>
 							<template v-if="s.status !== 2">
-								<span class="ml-1">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
+								<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 							</template>
 						</div>
 					</div>
@@ -193,6 +193,8 @@
 	import { Geschlecht, GostKursart, GostKursblockungRegelTyp, SchuelerStatus, SetUtils } from "@core";
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
+
+	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
 	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 

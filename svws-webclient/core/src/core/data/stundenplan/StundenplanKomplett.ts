@@ -4,6 +4,7 @@ import { StundenplanUnterrichtsverteilung } from '../../../core/data/stundenplan
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Stundenplan, cast_de_svws_nrw_core_data_stundenplan_Stundenplan } from '../../../core/data/stundenplan/Stundenplan';
 
 export class StundenplanKomplett extends JavaObject {
@@ -40,6 +41,8 @@ export class StundenplanKomplett extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanKomplett'].includes(name);
 	}
+
+	public static class = new Class<StundenplanKomplett>('de.svws_nrw.core.data.stundenplan.StundenplanKomplett');
 
 	public static transpilerFromJSON(json : string): StundenplanKomplett {
 		const obj = JSON.parse(json) as Partial<StundenplanKomplett>;

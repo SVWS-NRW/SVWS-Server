@@ -1,8 +1,8 @@
 package de.svws_nrw.module.reporting.proxytypes.lehrer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;

@@ -5,6 +5,7 @@ import { ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerk
 import { ENMZP10 } from '../../../core/data/enm/ENMZP10';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
 import { ENMSprachenfolge } from '../../../core/data/enm/ENMSprachenfolge';
 
@@ -97,6 +98,8 @@ export class ENMSchueler extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMSchueler'].includes(name);
 	}
+
+	public static class = new Class<ENMSchueler>('de.svws_nrw.core.data.enm.ENMSchueler');
 
 	public static transpilerFromJSON(json : string): ENMSchueler {
 		const obj = JSON.parse(json) as Partial<ENMSchueler>;

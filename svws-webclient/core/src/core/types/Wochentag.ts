@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class Wochentag extends JavaEnum<Wochentag> {
@@ -121,6 +122,8 @@ export class Wochentag extends JavaEnum<Wochentag> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.Wochentag', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Wochentag>('de.svws_nrw.core.types.Wochentag');
 
 }
 

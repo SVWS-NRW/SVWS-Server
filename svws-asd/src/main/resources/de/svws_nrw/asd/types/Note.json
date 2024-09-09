@@ -1,0 +1,368 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINE",
+		"idHistorie": 1,
+		"historie": [ {
+			"sortierung": -1,
+			"schluessel": -1,
+			"notenpunkte": null,
+			"id": -1,
+			"text": "",
+			"gueltigBis": null,
+			"kuerzel": "",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "UNGENUEGEND",
+		"idHistorie": 2,
+		"historie": [ {
+			"sortierung": 600,
+			"schluessel": 0,
+			"notenpunkte": 0,
+			"id": 0,
+			"text": "ungenuegend",
+			"gueltigBis": null,
+			"kuerzel": "6",
+			"gueltigVon": null,
+			"textZeugnis": "ungenuegend"
+		} ]
+	}, {
+		"bezeichner": "MANGELHAFT_MINUS",
+		"idHistorie": 3,
+		"historie": [ {
+			"sortierung": 501,
+			"schluessel": 1,
+			"notenpunkte": 1,
+			"id": 1,
+			"text": "mangelhaft (minus)",
+			"gueltigBis": null,
+			"kuerzel": "5-",
+			"gueltigVon": null,
+			"textZeugnis": "mangelhaft"
+		} ]
+	}, {
+		"bezeichner": "MANGELHAFT",
+		"idHistorie": 4,
+		"historie": [ {
+			"sortierung": 500,
+			"schluessel": 2,
+			"notenpunkte": 2,
+			"id": 2,
+			"text": "mangelhaft",
+			"gueltigBis": null,
+			"kuerzel": "5",
+			"gueltigVon": null,
+			"textZeugnis": "mangelhaft"
+		} ]
+	}, {
+		"bezeichner": "MANGELHAFT_PLUS",
+		"idHistorie": 5,
+		"historie": [ {
+			"sortierung": 499,
+			"schluessel": 3,
+			"notenpunkte": 3,
+			"id": 3,
+			"text": "mangelhaft (plus)",
+			"gueltigBis": null,
+			"kuerzel": "5+",
+			"gueltigVon": null,
+			"textZeugnis": "mangelhaft"
+		} ]
+	}, {
+		"bezeichner": "AUSREICHEND_MINUS",
+		"idHistorie": 6,
+		"historie": [ {
+			"sortierung": 401,
+			"schluessel": 4,
+			"notenpunkte": 4,
+			"id": 4,
+			"text": "ausreichend (minus)",
+			"gueltigBis": null,
+			"kuerzel": "4-",
+			"gueltigVon": null,
+			"textZeugnis": "ausreichend"
+		} ]
+	}, {
+		"bezeichner": "AUSREICHEND",
+		"idHistorie": 7,
+		"historie": [ {
+			"sortierung": 400,
+			"schluessel": 5,
+			"notenpunkte": 5,
+			"id": 5,
+			"text": "ausreichend",
+			"gueltigBis": null,
+			"kuerzel": "4",
+			"gueltigVon": null,
+			"textZeugnis": "ausreichend"
+		} ]
+	}, {
+		"bezeichner": "AUSREICHEND_PLUS",
+		"idHistorie": 8,
+		"historie": [ {
+			"sortierung": 399,
+			"schluessel": 6,
+			"notenpunkte": 6,
+			"id": 6,
+			"text": "ausreichend (plus)",
+			"gueltigBis": null,
+			"kuerzel": "4+",
+			"gueltigVon": null,
+			"textZeugnis": "ausreichend"
+		} ]
+	}, {
+		"bezeichner": "BEFRIEDIGEND_MINUS",
+		"idHistorie": 9,
+		"historie": [ {
+			"sortierung": 301,
+			"schluessel": 7,
+			"notenpunkte": 7,
+			"id": 7,
+			"text": "befriedigend (minus)",
+			"gueltigBis": null,
+			"kuerzel": "3-",
+			"gueltigVon": null,
+			"textZeugnis": "befriedigend"
+		} ]
+	}, {
+		"bezeichner": "BEFRIEDIGEND",
+		"idHistorie": 10,
+		"historie": [ {
+			"sortierung": 300,
+			"schluessel": 8,
+			"notenpunkte": 8,
+			"id": 8,
+			"text": "befriedigend",
+			"gueltigBis": null,
+			"kuerzel": "3",
+			"gueltigVon": null,
+			"textZeugnis": "befriedigend"
+		} ]
+	}, {
+		"bezeichner": "BEFRIEDIGEND_PLUS",
+		"idHistorie": 11,
+		"historie": [ {
+			"sortierung": 299,
+			"schluessel": 9,
+			"notenpunkte": 9,
+			"id": 9,
+			"text": "befriedigend (plus)",
+			"gueltigBis": null,
+			"kuerzel": "3+",
+			"gueltigVon": null,
+			"textZeugnis": "befriedigend"
+		} ]
+	}, {
+		"bezeichner": "GUT_MINUS",
+		"idHistorie": 12,
+		"historie": [ {
+			"sortierung": 201,
+			"schluessel": 10,
+			"notenpunkte": 10,
+			"id": 10,
+			"text": "gut (minus)",
+			"gueltigBis": null,
+			"kuerzel": "2-",
+			"gueltigVon": null,
+			"textZeugnis": "gut"
+		} ]
+	}, {
+		"bezeichner": "GUT",
+		"idHistorie": 13,
+		"historie": [ {
+			"sortierung": 200,
+			"schluessel": 11,
+			"notenpunkte": 11,
+			"id": 11,
+			"text": "gut",
+			"gueltigBis": null,
+			"kuerzel": "2",
+			"gueltigVon": null,
+			"textZeugnis": "gut"
+		} ]
+	}, {
+		"bezeichner": "GUT_PLUS",
+		"idHistorie": 14,
+		"historie": [ {
+			"sortierung": 199,
+			"schluessel": 12,
+			"notenpunkte": 12,
+			"id": 12,
+			"text": "gut (plus)",
+			"gueltigBis": null,
+			"kuerzel": "2+",
+			"gueltigVon": null,
+			"textZeugnis": "gut"
+		} ]
+	}, {
+		"bezeichner": "SEHR_GUT_MINUS",
+		"idHistorie": 15,
+		"historie": [ {
+			"sortierung": 101,
+			"schluessel": 13,
+			"notenpunkte": 13,
+			"id": 13,
+			"text": "sehr gut (minus)",
+			"gueltigBis": null,
+			"kuerzel": "1-",
+			"gueltigVon": null,
+			"textZeugnis": "sehr gut"
+		} ]
+	}, {
+		"bezeichner": "SEHR_GUT",
+		"idHistorie": 16,
+		"historie": [ {
+			"sortierung": 100,
+			"schluessel": 14,
+			"notenpunkte": 14,
+			"id": 14,
+			"text": "sehr gut",
+			"gueltigBis": null,
+			"kuerzel": "1",
+			"gueltigVon": null,
+			"textZeugnis": "sehr gut"
+		} ]
+	}, {
+		"bezeichner": "SEHR_GUT_PLUS",
+		"idHistorie": 17,
+		"historie": [ {
+			"sortierung": 99,
+			"schluessel": 15,
+			"notenpunkte": 15,
+			"id": 15,
+			"text": "sehr gut (plus)",
+			"gueltigBis": null,
+			"kuerzel": "1+",
+			"gueltigVon": null,
+			"textZeugnis": "sehr gut"
+		} ]
+	}, {
+		"bezeichner": "ATTEST",
+		"idHistorie": 18,
+		"historie": [ {
+			"sortierung": 2500,
+			"schluessel": 16,
+			"notenpunkte": null,
+			"id": 16,
+			"text": "(ärtzliches Attest)",
+			"gueltigBis": null,
+			"kuerzel": "AT",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN",
+		"idHistorie": 19,
+		"historie": [ {
+			"sortierung": 1000,
+			"schluessel": 17,
+			"notenpunkte": null,
+			"id": 17,
+			"text": "mit besonderem Erfolg teilgenommen",
+			"gueltigBis": null,
+			"kuerzel": "E1",
+			"gueltigVon": null,
+			"textZeugnis": "mit besonderem Erfolg teilgenommen"
+		} ]
+	}, {
+		"bezeichner": "E2_MIT_ERFOLG_TEILGENOMMEN",
+		"idHistorie": 20,
+		"historie": [ {
+			"sortierung": 1001,
+			"schluessel": 18,
+			"notenpunkte": null,
+			"id": 18,
+			"text": "mit Erfolg teilgenommen",
+			"gueltigBis": null,
+			"kuerzel": "E2",
+			"gueltigVon": null,
+			"textZeugnis": "mit Erfolg teilgenommen"
+		} ]
+	}, {
+		"bezeichner": "E3_TEILGENOMMEN",
+		"idHistorie": 21,
+		"historie": [ {
+			"sortierung": 1002,
+			"schluessel": 19,
+			"notenpunkte": null,
+			"id": 19,
+			"text": "teilgenommen",
+			"gueltigBis": null,
+			"kuerzel": "E3",
+			"gueltigVon": null,
+			"textZeugnis": "teilgenommen"
+		} ]
+	}, {
+		"bezeichner": "NICHT_TEILGENOMMEN",
+		"idHistorie": 22,
+		"historie": [ {
+			"sortierung": 4010,
+			"schluessel": 20,
+			"notenpunkte": null,
+			"id": 20,
+			"text": "(nicht teilgenommen)",
+			"gueltigBis": null,
+			"kuerzel": "NT",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "NICHT_BEURTEILT",
+		"idHistorie": 23,
+		"historie": [ {
+			"sortierung": 4000,
+			"schluessel": 21,
+			"notenpunkte": null,
+			"id": 21,
+			"text": "(kann nicht beurteilt werden)",
+			"gueltigBis": null,
+			"kuerzel": "NB",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "NICHT_ERTEILT",
+		"idHistorie": 24,
+		"historie": [ {
+			"sortierung": 4020,
+			"schluessel": 22,
+			"notenpunkte": null,
+			"id": 22,
+			"text": "(nicht erteilt)",
+			"gueltigBis": null,
+			"kuerzel": "NE",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "LEHRERMANGEL",
+		"idHistorie": 25,
+		"historie": [ {
+			"sortierung": 9000,
+			"schluessel": 23,
+			"notenpunkte": null,
+			"id": 23,
+			"text": "(kein Unterricht wegen Lehrermangels)",
+			"gueltigBis": null,
+			"kuerzel": "LM",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	}, {
+		"bezeichner": "ABGEMELDET",
+		"idHistorie": 26,
+		"historie": [ {
+			"sortierung": 2000,
+			"schluessel": 24,
+			"notenpunkte": null,
+			"id": 24,
+			"text": "(abgemeldet)",
+			"gueltigBis": null,
+			"kuerzel": "AM",
+			"gueltigVon": null,
+			"textZeugnis": "--------------------"
+		} ]
+	} ]
+}

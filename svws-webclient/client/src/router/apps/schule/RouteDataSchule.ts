@@ -47,8 +47,6 @@ export class RouteDataSchule extends RouteData<RouteStateSchule> {
 
 	patchSMTServerKonfiguration = async (data : Partial<SMTPServerKonfiguration>) => {
 		const smtpServerKonfiguration = this._state.value.smtpServerKonfiguration;
-		if (smtpServerKonfiguration === null)
-			return;
 		await api.server.patchSMTPServerKonfiguration(data, api.schema);
 		Object.assign(smtpServerKonfiguration, data);
 		this.setPatchedState({ smtpServerKonfiguration });

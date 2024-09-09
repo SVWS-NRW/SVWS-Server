@@ -6,9 +6,10 @@ import { ServiceBerechtigungMSAQ } from '../../../core/abschluss/ge/ServiceBerec
 import { LogLevel } from '../../../core/logger/LogLevel';
 import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
-import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend } from '../../../asd/types/schule/SchulabschlussAllgemeinbildend';
 import type { List } from '../../../java/util/List';
 import { ServiceAbschlussMSA } from '../../../core/abschluss/ge/ServiceAbschlussMSA';
+import { Class } from '../../../java/lang/Class';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { ServiceAbschlussHA9 } from '../../../core/abschluss/ge/ServiceAbschlussHA9';
 
@@ -117,6 +118,8 @@ export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebn
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.ge.ServicePrognose', 'de.svws_nrw.core.Service'].includes(name);
 	}
+
+	public static class = new Class<ServicePrognose>('de.svws_nrw.core.abschluss.ge.ServicePrognose');
 
 }
 

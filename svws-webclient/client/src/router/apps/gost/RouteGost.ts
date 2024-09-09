@@ -21,6 +21,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -28,7 +29,7 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

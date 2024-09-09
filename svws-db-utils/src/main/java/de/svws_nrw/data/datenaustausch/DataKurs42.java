@@ -20,11 +20,11 @@ import java.util.zip.ZipInputStream;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.kurs42.Kurs42Import;
 import de.svws_nrw.config.SVWSKonfiguration;
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
@@ -35,7 +35,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.SimpleBinaryMultipartBody;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -54,6 +54,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -222,8 +223,11 @@ public final class DataKurs42 {
 			logger.logLn("[Fehler] - Konnte die Informationen zur Schule nicht aus der Datenbank lesen");
 			throw new ApiOperationException(Status.NOT_FOUND, "Konnte die Informationen zur Schule nicht aus der Datenbank lesen.");
 		}
-		final Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb)) {
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		if ((schulform == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb)) {
 			logger.logLn("[Fehler] - Die Schulform hat keine gymnasiale Oberstufe oder konnte nicht bestimmt werden");
 			throw new ApiOperationException(Status.CONFLICT, "Die Schulform hat keine gymnasiale Oberstufe oder konnte nicht bestimmt werden.");
 		}

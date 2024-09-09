@@ -34,7 +34,7 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	abschnitt: undefined,
 	jahrgangsdaten: undefined,
 	halbjahr: GostHalbjahr.EF1,
-	manager: new GostKlausurplanManager(),
+	manager: new GostKlausurplanManager(-1),
 	view: routeGostKlausurplanungVorgaben,
 	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
 	termin: undefined,
@@ -123,7 +123,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					const listKlausurvorgaben = await api.server.getGostKlausurenVorgabenJahrgang(api.schema, -1);
 					this.manager.vorgabeAddAll(listKlausurvorgaben);
 					const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
-					const faecherManager = new GostFaecherManager(listFaecher);
+					const faecherManager = new GostFaecherManager(api.abschnitt.schuljahr, listFaecher);
 					this.manager.setFaecherManager(faecherManager);
 				}
 				this.setPatchedState(result);
@@ -140,7 +140,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				const klausurdatenGzip = await api.server.getGostKlausurenMetaCollectionOberstufeGZip(api.schema, this.abiturjahr, halbjahr.id);
 				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 				const klausurdaten = GostKlausurenCollectionAllData.transpilerFromJSON(await klausurdatenBlob.text());
-				const manager = new GostKlausurplanManager(klausurdaten);
+				const manager = new GostKlausurplanManager(this._state.value.abiturjahr - 1, klausurdaten);
 				Object.assign(result, {	manager });
 				this.setPatchedState(result);
 			}
@@ -177,8 +177,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return api.config.getValue("gost.klausurplan." + key);
 	}
 
-	public setConfigValue(key: string, value: string) {
-		api.config.setValue('gost.klausurplan.' + key, value);
+	public async setConfigValue(key: string, value: string) {
+		await api.config.setValue('gost.klausurplan.' + key, value);
 	}
 
 	setRaumTermin = async (termin: GostKlausurtermin | null) => {
@@ -196,7 +196,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		},
 		set: (value) => {
 			if (this.quartalsauswahl.value !== value) {
-				this.setConfigValue("quartal", value.toString());
+				void this.setConfigValue("quartal", value.toString());
 				this.commit();
 			}
 		}
@@ -239,7 +239,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	setZeigeAlleJahrgaenge = (value: boolean) => {
-		this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false");
+		void this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false");
 	}
 
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {

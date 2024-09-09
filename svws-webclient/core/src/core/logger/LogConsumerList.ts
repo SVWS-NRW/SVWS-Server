@@ -4,6 +4,7 @@ import type { Consumer } from '../../java/util/function/Consumer';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class LogConsumerList extends JavaObject implements Consumer<LogData> {
@@ -202,6 +203,8 @@ export class LogConsumerList extends JavaObject implements Consumer<LogData> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerList'].includes(name);
 	}
+
+	public static class = new Class<LogConsumerList>('de.svws_nrw.core.logger.LogConsumerList');
 
 }
 

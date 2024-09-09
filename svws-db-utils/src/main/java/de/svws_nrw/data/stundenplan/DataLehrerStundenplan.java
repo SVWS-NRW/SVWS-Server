@@ -20,6 +20,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtLehrer;
@@ -71,9 +72,14 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (dtoStundenplan == null)
 			throw new NotFoundException("Kein Stundenplan mit angegebener ID gefunden");
+		final DTOSchuljahresabschnitte dtoSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoStundenplan.Schuljahresabschnitts_ID);
+		if (dtoSchuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Konnte den Schuljahresabschnitt für den Stundenplan nicht in der Datenban finden.");
 		stundenplan.daten.id = dtoStundenplan.ID;
 		stundenplan.unterrichtsverteilung.id = dtoStundenplan.ID;
 		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
+		stundenplan.daten.schuljahr = dtoSchuljahresabschnitt.Jahr;
+		stundenplan.daten.abschnitt = dtoSchuljahresabschnitt.Abschnitt;
 		stundenplan.daten.bezeichnungStundenplan = dtoStundenplan.Beschreibung;
 		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
 		stundenplan.daten.gueltigBis = (dtoStundenplan.Ende == null) ? "" : dtoStundenplan.Ende;

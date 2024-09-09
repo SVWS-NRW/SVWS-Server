@@ -41,7 +41,7 @@
 	}
 
 	function validatorVermerkBezeichnung(value: InputDataType) : boolean {
-		if ((value === undefined) || (value === null))
+		if (value === null)
 			return true;
 		for (const eintrag of props.vermerkartenManager().liste.list())
 			if (eintrag.bezeichnung === value.toString().trim())

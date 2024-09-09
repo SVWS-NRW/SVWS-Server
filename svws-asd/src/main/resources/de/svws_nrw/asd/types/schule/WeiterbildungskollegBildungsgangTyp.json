@@ -1,0 +1,37 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "ABENDGYMNASIUM",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "1000",
+			"kuerzel": "AG",
+			"text": "Abendgymnasium",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ABENDREALSCHULE",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "2000",
+			"kuerzel": "AR",
+			"text": "Abendrealschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KOLLEG",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "3000",
+			"kuerzel": "KL",
+			"text": "Kolleg",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

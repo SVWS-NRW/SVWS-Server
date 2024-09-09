@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 
 export class ArrayMapCollectionIterator<K, V> extends JavaObject implements JavaIterator<V> {
@@ -73,6 +74,8 @@ export class ArrayMapCollectionIterator<K, V> extends JavaObject implements Java
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollectionIterator', 'java.util.Iterator'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapCollectionIterator<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollectionIterator');
 
 }
 

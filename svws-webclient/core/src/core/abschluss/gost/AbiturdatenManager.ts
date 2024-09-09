@@ -13,18 +13,19 @@ import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import { GostFachbereich } from '../../../core/types/gost/GostFachbereich';
 import { Allgemeines } from '../../../core/abschluss/gost/belegpruefung/Allgemeines';
 import { Sport } from '../../../core/abschluss/gost/belegpruefung/Sport';
-import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../java/util/List';
 import { Collections } from '../../../java/util/Collections';
 import { AbiFaecher } from '../../../core/abschluss/gost/belegpruefung/AbiFaecher';
 import { HashSet } from '../../../java/util/HashSet';
+import { Fach } from '../../../asd/types/fach/Fach';
 import { LiterarischKuenstlerisch } from '../../../core/abschluss/gost/belegpruefung/LiterarischKuenstlerisch';
 import { GostAbiturFach } from '../../../core/types/gost/GostAbiturFach';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { Deutsch } from '../../../core/abschluss/gost/belegpruefung/Deutsch';
 import { Fachkombinationen } from '../../../core/abschluss/gost/belegpruefung/Fachkombinationen';
 import { GostJahrgangFachkombination } from '../../../core/data/gost/GostJahrgangFachkombination';
-import { Note } from '../../../core/types/Note';
+import { Note } from '../../../asd/types/Note';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { FachWaehlbar } from '../../../core/abschluss/gost/belegpruefung/FachWaehlbar';
 import type { JavaSet } from '../../../java/util/JavaSet';
@@ -229,6 +230,24 @@ export class AbiturdatenManager extends JavaObject {
 	 */
 	public getSprachendaten() : Sprachendaten {
 		return this.abidaten.sprachendaten;
+	}
+
+	/**
+	 * Liefert das Abiturjahr
+	 *
+	 * @return das Abiturjahr
+	 */
+	public getAbiturjahr() : number {
+		return this.abidaten.abiturjahr;
+	}
+
+	/**
+	 * Liefert das Schuljahr, in dem das Abitur gemacht wird
+	 *
+	 * @return das Schuljahr
+	 */
+	public getSchuljahr() : number {
+		return this.abidaten.schuljahrAbitur;
 	}
 
 	/**
@@ -1298,14 +1317,14 @@ export class AbiturdatenManager extends JavaObject {
 	 *
 	 * @return die Menge der Statistik-Fächer
 	 */
-	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<ZulaessigesFach> {
-		const faecher : HashSet<ZulaessigesFach> = new HashSet<ZulaessigesFach>();
+	private getMengeStatistikFaecher(fachbelegungen : List<AbiturFachbelegung>) : JavaSet<Fach> {
+		const faecher : HashSet<Fach> = new HashSet<Fach>();
 		for (const fb of fachbelegungen) {
 			const fach : GostFach | null = this.faecherManager.get(fb.fachID);
 			if (fach === null)
 				continue;
-			const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach as unknown !== ZulaessigesFach.DEFAULT as unknown)
+			const zulFach : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
+			if (zulFach !== null)
 				faecher.add(zulFach);
 		}
 		return faecher;
@@ -1324,7 +1343,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengig(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : JavaSet<ZulaessigesFach> = this.getMengeStatistikFaecher(fachbelegungen);
+		const faecher : JavaSet<Fach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;
@@ -1334,7 +1353,7 @@ export class AbiturdatenManager extends JavaObject {
 					const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 					if (fbFach === null)
 						continue;
-					const fbZulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+					const fbZulFach : Fach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
 					const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 					if ((zulFach as unknown === fbZulFach as unknown) && (belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						belegung_vorhanden = true;
@@ -1352,11 +1371,11 @@ export class AbiturdatenManager extends JavaObject {
 		return count;
 	}
 
-	private istBelegungDurchgaengigSchriftlichInQPhase(zulFach : ZulaessigesFach, halbjahr : GostHalbjahr, fb : AbiturFachbelegung) : boolean {
+	private istBelegungDurchgaengigSchriftlichInQPhase(zulFach : Fach, halbjahr : GostHalbjahr, fb : AbiturFachbelegung) : boolean {
 		const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 		if (fbFach === null)
 			return false;
-		const fbZulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+		const fbZulFach : Fach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
 		if (zulFach as unknown === fbZulFach as unknown) {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
@@ -1383,7 +1402,7 @@ export class AbiturdatenManager extends JavaObject {
 	public zaehleBelegungenDurchgaengigSchriftlichInQPhase(fachbelegungen : List<AbiturFachbelegung> | null) : number {
 		if (fachbelegungen === null)
 			return 0;
-		const faecher : JavaSet<ZulaessigesFach> = this.getMengeStatistikFaecher(fachbelegungen);
+		const faecher : JavaSet<Fach> = this.getMengeStatistikFaecher(fachbelegungen);
 		let count : number = 0;
 		for (const zulFach of faecher) {
 			let vorhanden : boolean = true;
@@ -1848,6 +1867,8 @@ export class AbiturdatenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.AbiturdatenManager'].includes(name);
 	}
+
+	public static class = new Class<AbiturdatenManager>('de.svws_nrw.core.abschluss.gost.AbiturdatenManager');
 
 }
 

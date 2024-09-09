@@ -2,9 +2,9 @@ package de.svws_nrw.module.reporting.proxytypes.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;

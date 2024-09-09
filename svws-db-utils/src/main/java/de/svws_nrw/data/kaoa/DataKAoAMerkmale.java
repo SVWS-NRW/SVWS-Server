@@ -1,11 +1,10 @@
 package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.kaoa.KAOAMerkmalEintrag;
-import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
+import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
+import de.svws_nrw.asd.types.kaoa.KAOAMerkmal;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KAOAMerkmalEintrag}.
+ * Core-DTO {@link KAOAMerkmalKatalogEintrag}.
  */
 public final class DataKAoAMerkmale extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOAMerkmalEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOAMerkmalKatalogEintrag}.
 	 */
 	public DataKAoAMerkmale() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKAoAMerkmale extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final ArrayList<KAOAMerkmalEintrag> daten = new ArrayList<>();
+		final ArrayList<KAOAMerkmalKatalogEintrag> daten = new ArrayList<>();
 		for (final KAOAMerkmal m : KAOAMerkmal.values())
-			daten.addAll(Arrays.asList(m.historie));
+			daten.addAll(m.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

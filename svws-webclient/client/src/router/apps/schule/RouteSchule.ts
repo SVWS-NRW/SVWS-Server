@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
 import type { BenutzerKompetenzGruppe, List} from "@core";
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -100,8 +100,11 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
-	public benutzerKompetenzen(gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> {
-		return BenutzerKompetenz.getKompetenzenMitSchulform(gruppe, api.schulform)
+	public benutzerKompetenzen = (gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> => {
+		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;
+		const schulformEintrag = api.schulform.daten(schuljahr);
+		const schulform = Schulform.data().getWertByID(schulformEintrag?.id ?? -1);
+		return (schulform === null) ? new ArrayList() : BenutzerKompetenz.getKompetenzenMitSchulform(schuljahr, gruppe, schulform);
 	}
 
 }

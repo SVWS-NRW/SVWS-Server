@@ -665,6 +665,11 @@ public final class MethodNode {
 			if (!parameters.isEmpty())
 				sb.append(", ");
 		}
+		if (isDefault) {
+			sb.append("transpiledThis : any");
+			if (!parameters.isEmpty())
+				sb.append(", ");
+		}
 		for (int i = 0; i < parameters.size(); i++) {
 			sb.append(parameters.get(i).transpile());
 			if (i < (parameters.size() - 1))
@@ -706,7 +711,10 @@ public final class MethodNode {
 				sb.append(className).append(".all_values_by_name.set(name, this);");
 				sb.append(System.lineSeparator());
 			}
-			sb.append(body);
+			if (isDefault)
+				sb.append(body.replace("this", "transpiledThis"));
+			else
+				sb.append(body);
 			sb.append(indent);
 			sb.append("}");
 		}

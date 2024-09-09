@@ -1,0 +1,494 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "SBO_2_1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 35,
+			"kuerzel": "SBO 2.1",
+			"text": "Schulische prozessorientierte Begleitung und Beratung",
+			"schluessel": "SBO 2.1",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_2",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 36,
+			"kuerzel": "SBO 2.2",
+			"text": "Berufsorientierende Angebote der Berufsberatung der Bundesagentur für Arbeit (BA)",
+			"schluessel": "SBO 2.2",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_3",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 37,
+			"kuerzel": "SBO 2.3",
+			"text": "Individuelle Beratungsangebote außerschulischer Partner",
+			"schluessel": "SBO 2.3",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_4",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 38,
+			"kuerzel": "SBO 2.4",
+			"text": "STAR - Berufswegekonferenz",
+			"schluessel": "SBO 2.4",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_5",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 39,
+			"kuerzel": "SBO 2.5",
+			"text": "Einbindung von Eltern bzw. Erziehungsberechtigten",
+			"schluessel": "SBO 2.5",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_2_6",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 40,
+			"kuerzel": "SBO 2.6",
+			"text": "STAR - Einbindung von Eltern bzw. Erziehungsberechtigten",
+			"schluessel": "SBO 2.6",
+			"kategorie": "SBO_2",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3_4",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 41,
+			"kuerzel": "SBO 3.4",
+			"text": "Portfolioinstrument",
+			"schluessel": "SBO 3.4",
+			"kategorie": "SBO_3",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_1",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 42,
+			"kuerzel": "SBO 4.1",
+			"text": "Potenzialanalyse 1-tägig",
+			"schluessel": "SBO 4.1",
+			"kategorie": "SBO_4",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_2",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 43,
+			"kuerzel": "SBO 4.2",
+			"text": "Potenzialanalyse für Schülerinnen und Schüler mit den Förderschwerpunkten Lernen und Emotionale soziale Entwicklung– 2-tägig",
+			"schluessel": "SBO 4.2",
+			"kategorie": "SBO_4",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_3",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 44,
+			"kuerzel": "SBO 4.3",
+			"text": "STAR – Potenzialanalyse für Schülerinnen und Schüler mit den Förderschwerpunkten Geistige Entwicklung, Körperliche und motorische Entwicklung, Hören und Kommunikation und Sprache - 2-tägig",
+			"schluessel": "SBO 4.3",
+			"kategorie": "SBO_4",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_4",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 45,
+			"kuerzel": "SBO 4.4",
+			"text": "STAR – Feststellung des funktionalen Sehvermögens im Förderschwerpunkt Sehen",
+			"schluessel": "SBO 4.4",
+			"kategorie": "SBO_4",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4_5",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 46,
+			"kuerzel": "SBO 4.5",
+			"text": "STAR – Potenzialanalyse im Förderschwerpunkt Sehen – 2-tägig",
+			"schluessel": "SBO 4.5",
+			"kategorie": "SBO_4",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_1",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 47,
+			"kuerzel": "SBO 5.1",
+			"text": "Berufsfelderkundungen",
+			"schluessel": "SBO 5.1",
+			"kategorie": "SBO_5",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_2",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 48,
+			"kuerzel": "SBO 5.2",
+			"text": "STAR – Berufsfelderkundungen",
+			"schluessel": "SBO 5.2",
+			"kategorie": "SBO_5",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_3",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 49,
+			"kuerzel": "SBO 5.3",
+			"text": "STAR – Arbeitsplatzbezogenes Kommunikationstraining I im Förderschwerpunkt Hören und Kommunikation",
+			"schluessel": "SBO 5.3",
+			"kategorie": "SBO_5",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5_4",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 50,
+			"kuerzel": "SBO 5.4",
+			"text": "STAR - Berufsorientierungsseminar",
+			"schluessel": "SBO 5.4",
+			"kategorie": "SBO_5",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_1",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 51,
+			"kuerzel": "SBO 6.1",
+			"text": "Betriebspraktika in der Sekundarstufe I (ggf. 1 Woche verlagert aus der Oberstufe)",
+			"schluessel": "SBO 6.1",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_2",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 52,
+			"kuerzel": "SBO 6.2",
+			"text": "STAR – Intensivtraining arbeitsrelevanter sozialer Kompetenzen (TASK)",
+			"schluessel": "SBO 6.2",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_3",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 53,
+			"kuerzel": "SBO 6.3",
+			"text": "STAR – Betriebspraktikum im Block",
+			"schluessel": "SBO 6.3",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_4",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 54,
+			"kuerzel": "SBO 6.4",
+			"text": "Praxiskurse",
+			"schluessel": "SBO 6.4",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_5",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 55,
+			"kuerzel": "SBO 6.5",
+			"text": "Langzeitpraktikum",
+			"schluessel": "SBO 6.5",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_6",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 56,
+			"kuerzel": "SBO 6.6",
+			"text": "STAR – Betriebspraktikum in Langzeit",
+			"schluessel": "SBO 6.6",
+			"kategorie": "SBO_6",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 57,
+			"kuerzel": "SBO 7.1",
+			"text": "KAoA-kompakt",
+			"schluessel": "SBO 7.1",
+			"kategorie": "SBO_7",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_1",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 58,
+			"kuerzel": "SBO 8.1",
+			"text": "Standortbestimmung - Reflexionsworkshop Sek. II",
+			"schluessel": "SBO 8.1",
+			"kategorie": "SBO_8",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8_2",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 59,
+			"kuerzel": "SBO 8.2",
+			"text": "Stärkung der Entscheidungskompetenz I – Sek. II",
+			"schluessel": "SBO 8.2",
+			"kategorie": "SBO_8",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 60,
+			"kuerzel": "SBO 9.1",
+			"text": "Praxiselemente in Betrieben, Hochschulen, Institutionen",
+			"schluessel": "SBO 9.1",
+			"kategorie": "SBO_9",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 61,
+			"kuerzel": "SBO 9.2",
+			"text": "Studienorientierung",
+			"schluessel": "SBO 9.2",
+			"kategorie": "SBO_9",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_3",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 62,
+			"kuerzel": "SBO 9.3",
+			"text": "Stärkung der Entscheidungskompetenz II - Sek. II",
+			"schluessel": "SBO 9.3",
+			"kategorie": "SBO_9",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_1",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 63,
+			"kuerzel": "SBO 10.1",
+			"text": "Bewerbungsphase",
+			"schluessel": "SBO 10.1",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_2",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 64,
+			"kuerzel": "SBO 10.2",
+			"text": "STAR – Arbeitsplatzbezogenes Kommunikationstraining II im Förderschwerpunkt Hören und Kommunikation",
+			"schluessel": "SBO 10.2",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_3",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 65,
+			"kuerzel": "SBO 10.3",
+			"text": "STAR – Betriebsnahes Bewerbungstraining/Umgang mit Dolmetschenden und Technik im Förderschwerpunkt Hören und Kommunikation",
+			"schluessel": "SBO 10.3",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_4",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 66,
+			"kuerzel": "SBO 10.4",
+			"text": "Übergangsbegleitung",
+			"schluessel": "SBO 10.4",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_5",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 67,
+			"kuerzel": "SBO 10.5",
+			"text": "STAR - Übergangsbegleitung",
+			"schluessel": "SBO 10.5",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_6",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 68,
+			"kuerzel": "SBO 10.6",
+			"text": "Anschlussvereinbarung",
+			"schluessel": "SBO 10.6",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10_7",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 69,
+			"kuerzel": "SBO 10.7",
+			"text": "Koordinierte Übergangsgestaltung",
+			"schluessel": "SBO 10.7",
+			"kategorie": "SBO_10",
+			"optionsart": "KEINE",
+			"bkAnlagen": ["A12", "B06", "B07", "C03", "C05", "C06", "D02"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

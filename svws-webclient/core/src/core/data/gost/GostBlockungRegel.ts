@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungRegel extends JavaObject {
 
@@ -31,6 +32,8 @@ export class GostBlockungRegel extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungRegel'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungRegel>('de.svws_nrw.core.data.gost.GostBlockungRegel');
 
 	public static transpilerFromJSON(json : string): GostBlockungRegel {
 		const obj = JSON.parse(json) as Partial<GostBlockungRegel>;

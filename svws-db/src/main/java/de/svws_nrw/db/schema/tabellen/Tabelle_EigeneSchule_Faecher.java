@@ -1,10 +1,9 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
-import de.svws_nrw.db.converter.current.statkue.ZulaessigesFachKuerzelASDConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -54,8 +53,7 @@ public class Tabelle_EigeneSchule_Faecher extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte StatistikKrz */
 	public SchemaTabelleSpalte col_StatistikKrz = add("StatistikKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-			.setJavaName("StatistikFach")
-			.setConverter(ZulaessigesFachKuerzelASDConverter.class)
+			.setJavaName("StatistikKuerzel")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Das Statistik-Kürzel des Faches");
 

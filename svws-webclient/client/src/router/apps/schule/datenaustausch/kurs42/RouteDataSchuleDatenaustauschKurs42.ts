@@ -6,8 +6,7 @@ import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenausta
 import { OpenApiError, SimpleOperationResponse } from "@core";
 
 
-interface RouteStateDatenaustauschKurs42 extends RouteStateInterface {
-}
+type RouteStateDatenaustauschKurs42 = RouteStateInterface
 
 const defaultState = <RouteStateDatenaustauschKurs42> {
 	view: routeSchuleDatenaustauschKurs42Blockung

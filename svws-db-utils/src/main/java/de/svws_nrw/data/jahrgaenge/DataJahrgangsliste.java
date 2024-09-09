@@ -37,7 +37,7 @@ public final class DataJahrgangsliste extends DataManager<Long> {
 		eintrag.kuerzel = j.InternKrz;
 		eintrag.kuerzelStatistik = j.ASDJahrgang;
 		eintrag.bezeichnung = j.ASDBezeichnung;
-		eintrag.kuerzelSchulgliederung = j.Gliederung.daten.kuerzel;
+		eintrag.kuerzelSchulgliederung = j.GliederungKuerzel;
 		eintrag.idFolgejahrgang = j.Folgejahrgang_ID;
 		eintrag.anzahlRestabschnitte = j.AnzahlRestabschnitte;
 		eintrag.sortierung = j.Sortierung;

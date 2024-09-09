@@ -2,7 +2,7 @@ package de.svws_nrw.core.utils.schule;
 
 import java.util.Comparator;
 
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import jakarta.validation.constraints.NotNull;
 
 /**

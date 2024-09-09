@@ -1,0 +1,59 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "ST",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "ST",
+			"kuerzel": "ST",
+			"text": "Zweite Staatsprüfung für ein Lehramt",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AL",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "AL",
+			"kuerzel": "AL",
+			"text": "Anerkennung Lehramt",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AP",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "AP",
+			"kuerzel": "AP",
+			"text": "Anerkennung geeignete Prüfung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BT",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "BT",
+			"kuerzel": "BT",
+			"text": "Förderliche Berufstätigkeit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OH",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "OH",
+			"kuerzel": "OH",
+			"text": "ohne",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

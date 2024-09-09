@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMLernabschnitt extends JavaObject {
 
@@ -65,6 +66,8 @@ export class ENMLernabschnitt extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLernabschnitt'].includes(name);
 	}
+
+	public static class = new Class<ENMLernabschnitt>('de.svws_nrw.core.data.enm.ENMLernabschnitt');
 
 	public static transpilerFromJSON(json : string): ENMLernabschnitt {
 		const obj = JSON.parse(json) as Partial<ENMLernabschnitt>;

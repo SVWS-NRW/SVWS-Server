@@ -6,6 +6,7 @@ import { GostJahrgangFachwahlen } from '../../../core/data/gost/GostJahrgangFach
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 
 export class GostJahrgangsFachwahlenManager extends JavaObject {
@@ -226,6 +227,8 @@ export class GostJahrgangsFachwahlenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager'].includes(name);
 	}
+
+	public static class = new Class<GostJahrgangsFachwahlenManager>('de.svws_nrw.core.utils.gost.GostJahrgangsFachwahlenManager');
 
 }
 

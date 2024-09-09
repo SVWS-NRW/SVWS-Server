@@ -1,6 +1,9 @@
 package de.svws_nrw.transpiler.annotations;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 
@@ -10,6 +13,7 @@ import java.lang.annotation.Target;
  * typescript is transpiled as "TYPE | null".
  */
 @Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
+@Retention(RUNTIME)
 public @interface AllowNull {
 	// nur eine einfache Annotation
 }

@@ -41,7 +41,9 @@
 				</template>
 				<template #cell(name)="{rowData}">
 					<span class="line-clamp-1 leading-tight -my-0.5 break-all">{{ rowData.schueler.nachname }}, {{ rowData.schueler.vorname }}</span>
-					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold !mt-0 !ml-1 !bg-light dark:!bg-white/5">{{ SchuelerStatus.fromID(rowData.schueler.status)?.bezeichnung || "" }}</span>
+					<span v-if="rowData.schueler.status !== 2" class="svws-ui-badge text-sm font-bold !mt-0 !ml-1 !bg-light dark:!bg-white/5">
+						{{ SchuelerStatus.data().getWertByKuerzel("" + rowData.schueler.status)?.daten(schuljahr)?.text ?? '—' }}
+					</span>
 				</template>
 				<template #cell(hinweise)="cell">
 					<span v-if="counterAnzahlOderWochenstunden(cell.rowData.ergebnis.fehlercodes) > 0" class="opacity-75 -my-0.5"><span class="icon i-ri-information-line" /></span>
@@ -82,6 +84,8 @@
 
 	const props = defineProps<GostLaufbahnfehlerProps>();
 
+	const schuljahr = computed<number>(() => props.jahrgangsdaten().abiturjahr - 1);
+
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
@@ -108,7 +112,7 @@
 		for (const e of props.listBelegpruefungsErgebnisse()) {
 			if (props.filterFehler() && e.ergebnis.erfolgreich)
 				continue;
-			if ((props.filterExterne()) && (SchuelerStatus.fromID(e.schueler.status) === SchuelerStatus.EXTERN))
+			if ((props.filterExterne()) && (SchuelerStatus.data().getWertByKuerzel("" + e.schueler.status) === SchuelerStatus.EXTERN))
 				continue;
 			a.add(e);
 		}

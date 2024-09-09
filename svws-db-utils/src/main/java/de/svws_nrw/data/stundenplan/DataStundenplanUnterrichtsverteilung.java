@@ -60,6 +60,8 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 	 * @param idStundenplan   die ID des Stundenplans
 	 *
 	 * @return die Unterrichtsverteilung
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
 	 */
 	public static StundenplanUnterrichtsverteilung getUnterrichtsverteilung(final DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);

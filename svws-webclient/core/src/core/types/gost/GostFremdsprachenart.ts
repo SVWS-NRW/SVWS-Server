@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class GostFremdsprachenart extends JavaEnum<GostFremdsprachenart> {
 
@@ -75,6 +76,8 @@ export class GostFremdsprachenart extends JavaEnum<GostFremdsprachenart> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostFremdsprachenart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostFremdsprachenart>('de.svws_nrw.core.types.gost.GostFremdsprachenart');
 
 }
 

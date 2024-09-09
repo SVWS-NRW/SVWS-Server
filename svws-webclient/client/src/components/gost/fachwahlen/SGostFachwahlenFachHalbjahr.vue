@@ -43,7 +43,7 @@
 	import type { GostFachwahlenFachHalbjahrProps } from "./SGostFachwahlenFachHalbjahrProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
-	import { ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
+	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenFachHalbjahrProps>();
 
@@ -59,7 +59,13 @@
 		{ key: "GKM", label: "GKM", span: 1 },
 	];
 
-	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
+
+	function getBgColor(fws: GostStatistikFachwahl) : string {
+		if (fws.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(fws.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+	}
 
 	function doSortSchuelerListeByNachnameAndVornameAndId(liste : List<SchuelerListeEintrag>): List<SchuelerListeEintrag> {
 		liste.sort({ compare(a : SchuelerListeEintrag, b : SchuelerListeEintrag) : number {

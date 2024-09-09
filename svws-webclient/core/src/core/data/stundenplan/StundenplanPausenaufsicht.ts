@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { StundenplanPausenaufsichtBereich } from '../../../core/data/stundenplan/StundenplanPausenaufsichtBereich';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanPausenaufsicht extends JavaObject {
 
@@ -37,6 +38,8 @@ export class StundenplanPausenaufsicht extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht'].includes(name);
 	}
+
+	public static class = new Class<StundenplanPausenaufsicht>('de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht');
 
 	public static transpilerFromJSON(json : string): StundenplanPausenaufsicht {
 		const obj = JSON.parse(json) as Partial<StundenplanPausenaufsicht>;

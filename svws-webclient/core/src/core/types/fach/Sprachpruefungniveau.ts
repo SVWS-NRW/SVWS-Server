@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { SprachpruefungsniveauKatalogEintrag } from '../../../core/data/fach/SprachpruefungsniveauKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
+import { Class } from '../../../java/lang/Class';
 
 export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 
@@ -155,6 +156,8 @@ export class Sprachpruefungniveau extends JavaEnum<Sprachpruefungniveau> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.fach.Sprachpruefungniveau', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Sprachpruefungniveau>('de.svws_nrw.core.types.fach.Sprachpruefungniveau');
 
 }
 

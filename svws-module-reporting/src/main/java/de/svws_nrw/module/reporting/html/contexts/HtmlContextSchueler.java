@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;

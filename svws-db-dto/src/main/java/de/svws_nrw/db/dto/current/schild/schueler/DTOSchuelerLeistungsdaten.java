@@ -4,9 +4,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
-
-import de.svws_nrw.core.types.Note;
 
 
 import jakarta.persistence.Cacheable;
@@ -26,8 +23,6 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSer
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
 import de.svws_nrw.csv.converter.current.DatumConverterSerializer;
 import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerLeistungsdaten.
@@ -288,18 +283,12 @@ public final class DTOSchuelerLeistungsdaten {
 	/** Das Notenkürzel der erteilten Note */
 	@Column(name = "NotenKrz")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note NotenKrz;
+	public String NotenKrz;
 
 	/** Das Notenkürzel der Quartals-Note */
 	@Column(name = "NotenKrzQuartal")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note NotenKrzQuartal;
+	public String NotenKrzQuartal;
 
 	/** gibt an, ob die Leistung gemahnt wurde bzw. gemahnt werden soll – sie Mahndatum */
 	@Column(name = "Warnung")

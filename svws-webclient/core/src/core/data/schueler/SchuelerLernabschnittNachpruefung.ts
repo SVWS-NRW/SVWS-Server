@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerLernabschnittNachpruefung extends JavaObject {
 
@@ -34,6 +35,8 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung'].includes(name);
 	}
+
+	public static class = new Class<SchuelerLernabschnittNachpruefung>('de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung');
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittNachpruefung {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittNachpruefung>;

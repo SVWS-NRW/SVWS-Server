@@ -14,7 +14,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.module.reporting.proxytypes.kurs.ProxyReportingKurs;
@@ -108,12 +108,12 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 		// 7. Sortiere alle Schülerklausuren, sowohl Gesamtliste als auch bei den Kursklausuren.
 		final Collator colGerman = Collator.getInstance(Locale.GERMAN);
 		super.schuelerklausuren.sort(Comparator
-				.comparing((ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
+				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
 				.thenComparing(sk -> sk.schueler().id()));
 		super.kursklausuren.forEach(kk -> kk.schuelerklausuren().sort(Comparator
-				.comparing((ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
+				.comparing((final ReportingGostKlausurplanungSchuelerklausur sk) -> sk.schueler().nachname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vorname(), colGerman)
 				.thenComparing(sk -> sk.schueler().vornamen(), colGerman)
 				.thenComparing(sk -> sk.schueler().id())));

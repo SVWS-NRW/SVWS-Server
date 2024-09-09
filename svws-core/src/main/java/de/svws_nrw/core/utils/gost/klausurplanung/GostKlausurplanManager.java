@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import de.svws_nrw.core.adt.PairNN;
+import de.svws_nrw.asd.adt.PairNN;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.adt.map.HashMap3D;
 import de.svws_nrw.core.adt.map.HashMap4D;
@@ -36,7 +37,6 @@ import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.DateUtils;
@@ -55,6 +55,9 @@ import jakarta.validation.constraints.NotNull;
  * Es können Daten mehrerer Abiturjahrgänge und Gost-Halbjahre verwaltet.
  */
 public class GostKlausurplanManager {
+
+	// das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
+	private final int _schuljahr;
 
 	// externe Manager, klausurplanfremde Daten
 	private GostFaecherManager _faecherManager;
@@ -165,7 +168,7 @@ public class GostKlausurplanManager {
 
 				if ((sA == null) || (sB == null))
 					throw new DeveloperNotificationException("Schüler muss in SchuelerMap enthalten sein.");
-				int nameComparison = (sA.nachname + "," + sA.vorname).compareTo(sB.nachname + "," + sB.vorname);
+				final int nameComparison = (sA.nachname + "," + sA.vorname).compareTo(sB.nachname + "," + sB.vorname);
 				if (nameComparison != 0)
 					return nameComparison;
 			}
@@ -173,7 +176,7 @@ public class GostKlausurplanManager {
 
 		// Wenn es sich um die gleiche Schuelerklausur handelt, nach FolgeNr sortieren
 		if (a.idSchuelerklausur == b.idSchuelerklausur) {
-			int folgeNrComparison = Integer.compare(a.folgeNr, b.folgeNr);
+			final int folgeNrComparison = Integer.compare(a.folgeNr, b.folgeNr);
 			if (folgeNrComparison != 0)
 				return folgeNrComparison;
 		}
@@ -272,26 +275,33 @@ public class GostKlausurplanManager {
 
 	/**
 	 * Erstellt einen leeren Manager.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 */
-	public GostKlausurplanManager() {
+	public GostKlausurplanManager(final int schuljahr) {
+		this._schuljahr = schuljahr;
 	}
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param listVorgaben die Liste der {@link GostKlausurvorgabe}n
 	 */
-	public GostKlausurplanManager(final @NotNull List<GostKlausurvorgabe> listVorgaben) {
+	public GostKlausurplanManager(final int schuljahr, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
+		this._schuljahr = schuljahr;
 		vorgabeAddAll(listVorgaben);
 	}
 
 	/**
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n und dem übergebenen {@link GostFaecherManager}
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param faecherManager der GostFaecherManager
 	 * @param listVorgaben 	die Liste der GostKlausurvorgaben
 	 */
-	public GostKlausurplanManager(final GostFaecherManager faecherManager, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
+	public GostKlausurplanManager(final int schuljahr, final GostFaecherManager faecherManager, final @NotNull List<GostKlausurvorgabe> listVorgaben) {
+		this._schuljahr = schuljahr;
 		_faecherManager = faecherManager;
 		vorgabeAddAll(listVorgaben);
 	}
@@ -300,16 +310,18 @@ public class GostKlausurplanManager {
 	 * Erstellt einen neuen Manager mit den als Liste angegebenen {@link GostKlausurvorgabe}n, {@link GostKursklausur}en, {@link GostKlausurtermin}en,
 	 * {@link GostSchuelerklausur}en und {@link GostSchuelerklausurTermin}en
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param listVorgaben 			die Liste der {@link GostKlausurvorgabe}n
 	 * @param listKlausuren         die Liste der {@link GostKursklausur}en
 	 * @param listTermine           die Liste der {@link GostKlausurtermin}e
 	 * @param listSchuelerklausuren die Liste der {@link GostSchuelerklausur}en
 	 * @param listSchuelerklausurtermine die Liste der {@link GostSchuelerklausurTermin}e
 	 */
-	public GostKlausurplanManager(final @NotNull List<GostKlausurvorgabe> listVorgaben, final @NotNull List<GostKursklausur> listKlausuren,
+	public GostKlausurplanManager(final int schuljahr, final @NotNull List<GostKlausurvorgabe> listVorgaben, final @NotNull List<GostKursklausur> listKlausuren,
 			final @NotNull List<GostKlausurtermin> listTermine,
 			final @NotNull List<GostSchuelerklausur> listSchuelerklausuren,
 			final @NotNull List<GostSchuelerklausurTermin> listSchuelerklausurtermine) {
+		this._schuljahr = schuljahr;
 		addKlausurDataOhneUpdate(listVorgaben, listKlausuren, listTermine, listSchuelerklausuren, listSchuelerklausurtermine);
 		update_all();
 	}
@@ -317,9 +329,11 @@ public class GostKlausurplanManager {
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen {@link GostKlausurenCollectionAllData} enthaltenen Daten
 	 *
+	 * @param schuljahr   das Schuljahr, für welches der Manager betrieben wird - relevant für den Zugriff auf die Kataloge der amtlichen Schuldaten
 	 * @param allData            das {@link GostKlausurenCollectionAllData}-Objekt, das alle Informationen enthält
 	 */
-	public GostKlausurplanManager(final @NotNull GostKlausurenCollectionAllData allData) {
+	public GostKlausurplanManager(final int schuljahr, final @NotNull GostKlausurenCollectionAllData allData) {
+		this._schuljahr = schuljahr;
 		addAllData(allData);
 	}
 
@@ -364,7 +378,7 @@ public class GostKlausurplanManager {
 	}
 
 	private void initMetadata(final @NotNull GostKlausurenCollectionMetaData meta) {
-		_faecherManager = (meta.faecher != null && !meta.faecher.isEmpty()) ? new GostFaecherManager(meta.faecher) : null;
+		_faecherManager = (meta.faecher != null && !meta.faecher.isEmpty()) ? new GostFaecherManager(_schuljahr, meta.faecher) : null;
 		_kursManager = (meta.kurse != null && !meta.kurse.isEmpty()) ? new KursManager(meta.kurse) : null;
 		if (meta.kurse != null && !meta.kurse.isEmpty())
 			setKursManager(new KursManager(meta.kurse));
@@ -423,6 +437,16 @@ public class GostKlausurplanManager {
 	 */
 	public boolean hasRaumdataZuTermin(final @NotNull GostKlausurtermin termin) {
 		return _terminidmenge_manager_enthaelt_raumdata.contains(termin.id);
+	}
+
+
+	/**
+	 * Gibt das Schuljahr zurück, auf welches sich der Manager bezieht.
+	 *
+	 * @return das Schuljahr
+	 */
+	public int getSchuljahr() {
+		return _schuljahr;
 	}
 
 
@@ -1260,7 +1284,7 @@ public class GostKlausurplanManager {
 	}
 
 	private void kursklausurfehlendRemoveOhneUpdate(final @NotNull GostKursklausur kursklausur) {
-		@NotNull GostKlausurvorgabe vorgabe = vorgabeByKursklausur(kursklausur);
+		@NotNull final GostKlausurvorgabe vorgabe = vorgabeByKursklausur(kursklausur);
 		_kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.remove(vorgabe.abiJahrgang, vorgabe.halbjahr, vorgabe.quartal, kursklausur.idKurs);
 	}
 
@@ -3916,12 +3940,12 @@ public class GostKlausurplanManager {
 	 * Gibt die HTML-Farbe des zulässigen Faches zur übergebenen {@link GostKursklausur} als Aufruf der rgba-Funktion
 	 * mit der Transparenz 1.0 zurück.
 	 *
-	 * @param k die {@link GostKursklausur}
+	 * @param k           die {@link GostKursklausur}
 	 *
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public @NotNull String fachHTMLFarbeRgbaByKursklausur(final @NotNull GostKursklausur k) {
-		return ZulaessigesFach.getByKuerzelASD(fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(1.0);
+		return Fach.data().getWertBySchluesselOrException(fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(_schuljahr, 1.0);
 	}
 
 	/**
@@ -4216,7 +4240,8 @@ public class GostKlausurplanManager {
 	 * @return <code>true</code>, wenn alle {@link GostSchuelerklausurTermin}e verplant sind, sonst <code>false</code>.
 	 */
 	public boolean isKursklausurAlleSchuelerklausurenVerplant(final @NotNull GostKursklausur kk, final GostKlausurtermin termin) {
-		final List<GostSchuelerklausurTermin> skts = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(termin != null ? termin.id : DeveloperNotificationException.ifNull("idTermin der Kursklausur %d".formatted(kk.id), kk.idTermin), kk.id);
+		final List<GostSchuelerklausurTermin> skts = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(
+				termin != null ? termin.id : DeveloperNotificationException.ifNull("idTermin der Kursklausur %d".formatted(kk.id), kk.idTermin), kk.id);
 		if (skts != null)
 			for (final @NotNull GostSchuelerklausurTermin sk : skts)
 				if (!_raumstundenmenge_by_idSchuelerklausurtermin.containsKey(sk.id))
@@ -4594,7 +4619,7 @@ public class GostKlausurplanManager {
 		if (sksMap == null || sksMap.isEmpty())
 			return ergebnis;
 		for (final @NotNull Entry<Long, List<GostSchuelerklausur>> sk : sksMap.entrySet()) {
-			SchuelerListeEintrag schueler = getSchuelerMap().get(sk.getKey());
+			final SchuelerListeEintrag schueler = getSchuelerMap().get(sk.getKey());
 			if (!sk.getValue().isEmpty() && (schueler == null || schueler.abiturjahrgang != abijahrgang))
 				ergebnis.addAll(sk.getValue());
 		}

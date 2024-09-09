@@ -11,7 +11,7 @@ import {
 	GostHalbjahr,
 	DeveloperNotificationException,
 	ArrayList,
-	ReportingAusgabeformat, ReportingReportvorlage, ReportingParameter
+	ReportingReportvorlage, ReportingParameter
 } from "@core";
 
 import { api } from "~/router/Api";
@@ -37,7 +37,7 @@ const defaultState = <RouteStateSchuelerLaufbahnplanung> {
 	auswahl: undefined,
 	abiturdaten: undefined,
 	abiturdatenManager: undefined,
-	faecherManager: new GostFaecherManager(),
+	faecherManager: new GostFaecherManager(-1),
 	gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 	gostJahrgang: new GostJahrgang(),
 	gostJahrgangsdaten: new GostJahrgangsdaten(),
@@ -251,7 +251,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				const gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, gostJahrgang.abiturjahr);
 				const gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, auswahl.id);
 				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
-				const faecherManager = new GostFaecherManager(listGostFaecher);
+				const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
 				const listLehrer = await api.server.getLehrer(api.schema);

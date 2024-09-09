@@ -270,11 +270,11 @@
 <script setup lang="ts">
 
 	import type { Ref } from 'vue';
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
 	import { DateUtils, ListUtils, OpenApiError} from "@core";
-	import { ZulaessigesFach} from "@core";
+	import { Fach } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
 	import { RouteManager } from '~/router/RouteManager';
 	import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
@@ -285,6 +285,7 @@
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
 
+	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
 	const vorgaben = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const kursklausuren = () => props.kMan().kursklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const kursklausurenNichtVerteilt = () => props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -343,7 +344,11 @@
 		return newColumns;
 	}
 
-	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
+	function getBgColor(kuerzel: string | null) {
+		if (kuerzel === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0);
+	}
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {
 		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)

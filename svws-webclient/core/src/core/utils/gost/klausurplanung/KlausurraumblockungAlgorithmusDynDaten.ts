@@ -10,6 +10,7 @@ import { Random } from '../../../../java/util/Random';
 import { ArrayUtils } from '../../../../core/utils/ArrayUtils';
 import { GostKlausurraumRich } from '../../../../core/data/gost/klausurplanung/GostKlausurraumRich';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { GostKlausurraumblockungKonfiguration } from '../../../../core/data/gost/klausurplanung/GostKlausurraumblockungKonfiguration';
 
@@ -381,6 +382,8 @@ export class KlausurraumblockungAlgorithmusDynDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmusDynDaten'].includes(name);
 	}
+
+	public static class = new Class<KlausurraumblockungAlgorithmusDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurraumblockungAlgorithmusDynDaten');
 
 }
 

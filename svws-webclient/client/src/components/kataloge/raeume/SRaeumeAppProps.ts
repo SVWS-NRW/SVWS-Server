@@ -1,4 +1,4 @@
-import type { RaumListeManager  } from "@core";
+import type { RaumListeManager } from "@core";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 
 export interface RaeumeAppProps {

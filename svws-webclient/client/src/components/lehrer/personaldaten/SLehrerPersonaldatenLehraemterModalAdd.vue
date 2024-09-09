@@ -3,7 +3,7 @@
 		<template #modalTitle>Lehramt hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()" :item-text="(i: LehrerLehramt) => i.daten.text" headless />
+				<svws-ui-select title="Lehramt" v-model="lehramt" :items="LehrerLehramt.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -20,18 +20,20 @@
 
 	const props = defineProps<{
 		show: () => Ref<boolean>;
-		idLehrer: number,
+		idLehrer: number;
 		addLehramt: (eintrag: LehrerLehramtEintrag) => Promise<void>;
+		schuljahr: number;
 	}>();
 
 	const lehramt = ref<LehrerLehramt | undefined>(undefined);
 
 	function add() {
-		if (lehramt.value === undefined)
+		const daten = lehramt.value?.daten(props.schuljahr) ?? null;
+		if (daten === null)
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerLehramtEintrag();
 		l.id = props.idLehrer;
-		l.idLehramt = lehramt.value.daten.id;
+		l.idLehramt = daten.id;
 		l.idAnerkennungsgrund = null;
 		void props.addLehramt(l);
 		lehramt.value = undefined;

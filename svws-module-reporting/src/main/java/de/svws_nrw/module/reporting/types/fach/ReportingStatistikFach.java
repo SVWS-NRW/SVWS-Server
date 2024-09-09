@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.types.fach;
 
-import de.svws_nrw.core.types.fach.Fachgruppe;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Statistik-Fach.</p>

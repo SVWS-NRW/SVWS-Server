@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.types.fach;
 
-import de.svws_nrw.core.types.fach.Fachgruppe;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 
 /**
@@ -142,8 +142,8 @@ public class ReportingFach {
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
-		return GostFachbereich.compareFach(ZulaessigesFach.getByKuerzelASD(fach1.statistikfach().kuerzelASD()),
-				ZulaessigesFach.getByKuerzelASD(fach2.statistikfach().kuerzelASD()));
+		return GostFachbereich.compareFach(Fach.data().getWertBySchluessel(fach1.statistikfach().kuerzelASD()),
+				Fach.data().getWertBySchluessel(fach2.statistikfach().kuerzelASD()));
 	}
 
 

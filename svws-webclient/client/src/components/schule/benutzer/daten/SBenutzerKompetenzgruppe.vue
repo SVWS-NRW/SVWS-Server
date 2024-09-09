@@ -18,7 +18,7 @@
 		</div>
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
-				<s-benutzer-kompetenz :kompetenz="kompetenz" :get-benutzer-manager="getBenutzerManager" :add-kompetenz="addKompetenz" :remove-kompetenz="removeKompetenz" />
+				<s-benutzer-kompetenz :kompetenz :get-benutzer-manager :add-kompetenz :remove-kompetenz />
 			</div>
 		</template>
 	</div>
@@ -26,9 +26,9 @@
 
 <script setup lang="ts">
 
+	import { ref, computed } from "vue";
 	import type { BenutzerKompetenzGruppe, BenutzerManager, List } from "@core";
 	import { BenutzerKompetenz } from "@core";
-	import { ref, computed } from "vue";
 
 	const props = defineProps<{
 		kompetenzgruppe: BenutzerKompetenzGruppe;
@@ -71,7 +71,7 @@
 		for (const k of subKompetenzen)
 			for (const benutzergruppe of props.getBenutzerManager().getGruppen(k))
 				tmp.add(benutzergruppe.bezeichnung);
-		return [...tmp]?.join(', ');
+		return [...tmp].join(', ');
 	});
 
 </script>

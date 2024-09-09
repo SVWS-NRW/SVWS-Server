@@ -1,13 +1,13 @@
 package de.svws_nrw.core.data.schule;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.Schulform;
-import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
@@ -66,7 +66,8 @@ public class HerkunftSonstigeKatalogEintrag {
 		this.id = id;
 		this.kuerzel = kuerzel;
 		for (final @NotNull Schulform schulform : schulformen)
-			this.schulformen.add(schulform.daten.kuerzel);
+			if (!this.schulformen.contains(schulform.name()))
+				this.schulformen.add(schulform.name());
 		this.beschreibung = beschreibung;
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;

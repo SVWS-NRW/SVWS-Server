@@ -1,6 +1,6 @@
 import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
-import type { Schulform } from "../../../../core/src/core/types/schule/Schulform";
+import type { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
 import type { Wochentag } from "../../../../core/src/core/types/Wochentag";
 import type { StundenplanManager } from "../../../../core/src/core/utils/stundenplan/StundenplanManager";
 

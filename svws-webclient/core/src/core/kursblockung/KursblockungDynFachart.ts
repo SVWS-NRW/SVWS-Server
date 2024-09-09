@@ -7,6 +7,7 @@ import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynS
 import { ArrayUtils } from '../../core/utils/ArrayUtils';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { GostKursart } from '../../core/types/gost/GostKursart';
 
@@ -433,6 +434,8 @@ export class KursblockungDynFachart extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynFachart'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynFachart>('de.svws_nrw.core.kursblockung.KursblockungDynFachart');
 
 }
 

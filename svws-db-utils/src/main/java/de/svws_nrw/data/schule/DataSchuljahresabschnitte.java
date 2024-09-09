@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;

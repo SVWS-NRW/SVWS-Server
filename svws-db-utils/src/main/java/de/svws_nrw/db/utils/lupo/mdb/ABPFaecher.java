@@ -283,7 +283,7 @@ public final class ABPFaecher {
 
 		// Filtere alle Fächer, für die keine Fachgruppe definiert ist
 		final List<DTOFach> faecherGefiltert = faecher.stream()
-				.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikFach.daten.kuerzelASD) != null))
+				.filter(fach -> ((fach.Sichtbar == null) || fach.Sichtbar) && (fachgruppen.get(fach.StatistikKuerzel) != null))
 				.toList();
 		for (int i = 0; i < faecherGefiltert.size(); i++) {
 			final DTOFach fach = faecherGefiltert.get(i);
@@ -291,10 +291,10 @@ public final class ABPFaecher {
 			lupofach.ID = i + 1;
 			lupofach.FachKrz = fach.Kuerzel;
 			lupofach.Bezeichnung = fach.Bezeichnung;
-			lupofach.StatistikKrz = fach.StatistikFach.daten.kuerzelASD;
+			lupofach.StatistikKrz = fach.StatistikKuerzel;
 			lupofach.Sortierung = fach.SortierungAllg;
-			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD))
-					&& (!"VX".equalsIgnoreCase(fach.StatistikFach.daten.kuerzelASD));
+			lupofach.IstSprache = fach.IstFremdsprache && (!"PX".equalsIgnoreCase(fach.StatistikKuerzel))
+					&& (!"VX".equalsIgnoreCase(fach.StatistikKuerzel));
 			lupofach.Unterichtssprache = (fach.Unterichtssprache == null) ? "D" : fach.Unterichtssprache;
 			lupofach.E1 = fach.IstMoeglichEF1;
 			lupofach.E2 = fach.IstMoeglichEF2;
@@ -306,9 +306,9 @@ public final class ABPFaecher {
 			lupofach.LK_Moegl = fach.IstMoeglichAbiLK;
 			lupofach.AlsNeueFSInSII = fach.IstMoeglichAlsNeueFremdspracheInSekII;
 			final DTOFach lf = faecherMap.get(fach.ProjektKursLeitfach1_ID);
-			lupofach.Leitfach = (lf == null) ? null : lf.StatistikFach.daten.kuerzelASD;
+			lupofach.Leitfach = (lf == null) ? null : lf.StatistikKuerzel;
 			final DTOFach lf2 = faecherMap.get(fach.ProjektKursLeitfach2_ID);
-			lupofach.Leitfach2 = (lf2 == null) ? null : lf2.StatistikFach.daten.kuerzelASD;
+			lupofach.Leitfach2 = (lf2 == null) ? null : lf2.StatistikKuerzel;
 			lupofach.E1_WStd = fach.WochenstundenEF1;
 			lupofach.E2_WStd = fach.WochenstundenEF2;
 			lupofach.E1_S_M = fach.MussSchriftlichEF1;

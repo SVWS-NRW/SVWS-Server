@@ -89,10 +89,11 @@
 	import { computed, nextTick, ref, shallowRef, type Ref } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException } from "@core";
+	import { ArrayList, DeveloperNotificationException, BaseApi } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
+	import { JsonCoreTypeReader } from '~/router/JsonCoreTypeReader';
 	import type { LoginProps } from "./SLoginProps";
 
 	const props = defineProps<LoginProps>();
@@ -136,6 +137,12 @@
 		return i.name ?? '';
 	}
 
+	async function initCoreTypes() {
+		console.log("Initialisierung der Core-Types...");
+		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
+		await reader.readAll();
+	}
+
 	async function connect() {
 		connecting.value = true;
 		inputFocus.value = false;
@@ -144,6 +151,7 @@
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 			if (inputDBSchemata.value.size() <= 0)
 				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
+			await initCoreTypes();
 		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;

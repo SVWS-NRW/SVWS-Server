@@ -47,7 +47,7 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
 			eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
-			return this.getRoute(eintrag?.id);
+			return this.getRoute(eintrag.id);
 		}
 		else {
 			const id = parseInt(to_params.id);

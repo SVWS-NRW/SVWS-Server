@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -379,16 +380,10 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.GeschlechtConverterFromString</class>
                           <class>de.svws_nrw.db.converter.current.KursFortschreibungsartConverter</class>
                           <class>de.svws_nrw.db.converter.current.NationalitaetenConverter</class>
-                          <class>de.svws_nrw.db.converter.current.NoteConverterFromInteger</class>
-                          <class>de.svws_nrw.db.converter.current.NoteConverterFromKuerzel</class>
-                          <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte</class>
-                          <class>de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonTypNullableConverter</class>
                           <class>de.svws_nrw.db.converter.current.PersonalTypConverter</class>
-                          <class>de.svws_nrw.db.converter.current.SchuelerStatusConverter</class>
                           <class>de.svws_nrw.db.converter.current.SprachpruefungniveauConverter</class>
-                          <class>de.svws_nrw.db.converter.current.SprachreferenzniveauConverter</class>
                           <class>de.svws_nrw.db.converter.current.StringToIntegerConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverter</class>
                           <class>de.svws_nrw.db.converter.current.UhrzeitConverterString</class>
@@ -401,9 +396,6 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.gost.GOStKursartConverter</class>
                           <class>de.svws_nrw.db.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.kursblockung.GostKursblockungRegelTypConverter</class>
-                          <class>de.svws_nrw.db.converter.current.statkue.SchulformKuerzelConverter</class>
-                          <class>de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter</class>
-                          <class>de.svws_nrw.db.converter.current.statkue.ZulaessigesFachKuerzelASDConverter</class>
                           <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
                   """);
 		for (final String cl : allClasses)
@@ -429,6 +421,10 @@ public class DTOCreator {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(logConsumerConsole);
+
+		// Initialisieren der Core-Types
+		logger.logLn("Initialisiere...");
+		ASDCoreTypeUtils.initAll();
 
 		// Gib das aktuelle Verzeichnis aus
 		logger.logLn("Aktuelles Verzeichnis: " + Paths.get("").toAbsolutePath().toString());

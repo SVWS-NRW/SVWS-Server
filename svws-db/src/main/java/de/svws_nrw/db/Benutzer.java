@@ -3,8 +3,10 @@ package de.svws_nrw.db;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.crypto.SecretKey;
@@ -12,9 +14,15 @@ import javax.crypto.SecretKey;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
+import jakarta.validation.constraints.NotNull;
 
 
 /**
@@ -45,6 +53,16 @@ public final class Benutzer {
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
 	private Long _idLehrer = null;
 
+
+	/**
+	 * Enthält nach der Anmeldung die grundlegenden Informationen zur Schule und den dortigen Schuljahresabschnitten.
+	 */
+	private SchuleStammdaten _stammdaten = null;
+
+	/**
+	 * Eine Map für den schnellen Zugriff auf die Schuljahresabschnitte aus den Stammdaten der Schule
+	 */
+	private final @NotNull Map<Long, Schuljahresabschnitt> _mapSchuljahresabschnitte = new HashMap<>();
 
 	/**
 	 * Enthält die Information welche Kompetenzen der Benutzer in Bezug auf den Datenbankzugriff hat.
@@ -359,6 +377,131 @@ public final class Benutzer {
 			// TODO error handling
 			return null;
 		}
+	}
+
+
+	/**
+	 * Gibt die Stammdaten der Schule zurück.
+	 *
+	 * @return die Stammdaten der Schule
+	 */
+	public @NotNull SchuleStammdaten schuleGetStammdaten() {
+		if (_stammdaten == null)
+			throw new DeveloperNotificationException("Es wurde auf die Stammdaten der Schule zugegriffen, obwohl diese nicht geladen sind.");
+		return _stammdaten;
+	}
+
+
+	/**
+	 * Setzt die Stammdaten der Schule und initialisiert die Map für den Zugriff
+	 * auf die Schuljahresabschnitte.
+	 *
+	 * @param stammdaten   die neuen Stammdaten
+	 */
+	public void schuleSetStammdaten(final SchuleStammdaten stammdaten) {
+		_stammdaten = stammdaten;
+		this._mapSchuljahresabschnitte.clear();
+		if (_stammdaten != null)
+			for (final @NotNull Schuljahresabschnitt abschnitt : _stammdaten.abschnitte)
+				_mapSchuljahresabschnitte.put(abschnitt.id, abschnitt);
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt zu der ID zurück oder null, wenn keiner für die ID existiert.
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return der Schuljahresabschnitt oder null
+	 */
+	public Schuljahresabschnitt schuleGetAbschnittById(final long id) {
+		return _mapSchuljahresabschnitte.get(id);
+	}
+
+
+	/**
+	 * Bestimmt den aktuellen Schuljahresabschnitt der Schule
+	 *
+	 * @return der aktuelle Schuljahresabschnitt der Schule
+	 */
+	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnitt() {
+		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(schuleGetStammdaten().idSchuljahresabschnitt);
+		if (result == null)
+			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule konnte nicht bestimmt werden.");
+		return result;
+	}
+
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt für die angebene ID oder als alternative den der Schule
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return der Schuljahresabschnitt für ID oder der der Schule, falls die ID ungültig ist
+	 */
+	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnittByIdOrDefault(final long id) {
+		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(id);
+		if (result != null)
+			return result;
+		return schuleGetSchuljahresabschnitt();
+	}
+
+
+	/**
+	 * Gibt das aktuelle Schuljahr der Schule zurück.
+	 *
+	 * @return das aktuelle Schuljahr der Schule
+	 */
+	public int schuleGetSchuljahr() {
+		return schuleGetSchuljahresabschnitt().schuljahr;
+	}
+
+
+	/**
+	 * Gibt den aktuellen Abschnitt im Schuljahr der Schule zurück.
+	 *
+	 * @return der aktuelle Abschnitt
+	 */
+	public int schuleGetAbschnitt() {
+		return schuleGetSchuljahresabschnitt().abschnitt;
+	}
+
+
+	/**
+	 * Gibt die Schulform der Schule zurück.
+	 *
+	 * @return die Schulform der Schule
+	 */
+	public @NotNull Schulform schuleGetSchulform() {
+		final Schulform result = Schulform.data().getWertByKuerzel(schuleGetStammdaten().schulform);
+		if (result == null)
+			throw new DeveloperNotificationException("Die Schulform der Schule konnte nicht bestimmt werden.");
+		return result;
+	}
+
+
+	/**
+	 * Gibt den Katalog-Eintrag für die Schulform und das aktuelle Schuljahr der Schule zurück.
+	 *
+	 * @return der Schulform-Katalog-Eintrag
+	 */
+	public @NotNull SchulformKatalogEintrag schuleGetSchulformKatalogEintrag() {
+		final SchulformKatalogEintrag result = schuleGetSchulform().daten(schuleGetSchuljahresabschnitt().schuljahr);
+		if (result == null)
+			throw new DeveloperNotificationException(
+					"Der Schulform-Katalog-Eintrag für die Schulform der Schule konnte für das aktuelle Schuljahr %d nicht bestimmt werden."
+							.formatted(schuleGetSchuljahresabschnitt().schuljahr));
+		return result;
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Schulform dieser Schule eine gymnasiale Oberstufe erlaubt oder nicht.
+	 *
+	 * @return true, wenn die Schule eine gymnasiale Oberstufe hat, und false, wenn nicht.
+	 */
+	public boolean schuleHatGymOb() {
+		return schuleGetSchulformKatalogEintrag().hatGymOb;
 	}
 
 

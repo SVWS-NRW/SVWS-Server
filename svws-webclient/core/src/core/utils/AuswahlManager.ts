@@ -1,6 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { AttributMitAuswahl } from '../../core/utils/AttributMitAuswahl';
-import { Schulform } from '../../core/types/schule/Schulform';
+import { Schulform } from '../../asd/types/schule/Schulform';
 import { ArrayList } from '../../java/util/ArrayList';
 import { SchuljahresabschnittsUtils } from '../../core/utils/schule/SchuljahresabschnittsUtils';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
@@ -9,8 +9,9 @@ import type { JavaFunction } from '../../java/util/function/JavaFunction';
 import type { Runnable } from '../../java/lang/Runnable';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
-import { Schuljahresabschnitt } from '../../core/data/schule/Schuljahresabschnitt';
-import { Pair } from '../../core/adt/Pair';
+import { Class } from '../../java/lang/Class';
+import { Schuljahresabschnitt } from '../../asd/data/schule/Schuljahresabschnitt';
+import { Pair } from '../../asd/adt/Pair';
 
 export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 
@@ -391,8 +392,20 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	 *
 	 * @return der Schuljahresabschnitt der Schule
 	 */
-	public getSchuljahresabschnittSchule() : Schuljahresabschnitt | null {
-		return this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+	public getSchuljahresabschnittSchule() : Schuljahresabschnitt {
+		const result : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+		if (result === null)
+			throw new DeveloperNotificationException("Der Schuljahresabschnitt der Schule ist nicht verfügbar.")
+		return result;
+	}
+
+	/**
+	 * Gibt das Schuljahr des Schuljahresabschnitts der Schule zurück.
+	 *
+	 * @return das Schuljahr
+	 */
+	public getSchuljahr() : number {
+		return this.getSchuljahresabschnittSchule().schuljahr;
 	}
 
 	/**
@@ -404,7 +417,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittAktuell() : boolean {
 		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+		if (abschnittAuswahl === null)
 			return false;
 		return (abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt === abschnittSchule.abschnitt);
 	}
@@ -419,7 +432,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittPlanung() : boolean {
 		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+		if (abschnittAuswahl === null)
 			return false;
 		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
 	}
@@ -434,7 +447,7 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	public istSchuljahresabschnittVergangenheit() : boolean {
 		const abschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
 		const abschnittSchule : Schuljahresabschnitt | null = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl === null) || (abschnittSchule === null))
+		if (abschnittAuswahl === null)
 			return false;
 		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr) || ((abschnittAuswahl.schuljahr === abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));
 	}
@@ -455,6 +468,8 @@ export abstract class AuswahlManager<TID, TAuswahl, TDaten> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager'].includes(name);
 	}
+
+	public static class = new Class<AuswahlManager<any, any, any>>('de.svws_nrw.core.utils.AuswahlManager');
 
 }
 

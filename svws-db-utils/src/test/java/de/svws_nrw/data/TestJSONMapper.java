@@ -3,17 +3,28 @@ package de.svws_nrw.data;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.base.compression.CompressionException;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 
 
 /**
  * Diese Klasse prüft die Methoden der {@link JSONMapper}-Klasse.
  */
 class TestJSONMapper {
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
+
 	/**
 	 * Tests für das Komprimieren und Dekomprimieren von Core-DTOs mit dem GZip-Verfahren
 	 */
@@ -29,7 +40,7 @@ class TestJSONMapper {
 			original.idSchuljahresabschnitt = 4L;
 			original.idKlasse = 43L;
 			original.abiturjahrgang = 2050;
-			original.schulgliederung = Schulgliederung.GY8.daten.kuerzel;
+			original.schulgliederung = Schulgliederung.GY8.daten(2024).kuerzel;
 			original.kurse.add(142L);
 			original.kurse.add(1433L);
 			final byte[] encoded = JSONMapper.gzipByteArrayFromObject(original);

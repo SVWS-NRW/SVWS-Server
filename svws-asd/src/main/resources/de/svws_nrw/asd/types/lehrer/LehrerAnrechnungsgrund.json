@@ -1,0 +1,913 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "ID_310",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 310000,
+			"schluessel": "310",
+			"kuerzel": "310",
+			"text": "Seiteneinsteiger/-in: Entlastung für berufsbegleitende Ausbildung für Universitätsabsolventen OBAS",
+			"gueltigVon": 2010,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_315",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 315000,
+			"schluessel": "315",
+			"kuerzel": "315",
+			"text": "Seiteneinsteiger/-in: Entlastung für berufsbegleitende Ausbildung für FH - Absolventen",
+			"gueltigVon": 2010,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_320",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 320000,
+			"schluessel": "320",
+			"kuerzel": "320",
+			"text": "Seiteneinsteiger/-in: Entlastung für Pädagogische Einführung in den Schuldienst",
+			"gueltigVon": 2010,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_325",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 325000,
+			"schluessel": "325",
+			"kuerzel": "325",
+			"text": "Teilnahme an Qualifizierungsmaßnahme: Einführung in die Grundschuldidaktik",
+			"gueltigVon": 2019,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_330",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 330000,
+			"schluessel": "330",
+			"kuerzel": "330",
+			"text": "Tätigkeit als schulische/-r Ausbilder/-in OBAS (§ 11 Abs. 5 i. V. mit § 9 Abs. 2)",
+			"gueltigVon": 2012,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_340",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 340000,
+			"schluessel": "340",
+			"kuerzel": "340",
+			"text": "Erfahrene Lehrkraft: Entlastung für Pädagogische Einführung in den Schuldienst",
+			"gueltigVon": 2012,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_500",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 500000,
+			"schluessel": "500",
+			"kuerzel": "500",
+			"text": "Wahrnehmung besonderer schulischer Aufgaben / Ausgleich besonderer unterrichtlicher Belastungen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_510",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 510000,
+			"schluessel": "510",
+			"kuerzel": "510",
+			"text": "Schulleitungspauschale",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_520",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 520000,
+			"schluessel": "520",
+			"kuerzel": "520",
+			"text": "Schulübergreifende Aufgaben kleineren Umfangs",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_530",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 530000,
+			"schluessel": "530",
+			"kuerzel": "530",
+			"text": "SV-Verbindungslehrer, Beratungslehrer",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_540",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 540000,
+			"schluessel": "540",
+			"kuerzel": "540",
+			"text": "Beratungsaufgaben in der Sek. I",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_550",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 550000,
+			"schluessel": "550",
+			"kuerzel": "550",
+			"text": "Laufbahnberatung und -kontrolle in der gymnasialen Oberstufe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_590",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 590000,
+			"schluessel": "590",
+			"kuerzel": "590",
+			"text": "Koordinations- und Beratungsaufgaben im Landesvorhaben KAoA",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_600",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 600000,
+			"schluessel": "600",
+			"kuerzel": "600",
+			"text": "Teamabsprachen, Unterrichtsvorbereitung für Gemeinsames Lernen",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		},{
+		"id": 600001,
+		"schluessel": "600",
+		"kuerzel": "600",
+		"text": "Beratung, Teamabsprachen, Unterrichtsvorbereitung für Gemeinsames Lernen",
+		"gueltigVon": 2022,
+		"gueltigBis": null
+	} ]
+	},{
+		"bezeichner": "ID_605",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 605000,
+			"schluessel": "605",
+			"kuerzel": "605",
+			"text": "Tätigkeit als Fachleiter/-in am Zentrum für schulpraktische Lehrerausbildung (Vorbereitungsdienst, OBAS, VOBASOF, Pädagogische Einführung in den Schuldienst)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_610",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 610000,
+			"schluessel": "610",
+			"kuerzel": "610",
+			"text": "Personalratstätigkeit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_615",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 615000,
+			"schluessel": "615",
+			"kuerzel": "615",
+			"text": "Schwerbehindertenvertretung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_620",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 620000,
+			"schluessel": "620",
+			"kuerzel": "620",
+			"text": "Tätigkeit als schulische/-r Ausbilder/-in VOBASOF (qualifizierte Fachkraft, § 11 VOBASOF)",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_625",
+    	"idHistorie": 19,
+		"historie": [ {
+			"id": 625000,
+			"schluessel": "625",
+			"kuerzel": "625",
+			"text": "Fortbildungslehrgänge für technische Lehrer aus Entwicklungsländern (LIB)",
+			"gueltigVon": null,
+			"gueltigBis": 2007
+		},{
+			"id": 625001,
+			"schluessel": "625",
+			"kuerzel": "625",
+			"text": "Tätigkeit als Fachleiter/-in am Zentrum für schulpraktische Lehrerausbildung (Eignungs- und Orientierungspraktikum)",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_630",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 630000,
+			"schluessel": "630",
+			"kuerzel": "630",
+			"text": "Lehrkraft in Ausbildung: Schulpraktische Ausbildung am Zentrum für schulpraktische Ausbildung (§ 7 VOBASOF)",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_635",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 635000,
+			"schluessel": "635",
+			"kuerzel": "635",
+			"text": "Fortbildung und Qualifikation, Medien und Datenschutz",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_640",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 640000,
+			"schluessel": "640",
+			"kuerzel": "640",
+			"text": "Fachberater Schulaufsicht",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_645",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 645000,
+			"schluessel": "645",
+			"kuerzel": "645",
+			"text": "Sport sowie für Beratung und Koordination im Verbundsystem Schule und Leistungssport",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_650",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 650000,
+			"schluessel": "650",
+			"kuerzel": "650",
+			"text": "Mitarbeit in Kommunalen Integrationszentren",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_655",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 655000,
+			"schluessel": "655",
+			"kuerzel": "655",
+			"text": "Auslandstätigkeit (Landeslehrerentsendeprogramm)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_665",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 665000,
+			"schluessel": "665",
+			"kuerzel": "665",
+			"text": "Laborschule Bielefeld / Bildungspol. Sonderaufgaben",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		},{
+			"id": 665001,
+			"schluessel": "665",
+			"kuerzel": "665",
+			"text": "Tätigkeit als Fachleiter/-in am Zentrum für schulpraktische Lehrerausbildung (Praxissemester)",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_670",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 670000,
+			"schluessel": "670",
+			"kuerzel": "670",
+			"text": "Richtlinien und Lehrpläne / learn:line",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_675",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 675000,
+			"schluessel": "675",
+			"kuerzel": "675",
+			"text": "GÖS (GanzTag und Öffnung von Schule)",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_680",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 680000,
+			"schluessel": "680",
+			"kuerzel": "680",
+			"text": "Archivpädagogen Schülertheater Pusteblume / Koordination GU",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_685",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 685000,
+			"schluessel": "685",
+			"kuerzel": "685",
+			"text": "Modellversuche / BLK",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_690",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 690000,
+			"schluessel": "690",
+			"kuerzel": "690",
+			"text": "Musik / Tanz / Theater",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_695",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 695000,
+			"schluessel": "695",
+			"kuerzel": "695",
+			"text": "Andere Lernorte",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_700",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 700000,
+			"schluessel": "700",
+			"kuerzel": "700",
+			"text": "Schaustellerkinder",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_705",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 705000,
+			"schluessel": "705",
+			"kuerzel": "705",
+			"text": "Gesundheitserziehung",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_710",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 710000,
+			"schluessel": "710",
+			"kuerzel": "710",
+			"text": "Landerschülervertretungsverbindungslehrer / Go to School",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_715",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 715000,
+			"schluessel": "715",
+			"kuerzel": "715",
+			"text": "Stiftung (Wirtschaft und Schule / Pra WiS, Selbstständige Schule)",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		},{
+			"id": 715001,
+			"schluessel": "715",
+			"kuerzel": "715",
+			"text": "Eignungspraktikum Mentor Schule",
+			"gueltigVon": 2013,
+			"gueltigBis": 2017
+		} ]
+	},{
+		"bezeichner": "ID_720",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 720000,
+			"schluessel": "720",
+			"kuerzel": "720",
+			"text": "Pädaudiologische Zentren und Frühförderzentren für Sehgeschädigte",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_725",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 725000,
+			"schluessel": "725",
+			"kuerzel": "725",
+			"text": "Tätigkeit bei EU-Geschäftsstellen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_730",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 730000,
+			"schluessel": "730",
+			"kuerzel": "730",
+			"text": "Curriculumentwicklung / Zentrale Prüfungen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_735",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 735000,
+			"schluessel": "735",
+			"kuerzel": "735",
+			"text": "Förderung des Theatertreffens für behinderte Kinder und Jugendliche",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_740",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 740000,
+			"schluessel": "740",
+			"kuerzel": "740",
+			"text": "Archivpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_745",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 745000,
+			"schluessel": "745",
+			"kuerzel": "745",
+			"text": "Bildungspolitische Sonderaufgaben",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_750",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 750000,
+			"schluessel": "750",
+			"kuerzel": "750",
+			"text": "Sonstiger Ausgleichsbedarf, der aus wechselnden Ausgleichs- und Mehrbedarfen finanziert ist.",
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_765",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 765000,
+			"schluessel": "765",
+			"kuerzel": "765",
+			"text": "Tätigkeit als schulische/-r Mentor/-in: Praxissemester",
+			"gueltigVon": 2013,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_770",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 770000,
+			"schluessel": "770",
+			"kuerzel": "770",
+			"text": "Individuelle Beratung der Schülerinnen und Schüler im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_771",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 771000,
+			"schluessel": "771",
+			"kuerzel": "771",
+			"text": "Innerschulischer Transfer der Maßnahmen im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_772",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 772000,
+			"schluessel": "772",
+			"kuerzel": "772",
+			"text": "Durchführung soziales Training im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_773",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 773000,
+			"schluessel": "773",
+			"kuerzel": "773",
+			"text": "Berufsfeld- oder fachbereichsübergreifende Berufsorientierung im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_774",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 774000,
+			"schluessel": "774",
+			"kuerzel": "774",
+			"text": "Erweiterte Blockpraktika/Praxismodul „Berufliche Orientierung“ im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_775",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 775000,
+			"schluessel": "775",
+			"kuerzel": "775",
+			"text": "Sprachförderung im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_776",
+		"idHistorie": 51,
+		"historie": [ {
+			"id": 776000,
+			"schluessel": "776",
+			"kuerzel": "776",
+			"text": "Übergangssicherung/Datenmonitoring im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_777",
+		"idHistorie": 52,
+		"historie": [ {
+			"id": 777000,
+			"schluessel": "777",
+			"kuerzel": "777",
+			"text": "Kooperation mit externen Partnern im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_778",
+		"idHistorie": 53,
+		"historie": [ {
+			"id": 778000,
+			"schluessel": "778",
+			"kuerzel": "778",
+			"text": "Verwaltungstätigkeiten zur Unterstützung der Schulleitung bei den Landesaufgaben im Schulversuch Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_779",
+		"idHistorie": 54,
+		"historie": [ {
+			"id": 779000,
+			"schluessel": "779",
+			"kuerzel": "779",
+			"text": "Sonstige Tätigkeiten im Rahmen des Schulversuchs Talentschule",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_800",
+		"idHistorie": 55,
+		"historie": [ {
+			"id": 800000,
+			"schluessel": "800",
+			"kuerzel": "800",
+			"text": "Zeitbudget, Steigerung der Berufsfähigkeit (Förderschulen)",
+			"gueltigVon": null, 
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_805",
+		"idHistorie": 56,
+		"historie": [ {
+			"id": 805000,
+			"schluessel": "805",
+			"kuerzel": "805",
+			"text": "Zeitbudget, Modellvorhaben \"Selbstständige Schule\"",
+			"gueltigVon": null, 
+			"gueltigBis": 2007
+		} ]
+	},{
+		"bezeichner": "ID_815",
+		"idHistorie": 57,
+		"historie": [ {
+			"id": 815000,
+			"schluessel": "815",
+			"kuerzel": "815",
+			"text": "Projekt: Abitur-Online",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_820",
+		"idHistorie": 58,
+		"historie": [ {
+			"id": 820000,
+			"schluessel": "820",
+			"kuerzel": "820",
+			"text": "Sonstiger Ausgleichsbedarf, der aus Zeitbudget finanziert ist.",
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_850",
+		"idHistorie": 59,
+		"historie": [ {
+			"id": 850000,
+			"schluessel": "850",
+			"kuerzel": "850",
+			"text": "Förderung lernschwacher und begabter Schülerinnen und Schüler",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_855",
+		"idHistorie": 60,
+		"historie": [ {
+			"id": 855000,
+			"schluessel": "855",
+			"kuerzel": "855",
+			"text": "sonderpädagogischer Förderbedarf, z.B. Lese- und Rechtschreibschwächen, Lernbehinderungen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_860",
+		"idHistorie": 61,
+		"historie": [ {
+			"id": 860000,
+			"schluessel": "860",
+			"kuerzel": "860",
+			"text": "Einstiegshilfen in Beruf/Ausbildung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_875",
+		"idHistorie": 62,
+		"historie": [ {
+			"id": 875000,
+			"schluessel": "875",
+			"kuerzel": "875",
+			"text": "Landes- und Bundeswettbewerbe, Landessschülertheater",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_880",
+		"idHistorie": 63,
+		"historie": [ {
+			"id": 880000,
+			"schluessel": "880",
+			"kuerzel": "880",
+			"text": "Nichtschüler-, Änderungs- und Feststellungsprüfungen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_885",
+		"idHistorie": 64,
+		"historie": [ {
+			"id": 885000,
+			"schluessel": "885",
+			"kuerzel": "885",
+			"text": "Sonstiger Ausgleichsbedarf, der aus Rundungsgewinnen finanziert ist.",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_900",
+		"idHistorie": 65,
+		"historie": [ {
+			"id": 900000,
+			"schluessel": "900",
+			"kuerzel": "900",
+			"text": "Tätigkeit als schulische/-r Ausbildungsbeauftragte/-r OVP",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_910",
+		"idHistorie": 66,
+		"historie": [ {
+			"id": 910000,
+			"schluessel": "910",
+			"kuerzel": "910",
+			"text": "Außerunterrichtliche Tätigkeit in der offenen Ganztagsschule",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_915",
+		"idHistorie": 67,
+		"historie": [ {
+			"id": 915000,
+			"schluessel": "915",
+			"kuerzel": "915",
+			"text": "Unterrichtsausfallstatistik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_920",
+		"idHistorie": 68,
+		"historie": [ {
+			"id": 920000,
+			"schluessel": "920",
+			"kuerzel": "920",
+			"text": "Einsatz als sozialpädagogische Fachkraft in der Schuleingangsphase",
+			"gueltigVon": null,
+			"gueltigBis": 2019
+		} ]
+	},{
+		"bezeichner": "ID_930",
+		"idHistorie": 69,
+		"historie": [ {
+			"id": 930000,
+			"schluessel": "930",
+			"kuerzel": "930",
+			"text": "Einsatz als sozialpädagogische Fachkraft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_935",
+		"idHistorie": 70,
+		"historie": [ {
+			"id": 935000,
+			"schluessel": "935",
+			"kuerzel": "935",
+			"text": "Tätigkeit als Verwaltungsassistent/ Verwaltungsassistentin",
+			"gueltigVon": 2008,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_936",
+		"idHistorie": 71,
+		"historie": [ {
+			"id": 936000,
+			"schluessel": "936",
+			"kuerzel": "936",
+			"text": "LOGINEO: Anrechnungsstunde zur Betreuung und Pflege",
+			"gueltigVon": 2020,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_940",
+		"idHistorie": 72,
+		"historie": [ {
+			"id": 940000,
+			"schluessel": "940",
+			"kuerzel": "940",
+			"text": "Betreung und Aufsicht im Ganztagsbereich der Ganztagsschulen",
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		} ]
+	},{
+		"bezeichner": "ID_945",
+		"idHistorie": 73,
+		"historie": [ {
+			"id": 945000,
+			"schluessel": "945",
+			"kuerzel": "945",
+			"text": "Lehrerwochenstunden, die nicht verplant sind",
+			"gueltigVon": 2008,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_950",
+		"idHistorie": 74,
+		"historie": [ {
+			"id": 950000,
+			"schluessel": "950",
+			"kuerzel": "950",
+			"text": "Ausgleichsbedarf, der aus Flexiblen Mitteln finanziert wird",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_955",
+		"idHistorie": 75,
+		"historie": [ {
+			"id": 955000,
+			"schluessel": "955",
+			"kuerzel": "955",
+			"text": "Schulpsychologischer Dienst",
+			"gueltigVon": 2010,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_960",
+		"idHistorie": 76,
+		"historie": [ {
+			"id": 960000,
+			"schluessel": "960",
+			"kuerzel": "960",
+			"text": "Pädagogische Tätigkeiten im Bereich Ganztag und Übermittagsbetreuung",
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_965",
+		"idHistorie": 77,
+		"historie": [ {
+			"id": 965000,
+			"schluessel": "965",
+			"kuerzel": "965",
+			"text": "Aufsicht im Bereich Ganztag und Übermittagsbetreuung (halbe Anrechnung)",
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_970",
+		"idHistorie": 78,
+		"historie": [ {
+			"id": 970000,
+			"schluessel": "970",
+			"kuerzel": "970",
+			"text": "sonstige nichtunterrichtliche Tätigkeiten (Nur mit Genehmigung durch die Schulaufsicht.; auch Beratungstätigkeiten für sonderpäd. Förderung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_975",
+		"idHistorie": 79,
+		"historie": [ {
+			"id": 975000,
+			"schluessel": "975",
+			"kuerzel": "975",
+			"text": "Begleitung Schulversuch Gemeinschaftsschule",
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_985",
+		"idHistorie": 80,
+		"historie": [ {
+			"id": 985000,
+			"schluessel": "985",
+			"kuerzel": "985",
+			"text": "Übergangsbegleitung im Rahmen des Langzeitpraktikums im Ausbildungskonsens KAoA",
+			"gueltigVon": 2015,
+			"gueltigBis": null
+		} ]
+	} ]
+}
+		

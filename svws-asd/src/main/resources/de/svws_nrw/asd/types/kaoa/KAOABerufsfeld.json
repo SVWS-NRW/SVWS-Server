@@ -1,0 +1,180 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "BAV",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "BAV",
+			"text": "Bau, Architektur, Vermessung",
+			"schluessel": "BAV",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "D",
+			"text": "Dienstleistung",
+			"schluessel": "D",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EL",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"kuerzel": "EL",
+			"text": "Elektro",
+			"schluessel": "EL",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "G",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"kuerzel": "G",
+			"text": "Gesundheit",
+			"schluessel": "G",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GESGE",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"kuerzel": "GESGE",
+			"text": "Gesellschafts-,Geisteswissenschaften",
+			"schluessel": "GESGE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ITC",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"kuerzel": "ITC",
+			"text": "IT, Computer",
+			"schluessel": "ITC",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KKG",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7,
+			"kuerzel": "KKG",
+			"text": "Kunst, Kultur, Gestaltung",
+			"schluessel": "KKG",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LANAUM",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8,
+			"kuerzel": "LANAUM",
+			"text": "Landwirtschaft, Natur, Umwelt",
+			"schluessel": "LANAUM",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "M",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9,
+			"kuerzel": "M",
+			"text": "Metall, Maschinenbau",
+			"schluessel": "M",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ME",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10,
+			"kuerzel": "ME",
+			"text": "Medien",
+			"schluessel": "ME",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "N",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11,
+			"kuerzel": "N",
+			"text": "Naturwissenschaft",
+			"schluessel": "N",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PRFE",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12,
+			"kuerzel": "PRFE",
+			"text": "Produktion, Fertigung",
+			"schluessel": "PRFE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SP",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13,
+			"kuerzel": "SP",
+			"text": "Soziales, Pädagogik",
+			"schluessel": "SP",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TEC",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 14,
+			"kuerzel": "TEC",
+			"text": "Technik, Technologiefelder",
+			"schluessel": "TEC",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VL",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 15,
+			"kuerzel": "VL",
+			"text": "Verkehr, Logistik",
+			"schluessel": "VL",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WIVE",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 16,
+			"kuerzel": "WIVE",
+			"text": "Wirtschaft, Verwaltung",
+			"schluessel": "WIVE",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

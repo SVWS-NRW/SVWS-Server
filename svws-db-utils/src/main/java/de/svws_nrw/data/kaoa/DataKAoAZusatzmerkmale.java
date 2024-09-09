@@ -1,11 +1,10 @@
 package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.kaoa.KAOAZusatzmerkmalEintrag;
-import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
+import de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmalKatalogEintrag;
+import de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KAOAZusatzmerkmalEintrag}.
+ * Core-DTO {@link KAOAZusatzmerkmalKatalogEintrag}.
  */
 public final class DataKAoAZusatzmerkmale extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOAZusatzmerkmalEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOAZusatzmerkmalKatalogEintrag}.
 	 */
 	public DataKAoAZusatzmerkmale() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKAoAZusatzmerkmale extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final ArrayList<KAOAZusatzmerkmalEintrag> daten = new ArrayList<>();
+		final ArrayList<KAOAZusatzmerkmalKatalogEintrag> daten = new ArrayList<>();
 		for (final KAOAZusatzmerkmal z : KAOAZusatzmerkmal.values())
-			daten.addAll(Arrays.asList(z.historie));
+			daten.addAll(z.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

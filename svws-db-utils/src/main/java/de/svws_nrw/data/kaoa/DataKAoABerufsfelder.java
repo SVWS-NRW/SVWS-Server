@@ -1,11 +1,10 @@
 package de.svws_nrw.data.kaoa;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.kaoa.KAOABerufsfeldEintrag;
-import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
+import de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag;
+import de.svws_nrw.asd.types.kaoa.KAOABerufsfeld;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link KAOABerufsfeldEintrag}.
+ * Core-DTO {@link KAOABerufsfeldKatalogEintrag}.
  */
 public final class DataKAoABerufsfelder extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOABerufsfeldEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link KAOABerufsfeldKatalogEintrag}.
 	 */
 	public DataKAoABerufsfelder() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKAoABerufsfelder extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final ArrayList<KAOABerufsfeldEintrag> daten = new ArrayList<>();
+		final ArrayList<KAOABerufsfeldKatalogEintrag> daten = new ArrayList<>();
 		for (final KAOABerufsfeld b : KAOABerufsfeld.values())
-			daten.addAll(Arrays.asList(b.historie));
+			daten.addAll(b.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

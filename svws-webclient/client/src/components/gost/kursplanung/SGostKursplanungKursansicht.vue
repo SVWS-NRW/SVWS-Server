@@ -319,7 +319,7 @@
 	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
 		GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate,
 		GostBlockungSchiene, GostBlockungRegel} from "@core";
-	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, ZulaessigesFach, GostBlockungKurs, GostBlockungsergebnisSchiene,
+	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, Fach, GostBlockungKurs, GostBlockungsergebnisSchiene,
 		SetUtils, ArrayList, GostKursblockungRegelTyp, DeveloperNotificationException } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
@@ -358,6 +358,8 @@
 		apiStatus: ApiStatus;
 		hatUpdateKompetenz: boolean;
 	}>();
+
+	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
 	const edit_schienenname = ref<number|undefined>(undefined);
 	const fehlermeldungen = computed(() => props.getErgebnismanager().getFehlermeldungen());
@@ -423,13 +425,13 @@
 				const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
 				const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
 				if (gostfach !== null) {
-					const zulFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(gostfach.kuerzel);
+					const zulFach = Fach.data().getWertBySchluessel(gostfach.kuerzel);
 					switch (kursart) {
 						case GostKursart.LK: { anzahl = fach_halbjahr.wahlenLK; break; }
-						case GostKursart.GK: { anzahl = (zulFach === ZulaessigesFach.PX) || (zulFach === ZulaessigesFach.VX) ? 0 : fach_halbjahr.wahlenGK; break; }
+						case GostKursart.GK: { anzahl = (zulFach === Fach.PX) || (zulFach === Fach.VX) ? 0 : fach_halbjahr.wahlenGK; break; }
 						case GostKursart.ZK: { anzahl = fach_halbjahr.wahlenZK; break; }
-						case GostKursart.PJK: { anzahl = (zulFach === ZulaessigesFach.PX) ? fach_halbjahr.wahlenGK : 0; break; }
-						case GostKursart.VTF: { anzahl = (zulFach === ZulaessigesFach.VX) ? fach_halbjahr.wahlenGK : 0; break; }
+						case GostKursart.PJK: { anzahl = (zulFach === Fach.PX) ? fach_halbjahr.wahlenGK : 0; break; }
+						case GostKursart.VTF: { anzahl = (zulFach === Fach.VX) ? fach_halbjahr.wahlenGK : 0; break; }
 					}
 				}
 				result.put(fachwahlen.id, kursart.id, anzahl);
@@ -777,7 +779,9 @@
 	});
 
 	function bgColor(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) : string {
-		return ZulaessigesFach.getByKuerzelASD(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+		if (fachwahl.fachwahlen.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(fachwahl.fachwahlen.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
 	}
 
 	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {

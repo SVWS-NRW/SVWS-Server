@@ -1,14 +1,15 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { HashMap } from '../../../java/util/HashMap';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { SchulabschlussBerufsbildend } from '../../../asd/types/schule/SchulabschlussBerufsbildend';
+import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
+import { SchulabschlussAllgemeinbildend } from '../../../asd/types/schule/SchulabschlussAllgemeinbildend';
 import { AbgangsartKatalog } from '../../../core/data/schule/AbgangsartKatalog';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
-import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
-import { SchulabschlussBerufsbildend } from '../../../core/types/schule/SchulabschlussBerufsbildend';
-import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { AbgangsartKatalogDaten } from '../../../core/data/schule/AbgangsartKatalogDaten';
 
 export class AbgangsartenManager extends JavaObject {
 
@@ -184,7 +185,7 @@ export class AbgangsartenManager extends JavaObject {
 		if ((abschlussart.kuerzel.length < 0) || (abschlussart.kuerzel.length > 2))
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
 		const kuerzelAbschluss : string = (abschlussart.kuerzel.length === 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
-		return SchulabschlussAllgemeinbildend.getByKuerzelStatistik(kuerzelAbschluss);
+		return SchulabschlussAllgemeinbildend.data().getWertBySchluessel(kuerzelAbschluss);
 	}
 
 	/**
@@ -199,7 +200,7 @@ export class AbgangsartenManager extends JavaObject {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.")
 		if (abschlussart.kuerzel.length === 1)
 			return null;
-		return SchulabschlussBerufsbildend.getByKuerzelStatistik(abschlussart.kuerzel.substring(0, 1));
+		return SchulabschlussBerufsbildend.data().getWertBySchluessel(abschlussart.kuerzel.substring(0, 1));
 	}
 
 	transpilerCanonicalName(): string {
@@ -209,6 +210,8 @@ export class AbgangsartenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.AbgangsartenManager'].includes(name);
 	}
+
+	public static class = new Class<AbgangsartenManager>('de.svws_nrw.core.utils.schule.AbgangsartenManager');
 
 }
 

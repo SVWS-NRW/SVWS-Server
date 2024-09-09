@@ -4,6 +4,7 @@ import { RuntimeException } from '../../java/lang/RuntimeException';
 import type { JavaSet } from '../../java/util/JavaSet';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { JavaString } from '../../java/lang/JavaString';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { HashMap5D } from '../../core/adt/map/HashMap5D';
@@ -602,6 +603,8 @@ export class DeveloperNotificationException extends RuntimeException {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Throwable', 'de.svws_nrw.core.exceptions.DeveloperNotificationException', 'java.lang.RuntimeException', 'java.lang.Exception', 'java.io.Serializable'].includes(name);
 	}
+
+	public static class = new Class<DeveloperNotificationException>('de.svws_nrw.core.exceptions.DeveloperNotificationException');
 
 }
 

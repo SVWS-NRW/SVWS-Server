@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BKBildungsplan, cast_de_svws_nrw_core_data_bk_BKBildungsplan } from '../../../core/data/bk/BKBildungsplan';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class BKBildungsplanKatalogEintrag extends JavaObject {
 
@@ -37,6 +38,8 @@ export class BKBildungsplanKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKBildungsplanKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<BKBildungsplanKatalogEintrag>('de.svws_nrw.core.data.bk.BKBildungsplanKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): BKBildungsplanKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BKBildungsplanKatalogEintrag>;

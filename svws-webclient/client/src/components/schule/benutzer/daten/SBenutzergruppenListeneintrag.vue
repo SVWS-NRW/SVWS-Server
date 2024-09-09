@@ -19,9 +19,8 @@
 </template>
 
 <script setup lang="ts">
-	import type { BenutzergruppeListeEintrag, BenutzerManager } from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
+	import type { BenutzergruppeListeEintrag, BenutzerManager } from "@core";
 
 	const props = withDefaults(defineProps<{
 		row: BenutzergruppeListeEintrag;
@@ -34,7 +33,7 @@
 		istAlle: false
 	});
 
-	const selected: WritableComputedRef<boolean> = computed({
+	const selected = computed<boolean>({
 		get: () => props.getBenutzerManager().istInGruppe(props.row.id),
 		set: (value) => {
 			if (value)

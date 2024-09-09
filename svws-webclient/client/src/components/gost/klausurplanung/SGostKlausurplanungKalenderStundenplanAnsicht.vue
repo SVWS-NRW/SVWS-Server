@@ -123,7 +123,7 @@
 <script setup lang="ts">
 
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr, BenutzerKompetenz} from "@core";
+	import {type List, type StundenplanPausenzeit, DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 	import { routeApp } from "~/router/apps/RouteApp";
@@ -136,6 +136,8 @@
 		useDragAndDrop: false,
 		dragData: () => undefined,
 	});
+
+	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
@@ -277,7 +279,7 @@
 			return "#f2f4f5";
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
-		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
+		const colors = klausuren.map(kuerzel => Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)');
 
 		let gradient = '';
 

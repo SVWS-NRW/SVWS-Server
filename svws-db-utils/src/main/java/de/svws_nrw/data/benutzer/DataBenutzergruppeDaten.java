@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.benutzer.BenutzergruppenManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -19,6 +19,7 @@ import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppe;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenKompetenz;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzergruppenMitglied;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaAutoInkremente;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -117,13 +118,14 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 	 *
 	 */
 	private boolean istKompetenzZulaessig(final List<Long> kids) throws ApiOperationException {
-		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-		//Nehme als Schulform GY als Beispiel
-
+		// Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
+		final Schulform schulform = Schulform.data().getWertBySchluessel(schule.SchulformNr);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
 
 		final List<BenutzerKompetenz> bks = new ArrayList<>();
 		for (final Long kid : kids) {
@@ -131,9 +133,9 @@ public final class DataBenutzergruppeDaten extends DataManager<Long> {
 		}
 
 		for (final BenutzerKompetenz bk : bks) {
-			if (!bk.hatSchulform(schulform))
+			if (!bk.hatSchulform(schuljahresabschnitt.Jahr, schulform))
 				throw new ApiOperationException(Status.FORBIDDEN, "Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
-						+ schulform.daten.bezeichnung + "nicht zulässig");
+						+ schulform.daten(schuljahresabschnitt.Jahr).text + "nicht zulässig");
 		}
 		return true;
 	}

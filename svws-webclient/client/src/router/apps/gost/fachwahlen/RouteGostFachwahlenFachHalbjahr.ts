@@ -10,6 +10,7 @@ import { routeGostFachwahlen } from "~/router/apps/gost/fachwahlen/RouteGostFach
 import type { GostFachwahlenFachHalbjahrProps } from "~/components/gost/fachwahlen/SGostFachwahlenFachHalbjahrProps";
 import { ref } from "vue";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 
 const SGostFachwahlenFachHalbjahr = () => import("~/components/gost/fachwahlen/SGostFachwahlenFachHalbjahr.vue");
@@ -20,7 +21,7 @@ export class RouteGostFachwahlenFachHalbjahr extends RouteNode<any, RouteGost> {
 	private _halbjahr = ref<GostHalbjahr>(GostHalbjahr.EF1);
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,

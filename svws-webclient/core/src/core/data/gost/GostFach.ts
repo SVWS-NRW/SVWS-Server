@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class GostFach extends JavaObject {
 
@@ -124,6 +125,8 @@ export class GostFach extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostFach'].includes(name);
 	}
+
+	public static class = new Class<GostFach>('de.svws_nrw.core.data.gost.GostFach');
 
 	public static transpilerFromJSON(json : string): GostFach {
 		const obj = JSON.parse(json) as Partial<GostFach>;

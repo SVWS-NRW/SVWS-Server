@@ -5,6 +5,7 @@ import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBeleg
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -63,6 +64,8 @@ export class Allgemeines extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines'].includes(name);
 	}
+
+	public static class = new Class<Allgemeines>('de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines');
 
 }
 

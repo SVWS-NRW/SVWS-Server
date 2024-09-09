@@ -1,7 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Raum } from '../../../core/data/schule/Raum';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
@@ -9,8 +9,9 @@ import { RaumUtils } from '../../../core/utils/raum/RaumUtils';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 
@@ -118,6 +119,8 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.raum.RaumListeManager'].includes(name);
 	}
+
+	public static class = new Class<RaumListeManager>('de.svws_nrw.core.utils.raum.RaumListeManager');
 
 }
 

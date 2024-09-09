@@ -1,0 +1,48 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "ID_1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "erworben durch LABG/OVP bzw. Laufbahnverordnung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_2",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Unterrichtserlaubnis (z. B. Zertifikatskurs)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_3",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "mehrjähriger Unterricht ohne Lehramtsprüfung oder Unterrichtserlaubnis",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_9",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "9",
+			"kuerzel": "9",
+			"text": "sonstige",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

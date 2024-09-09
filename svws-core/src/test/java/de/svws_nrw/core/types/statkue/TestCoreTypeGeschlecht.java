@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.types.Geschlecht;
 
 
 /**

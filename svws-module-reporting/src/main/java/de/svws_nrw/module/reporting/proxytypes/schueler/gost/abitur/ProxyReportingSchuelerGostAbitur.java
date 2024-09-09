@@ -2,7 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.schueler.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.module.reporting.proxytypes.gost.abitur.ProxyReportingGostAbiturFachbelegung;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;

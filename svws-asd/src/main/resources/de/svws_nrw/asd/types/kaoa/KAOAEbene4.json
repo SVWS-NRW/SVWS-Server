@@ -1,0 +1,292 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "SBO_6_5_1_1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "SBO 6.5.1.1",
+			"text": "Langzeitpraktikum 1-tägig",
+			"schluessel": "SBO 6.5.1.1",
+			"zusatzmerkmal": "SBO_6_5_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6_5_1_2",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "SBO 6.5.1.2",
+			"text": "Langzeitpraktikum 2-tägig",
+			"schluessel": "SBO 6.5.1.2",
+			"zusatzmerkmal": "SBO_6_5_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_1",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"kuerzel": "SBO 7.1.1.1",
+			"text": "An der KAoA-kompakt Potenzialanalyse teilgenommen",
+			"schluessel": "SBO 7.1.1.1",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_2",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"kuerzel": "SBO 7.1.1.2",
+			"text": "Keine Teilnahme an der KAoA-kompakt Potenzialanalyse",
+			"schluessel": "SBO 7.1.1.2",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_3",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"kuerzel": "SBO 7.1.1.3",
+			"text": "An der KAoA-kompakt Berufsfelderkundung teilgenommen - 1. Tag ",
+			"schluessel": "SBO 7.1.1.3",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_4",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"kuerzel": "SBO 7.1.1.4",
+			"text": "An der KAoA-kompakt Berufsfelderkundung teilgenommen - 2. Tag ",
+			"schluessel": "SBO 7.1.1.4",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_5",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7,
+			"kuerzel": "SBO 7.1.1.5",
+			"text": "An der KAoA-kompakt Berufsfelderkundung teilgenommen - 3. Tag ",
+			"schluessel": "SBO 7.1.1.5",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_6",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8,
+			"kuerzel": "SBO 7.1.1.6",
+			"text": "Keine Teilnahme an den KAoA-kompakt Berufsfelderkundungen",
+			"schluessel": "SBO 7.1.1.6",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_7",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9,
+			"kuerzel": "SBO 7.1.1.7",
+			"text": "An KAoA-kompakt Praxiskursen teilgenommen",
+			"schluessel": "SBO 7.1.1.7",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7_1_1_8",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10,
+			"kuerzel": "SBO 7.1.1.8",
+			"text": "Keine Teilnahme an den KAoA-kompakt Praxiskursen",
+			"schluessel": "SBO 7.1.1.8",
+			"zusatzmerkmal": "SBO_7_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_1",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11,
+			"kuerzel": "SBO 9.1.1.1",
+			"text": "Einzeltag",
+			"schluessel": "SBO 9.1.1.1",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_2",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12,
+			"kuerzel": "SBO 9.1.1.2",
+			"text": "Betriebspraktikum",
+			"schluessel": "SBO 9.1.1.2",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_3",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13,
+			"kuerzel": "SBO 9.1.1.3",
+			"text": "Auslandspraktikum",
+			"schluessel": "SBO 9.1.1.3",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_4",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 14,
+			"kuerzel": "SBO 9.1.1.4",
+			"text": "Hochschulpraktikum/Schnupperstudium",
+			"schluessel": "SBO 9.1.1.4",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_5",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 15,
+			"kuerzel": "SBO 9.1.1.5",
+			"text": "Duales Orientierungspraktikum",
+			"schluessel": "SBO 9.1.1.5",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_1_1_6",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 16,
+			"kuerzel": "SBO 9.1.1.6",
+			"text": "Projektworkshop ( bei einem Bildungsträger)",
+			"schluessel": "SBO 9.1.1.6",
+			"zusatzmerkmal": "SBO_9_1_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_1",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 17,
+			"kuerzel": "SBO 9.2.1.1",
+			"text": "Veranstaltungen zur allgemeinen Studienorientierung an einer Hochschule",
+			"schluessel": "SBO 9.2.1.1",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_2",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 18,
+			"kuerzel": "SBO 9.2.1.2",
+			"text": "Veranstaltungen zur allgemeinen Studienorientierung in der Schule",
+			"schluessel": "SBO 9.2.1.2",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_3",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 19,
+			"kuerzel": "SBO 9.2.1.3",
+			"text": "Wochen der Studienorientierung",
+			"schluessel": "SBO 9.2.1.3",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_4",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 20,
+			"kuerzel": "SBO 9.2.1.4",
+			"text": "Langer Abend der Studienberatung",
+			"schluessel": "SBO 9.2.1.4",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_5",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 21,
+			"kuerzel": "SBO 9.2.1.5",
+			"text": "Individuelle Einzelberatung durch die Zentralen Studienberatungen der Hochschulen",
+			"schluessel": "SBO 9.2.1.5",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_6",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 22,
+			"kuerzel": "SBO 9.2.1.6",
+			"text": "Workshops für Schülerinnen und Schüler in der Zentralen Studienberatung",
+			"schluessel": "SBO 9.2.1.6",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_7",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 23,
+			"kuerzel": "SBO 9.2.1.7",
+			"text": "Besondere Formate für Schlerinnen und Schüler an der Hochschule (Hochschultag, Hochschulpraktikum i.S. eines „Schnupperstudiums“, allgemeine Boys‘ und Girls‘ Day Angebote)",
+			"schluessel": "SBO 9.2.1.7",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9_2_1_8",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 24,
+			"kuerzel": "SBO 9.2.1.8",
+			"text": "Fachspezifische Angebote (z. B. Schülerstudium, Praktika bei Hochschullehrer*innen, Schülerlabore, zdi-Zentren, fachspezifische Boys‘ und Girls‘ Day Angebote)",
+			"schluessel": "SBO 9.2.1.8",
+			"zusatzmerkmal": "SBO_9_2_1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

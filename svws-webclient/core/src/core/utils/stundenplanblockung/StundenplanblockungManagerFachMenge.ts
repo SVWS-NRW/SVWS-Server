@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class StundenplanblockungManagerFachMenge extends JavaObject {
@@ -93,6 +94,8 @@ export class StundenplanblockungManagerFachMenge extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFachMenge'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerFachMenge>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerFachMenge');
 
 }
 

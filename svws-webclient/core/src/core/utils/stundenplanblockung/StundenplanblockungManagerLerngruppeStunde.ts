@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerLerngruppe, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 
 export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
@@ -52,6 +53,8 @@ export class StundenplanblockungManagerLerngruppeStunde extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerLerngruppeStunde>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeStunde');
 
 }
 

@@ -141,7 +141,7 @@
 	import type { List, StundenplanKlasse } from "@core";
 	import type { StundenplanKlasseProps } from "./SStundenplanKlasseProps";
 	import type { StundenplanAnsichtDragData, StundenplanAnsichtDropZone } from "@comp";
-	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, ZulaessigesFach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz } from "@core";
+	import { ArrayList, StundenplanKurs, StundenplanKlassenunterricht, Fach, StundenplanUnterricht, StundenplanZeitraster, HashSet, StundenplanSchiene, BenutzerKompetenz } from "@core";
 	import { computed, onMounted, shallowRef } from "vue";
 	import { cast_java_util_List } from "../../../../../core/src/java/util/List";
 
@@ -157,6 +157,8 @@
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
+	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());
+
 	const klasse = computed<StundenplanKlasse>({
 		get: () : StundenplanKlasse => {
 			if (_klasse.value !== undefined)
@@ -169,7 +171,7 @@
 	});
 
 	function getBgColor(fach: string): string {
-		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+		return Fach.data().getWertBySchluessel(fach)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
 	}
 
 	function wochentypen(): List<number> {

@@ -14,12 +14,12 @@ import { type RouteNode } from "~/router/RouteNode";
 
 interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number,
-	schuelerListeManager: SchuelerListeManager;
+	schuelerListeManager: SchuelerListeManager | undefined;
 }
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
-	schuelerListeManager: new SchuelerListeManager(null, new SchuelerListe(), new ArrayList<Schuljahresabschnitt>(), -1),
+	schuelerListeManager: undefined,
 	view: routeSchuelerIndividualdaten,
 };
 
@@ -37,17 +37,21 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	 * @param {boolean} isEntering              gibt an, ob die Route neu betreten wird
 	 */
 	public async reload(idSchuljahresabschnitt: number, idSchueler: number | undefined, isEntering: boolean): Promise<void> {
-		let manager = this.schuelerListeManager;
+		let manager = this._state.value.schuelerListeManager;
 
 		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird oder der Schuljahresabschnitt geändert wird
-		if (isEntering || idSchuljahresabschnitt !== this.schuelerListeManager.getSchuljahresabschnittAuswahl()?.id) {
+		if (isEntering || (idSchuljahresabschnitt !== this.schuelerListeManager.getSchuljahresabschnittAuswahl()?.id)) {
 			const schuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
 
 			manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-			manager.useFilter(this.schuelerListeManager);
+			if (this._state.value.schuelerListeManager !== undefined)
+				manager.useFilter(this._state.value.schuelerListeManager);
 		}
+
+		if (manager === undefined)
+			throw new DeveloperNotificationException("Der Schüler-Liste-Manager ist nicht gültig initialisiert. Dies sollte an dieser Stelle nicht mehr der Fall sein.");
 
 		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
 		const schuelerAuswahl = await this.getSchuelerAuswahl(idSchueler, manager, isEntering);
@@ -85,7 +89,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	 * @returns aktuelle View oder Default View
 	 */
 	private getCurrentViewOrDefault(schuelerManager: SchuelerListeManager): RouteNode<any, any> | undefined {
-		if (schuelerManager.hasDaten() && schuelerManager.auswahl()) {
+		if (schuelerManager.hasDaten()) {
 			return this._state.value.view;
 		} else {
 			return routeSchuelerIndividualdaten;
@@ -130,6 +134,8 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
 
 	get schuelerListeManager(): SchuelerListeManager {
+		if (this._state.value.schuelerListeManager === undefined)
+			return new SchuelerListeManager(null, new SchuelerListe(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt); // Gib Dummy zurück
 		return this._state.value.schuelerListeManager;
 	}
 

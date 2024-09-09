@@ -1,8 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 
@@ -71,7 +72,8 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 			this.id = id;
 			this.kuerzel = kuerzel;
 			for (const schulform of schulformen)
-				this.schulformen.add(schulform.daten.kuerzel);
+				if (!this.schulformen.contains(schulform.name()))
+					this.schulformen.add(schulform.name());
 			this.beschreibung = beschreibung;
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
@@ -85,6 +87,8 @@ export class HerkunftSonstigeKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.HerkunftSonstigeKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<HerkunftSonstigeKatalogEintrag>('de.svws_nrw.core.data.schule.HerkunftSonstigeKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): HerkunftSonstigeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<HerkunftSonstigeKatalogEintrag>;

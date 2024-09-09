@@ -15,6 +15,7 @@ import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/Rou
 import { RouteDataGostKursplanung } from "~/router/apps/gost/kursplanung/RouteDataGostKursplanung";
 
 import { ConfigElement } from "~/components/Config";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKursplanung = () => import("~/components/gost/kursplanung/SGostKursplanung.vue");
 const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGostKursplanungAuswahl.vue");
@@ -22,7 +23,7 @@ const SGostKursplanungAuswahl = () => import("~/components/gost/kursplanung/SGos
 export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.kursplanung", "kursplanung/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SGostKursplanung, new RouteDataGostKursplanung());

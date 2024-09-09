@@ -5,11 +5,6 @@ import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
-import de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter;
-
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.schule.Schulgliederung;
 
 
 import jakarta.persistence.Cacheable;
@@ -31,10 +26,6 @@ import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterSer
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultPlusConverterDeserializer;
 import de.svws_nrw.csv.converter.current.DatumConverterSerializer;
 import de.svws_nrw.csv.converter.current.DatumConverterDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromIntegerSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromIntegerDeserializer;
-import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverterSerializer;
-import de.svws_nrw.csv.converter.current.statkue.SchulgliederungKuerzelConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerLernabschnittsdaten.
@@ -611,10 +602,7 @@ public final class DTOSchuelerLernabschnittsdaten {
 	/** ASD-Kürzel SGL */
 	@Column(name = "ASDSchulgliederung")
 	@JsonProperty
-	@Convert(converter = SchulgliederungKuerzelConverter.class)
-	@JsonSerialize(using = SchulgliederungKuerzelConverterSerializer.class)
-	@JsonDeserialize(using = SchulgliederungKuerzelConverterDeserializer.class)
-	public Schulgliederung Schulgliederung;
+	public String Schulgliederung;
 
 	/** ASD-Jahrgang kann alles über ID geregelt werden */
 	@Column(name = "ASDJahrgang")
@@ -693,18 +681,12 @@ public final class DTOSchuelerLernabschnittsdaten {
 	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
 	@Column(name = "Gesamtnote_GS")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromInteger.class)
-	@JsonSerialize(using = NoteConverterFromIntegerSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromIntegerDeserializer.class)
-	public Note Gesamtnote_GS;
+	public Integer Gesamtnote_GS;
 
 	/** Lernbereichnote Naturwissenschaft HA10 */
 	@Column(name = "Gesamtnote_NW")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromInteger.class)
-	@JsonSerialize(using = NoteConverterFromIntegerSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromIntegerDeserializer.class)
-	public Note Gesamtnote_NW;
+	public Integer Gesamtnote_NW;
 
 	/** ID der Folgeklasse für den Lernabschnitt, sofern dieser vom Standard der Klassentabelle abweicht */
 	@Column(name = "Folgeklasse_ID")

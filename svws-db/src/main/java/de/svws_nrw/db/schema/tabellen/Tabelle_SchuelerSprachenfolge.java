@@ -1,8 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
-import de.svws_nrw.db.converter.current.SprachreferenzniveauConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -59,8 +58,6 @@ public class Tabelle_SchuelerSprachenfolge extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Referenzniveau */
 	public SchemaTabelleSpalte col_Referenzniveau = add("Referenzniveau", SchemaDatentypen.VARCHAR, false).setDatenlaenge(5)
-			.setConverter(SprachreferenzniveauConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Referenzniveau GeR des Sprachenfolgeeintrags");
 
 	/** Die Definition der Tabellenspalte KleinesLatinumErreicht */

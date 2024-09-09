@@ -5,6 +5,7 @@ import { StundenplanInputSimpleFach } from '../../../core/data/stundenplanblocku
 import { StundenplanInputSimpleRaum } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleRaum';
 import { StundenplanInputSimpleKopplung } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKopplung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanInputSimpleKlasse } from '../../../core/data/stundenplanblockung/StundenplanInputSimpleKlasse';
 
 export class StundenplanInputSimpleKurs extends JavaObject {
@@ -51,6 +52,8 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKurs'].includes(name);
 	}
+
+	public static class = new Class<StundenplanInputSimpleKurs>('de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKurs');
 
 	public static transpilerFromJSON(json : string): StundenplanInputSimpleKurs {
 		const obj = JSON.parse(json) as Partial<StundenplanInputSimpleKurs>;

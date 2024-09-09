@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.types.schueler.sprachen;
 
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
 
 /**

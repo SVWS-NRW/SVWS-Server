@@ -56,8 +56,15 @@
 	}
 
 	const textSchulform = computed<string>(() => {
-		const schulform = Schulform.getByKuerzel(props.schule().schulform);
-		return schulform?.daten.bezeichnung ?? "---";
+		let schuljahr = -1;
+		const id = props.schule().idSchuljahresabschnitt;
+		for (const abschnitt of props.schule().abschnitte)
+			if (abschnitt.id === id) {
+				schuljahr = abschnitt.schuljahr;
+				break;
+			}
+		const schulform = Schulform.data().getWertByKuerzel(props.schule().schulform);
+		return schulform?.daten(schuljahr)?.text ?? "—";
 	});
 
 </script>

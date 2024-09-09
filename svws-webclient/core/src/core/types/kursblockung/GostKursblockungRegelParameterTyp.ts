@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockungRegelParameterTyp> {
 
@@ -77,6 +78,8 @@ export class GostKursblockungRegelParameterTyp extends JavaEnum<GostKursblockung
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostKursblockungRegelParameterTyp>('de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp');
 
 }
 

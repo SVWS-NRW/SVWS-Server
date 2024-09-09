@@ -8,21 +8,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.klassen.Klassenart;
-import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
-import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
-import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.asd.types.klassen.Klassenart;
+import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
@@ -45,21 +45,13 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen, KlassenDaten> {
 
-
-	private final DataSchuljahresabschnitte dataSchuljahresabschnitte;
-
 	/**
 	 * @param conn DBEntityManager
 	 */
 	public DataKlassendaten(final DBEntityManager conn) {
-		this(conn, new DataSchuljahresabschnitte(conn));
-		setAttributesRequiredOnCreation("kuerzel", "idJahrgang");
-		setAttributesNotPatchable("id", "idSchuljahresabschnitt", "kuerzelVorgaengerklasse", "kuerzelFolgeklasse", "pruefungsordnung");
-	}
-
-	DataKlassendaten(final DBEntityManager conn, final DataSchuljahresabschnitte dataSchuljahresabschnitte) {
 		super(conn);
-		this.dataSchuljahresabschnitte = dataSchuljahresabschnitte;
+		setAttributesRequiredOnCreation("idSchuljahresabschnitt", "kuerzel", "idJahrgang");
+		setAttributesNotPatchable("id", "idSchuljahresabschnitt", "kuerzelVorgaengerklasse", "kuerzelFolgeklasse", "pruefungsordnung");
 	}
 
 	/**
@@ -254,16 +246,18 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	@Override
 	protected void initDTO(final DTOKlassen dtoKlassen, final Long newId) throws ApiOperationException {
 		// Wenn ein Schuljahresabschnitt mitgeliefert wurde, wird dieser hinterlegt, ansonsten wird default der aktuelle Schuljahresabschnitt der Schule hinterlegt
-		final DTOEigeneSchule schule = getDTOEigeneSchule();
 		final DTOTeilstandorte teilstandort = getDTOTeilstandort();
+
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
+		final int schuljahr = conn.getUser().schuleGetSchuljahr(); // TODO hier muss das Schuljahr mithilfe des idSchuljahresabschnitt aus der Klasse erzeugt werden! (siehe Defaults unten)
 
 		dtoKlassen.ID = newId;
 		dtoKlassen.Sichtbar = true;
 		dtoKlassen.Sortierung = 32000;
 		dtoKlassen.AdrMerkmal = teilstandort.AdrMerkmal;
-		dtoKlassen.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten.kuerzel;
-		dtoKlassen.ASDSchulformNr = Schulgliederung.getDefault(schule.Schulform).daten.kuerzel;
-		dtoKlassen.Klassenart = Klassenart.getDefault(schule.Schulform).daten.kuerzel;
+		dtoKlassen.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahr).kuerzel;
+		dtoKlassen.ASDSchulformNr = Schulgliederung.getDefault(schulform).daten(schuljahr).kuerzel;
+		dtoKlassen.Klassenart = Klassenart.getDefault(schulform).daten(schuljahr).kuerzel;
 	}
 
 
@@ -446,17 +440,24 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 * @throws ApiOperationException   wenn ein Fehler bei dem Mapping auftritt
 	 */
 	private void mapAllgemeinbildendOrganisationsform(final DTOKlassen dto, final Object value) throws ApiOperationException {
-		final DTOEigeneSchule schule = getDTOEigeneSchule();
-		if (!schule.Schulform.daten.istAllgemeinbildend)
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Keinen Schuljahresabschnitt für die ID %d gefunden.".formatted(dto.Schuljahresabschnitts_ID));
+		if (!conn.getUser().schuleGetSchulform().istAllgemeinbildend())
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Wert kann nicht gesetzt werden, da die Schule keine allgemeinbildende Schulform hat.");
 		final Long idOrgform = JSONMapper.convertToLong(value, true);
-		AllgemeinbildendOrganisationsformen orgform = AllgemeinbildendOrganisationsformen.getByID(idOrgform);
+		AllgemeinbildendOrganisationsformen orgform = AllgemeinbildendOrganisationsformen.data().getWertByID(idOrgform);
 		if (idOrgform == null)
 			orgform = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET;
 		if (orgform == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d für die allgemeinene Organisationform ist ungültig");
-		dto.OrgFormKrz = orgform.daten.kuerzel;
+		final OrganisationsformKatalogEintrag oke = orgform.daten(abschnitt.schuljahr);
+		if (oke == null)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die ID %d für die allgemeinene Organisationform ist für das Schuljahr %d der Klasse ungültig".formatted(idOrgform, abschnitt.schuljahr));
+		dto.OrgFormKrz = oke.kuerzel;
 	}
 
 
@@ -469,18 +470,30 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 * @throws ApiOperationException   wenn ein Fehler bei dem Mapping auftritt
 	 */
 	private void mapBerufsbildendOrganisationsform(final DTOKlassen dto, final Object value) throws ApiOperationException {
-		final DTOEigeneSchule schule = getDTOEigeneSchule();
-		if (!schule.Schulform.daten.istBerufsbildend)
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Keinen Schuljahresabschnitt für die ID %d gefunden.".formatted(dto.Schuljahresabschnitts_ID));
+		if (!conn.getUser().schuleGetSchulform().istBerufsbildend())
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Wert kann nicht gesetzt werden, da die Schule keine berufsbildende Schulform hat.");
 		final Long idOrgform = JSONMapper.convertToLong(value, true);
 		if (idOrgform == null) {
-			dto.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten.kuerzel;
+			final OrganisationsformKatalogEintrag oke = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(abschnitt.schuljahr);
+			if (oke == null)
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die allgemeinene Organisationform NICHT_ZUGEORDNET ist für das Schuljahr %d der Klasse ungültig".formatted(abschnitt.schuljahr));
+			dto.OrgFormKrz = oke.kuerzel;
 		} else {
-			final BerufskollegOrganisationsformen orgform = BerufskollegOrganisationsformen.getByID(idOrgform);
+			final BerufskollegOrganisationsformen orgform = BerufskollegOrganisationsformen.data().getWertByID(idOrgform);
 			if (orgform == null)
-				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d für die allgemeinene Organisationform ist ungültig");
-			dto.OrgFormKrz = orgform.daten.kuerzel;
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d für die berufsbildende Organisationform ist ungültig");
+			final OrganisationsformKatalogEintrag oke = orgform.daten(abschnitt.schuljahr);
+			if (oke == null)
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die ID %d für die berufsbildende Organisationform ist für das Schuljahr %d der Klasse ungültig".formatted(idOrgform,
+								abschnitt.schuljahr));
+			dto.OrgFormKrz = oke.kuerzel;
 		}
 	}
 
@@ -494,24 +507,38 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 * @throws ApiOperationException   wenn ein Fehler bei dem Mapping auftritt
 	 */
 	private void mapWeiterbildungOrganisationsform(final DTOKlassen dto, final Object value) throws ApiOperationException {
-		final DTOEigeneSchule schule = getDTOEigeneSchule();
-		if (!schule.Schulform.daten.istWeiterbildung)
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
+		if (abschnitt == null)
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+					"Keinen Schuljahresabschnitt für die ID %d gefunden.".formatted(dto.Schuljahresabschnitts_ID));
+		if (!conn.getUser().schuleGetSchulform().istWeiterbildung())
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Wert kann nicht gesetzt werden, da die Schule keine Schulform für die Weiterbildung hat.");
 		final Long idOrgform = JSONMapper.convertToLong(value, true);
 		if (idOrgform == null) {
-			dto.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten.kuerzel;
+			final OrganisationsformKatalogEintrag oke = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(abschnitt.schuljahr);
+			if (oke == null)
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die allgemeinene Organisationform NICHT_ZUGEORDNET ist für das Schuljahr %d der Klasse ungültig".formatted(abschnitt.schuljahr));
+			dto.OrgFormKrz = oke.kuerzel;
 		} else {
-			final WeiterbildungskollegOrganisationsformen orgform = WeiterbildungskollegOrganisationsformen.getByID(idOrgform);
+			final WeiterbildungskollegOrganisationsformen orgform = WeiterbildungskollegOrganisationsformen.data().getWertByID(idOrgform);
 			if (orgform == null)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Die ID %d für die Organisationform am Weiterbildungskolleg ist ungültig");
-			dto.OrgFormKrz = orgform.daten.kuerzel;
+			final OrganisationsformKatalogEintrag oke = orgform.daten(abschnitt.schuljahr);
+			if (oke == null)
+				throw new ApiOperationException(Status.BAD_REQUEST,
+						"Die ID %d für die Organisationform am Weiterbildungskolleg ist für das Schuljahr %d der Klasse ungültig".formatted(idOrgform,
+								abschnitt.schuljahr));
+			dto.OrgFormKrz = oke.kuerzel;
 		}
 	}
 
 
 	@Override
 	protected void mapAttribute(final DTOKlassen dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 		switch (name) {
 			case "kuerzel" -> {
 				// Prüfen, ob das Klassenkürzel bereits im Schuljahresabschnitt existiert
@@ -544,23 +571,24 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			case "idBerufsbildendOrganisationsform" -> mapBerufsbildendOrganisationsform(dto, value);
 			case "idWeiterbildungOrganisationsform" -> mapWeiterbildungOrganisationsform(dto, value);
 			case "idSchulgliederung" -> {
-				final DTOEigeneSchule schule = getDTOEigeneSchule();
 				final Long idSchulgliederung = JSONMapper.convertToLong(value, true);
-				if (((idSchulgliederung == null) || (idSchulgliederung == -1)) && (Schulgliederung.getDefault(schule.Schulform) == null)) {
+				if (((idSchulgliederung == null) || (idSchulgliederung == -1)) && (Schulgliederung.getDefault(schulform) == null)) {
 					dto.ASDSchulformNr = null;
 					return;
 				}
-				final Schulgliederung sgl = Schulgliederung.getByID(idSchulgliederung);
-				if (!sgl.hasSchulform(schule.Schulform))
+				final Schulgliederung sgl = ((idSchulgliederung == null) || (idSchulgliederung == -1))
+						? Schulgliederung.getDefault(schulform)
+						: Schulgliederung.data().getWertByID(idSchulgliederung);
+				if (!sgl.hatSchulform(abschnitt.schuljahr, schulform))
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulgliederung wird von der angegeben Schulform nicht unterstützt.");
-				dto.ASDSchulformNr = sgl.daten.kuerzel;
+				dto.ASDSchulformNr = sgl.daten(abschnitt.schuljahr).kuerzel;
 			}
 			case "idKlassenart" -> {
 				final Long idKlassenart = JSONMapper.convertToLong(value, true);
-				final Klassenart k = Klassenart.getByID(idKlassenart);
+				final Klassenart k = Klassenart.data().getWertByID(idKlassenart);
 				if (k == null)
 					throw new ApiOperationException(Status.BAD_REQUEST, "Die Klassenart für die ID %d konnte nicht gefunden werden.".formatted(idKlassenart));
-				dto.Klassenart = k.daten.kuerzel;
+				dto.Klassenart = k.daten(abschnitt.schuljahr).kuerzel;
 			}
 			case "noteneingabeGesperrt" -> dto.NotenGesperrt = JSONMapper.convertToBoolean(value, false);
 			case "verwendungAnkreuzkompetenzen" -> dto.Ankreuzzeugnisse = JSONMapper.convertToBoolean(value, false);
@@ -569,7 +597,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 				if (idFachklasse == null) {
 					dto.Fachklasse_ID = null;
 				} else {
-					final BerufskollegFachklassenKatalogDaten fachklasse = JsonDaten.fachklassenManager.getDaten(idFachklasse);
+					final BerufskollegFachklassenKatalogDaten fachklasse = JsonDaten.fachklassenManager.getDatenByID(idFachklasse);
 					if (fachklasse == null)
 						throw new ApiOperationException(Status.BAD_REQUEST, "Keine Fachklasse die ID %d gefunden.".formatted(idFachklasse));
 					dto.Fachklasse_ID = fachklasse.id;
@@ -684,6 +712,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 	/**
 	 * Methode liefert eine Liste von {@link KlassenDaten} zu einem Schuljahresabschnitt zurück.
+	 *
 	 * @param dtos zu mappende DTOs
 	 * @param schuljahresabschnittId ID des Schuljahresabschnitts
 	 * @param attachSchueler gibt an, ob die Schueler zu den Klassen geladen werden sollen
@@ -694,34 +723,31 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 */
 	private List<KlassenDaten> mapList(final List<DTOKlassen> dtos, final Long schuljahresabschnittId, final boolean attachSchueler)
 			throws ApiOperationException {
-		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
-		final Schulform schulform = getDTOEigeneSchule().Schulform;
-		final Schuljahresabschnitt schuljahresabschnitt = dataSchuljahresabschnitte.getByID(schuljahresabschnittId);
-
+		// Bestimme die Information zum Schuljahresabschnitt
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(schuljahresabschnittId);
 		final Map<String, DTOKlassen> klassenVorher = getKlassenBySchuljahresabschnittId(schuljahresabschnitt.idVorigerAbschnitt);
 		final Map<String, DTOKlassen> klassenNachher = getKlassenBySchuljahresabschnittId(schuljahresabschnitt.idFolgeAbschnitt);
 
 		final List<KlassenDaten> klassenDatenList = new ArrayList<>();
-		for (final DTOKlassen dto : dtos) {
-			klassenDatenList.add(mapInternal(dto, schulform, schuljahresabschnitt, klassenVorher, klassenNachher, attachSchueler));
-		}
+		for (final DTOKlassen dto : dtos)
+			klassenDatenList.add(mapInternal(dto, schuljahresabschnitt, klassenVorher, klassenNachher, attachSchueler));
 
 		return klassenDatenList;
 	}
 
 	private KlassenDaten map(final DTOKlassen dto, final boolean attachSchueler) throws ApiOperationException {
 		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
-		final Schulform schulform = getDTOEigeneSchule().Schulform;
-		final Schuljahresabschnitt schuljahresabschnitt = dataSchuljahresabschnitte.getByID(dto.Schuljahresabschnitts_ID);
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
 
 		final Map<String, DTOKlassen> klassenVorher = getKlassenBySchuljahresabschnittId(schuljahresabschnitt.idVorigerAbschnitt);
 		final Map<String, DTOKlassen> klassenNachher = getKlassenBySchuljahresabschnittId(schuljahresabschnitt.idFolgeAbschnitt);
 
-		return mapInternal(dto, schulform, schuljahresabschnitt, klassenVorher, klassenNachher, attachSchueler);
+		return mapInternal(dto, schuljahresabschnitt, klassenVorher, klassenNachher, attachSchueler);
 	}
 
-	private KlassenDaten mapInternal(final DTOKlassen dto, final Schulform schulform, final Schuljahresabschnitt schuljahresabschnitt,
+	private KlassenDaten mapInternal(final DTOKlassen dto, final Schuljahresabschnitt schuljahresabschnitt,
 			final Map<String, DTOKlassen> klassenVorher, final Map<String, DTOKlassen> klassenNachher, final boolean attachSchueler) {
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final KlassenDaten klassenDaten = new KlassenDaten();
 
 		final List<DTOKlassenLeitung> klassenLeitungen = conn.queryList(DTOKlassenLeitung.QUERY_BY_KLASSEN_ID + " ORDER BY e.Reihenfolge",
@@ -740,16 +766,18 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		klassenDaten.teilstandort = Objects.toString(dto.AdrMerkmal, "");
 		klassenDaten.beschreibung = Objects.toString(dto.Bezeichnung, "");
 
-		klassenDaten.idAllgemeinbildendOrganisationsform = (AllgemeinbildendOrganisationsformen.getByKuerzel(dto.OrgFormKrz) == null)
-				? null : AllgemeinbildendOrganisationsformen.getByKuerzel(dto.OrgFormKrz).daten.id;
-		klassenDaten.idBerufsbildendOrganisationsform = (BerufskollegOrganisationsformen.getByKuerzel(dto.OrgFormKrz) == null)
-				? null : BerufskollegOrganisationsformen.getByKuerzel(dto.OrgFormKrz).daten.id;
-		klassenDaten.idWeiterbildungOrganisationsform = (WeiterbildungskollegOrganisationsformen.getByKuerzel(dto.OrgFormKrz) == null)
-				? null : WeiterbildungskollegOrganisationsformen.getByKuerzel(dto.OrgFormKrz).daten.id;
+		klassenDaten.idAllgemeinbildendOrganisationsform = (AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz) == null)
+				? null : AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz).daten(schuljahresabschnitt.schuljahr).id;
+		klassenDaten.idBerufsbildendOrganisationsform = (BerufskollegOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz) == null)
+				? null : BerufskollegOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz).daten(schuljahresabschnitt.schuljahr).id;
+		klassenDaten.idWeiterbildungOrganisationsform = (WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz) == null)
+				? null : WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(dto.OrgFormKrz).daten(schuljahresabschnitt.schuljahr).id;
 		klassenDaten.pruefungsordnung = dto.PruefOrdnung;
 
-		final Klassenart klassenart = Klassenart.getByKuerzel(dto.Klassenart);
-		klassenDaten.idKlassenart = ((klassenart != null) && (klassenart.hasSchulform(schulform))) ? klassenart.daten.id : Klassenart.UNDEFINIERT.daten.id;
+		final Klassenart klassenart = Klassenart.data().getWertByKuerzel(dto.Klassenart);
+		klassenDaten.idKlassenart = ((klassenart != null) && (klassenart.hatSchulform(schuljahresabschnitt.schuljahr, schulform)))
+				? klassenart.daten(schuljahresabschnitt.schuljahr).id
+				: Klassenart.UNDEFINIERT.daten(schuljahresabschnitt.schuljahr).id;
 		klassenDaten.noteneingabeGesperrt = (dto.NotenGesperrt != null) && dto.NotenGesperrt;
 		klassenDaten.verwendungAnkreuzkompetenzen = (dto.Ankreuzzeugnisse != null) && dto.Ankreuzzeugnisse;
 		klassenDaten.kuerzelVorgaengerklasse = dto.VKlasse;
@@ -790,11 +818,11 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 	// TODO: Methode sollte später durch eigene Methode in zugehöriger DataManager Klasse abgelöst werden
 	Long getSchulgliederungIdByKlasseAndSchulform(final DTOKlassen dto, final Schulform schulform) {
-		Schulgliederung gliederung = Schulgliederung.getBySchulformAndKuerzel(schulform, dto.ASDSchulformNr);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
+		Schulgliederung gliederung = Schulgliederung.getBySchuljahrAndSchulformAndSchluessel(abschnitt.schuljahr, schulform, dto.ASDSchulformNr);
 		if (gliederung == null)
 			gliederung = Schulgliederung.getDefault(schulform);
-
-		return (gliederung != null) ? gliederung.daten.id : -1;
+		return (gliederung != null) ? gliederung.daten(abschnitt.schuljahr).id : -1;
 	}
 
 

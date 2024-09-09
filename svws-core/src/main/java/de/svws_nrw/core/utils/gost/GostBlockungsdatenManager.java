@@ -128,21 +128,9 @@ public class GostBlockungsdatenManager {
 	/** Die maximale Zeit in Millisekunden die der Blockungsalgorithmus verwenden darf. */
 	private long _maxTimeMillis = 1000;
 
-	/**
-	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
-	 */
-	public GostBlockungsdatenManager() {
-		_faecherManager = new GostFaecherManager();
-		_daten = new GostBlockungsdaten();
-		_daten.gostHalbjahr = GostHalbjahr.EF1.id;
-		_compKurs_fach_kursart_kursnummer = createComparatorKursFachKursartNummer();
-		_compKurs_kursart_fach_kursnummer = createComparatorKursKursartFachNummer();
-		_compFachwahlen = createComparatorFachwahlen();
-		_compRegel = createComparatorRegeln();
-		_compSchueler = createComparatorSchueler();
-	}
 
-	/** Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
+	/**
+	 * Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
 	 *
 	 * @param daten           die Blockungsdaten
 	 * @param faecherManager  der Fächer-Manager

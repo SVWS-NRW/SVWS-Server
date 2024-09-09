@@ -1,0 +1,158 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "OA",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"schluessel": "0",
+			"kuerzel": "OA",
+			"text": "Ohne Abschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VORB",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 100000,
+			"schluessel": "1",
+			"kuerzel": "VORB",
+			"text": "Abschluss der Ausbildungsvorbereitung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VERS",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 110000,
+			"schluessel": "1",
+			"kuerzel": "VERS",
+			"text": "Versetzungszeugnis",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AUFB",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 120000,
+			"schluessel": "1",
+			"kuerzel": "AUFB",
+			"text": "Abschlusszeugnis in Aufbaubildungsgängen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BV",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 130000,
+			"schluessel": "1",
+			"kuerzel": "BV",
+			"text": "Abschluss der Berufschulvorbereitung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VP",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 140000,
+			"schluessel": "1",
+			"kuerzel": "VP",
+			"text": "Vorpraktikum",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BP",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 150000,
+			"schluessel": "1",
+			"kuerzel": "BP",
+			"text": "Berufspraktikum",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BG",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 200000,
+			"schluessel": "2",
+			"kuerzel": "BG",
+			"text": "Abschluss der Berufschulgrundjahres",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BS",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 300000,
+			"schluessel": "3",
+			"kuerzel": "BS",
+			"text": "Berufschulabschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BK",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 400000,
+			"schluessel": "4",
+			"kuerzel": "BK",
+			"text": "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BAB",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 500000,
+			"schluessel": "5",
+			"kuerzel": "BAB",
+			"text": "Berufsabschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BW",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 600000,
+			"schluessel": "6",
+			"kuerzel": "BW",
+			"text": "Fachschulabschluss (berufliche Weiterbildung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VBK",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 800000,
+			"schluessel": "8",
+			"kuerzel": "VBK",
+			"text": "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WECHSEL",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 900000,
+			"schluessel": "9",
+			"kuerzel": "WECHSEL",
+			"text": "Schulwechsler, die im selben Bildungsgang verbleiben",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

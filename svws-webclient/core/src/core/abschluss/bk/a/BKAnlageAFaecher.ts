@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { BKAnlageAFach } from '../../../../core/abschluss/bk/a/BKAnlageAFach';
 
 export class BKAnlageAFaecher extends JavaObject {
@@ -31,6 +32,8 @@ export class BKAnlageAFaecher extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher'].includes(name);
 	}
+
+	public static class = new Class<BKAnlageAFaecher>('de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher');
 
 }
 

@@ -3,17 +3,19 @@ package de.svws_nrw.data.schueler;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefung;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittNachpruefungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.fach.BilingualeSprache;
-import de.svws_nrw.core.types.klassen.Klassenart;
-import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
-import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
-import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
-import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.asd.types.fach.BilingualeSprache;
+import de.svws_nrw.asd.types.klassen.Klassenart;
+import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -23,7 +25,6 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerPSFachBemerkungen;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -74,6 +75,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
 		if (bemerkungen.size() > 1)
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Mehr als einen Datensatz mit Bemerkungen zur Abschnitt-ID " + dto.ID + " gefunden.");
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
 
 		final SchuelerLernabschnittsdaten daten = new SchuelerLernabschnittsdaten();
 		daten.id = dto.ID;
@@ -91,7 +93,12 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		daten.tutorID = dto.Tutor_ID;
 		daten.klassenID = dto.Klassen_ID;
 		daten.folgeklassenID = dto.Folgeklasse_ID;
-		daten.schulgliederung = dto.Schulgliederung.daten.kuerzel;
+		// TODO Validierung der Schulgliederung überprüfen...
+		final Schulgliederung sgl = (dto.Schulgliederung == null) ? null : Schulgliederung.data().getWertByKuerzel(dto.Schulgliederung);
+		SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(abschnitt.schuljahr);
+		if (sglke == null)
+			sglke = Schulgliederung.getDefault(conn.getUser().schuleGetSchulform()).daten(abschnitt.schuljahr);
+		daten.schulgliederung = sglke.kuerzel;
 		daten.jahrgangID = dto.Jahrgang_ID;
 		daten.fachklasseID = dto.Fachklasse_ID;
 		daten.schwerpunktID = dto.Schwerpunkt_ID;
@@ -111,8 +118,10 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 		daten.istFachpraktischerAnteilAusreichend = dto.FachPraktAnteilAusr;
 		daten.versetzungsvermerk = dto.VersetzungKrz;
 		daten.noteDurchschnitt = dto.DSNote;
-		daten.noteLernbereichGSbzwAL = (dto.Gesamtnote_GS == null) ? null : dto.Gesamtnote_GS.getNoteSekI();
-		daten.noteLernbereichNW = (dto.Gesamtnote_NW == null) ? null : dto.Gesamtnote_NW.getNoteSekI();
+		final Note noteLernbereichGSbzwAL = (dto.Gesamtnote_GS == null) ? null : Note.fromNoteSekI(dto.Gesamtnote_GS);
+		daten.noteLernbereichGSbzwAL = (noteLernbereichGSbzwAL == null) ? null : dto.Gesamtnote_GS;
+		final Note noteLernbereichNW = (dto.Gesamtnote_NW == null) ? null : Note.fromNoteSekI(dto.Gesamtnote_NW);
+		daten.noteLernbereichNW = (noteLernbereichNW == null) ? null : dto.Gesamtnote_NW;
 		daten.abschlussart = dto.AbschlussArt;
 		daten.istAbschlussPrognose = dto.AbschlIstPrognose;
 		daten.abschluss = dto.Abschluss;
@@ -171,6 +180,8 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	@Override
 	protected void mapAttribute(final DTOSchuelerLernabschnittsdaten dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		switch (name) {
 			case "id" -> {
 				final Long patch_id = JSONMapper.convertToLong(value, true);
@@ -238,7 +249,15 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			}
 			case "schulgliederung" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				dto.Schulgliederung = Schulgliederung.getByKuerzel(str);
+				if (str != null) {
+					final Schulgliederung sgl = Schulgliederung.data().getWertByKuerzel(str);
+					if (sgl == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Kürzel %s für die Schulgliederung ist ungültig.".formatted(str));
+					if (sgl.daten(abschnitt.schuljahr) == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Kürzel %s für die Schulgliederung ist in dem Schuljahr %d nicht (mehr) ungültig.".formatted(str, abschnitt.schuljahr));
+				}
+				dto.Schulgliederung = str;
 			}
 			case "jahrgangID" -> {
 				final Long idJahrgang = JSONMapper.convertToLong(value, true);
@@ -250,7 +269,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 				final Long idFachklasse = JSONMapper.convertToLong(value, true);
 				if (idFachklasse != null) {
 					final var manager = JsonDaten.fachklassenManager;
-					if (manager.getDaten(idFachklasse) == null)
+					if (manager.getDatenByID(idFachklasse) == null)
 						throw new ApiOperationException(Status.CONFLICT);
 				}
 				dto.Fachklasse_ID = idFachklasse;
@@ -262,18 +281,18 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			}
 			case "organisationsform" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 				if (str != null) {
-					if ((schule.Schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.getByKuerzel(str) == null))
+					if ((schulform == Schulform.WB) && (WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(str) == null))
 						throw new ApiOperationException(Status.CONFLICT);
-					if ((AllgemeinbildendOrganisationsformen.getByKuerzel(str) == null) && (BerufskollegOrganisationsformen.getByKuerzel(str) == null))
+					if ((AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(str) == null)
+							&& (BerufskollegOrganisationsformen.data().getWertByKuerzel(str) == null))
 						throw new ApiOperationException(Status.CONFLICT);
 				}
 				dto.OrgFormKrz = str;
 			}
 			case "Klassenart" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (Klassenart.getByKuerzel(str) == null))
+				if ((str != null) && (Klassenart.data().getWertByKuerzel(str) == null))
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Klassenart = str;
 			}
@@ -304,7 +323,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			}
 			case "bilingualerZweig" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (BilingualeSprache.getByKuerzel(str) == null))
+				if ((str != null) && (BilingualeSprache.data().getWertByKuerzel(str) == null))
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.BilingualerZweig = str;
 			}
@@ -321,8 +340,18 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 				// TODO Prüfung der Durchschnittsnote
 				dto.DSNote = str;
 			}
-			case "noteLernbereichGSbzwAL" -> dto.Gesamtnote_GS = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6));
-			case "noteLernbereichNW" -> dto.Gesamtnote_NW = Note.fromNoteSekI(JSONMapper.convertToIntegerInRange(value, true, 1, 6));
+			case "noteLernbereichGSbzwAL" -> {
+				final Integer noteSekI = JSONMapper.convertToIntegerInRange(value, true, 1, 6);
+				if ((noteSekI != null) && (Note.fromNoteSekI(noteSekI) == null))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Der Notenwert für die Lernbereichsnote ist ungültig");
+				dto.Gesamtnote_GS = noteSekI;
+			}
+			case "noteLernbereichNW" -> {
+				final Integer noteSekI = JSONMapper.convertToIntegerInRange(value, true, 1, 6);
+				if ((noteSekI != null) && (Note.fromNoteSekI(noteSekI) == null))
+					throw new ApiOperationException(Status.BAD_REQUEST, "Der Notenwert für die Lernbereichsnote ist ungültig");
+				dto.Gesamtnote_NW = noteSekI;
+			}
 			case "abschlussart" -> {
 				final Integer abschlussart = JSONMapper.convertToInteger(value, true);
 				// TODO Prüfung der Abschlussart
@@ -331,13 +360,13 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 			case "istAbschlussPrognose" -> dto.AbschlIstPrognose = JSONMapper.convertToBoolean(value, true);
 			case "abschluss" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (SchulabschlussAllgemeinbildend.getByKuerzel(str) == null))
+				if ((str != null) && (SchulabschlussAllgemeinbildend.data().getWertByKuerzel(str) == null))
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Abschluss = str;
 			}
 			case "abschlussBerufsbildend" -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				if ((str != null) && (SchulabschlussBerufsbildend.getByKuerzel(str) == null))
+				if ((str != null) && (SchulabschlussBerufsbildend.data().getWertByKuerzel(str) == null))
 					throw new ApiOperationException(Status.CONFLICT);
 				dto.Abschluss_B = str;
 			}

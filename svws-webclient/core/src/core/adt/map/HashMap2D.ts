@@ -5,6 +5,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -271,6 +272,8 @@ export class HashMap2D<K1, K2, V> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap2D'].includes(name);
 	}
+
+	public static class = new Class<HashMap2D<any, any, any>>('de.svws_nrw.core.adt.map.HashMap2D');
 
 }
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { HashMap4D } from '../../core/adt/map/HashMap4D';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -69,6 +70,8 @@ export class Map4DUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map4DUtils'].includes(name);
 	}
+
+	public static class = new Class<Map4DUtils>('de.svws_nrw.core.utils.Map4DUtils');
 
 }
 

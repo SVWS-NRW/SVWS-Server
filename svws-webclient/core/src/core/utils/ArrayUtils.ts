@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
+import { Class } from '../../java/lang/Class';
 import { System } from '../../java/lang/System';
 
 export class ArrayUtils extends JavaObject {
@@ -54,6 +55,8 @@ export class ArrayUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.ArrayUtils'].includes(name);
 	}
+
+	public static class = new Class<ArrayUtils>('de.svws_nrw.core.utils.ArrayUtils');
 
 }
 

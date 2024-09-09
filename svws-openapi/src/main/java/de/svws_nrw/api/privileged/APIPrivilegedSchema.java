@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
@@ -15,7 +16,6 @@ import de.svws_nrw.core.data.db.MigrateBody;
 import de.svws_nrw.core.data.db.SchemaListeEintrag;
 import de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten;
 import de.svws_nrw.core.data.schule.SchuleInfo;
-import de.svws_nrw.core.data.schule.SchuleStammdaten;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;

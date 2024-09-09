@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 
@@ -176,6 +177,8 @@ export class GostAbiturFach extends JavaEnum<GostAbiturFach> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostAbiturFach', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostAbiturFach>('de.svws_nrw.core.types.gost.GostAbiturFach');
 
 }
 

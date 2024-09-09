@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import type { Collection } from '../../java/util/Collection';
+import { Class } from '../../java/lang/Class';
 
 export class StringUtils extends JavaObject {
 
@@ -90,6 +91,8 @@ export class StringUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.StringUtils'].includes(name);
 	}
+
+	public static class = new Class<StringUtils>('de.svws_nrw.core.utils.StringUtils');
 
 }
 

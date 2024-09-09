@@ -9,8 +9,8 @@
 		<template #content>
 			<svws-ui-table clickable :clicked="lehrerListeManager().hasDaten() ? lehrerListeManager().auswahl() : null" @update:clicked="gotoLehrer"
 				:items="rowsFiltered.values()" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -29,13 +29,13 @@
 <script setup lang="ts">
 
 	import { computed, ref, shallowRef } from "vue";
-	import { type SortByAndOrder } from "@ui";
-	import { type PersonalTyp, type LehrerListeEintrag } from "@core";
-	import { type LehrerAuswahlProps } from "./SLehrerAuswahlProps";
+	import type { SortByAndOrder } from "@ui";
+	import type { PersonalTyp, LehrerListeEintrag } from "@core";
+	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "nachname", label: "Nachname", sortable: true, span: 2 },
 		{ key: "vorname", label: "Vorname", sortable: true, span: 2 }

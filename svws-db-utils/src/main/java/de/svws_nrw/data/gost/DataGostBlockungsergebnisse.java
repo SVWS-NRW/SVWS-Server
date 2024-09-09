@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
@@ -13,7 +14,6 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.types.KursFortschreibungsart;
-import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.DTOUtils;
@@ -504,7 +504,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 		// Entferne die Kurs-Schüler-Zuordnungen
 		if (!update.listEntfernen.isEmpty()) {
-			final @NotNull HashSet<@NotNull Pair<@NotNull Long, @NotNull Long>> setEntfernt = new HashSet<>();
+			final @NotNull HashSet<de.svws_nrw.asd.adt.Pair<@NotNull Long, @NotNull Long>> setEntfernt = new HashSet<>();
 			for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung : update.listEntfernen) {
 				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
@@ -529,7 +529,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 
 		// Füge die Kurs-Schüler-Zuordnungen hinzu
 		if (!update.listHinzuzufuegen.isEmpty()) {
-			final @NotNull HashSet<@NotNull Pair<@NotNull Long, @NotNull Long>> setHinzugefuegt = new HashSet<>();
+			final @NotNull HashSet<de.svws_nrw.asd.adt.Pair<@NotNull Long, @NotNull Long>> setHinzugefuegt = new HashSet<>();
 			for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung zuordnung : update.listHinzuzufuegen) {
 				// Prüfe, ob die zu entfernende Zuordnung doppelt vorkommt
 				final @NotNull Pair<@NotNull Long, @NotNull Long> eintrag = new Pair<>(zuordnung.idKurs, zuordnung.idSchueler);
@@ -912,27 +912,27 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
 				leistung.NotenKrz = switch (halbjahr) {
 					case EF1 -> switch (fachwahl.EF1_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 					case EF2 -> switch (fachwahl.EF2_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 					case Q21 -> switch (fachwahl.Q21_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 					case Q22 -> switch (fachwahl.Q22_Kursart) {
-						case "AT" -> Note.ATTEST;
+						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 						default -> null;
 					};
 				};
@@ -1152,30 +1152,30 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				};
 				leistung.KursartAllg = kursart.kuerzel;
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
-				if ((leistung.NotenKrz == null) || (leistung.NotenKrz == Note.KEINE)) {
+				if ((leistung.NotenKrz == null) || (Objects.equals(leistung.NotenKrz, Note.KEINE.daten(abschnitt.Jahr).kuerzel))) {
 					leistung.NotenKrz = switch (halbjahr) {
 						case EF1 -> switch (fachwahl.EF1_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case EF2 -> switch (fachwahl.EF2_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q11 -> switch (fachwahl.Q11_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q12 -> switch (fachwahl.Q12_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q21 -> switch (fachwahl.Q21_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q22 -> switch (fachwahl.Q22_Kursart) {
-							case "AT" -> Note.ATTEST;
+							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 					};

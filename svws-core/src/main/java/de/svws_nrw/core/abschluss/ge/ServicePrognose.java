@@ -8,7 +8,7 @@ import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFach;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import jakarta.validation.constraints.NotNull;
 
 

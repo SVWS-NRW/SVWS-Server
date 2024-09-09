@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
@@ -9,6 +9,7 @@ import { type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustau
 import type { SchuleDatenaustauschKurs42Props } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Props";
 import { type AuswahlChildData } from "~/components/AuswahlChildData";
 import { RouteManager } from "~/router/RouteManager";
+import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteDataSchuleDatenaustauschKurs42 } from "./RouteDataSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenaustauschKurs42Blockung";
 import { routeSchuleDatenaustauschKurs42Raeume } from "./RouteSchuleDatenaustauschKurs42Raeume";
@@ -18,7 +19,7 @@ const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenausta
 export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteSchuleDatenaustausch> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
+		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";

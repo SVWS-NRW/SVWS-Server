@@ -1,4 +1,4 @@
-import type { Schuljahresabschnitt } from "../../../../core/src/core/data/schule/Schuljahresabschnitt";
+import type { Schuljahresabschnitt } from "../../../../core/src/asd/data/schule/Schuljahresabschnitt";
 
 /**
  * Dieses Interface stellt die Daten und Methoden zur Steuerung der

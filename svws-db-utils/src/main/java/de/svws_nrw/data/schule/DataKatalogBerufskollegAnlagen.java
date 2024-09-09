@@ -1,14 +1,13 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.schule.BerufskollegAnlageKatalogEintrag;
-import de.svws_nrw.core.types.schule.BerufskollegAnlage;
+import de.svws_nrw.asd.data.schule.BerufskollegAnlageKatalogEintrag;
+import de.svws_nrw.asd.types.schule.BerufskollegAnlage;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 
@@ -31,7 +30,7 @@ public final class DataKatalogBerufskollegAnlagen extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<BerufskollegAnlageKatalogEintrag> daten = new ArrayList<>();
 		for (final BerufskollegAnlage anlagen : BerufskollegAnlage.values())
-			daten.addAll(Arrays.asList(anlagen.historie));
+			daten.addAll(anlagen.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class BetriebAnsprechpartner extends JavaObject {
 
@@ -64,6 +65,8 @@ export class BetriebAnsprechpartner extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner'].includes(name);
 	}
+
+	public static class = new Class<BetriebAnsprechpartner>('de.svws_nrw.core.data.betrieb.BetriebAnsprechpartner');
 
 	public static transpilerFromJSON(json : string): BetriebAnsprechpartner {
 		const obj = JSON.parse(json) as Partial<BetriebAnsprechpartner>;

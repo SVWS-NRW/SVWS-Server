@@ -31,10 +31,10 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { StundenplanManager } from "@core";
-	import { DateUtils, Wochentag, ZulaessigesFach , StundenplanZeitraster, ListUtils } from "@core";
+	import { DateUtils, Wochentag, Fach , StundenplanZeitraster, ListUtils } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 
 	const props = defineProps<{
@@ -43,6 +43,8 @@
 		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
+
+	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());
 
 	const inputBeginn = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 	const inputEnde = ref<ComponentExposed<typeof SvwsUiTextInput>>();
@@ -57,7 +59,7 @@
 	];
 
 	function getBgColor(fach: string): string {
-		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+		return Fach.data().getWertBySchluessel(fach)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
 	}
 
 	async function patchBeginn(start: string | null) {

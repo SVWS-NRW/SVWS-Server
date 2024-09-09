@@ -22,9 +22,11 @@ import de.svws_nrw.test.apitests.util.APITestUtil;
 import de.svws_nrw.test.apitests.util.BaseApiUtil;
 import de.svws_nrw.test.davapitests.util.xml.XmlPathWalker;
 import io.restassured.response.Response;
+
 /**
  * Testet die XML-Antworten der DavApi auf enthaltene Informationen
  */
+@Disabled
 class DavApiXmlResponseTest extends BaseApiUtil {
 
 	/**

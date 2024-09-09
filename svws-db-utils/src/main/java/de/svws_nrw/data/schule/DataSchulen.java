@@ -8,8 +8,8 @@ import java.util.Set;
 import java.util.function.ObjLongConsumer;
 
 import de.svws_nrw.core.data.kataloge.SchulEintrag;
-import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -38,17 +38,15 @@ public final class DataSchulen extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleNRW} in einen Core-DTO {@link SchulEintrag}.
-	 */
-	private static final DTOMapper<DTOSchuleNRW, SchulEintrag> dtoMapper = (final DTOSchuleNRW e) -> {
+	private static SchulEintrag map(final DBEntityManager conn, final DTOSchuleNRW e) {
 		final SchulEintrag daten = new SchulEintrag();
 		daten.id = e.ID;
 		daten.kuerzel = e.Kuerzel;
 		daten.kurzbezeichnung = e.KurzBez;
 		daten.schulnummer = e.SchulNr;
 		daten.name = (e.Name == null) ? "" : e.Name;
-		daten.schulformID = (e.SchulformNr == null) ? null : Schulform.getByNummer(e.SchulformNr).daten.id;
+		final Schulform schulform = (e.SchulformNr == null) ? null : Schulform.data().getWertBySchluessel(e.SchulformNr);
+		daten.schulformID = (schulform == null) ? null : schulform.daten(conn.getUser().schuleGetSchuljahr()).id;
 		daten.strassenname = e.Strassenname;
 		daten.hausnummer = e.HausNr;
 		daten.hausnummerZusatz = e.HausNrZusatz;
@@ -61,7 +59,10 @@ public final class DataSchulen extends DataManager<Long> {
 		daten.sortierung = (e.Sortierung == null) ? 32000 : e.Sortierung;
 		daten.istSichtbar = (e.Sichtbar == null) || e.Sichtbar;
 		return daten;
-	};
+	}
+
+	/** Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOSchuleNRW} in einen Core-DTO {@link SchulEintrag}. */
+	private final DTOMapper<DTOSchuleNRW, SchulEintrag> dtoMapper = (final DTOSchuleNRW e) -> map(conn, e);
 
 
 	@Override
@@ -76,14 +77,12 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Schulen
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<SchulEintrag> getSchulen(final @NotNull DBEntityManager conn) throws ApiOperationException {
+	public static List<SchulEintrag> getSchulen(final @NotNull DBEntityManager conn) {
 		final List<DTOSchuleNRW> eintraege = conn.queryAll(DTOSchuleNRW.class);
 		final ArrayList<SchulEintrag> daten = new ArrayList<>();
 		for (final DTOSchuleNRW e : eintraege)
-			daten.add(dtoMapper.apply(e));
+			daten.add(map(conn, e));
 		return daten;
 	}
 
@@ -94,15 +93,13 @@ public final class DataSchulen extends DataManager<Long> {
 	 * @param conn   die Datenbankverbindung
 	 *
 	 * @return die Liste der Schulen, welche ein Kürzel gesetzt haben
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<SchulEintrag> getSchulenMitKuerzel(final @NotNull DBEntityManager conn) throws ApiOperationException {
+	public static List<SchulEintrag> getSchulenMitKuerzel(final @NotNull DBEntityManager conn) {
 		final List<DTOSchuleNRW> eintraege = conn.queryAll(DTOSchuleNRW.class);
 		final ArrayList<SchulEintrag> daten = new ArrayList<>();
 		for (final DTOSchuleNRW e : eintraege)
 			if ((e.Kuerzel != null) && (!e.Kuerzel.isBlank()))
-				daten.add(dtoMapper.apply(e));
+				daten.add(map(conn, e));
 		return daten;
 	}
 
@@ -121,7 +118,7 @@ public final class DataSchulen extends DataManager<Long> {
 		final DTOSchuleNRW schule = conn.queryByKey(DTOSchuleNRW.class, id);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Eintrag im Katalog der Schulen mit der ID %d gefunden.".formatted(id));
-		final SchulEintrag daten = dtoMapper.apply(schule);
+		final SchulEintrag daten = map(conn, schule);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -146,12 +143,12 @@ public final class DataSchulen extends DataManager<Long> {
 					dto.SchulformKrz = null;
 					dto.SchulformNr = null;
 				} else {
-					final SchulformKatalogEintrag sf = Schulform.getEintragByID(id);
+					final SchulformKatalogEintrag sf = Schulform.data().getEintragByID(id);
 					if (sf == null)
 						throw new ApiOperationException(Status.BAD_REQUEST);
-					dto.SchulformBez = sf.bezeichnung;
+					dto.SchulformBez = sf.text;
 					dto.SchulformKrz = sf.kuerzel;
-					dto.SchulformNr = sf.nummer;
+					dto.SchulformNr = sf.schluessel;
 				}
 			}),
 			Map.entry("strassenname", (conn, dto, value, map) -> dto.Strassenname = JSONMapper.convertToString(value, false, true, 55)),

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { Random } from '../../java/util/Random';
+import { Class } from '../../java/lang/Class';
 
 export class KursblockungStatic extends JavaObject {
 
@@ -51,6 +52,8 @@ export class KursblockungStatic extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungStatic'].includes(name);
 	}
+
+	public static class = new Class<KursblockungStatic>('de.svws_nrw.core.kursblockung.KursblockungStatic');
 
 }
 

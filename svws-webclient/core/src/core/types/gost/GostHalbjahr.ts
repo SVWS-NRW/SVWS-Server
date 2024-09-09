@@ -3,6 +3,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -497,6 +498,8 @@ export class GostHalbjahr extends JavaEnum<GostHalbjahr> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostHalbjahr', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostHalbjahr>('de.svws_nrw.core.types.gost.GostHalbjahr');
 
 }
 

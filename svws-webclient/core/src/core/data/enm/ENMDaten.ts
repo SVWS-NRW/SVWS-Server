@@ -9,6 +9,7 @@ import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
 import { ENMFloskelgruppe } from '../../../core/data/enm/ENMFloskelgruppe';
 
@@ -136,6 +137,8 @@ export class ENMDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMDaten'].includes(name);
 	}
+
+	public static class = new Class<ENMDaten>('de.svws_nrw.core.data.enm.ENMDaten');
 
 	public static transpilerFromJSON(json : string): ENMDaten {
 		const obj = JSON.parse(json) as Partial<ENMDaten>;

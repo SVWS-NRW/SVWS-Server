@@ -21,10 +21,10 @@
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Kursliste">
-			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="kursListeManager().schuelerstatus.list()" :item-text="status => status.bezeichnung" class="col-span-full" />
+			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="kursListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-table :columns="colsSchueler" :items="kursListeManager().getSchuelerListe()">
 				<template #cell(status)="{ value }: { value: number}">
-					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.fromID(value)?.bezeichnung || "" }}</span>
+					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text || "—" }}</span>
 				</template>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
@@ -45,12 +45,14 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
-	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import type { KursDatenProps } from "./SKursDatenProps";
+	import type { JahrgangsDaten, LehrerListeEintrag, List } from "@core";
+	import { FachDaten, SchuelerStatus, ZulaessigeKursart, KursFortschreibungsart, ArrayList, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KursDatenProps>();
+
+	const schuljahr = computed<number>(() => props.kursListeManager().getSchuljahr());
 
 	// TODO auch UNTERRICHTSVERTEILUNG_PLANUNG_ANSEHEN verwenden und hier unterscheiden zu UNTERRICHTSVERTEILUNG_ANSEHEN
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN));
@@ -121,15 +123,18 @@
 
 	const kursarten = computed<Map<string, string>>(() => {
 		const arten = new Map<string, string>();
-		for (const art of ZulaessigeKursart.get(props.schulform)) {
-			if (art.daten.kuerzel === "PUK")
+		for (const art of ZulaessigeKursart.data().getWerteBySchuljahr(schuljahr.value)) {
+			const daten = art.daten(schuljahr.value);
+			if (daten === null)
 				continue;
-			if ((art.daten.kuerzelAllg !== null) && (art.daten.bezeichnungAllg !== null))
-				arten.set(art.daten.kuerzelAllg, art.daten.bezeichnungAllg);
+			if (daten.kuerzel === "PUK")
+				continue;
+			if ((daten.kuerzelAllg !== null) && (daten.bezeichnungAllg !== null))
+				arten.set(daten.kuerzelAllg, daten.bezeichnungAllg);
 			else
-				arten.set(art.daten.kuerzel, art.daten.bezeichnung);
-			if (art.daten.kuerzelAllg === "DK")
-				arten.set(art.daten.kuerzel, art.daten.bezeichnung);
+				arten.set(daten.kuerzel, daten.text);
+			if (daten.kuerzelAllg === "DK")
+				arten.set(daten.kuerzel, daten.text);
 		}
 		return new Map([...arten.entries()].sort());
 	});

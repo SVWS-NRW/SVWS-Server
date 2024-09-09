@@ -18,7 +18,7 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
 import de.svws_nrw.core.data.gost.GostLeistungen;
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchueler;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;

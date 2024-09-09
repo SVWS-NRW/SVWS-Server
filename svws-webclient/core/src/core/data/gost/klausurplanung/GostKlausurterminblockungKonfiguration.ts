@@ -2,6 +2,7 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { KlausurterminblockungModusKursarten } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungModusKursarten';
 import { KlausurterminblockungAlgorithmen } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
 import { KlausurterminblockungModusQuartale } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungModusQuartale';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurterminblockungKonfiguration extends JavaObject {
 
@@ -47,6 +48,8 @@ export class GostKlausurterminblockungKonfiguration extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungKonfiguration'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurterminblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungKonfiguration');
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungKonfiguration {
 		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungKonfiguration>;

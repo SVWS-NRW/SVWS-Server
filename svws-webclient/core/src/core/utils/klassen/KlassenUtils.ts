@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -33,6 +34,8 @@ export class KlassenUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.klassen.KlassenUtils'].includes(name);
 	}
+
+	public static class = new Class<KlassenUtils>('de.svws_nrw.core.utils.klassen.KlassenUtils');
 
 }
 

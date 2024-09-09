@@ -7,7 +7,7 @@ import java.util.Objects;
 import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
@@ -67,7 +67,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 		try {
 			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
-			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(allData);
+			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(reportingRepository.auswahlSchuljahresabschnitt().schuljahr, allData);
 
 			final ReportingGostKlausurplanungKlausurplan gostKlausurplan =
 					new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager);

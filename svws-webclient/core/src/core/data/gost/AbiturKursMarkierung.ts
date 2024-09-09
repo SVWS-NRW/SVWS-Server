@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class AbiturKursMarkierung extends JavaObject {
 
@@ -61,6 +62,8 @@ export class AbiturKursMarkierung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.AbiturKursMarkierung'].includes(name);
 	}
+
+	public static class = new Class<AbiturKursMarkierung>('de.svws_nrw.core.data.gost.AbiturKursMarkierung');
 
 	public static transpilerFromJSON(json : string): AbiturKursMarkierung {
 		const obj = JSON.parse(json) as Partial<AbiturKursMarkierung>;

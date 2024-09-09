@@ -74,7 +74,7 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler) {
-			const status = SchuelerStatus.fromID(s.status);
+			const status = SchuelerStatus.data().getWertByKuerzel("" + s.status);
 			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
 				mapSchueler.set(s.id, s);
 		}

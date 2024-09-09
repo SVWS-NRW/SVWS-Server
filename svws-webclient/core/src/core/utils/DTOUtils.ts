@@ -3,6 +3,7 @@ import { GostBlockungsergebnisSchiene } from '../../core/data/gost/GostBlockungs
 import { GostBlockungsergebnisKursSchuelerZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { GostBlockungsergebnisKursSchienenZuordnung } from '../../core/data/gost/GostBlockungsergebnisKursSchienenZuordnung';
 import { GostBlockungsergebnisKurs } from '../../core/data/gost/GostBlockungsergebnisKurs';
+import { Class } from '../../java/lang/Class';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
 
 export class DTOUtils extends JavaObject {
@@ -148,6 +149,8 @@ export class DTOUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DTOUtils'].includes(name);
 	}
+
+	public static class = new Class<DTOUtils>('de.svws_nrw.core.utils.DTOUtils');
 
 }
 

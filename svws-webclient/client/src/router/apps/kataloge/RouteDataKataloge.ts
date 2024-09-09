@@ -2,8 +2,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
 import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 
-interface RouteStateKataloge extends RouteStateInterface {
-}
+type RouteStateKataloge = RouteStateInterface
 
 const defaultState: RouteStateKataloge = {
 	view: routeKatalogFaecher,

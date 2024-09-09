@@ -1,4 +1,4 @@
-import { ArrayList, KursListeManager, type KursDaten, type Schueler, DeveloperNotificationException} from "@core";
+import { KursListeManager, type KursDaten, type Schueler, DeveloperNotificationException} from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -11,12 +11,12 @@ import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 
 interface RouteStateKurse extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
-	kursListeManager: KursListeManager;
+	kursListeManager: KursListeManager | undefined;
 }
 
 const defaultState = <RouteStateKurse> {
 	idSchuljahresabschnitt: -1,
-	kursListeManager: new KursListeManager(-1, -1, new ArrayList(), null, new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList(), new ArrayList()),
+	kursListeManager: undefined,
 	view: routeKursDaten,
 };
 
@@ -27,6 +27,8 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 	}
 
 	get kursListeManager(): KursListeManager {
+		if (this._state.value.kursListeManager === undefined)
+			throw new DeveloperNotificationException("Zugriff auf den Kurs-Liste-Manager, bevor dieser initialisiert wurde.");
 		return this._state.value.kursListeManager;
 	}
 
@@ -35,7 +37,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		if (schuljahresabschnitt === undefined)
 			return null;
 		// Bestimme die Kursdaten vorher, um ggf. eine neu ID für das Routing zurückzugeben
-		const hatteAuswahl = (this.kursListeManager.auswahlID() !== null) ? this.kursListeManager.auswahl() : null;
+		const hatteAuswahl = (this._state.value.kursListeManager !== undefined) && (this.kursListeManager.auswahlID() !== null) ? this.kursListeManager.auswahl() : null;
 		// Lade die Kataloge und erstelle den Manager
 		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const listSchueler = await api.server.getSchuelerFuerAbschnitt(api.schema, idSchuljahresabschnitt);

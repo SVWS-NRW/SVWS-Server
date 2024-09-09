@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class KatalogEintragOrte extends JavaObject {
 
@@ -49,6 +50,8 @@ export class KatalogEintragOrte extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kataloge.KatalogEintragOrte'].includes(name);
 	}
+
+	public static class = new Class<KatalogEintragOrte>('de.svws_nrw.core.data.kataloge.KatalogEintragOrte');
 
 	public static transpilerFromJSON(json : string): KatalogEintragOrte {
 		const obj = JSON.parse(json) as Partial<KatalogEintragOrte>;

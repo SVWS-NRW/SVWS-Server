@@ -2,6 +2,7 @@ import { StringBuilder } from '../../../java/lang/StringBuilder';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
@@ -68,7 +69,7 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 		if ((__param0 === undefined)) {
 			return this._sub.bcGetArrayListOfValues().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T | null> = __param0;
+			const a : Array<T | null> = __param0 as unknown as Array<T>;
 			return this._sub.bcGetArrayListOfValues().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -108,6 +109,8 @@ export class AVLMapSubCollection<K, V> extends JavaObject implements Collection<
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'java.lang.Iterable', 'de.svws_nrw.core.adt.map.AVLMapSubCollection'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubCollection<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubCollection');
 
 	public [Symbol.iterator](): Iterator<V> {
 		const iter : JavaIterator<V> = this.iterator();

@@ -4,6 +4,7 @@ import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegun
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -100,6 +101,8 @@ export class FachWaehlbar extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<FachWaehlbar>('de.svws_nrw.core.abschluss.gost.belegpruefung.FachWaehlbar');
 
 }
 

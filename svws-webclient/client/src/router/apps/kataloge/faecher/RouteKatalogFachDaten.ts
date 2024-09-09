@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 
@@ -26,7 +25,6 @@ export class RouteKatalogFachDaten extends RouteNode<any, RouteKatalogFaecher> {
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
-		api.schulform
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 

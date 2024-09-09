@@ -1,0 +1,1225 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "ID_03",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 78,
+			"schluessel": "03",
+			"kuerzel": "03",
+			"text": "Kraftfahrzeugtechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_04",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 79,
+			"schluessel": "04",
+			"kuerzel": "04",
+			"text": "Metalltechnik, Maschinenbau (außer Kfz), Verfahrens-, Fertigungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_05",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 80,
+			"schluessel": "05",
+			"kuerzel": "05",
+			"text": "Sanitär-, Heizungs-, Klima-, Lüftungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_08",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 81,
+			"schluessel": "08",
+			"kuerzel": "08",
+			"text": "Bergtechnik, Bergbau",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_09",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 82,
+			"schluessel": "09",
+			"kuerzel": "09",
+			"text": "Hütten-, Gießereiwesen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_11",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 83,
+			"schluessel": "11",
+			"kuerzel": "11",
+			"text": "Elektrotechnik: Energietechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_12",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 84,
+			"schluessel": "12",
+			"kuerzel": "12",
+			"text": "Elektrotechnik: Nachrichtentechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_21",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 85,
+			"schluessel": "21",
+			"kuerzel": "21",
+			"text": "Bautechnik, Bauingenieurwesen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_22",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 86,
+			"schluessel": "22",
+			"kuerzel": "22",
+			"text": "Holztechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_23",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 87,
+			"schluessel": "23",
+			"kuerzel": "23",
+			"text": "Architektur",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_31",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 88,
+			"schluessel": "31",
+			"kuerzel": "31",
+			"text": "Textil-, Bekleidungstechnik, Textilgestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_35",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 89,
+			"schluessel": "35",
+			"kuerzel": "35",
+			"text": "Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_41",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 90,
+			"schluessel": "41",
+			"kuerzel": "41",
+			"text": "Chemie- / Verfahrens- / Chemotechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_42",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 91,
+			"schluessel": "42",
+			"kuerzel": "42",
+			"text": "Lebensmittelchemie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_55",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 92,
+			"schluessel": "55",
+			"kuerzel": "55",
+			"text": "Farb- u. Raumgestaltung, Gestaltungstechnik, Malerei, Graphik, Design, Fotografie, Glas- und Keramiktechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_60",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 93,
+			"schluessel": "60",
+			"kuerzel": "60",
+			"text": "Wirtschaftswissenschaft in kaufmännischen Berufen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_65",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 94,
+			"schluessel": "65",
+			"kuerzel": "65",
+			"text": "Hauswirtschaftswissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_66",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 95,
+			"schluessel": "66",
+			"kuerzel": "66",
+			"text": "Ernährungswissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_70",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 96,
+			"schluessel": "70",
+			"kuerzel": "70",
+			"text": "Sozialwesen, Sozialpädagogik, Sozialpflege, Sozialwissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_71",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 97,
+			"schluessel": "71",
+			"kuerzel": "71",
+			"text": "Psychologie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_80",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 98,
+			"schluessel": "80",
+			"kuerzel": "80",
+			"text": "Körperpflege / Biotechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_91",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 99,
+			"schluessel": "91",
+			"kuerzel": "91",
+			"text": "Landbauwissenschaft, Agrarwissenschaft, Agrarwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_92",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 100,
+			"schluessel": "92",
+			"kuerzel": "92",
+			"text": "Gartenbauwissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_BL",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 101,
+			"schluessel": "BL",
+			"kuerzel": "BL",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Blinden",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_EZ",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 102,
+			"schluessel": "EZ",
+			"kuerzel": "EZ",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Erziehungsschwierigen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GB",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 103,
+			"schluessel": "GB",
+			"kuerzel": "GB",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Geistigbehinderten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GH",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 104,
+			"schluessel": "GH",
+			"kuerzel": "GH",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Gehörlosen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_KB",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 105,
+			"schluessel": "KB",
+			"kuerzel": "KB",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Körperbehinderten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_LB",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 106,
+			"schluessel": "LB",
+			"kuerzel": "LB",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Lernbehinderten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_SB",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 107,
+			"schluessel": "SB",
+			"kuerzel": "SB",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Sprachbehinderten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_SG",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 108,
+			"schluessel": "SG",
+			"kuerzel": "SG",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Schwerhörigen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_SH",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 109,
+			"schluessel": "SH",
+			"kuerzel": "SH",
+			"text": "Fachrichtung für Sondererziehung und Rehabilitation der Sehbehinderten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_51",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 110,
+			"schluessel": "51",
+			"kuerzel": "51",
+			"text": "Drucktechnik, Reproduktionstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_FT",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 111,
+			"schluessel": "FT",
+			"kuerzel": "FT",
+			"text": "Fertigungstechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_KT",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 112,
+			"schluessel": "KT",
+			"kuerzel": "KT",
+			"text": "Fahrzeugtechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_VT",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 113,
+			"schluessel": "VT",
+			"kuerzel": "VT",
+			"text": "Versorgungstechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_TI",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 114,
+			"schluessel": "TI",
+			"kuerzel": "TI",
+			"text": "Technische Informatik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_ET",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 115,
+			"schluessel": "ET",
+			"kuerzel": "ET",
+			"text": "Energietechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_NT",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 116,
+			"schluessel": "NT",
+			"kuerzel": "NT",
+			"text": "Nachrichtentechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_HC",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 117,
+			"schluessel": "HC",
+			"kuerzel": "HC",
+			"text": "Hochbau (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_HT",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 118,
+			"schluessel": "HT",
+			"kuerzel": "HT",
+			"text": "Holztechnik (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_TB",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 119,
+			"schluessel": "TB",
+			"kuerzel": "TB",
+			"text": "Tiefbau (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_BK",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 120,
+			"schluessel": "BK",
+			"kuerzel": "BK",
+			"text": "Banken, Bankbetriebslehre / Finanzwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_HB",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 121,
+			"schluessel": "HB",
+			"kuerzel": "HB",
+			"text": "Handel, Handelsbetriebslehre / Absatzwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_IB",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 122,
+			"schluessel": "IB",
+			"kuerzel": "IB",
+			"text": "Industrie, Industriebetriebslehre / Produktionswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_VR",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 123,
+			"schluessel": "VR",
+			"kuerzel": "VR",
+			"text": "Verkehr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_VL",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 124,
+			"schluessel": "VL",
+			"kuerzel": "VL",
+			"text": "Versicherung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_OL",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 125,
+			"schluessel": "OL",
+			"kuerzel": "OL",
+			"text": "Organisation und Bürokommunikation / Datenverarbeitung / Organisationslehre / Betriebsinformatik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_ST",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 126,
+			"schluessel": "ST",
+			"kuerzel": "ST",
+			"text": "Betriebswirtschaftliche Steuerlehre / Revisions- und Treuhandwesen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_WL",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 127,
+			"schluessel": "WL",
+			"kuerzel": "WL",
+			"text": "Wirtschaftliche Warenlehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_WG",
+		"idHistorie": 51,
+		"historie": [ {
+			"id": 128,
+			"schluessel": "WG",
+			"kuerzel": "WG",
+			"text": "Wirtschaftsgeographie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_WI",
+		"idHistorie": 52,
+		"historie": [ {
+			"id": 129,
+			"schluessel": "WI",
+			"kuerzel": "WI",
+			"text": "Wirtschaftsinformatik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_LT",
+		"idHistorie": 53,
+		"historie": [ {
+			"id": 130,
+			"schluessel": "LT",
+			"kuerzel": "LT",
+			"text": "Lebensmitteltechnologie (spez. Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_99",
+		"idHistorie": 54,
+		"historie": [ {
+			"id": 131,
+			"schluessel": "99",
+			"kuerzel": "99",
+			"text": "Sonstige Fachrichtung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_AS",
+		"idHistorie": 55,
+		"historie": [ {
+			"id": 132,
+			"schluessel": "AS",
+			"kuerzel": "AS",
+			"text": "Absatz und Marketing",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_BS",
+		"idHistorie": 56,
+		"historie": [ {
+			"id": 133,
+			"schluessel": "BS",
+			"kuerzel": "BS",
+			"text": "Betriebswirtschaftliche Finanzierungslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_UR",
+		"idHistorie": 57,
+		"historie": [ {
+			"id": 134,
+			"schluessel": "UR",
+			"kuerzel": "UR",
+			"text": "Unternehmensrechnung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_81",
+		"idHistorie": 58,
+		"historie": [ {
+			"id": 135,
+			"schluessel": "81",
+			"kuerzel": "81",
+			"text": "Gesundheit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_02",
+		"idHistorie": 59,
+		"historie": [ {
+			"id": 136,
+			"schluessel": "02",
+			"kuerzel": "02",
+			"text": "Maschinenbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_06",
+		"idHistorie": 60,
+		"historie": [ {
+			"id": 137,
+			"schluessel": "06",
+			"kuerzel": "06",
+			"text": "Fertigungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_07",
+		"idHistorie": 61,
+		"historie": [ {
+			"id": 138,
+			"schluessel": "07",
+			"kuerzel": "07",
+			"text": "Versorgungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_13",
+		"idHistorie": 62,
+		"historie": [ {
+			"id": 139,
+			"schluessel": "13",
+			"kuerzel": "13",
+			"text": "Energietechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_24",
+		"idHistorie": 63,
+		"historie": [ {
+			"id": 140,
+			"schluessel": "24",
+			"kuerzel": "24",
+			"text": "Hochbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_25",
+		"idHistorie": 64,
+		"historie": [ {
+			"id": 141,
+			"schluessel": "25",
+			"kuerzel": "25",
+			"text": "Tiefbautechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_36",
+		"idHistorie": 65,
+		"historie": [ {
+			"id": 142,
+			"schluessel": "36",
+			"kuerzel": "36",
+			"text": "Technische Informatik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_67",
+		"idHistorie": 66,
+		"historie": [ {
+			"id": 143,
+			"schluessel": "67",
+			"kuerzel": "67",
+			"text": "Lebensmitteltechnologie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_BB",
+		"idHistorie": 67,
+		"historie": [ {
+			"id": 144,
+			"schluessel": "BB",
+			"kuerzel": "BB",
+			"text": "Bankbetriebslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_BW",
+		"idHistorie": 68,
+		"historie": [ {
+			"id": 145,
+			"schluessel": "BW",
+			"kuerzel": "BW",
+			"text": "Betriebswirtschaftliche Steuerlehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_PW",
+		"idHistorie": 69,
+		"historie": [ {
+			"id": 146,
+			"schluessel": "PW",
+			"kuerzel": "PW",
+			"text": "Personalwirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_VB",
+		"idHistorie": 70,
+		"historie": [ {
+			"id": 147,
+			"schluessel": "VB",
+			"kuerzel": "VB",
+			"text": "Versicherungsbetriebslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_ES",
+		"idHistorie": 71,
+		"historie": [ {
+			"id": 148,
+			"schluessel": "ES",
+			"kuerzel": "ES",
+			"text": "Emotionale und soziale Entwicklung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GG",
+		"idHistorie": 72,
+		"historie": [ {
+			"id": 149,
+			"schluessel": "GG",
+			"kuerzel": "GG",
+			"text": "Geistige Entwicklung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_HK",
+		"idHistorie": 73,
+		"historie": [ {
+			"id": 150,
+			"schluessel": "HK",
+			"kuerzel": "HK",
+			"text": "Hören und Kommunikation",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_KM",
+		"idHistorie": 74,
+		"historie": [ {
+			"id": 151,
+			"schluessel": "KM",
+			"kuerzel": "KM",
+			"text": "Körperliche und motorische Entwicklung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_LE",
+		"idHistorie": 75,
+		"historie": [ {
+			"id": 152,
+			"schluessel": "LE",
+			"kuerzel": "LE",
+			"text": "Lernen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_SQ",
+		"idHistorie": 76,
+		"historie": [ {
+			"id": 153,
+			"schluessel": "SQ",
+			"kuerzel": "SQ",
+			"text": "Sprache",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_SE",
+		"idHistorie": 77,
+		"historie": [ {
+			"id": 154,
+			"schluessel": "SE",
+			"kuerzel": "SE",
+			"text": "Sehen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_32",
+		"idHistorie": 78,
+		"historie": [ {
+			"id": 155,
+			"schluessel": "32",
+			"kuerzel": "32",
+			"text": "Textiltechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_57",
+		"idHistorie": 79,
+		"historie": [ {
+			"id": 156,
+			"schluessel": "57",
+			"kuerzel": "57",
+			"text": "Mediendesign und Designtechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_58",
+		"idHistorie": 80,
+		"historie": [ {
+			"id": 157,
+			"schluessel": "58",
+			"kuerzel": "58",
+			"text": "Druck- und Medientechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_59",
+		"idHistorie": 81,
+		"historie": [ {
+			"id": 158,
+			"schluessel": "59",
+			"kuerzel": "59",
+			"text": "Farbtechnik/Raumgestaltung/Oberflächentechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_68",
+		"idHistorie": 82,
+		"historie": [ {
+			"id": 159,
+			"schluessel": "68",
+			"kuerzel": "68",
+			"text": "Lebensmitteltechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_86",
+		"idHistorie": 83,
+		"historie": [ {
+			"id": 160,
+			"schluessel": "86",
+			"kuerzel": "86",
+			"text": "Gesundheitswissenschaft/Pflege",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_93",
+		"idHistorie": 84,
+		"historie": [ {
+			"id": 161,
+			"schluessel": "93",
+			"kuerzel": "93",
+			"text": "Agrarwissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_IT",
+		"idHistorie": 85,
+		"historie": [ {
+			"id": 162,
+			"schluessel": "IT",
+			"kuerzel": "IT",
+			"text": "Informationstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_AU",
+		"idHistorie": 86,
+		"historie": [ {
+			"id": 163,
+			"schluessel": "AU",
+			"kuerzel": "AU",
+			"text": "Automatisierungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_VE",
+		"idHistorie": 87,
+		"historie": [ {
+			"id": 164,
+			"schluessel": "VE",
+			"kuerzel": "VE",
+			"text": "Vermessungstechnik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6A",
+		"idHistorie": 88,
+		"historie": [ {
+			"id": 165,
+			"schluessel": "6A",
+			"kuerzel": "6A",
+			"text": "Sektorales Management mit dem Profil: Verwaltung und Rechtswesen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6B",
+		"idHistorie": 89,
+		"historie": [ {
+			"id": 166,
+			"schluessel": "6B",
+			"kuerzel": "6B",
+			"text": "Sektorales Management mit dem Profil: Medien",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6C",
+		"idHistorie": 90,
+		"historie": [ {
+			"id": 167,
+			"schluessel": "6C",
+			"kuerzel": "6C",
+			"text": "Sektorales Management mit dem Profil: Gesundheitsökonomie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6D",
+		"idHistorie": 91,
+		"historie": [ {
+			"id": 168,
+			"schluessel": "6D",
+			"kuerzel": "6D",
+			"text": "Sektorales Management mit dem Profil: Freizeitökonomie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6E",
+		"idHistorie": 92,
+		"historie": [ {
+			"id": 169,
+			"schluessel": "6E",
+			"kuerzel": "6E",
+			"text": "Sektorales Management mit dem Profil: Tourismus und Gastronomie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6F",
+		"idHistorie": 93,
+		"historie": [ {
+			"id": 170,
+			"schluessel": "6F",
+			"kuerzel": "6F",
+			"text": "Produktion, Logistik, Absatz mit dem Profil: Produktionswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6G",
+		"idHistorie": 94,
+		"historie": [ {
+			"id": 171,
+			"schluessel": "6G",
+			"kuerzel": "6G",
+			"text": "Produktion, Logistik, Absatz mit dem Profil: Verkehr und Logistik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6H",
+		"idHistorie": 95,
+		"historie": [ {
+			"id": 172,
+			"schluessel": "6H",
+			"kuerzel": "6H",
+			"text": "Produktion, Logistik, Absatz mit dem Profil: Marketing/Handel",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6I",
+		"idHistorie": 96,
+		"historie": [ {
+			"id": 173,
+			"schluessel": "6I",
+			"kuerzel": "6I",
+			"text": "Finanz- und Rechnungswesen mit dem Profil: Steuerung und Dokumentation",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6J",
+		"idHistorie": 97,
+		"historie": [ {
+			"id": 174,
+			"schluessel": "6J",
+			"kuerzel": "6J",
+			"text": "Finanz- und Rechnungswesen mit dem Profil: Finanzdienstleistungen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_6K",
+		"idHistorie": 98,
+		"historie": [ {
+			"id": 175,
+			"schluessel": "6K",
+			"kuerzel": "6K",
+			"text": "Finanz- und Rechnungswesen mit dem Profil: Steuern",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_PK",
+		"idHistorie": 99,
+		"historie": [ {
+			"id": 176,
+			"schluessel": "PK",
+			"kuerzel": "PK",
+			"text": "Politik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GZ",
+		"idHistorie": 100,
+		"historie": [ {
+			"id": 177,
+			"schluessel": "GZ",
+			"kuerzel": "GZ",
+			"text": "Gastronomie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GA",
+		"idHistorie": 101,
+		"historie": [ {
+			"id": 178,
+			"schluessel": "GA",
+			"kuerzel": "GA",
+			"text": "Gartenbau",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_GL",
+		"idHistorie": 102,
+		"historie": [ {
+			"id": 179,
+			"schluessel": "GL",
+			"kuerzel": "GL",
+			"text": "Garten- Landschaftsbau",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_PB",
+		"idHistorie": 103,
+		"historie": [ {
+			"id": 180,
+			"schluessel": "PB",
+			"kuerzel": "PB",
+			"text": "Pflanzenbau",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_TH",
+		"idHistorie": 104,
+		"historie": [ {
+			"id": 181,
+			"schluessel": "TH",
+			"kuerzel": "TH",
+			"text": "Tierhaltung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_NU",
+		"idHistorie": 105,
+		"historie": [ {
+			"id": 182,
+			"schluessel": "NU",
+			"kuerzel": "NU",
+			"text": "Natur- und Umweltschutz",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_82",
+		"idHistorie": 106,
+		"historie": [ {
+			"id": 183,
+			"schluessel": "82",
+			"kuerzel": "82",
+			"text": "Medizintechnik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_AO",
+		"idHistorie": 107,
+		"historie": [ {
+			"id": 184,
+			"schluessel": "AO",
+			"kuerzel": "AO",
+			"text": "Augenoptik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_OT",
+		"idHistorie": 108,
+		"historie": [ {
+			"id": 185,
+			"schluessel": "OT",
+			"kuerzel": "OT",
+			"text": "Orthopädietechnik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_ZT",
+		"idHistorie": 109,
+		"historie": [ {
+			"id": 186,
+			"schluessel": "ZT",
+			"kuerzel": "ZT",
+			"text": "Zahntechnik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_IG",
+		"idHistorie": 110,
+		"historie": [ {
+			"id": 187,
+			"schluessel": "IG",
+			"kuerzel": "IG",
+			"text": "Ingenieurtechnik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_HA",
+		"idHistorie": 111,
+		"historie": [ {
+			"id": 188,
+			"schluessel": "HA",
+			"kuerzel": "HA",
+			"text": "Hörakustik",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	} ]
+}

@@ -3,7 +3,7 @@ import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisManager } from '../../../core/utils/gost/GostBlockungsergebnisManager';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
-import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
+import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
@@ -28,10 +28,11 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
-import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
+import { GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { ListUtils } from '../../../core/utils/ListUtils';
 import { DTOUtils } from '../../../core/utils/DTOUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -182,54 +183,31 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 
 	/**
-	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
-	 */
-	public constructor();
-
-	/**
-	 *Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
+	 * Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
 	 *
 	 * @param daten           die Blockungsdaten
 	 * @param faecherManager  der Fächer-Manager
 	 */
-	public constructor(daten : GostBlockungsdaten, faecherManager : GostFaecherManager);
-
-	/**
-	 * Implementation for method overloads of 'constructor'
-	 */
-	public constructor(__param0? : GostBlockungsdaten, __param1? : GostFaecherManager) {
+	public constructor(daten : GostBlockungsdaten, faecherManager : GostFaecherManager) {
 		super();
-		if ((__param0 === undefined) && (__param1 === undefined)) {
-			this._faecherManager = new GostFaecherManager();
-			this._daten = new GostBlockungsdaten();
-			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
-			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
-			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this._compFachwahlen = this.createComparatorFachwahlen();
-			this._compRegel = this.createComparatorRegeln();
-			this._compSchueler = this.createComparatorSchueler();
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsdaten')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))))) {
-			const daten : GostBlockungsdaten = cast_de_svws_nrw_core_data_gost_GostBlockungsdaten(__param0);
-			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
-			this._faecherManager = faecherManager;
-			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
-			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this._compFachwahlen = this.createComparatorFachwahlen();
-			this._compRegel = this.createComparatorRegeln();
-			this._compSchueler = this.createComparatorSchueler();
-			this._daten = new GostBlockungsdaten();
-			this._daten.id = daten.id;
-			this._daten.name = daten.name;
-			this._daten.abijahrgang = daten.abijahrgang;
-			this._daten.gostHalbjahr = daten.gostHalbjahr;
-			this._daten.istAktiv = daten.istAktiv;
-			this.schieneAddListe(daten.schienen);
-			this.fachwahlAddListe(daten.fachwahlen);
-			this.schuelerAddListe(daten.schueler);
-			this.kursAddListe(daten.kurse);
-			this.regelAddListe(daten.regeln);
-			this.ergebnisAddListe(daten.ergebnisse);
-		} else throw new Error('invalid method overload');
+		this._faecherManager = faecherManager;
+		this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
+		this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
+		this._compFachwahlen = this.createComparatorFachwahlen();
+		this._compRegel = this.createComparatorRegeln();
+		this._compSchueler = this.createComparatorSchueler();
+		this._daten = new GostBlockungsdaten();
+		this._daten.id = daten.id;
+		this._daten.name = daten.name;
+		this._daten.abijahrgang = daten.abijahrgang;
+		this._daten.gostHalbjahr = daten.gostHalbjahr;
+		this._daten.istAktiv = daten.istAktiv;
+		this.schieneAddListe(daten.schienen);
+		this.fachwahlAddListe(daten.fachwahlen);
+		this.schuelerAddListe(daten.schueler);
+		this.kursAddListe(daten.kurse);
+		this.regelAddListe(daten.regeln);
+		this.ergebnisAddListe(daten.ergebnisse);
 	}
 
 	/**
@@ -2423,6 +2401,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
 
 }
 

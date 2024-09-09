@@ -2,33 +2,38 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
+import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
+import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { SchuelerListe } from '../../../core/data/schueler/SchuelerListe';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
-import { Pair } from '../../../core/adt/Pair';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
-import { SchuelerStammdaten } from '../../../core/data/schueler/SchuelerStammdaten';
+import { SchuelerStammdaten } from '../../../asd/data/schueler/SchuelerStammdaten';
 import { GostAbiturjahrUtils } from '../../../core/utils/gost/GostAbiturjahrUtils';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
+import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEintrag, SchuelerStammdaten> {
 
@@ -91,7 +96,12 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public readonly schulgliederungen : AttributMitAuswahl<string, Schulgliederung>;
 
-	private static readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => sg.daten.kuerzel };
+	private readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => {
+		const sglke : SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()))
+		return sglke.kuerzel;
+	} };
 
 	private static readonly _comparatorSchulgliederung : Comparator<Schulgliederung> = { compare : (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
 
@@ -100,7 +110,12 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 */
 	public readonly schuelerstatus : AttributMitAuswahl<number, SchuelerStatus>;
 
-	private static readonly _schuelerstatusToId : JavaFunction<SchuelerStatus, number> = { apply : (s: SchuelerStatus) => s.id };
+	private readonly _schuelerstatusToId : JavaFunction<SchuelerStatus, number> = { apply : (s: SchuelerStatus) => {
+		const sske : SchuelerStatusKatalogEintrag | null = s.daten(this.getSchuljahr());
+		if (sske === null)
+			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), this.getSchuljahr()))
+		return JavaInteger.parseInt(sske.kuerzel);
+	} };
 
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
@@ -130,9 +145,9 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 		this.jahrgaenge = new AttributMitAuswahl(daten.jahrgaenge, SchuelerListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.kurse = new AttributMitAuswahl(daten.kurse, SchuelerListeManager._kursToId, KursUtils.comparator, this._eventHandlerFilterChanged);
 		this.abiturjahrgaenge = new AttributMitAuswahl(daten.jahrgaengeGost, SchuelerListeManager._abiturjahrgangToId, GostAbiturjahrUtils.comparator, this._eventHandlerFilterChanged);
-		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
-		this.schulgliederungen = new AttributMitAuswahl(gliederungen, SchuelerListeManager._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
-		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), SchuelerListeManager._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
+		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, SchuelerListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, SchuelerListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.initSchueler();
 	}
 
@@ -322,6 +337,35 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	}
 
 	/**
+	 * Gibt das Schuljahr zurück, in dem der Schüler mit der angegeben ID ist.
+	 *
+	 * @param idSchueler   die ID des Schülers
+	 *
+	 * @return das Schuljahr
+	 */
+	public schuelerGetSchuljahrByIdOrException(idSchueler : number) : number {
+		const schueler : SchuelerListeEintrag | null = this.liste.get(idSchueler);
+		if (schueler === null)
+			throw new DeveloperNotificationException("")
+		const schuljahresabschnitt : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(schueler.idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null)
+			throw new DeveloperNotificationException("")
+		return schuljahresabschnitt.schuljahr;
+	}
+
+	/**
+	 * Gibt das Schuljahr zurück, in dem sich der ausgewählt Schüler befindet.
+	 *
+	 * @return das Schuljahr
+	 */
+	public schuelerGetSchuljahrOrException() : number {
+		const schuljahresabschnitt : Schuljahresabschnitt | null = this.schuljahresabschnitte.get(this.auswahl().idSchuljahresabschnitt);
+		if (schuljahresabschnitt === null)
+			throw new DeveloperNotificationException("Der Schuljahresabschnitt des Schülers fehlt.")
+		return schuljahresabschnitt.schuljahr;
+	}
+
+	/**
 	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link SchuelerListeManager}
 	 *
 	 * @param srcManager Manager aus dem die Filterinformationen übernommen werden
@@ -340,6 +384,8 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.schueler.SchuelerListeManager'].includes(name);
 	}
+
+	public static class = new Class<SchuelerListeManager>('de.svws_nrw.core.utils.schueler.SchuelerListeManager');
 
 }
 

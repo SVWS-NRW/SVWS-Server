@@ -1,0 +1,232 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "BK",
+		"idHistorie": 1,
+		"historie": [ {
+			"id" : 1000,
+			"schluessel": "30", 
+			"kuerzel": "BK", 
+			"text": "Berufskolleg", 
+			"hatGymOb": false, 
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FW",
+		"idHistorie": 2,
+		"historie": [ {
+			"id" : 2000,
+			"schluessel": "17", 
+			"kuerzel": "FW", 
+			"text": "Freie Waldorfschule", 
+			"hatGymOb": true, 
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner":  "G",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel":  "02",
+			"kuerzel":  "G",
+			"text":  "Grundschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "GE",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"schluessel":  "15",
+			"kuerzel":  "GE",
+			"text":  "Gesamtschule",
+			"hatGymOb":  true,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "GM",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"schluessel":  "16",
+			"kuerzel":  "GM",
+			"text":  "Gemeinschaftsschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  2022
+		} ]
+	}, {
+		"bezeichner":  "GY",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6000,
+			"schluessel":  "20",
+			"kuerzel":  "GY",
+			"text":  "Gymnasium",
+			"hatGymOb":  true,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "H",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7000,
+			"schluessel":  "04",
+			"kuerzel":  "H",
+			"text":  "Hauptschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "HI",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8000,
+			"schluessel":  "18",
+			"kuerzel":  "HI",
+			"text":  "Hibernia",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "PS",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9000,
+			"schluessel":  "13",
+			"kuerzel":  "PS",
+			"text":  "Schulversuch PRIMUS",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "R",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10000,
+			"schluessel":  "10",
+			"kuerzel":  "R",
+			"text":  "Realschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "S",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11000,
+			"schluessel":  "08",
+			"kuerzel":  "S",
+			"text":  "Förderschule im Bereich G/H",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "KS",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12000,
+			"schluessel":  "83",
+			"kuerzel":  "KS",
+			"text":  "Klinikschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "SB",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13000,
+			"schluessel":  "88",
+			"kuerzel":  "SB",
+			"text":  "Förderschule im Bereich Berufskolleg",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "SG",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 14000,
+			"schluessel":  "87",
+			"kuerzel":  "SG",
+			"text":  "Förderschule im Bereich Gymnasium",
+			"hatGymOb":  true,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "SK",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 15000,
+			"schluessel":  "14",
+			"kuerzel":  "SK",
+			"text":  "Sekundarschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "SR",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 16000,
+			"schluessel":  "85",
+			"kuerzel":  "SR",
+			"text":  "Förderschule im Bereich Realschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "V",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 17000,
+			"schluessel":  "06",
+			"kuerzel":  "V",
+			"text":  "nicht umorganisierte Volksschule",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "WB",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 18000,
+			"schluessel":  "25",
+			"kuerzel":  "WB",
+			"text":  "Weiterbildungskolleg",
+			"hatGymOb":  false,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	}, {
+		"bezeichner":  "WF",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 19000,
+			"schluessel":  "19",
+			"kuerzel":  "WF",
+			"text":  "Freie Waldorfschule (Förderschule)",
+			"hatGymOb":  true,
+			"gueltigVon":  null,
+			"gueltigBis":  null
+		} ]
+	} ]
+}

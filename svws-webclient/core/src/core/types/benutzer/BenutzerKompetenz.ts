@@ -1,10 +1,11 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { BenutzerKompetenzKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -155,7 +156,7 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte Import von Daten aus Kurs42 benötigt.
 	 */
-	public static readonly EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN", 27, new BenutzerKompetenzKatalogEintrag(74, BenutzerKompetenzGruppe.EXTRAS, "Daten aus Kurs42 importieren", Schulform.getMitGymOb()));
+	public static readonly EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN : BenutzerKompetenz = new BenutzerKompetenz("EXTRAS_DATEN_AUS_KURS42_IMPORTIEREN", 27, new BenutzerKompetenzKatalogEintrag(74, BenutzerKompetenzGruppe.EXTRAS, "Daten aus Kurs42 importieren", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zum Bearbeiten von Personengruppen benötigt.
@@ -310,82 +311,82 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN", 58, new BenutzerKompetenzKatalogEintrag(160, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturjahrgänge anlegen und löschen", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN", 58, new BenutzerKompetenzKatalogEintrag(160, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturjahrgänge anlegen und löschen", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN", 59, new BenutzerKompetenzKatalogEintrag(161, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN", 59, new BenutzerKompetenzKatalogEintrag(161, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Durchführung der Laufbahnplanung (stufenbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN", 60, new BenutzerKompetenzKatalogEintrag(162, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN", 60, new BenutzerKompetenzKatalogEintrag(162, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zum Import von Laufbahnpdaten aus LuPO benötigt.
 	 */
-	public static readonly OBERSTUFE_LUPO_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LUPO_IMPORT", 61, new BenutzerKompetenzKatalogEintrag(163, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_LUPO_IMPORT : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_LUPO_IMPORT", 61, new BenutzerKompetenzKatalogEintrag(163, BenutzerKompetenzGruppe.OBERSTUFE, "Laufbahnplanung aus LuPO importieren", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Kursverwaltung - Blocken (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_ALLGEMEIN", 62, new BenutzerKompetenzKatalogEintrag(171, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (allgemein)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KURSPLANUNG_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_ALLGEMEIN", 62, new BenutzerKompetenzKatalogEintrag(171, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Kursverwaltung - Blocken (stufenbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN", 63, new BenutzerKompetenzKatalogEintrag(172, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN", 63, new BenutzerKompetenzKatalogEintrag(172, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blocken (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Aktivierung einer Blockung benötigt.
 	 */
-	public static readonly OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN", 64, new BenutzerKompetenzKatalogEintrag(173, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blockung aktivieren", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KURSPLANUNG_BLOCKUNG_AKTIVIEREN", 64, new BenutzerKompetenzKatalogEintrag(173, BenutzerKompetenzGruppe.OBERSTUFE, "Kursplanung - Blockung aktivieren", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zur Bearbeitung einer Klausurplanung benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_AENDERN", 65, new BenutzerKompetenzKatalogEintrag(181, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_AENDERN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_AENDERN", 65, new BenutzerKompetenzKatalogEintrag(181, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ändern", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zum Ansehen einer Klausurplanung (allgemein) benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN", 66, new BenutzerKompetenzKatalogEintrag(182, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN", 66, new BenutzerKompetenzKatalogEintrag(182, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Es werden Rechte zum Ansehen einer Klausurplanung (funktionsbezogen) benötigt.
 	 */
-	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION", 67, new BenutzerKompetenzKatalogEintrag(183, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION : BenutzerKompetenz = new BenutzerKompetenz("OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION", 67, new BenutzerKompetenzKatalogEintrag(183, BenutzerKompetenzGruppe.OBERSTUFE, "Klausurplanung ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Ansehen von Abiturdaten der Oberstufe (allgemein).
 	 */
-	public static readonly ABITUR_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_ALLGEMEIN", 68, new BenutzerKompetenzKatalogEintrag(191, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (allgemein)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_ANSEHEN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_ALLGEMEIN", 68, new BenutzerKompetenzKatalogEintrag(191, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Ansehen von Abiturdaten der Oberstufe (funktionsbezogen).
 	 */
-	public static readonly ABITUR_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_FUNKTIONSBEZOGEN", 69, new BenutzerKompetenzKatalogEintrag(192, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_ANSEHEN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_ANSEHEN_FUNKTIONSBEZOGEN", 69, new BenutzerKompetenzKatalogEintrag(192, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ansehen (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Ändern aller Daten zum Abitur (allgemein).
 	 */
-	public static readonly ABITUR_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_ALLGEMEIN", 70, new BenutzerKompetenzKatalogEintrag(193, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (allgemein)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_AENDERN_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_ALLGEMEIN", 70, new BenutzerKompetenzKatalogEintrag(193, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Ändern aller Daten zum Abitur (funktionsbezogen).
 	 */
-	public static readonly ABITUR_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_FUNKTIONSBEZOGEN", 71, new BenutzerKompetenzKatalogEintrag(194, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_AENDERN_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_AENDERN_FUNKTIONSBEZOGEN", 71, new BenutzerKompetenzKatalogEintrag(194, BenutzerKompetenzGruppe.OBERSTUFE, "Abiturdaten ändern (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (allgemein).
 	 */
-	public static readonly ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN", 72, new BenutzerKompetenzKatalogEintrag(195, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (allgemein)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_ALLGEMEIN", 72, new BenutzerKompetenzKatalogEintrag(195, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (allgemein)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Berechtigung zum Eingeben von Prüfungsergebnissen (funktionsbezogen).
 	 */
-	public static readonly ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 73, new BenutzerKompetenzKatalogEintrag(196, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (funktionsbezogen)", Schulform.getMitGymOb()));
+	public static readonly ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN : BenutzerKompetenz = new BenutzerKompetenz("ABITUR_EINGABE_ERGEBNISSE_FUNKTIONSBEZOGEN", 73, new BenutzerKompetenzKatalogEintrag(196, BenutzerKompetenzGruppe.OBERSTUFE, "Prüfungsergebnisse eingeben (funktionsbezogen)", BenutzerKompetenz.getSchulformenGymOb()));
 
 	/**
 	 * Allgemeine Berechtigung zum Verwenden der CardDav API für Addressdaten
@@ -558,15 +559,16 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	/**
 	 * Überprüft, ob die Kompetenz mit k_id für die Schulform mit s_id zulässig ist.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform  Die Schulform
 	 *
 	 * @return true, wenn die Kompetenz für die Schulform zulässig ist.
 	 */
-	public hatSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null))
+	public hatSchulform(schuljahr : number, schulform : Schulform | null) : boolean {
+		if (schulform === null)
 			return false;
 		if (this.daten.nurSchulformen !== null)
-			return this.daten.nurSchulformen.contains(schulform.daten.id);
+			return this.daten.nurSchulformen.contains(schulform.name());
 		return true;
 	}
 
@@ -589,21 +591,32 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	 * Gibt die Liste aller Benutzerkompetenzen zurück, welche der übergebenen Gruppe
 	 * zugeordnet sind und die übergebene Schulform besitzen.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param gruppe   die Benutzerkompetenz-Gruppe
 	 * @param schulform   die Schulform
 	 *
 	 * @return die Liste der Benutzerkompetenzen
 	 */
-	public static getKompetenzenMitSchulform(gruppe : BenutzerKompetenzGruppe, schulform : Schulform) : List<BenutzerKompetenz> {
+	public static getKompetenzenMitSchulform(schuljahr : number, gruppe : BenutzerKompetenzGruppe, schulform : Schulform) : List<BenutzerKompetenz> {
 		const l : List<BenutzerKompetenz> | null = new ArrayList<BenutzerKompetenz>();
 		const liste : List<BenutzerKompetenz> | null = BenutzerKompetenz.getMapGruppenZuordnung().get(gruppe);
 		if (liste === null)
 			return l;
 		for (const bk of liste) {
-			if (bk.hatSchulform(schulform))
+			if (bk.hatSchulform(schuljahr, schulform))
 				l.add(bk);
 		}
 		return l;
+	}
+
+	private static getSchulformenGymOb() : List<Schulform> {
+		const result : List<Schulform> = new ArrayList<Schulform>();
+		result.add(Schulform.FW);
+		result.add(Schulform.GE);
+		result.add(Schulform.GY);
+		result.add(Schulform.SG);
+		result.add(Schulform.WF);
+		return result;
 	}
 
 	/**
@@ -634,6 +647,8 @@ export class BenutzerKompetenz extends JavaEnum<BenutzerKompetenz> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenz', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<BenutzerKompetenz>('de.svws_nrw.core.types.benutzer.BenutzerKompetenz');
 
 }
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 
@@ -51,6 +52,8 @@ export class GostKlausurenCollectionRaumData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionRaumData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionRaumData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionRaumData>;

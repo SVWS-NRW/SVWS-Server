@@ -1,4 +1,5 @@
 import { Service } from '../../../../../core/Service';
+import { Class } from '../../../../../java/lang/Class';
 import { Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
 import { LogLevel } from '../../../../../core/logger/LogLevel';
 
@@ -29,6 +30,8 @@ export class AbiturBlockIMarkierAlgorithmus extends Service<Abiturdaten, Abiturd
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierAlgorithmus'].includes(name);
 	}
+
+	public static class = new Class<AbiturBlockIMarkierAlgorithmus>('de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierAlgorithmus');
 
 }
 

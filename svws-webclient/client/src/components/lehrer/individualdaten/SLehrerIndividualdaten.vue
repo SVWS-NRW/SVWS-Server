@@ -6,10 +6,10 @@
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data.istSichtbar" @update:model-value="istSichtbar => patch({istSichtbar: istSichtbar === true})"> Ist sichtbar </svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatUpdateKompetenz" :model-value="data.istRelevantFuerStatistik" @update:model-value="istRelevantFuerStatistik => patch({istRelevantFuerStatistik: istRelevantFuerStatistik === true})"> Ist Relevant für Statistik </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
-				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel})" required />
+				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data.nachname" @change="nachname => patch({nachname})" required />
-				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data.vorname" @change="vorname => patch({vorname})" required />
+				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data.nachname" @change="nachname => patch({nachname: nachname ?? undefined})" required />
+				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data.vorname" @change="vorname => patch({vorname: vorname ?? undefined})" required />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data.geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required />
@@ -36,7 +36,7 @@
 		<svws-ui-content-card title="Leitungsfunktionen">
 			<svws-ui-table :columns="colsLeitungsfunktionen" :items="lehrerListeManager().daten().leitungsfunktionen" count>
 				<template #cell(idLeitungsfunktion)="{ value }">
-					{{ LehrerLeitungsfunktion.getByID(value)?.daten.bezeichnung }}
+					{{ LehrerLeitungsfunktion.data().getWertByID(value)?.daten(schuljahr)?.text ?? '—' }}
 				</template>
 				<template #cell(beginn)="{ value }">
 					{{ (value === null) || (JavaString.isBlank(value)) ? '–' : DateUtils.gibDatumGermanFormat(value) }}
@@ -52,12 +52,14 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
+	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
-	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
+
+	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.LEHRERDATEN_AENDERN));
 
@@ -80,16 +82,14 @@
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname || "", data.value.hausnummer || "", data.value.hausnummerZusatz || ""))
 
-	const patchStrasse = (value: string ) => {
-		if (value) {
-			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
-		}
+	const patchStrasse = (value: string | null) => {
+		const vals = AdressenUtils.splitStrasse(value);
+		void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
 	}
 
-	const wohnortID = computed<OrtKatalogEintrag | undefined>({
-		get: () =>data.value.wohnortID ? props.mapOrte.get(data.value.wohnortID) : undefined,
-		set: (val) => void props.patch({ wohnortID: val?.id })
+	const wohnortID = computed<OrtKatalogEintrag | null>({
+		get: () => (data.value.wohnortID === null) ? null : props.mapOrte.get(data.value.wohnortID) ?? null,
+		set: (val) => void props.patch({ wohnortID: val?.id ?? null })
 	});
 
 	const ortsteile = computed<Array<OrtsteilKatalogEintrag>>(() => {
@@ -100,8 +100,8 @@
 		return result;
 	});
 
-	const ortsteilID = computed<OrtsteilKatalogEintrag | undefined>({
-		get: () => data.value.ortsteilID ? props.mapOrtsteile.get(data.value.ortsteilID) : undefined,
+	const ortsteilID = computed<OrtsteilKatalogEintrag | null>({
+		get: () => data.value.ortsteilID === null ? null : props.mapOrtsteile.get(data.value.ortsteilID) ?? null,
 		set: (val) => void props.patch({ ortsteilID: val?.id ?? null })
 	});
 

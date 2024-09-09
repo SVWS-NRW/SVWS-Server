@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
-import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend } from '../../asd/types/schule/SchulabschlussAllgemeinbildend';
+import { Class } from '../../java/lang/Class';
 import { AbschlussErgebnisBerufsbildend } from '../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
 import { BKAnlageAFaecher } from '../../core/abschluss/bk/a/BKAnlageAFaecher';
 
@@ -93,6 +94,8 @@ export class AbschlussManagerBerufsbildend extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend'].includes(name);
 	}
+
+	public static class = new Class<AbschlussManagerBerufsbildend>('de.svws_nrw.core.abschluss.AbschlussManagerBerufsbildend');
 
 }
 

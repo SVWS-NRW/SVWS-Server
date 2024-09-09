@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { AbgangsartKatalogEintrag } from '../../../core/data/schule/AbgangsartKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class AbgangsartKatalog extends JavaObject {
 
@@ -27,6 +28,8 @@ export class AbgangsartKatalog extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.AbgangsartKatalog'].includes(name);
 	}
+
+	public static class = new Class<AbgangsartKatalog>('de.svws_nrw.core.data.schule.AbgangsartKatalog');
 
 	public static transpilerFromJSON(json : string): AbgangsartKatalog {
 		const obj = JSON.parse(json) as Partial<AbgangsartKatalog>;

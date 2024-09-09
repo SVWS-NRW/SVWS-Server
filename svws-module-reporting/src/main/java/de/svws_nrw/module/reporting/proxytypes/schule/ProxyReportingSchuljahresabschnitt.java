@@ -1,6 +1,6 @@
 package de.svws_nrw.module.reporting.proxytypes.schule;
 
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**

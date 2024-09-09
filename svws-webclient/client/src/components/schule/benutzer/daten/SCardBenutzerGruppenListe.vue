@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card>
-		<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true" :columns="cols">
+		<svws-ui-table selectable :items="listBenutzergruppen" :disable-footer="true" :columns>
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<!--<div class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
@@ -13,11 +13,7 @@
 			</template>
 			<template #body>
 				<div role="row" class="svws-ui-tr" v-for="(bgle, index) in listBenutzergruppen" :key="index">
-					<s-benutzergruppen-listeneintrag :row="bgle"
-						:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
-						:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-						:get-benutzer-manager="getBenutzerManager"
-						:goto-benutzergruppe="gotoBenutzergruppe" />
+					<s-benutzergruppen-listeneintrag :row="bgle" :add-benutzer-to-benutzergruppe :remove-benutzer-from-benutzergruppe :get-benutzer-manager :goto-benutzergruppe />
 				</div>
 			</template>
 		</svws-ui-table>
@@ -27,8 +23,6 @@
 <script setup lang="ts">
 
 	import type { BenutzergruppeListeEintrag, BenutzerManager, List } from "@core";
-	import type { WritableComputedRef } from "vue";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		listBenutzergruppen: List<BenutzergruppeListeEintrag>;
@@ -38,17 +32,7 @@
 		gotoBenutzergruppe: (b_id: number) => Promise<void>;
 	}>();
 
-	const selected: WritableComputedRef<boolean> = computed({
-		get: () => props.listBenutzergruppen.size() === props.getBenutzerManager().anzahlGruppen() ?  true : false,
-		set: (value) => {
-			if (value)
-				void props.addBenutzerToBenutzergruppe(-1);
-			else
-				void props.removeBenutzerFromBenutzergruppe(-1);
-		}
-	});
-
-	const cols = [
+	const columns = [
 		{key: 'bezeichnung', label: 'Bezeichnung'},
 		{key: 'istAdmin', label: 'ist Admin'}
 	]

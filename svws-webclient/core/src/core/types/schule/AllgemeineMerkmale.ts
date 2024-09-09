@@ -1,7 +1,8 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { AllgemeineMerkmaleKatalogEintrag } from '../../../core/data/schule/AllgemeineMerkmaleKatalogEintrag';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
@@ -207,6 +208,8 @@ export class AllgemeineMerkmale extends JavaEnum<AllgemeineMerkmale> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.AllgemeineMerkmale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<AllgemeineMerkmale>('de.svws_nrw.core.types.schule.AllgemeineMerkmale');
 
 }
 

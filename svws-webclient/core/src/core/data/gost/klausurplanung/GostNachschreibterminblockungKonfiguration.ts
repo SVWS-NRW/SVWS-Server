@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 
@@ -43,6 +44,8 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration'].includes(name);
 	}
+
+	public static class = new Class<GostNachschreibterminblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration');
 
 	public static transpilerFromJSON(json : string): GostNachschreibterminblockungKonfiguration {
 		const obj = JSON.parse(json) as Partial<GostNachschreibterminblockungKonfiguration>;

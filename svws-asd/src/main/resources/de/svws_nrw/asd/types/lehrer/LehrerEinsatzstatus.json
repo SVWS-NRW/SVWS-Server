@@ -1,0 +1,37 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "A",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "1",
+			"kuerzel": "A",
+			"text": "Stammschule, ganz oder teilweise auch an anderen Schulen tätig",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "2",
+			"kuerzel": "B",
+			"text": "nicht Stammschule, aber auch hier tätig",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DEFAULT",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "3",
+			"kuerzel": "DEFAULT",
+			"text": "Stammschule, nur hier tätig",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

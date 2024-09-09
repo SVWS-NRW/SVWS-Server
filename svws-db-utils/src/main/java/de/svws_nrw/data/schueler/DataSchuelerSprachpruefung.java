@@ -7,11 +7,15 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
+import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -54,7 +58,9 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 
 
 	@Override
-	protected Sprachpruefung map(final DTOSchuelerSprachpruefungen dto) throws ApiOperationException {
+	public Sprachpruefung map(final DTOSchuelerSprachpruefungen dto) throws ApiOperationException {
+		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 		final Sprachpruefung daten = new Sprachpruefung();
 		daten.sprache = dto.Sprache;
 		daten.jahrgang = dto.ASDJahrgang;
@@ -67,8 +73,12 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 		daten.kannWahlpflichtfremdspracheErsetzen = (dto.KannWahlpflichtfremdspracheErsetzen != null) && dto.KannWahlpflichtfremdspracheErsetzen;
 		daten.kannBelegungAlsFortgefuehrteSpracheErlauben =
 				(dto.KannBelegungAlsFortgefuehrteSpracheErlauben != null) && dto.KannBelegungAlsFortgefuehrteSpracheErlauben;
-		daten.referenzniveau = (dto.Referenzniveau == null) ? null : dto.Referenzniveau.daten.kuerzel;
-		daten.note = (dto.NotePruefung == null) ? null : dto.NotePruefung.getNoteSekI();
+		final Sprachreferenzniveau niveau = (dto.Referenzniveau == null) ? null : Sprachreferenzniveau.data().getWertByKuerzel(dto.Referenzniveau);
+		final SprachreferenzniveauKatalogEintrag niveauEintrag = (niveau == null) ? null : niveau.daten(abschnitt.schuljahr);
+		daten.referenzniveau = (niveauEintrag == null) ? null : niveauEintrag.kuerzel;
+		final Note note = Note.fromNoteSekI(dto.NotePruefung);
+		final NoteKatalogEintrag noteEintrag = (note == null) ? null : note.daten(abschnitt.schuljahr);
+		daten.note = (noteEintrag == null) ? null : dto.NotePruefung;
 		return daten;
 	}
 
@@ -89,10 +99,16 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 				if (kuerzel == null) {
 					dto.ASDJahrgang = null;
 				} else {
-					final Jahrgaenge jg = Jahrgaenge.getByKuerzel(kuerzel);
+					final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+					final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
+					final Jahrgaenge jg = Jahrgaenge.data().getWertByKuerzel(kuerzel);
 					if (jg == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Jahrgangs-Kürzel verwendet.");
-					dto.ASDJahrgang = jg.daten.kuerzel;
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Jahrgangs-Kürzel %s ist ungültig.".formatted(kuerzel));
+					final JahrgaengeKatalogEintrag jgke = jg.daten(abschnitt.schuljahr);
+					if (jgke == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Jahrgangs-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
+					dto.ASDJahrgang = kuerzel;
 				}
 			}
 			case "anspruchsniveauId" -> {
@@ -118,10 +134,16 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 				if (kuerzel == null) {
 					dto.Referenzniveau = null;
 				} else {
-					final Sprachreferenzniveau niveau = Sprachreferenzniveau.getByKuerzel(kuerzel);
+					final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+					final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
+					final Sprachreferenzniveau niveau = Sprachreferenzniveau.data().getWertByKuerzel(kuerzel);
 					if (niveau == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültiges Sprachreferenzniveau-Kürzel verwendet.");
-					dto.Referenzniveau = niveau;
+						throw new ApiOperationException(Status.BAD_REQUEST, "Das Sprachreferenzniveau-Kürzel %s ist ungültig.".formatted(kuerzel));
+					final SprachreferenzniveauKatalogEintrag niveauEintrag = niveau.daten(abschnitt.schuljahr);
+					if (niveauEintrag == null)
+						throw new ApiOperationException(Status.BAD_REQUEST,
+								"Das Sprachreferenzniveau-Kürzel %s ist dem Schuljahr %d ungültig.".formatted(kuerzel, abschnitt.schuljahr));
+					dto.Referenzniveau = niveauEintrag.kuerzel;
 				}
 			}
 			case "note" -> {
@@ -129,10 +151,15 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 				if (note == null) {
 					dto.NotePruefung = null;
 				} else {
+					final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, dto.Schueler_ID);
+					final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoSchueler.Schuljahresabschnitts_ID);
 					final Note notePruefung = Note.fromNoteSekI(note);
 					if (notePruefung == null)
 						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültige Note angegeben.");
-					dto.NotePruefung = notePruefung;
+					final NoteKatalogEintrag notePruefungEintrag = notePruefung.daten(abschnitt.schuljahr);
+					if (notePruefungEintrag == null)
+						throw new ApiOperationException(Status.BAD_REQUEST, "Ungültige Note angegeben.");
+					dto.NotePruefung = note;
 				}
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten ein unbekanntes Attribut.");

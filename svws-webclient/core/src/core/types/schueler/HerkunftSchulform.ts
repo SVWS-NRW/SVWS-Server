@@ -1,7 +1,8 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HerkunftSchulformKatalogEintrag } from '../../../core/data/schule/HerkunftSchulformKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
@@ -167,6 +168,8 @@ export class HerkunftSchulform extends JavaEnum<HerkunftSchulform> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.HerkunftSchulform', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<HerkunftSchulform>('de.svws_nrw.core.types.schueler.HerkunftSchulform');
 
 }
 

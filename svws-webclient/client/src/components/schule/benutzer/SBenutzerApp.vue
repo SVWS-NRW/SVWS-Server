@@ -4,13 +4,13 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
-						<span>{{ anzeigename || '—' }}</span>
+						<span>{{ anzeigename }}</span>
 						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 							ID: {{ id }}
 						</svws-ui-badge>
 					</h2>
 					<span class="svws-subline">
-						{{ name || '—' }}
+						{{ name }}
 					</span>
 				</div>
 			</div>
@@ -27,17 +27,15 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef } from "vue";
 	import { computed } from "vue";
-
 	import type { BenutzerAppProps } from "./SBenutzerAppProps";
 
 	const props = defineProps<BenutzerAppProps>();
 
-	const id: ComputedRef<number | string> = computed(() => props.auswahl()?.id ?? "?");
-	const anzeigename: ComputedRef<string> = computed(() => props.auswahl()?.anzeigename ?? "---");
-	const name: ComputedRef<string> = computed(() => props.auswahl()?.name ?? "---");
+	const id = computed<number | string>(() => props.auswahl()?.id ?? "?");
+	const anzeigename = computed<string>(() => props.auswahl()?.anzeigename ?? "---");
+	const name = computed<string>(() => props.auswahl()?.name ?? "---");
 
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl() !== undefined);
+	const visible = computed<boolean>(() => props.auswahl() !== undefined);
 
 </script>

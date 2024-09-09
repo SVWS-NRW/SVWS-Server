@@ -1,14 +1,13 @@
 package de.svws_nrw.data.klassen;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
-import de.svws_nrw.core.types.klassen.Klassenart;
+import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
+import de.svws_nrw.asd.types.klassen.Klassenart;
 import de.svws_nrw.data.DataManager;
 
 /**
@@ -28,7 +27,7 @@ public final class DataKatalogKlassenarten extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<KlassenartKatalogEintrag> daten = new ArrayList<>();
 		for (final Klassenart ka : Klassenart.values())
-			daten.addAll(Arrays.asList(ka.historie));
+			daten.addAll(ka.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

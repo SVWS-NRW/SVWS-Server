@@ -7,8 +7,8 @@ import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
@@ -102,7 +102,7 @@ public final class DBUtilsGostAbitur {
 				belegung.wochenstunden = leistungenBelegung.wochenstunden;
 				belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
 				belegung.fehlstundenUnentschuldigt = leistungenBelegung.fehlstundenUnentschuldigt;
-				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).kuerzel;
+				belegung.notenkuerzel = Note.fromKuerzel(leistungenBelegung.notenKuerzel).daten(abidaten.schuljahrAbitur).kuerzel;
 				fach.belegungen[GostHalbjahr.fromKuerzel(belegung.halbjahrKuerzel).id] = belegung;
 			}
 			abidaten.fachbelegungen.add(fach);
@@ -180,7 +180,7 @@ public final class DBUtilsGostAbitur {
 			abiturjahr = abidatenVergleich.abiturjahr;
 
 		// Lese die Oberstufenfächer aus der DB ein, um schnell Daten zu einzelnen Fächern nachschlagen zu können
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidatenVergleich.schuljahrAbitur, conn, abiturjahr);
 
 		// Kopiere die DTOs in die Abiturdaten-Klasse
 		final Abiturdaten abidaten = new Abiturdaten();
@@ -193,30 +193,31 @@ public final class DBUtilsGostAbitur {
 				: dtoSchuelerAbitur.FehlstundenSummeUnentschuldigt;
 		abidaten.latinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.LatinumErreicht != null) && (folge.LatinumErreicht)) {
 				abidaten.latinum = true;
 				break;
 			}
 		abidaten.kleinesLatinum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.L.daten.kuerzel.equals(folge.Sprache) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht)) {
+			if ((Fach.L == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.KleinesLatinumErreicht != null) && (folge.KleinesLatinumErreicht)) {
 				abidaten.kleinesLatinum = true;
 				break;
 			}
 		abidaten.graecum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.G.daten.kuerzel.equals(folge.Sprache) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht)) {
+			if ((Fach.G == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.GraecumErreicht != null) && (folge.GraecumErreicht)) {
 				abidaten.graecum = true;
 				break;
 			}
 		abidaten.hebraicum = false;
 		for (final DTOSchuelerSprachenfolge folge : sprachenfolge)
-			if (ZulaessigesFach.H.daten.kuerzel.equals(folge.Sprache) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht)) {
+			if ((Fach.H == Fach.data().getWertByKuerzel(folge.Sprache)) && (folge.HebraicumErreicht != null) && (folge.HebraicumErreicht)) {
 				abidaten.hebraicum = true;
 				break;
 			}
 		abidaten.besondereLernleistung = dtoSchuelerAbitur.BesondereLernleistungArt.kuerzel;
-		abidaten.besondereLernleistungNotenKuerzel = dtoSchuelerAbitur.BesondereLernleistungNotenpunkte.kuerzel;
+		abidaten.besondereLernleistungNotenKuerzel =
+				Note.fromNotenpunkte(dtoSchuelerAbitur.BesondereLernleistungNotenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 		abidaten.besondereLernleistungThema = dtoSchuelerAbitur.BesondereLernleistungThema;
 
 		abidaten.block1AnzahlKurse = dtoSchuelerAbitur.BlockI_AnzahlKurseEingebracht;
@@ -262,19 +263,19 @@ public final class DBUtilsGostAbitur {
 			fach.block1PunktSumme = dto.ZulassungPunktsumme;
 			fach.block1NotenpunkteDurchschnitt = dto.ZulassungNotenpunktdurchschnitt;
 
-			fach.block2NotenKuerzelPruefung = dto.PruefungNotenpunkte.kuerzel;
+			fach.block2NotenKuerzelPruefung = Note.fromNotenpunkte(dto.PruefungNotenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 			fach.block2PunkteZwischenstand = dto.PruefungPunktsummeZwischenstand;
 			fach.block2MuendlichePruefungAbweichung = dto.PruefungMuendlichAbweichung;
 			fach.block2MuendlichePruefungBestehen = dto.PruefungMuendlichBestehen;
 			fach.block2MuendlichePruefungFreiwillig = dto.PruefungMuendlichFreiwillig;
 			fach.block2MuendlichePruefungReihenfolge = dto.PruefungMuendlichReihenfolge;
-			fach.block2MuendlichePruefungNotenKuerzel = dto.PruefungMuendlichNotenpunkte.kuerzel;
+			fach.block2MuendlichePruefungNotenKuerzel = Note.fromNotenpunkte(dto.PruefungMuendlichNotenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 			fach.block2Punkte = dto.PruefungPunktsummeGesamt;
 			fach.block2Pruefer = dto.Fachlehrer_ID;
 			if (dto.EF_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr ef1 = new AbiturFachbelegungHalbjahr();
 				ef1.halbjahrKuerzel = GostHalbjahr.EF1.kuerzel;
-				ef1.notenkuerzel = dto.EF_HJ1_Notenpunkte.kuerzel;
+				ef1.notenkuerzel = Note.fromNotenpunkteString(dto.EF_HJ1_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				ef1.schriftlich = (dto.EF_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				ef1.block1gewertet = false;
 				ef1.block1kursAufZeugnis = false;
@@ -283,7 +284,7 @@ public final class DBUtilsGostAbitur {
 			if (dto.EF_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr ef2 = new AbiturFachbelegungHalbjahr();
 				ef2.halbjahrKuerzel = GostHalbjahr.EF2.kuerzel;
-				ef2.notenkuerzel = dto.EF_HJ2_Notenpunkte.kuerzel;
+				ef2.notenkuerzel = Note.fromNotenpunkteString(dto.EF_HJ2_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				ef2.schriftlich = (dto.EF_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				ef2.block1gewertet = false;
 				ef2.block1kursAufZeugnis = false;
@@ -292,7 +293,7 @@ public final class DBUtilsGostAbitur {
 			if (dto.Q1_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr q11 = new AbiturFachbelegungHalbjahr();
 				q11.halbjahrKuerzel = GostHalbjahr.Q11.kuerzel;
-				q11.notenkuerzel = dto.Q1_HJ1_Notenpunkte.kuerzel;
+				q11.notenkuerzel = Note.fromNotenpunkteString(dto.Q1_HJ1_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				q11.schriftlich = (dto.Q1_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				q11.wochenstunden = dto.Q1_HJ1_Wochenstunden;
 				q11.block1gewertet = dto.Q1_HJ1_MarkiertFuerAbiturBerechnung.fuerBerechnung;
@@ -302,7 +303,7 @@ public final class DBUtilsGostAbitur {
 			if (dto.Q1_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr q12 = new AbiturFachbelegungHalbjahr();
 				q12.halbjahrKuerzel = GostHalbjahr.Q12.kuerzel;
-				q12.notenkuerzel = dto.Q1_HJ2_Notenpunkte.kuerzel;
+				q12.notenkuerzel = Note.fromNotenpunkteString(dto.Q1_HJ2_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				q12.schriftlich = (dto.Q1_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				q12.wochenstunden = dto.Q1_HJ2_Wochenstunden;
 				q12.block1gewertet = dto.Q1_HJ2_MarkiertFuerAbiturBerechnung.fuerBerechnung;
@@ -312,7 +313,7 @@ public final class DBUtilsGostAbitur {
 			if (dto.Q2_HJ1_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr q21 = new AbiturFachbelegungHalbjahr();
 				q21.halbjahrKuerzel = GostHalbjahr.Q21.kuerzel;
-				q21.notenkuerzel = dto.Q2_HJ1_Notenpunkte.kuerzel;
+				q21.notenkuerzel = Note.fromNotenpunkteString(dto.Q2_HJ1_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				q21.schriftlich = (dto.Q2_HJ1_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				q21.wochenstunden = dto.Q2_HJ1_Wochenstunden;
 				q21.block1gewertet = dto.Q2_HJ1_MarkiertFuerAbiturBerechnung.fuerBerechnung;
@@ -322,7 +323,7 @@ public final class DBUtilsGostAbitur {
 			if (dto.Q2_HJ2_BelegungArt != AbiturBelegungsart.NICHT_BELEGT) {
 				final AbiturFachbelegungHalbjahr q22 = new AbiturFachbelegungHalbjahr();
 				q22.halbjahrKuerzel = GostHalbjahr.Q22.kuerzel;
-				q22.notenkuerzel = dto.Q2_HJ2_Notenpunkte.kuerzel;
+				q22.notenkuerzel = Note.fromNotenpunkteString(dto.Q2_HJ2_Notenpunkte).daten(abidaten.abiturjahr - 1).kuerzel;
 				q22.schriftlich = (dto.Q2_HJ2_BelegungArt == AbiturBelegungsart.SCHRIFTLICH);
 				q22.wochenstunden = dto.Q2_HJ2_Wochenstunden;
 				q22.block1gewertet = dto.Q2_HJ2_MarkiertFuerAbiturBerechnung.fuerBerechnung;

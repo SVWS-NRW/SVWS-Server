@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { Random } from '../../../java/util/Random';
+import { Class } from '../../../java/lang/Class';
 import { SatInput } from '../../../core/adt/sat/SatInput';
 import { SatOutput } from '../../../core/adt/sat/SatOutput';
 
@@ -59,6 +60,8 @@ export class SatWrapper1 extends JavaObject implements JavaFunction<SatInput, Sa
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatWrapper1', 'java.util.function.Function'].includes(name);
 	}
+
+	public static class = new Class<SatWrapper1>('de.svws_nrw.core.adt.sat.SatWrapper1');
 
 }
 

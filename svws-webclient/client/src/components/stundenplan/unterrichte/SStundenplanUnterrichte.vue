@@ -118,7 +118,7 @@
 	import { computed, ref } from "vue";
 	import type { StundenplanUnterrichteProps } from "./SStundenplanUnterrichteProps";
 	import type { List, StundenplanKlasse, StundenplanKurs, StundenplanRaum, StundenplanSchiene, StundenplanSchueler, StundenplanZeitraster, Wochentag, StundenplanLehrer, StundenplanFach, StundenplanUnterricht } from "@core";
-	import { ArrayList, ListUtils, ZulaessigesFach } from "@core";
+	import { ArrayList, ListUtils, Fach } from "@core";
 
 	type FokusType = { type: 'lehrer' | 'klassen' | 'raeume' | 'schienen' | null, id: number | null };
 
@@ -133,6 +133,8 @@
 	}
 
 	const props = defineProps<StundenplanUnterrichteProps>();
+
+	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());
 
 	const wochentage = [null, 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
 
@@ -157,7 +159,9 @@
 	];
 
 	function getBgColor(kuerzel: string | null) {
-		return ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
+		if (kuerzel === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
 	}
 
 	const filtered = computed(() => {

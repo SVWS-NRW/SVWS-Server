@@ -73,6 +73,8 @@ public class StupasSchulmanagerFormatReader {
 
 		// Fast leeren Manager erzeugen
 		komplett = new StundenplanKomplett();
+		komplett.daten.schuljahr = 2022;
+		komplett.daten.abschnitt = 2;
 		komplett.daten.bezeichnungStundenplan = "Import aus " + location;
 		komplett.daten.wochenTypModell = getWochenTypModell(csvData);
 		komplett.daten.gueltigAb = gueltigAb;

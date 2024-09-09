@@ -1,0 +1,1214 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "AH",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 174,
+			"schluessel": "AH",
+			"kuerzel": "AH",
+			"text": "Arbeitslehre / Schwerpunkt Haushaltslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AL",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 175,
+			"schluessel": "AL",
+			"kuerzel": "AL",
+			"text": "Arbeitslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AM",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 176,
+			"schluessel": "AM",
+			"kuerzel": "AM",
+			"text": "Arabisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AT",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 177,
+			"schluessel": "AT",
+			"kuerzel": "AT",
+			"text": "Arbeitslehre / Schwerpunkt Technik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AW",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 178,
+			"schluessel": "AW",
+			"kuerzel": "AW",
+			"text": "Arbeitslehre / Wirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BE",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 179,
+			"schluessel": "BE",
+			"kuerzel": "BE",
+			"text": "Betreuung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BI",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 180,
+			"schluessel": "BI",
+			"kuerzel": "BI",
+			"text": "Biologie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BM",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 181,
+			"schluessel": "BM",
+			"kuerzel": "BM",
+			"text": "Bosnisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 182,
+			"schluessel": "C",
+			"kuerzel": "C",
+			"text": "Chinesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CH",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 183,
+			"schluessel": "CH",
+			"kuerzel": "CH",
+			"text": "Chemie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CM",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 184,
+			"schluessel": "CM",
+			"kuerzel": "CM",
+			"text": "Kroatisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 185,
+			"schluessel": "D",
+			"kuerzel": "D",
+			"text": "Deutsch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 186,
+			"schluessel": "E",
+			"kuerzel": "E",
+			"text": "Englisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EK",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 187,
+			"schluessel": "EK",
+			"kuerzel": "EK",
+			"text": "Erdkunde",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EM",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 188,
+			"schluessel": "EM",
+			"kuerzel": "EM",
+			"text": "Serbisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ER",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 189,
+			"schluessel": "ER",
+			"kuerzel": "ER",
+			"text": "Evangelische Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "F",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 190,
+			"schluessel": "F",
+			"kuerzel": "F",
+			"text": "Französisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FP",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 191,
+			"schluessel": "FP",
+			"kuerzel": "FP",
+			"text": "Fachpraxis",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "G",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 192,
+			"schluessel": "G",
+			"kuerzel": "G",
+			"text": "Griechisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GE",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 193,
+			"schluessel": "GE",
+			"kuerzel": "GE",
+			"text": "Geschichte",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GM",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 194,
+			"schluessel": "GM",
+			"kuerzel": "GM",
+			"text": "Griechisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GP",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 195,
+			"schluessel": "GP",
+			"kuerzel": "GP",
+			"text": "Geschichte / Politische Bildung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GS",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 196,
+			"schluessel": "GS",
+			"kuerzel": "GS",
+			"text": "Kunst/Gestalten (Kunst oder Textilgestaltung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GU",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 197,
+			"schluessel": "GU",
+			"kuerzel": "GU",
+			"text": "Gesamtunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "H",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 198,
+			"schluessel": "H",
+			"kuerzel": "H",
+			"text": "Hebräisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 199,
+			"schluessel": "HA",
+			"kuerzel": "HA",
+			"text": "Hauswirtschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HR",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 200,
+			"schluessel": "HR",
+			"kuerzel": "HR",
+			"text": "Jüdische Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HW",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 201,
+			"schluessel": "HW",
+			"kuerzel": "HW",
+			"text": "Hauswirtschaft (-swissenschaft)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "I",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 202,
+			"schluessel": "I",
+			"kuerzel": "I",
+			"text": "Italienisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IF",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 203,
+			"schluessel": "IF",
+			"kuerzel": "IF",
+			"text": "Informatik (nachgewiesen durch 2. Staatsprüfung, sonst siehe IK)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IM",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 204,
+			"schluessel": "IM",
+			"kuerzel": "IM",
+			"text": "Italienisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IR",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 205,
+			"schluessel": "IR",
+			"kuerzel": "IR",
+			"text": "Islamkunde",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "K",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 206,
+			"schluessel": "K",
+			"kuerzel": "K",
+			"text": "Japanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KG",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 207,
+			"schluessel": "KG",
+			"kuerzel": "KG",
+			"text": "Kunst/Gestalten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KR",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 208,
+			"schluessel": "KR",
+			"kuerzel": "KR",
+			"text": "Katholische Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KS",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 209,
+			"schluessel": "KS",
+			"kuerzel": "KS",
+			"text": "Kurzschrift",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KU",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 210,
+			"schluessel": "KU",
+			"kuerzel": "KU",
+			"text": "Kunst / Werken",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KW",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 211,
+			"schluessel": "KW",
+			"kuerzel": "KW",
+			"text": "Kunstwissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "L",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 212,
+			"schluessel": "L",
+			"kuerzel": "L",
+			"text": "Lateinisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LI",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 213,
+			"schluessel": "LI",
+			"kuerzel": "LI",
+			"text": "Literaturwissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LM",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 214,
+			"schluessel": "LM",
+			"kuerzel": "LM",
+			"text": "Albanisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LN",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 215,
+			"schluessel": "LN",
+			"kuerzel": "LN",
+			"text": "Linguistik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "M",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 216,
+			"schluessel": "M",
+			"kuerzel": "M",
+			"text": "Mathematik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MM",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 217,
+			"schluessel": "MM",
+			"kuerzel": "MM",
+			"text": "Makedonisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MS",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 218,
+			"schluessel": "MS",
+			"kuerzel": "MS",
+			"text": "Maschinenschreiben",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MU",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 219,
+			"schluessel": "MU",
+			"kuerzel": "MU",
+			"text": "Musik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "N",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 220,
+			"schluessel": "N",
+			"kuerzel": "N",
+			"text": "Niederländisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "O",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 221,
+			"schluessel": "O",
+			"kuerzel": "O",
+			"text": "Portugiesisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OA",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 222,
+			"schluessel": "OA",
+			"kuerzel": "OA",
+			"text": "Ohne Angabe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OM",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 223,
+			"schluessel": "OM",
+			"kuerzel": "OM",
+			"text": "Portugiesisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "OR",
+		"idHistorie": 51,
+		"historie": [ {
+			"id": 224,
+			"schluessel": "OR",
+			"kuerzel": "OR",
+			"text": "Griechisch-orthodoxe Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PA",
+		"idHistorie": 52,
+		"historie": [ {
+			"id": 225,
+			"schluessel": "PA",
+			"kuerzel": "PA",
+			"text": "Pädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PH",
+		"idHistorie": 53,
+		"historie": [ {
+			"id": 226,
+			"schluessel": "PH",
+			"kuerzel": "PH",
+			"text": "Physik (Astronomie)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PI",
+		"idHistorie": 54,
+		"historie": [ {
+			"id": 227,
+			"schluessel": "PI",
+			"kuerzel": "PI",
+			"text": "Philosophie/Praktische Philosophie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PK",
+		"idHistorie": 55,
+		"historie": [ {
+			"id": 228,
+			"schluessel": "PK",
+			"kuerzel": "PK",
+			"text": "Politik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PL",
+		"idHistorie": 56,
+		"historie": [ {
+			"id": 229,
+			"schluessel": "PL",
+			"kuerzel": "PL",
+			"text": "Philosophie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PM",
+		"idHistorie": 57,
+		"historie": [ {
+			"id": 230,
+			"schluessel": "PM",
+			"kuerzel": "PM",
+			"text": "Polnisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PP",
+		"idHistorie": 58,
+		"historie": [ {
+			"id": 231,
+			"schluessel": "PP",
+			"kuerzel": "PP",
+			"text": "Praktische Philosophie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PS",
+		"idHistorie": 59,
+		"historie": [ {
+			"id": 232,
+			"schluessel": "PS",
+			"kuerzel": "PS",
+			"text": "Psychologie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "R",
+		"idHistorie": 60,
+		"historie": [ {
+			"id": 233,
+			"schluessel": "R",
+			"kuerzel": "R",
+			"text": "Russisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RM",
+		"idHistorie": 61,
+		"historie": [ {
+			"id": 234,
+			"schluessel": "RM",
+			"kuerzel": "RM",
+			"text": "Russisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RW",
+		"idHistorie": 62,
+		"historie": [ {
+			"id": 235,
+			"schluessel": "RW",
+			"kuerzel": "RW",
+			"text": "Rechtswissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "S",
+		"idHistorie": 63,
+		"historie": [ {
+			"id": 236,
+			"schluessel": "S",
+			"kuerzel": "S",
+			"text": "Spanisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SE",
+		"idHistorie": 64,
+		"historie": [ {
+			"id": 237,
+			"schluessel": "SE",
+			"kuerzel": "SE",
+			"text": "Sozial- und Erziehungswissenschaft",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SF",
+		"idHistorie": 65,
+		"historie": [ {
+			"id": 238,
+			"schluessel": "SF",
+			"kuerzel": "SF",
+			"text": "Sozialpflege",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SM",
+		"idHistorie": 66,
+		"historie": [ {
+			"id": 239,
+			"schluessel": "SM",
+			"kuerzel": "SM",
+			"text": "Spanisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SN",
+		"idHistorie": 67,
+		"historie": [ {
+			"id": 240,
+			"schluessel": "SN",
+			"kuerzel": "SN",
+			"text": "Sonderpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SO",
+		"idHistorie": 68,
+		"historie": [ {
+			"id": 241,
+			"schluessel": "SO",
+			"kuerzel": "SO",
+			"text": "Sozialpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SP",
+		"idHistorie": 69,
+		"historie": [ {
+			"id": 242,
+			"schluessel": "SP",
+			"kuerzel": "SP",
+			"text": "Sport",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SR",
+		"idHistorie": 70,
+		"historie": [ {
+			"id": 243,
+			"schluessel": "SR",
+			"kuerzel": "SR",
+			"text": "sonstige Sprachen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SU",
+		"idHistorie": 71,
+		"historie": [ {
+			"id": 244,
+			"schluessel": "SU",
+			"kuerzel": "SU",
+			"text": "Sachunterricht",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SW",
+		"idHistorie": 72,
+		"historie": [ {
+			"id": 245,
+			"schluessel": "SW",
+			"kuerzel": "SW",
+			"text": "Sozialwissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "T",
+		"idHistorie": 73,
+		"historie": [ {
+			"id": 246,
+			"schluessel": "T",
+			"kuerzel": "T",
+			"text": "Türkisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TC",
+		"idHistorie": 74,
+		"historie": [ {
+			"id": 247,
+			"schluessel": "TC",
+			"kuerzel": "TC",
+			"text": "Technik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TE",
+		"idHistorie": 75,
+		"historie": [ {
+			"id": 248,
+			"schluessel": "TE",
+			"kuerzel": "TE",
+			"text": "Technologie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TM",
+		"idHistorie": 76,
+		"historie": [ {
+			"id": 249,
+			"schluessel": "TM",
+			"kuerzel": "TM",
+			"text": "Türkisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TX",
+		"idHistorie": 77,
+		"historie": [ {
+			"id": 250,
+			"schluessel": "TX",
+			"kuerzel": "TX",
+			"text": "Textilgestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UW",
+		"idHistorie": 78,
+		"historie": [ {
+			"id": 251,
+			"schluessel": "UW",
+			"kuerzel": "UW",
+			"text": "Unterweisung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "W",
+		"idHistorie": 79,
+		"historie": [ {
+			"id": 252,
+			"schluessel": "W",
+			"kuerzel": "W",
+			"text": "Werken (Musisches)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WM",
+		"idHistorie": 80,
+		"historie": [ {
+			"id": 253,
+			"schluessel": "WM",
+			"kuerzel": "WM",
+			"text": "Slowenisch (Muttersprachl. Unterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WP",
+		"idHistorie": 81,
+		"historie": [ {
+			"id": 254,
+			"schluessel": "WP",
+			"kuerzel": "WP",
+			"text": "Wirtschaftslehre/Politik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WT",
+		"idHistorie": 82,
+		"historie": [ {
+			"id": 255,
+			"schluessel": "WT",
+			"kuerzel": "WT",
+			"text": "Technisches Werken",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WW",
+		"idHistorie": 83,
+		"historie": [ {
+			"id": 256,
+			"schluessel": "WW",
+			"kuerzel": "WW",
+			"text": "Wirtschafts- und Arbeitslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XM",
+		"idHistorie": 84,
+		"historie": [ {
+			"id": 257,
+			"schluessel": "XM",
+			"kuerzel": "XM",
+			"text": "sonstige Muttersprache",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "YR",
+		"idHistorie": 85,
+		"historie": [ {
+			"id": 258,
+			"schluessel": "YR",
+			"kuerzel": "YR",
+			"text": "Syrisch-orthodoxe Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "Z",
+		"idHistorie": 86,
+		"historie": [ {
+			"id": 259,
+			"schluessel": "Z",
+			"kuerzel": "Z",
+			"text": "Neugriechisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AR",
+		"idHistorie": 87,
+		"historie": [ {
+			"id": 260,
+			"schluessel": "AR",
+			"kuerzel": "AR",
+			"text": "Alevitische Religionslehre nach den Grundsätzen des AABF",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AE",
+		"idHistorie": 88,
+		"historie": [ {
+			"id": 261,
+			"schluessel": "AE",
+			"kuerzel": "AE",
+			"text": "Ästhetische Erziehung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DZ",
+		"idHistorie": 89,
+		"historie": [ {
+			"id": 262,
+			"schluessel": "DZ",
+			"kuerzel": "DZ",
+			"text": "Deutsch für Schülerinnen und Schüler mit Zuwanderungsgeschichte",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MG",
+		"idHistorie": 90,
+		"historie": [ {
+			"id": 263,
+			"schluessel": "MG",
+			"kuerzel": "MG",
+			"text": "Mathematische Grundbildung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NG",
+		"idHistorie": 91,
+		"historie": [ {
+			"id": 264,
+			"schluessel": "NG",
+			"kuerzel": "NG",
+			"text": "Natur- und Gesellschaftswissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SB",
+		"idHistorie": 92,
+		"historie": [ {
+			"id": 265,
+			"schluessel": "SB",
+			"kuerzel": "SB",
+			"text": "Sprachliche Grundbildung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MB",
+		"idHistorie": 93,
+		"historie": [ {
+			"id": 266,
+			"schluessel": "MB",
+			"kuerzel": "MB",
+			"text": "Religionslehre der mennonitischen Brüdergemeinden in RW (Lehrerlaubnis)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VM",
+		"idHistorie": 94,
+		"historie": [ {
+			"id": 267,
+			"schluessel": "VM",
+			"kuerzel": "VM",
+			"text": "Bulgarisch (Herkunftssprache)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "QM",
+		"idHistorie": 95,
+		"historie": [ {
+			"id": 268,
+			"schluessel": "QM",
+			"kuerzel": "QM",
+			"text": "Farsi (Herkunftssprache)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "YM",
+		"idHistorie": 96,
+		"historie": [ {
+			"id": 269,
+			"schluessel": "YM",
+			"kuerzel": "YM",
+			"text": "Koreanisch (Herkunftssprache)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ZM",
+		"idHistorie": 97,
+		"historie": [ {
+			"id": 270,
+			"schluessel": "ZM",
+			"kuerzel": "ZM",
+			"text": "Kurdische Sprachen (Herkunftssprache) (Sorani, Komaci, Zaza)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NM",
+		"idHistorie": 98,
+		"historie": [ {
+			"id": 271,
+			"schluessel": "NM",
+			"kuerzel": "NM",
+			"text": "Niederländisch (Herkunftssprache)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UM",
+		"idHistorie": 99,
+		"historie": [ {
+			"id": 272,
+			"schluessel": "UM",
+			"kuerzel": "UM",
+			"text": "Rumänisch (Herkunftssprache)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "IL",
+		"idHistorie": 100,
+		"historie": [ {
+			"id": 273,
+			"schluessel": "IL",
+			"kuerzel": "IL",
+			"text": "Islamische Religionslehre",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A",
+		"idHistorie": 101,
+		"historie": [ {
+			"id": 274,
+			"schluessel": "A",
+			"kuerzel": "A",
+			"text": "Arabisch",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BN",
+		"idHistorie": 102,
+		"historie": [ {
+			"id": 275,
+			"schluessel": "BN",
+			"kuerzel": "BN",
+			"text": "Braille´sche Punktschrift",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DS",
+		"idHistorie": 103,
+		"historie": [ {
+			"id": 276,
+			"schluessel": "DS",
+			"kuerzel": "DS",
+			"text": "Darstellen und Gestalten",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EL",
+		"idHistorie": 104,
+		"historie": [ {
+			"id": 277,
+			"schluessel": "EL",
+			"kuerzel": "EL",
+			"text": "Hauswirtschaft (Konsum/Ernährung/Gesundheit)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DF",
+		"idHistorie": 105,
+		"historie": [ {
+			"id": 278,
+			"schluessel": "DF",
+			"kuerzel": "DF",
+			"text": "Design/Fotografie",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GW",
+		"idHistorie": 106,
+		"historie": [ {
+			"id": 279,
+			"schluessel": "GW",
+			"kuerzel": "GW",
+			"text": "Gesellschaftswissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MJ",
+		"idHistorie": 107,
+		"historie": [ {
+			"id": 280,
+			"schluessel": "MJ",
+			"kuerzel": "MJ",
+			"text": "Malerei/Grafik/Gestaltung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NW",
+		"idHistorie": 108,
+		"historie": [ {
+			"id": 281,
+			"schluessel": "NW",
+			"kuerzel": "NW",
+			"text": "Naturwissenschaften",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SI",
+		"idHistorie": 109,
+		"historie": [ {
+			"id": 282,
+			"schluessel": "SI",
+			"kuerzel": "SI",
+			"text": "Sozialwesen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ZB",
+		"idHistorie": 110,
+		"historie": [ {
+			"id": 283,
+			"schluessel": "ZB",
+			"kuerzel": "ZB",
+			"text": "Zusatzqualifikation Bilinguales Lernen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

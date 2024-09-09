@@ -11,6 +11,7 @@ import { SchuldateiOrganisationseinheitMerkmal } from '../../../schulen/v1/data/
 import { SchuldateiOrganisationseinheit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheit';
 import { SchuldateiOrganisationseinheitGliederung } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitGliederung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
@@ -899,6 +900,8 @@ export class SchuldateiOrganisationseinheitManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitManager'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiOrganisationseinheitManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitManager');
 
 }
 

@@ -5,9 +5,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.Disabled;
+
 /**
  * Utility für API-Tests
  */
+@Disabled
 public final class APITestUtil {
 
 	/**

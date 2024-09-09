@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { KlausurblockungSchienenDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurblockungSchienenDynDaten';
 import { Random } from '../../../../java/util/Random';
+import { Class } from '../../../../java/lang/Class';
 
 export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObject {
 
@@ -42,6 +43,8 @@ export abstract class KlausurblockungSchienenAlgorithmusAbstract extends JavaObj
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungSchienenAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenAlgorithmusAbstract');
 
 }
 

@@ -21,7 +21,7 @@ import { GostLaufbahnplanungDatenFachbelegung } from "../../../../core/src/core/
 import { GostLaufbahnplanungDatenSchueler } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenSchueler";
 import type { GostSchuelerFachwahl } from "../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 import { SchuelerListeEintrag } from "../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import { SchuleStammdaten } from "../../../../core/src/core/data/schule/SchuleStammdaten";
+import { SchuleStammdaten } from "../../../../core/src/asd/data/schule/SchuleStammdaten";
 import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "../../../../core/src/core/exceptions/UserNotificationException";
 import { GostHalbjahr } from "../../../../core/src/core/types/gost/GostHalbjahr";
@@ -134,7 +134,7 @@ export class RouteData {
 		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
 		gostJahrgangsdaten.textMailversand = null;
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
-		const faecherManager = new GostFaecherManager(daten.faecher);
+		const faecherManager = new GostFaecherManager(daten.abiturjahr - 1, daten.faecher);
 		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
@@ -202,7 +202,7 @@ export class RouteData {
 		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
 		daten.schulBezeichnung2 = (this._state.value.schuleStammdaten.bezeichnung2 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung2;
 		daten.schulBezeichnung3 = (this._state.value.schuleStammdaten.bezeichnung3 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung3;
-		daten.anmerkungen = "Letzte Änderung am " +  (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
+		daten.anmerkungen = "Letzte Änderung am " + (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
 		daten.abiturjahr = this._state.value.abiturdaten.abiturjahr;
 		daten.jahrgang = this._state.value.gostJahrgang.jahrgang;
 		daten.hatZusatzkursGE = this._state.value.gostJahrgangsdaten.hatZusatzkursGE;

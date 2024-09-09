@@ -1,0 +1,34 @@
+{
+	"version": 1,
+	"daten": [ {
+		"validator": "de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdaten",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": ["BK"],
+			"muss": ["GY", "R"],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": 2018
+		}, {
+			"zebras": false,
+			"svws": true,
+			"hart": ["BK"],
+			"muss": ["GY"],
+			"hinweis": ["R"],
+			"gueltigVon": 2019,
+			"gueltigBis": null
+		} ]
+	}, {
+		"validator": "de.svws_nrw.asd.validate.schule.ValidatorSchuleStammdatenSchulform",
+		"historie": [ {
+			"zebras": false,
+			"svws": true,
+			"hart": ["BK", "GY", "R"],
+			"muss": [],
+			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    } ]
+}	

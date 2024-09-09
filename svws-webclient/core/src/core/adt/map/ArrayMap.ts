@@ -10,6 +10,7 @@ import { ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { ArrayIndexOutOfBoundsException } from '../../../java/lang/ArrayIndexOutOfBoundsException';
@@ -83,7 +84,7 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	public constructor(__param0 : Array<K>, __param1? : JavaFunction<K, number>) {
 		super();
 		if (((__param0 !== undefined) && Array.isArray(__param0)) && (__param1 === undefined)) {
-			const keyArray : Array<K> = __param0;
+			const keyArray : Array<K> = __param0 as unknown as Array<K>;
 			if (keyArray.length <= 0)
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
 			const firstKey : K = keyArray[0];
@@ -91,18 +92,18 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 				throw new IllegalArgumentException("Enthält das Array der Schlüsselwerte keine Enum-Konstanten, so muss ein Funktion für die Zuordnung von Schlüsselwerten angegeben werden.")
 			this.keyArray = keyArray;
 			this.keyIndexFunction = this.keyIndexFunctionEnum;
-			this.entries = Array(keyArray.length).fill(null);
+			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
 			this._keySet = new ArrayMapKeySet(this);
 			this._collection = new ArrayMapCollection(this);
 			this._entrySet = new ArrayMapEntrySet(this);
 		} else if (((__param0 !== undefined) && Array.isArray(__param0)) && ((__param1 !== undefined) && ((__param1 !== undefined) && (__param1 instanceof Object) && (__param1 !== null) && ('apply' in __param1) && (typeof __param1.apply === 'function')) || (__param1 === null))) {
-			const keyArray : Array<K> = __param0;
+			const keyArray : Array<K> = __param0 as unknown as Array<K>;
 			const keyIndexFunction : JavaFunction<K, number> = cast_java_util_function_Function(__param1);
 			if (keyArray.length <= 0)
 				throw new IllegalArgumentException("Das Array mit den gültigen Schlüsselwerten darf nicht leer sein.")
 			this.keyArray = keyArray;
 			this.keyIndexFunction = keyIndexFunction;
-			this.entries = Array(keyArray.length).fill(null);
+			this.entries = Array(keyArray.length).fill(null) as unknown as Array<ArrayMapEntry<K, V> | null>;
 			this._keySet = new ArrayMapKeySet(this);
 			this._collection = new ArrayMapCollection(this);
 			this._entrySet = new ArrayMapEntrySet(this);
@@ -261,6 +262,8 @@ export class ArrayMap<K, V> extends JavaObject implements JavaMap<K, V> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Map', 'de.svws_nrw.core.adt.map.ArrayMap'].includes(name);
 	}
+
+	public static class = new Class<ArrayMap<any, any>>('de.svws_nrw.core.adt.map.ArrayMap');
 
 	public computeIfAbsent(key : K, mappingFunction: JavaFunction<K, V> ) : V | null {
 		const v : V | null = this.get(key);

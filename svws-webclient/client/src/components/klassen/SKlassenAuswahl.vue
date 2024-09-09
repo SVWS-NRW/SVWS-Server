@@ -7,7 +7,7 @@
 		<template #content>
 			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoEintrag(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll>
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -21,7 +21,7 @@
 					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #actions>
-					<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung="setzeDefaultSortierung">
+					<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
 						<svws-ui-button type="secondary" @click="openModal">Standardsortierung anwenden …</svws-ui-button>
 					</s-klassen-auswahl-sortierung-modal>
 				</template>
@@ -32,13 +32,15 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
-	import {computed, ref} from "vue";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
-	const cols = [
+	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc", span: 0.5 },
 		{ key: "klassenLehrer", label: "Klassenleitung" },
 		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
@@ -57,7 +59,7 @@
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten.kuerzel;
+		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
 	const filterSchulgliederung = computed<Schulgliederung[]>({

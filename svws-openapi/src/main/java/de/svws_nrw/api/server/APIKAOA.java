@@ -1,11 +1,11 @@
 package de.svws_nrw.api.server;
 
-import de.svws_nrw.core.data.kaoa.KAOAAnschlussoptionEintrag;
-import de.svws_nrw.core.data.kaoa.KAOABerufsfeldEintrag;
-import de.svws_nrw.core.data.kaoa.KAOAEbene4Eintrag;
-import de.svws_nrw.core.data.kaoa.KAOAKategorieEintrag;
-import de.svws_nrw.core.data.kaoa.KAOAMerkmalEintrag;
-import de.svws_nrw.core.data.kaoa.KAOAZusatzmerkmalEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmalKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -54,7 +54,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Kategorien. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAKategorieEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAKategorieKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoAKategorien(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -78,7 +78,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Merkmale. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAMerkmalEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAMerkmalKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoAMerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -102,7 +102,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Zusatzmerkmale. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAZusatzmerkmalEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAZusatzmerkmalKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoAZusatzmerkmale(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -126,7 +126,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Einträge der SBO Ebene 4. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAEbene4Eintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAEbene4KatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoAEbene4(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -150,7 +150,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Anschlussoptionen. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAAnschlussoptionEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOAAnschlussoptionenKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoAAnschlussoptionen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -174,7 +174,7 @@ public class APIKAOA {
 			description = "Die Liste der Einträge aus dem KAoA-Katalog Berufsfelder. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOABerufsfeldEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KAOABerufsfeldKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Katalog-Einträge gefunden")
 	public Response getKatalogKAoABerufsfelder(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {

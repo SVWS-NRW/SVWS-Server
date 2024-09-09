@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SMTPServerKonfiguration extends JavaObject {
 
@@ -44,6 +45,8 @@ export class SMTPServerKonfiguration extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.email.SMTPServerKonfiguration'].includes(name);
 	}
+
+	public static class = new Class<SMTPServerKonfiguration>('de.svws_nrw.core.data.email.SMTPServerKonfiguration');
 
 	public static transpilerFromJSON(json : string): SMTPServerKonfiguration {
 		const obj = JSON.parse(json) as Partial<SMTPServerKonfiguration>;

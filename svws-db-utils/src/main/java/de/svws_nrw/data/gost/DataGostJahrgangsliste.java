@@ -7,17 +7,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.DataManager;
@@ -69,6 +69,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	 */
 	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -92,8 +93,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
 				final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 				for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
-					if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
+							jahrgang.ASDJahrgang);
+					if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
 						jahrgangRestjahre += 3;
 					if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 						eintrag.jahrgang = jahrgang.ASDJahrgang;
@@ -153,6 +155,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	public Response create(final long jahrgang_id) throws ApiOperationException {
 		// Prüfe die Schuldaten
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		if (aktuellerAbschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -161,7 +164,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		final DTOJahrgang jahrgang = conn.queryByKey(DTOJahrgang.class, jahrgang_id);
 		if (jahrgang == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, jahrgang.Gliederung, aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
+		final Integer abiturjahr = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
+				aktuellerAbschnitt.Jahr, jahrgang.ASDJahrgang);
 		if (abiturjahr == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 
@@ -229,8 +233,8 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		}
 		conn.transactionFlush();
 		// Bestimme die Fachwahlen aus ggf. schon bestehenden Lernabschnitten
-		final Jahrgaenge jg = Jahrgaenge.getByKuerzel(jahrgang.ASDJahrgang);
-		if ((jg == Jahrgaenge.JG_EF) || (jg == Jahrgaenge.JG_Q1) || (jg == Jahrgaenge.JG_Q2)) {
+		final Jahrgaenge jg = Jahrgaenge.data().getWertBySchluessel(jahrgang.ASDJahrgang);
+		if ((jg == Jahrgaenge.EF) || (jg == Jahrgaenge.Q1) || (jg == Jahrgaenge.Q2)) {
 			// Bestimme alle Schüler-IDs des angegebenen Abiturjahrgangs
 			final Map<Long, DTOFach> mapFaecher = faecher.stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final List<DTOSchueler> schueler = DBUtilsGostLaufbahn.getSchuelerOfAbiturjahrgang(conn, abiturjahr);
@@ -295,27 +299,27 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							switch (halbjahr) {
 								case EF1 -> {
 									fachbelegung.EF1_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.EF1_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 								case EF2 -> {
 									fachbelegung.EF2_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.EF2_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 								case Q11 -> {
 									fachbelegung.Q11_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.Q11_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 								case Q12 -> {
 									fachbelegung.Q12_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.Q12_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 								case Q21 -> {
 									fachbelegung.Q21_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.Q21_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 								case Q22 -> {
 									fachbelegung.Q22_Kursart = funcGetKursart.apply(sld, halbjahr);
-									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz);
+									fachbelegung.Q22_Punkte = funcGetNotenpunkte.apply(sld.NotenKrz, aktuellerAbschnitt.Jahr);
 								}
 							}
 						}
@@ -341,13 +345,14 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(abiturjahr).build();
 	}
 
-	private final Function<Note, String> funcGetNotenpunkte = (final Note note) -> {
-		if (note == null)
+	private final BiFunction<String, Integer, String> funcGetNotenpunkte = (final String notenKuerzel, final Integer schuljahr) -> {
+		if (notenKuerzel == null)
 			return null;
-		if (note.istNote())
-			return "" + note.notenpunkte;
+		final Note note = Note.fromKuerzel(notenKuerzel);
+		if (note.istNote(schuljahr))
+			return "" + note.daten(schuljahr).notenpunkte;
 		return switch (note) {
-			case ATTEST, E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN, E2_MIT_ERFOLG_TEILGENOMMEN, E3_TEILGENOMMEN -> note.kuerzel;
+			case ATTEST, E1_MIT_BESONDEREM_ERFOLG_TEILGENOMMEN, E2_MIT_ERFOLG_TEILGENOMMEN, E3_TEILGENOMMEN -> note.daten(schuljahr).kuerzel;
 			default -> null;
 		};
 	};
@@ -355,10 +360,10 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 	private final BiFunction<DTOSchuelerLeistungsdaten, GostHalbjahr, String> funcGetKursart =
 			(final DTOSchuelerLeistungsdaten sld, final GostHalbjahr halbjahr) -> {
 				final GostKursart kursart = GostKursart.fromKuerzel(sld.KursartAllg);
-				final ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(sld.Kursart);
+				final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(sld.Kursart);
 				if ((kursart == null) || (zulkursart == null))
 					return null;
-				if (((kursart == GostKursart.LK) || (kursart == GostKursart.GK)) && (sld.NotenKrz == Note.ATTEST))
+				if (((kursart == GostKursart.LK) || (kursart == GostKursart.GK)) && (Note.data().getWertByKuerzel(sld.NotenKrz) == Note.ATTEST))
 					return "AT";
 				return switch (kursart) {
 					case LK -> "LK";

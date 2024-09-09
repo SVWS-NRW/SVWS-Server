@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMLeistungBemerkungen extends JavaObject {
 
@@ -69,6 +70,8 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLeistungBemerkungen'].includes(name);
 	}
+
+	public static class = new Class<ENMLeistungBemerkungen>('de.svws_nrw.core.data.enm.ENMLeistungBemerkungen');
 
 	public static transpilerFromJSON(json : string): ENMLeistungBemerkungen {
 		const obj = JSON.parse(json) as Partial<ENMLeistungBemerkungen>;

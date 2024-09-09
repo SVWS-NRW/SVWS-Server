@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, JahrgangsUtils, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, JahrgangsUtils, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -10,13 +10,17 @@ import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausurenProps";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausuren.vue");
 
 export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION ], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION
+		], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klausuren";
@@ -52,7 +56,8 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,
 			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
 			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,
-			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin
+			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin,
+			gotoPlanung: routeSchuelerLernabschnitte.data.gotoPlanung,
 		};
 	}
 

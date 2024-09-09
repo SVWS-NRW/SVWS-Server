@@ -2,7 +2,7 @@ package de.svws_nrw.core.data.schule;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
@@ -45,7 +45,7 @@ public class HerkunftsartKatalogEintragBezeichnung {
 	 * @param bezeichnung       die Bezeichnung der Herkunftsart
 	 */
 	public HerkunftsartKatalogEintragBezeichnung(final @NotNull Schulform schulform, final @NotNull String kurzBezeichnung, final @NotNull String bezeichnung) {
-		this.schulform = schulform.daten.kuerzel;
+		this.schulform = schulform.name();
 		this.kurzBezeichnung = kurzBezeichnung;
 		this.bezeichnung = bezeichnung;
 	}

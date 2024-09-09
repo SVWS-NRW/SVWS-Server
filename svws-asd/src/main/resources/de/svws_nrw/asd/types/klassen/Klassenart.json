@@ -1,0 +1,261 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "UNDEFINIERT",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"kuerzel": "**",
+			"text": "Kein Eintrag",
+			"schluessel": "**",
+			"zulaessig": [ {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA_1A",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1000,
+			"kuerzel": "1A",
+			"text": "Klasse 10 Typ A (Hauptschule)",
+			"schluessel": "1A",
+			"zulaessig": [ {
+					"schulform": "H",
+					"gliederung": null
+				}, {
+					"schulform": "GM",
+					"gliederung": "H"
+				}, {
+					"schulform": "R",
+					"gliederung": "H"
+				}, {
+					"schulform": "SK",
+					"gliederung": "H"
+				}, {
+					"schulform": "V",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA_1B",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 2000,
+			"kuerzel": "1B",
+			"text": "Klasse 10 Typ B (Hauptschule)",
+			"schluessel": "1B",
+			"zulaessig": [ {
+					"schulform": "H",
+					"gliederung": null
+				}, {
+					"schulform": "GM",
+					"gliederung": "H"
+				}, {
+					"schulform": "SK",
+					"gliederung": "H"
+				}, {
+					"schulform": "V",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA_AB",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 3000,
+			"kuerzel": "AB",
+			"text": "Klassen im Jahrgang 10 ohne Differenzierung in Typ A und Typ B (Hauptschule)",
+			"schluessel": "AB",
+			"zulaessig": [ {
+					"schulform": "H",
+					"gliederung": null
+				}, {
+					"schulform": "GM",
+					"gliederung": "H"
+				}, {
+					"schulform": "SK",
+					"gliederung": "H"
+				}, {
+					"schulform": "V",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AM",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 4000,
+			"kuerzel": "AM",
+			"text": "Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder)",
+			"schluessel": "AM",
+			"zulaessig": [ {
+					"schulform": "KS",
+					"gliederung": null
+				}, {
+					"schulform": "S",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PG",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 5000,
+			"kuerzel": "PG",
+			"text": "Frühförderung: SKG (Präsenzgruppe)",
+			"schluessel": "PG",
+			"zulaessig": [ {
+					"schulform": "KS",
+					"gliederung": null
+				}, {
+					"schulform": "S",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PK",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 6000,
+			"kuerzel": "PK",
+			"text": "Profilklasse (gemäß § 21 Abs. 3 APO-S I)",
+			"schluessel": "PK",
+			"zulaessig": [ {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": "GY9"
+				}, {
+					"schulform": "SK",
+					"gliederung": "GY"
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RK",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 7000,
+			"kuerzel": "RK",
+			"text": "Regelklasse",
+			"schluessel": "RK",
+			"zulaessig": [ {
+					"schulform": "FW",
+					"gliederung": null
+				}, {
+					"schulform": "HI",
+					"gliederung": null
+				}, {
+					"schulform": "WF",
+					"gliederung": null
+				}, {
+					"schulform": "G",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GM",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "H",
+					"gliederung": null
+				}, {
+					"schulform": "PS",
+					"gliederung": null
+				}, {
+					"schulform": "R",
+					"gliederung": null
+				}, {
+					"schulform": "S",
+					"gliederung": null
+				}, {
+					"schulform": "KS",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "SK",
+					"gliederung": null
+				}, {
+					"schulform": "SR",
+					"gliederung": null
+				}, {
+					"schulform": "V",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SG",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 8000,
+			"kuerzel": "SG",
+			"text": "Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)",
+			"schluessel": "SG",
+			"zulaessig": [ {
+					"schulform": "G",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GM",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "H",
+					"gliederung": null
+				}, {
+					"schulform": "PS",
+					"gliederung": null
+				}, {
+					"schulform": "R",
+					"gliederung": null
+				}, {
+					"schulform": "S",
+					"gliederung": null
+				}, {
+					"schulform": "KS",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "SK",
+					"gliederung": null
+				}, {
+					"schulform": "SR",
+					"gliederung": null
+				}, {
+					"schulform": "V",
+					"gliederung": null
+				} ],
+			"gueltigVon": null,
+			"gueltigBis": null
+	} ] 	} ]
+}

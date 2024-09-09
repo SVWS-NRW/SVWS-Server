@@ -1,7 +1,8 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { HerkunftSonstigeKatalogEintrag } from '../../../core/data/schule/HerkunftSonstigeKatalogEintrag';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class HerkunftSonstige extends JavaEnum<HerkunftSonstige> {
@@ -147,6 +148,8 @@ export class HerkunftSonstige extends JavaEnum<HerkunftSonstige> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.HerkunftSonstige', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<HerkunftSonstige>('de.svws_nrw.core.types.schueler.HerkunftSonstige');
 
 }
 

@@ -5,25 +5,26 @@ import type { NavigableSet } from '../../../java/util/NavigableSet';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import type { NavigableMap } from '../../../java/util/NavigableMap';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
-import { AVLMapSubCollection } from '../../../core/adt/map/AVLMapSubCollection';
-import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { AVLMapSubEntrySetIterator } from '../../../core/adt/map/AVLMapSubEntrySetIterator';
-import { AVLMapSubKeySet } from '../../../core/adt/map/AVLMapSubKeySet';
 import type { SortedSet } from '../../../java/util/SortedSet';
-import { AVLMap, cast_de_svws_nrw_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
 import type { Comparator } from '../../../java/util/Comparator';
 import { AVLMapNode } from '../../../core/adt/map/AVLMapNode';
-import type { SortedMap } from '../../../java/util/SortedMap';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import { AVLMapSubKeySetIterator } from '../../../core/adt/map/AVLMapSubKeySetIterator';
-import type { Collection } from '../../../java/util/Collection';
-import { JavaObject } from '../../../java/lang/JavaObject';
 import { AVLMapSubEntrySet } from '../../../core/adt/map/AVLMapSubEntrySet';
-import type { JavaMap } from '../../../java/util/JavaMap';
-import { cast_java_util_Map } from '../../../java/util/JavaMap';
 import { AVLMapSubCollectionIterator } from '../../../core/adt/map/AVLMapSubCollectionIterator';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { AVLMapSubCollection } from '../../../core/adt/map/AVLMapSubCollection';
+import { AVLMapIntervall } from '../../../core/adt/map/AVLMapIntervall';
+import { AVLMapSubKeySet } from '../../../core/adt/map/AVLMapSubKeySet';
+import { AVLMap, cast_de_svws_nrw_core_adt_map_AVLMap } from '../../../core/adt/map/AVLMap';
+import type { SortedMap } from '../../../java/util/SortedMap';
+import type { Collection } from '../../../java/util/Collection';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { cast_java_util_Map } from '../../../java/util/JavaMap';
 
 export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V> {
 
@@ -801,6 +802,8 @@ export class AVLMapSubMap<K, V> extends JavaObject implements NavigableMap<K, V>
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubMap', 'java.util.SequencedMap', 'java.util.Map', 'java.util.NavigableMap', 'java.util.SortedMap'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubMap<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubMap');
 
 	public reversed() : NavigableMap<K, V> {
 		return this.descendingMap();

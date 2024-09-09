@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { SchuelerKAoADaten } from '../../../core/data/schueler/SchuelerKAoADaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuelerKAoAUtils extends JavaObject {
@@ -32,6 +33,8 @@ export class SchuelerKAoAUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerKAoAUtils'].includes(name);
 	}
+
+	public static class = new Class<SchuelerKAoAUtils>('de.svws_nrw.core.utils.schueler.SchuelerKAoAUtils');
 
 }
 

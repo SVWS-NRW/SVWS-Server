@@ -2,14 +2,15 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { ReligionEintrag } from '../../../core/data/schule/ReligionEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import type { List } from '../../../java/util/List';
 import { ReligionUtils } from '../../../core/utils/religion/ReligionUtils';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag, ReligionEintrag> {
 
@@ -143,6 +144,8 @@ export class ReligionListeManager extends AuswahlManager<number, ReligionEintrag
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.religion.ReligionListeManager'].includes(name);
 	}
+
+	public static class = new Class<ReligionListeManager>('de.svws_nrw.core.utils.religion.ReligionListeManager');
 
 }
 

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungsergebnisBewertung extends JavaObject {
 
@@ -56,6 +57,8 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnisBewertung>('de.svws_nrw.core.data.gost.GostBlockungsergebnisBewertung');
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisBewertung {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisBewertung>;

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class KlassenDaten extends JavaObject {
 
@@ -142,6 +143,8 @@ export class KlassenDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.klassen.KlassenDaten'].includes(name);
 	}
+
+	public static class = new Class<KlassenDaten>('de.svws_nrw.core.data.klassen.KlassenDaten');
 
 	public static transpilerFromJSON(json : string): KlassenDaten {
 		const obj = JSON.parse(json) as Partial<KlassenDaten>;

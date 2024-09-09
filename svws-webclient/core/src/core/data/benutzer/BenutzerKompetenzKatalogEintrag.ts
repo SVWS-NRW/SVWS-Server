@@ -1,8 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { BenutzerKompetenzGruppe, cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 
 export class BenutzerKompetenzKatalogEintrag extends JavaObject {
@@ -25,7 +26,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	/**
 	 * Die Schulformen.
 	 */
-	public nurSchulformen : List<number> | null = null;
+	public nurSchulformen : List<string> | null = null;
 
 
 	/**
@@ -61,7 +62,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			if (schulformen !== null) {
 				this.nurSchulformen = new ArrayList();
 				for (const schulform of schulformen)
-					this.nurSchulformen.add(schulform.daten.id);
+					this.nurSchulformen.add(schulform.name());
 			}
 		} else throw new Error('invalid method overload');
 	}
@@ -73,6 +74,8 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<BenutzerKompetenzKatalogEintrag>('de.svws_nrw.core.data.benutzer.BenutzerKompetenzKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): BenutzerKompetenzKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<BenutzerKompetenzKatalogEintrag>;
@@ -108,7 +111,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 			result += '"nurSchulformen" : [ ';
 			for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 				const elem = obj.nurSchulformen.get(i);
-				result += elem.toString();
+				result += '"' + elem + '"';
 				if (i < obj.nurSchulformen.size() - 1)
 					result += ',';
 			}
@@ -137,7 +140,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 				result += '"nurSchulformen" : [ ';
 				for (let i = 0; i < obj.nurSchulformen.size(); i++) {
 					const elem = obj.nurSchulformen.get(i);
-					result += elem.toString();
+					result += '"' + elem + '"';
 					if (i < obj.nurSchulformen.size() - 1)
 						result += ',';
 				}

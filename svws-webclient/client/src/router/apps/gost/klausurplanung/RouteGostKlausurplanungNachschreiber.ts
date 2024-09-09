@@ -9,13 +9,14 @@ import type { GostKlausurplanungNachschreiberProps } from "~/components/gost/kla
 import { routeError } from "~/router/error/RouteError";
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungNachschreiber = () => import("~/components/gost/klausurplanung/SGostKlausurplanungNachschreiber.vue");
 
 export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN

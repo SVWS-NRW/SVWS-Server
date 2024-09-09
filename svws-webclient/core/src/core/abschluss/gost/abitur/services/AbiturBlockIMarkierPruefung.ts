@@ -1,4 +1,5 @@
 import { Service } from '../../../../../core/Service';
+import { Class } from '../../../../../java/lang/Class';
 import { Abiturdaten } from '../../../../../core/data/gost/Abiturdaten';
 import { LogLevel } from '../../../../../core/logger/LogLevel';
 
@@ -29,6 +30,8 @@ export class AbiturBlockIMarkierPruefung extends Service<Abiturdaten, boolean> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierPruefung', 'de.svws_nrw.core.Service'].includes(name);
 	}
+
+	public static class = new Class<AbiturBlockIMarkierPruefung>('de.svws_nrw.core.abschluss.gost.abitur.services.AbiturBlockIMarkierPruefung');
 
 }
 

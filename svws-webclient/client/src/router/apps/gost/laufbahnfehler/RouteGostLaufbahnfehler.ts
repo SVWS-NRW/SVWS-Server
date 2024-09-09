@@ -11,13 +11,14 @@ import { RouteDataGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/R
 
 import { ConfigElement } from "~/components/Config";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostLaufbahnfehler = () => import("~/components/gost/laufbahnfehler/SGostLaufbahnfehler.vue");
 
 export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehler, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
 		], "gost.laufbahnfehler", "laufbahnfehler", SGostLaufbahnfehler, new RouteDataGostLaufbahnfehler());

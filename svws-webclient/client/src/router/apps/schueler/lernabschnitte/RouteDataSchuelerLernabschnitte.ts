@@ -7,7 +7,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
-import { routeSchuelerLernabschnittGostKlausuren, RouteSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
+import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
@@ -118,7 +118,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahrgang, found.schuljahr, found.abschnitt);
 			if (halbjahr !== null) {
 				const gostKlausurCollection = await api.server.getGostKlausurenCollectionBySchuelerid(api.schema, schueler.id, abiturjahrgang, halbjahr.id);
-				klausurManager = new GostKlausurplanManager(gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
+				klausurManager = new GostKlausurplanManager(found.schuljahr, gostKlausurCollection.vorgaben, gostKlausurCollection.kursklausuren, gostKlausurCollection.termine, gostKlausurCollection.schuelerklausuren, gostKlausurCollection.schuelerklausurtermine);
 				klausurManager.setKursManager(new KursManager(listKurse));
 				const mapLehrer = new HashMap<number, LehrerListeEintrag>();
 				for (const l of curState.listLehrer)
@@ -228,6 +228,18 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	patchSchuelerklausurTermin = async (id: number, skt : Partial<GostSchuelerklausurTermin>) => {
 		await api.server.patchGostKlausurenSchuelerklausurtermin(skt, api.schema, id);
+	}
+
+	gotoPlanung = async() => {
+		const abiturjahr = this.manager.schuelerGet().abiturjahrgang;
+		if (abiturjahr === null)
+			return;
+		const schuljahr = this.manager.schuljahresabschnittGet().schuljahr;
+		const abschnitt = this.manager.schuljahresabschnittGet().abschnitt;
+		const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt);
+		if (halbjahr === null)
+			return;
+		await RouteManager.doRoute({ name: "gost.klausurplanung.nachschreiber", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr: halbjahr.id }});
 	}
 
 }

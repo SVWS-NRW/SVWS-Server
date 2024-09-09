@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { NationalitaetenKatalogEintrag } from '../../../core/data/schule/NationalitaetenKatalogEintrag';
+import { Class } from '../../../java/lang/Class';
 
 export class Nationalitaeten extends JavaEnum<Nationalitaeten> {
 
@@ -1197,6 +1198,8 @@ export class Nationalitaeten extends JavaEnum<Nationalitaeten> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Nationalitaeten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Nationalitaeten>('de.svws_nrw.core.types.schule.Nationalitaeten');
 
 }
 

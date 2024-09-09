@@ -13,13 +13,13 @@ import { BenutzergruppeListeEintrag } from '../core/data/benutzer/Benutzergruppe
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
-import { BerufskollegAnlageKatalogEintrag } from '../core/data/schule/BerufskollegAnlageKatalogEintrag';
+import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
-import { BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
+import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
@@ -29,10 +29,10 @@ import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
 import { FachDaten } from '../core/data/fach/FachDaten';
-import { FachgruppenKatalogEintrag } from '../core/data/fach/FachgruppenKatalogEintrag';
-import { FachKatalogEintrag } from '../core/data/fach/FachKatalogEintrag';
+import { FachgruppeKatalogEintrag } from '../asd/data/fach/FachgruppeKatalogEintrag';
+import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
 import { FoerderschwerpunktEintrag } from '../core/data/schule/FoerderschwerpunktEintrag';
-import { FoerderschwerpunktKatalogEintrag } from '../core/data/schule/FoerderschwerpunktKatalogEintrag';
+import { FoerderschwerpunktKatalogEintrag } from '../asd/data/schule/FoerderschwerpunktKatalogEintrag';
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostBelegpruefungsErgebnisse } from '../core/data/gost/GostBelegpruefungsErgebnisse';
@@ -75,54 +75,53 @@ import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
 import { HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
+import { JahrgaengeKatalogEintrag } from '../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
-import { JahrgangsKatalogEintrag } from '../core/data/jahrgang/JahrgangsKatalogEintrag';
-import { KAOAAnschlussoptionEintrag } from '../core/data/kaoa/KAOAAnschlussoptionEintrag';
-import { KAOABerufsfeldEintrag } from '../core/data/kaoa/KAOABerufsfeldEintrag';
-import { KAOAEbene4Eintrag } from '../core/data/kaoa/KAOAEbene4Eintrag';
-import { KAOAKategorieEintrag } from '../core/data/kaoa/KAOAKategorieEintrag';
-import { KAOAMerkmalEintrag } from '../core/data/kaoa/KAOAMerkmalEintrag';
-import { KAOAZusatzmerkmalEintrag } from '../core/data/kaoa/KAOAZusatzmerkmalEintrag';
+import { KAOAAnschlussoptionenKatalogEintrag } from '../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
+import { KAOABerufsfeldKatalogEintrag } from '../asd/data/kaoa/KAOABerufsfeldKatalogEintrag';
+import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEintrag';
+import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
+import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
+import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
-import { KindergartenbesuchKatalogEintrag } from '../core/data/schule/KindergartenbesuchKatalogEintrag';
-import { KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
+import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/KindergartenbesuchKatalogEintrag';
+import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
-import { KursartKatalogEintrag } from '../core/data/kurse/KursartKatalogEintrag';
 import { KursDaten } from '../core/data/kurse/KursDaten';
-import { LehrerKatalogAbgangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';
-import { LehrerKatalogAnrechnungsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
-import { LehrerKatalogBeschaeftigungsartEintrag } from '../core/data/lehrer/LehrerKatalogBeschaeftigungsartEintrag';
-import { LehrerKatalogEinsatzstatusEintrag } from '../core/data/lehrer/LehrerKatalogEinsatzstatusEintrag';
-import { LehrerKatalogFachrichtungAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogFachrichtungAnerkennungEintrag';
-import { LehrerKatalogFachrichtungEintrag } from '../core/data/lehrer/LehrerKatalogFachrichtungEintrag';
-import { LehrerKatalogLehramtAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogLehramtAnerkennungEintrag';
-import { LehrerKatalogLehramtEintrag } from '../core/data/lehrer/LehrerKatalogLehramtEintrag';
-import { LehrerKatalogLehrbefaehigungAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
-import { LehrerKatalogLehrbefaehigungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungEintrag';
-import { LehrerKatalogLeitungsfunktionenEintrag } from '../core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
-import { LehrerKatalogMehrleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
-import { LehrerKatalogMinderleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
-import { LehrerKatalogRechtsverhaeltnisEintrag } from '../core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
-import { LehrerKatalogZugangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
+import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
+import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
+import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
+import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
+import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
+import { LehrerFachrichtungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
+import { LehrerLehramtAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
+import { LehrerLehramtKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtKatalogEintrag';
+import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag';
+import { LehrerLehrbefaehigungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag';
+import { LehrerLeitungsfunktionKatalogEintrag } from '../asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag';
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
-import { LehrerPersonalabschnittsdaten } from '../core/data/lehrer/LehrerPersonalabschnittsdaten';
-import { LehrerPersonaldaten } from '../core/data/lehrer/LehrerPersonaldaten';
-import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
+import { LehrerMehrleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag';
+import { LehrerMinderleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
+import { LehrerPersonalabschnittsdaten } from '../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { LehrerPersonaldaten } from '../asd/data/lehrer/LehrerPersonaldaten';
+import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
+import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
+import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { List } from '../java/util/List';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
-import { NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
+import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientSecret } from '../core/data/oauth2/OAuth2ClientSecret';
-import { OrganisationsformKatalogEintrag } from '../core/data/schule/OrganisationsformKatalogEintrag';
+import { OrganisationsformKatalogEintrag } from '../asd/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
 import { PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
 import { Raum } from '../core/data/schule/Raum';
 import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
-import { ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
+import { ReligionKatalogEintrag } from '../asd/data/schule/ReligionKatalogEintrag';
 import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
@@ -142,26 +141,25 @@ import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/Schuele
 import { SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
-import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
-import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
+import { SchuelerStammdaten } from '../asd/data/schueler/SchuelerStammdaten';
+import { SchuelerStatusKatalogEintrag } from '../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { SchuelerVermerkartZusammenfassung } from '../core/data/schueler/SchuelerVermerkartZusammenfassung';
 import { SchuelerVermerke } from '../core/data/schueler/SchuelerVermerke';
-import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
-import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
+import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
+import { SchulabschlussBerufsbildendKatalogEintrag } from '../asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 import { SchulEintrag } from '../core/data/kataloge/SchulEintrag';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
-import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
-import { SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
-import { SchulgliederungKatalogEintrag } from '../core/data/schule/SchulgliederungKatalogEintrag';
-import { Schulleitung } from '../core/data/schule/Schulleitung';
-import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
+import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
+import { SchulformKatalogEintrag } from '../asd/data/schule/SchulformKatalogEintrag';
+import { SchulgliederungKatalogEintrag } from '../asd/data/schule/SchulgliederungKatalogEintrag';
+import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SMTPServerKonfiguration } from '../core/data/email/SMTPServerKonfiguration';
 import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../core/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
-import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
+import { SprachreferenzniveauKatalogEintrag } from '../asd/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -177,10 +175,11 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
-import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
+import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
 import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
+import { ZulaessigeKursartKatalogEintrag } from '../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
 
 export class ApiServer extends BaseApi {
 
@@ -2342,7 +2341,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: FachgruppenKatalogEintrag
+	 *     - Rückgabe-Typ: FachgruppeKatalogEintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.
 	 *
@@ -2351,13 +2350,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 */
-	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppenKatalogEintrag> {
+	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppeKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return FachgruppenKatalogEintrag.transpilerFromJSON(text);
+		return FachgruppeKatalogEintrag.transpilerFromJSON(text);
 	}
 
 
@@ -2369,7 +2368,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Katalog aller Fachgruppen aller Schulformen.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<FachgruppeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Fachgruppen gefunden.
 	 *
@@ -2377,13 +2376,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog aller Fachgruppen aller Schulformen.
 	 */
-	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<FachgruppenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<FachgruppeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -2587,7 +2586,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Katalog der Fachgruppen für die Schulform dieser Schule.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<FachgruppeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Fachgruppen für die Schulform dieser Schule gefunden.
 	 *
@@ -2595,13 +2594,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Fachgruppen für die Schulform dieser Schule.
 	 */
-	public async getFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+	public async getFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<FachgruppenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<FachgruppeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6488,7 +6487,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Jahrgangs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<JahrgangsKatalogEintrag>
+	 *     - Rückgabe-Typ: List<JahrgaengeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Jahrgangs-Katalog-Einträge gefunden
 	 *
@@ -6496,13 +6495,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Katalog-Einträgen
 	 */
-	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgangsKatalogEintrag>> {
+	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgaengeKatalogEintrag>> {
 		const path = "/db/{schema}/jahrgaenge/allgemein/jahrgaenge"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<JahrgangsKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<JahrgaengeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgaengeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6574,7 +6573,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAAnschlussoptionEintrag>
+	 *     - Rückgabe-Typ: List<KAOAAnschlussoptionenKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6582,13 +6581,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
 	 */
-	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionEintrag>> {
+	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionenKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/anschlussoptionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAAnschlussoptionEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6601,7 +6600,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOABerufsfeldEintrag>
+	 *     - Rückgabe-Typ: List<KAOABerufsfeldKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6609,13 +6608,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
 	 */
-	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldEintrag>> {
+	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/berufsfelder"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOABerufsfeldEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOABerufsfeldKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6628,7 +6627,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAEbene4Eintrag>
+	 *     - Rückgabe-Typ: List<KAOAEbene4KatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6636,13 +6635,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
 	 */
-	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4Eintrag>> {
+	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4KatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/ebene4"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAEbene4Eintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4Eintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAEbene4KatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6655,7 +6654,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAKategorieEintrag>
+	 *     - Rückgabe-Typ: List<KAOAKategorieKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6663,13 +6662,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
 	 */
-	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieEintrag>> {
+	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/kategorien"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAKategorieEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAKategorieKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6682,7 +6681,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAMerkmalEintrag>
+	 *     - Rückgabe-Typ: List<KAOAMerkmalKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6690,13 +6689,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
 	 */
-	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalEintrag>> {
+	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/merkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAMerkmalEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAMerkmalKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6709,7 +6708,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAZusatzmerkmalEintrag>
+	 *     - Rückgabe-Typ: List<KAOAZusatzmerkmalKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6717,13 +6716,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
 	 */
-	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalEintrag>> {
+	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/zusatzmerkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAZusatzmerkmalEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7081,7 +7080,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Kursart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KursartKatalogEintrag>
+	 *     - Rückgabe-Typ: List<ZulaessigeKursartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Kursart-Katalog-Einträge gefunden
 	 *
@@ -7089,13 +7088,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kursart-Katalog-Einträgen
 	 */
-	public async getKatalogKursarten(schema : string) : Promise<List<KursartKatalogEintrag>> {
+	public async getKatalogKursarten(schema : string) : Promise<List<ZulaessigeKursartKatalogEintrag>> {
 		const path = "/db/{schema}/kurse/allgemein/kursarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KursartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursartKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<ZulaessigeKursartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ZulaessigeKursartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7269,7 +7268,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogAbgangsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerAbgangsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerabgangsgrund-Katalog-Einträge gefunden
 	 *
@@ -7277,13 +7276,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerKatalogAbgangsgrundEintrag>> {
+	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/abgangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogAbgangsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAbgangsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerAbgangsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAbgangsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7296,7 +7295,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogAnrechnungsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerAnrechnungsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -7304,13 +7303,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 */
-	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerKatalogAnrechnungsgrundEintrag>> {
+	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/anrechnungsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogAnrechnungsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAnrechnungsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerAnrechnungsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAnrechnungsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7323,7 +7322,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogBeschaeftigungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerBeschaeftigungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Beschäftigungsart-Katalog-Einträge gefunden
 	 *
@@ -7331,13 +7330,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 */
-	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerKatalogBeschaeftigungsartEintrag>> {
+	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogBeschaeftigungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogBeschaeftigungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerBeschaeftigungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerBeschaeftigungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7350,7 +7349,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogEinsatzstatusEintrag>
+	 *     - Rückgabe-Typ: List<LehrerEinsatzstatusKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Einsatzstatus-Katalog-Einträge gefunden
 	 *
@@ -7358,13 +7357,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerKatalogEinsatzstatusEintrag>> {
+	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/einsatzstatus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogEinsatzstatusEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogEinsatzstatusEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerEinsatzstatusKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerEinsatzstatusKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7377,7 +7376,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogFachrichtungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Fachrichtungs-Katalog-Einträge gefunden
 	 *
@@ -7385,13 +7384,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerKatalogFachrichtungEintrag>> {
+	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerFachrichtungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogFachrichtungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerFachrichtungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7404,7 +7403,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Anerkennungs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogFachrichtungAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7412,13 +7411,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerKatalogFachrichtungAnerkennungEintrag>> {
+	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerFachrichtungAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7431,7 +7430,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehramt-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehramtEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehramtKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehramt-Katalog-Einträge gefunden
 	 *
@@ -7439,13 +7438,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehramt-Katalog-Einträgen
 	 */
-	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerKatalogLehramtEintrag>> {
+	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerLehramtKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehramtEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehramtKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7458,7 +7457,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Anerkennungs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehramtAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehramtAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7466,13 +7465,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehramtAnerkennungEintrag>> {
+	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehramtAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehramtAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7485,7 +7484,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehrbefaehigungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehrbefaehigungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrbefähigung-Katalog-Einträge gefunden
 	 *
@@ -7493,13 +7492,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungEintrag>> {
+	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehrbefaehigungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehrbefaehigungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7512,7 +7511,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehrbefaehigungAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7520,13 +7519,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungAnerkennungEintrag>> {
+	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehrbefaehigungAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehrbefaehigungAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7539,7 +7538,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogMehrleistungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerMehrleistungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Mehrleistungsart-Katalog-Einträge gefunden
 	 *
@@ -7547,13 +7546,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerKatalogMehrleistungsartEintrag>> {
+	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/mehrleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogMehrleistungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMehrleistungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerMehrleistungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMehrleistungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7566,7 +7565,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogMinderleistungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerMinderleistungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Minderleistungsart-Katalog-Einträge gefunden
 	 *
@@ -7574,13 +7573,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerKatalogMinderleistungsartEintrag>> {
+	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/minderleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogMinderleistungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMinderleistungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerMinderleistungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMinderleistungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7593,7 +7592,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogRechtsverhaeltnisEintrag>
+	 *     - Rückgabe-Typ: List<LehrerRechtsverhaeltnisKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Rechtsverhältnis-Katalog-Einträge gefunden
 	 *
@@ -7601,13 +7600,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 */
-	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerKatalogRechtsverhaeltnisEintrag>> {
+	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogRechtsverhaeltnisEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogRechtsverhaeltnisEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerRechtsverhaeltnisKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerRechtsverhaeltnisKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7620,7 +7619,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogZugangsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerZugangsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerzugangsgrund-Katalog-Einträge gefunden
 	 *
@@ -7628,13 +7627,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerKatalogZugangsgrundEintrag>> {
+	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerZugangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/zugangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogZugangsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogZugangsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerZugangsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerZugangsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7647,7 +7646,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLeitungsfunktionenEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLeitungsfunktionKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden
 	 *
@@ -7655,13 +7654,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 */
-	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerKatalogLeitungsfunktionenEintrag>> {
+	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerLeitungsfunktionKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/leitungsfunktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLeitungsfunktionKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLeitungsfunktionKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -9973,7 +9972,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Noten-Katalog.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<NotenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<NoteKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Noten-Einträge gefunden.
 	 *
@@ -9981,13 +9980,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Noten-Katalog.
 	 */
-	public async getKatalogNoten(schema : string) : Promise<List<NotenKatalogEintrag>> {
+	public async getKatalogNoten(schema : string) : Promise<List<NoteKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/noten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<NotenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NotenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<NoteKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NoteKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -10285,33 +10284,6 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulgliederungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulstufen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulstufen
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden gültigen Schulstufen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Schulstufen-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulstufeKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Schulstufen-Katalog-Einträgen
-	 */
-	public async getSchulstufen(schema : string) : Promise<List<SchulstufeKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/schulstufen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchulstufeKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulstufeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -11659,7 +11631,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerstatusKatalogEintrag>
+	 *     - Rückgabe-Typ: List<SchuelerStatusKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -11667,13 +11639,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
 	 */
-	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerstatusKatalogEintrag>> {
+	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerStatusKatalogEintrag>> {
 		const path = "/db/{schema}/schule/schueler/status"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerstatusKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerstatusKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SchuelerStatusKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerStatusKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 

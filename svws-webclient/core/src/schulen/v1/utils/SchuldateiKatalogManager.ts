@@ -4,6 +4,7 @@ import { SchuldateiEintrag, cast_de_svws_nrw_schulen_v1_data_SchuldateiEintrag }
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { SchuldateiUtils } from '../../../schulen/v1/utils/SchuldateiUtils';
@@ -415,6 +416,8 @@ export class SchuldateiKatalogManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiKatalogManager'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiKatalogManager>('de.svws_nrw.schulen.v1.utils.SchuldateiKatalogManager');
 
 }
 

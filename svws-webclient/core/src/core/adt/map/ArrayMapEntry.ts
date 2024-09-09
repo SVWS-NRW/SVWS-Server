@@ -1,6 +1,7 @@
 import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import { cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V> {
@@ -64,6 +65,8 @@ export class ArrayMapEntry<K, V> extends JavaObject implements JavaMapEntry<K, V
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapEntry', 'java.util.Map.Entry'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapEntry<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntry');
 
 }
 

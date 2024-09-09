@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanKalenderwochenzuordnung extends JavaObject {
 
@@ -34,6 +35,8 @@ export class StundenplanKalenderwochenzuordnung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung'].includes(name);
 	}
+
+	public static class = new Class<StundenplanKalenderwochenzuordnung>('de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung');
 
 	public static transpilerFromJSON(json : string): StundenplanKalenderwochenzuordnung {
 		const obj = JSON.parse(json) as Partial<StundenplanKalenderwochenzuordnung>;

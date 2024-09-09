@@ -108,10 +108,12 @@
 	import { computed, ref, onMounted } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type { GostFach } from "@core";
-	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, ZulaessigesFach } from "@core";
+	import { BenutzerKompetenz, ArrayList, GostKlausurvorgabe, Fach } from "@core";
 	import type { GostKlausurplanungVorgabenProps } from "./SGostKlausurplanungVorgabenProps";
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
+
+	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
@@ -199,7 +201,11 @@
 		{key: 'bemerkungVorgabe', label: 'Bemerkung', span: 1.25}
 	];
 
-	const getBgColor = (kuerzel: string | null) => ZulaessigesFach.getByKuerzelASD(kuerzel).getHMTLFarbeRGBA(1.0);
+	function getBgColor(kuerzel: string | null) {
+		if (kuerzel === null)
+			return 'rgb(220,220,220)';
+		return Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+	}
 
 	window.addEventListener('click', function(e) {
 		const vT = document.getElementById('vorgabenTable');

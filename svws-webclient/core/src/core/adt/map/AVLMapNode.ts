@@ -1,6 +1,7 @@
 import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import { cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
@@ -94,6 +95,8 @@ export class AVLMapNode<K, V> extends JavaObject implements JavaMapEntry<K, V> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Map.Entry', 'de.svws_nrw.core.adt.map.AVLMapNode'].includes(name);
 	}
+
+	public static class = new Class<AVLMapNode<any, any>>('de.svws_nrw.core.adt.map.AVLMapNode');
 
 }
 

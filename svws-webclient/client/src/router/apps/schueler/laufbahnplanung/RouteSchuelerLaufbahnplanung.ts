@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 import type { SchuelerLaufbahnplanungProps } from "@comp";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
@@ -12,11 +12,12 @@ import { RouteDataSchuelerLaufbahnplanung } from "~/router/apps/schueler/laufbah
 import { ConfigElement } from "~/components/Config";
 import { SSchuelerLaufbahnplanung } from "@comp";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLaufbahnplanung, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "schueler.laufbahnplanung", "laufbahnplanung", SSchuelerLaufbahnplanung, new RouteDataSchuelerLaufbahnplanung());

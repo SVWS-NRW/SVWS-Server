@@ -7,13 +7,14 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 import type { GostKlausurplanungKalenderProps } from "~/components/gost/klausurplanung/SGostKlausurplanungKalenderProps";
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungKalender = () => import("~/components/gost/klausurplanung/SGostKlausurplanungKalender.vue");
 
 export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN

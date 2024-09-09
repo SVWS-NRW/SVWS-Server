@@ -3,6 +3,7 @@ import { LogData, cast_de_svws_nrw_core_logger_LogData } from '../../core/logger
 import type { Consumer } from '../../java/util/function/Consumer';
 import { LogConsumerConsole } from '../../core/logger/LogConsumerConsole';
 import { ArrayList } from '../../java/util/ArrayList';
+import { Class } from '../../java/lang/Class';
 import { LogLevel, cast_de_svws_nrw_core_logger_LogLevel } from '../../core/logger/LogLevel';
 
 export class Logger extends JavaObject {
@@ -234,6 +235,8 @@ export class Logger extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.logger.Logger'].includes(name);
 	}
+
+	public static class = new Class<Logger>('de.svws_nrw.core.logger.Logger');
 
 }
 

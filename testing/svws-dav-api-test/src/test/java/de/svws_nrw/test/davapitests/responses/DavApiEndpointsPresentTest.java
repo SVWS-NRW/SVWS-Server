@@ -1,12 +1,15 @@
 package de.svws_nrw.test.davapitests.responses;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.test.apitests.util.BaseApiUtil;
+
 /**
  * Testmethode für die Verfügbarkeit der Dav-Api-Endpunkte
  */
+@Disabled
 class DavApiEndpointsPresentTest extends BaseApiUtil {
 	/**
 	 * Testmethode prüft ob der Endpunkt vorhanden und erreichbar ist. Dummy

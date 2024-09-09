@@ -5,6 +5,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuldateiOrganisationseinheitManager } from '../../../schulen/v1/utils/SchuldateiOrganisationseinheitManager';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { SchuldateiOrganisationseinheitErreichbarkeit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitErreichbarkeit';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -308,6 +309,8 @@ export class SchuldateiOrganisationseinheitAdressManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitAdressManager'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiOrganisationseinheitAdressManager>('de.svws_nrw.schulen.v1.utils.SchuldateiOrganisationseinheitAdressManager');
 
 }
 

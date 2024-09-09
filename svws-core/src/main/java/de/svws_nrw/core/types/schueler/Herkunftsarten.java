@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -969,7 +970,7 @@ public enum Herkunftsarten {
 	private static final @NotNull HashMap<Long, Herkunftsarten> _mapID = new HashMap<>();
 
 	/** Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
-	private final @NotNull ArrayList<Schulform> @NotNull [] schulformen;
+	private final @NotNull ArrayList<String> @NotNull [] schulformen;
 
 	/** Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge */
 	private final @NotNull ArrayList<String> @NotNull [] bezeichnungen;
@@ -986,15 +987,13 @@ public enum Herkunftsarten {
 		// TODO Prüfe korrekte Reihenfolge der Einträge und sortiere so, dass Eintrag 0 im Array der älteste Eintrag ist
 		this.daten = historie[historie.length - 1];
 		// Erzeuge zwei weitere Arrays mit der Schulformzuordnung und den Bezeichnungen für die Historie
-		this.schulformen = (@NotNull ArrayList<Schulform> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
+		this.schulformen = (@NotNull ArrayList<String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		this.bezeichnungen = (@NotNull ArrayList<String> @NotNull []) Array.newInstance(ArrayList.class, historie.length);
 		for (int i = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList<>();
 			this.bezeichnungen[i] = new ArrayList<>();
 			for (final @NotNull HerkunftsartKatalogEintragBezeichnung bez : historie[i].bezeichnungen) {
-				final Schulform sf = Schulform.getByKuerzel(bez.schulform);
-				if (sf != null)
-					this.schulformen[i].add(sf);
+				this.schulformen[i].add(bez.schulform);
 				this.bezeichnungen[i].add(bez.bezeichnung);
 			}
 		}
@@ -1059,17 +1058,21 @@ public enum Herkunftsarten {
 	/**
 	 * Liefert die Bezeichnung der Herkunftsart für die angegebene Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die Bezeichnung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
-	public String getBezeichnung(final Schulform schulform) {
-		if ((schulform == null) || (schulform.daten == null))
+	public String getBezeichnung(final int schuljahr, final Schulform schulform) {
+		if (schulform == null)
+			return null;
+		final SchulformKatalogEintrag sfe = schulform.daten(schuljahr);
+		if (sfe == null)
 			return null;
 		if (daten.bezeichnungen != null) {
 			for (final @NotNull HerkunftsartKatalogEintragBezeichnung bez : daten.bezeichnungen) {
 				final String sfKuerzel = bez.schulform;
-				if (sfKuerzel.equals(schulform.daten.kuerzel))
+				if (sfKuerzel.equals(sfe.kuerzel))
 					return bez.bezeichnung;
 			}
 		}
@@ -1083,7 +1086,7 @@ public enum Herkunftsarten {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public @NotNull List<Schulform> getSchulformen() {
+	public @NotNull List<String> getSchulformen() {
 		return schulformen[historie.length - 1];
 	}
 
@@ -1091,17 +1094,18 @@ public enum Herkunftsarten {
 	/**
 	 * Liefert alle zulässigen Herkunftsarten für die angegebene Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
-	public static @NotNull List<Herkunftsarten> get(final Schulform schulform) {
+	public static @NotNull List<Herkunftsarten> get(final int schuljahr, final Schulform schulform) {
 		final @NotNull ArrayList<Herkunftsarten> result = new ArrayList<>();
 		if (schulform == null)
 			return result;
 		final @NotNull Herkunftsarten @NotNull [] herkunftsarten = Herkunftsarten.values();
 		for (final @NotNull @NotNull Herkunftsarten herkunftsart : herkunftsarten) {
-			if (herkunftsart.hasSchulform(schulform))
+			if (herkunftsart.hasSchulform(schuljahr, schulform))
 				result.add(herkunftsart);
 		}
 		return result;
@@ -1133,17 +1137,21 @@ public enum Herkunftsarten {
 	/**
 	 * Prüft, ob die Schulform diese Herkunftsart hat oder nicht.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
-	public boolean hasSchulform(final Schulform schulform) {
-		if ((schulform == null) || (schulform.daten == null))
+	public boolean hasSchulform(final int schuljahr, final Schulform schulform) {
+		if (schulform == null)
+			return false;
+		final SchulformKatalogEintrag sfe = schulform.daten(schuljahr);
+		if (sfe == null)
 			return false;
 		if (daten.bezeichnungen != null) {
 			for (final HerkunftsartKatalogEintragBezeichnung element : daten.bezeichnungen) {
 				final String sfKuerzel = element.schulform;
-				if (sfKuerzel.equals(schulform.daten.kuerzel))
+				if (sfKuerzel.equals(sfe.kuerzel))
 					return true;
 			}
 		}

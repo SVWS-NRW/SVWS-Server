@@ -1,8 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 
@@ -96,7 +97,8 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 			this.beiSchueler = beiSchueler;
 			this.kuerzelASD = kuerzelASD;
 			for (const sf of schulformen)
-				this.schulformen.add(sf.daten.kuerzel);
+				if (!this.schulformen.contains(sf.name()))
+					this.schulformen.add(sf.name());
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
 		} else throw new Error('invalid method overload');
@@ -109,6 +111,8 @@ export class AllgemeineMerkmaleKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<AllgemeineMerkmaleKatalogEintrag>('de.svws_nrw.core.data.schule.AllgemeineMerkmaleKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): AllgemeineMerkmaleKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<AllgemeineMerkmaleKatalogEintrag>;

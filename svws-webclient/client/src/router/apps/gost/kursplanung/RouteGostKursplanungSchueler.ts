@@ -7,6 +7,7 @@ import { ConfigElement } from "~/components/Config";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
+import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeGostKursplanung, type RouteGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
@@ -20,7 +21,7 @@ const SGostKursplanungSchuelerAuswahl = () => import("~/components/gost/kursplan
 export class RouteGostKursplanungSchueler extends RouteNode<any, RouteGostKursplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN
 		], "gost.kursplanung.schueler", "schueler/:idschueler(\\d+)?", SGostKursplanungUmwahlansicht);

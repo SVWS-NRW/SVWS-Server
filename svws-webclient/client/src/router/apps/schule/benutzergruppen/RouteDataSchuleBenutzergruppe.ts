@@ -11,7 +11,7 @@ import { routeApp } from "../../RouteApp";
 
 
 interface RoutStateSchuleBenutzergruppe extends RouteStateInterface {
-    auswahl: BenutzergruppeListeEintrag | undefined;
+	auswahl: BenutzergruppeListeEintrag | undefined;
 	mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>;
 	benutzergruppenManager: BenutzergruppenManager;
 	listBenutzergruppe: List<BenutzergruppeListeEintrag>;
@@ -80,7 +80,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 		const neueAuswahl = benutzerGruppe === undefined ? this.firstBenutzer(this.mapBenutzergruppe) : benutzerGruppe;
 		const daten = await this.ladeBenutzergruppenDaten(neueAuswahl);
 		const benutzergruppenManager = daten=== undefined ? undefined : new BenutzergruppenManager(daten);
-		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl?.id);
+		const listBenutzergruppenBenutzer = neueAuswahl === undefined ? undefined : await api.server.getBenutzerMitGruppenID(api.schema, neueAuswahl.id);
 		this.setPatchedState({
 			auswahl: neueAuswahl,
 			benutzergruppenManager: benutzergruppenManager,
@@ -90,7 +90,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	}
 
 	gotoBenutzergruppe = async (value: BenutzergruppeListeEintrag | undefined) => {
-		if (value === undefined || value === null) {
+		if (value === undefined) {
 			await RouteManager.doRoute({ name: routeSchuleBenutzergruppe.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
 		}
@@ -103,8 +103,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	}
 
 	get benutzergruppenManager(): BenutzergruppenManager {
-		if(this._state.value.benutzergruppenManager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.benutzergruppenManager
 	}
 
@@ -160,8 +158,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	}
 
 	get mapBenutzergruppe(): Map<number, BenutzergruppeListeEintrag> {
-		if(this._state.value.mapBenutzergruppe === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Klassendaten nicht initialisiert");
 		return this._state.value.mapBenutzergruppe
 	}
 
@@ -178,8 +174,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 * @returns {Promise<void>}
 	 */
 	setBezeichnung = async (bezeichnung: string) => {
-		if (!this.benutzergruppenManager)
-			return;
 		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.benutzergruppenManager.getID());
 		this.benutzergruppenManager.setBezeichnung(bezeichnung);
 		const neueAuswahl = this.mapBenutzergruppe.get(this.daten.id);
@@ -198,9 +192,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 *
 	 * @returns {Promise<void>}
 	 */
-	 setIstAdmin = async (istAdmin: boolean) => {
-		if (!this.benutzergruppenManager)
-			return;
+	setIstAdmin = async (istAdmin: boolean) => {
 		if(istAdmin)
 			await api.server.addBenutzergruppeAdmin(api.schema, this.benutzergruppenManager.getID());
 		else
@@ -220,8 +212,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	addKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzergruppenManager)
-			return false;
 		if (this.benutzergruppenManager.hatKompetenz(kompetenz))
 			return false;
 		await api.server.addBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
@@ -237,11 +227,9 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 *
 	 * @param kompetenz   die zu entfernende Kompetenz
 	 */
-	 removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
+	removeKompetenz = async (kompetenz : BenutzerKompetenz) => {
 		const kid = new ArrayList<number>();
 		kid.add(kompetenz.daten.id);
-		if (!this.benutzergruppenManager)
-			return false;
 		if (!this.benutzergruppenManager.hatKompetenz(kompetenz))
 			return false;
 		await api.server.removeBenutzergruppeKompetenzen(kid, api.schema, this.benutzergruppenManager.getID());
@@ -257,10 +245,8 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 *
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen hinzugefügt werden.
 	 */
-	 addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
-		const kids  = new ArrayList<number>();
-		if (!this.benutzergruppenManager)
-			return false;
+	addBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
+		const kids = new ArrayList<number>();
 		if (!this.benutzergruppenManager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe)) {
 				kids.add(komp.daten.id);
@@ -283,10 +269,8 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 *
 	 * @param kompetenzgruppe   die Kompetenzgruppe, deren Kompetenzen entfernt werden.
 	 */
-	 removeBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
+	removeBenutzerKompetenzGruppe = async (kompetenzgruppe : BenutzerKompetenzGruppe) => {
 		const kids = new ArrayList<number>();
-		if (!this.benutzergruppenManager)
-			return false;
 		if (!this.benutzergruppenManager.istAdmin()) {
 			for (const komp of BenutzerKompetenz.getKompetenzen(kompetenzgruppe))
 				kids.add(komp.daten.id);
@@ -347,7 +331,7 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 		}
 		alert("Benutzergruppe gelöscht.");
 		if(auswahl_gewaehlt)
-			 await this.gotoBenutzergruppe(this.listBenutzergruppe.get(0));
+			await this.gotoBenutzergruppe(this.listBenutzergruppe.get(0));
 		this.setPatchedState({
 			listBenutzergruppe: this.listBenutzergruppe,
 			mapBenutzergruppe: this.mapBenutzergruppe
@@ -363,8 +347,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 * @returns {Promise<void>}
 	 */
 	addBenutzerToBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
-		if (!this.benutzergruppenManager)
-			return;
 		const b_ids = new ArrayList<number>();
 		b_ids.add(benutzer.id);
 		await api.server.addBenutzergruppeBenutzer(b_ids, api.schema,this.benutzergruppenManager.getID());
@@ -395,8 +377,6 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 * @returns {Promise<void>}
 	 */
 	removeBenutzerFromBenutzergruppe = async (benutzer: BenutzerListeEintrag): Promise<void> => {
-		if (!this.benutzergruppenManager)
-			return;
 		const bg_ids = new ArrayList<number>();
 		bg_ids.add(benutzer.id);
 		await api.server.removeBenutzergruppeBenutzer(bg_ids, api.schema,this.benutzergruppenManager.getID());
@@ -411,7 +391,5 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	aktualisiereListeBenutzerGruppenBenutzer = async (benutzer: BenutzerListeEintrag) => {
 		this.listBenutzergruppenBenutzer.add(benutzer);
 	}
-
-
 
 }

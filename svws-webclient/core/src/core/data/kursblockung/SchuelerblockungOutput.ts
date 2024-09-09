@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { SchuelerblockungOutputFachwahlZuKurs } from '../../../core/data/kursblockung/SchuelerblockungOutputFachwahlZuKurs';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerblockungOutput extends JavaObject {
 
@@ -22,6 +23,8 @@ export class SchuelerblockungOutput extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput'].includes(name);
 	}
+
+	public static class = new Class<SchuelerblockungOutput>('de.svws_nrw.core.data.kursblockung.SchuelerblockungOutput');
 
 	public static transpilerFromJSON(json : string): SchuelerblockungOutput {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungOutput>;

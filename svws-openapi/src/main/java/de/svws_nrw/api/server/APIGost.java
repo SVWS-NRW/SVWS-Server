@@ -38,8 +38,6 @@ import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanung;
 import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.data.schule.SchulUtils;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -1093,14 +1091,13 @@ public class APIGost {
 					schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-			if (!schule.Schulform.daten.hatGymOb)
+			if (!conn.getUser().schuleHatGymOb())
 				throw new ApiOperationException(Status.NOT_FOUND);
 			final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
+			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 			if (faecherManager.isEmpty())
-				faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, null);
+				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();
@@ -1133,14 +1130,13 @@ public class APIGost {
 					schema = @Schema(implementation = Abiturdaten.class))) final Abiturdaten abidaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-			if (!schule.Schulform.daten.hatGymOb)
+			if (!conn.getUser().schuleHatGymOb())
 				throw new ApiOperationException(Status.NOT_FOUND);
 			final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abidaten.abiturjahr);
 			// Prüfe die Belegung der Kurse mithilfe des Abiturdaten-Managers und gib das Ergebnis der Belegprüfung zurück.
-			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
+			GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 			if (faecherManager.isEmpty())
-				faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, null);
+				faecherManager = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, null);
 			faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abidaten.abiturjahr));
 			final AbiturdatenManager manager = new AbiturdatenManager(abidaten, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(manager.getBelegpruefungErgebnis()).build();

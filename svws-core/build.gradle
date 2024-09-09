@@ -6,8 +6,16 @@ configurations {
 dependencies {
 	implementation project(':svws-transpile')
 	implementation project(':svws-schulen')
+	implementation project(':svws-asd')
 	
-	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/core/**/*.java', '**/svws_nrw/schuldatei/*/data/**/*.java', '**/svws_nrw/schuldatei/*/utils/**/*.java'], excludes: ['**/svws_nrw/core/transpiler/TranspilerDTO.java'])	
+	transpiler fileTree(dir: "$projectDir/src/main/java", includes: [
+			'**/svws_nrw/core/**/*.java',
+			'**/svws_nrw/schuldatei/*/data/**/*.java',
+			'**/svws_nrw/schuldatei/*/utils/**/*.java'
+		], excludes: [
+			'**/svws_nrw/core/data/schild3/reporting/SchildReportingDate.java',
+			'**/svws_nrw/core/data/schild3/reporting/SchildReportingMemo.java'
+		])	
 }
 
 task cleanTranspiled(type: Delete) {

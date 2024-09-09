@@ -2,12 +2,12 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
-import de.svws_nrw.core.data.fach.BilingualeSpracheKatalogEintrag;
+import de.svws_nrw.asd.data.fach.BilingualeSpracheKatalogEintrag;
 import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.data.fach.FachKatalogEintrag;
-import de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
 import de.svws_nrw.core.data.fach.SprachpruefungsniveauKatalogEintrag;
-import de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag;
+import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -224,7 +224,7 @@ public class APIFaecher {
 			description = "Gibt den Katalog aller Fachgruppen aller Schulformen zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Katalog aller Fachgruppen aller Schulformen.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppenKatalogEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppeKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
 	@ApiResponse(responseCode = "404", description = "Keine Fachgruppen gefunden.")
 	public Response getKatalogFachgruppen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -247,7 +247,7 @@ public class APIFaecher {
 			description = "Gibt den Katalog der Fachgruppen für die Schulform dieser Schule zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Katalog der Fachgruppen für die Schulform dieser Schule.",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppenKatalogEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = FachgruppeKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
 	@ApiResponse(responseCode = "404", description = "Keine Fachgruppen für die Schulform dieser Schule gefunden.")
 	public Response getFachgruppen(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
@@ -271,7 +271,7 @@ public class APIFaecher {
 			description = "Gibt den Fachgruppen-Katalog-Eintrag für die angegebene ID zurück. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Der Fachgruppen-Katalog-Eintrag für die angegebene ID.",
-			content = @Content(mediaType = "application/json", schema = @Schema(implementation = FachgruppenKatalogEintrag.class)))
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = FachgruppeKatalogEintrag.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine gültige Anmeldung.")
 	@ApiResponse(responseCode = "404", description = "Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.")
 	public Response getKatalogFachgruppenEintrag(@PathParam("schema") final String schema, @PathParam("id") final long id,

@@ -6,6 +6,7 @@ import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEint
 import type { JavaSet } from '../../../../java/util/JavaSet';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { HashSet } from '../../../../java/util/HashSet';
 
 export class GostKlausurenCollectionMetaData extends JavaObject {
@@ -56,6 +57,8 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionMetaData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionMetaData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionMetaData>;

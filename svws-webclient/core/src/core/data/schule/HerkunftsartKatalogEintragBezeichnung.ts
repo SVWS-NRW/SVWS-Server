@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform, cast_de_svws_nrw_core_types_schule_Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform, cast_de_svws_nrw_asd_types_schule_Schulform } from '../../../asd/types/schule/Schulform';
+import { Class } from '../../../java/lang/Class';
 
 export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 
@@ -40,11 +41,11 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 		super();
 		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined)) {
 			// empty method body
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulform')))) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string"))) {
-			const schulform : Schulform = cast_de_svws_nrw_core_types_schule_Schulform(__param0);
+		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.asd.types.schule.Schulform')))) && ((__param1 !== undefined) && (typeof __param1 === "string")) && ((__param2 !== undefined) && (typeof __param2 === "string"))) {
+			const schulform : Schulform = cast_de_svws_nrw_asd_types_schule_Schulform(__param0);
 			const kurzBezeichnung : string = __param1;
 			const bezeichnung : string = __param2;
-			this.schulform = schulform.daten.kuerzel;
+			this.schulform = schulform.name();
 			this.kurzBezeichnung = kurzBezeichnung;
 			this.bezeichnung = bezeichnung;
 		} else throw new Error('invalid method overload');
@@ -57,6 +58,8 @@ export class HerkunftsartKatalogEintragBezeichnung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung'].includes(name);
 	}
+
+	public static class = new Class<HerkunftsartKatalogEintragBezeichnung>('de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung');
 
 	public static transpilerFromJSON(json : string): HerkunftsartKatalogEintragBezeichnung {
 		const obj = JSON.parse(json) as Partial<HerkunftsartKatalogEintragBezeichnung>;

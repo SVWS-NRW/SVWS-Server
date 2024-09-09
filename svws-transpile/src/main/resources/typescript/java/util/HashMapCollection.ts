@@ -1,6 +1,6 @@
 import type { Collection } from './Collection';
 import type { JavaIterator } from './JavaIterator';
-import type { Class } from '../../java/lang/Class';
+import { Class } from '../../java/lang/Class';
 import type { TranspiledObject } from '../../java/lang/TranspiledObject';
 import type { JavaMapEntry } from './JavaMapEntry';
 import type { JavaObject } from '../../java/lang/JavaObject';
@@ -114,7 +114,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	}
 
 	getClass<T extends TranspiledObject>(): Class<T> {
-		throw new UnsupportedOperationException();
+		return new Class(this.transpilerCanonicalName());
 	}
 
 	clone(): unknown {
@@ -124,7 +124,7 @@ export class HashMapCollection<K, V> implements Collection<V> {
 	toString(): string | null {
 		let res = '[';
 		for (const e of this._map)
-			res + (e.getValue() as unknown as JavaObject).toString() + ', ';
+			res = res + (e.getValue() as unknown as JavaObject).toString() + ', ';
 		res = res.substring(-2, 0);
 		res = res + ']';
 		return res;

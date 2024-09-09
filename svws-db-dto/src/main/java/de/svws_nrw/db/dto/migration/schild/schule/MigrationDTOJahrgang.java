@@ -26,7 +26,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBooleanPlusMinusDefaultPlusC
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "EigeneSchule_Jahrgaenge")
-@JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "Gliederung", "AnzahlRestabschnitte", "Folgejahrgang_ID", "SchulnrEigner"})
+@JsonPropertyOrder({"ID", "InternKrz", "GueltigVon", "GueltigBis", "ASDJahrgang", "ASDBezeichnung", "Sichtbar", "Sortierung", "IstChronologisch", "Kurzbezeichnung", "Sekundarstufe", "GliederungKuerzel", "AnzahlRestabschnitte", "Folgejahrgang_ID", "SchulnrEigner"})
 public final class MigrationDTOJahrgang {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -107,11 +107,11 @@ public final class MigrationDTOJahrgang {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Sekundarstufe */
 	public static final String QUERY_LIST_BY_SEKUNDARSTUFE = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Sekundarstufe IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes Gliederung */
-	public static final String QUERY_BY_GLIEDERUNG = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes GliederungKuerzel */
+	public static final String QUERY_BY_GLIEDERUNGKUERZEL = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GliederungKuerzel = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Gliederung */
-	public static final String QUERY_LIST_BY_GLIEDERUNG = "SELECT e FROM MigrationDTOJahrgang e WHERE e.Gliederung IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes GliederungKuerzel */
+	public static final String QUERY_LIST_BY_GLIEDERUNGKUERZEL = "SELECT e FROM MigrationDTOJahrgang e WHERE e.GliederungKuerzel IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes AnzahlRestabschnitte */
 	public static final String QUERY_BY_ANZAHLRESTABSCHNITTE = "SELECT e FROM MigrationDTOJahrgang e WHERE e.AnzahlRestabschnitte = ?1";
@@ -196,7 +196,7 @@ public final class MigrationDTOJahrgang {
 	/** Schulgliederung des Jahrgangs */
 	@Column(name = "SGL")
 	@JsonProperty
-	public String Gliederung;
+	public String GliederungKuerzel;
 
 	/** Gibt die Anzahl der Restabschnitte an, die für den Verbleib an dieser Schulform üblich ist. */
 	@Column(name = "Restabschnitte")
@@ -265,7 +265,7 @@ public final class MigrationDTOJahrgang {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOJahrgang(ID=" + this.ID + ", InternKrz=" + this.InternKrz + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ", ASDJahrgang=" + this.ASDJahrgang + ", ASDBezeichnung=" + this.ASDBezeichnung + ", Sichtbar=" + this.Sichtbar + ", Sortierung=" + this.Sortierung + ", IstChronologisch=" + this.IstChronologisch + ", Kurzbezeichnung=" + this.Kurzbezeichnung + ", Sekundarstufe=" + this.Sekundarstufe + ", Gliederung=" + this.Gliederung + ", AnzahlRestabschnitte=" + this.AnzahlRestabschnitte + ", Folgejahrgang_ID=" + this.Folgejahrgang_ID + ", SchulnrEigner=" + this.SchulnrEigner + ")";
+		return "MigrationDTOJahrgang(ID=" + this.ID + ", InternKrz=" + this.InternKrz + ", GueltigVon=" + this.GueltigVon + ", GueltigBis=" + this.GueltigBis + ", ASDJahrgang=" + this.ASDJahrgang + ", ASDBezeichnung=" + this.ASDBezeichnung + ", Sichtbar=" + this.Sichtbar + ", Sortierung=" + this.Sortierung + ", IstChronologisch=" + this.IstChronologisch + ", Kurzbezeichnung=" + this.Kurzbezeichnung + ", Sekundarstufe=" + this.Sekundarstufe + ", GliederungKuerzel=" + this.GliederungKuerzel + ", AnzahlRestabschnitte=" + this.AnzahlRestabschnitte + ", Folgejahrgang_ID=" + this.Folgejahrgang_ID + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

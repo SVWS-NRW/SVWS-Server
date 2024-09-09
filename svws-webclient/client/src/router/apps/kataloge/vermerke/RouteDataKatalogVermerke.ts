@@ -45,7 +45,7 @@ export class RouteDataKatalogVermerke extends RouteData<RouteStateKatalogeVermer
 
 		const vermerkartenManager : VermerkartenManager = new VermerkartenManager(listKatalogeintraege, listSchuelerVermerkartZusammenfassung);
 		vermerkartenManager.setFilterAuswahlPermitted(true);
-		vermerkartenManager.setDaten(auswahl ?? vermerkartenManager.liste.list().get(0));
+		vermerkartenManager.setDaten(auswahl);
 		this.setPatchedDefaultState({ vermerkartenManager})
 	}
 

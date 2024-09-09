@@ -13,6 +13,7 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class Fremdsprachen extends GostBelegpruefung {
@@ -519,6 +520,8 @@ export class Fremdsprachen extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen'].includes(name);
 	}
+
+	public static class = new Class<Fremdsprachen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fremdsprachen');
 
 }
 

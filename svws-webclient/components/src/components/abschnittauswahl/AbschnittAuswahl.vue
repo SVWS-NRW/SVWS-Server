@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 	import { computed } from 'vue';
-	import type { Schuljahresabschnitt } from '../../../../core/src/core/data/schule/Schuljahresabschnitt';
+	import type { Schuljahresabschnitt } from '../../../../core/src/asd/data/schule/Schuljahresabschnitt';
 	import type { AbschnittAuswahlProps } from './AbschnittAuswahlProps';
 
 	const props = defineProps<AbschnittAuswahlProps>();

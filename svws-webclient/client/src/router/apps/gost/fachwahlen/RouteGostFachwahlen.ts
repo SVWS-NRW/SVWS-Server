@@ -20,6 +20,7 @@ import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFach
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -27,7 +28,7 @@ const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahl
 export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -89,6 +90,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {
 		return {
 			fachwahlstatistik: this.data.fachwahlstatistik,
+			faecherManager: routeGost.data.faecherManager,
 			doSelect: this.data.doSelect,
 			selected: () => this.data.auswahl,
 		};

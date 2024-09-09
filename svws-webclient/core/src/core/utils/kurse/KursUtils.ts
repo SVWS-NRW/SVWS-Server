@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -31,6 +32,8 @@ export class KursUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.kurse.KursUtils'].includes(name);
 	}
+
+	public static class = new Class<KursUtils>('de.svws_nrw.core.utils.kurse.KursUtils');
 
 }
 

@@ -1,7 +1,7 @@
 package de.svws_nrw.data.schueler;
 
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
-import de.svws_nrw.core.types.schueler.Foerderschwerpunkt;
+import de.svws_nrw.asd.types.schule.Foerderschwerpunkt;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOFoerderschwerpunkt;
@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.Response.Status;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
@@ -29,19 +28,17 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 		super(conn);
 	}
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOFoerderschwerpunkt} in einen Core-DTO {@link FoerderschwerpunktEintrag}.
-	 */
-	private final Function<DTOFoerderschwerpunkt, FoerderschwerpunktEintrag> dtoMapper = (final DTOFoerderschwerpunkt k) -> {
+	private FoerderschwerpunktEintrag map(final DTOFoerderschwerpunkt k) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final FoerderschwerpunktEintrag eintrag = new FoerderschwerpunktEintrag();
 		eintrag.id = k.ID;
 		eintrag.kuerzel = (k.Bezeichnung == null) ? "" : k.Bezeichnung;
-		final Foerderschwerpunkt fs = Foerderschwerpunkt.getByKuerzel(eintrag.kuerzel);
-		eintrag.text = (fs == null) ? "---" : fs.daten.beschreibung;
+		final Foerderschwerpunkt fs = Foerderschwerpunkt.data().getWertByKuerzel(eintrag.kuerzel);
+		eintrag.text = ((fs == null) || (fs.daten(schuljahr) == null)) ? "---" : fs.daten(schuljahr).text;
 		eintrag.kuerzelStatistik = k.StatistikKrz;
 		eintrag.istSichtbar = k.Sichtbar;
 		return eintrag;
-	};
+	}
 
 	@Override
 	public Response getAll() throws ApiOperationException {
@@ -60,7 +57,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 		final List<DTOFoerderschwerpunkt> katalog = conn.queryAll(DTOFoerderschwerpunkt.class);
 		if (katalog == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		return katalog.stream().map(dtoMapper).toList();
+		return katalog.stream().map(fs -> map(fs)).toList();
 	}
 
 
@@ -74,7 +71,7 @@ public final class DataKatalogSchuelerFoerderschwerpunkte extends DataManager<Lo
 		final DTOFoerderschwerpunkt fs = conn.queryByKey(DTOFoerderschwerpunkt.class, id);
 		if (fs == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final FoerderschwerpunktEintrag daten = dtoMapper.apply(fs);
+		final FoerderschwerpunktEintrag daten = map(fs);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -1,0 +1,196 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINER",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"kuerzel": "**",
+			"text": "kein Förderschwerpunkt",
+			"schluessel": "**",
+			"schulformen": ["BK", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "V", "WB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BL",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1000,
+			"kuerzel": "BL",
+			"text": "Sehen (Blinde)",
+			"schluessel": "BL",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EZ",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 2000,
+			"kuerzel": "EZ",
+			"text": "Emotionale und soziale Entwicklung",
+			"schluessel": "EZ",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GB",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 3000,
+			"kuerzel": "GB",
+			"text": "Geistige Entwicklung",
+			"schluessel": "GB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GH",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 4000,
+			"kuerzel": "GH",
+			"text": "Hören und Kommunikation (Gehörlose)",
+			"schluessel": "GH",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SR", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KB",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 5000,
+			"kuerzel": "KB",
+			"text": "Körperliche und motorische Entwicklung",
+			"schluessel": "KB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SG", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KR",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 6000,
+			"kuerzel": "KR",
+			"text": "Schule für Kranke",
+			"schluessel": "KR",
+			"schulformen": ["FW", "HI", "WF", "S", "KS"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "LB",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 7000,
+			"kuerzel": "LB",
+			"text": "Lernen",
+			"schluessel": "LB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "PE",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 8000,
+			"kuerzel": "PE",
+			"text": "Präventive Förderung im Bereich Emotionale und soziale Entwicklung",
+			"schluessel": "PE",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		} ]
+	}, {
+		"bezeichner": "PF",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 9000,
+			"kuerzel": "PF",
+			"text": "Präventive Förderung",
+			"schluessel": "PF",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		} ]
+	}, {
+		"bezeichner": "PL",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 10000,
+			"kuerzel": "PL",
+			"text": "Präventive Förderung im Bereich Lernen",
+			"schluessel": "PL",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		} ]
+	}, {
+		"bezeichner": "PS",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 11000,
+			"kuerzel": "PS",
+			"text": "Präventive Förderung im Bereich Sprache",
+			"schluessel": "PS",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		} ]
+	}, {
+		"bezeichner": "SB",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 12000,
+			"kuerzel": "SB",
+			"text": "Sprache",
+			"schluessel": "SB",
+			"schulformen": ["FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SG",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 13000,
+			"kuerzel": "SG",
+			"text": "Hören und Kommunikation (Schwerhörige)",
+			"schluessel": "SG",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SR", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SH",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 14000,
+			"kuerzel": "SH",
+			"text": "Sehen (Sehbehinderte)",
+			"schluessel": "SH",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2011,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "XX",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 15000,
+			"kuerzel": "XX",
+			"text": "Kein Förderschwerpunkt",
+			"schluessel": "XX",
+			"schulformen": ["SB", "SG"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

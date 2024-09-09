@@ -124,7 +124,7 @@ export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetrieb
 
 	deleteEintraege = async (eintraege: BetriebListeEintrag[]) => {
 		const bids = new ArrayList<number>();
-		let istAuswahlMitGeloescht : boolean  = false;
+		let istAuswahlMitGeloescht : boolean = false;
 		for ( const betrieb of eintraege)
 			bids.add(betrieb.id);
 		await api.server.removeBetrieb(bids, api.schema);

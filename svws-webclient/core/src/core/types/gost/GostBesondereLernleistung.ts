@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBesondereLernleistung extends JavaEnum<GostBesondereLernleistung> {
 
@@ -120,6 +121,8 @@ export class GostBesondereLernleistung extends JavaEnum<GostBesondereLernleistun
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostBesondereLernleistung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostBesondereLernleistung>('de.svws_nrw.core.types.gost.GostBesondereLernleistung');
 
 }
 

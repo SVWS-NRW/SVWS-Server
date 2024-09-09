@@ -406,6 +406,8 @@ public class StundenplanManager {
 	private final long _stundenplanID;
 	private int _stundenplanWochenTypModell;
 	private final long _stundenplanSchuljahresAbschnittID;
+	private final int _stundenplanSchuljahr;
+	private final int _stundenplanAbschnitt;
 	private final @NotNull String _stundenplanGueltigAb;
 	private final @NotNull String _stundenplanGueltigBis;
 	private final @NotNull String _stundenplanBezeichnung;
@@ -419,10 +421,10 @@ public class StundenplanManager {
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param daten                 liefert die Grund-Daten des Stundenplanes.
-	 * @param unterrichte           liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
-	 * @param pausenaufsichten      liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
-	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
+	 * @param daten                  liefert die Grund-Daten des Stundenplanes.
+	 * @param unterrichte            liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
+	 * @param pausenaufsichten       liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
+	 * @param unterrichtsverteilung  liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
 	public StundenplanManager(final @NotNull Stundenplan daten, final @NotNull List<StundenplanUnterricht> unterrichte,
 			final @NotNull List<StundenplanPausenaufsicht> pausenaufsichten, final StundenplanUnterrichtsverteilung unterrichtsverteilung) {
@@ -431,6 +433,8 @@ public class StundenplanManager {
 		_stundenplanID = daten.id;
 		_stundenplanWochenTypModell = daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
+		_stundenplanSchuljahr = daten.schuljahr;
+		_stundenplanAbschnitt = daten.abschnitt;
 		_stundenplanGueltigAb = daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 		_stundenplanBezeichnung = daten.bezeichnungStundenplan;
@@ -472,7 +476,7 @@ public class StundenplanManager {
 	/**
 	 * Dieser Manager baut mit Hilfe des {@link StundenplanKomplett}-Objektes eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param stundenplanKomplett  Beinhaltet alle relevanten Daten für einen Stundenplan.
+	 * @param stundenplanKomplett    Beinhaltet alle relevanten Daten für einen Stundenplan.
 	 */
 	public StundenplanManager(final @NotNull StundenplanKomplett stundenplanKomplett) {
 		_compKlassenunterricht = klassenunterrichtCreateComparator();
@@ -480,6 +484,8 @@ public class StundenplanManager {
 		_stundenplanID = stundenplanKomplett.daten.id;
 		_stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 		_stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
+		_stundenplanSchuljahr = stundenplanKomplett.daten.schuljahr;
+		_stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 		_stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 		_stundenplanGueltigBis = init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
 		_stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
@@ -5322,6 +5328,24 @@ public class StundenplanManager {
 	 */
 	public long getIDSchuljahresabschnitt() {
 		return _stundenplanSchuljahresAbschnittID;
+	}
+
+	/**
+	 * Liefert das Schuljahr, für welches der Stundenplan gültig ist
+	 *
+	 * @return das Schuljahr, für welches der Stundenplan gültig ist
+	 */
+	public int getSchuljahr() {
+		return _stundenplanSchuljahr;
+	}
+
+	/**
+	 * Liefert den Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 *
+	 * @return der Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 */
+	public int getAbschnitt() {
+		return _stundenplanAbschnitt;
 	}
 
 	/**

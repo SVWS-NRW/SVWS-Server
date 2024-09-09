@@ -58,7 +58,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 		lernabschnitt.AbschlIstPrognose = null;
 		lernabschnitt.Konferenzdatum = null;
 		lernabschnitt.ZeugnisDatum = null;
-		lernabschnitt.Schulgliederung = jahrgang.Gliederung;
+		lernabschnitt.Schulgliederung = jahrgang.GliederungKuerzel;
 		lernabschnitt.ASDJahrgang = jahrgang.ASDJahrgang;
 		lernabschnitt.Jahrgang_ID = jahrgang.ID;
 		lernabschnitt.Fachklasse_ID = null;

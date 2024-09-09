@@ -105,6 +105,8 @@ public final class DataStundenplan extends DataManager<Long> {
 		final Stundenplan daten = new Stundenplan();
 		daten.id = stundenplan.ID;
 		daten.idSchuljahresabschnitt = stundenplan.Schuljahresabschnitts_ID;
+		daten.schuljahr = schuljahresabschnitt.Jahr;
+		daten.abschnitt = schuljahresabschnitt.Abschnitt;
 		daten.gueltigAb = stundenplan.Beginn;
 		if (stundenplan.Ende == null) {
 			daten.gueltigBis = "%04d-%02d-%02d".formatted(schuljahresabschnitt.Jahr + 1, 7, 31);
@@ -141,6 +143,12 @@ public final class DataStundenplan extends DataManager<Long> {
 					throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
 			Map.entry("idSchuljahresabschnitt", (conn, dto, value, map) -> {
+				throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("schuljahr", (conn, dto, value, map) -> {
+				throw new ApiOperationException(Status.BAD_REQUEST);
+			}),
+			Map.entry("abschnitt", (conn, dto, value, map) -> {
 				throw new ApiOperationException(Status.BAD_REQUEST);
 			}),
 			Map.entry("gueltigAb", (conn, dto, value, map) -> dto.Beginn = JSONMapper.convertToString(value, false, false, null)),

@@ -3,6 +3,7 @@ import { Sprachbelegung } from '../../../core/data/schueler/Sprachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class Sprachendaten extends JavaObject {
 
@@ -33,6 +34,8 @@ export class Sprachendaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.Sprachendaten'].includes(name);
 	}
+
+	public static class = new Class<Sprachendaten>('de.svws_nrw.core.data.schueler.Sprachendaten');
 
 	public static transpilerFromJSON(json : string): Sprachendaten {
 		const obj = JSON.parse(json) as Partial<Sprachendaten>;

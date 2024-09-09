@@ -2,7 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
@@ -13,17 +13,18 @@ import { KursDaten } from '../../../core/data/kurse/KursDaten';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { FachDaten } from '../../../core/data/fach/FachDaten';
 import { FoerderschwerpunktEintrag } from '../../../core/data/schule/FoerderschwerpunktEintrag';
-import { ZulaessigesFach } from '../../../core/types/fach/ZulaessigesFach';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
+import { Fach } from '../../../asd/types/fach/Fach';
 import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeistungsdaten';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
-import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
+import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
-import { Note } from '../../../core/types/Note';
+import { Note } from '../../../asd/types/Note';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { KursUtils } from '../../../core/utils/kurse/KursUtils';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class SchuelerLernabschnittManager extends JavaObject {
@@ -204,7 +205,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	public lernabschnittGetGliederung() : Schulgliederung | null {
 		if (this._lernabschnittsdaten.schulgliederung === null)
 			return null;
-		return Schulgliederung.getByKuerzel(this._lernabschnittsdaten.schulgliederung);
+		return Schulgliederung.data().getWertByKuerzel(this._lernabschnittsdaten.schulgliederung);
 	}
 
 	/**
@@ -219,7 +220,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 		const eintrag : JahrgangsDaten | null = this._mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
 		if ((eintrag === null) || (eintrag.kuerzelStatistik === null))
 			return null;
-		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
+		return Jahrgaenge.data().getWertByKuerzel(eintrag.kuerzelStatistik);
 	}
 
 	/**
@@ -359,7 +360,7 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 */
 	public fachFarbeGetByLeistungsIdOrException(idLeistung : number) : string {
 		const fach : FachDaten = this.fachGetByLeistungIdOrException(idLeistung);
-		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB();
+		return Fach.data().getWertBySchluesselOrException(fach.kuerzel).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
 	/**
@@ -579,6 +580,15 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	}
 
 	/**
+	 * Gibt das Schuljahr des Lernabschnittes zurück.
+	 *
+	 * @return das Schuljahr des Lernabschnittes
+	 */
+	public schuljahrGet() : number {
+		return this._schuljahresabschnitt.schuljahr;
+	}
+
+	/**
 	 * Gibt die Informationen des Schülers zurück, zu dem die Lernabschnittsdaten gehören.
 	 *
 	 * @return die Informationen des Schülers
@@ -594,6 +604,8 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager'].includes(name);
 	}
+
+	public static class = new Class<SchuelerLernabschnittManager>('de.svws_nrw.core.utils.schueler.SchuelerLernabschnittManager');
 
 }
 

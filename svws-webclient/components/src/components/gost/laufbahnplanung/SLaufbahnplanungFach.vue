@@ -125,16 +125,16 @@
 	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import { ZulaessigesFach } from "../../../../../core/src/core/types/fach/ZulaessigesFach";
+	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
 	import type { Sprachbelegung } from "../../../../../core/src/core/data/schueler/Sprachbelegung";
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
-	import { Fachgruppe } from "../../../../../core/src/core/types/fach/Fachgruppe";
+	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
-	import { Note } from "../../../../../core/src/core/types/Note";
+	import { Note } from "../../../../../core/src/asd/types/Note";
 	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
@@ -159,15 +159,20 @@
 		(e: 'update:wahl', fachID: number, wahl: GostSchuelerFachwahl): void,
 	}>();
 
+	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 
-	const istFremdsprache = computed<boolean>(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.istFremdsprache);
+	const fachgruppe = computed<Fachgruppe | null>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.getFachgruppe(schuljahr.value) ?? null);
 
-	const bgColor = computed<string>(() => ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getHMTLFarbeRGB());
+	const istFremdsprache = computed<boolean>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.istFremdsprache ?? false);
+
+	const bgColor = computed<string>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220, 220, 220)');
 
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
 	const sprachbelegung = computed<Sprachbelegung | null>(()=> {
-		const sprach_kuerzel = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel;
+		const sprach_kuerzel = Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.kuerzel ?? null;
+		if (sprach_kuerzel === null)
+			return null;
 		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen) {
 			if (sprache.sprache === sprach_kuerzel)
 				return sprache;
@@ -178,7 +183,7 @@
 	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
 	const getFallsSpracheMoeglich = computed<boolean>(()=> {
 		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
-			props.abiturdatenManager().getSprachendaten(), ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).daten.kuerzel
+			props.abiturdatenManager().getSprachendaten(), Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.kuerzel ?? null
 		);
 		sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
 		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
@@ -213,8 +218,7 @@
 	 */
 	function checkDoppelbelegung(hj: GostHalbjahr): boolean {
 		// TODO Prüfe, ob der AbiturdatenManager nicht schon eine solche Methode hat - wenn nicht, dann ergänze eine
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		if ((!props.fach.istPruefungsordnungsRelevant) || (fach.getFachgruppe() === Fachgruppe.FG_VX))
+		if ((!props.fach.istPruefungsordnungsRelevant) || (fachgruppe.value === Fachgruppe.FG_VX))
 			return false;
 		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
 		if (fachbelegungen !== undefined) {
@@ -235,11 +239,9 @@
 	const istMoeglich = computed<boolean[]>(() => {
 		if (props.fach.istFremdsprache && ((!props.ignoriereSprachenfolge) && !getFallsSpracheMoeglich.value))
 			return [ false, false, false, false, false, false ];
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		const result = [ false, false, false, false, false, false ];
 		return [
-			(props.fach.istMoeglichEF1 && !checkDoppelbelegung(GostHalbjahr.EF1) && (fach.getFachgruppe() !== Fachgruppe.FG_ME) && (fach.getFachgruppe() !== Fachgruppe.FG_PX)),
-			(props.fach.istMoeglichEF2 && !checkDoppelbelegung(GostHalbjahr.EF2) && (fach.getFachgruppe() !== Fachgruppe.FG_ME) && (fach.getFachgruppe() !== Fachgruppe.FG_PX)),
+			(props.fach.istMoeglichEF1 && !checkDoppelbelegung(GostHalbjahr.EF1) && (fachgruppe.value !== Fachgruppe.FG_ME) && (fachgruppe.value !== Fachgruppe.FG_PX)),
+			(props.fach.istMoeglichEF2 && !checkDoppelbelegung(GostHalbjahr.EF2) && (fachgruppe.value !== Fachgruppe.FG_ME) && (fachgruppe.value !== Fachgruppe.FG_PX)),
 			(props.fach.istMoeglichQ11 && !checkDoppelbelegung(GostHalbjahr.Q11)),
 			(props.fach.istMoeglichQ12 && !checkDoppelbelegung(GostHalbjahr.Q12)),
 			(props.fach.istMoeglichQ21 && !checkDoppelbelegung(GostHalbjahr.Q21)),
@@ -253,7 +255,7 @@
 			const note = noten.value[halbjahr.id];
 			if (note === null)
 				return 'Es liegen keine Leistungsdaten vor!';
-			return `Note ${note.kuerzel} (keine Änderungen mehr möglich)`;
+			return `Note ${note.daten(schuljahr.value)?.kuerzel ?? '-'} (keine Änderungen mehr möglich)`;
 		}
 		return (!istMoeglich.value[halbjahr.id]) ? 'Wahl nicht möglich' : '';
 	}
@@ -370,15 +372,12 @@
 		return result;
 	});
 
-	const ist_VTF = computed<boolean>(() =>
-		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_VX);
+	const ist_VTF = computed<boolean>(() => fachgruppe.value === Fachgruppe.FG_VX);
 
-	const ist_PJK = computed<boolean>(()=>
-		ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX);
+	const ist_PJK = computed<boolean>(()=> fachgruppe.value === Fachgruppe.FG_PX);
 
 	const getAndereFachwahl = computed<GostSchuelerFachwahl | null>(()=> {
-		const fach = ZulaessigesFach.getByKuerzelASD(props.fach.kuerzel);
-		if (fach.getFachgruppe() === Fachgruppe.FG_VX)
+		if (fachgruppe.value === Fachgruppe.FG_VX)
 			return null;
 		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
 		if (fachbelegungen !== undefined)
@@ -627,7 +626,7 @@
 				}
 				break;
 			}
-			case "S":  {
+			case "S": {
 				if (wahl.abiturFach !== null)
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'M';
 				// Prüfe, ob die Folgehalbjahre S,S,S,S,M sind und Abi-Fach nicht gesetzt (Spezialfälle berücksichtigen KU+MU+RE)
@@ -649,7 +648,7 @@
 					wahl.halbjahre[GostHalbjahr.EF1.id] = "M";
 				break;
 			}
-			case "M":  {
+			case "M": {
 				if (wahl.abiturFach !== null) {
 					wahl.halbjahre[GostHalbjahr.EF1.id] = 'S';
 				// Prüfe, ob die Folgehalbjahre M,M,M,M?,M? sind und passe diese an (Spezialfälle berücksichtigen KU+MU+RE)

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.db.Benutzer;
@@ -20,6 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,6 +69,14 @@ class DataManagerRevisedTest {
 	private DBEntityManager conn;
 
 	private static KlassenDaten klassenDaten;
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	@BeforeEach
 	public void setUpBeforeEach() {

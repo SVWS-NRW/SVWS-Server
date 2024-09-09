@@ -1,4 +1,4 @@
-import type { ApiFile, GostBlockungListeneintrag, GostBlockungsdatenManager, GostBlockungsergebnis, GostHalbjahr, GostJahrgang, List  } from "@core";
+import type { ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostHalbjahr, GostJahrgang, List } from "@core";
 
 export interface SchuleDatenaustauschUntisBlockungenProps {
 	mapAbiturjahrgaenge: () => Map<number, GostJahrgang>;

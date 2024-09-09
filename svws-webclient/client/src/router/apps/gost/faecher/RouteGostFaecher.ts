@@ -10,6 +10,7 @@ import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFa
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
@@ -17,7 +18,7 @@ const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
 export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
 		], "gost.faecher", "faecher", SGostFaecher, new RouteDataGostFaecher());

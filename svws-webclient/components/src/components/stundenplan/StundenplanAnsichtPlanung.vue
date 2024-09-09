@@ -90,7 +90,7 @@
 	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import { Schulform } from "../../../../core/src/core/types/schule/Schulform";
+	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
 

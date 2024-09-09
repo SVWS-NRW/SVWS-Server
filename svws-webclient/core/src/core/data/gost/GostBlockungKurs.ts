@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKursLehrer';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungKurs extends JavaObject {
 
@@ -62,6 +63,8 @@ export class GostBlockungKurs extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungKurs'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungKurs>('de.svws_nrw.core.data.gost.GostBlockungKurs');
 
 	public static transpilerFromJSON(json : string): GostBlockungKurs {
 		const obj = JSON.parse(json) as Partial<GostBlockungKurs>;

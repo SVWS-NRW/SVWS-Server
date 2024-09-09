@@ -16,21 +16,21 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.core.types.SchuelerStatus;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AdressenUtils;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
@@ -40,6 +40,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.MigrationDTOs;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
@@ -126,6 +127,9 @@ public final class DBMigrationManager {
 
 	// Die Schulform der Quelldatenbank, sofern sie schon eingelesen wurde
 	private Schulform schulform = null;
+
+	// Das Schuljahr der Schule in der Quelldatenbank, sofern es schon eingelesen wurde
+	private int schuljahr = -1;
 
 	// Eine Liste zum Zwischenspeichern der Schüler-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> schuelerIDs = new HashSet<>();
@@ -534,8 +538,10 @@ public final class DBMigrationManager {
 	private boolean fixSchulform() throws ApiOperationException {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
 			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+			final Schulform tmpSchulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 			logger.logLn("- Schulnummer: " + schule.SchulNr);
-			logger.logLn("- Schulform: " + ((schule.Schulform == null) ? "???" : schule.Schulform.daten.kuerzel));
+			logger.logLn("- Schulform: " + ((tmpSchulform == null) ? "???" : tmpSchulform.daten(schuljahresabschnitt.Jahr).kuerzel));
 			final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
 			final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.SchulNr)).findFirst().orElse(null);
 			if (dtoSchulver == null) {
@@ -543,11 +549,11 @@ public final class DBMigrationManager {
 				return false;
 			}
 
-			final Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
-			if (statSchulform != schule.Schulform) {
-				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);
+			final Schulform statSchulform = Schulform.data().getWertBySchluessel(dtoSchulver.SF);
+			if (statSchulform != tmpSchulform) {
+				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten(schuljahresabschnitt.Jahr).kuerzel);
 				logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
-				schule.Schulform = statSchulform;
+				schule.SchulformKuerzel = statSchulform.daten(schuljahresabschnitt.Jahr).kuerzel;
 				conn.persist(schule);
 			}
 			return true;
@@ -833,21 +839,21 @@ public final class DBMigrationManager {
 		}
 		final MigrationDTOEigeneSchule daten = entities.get(0);
 		// Passe ggf. das die Schulform an
-		if (daten.SchulformNr.equals(Schulform.PS.daten.nummer)) {
-			daten.Schulform = Schulform.PS.daten.kuerzel;
-			daten.SchulformBez = Schulform.PS.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.SK.daten.nummer)) {
-			daten.Schulform = Schulform.SK.daten.kuerzel;
-			daten.SchulformBez = Schulform.SK.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.GM.daten.nummer)) {
-			daten.Schulform = Schulform.GM.daten.kuerzel;
-			daten.SchulformBez = Schulform.GM.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.HI.daten.nummer)) {
-			daten.Schulform = Schulform.HI.daten.kuerzel;
-			daten.SchulformBez = Schulform.HI.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.WF.daten.nummer)) {
-			daten.Schulform = Schulform.WF.daten.kuerzel;
-			daten.SchulformBez = Schulform.WF.daten.bezeichnung;
+		if (daten.SchulformNr.equals(Schulform.PS.daten(daten.Schuljahr).schluessel)) {
+			daten.SchulformKuerzel = Schulform.PS.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.PS.daten(daten.Schuljahr).text;
+		} else if (daten.SchulformNr.equals(Schulform.SK.daten(daten.Schuljahr).schluessel)) {
+			daten.SchulformKuerzel = Schulform.SK.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.SK.daten(daten.Schuljahr).text;
+		} else if (daten.SchulformNr.equals(Schulform.GM.daten(daten.Schuljahr).schluessel)) {
+			daten.SchulformKuerzel = Schulform.GM.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.GM.daten(daten.Schuljahr).text;
+		} else if (daten.SchulformNr.equals(Schulform.HI.daten(daten.Schuljahr).schluessel)) {
+			daten.SchulformKuerzel = Schulform.HI.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.HI.daten(daten.Schuljahr).text;
+		} else if (daten.SchulformNr.equals(Schulform.WF.daten(daten.Schuljahr).schluessel)) {
+			daten.SchulformKuerzel = Schulform.WF.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.WF.daten(daten.Schuljahr).text;
 		}
 		// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 		if (daten.Strasse != null) {
@@ -856,11 +862,12 @@ public final class DBMigrationManager {
 			daten.HausNr = aufgeteilt[1];
 			daten.HausNrZusatz = aufgeteilt[2];
 		}
-		if (daten.Schulform != null) {
-			schulform = Schulform.getByKuerzel(daten.Schulform);
+		if (daten.SchulformKuerzel != null) {
+			schulform = Schulform.data().getWertByKuerzel(daten.SchulformKuerzel);
+			schuljahr = daten.Schuljahr;
 		}
 		// Passe ggf. die Anzahl der Abschnitte bei WBKs an
-		if (daten.SchulformNr.equals(Schulform.WB.daten.nummer) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
+		if (daten.SchulformNr.equals(Schulform.WB.daten(daten.Schuljahr).schluessel) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
 			logger.logLn(LogLevel.ERROR, "Passe die Anzahl der Abschnitte am Witerbildungskolleg an. Es gibt hier im Jahr 2 Abschnitte, wobei jeder"
 					+ " Abschnitt als Jahrgangsstufe zählt.");
 			daten.AnzahlAbschnitte = 2;
@@ -1230,8 +1237,8 @@ public final class DBMigrationManager {
 									.formatted(daten.ID));
 					daten.Schulgliederung = null;
 				} else {
-					final Schulgliederung sgl = Schulgliederung.getByKuerzel(daten.Schulgliederung);
-					if ((sgl == null) || (!sgl.hasSchulform(this.schulform))) {
+					final Schulgliederung sgl = Schulgliederung.data().getWertByKuerzel(daten.Schulgliederung);
+					if ((sgl == null) || (!sgl.hatSchulform(schuljahr, this.schulform))) {
 						logger.logLn(LogLevel.ERROR,
 								"Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag (%s). Dieser wird auf null gesetzt."
 										.formatted(daten.ID, daten.Schulgliederung));
@@ -1903,11 +1910,11 @@ public final class DBMigrationManager {
 						.formatted(daten.ID, daten.Fachklasse_ID));
 				daten.Fachklasse_ID = null;
 			}
-			if (!SchuelerStatus.isValidID(daten.Status)) {
+			if (SchuelerStatus.data().getWertBySchluessel("" + daten.idStatus) == null) {
 				logger.logLn(LogLevel.ERROR,
 						"Korrigiere Datensatz (ID %d): Der Schüler-Status (%d) is ungültig. Dieser wird auf Neuaufnahme gesetzt. Bitte überprüfen Sie die Neuaufnahmen nach der Migration."
-								.formatted(daten.ID, daten.Status));
-				daten.Status = SchuelerStatus.NEUAUFNAHME.id;
+								.formatted(daten.ID, daten.idStatus));
+				daten.idStatus = Integer.valueOf(SchuelerStatus.NEUAUFNAHME.daten(schuljahr).schluessel);
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
@@ -2127,22 +2134,22 @@ public final class DBMigrationManager {
 			} else if (faecherIDs.contains(daten.ID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Doppelte Fächer-IDs sind unzulässig.".formatted(daten.ID));
 				entities.remove(i);
-			} else if (daten.StatistikFach == null) {
+			} else if (daten.StatistikKuerzel == null) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Dieses darf nicht null sein."
 								.formatted(daten.ID));
 				entities.remove(i);
 			} else {
-				if (Collator.getInstance().compare("E5", daten.StatistikFach) == 0) {
+				if (Collator.getInstance().compare("E5", daten.StatistikKuerzel) == 0) {
 					logger.logLn(LogLevel.ERROR,
 							"Korrigiere fehlerhaften Datensatz (ID %d): Ändere Das Statistik-Kürzel des Faches von E5 auf E.".formatted(daten.ID));
-					daten.StatistikFach = "E";
+					daten.StatistikKuerzel = "E";
 				}
-				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(daten.StatistikFach);
+				final Fach zulFach = Fach.data().getWertBySchluessel(daten.StatistikKuerzel);
 				if (zulFach == null) {
 					logger.logLn(LogLevel.ERROR,
 							"Entferne ungültigen Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt."
-									.formatted(daten.ID, daten.StatistikFach));
+									.formatted(daten.ID, daten.StatistikKuerzel));
 					entities.remove(i);
 				} else
 					faecherIDs.add(daten.ID);

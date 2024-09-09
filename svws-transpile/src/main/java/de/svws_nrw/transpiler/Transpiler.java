@@ -875,6 +875,28 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Checks whether the annotation list contains a TsObject annotation.
+	 *
+	 * @param annotations   the list of annotation nodes
+	 * @param tu            the transpiler unit
+	 *
+	 * @return true if the list contains a TsObject annotation
+	 */
+	public static boolean hasTsObjectAnnotation(final List<? extends AnnotationTree> annotations, final TranspilerUnit tu) {
+		if (annotations != null) {
+			for (final AnnotationTree annotation : annotations) {
+				if ("TsObject".equals(annotation.getAnnotationType().toString())) {
+					final String packageName = tu.allAnnotations.get(annotation.getAnnotationType());
+					if ("de.svws_nrw.transpiler.annotations".equals(packageName))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	/**
 	 * Checks whether the annotation list contains a AllowNull annotation.
 	 *
 	 * @param annotations   the list of annotation nodes
@@ -1294,6 +1316,22 @@ public final class Transpiler extends AbstractProcessor {
 
 
 	/**
+	 * Checks whether the specified identifier tree node is part of an annotation.
+	 *
+	 * @param node   the identifier tree node
+	 *
+	 * @return true, if the specified identifier tree node is part of an annotation, and false otherwise
+	 */
+	public boolean isParentAnnotationType(final IdentifierTree node) {
+		TreePath path = getTreePath(node);
+		for (; path != null; path = path.getParentPath())
+			if (path.getLeaf() instanceof AnnotationTree)
+				return true;
+		return false;
+	}
+
+
+	/**
 	 * Gets the type object associated with specified expression tree node.
 	 *
 	 * @param node   the expression tree node
@@ -1603,17 +1641,32 @@ public final class Transpiler extends AbstractProcessor {
 	/**
 	 * Returns the type of the specified class attribute member.
 	 *
+	 * @param classElement   the TypeElement of the class, enum or interface
+	 * @param memberName     the name of the attribute member
+	 *
+	 * @return the type of the class attribute member
+	 */
+	ExpressionType getAttributeType(final TypeElement classElement, final String memberName) {
+		for (final Element e : classElement.getEnclosedElements())
+			if ((e instanceof final VariableElement ve) && (memberName.equals(ve.getSimpleName().toString())))
+				return ExpressionType.getExpressionType(this, ve.asType());
+		final TypeMirror superClass = classElement.getSuperclass();
+		if ((superClass instanceof final DeclaredType dt) && (dt.asElement() instanceof final TypeElement te))
+			return getAttributeType(te, memberName);
+		return null;
+	}
+
+
+	/**
+	 * Returns the type of the specified class attribute member.
+	 *
 	 * @param className    the full qualified name of the class, i.e. the canonical name
 	 * @param memberName   the name of the attribute member
 	 *
 	 * @return the type of the class attribute member
 	 */
 	ExpressionType getAttributeType(final String className, final String memberName) {
-		final TypeElement classElement = getTypeElement(className);
-		for (final Element e : classElement.getEnclosedElements())
-			if ((e instanceof final VariableElement ve) && (memberName.equals(ve.getSimpleName().toString())))
-				return ExpressionType.getExpressionType(this, ve.asType());
-		return null;
+		return getAttributeType(getTypeElement(className), memberName);
 	}
 
 

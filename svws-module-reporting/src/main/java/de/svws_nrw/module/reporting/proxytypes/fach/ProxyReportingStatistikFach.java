@@ -1,7 +1,7 @@
 package de.svws_nrw.module.reporting.proxytypes.fach;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
@@ -42,29 +42,29 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param zulaessigesFach Fach aus dem Katalog der zulässigen Fächer
 	 */
-	public ProxyReportingStatistikFach(final ReportingRepository reportingRepository, final ZulaessigesFach zulaessigesFach) {
-		super(zulaessigesFach.daten.abJahrgang,
-				zulaessigesFach.daten.aufgabenfeld,
-				zulaessigesFach.daten.bezeichnung,
-				zulaessigesFach.daten.exportASD,
+	public ProxyReportingStatistikFach(final ReportingRepository reportingRepository, final Fach zulaessigesFach) {
+		super(zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).aufgabenfeld,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).text,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).exportASD,
 				null,
-				zulaessigesFach.getFachgruppe(),
-				zulaessigesFach.daten.gueltigBis,
-				zulaessigesFach.daten.gueltigVon,
-				zulaessigesFach.getHMTLFarbeRGB(),
-				zulaessigesFach.daten.id,
-				zulaessigesFach.daten.istAusRegUFach,
-				zulaessigesFach.daten.istErsatzPflichtFS,
-				zulaessigesFach.daten.istFremdsprache,
-				zulaessigesFach.daten.istHKFS,
-				zulaessigesFach.daten.istKonfKoop,
-				zulaessigesFach.daten.kuerzel,
-				zulaessigesFach.daten.kuerzelASD,
-				zulaessigesFach.daten.nurSII);
+				zulaessigesFach.getFachgruppe(reportingRepository.auswahlSchuljahr()),
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).gueltigBis,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).gueltigVon,
+				zulaessigesFach.getHMTLFarbeRGB(reportingRepository.auswahlSchuljahr()),
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).id,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istAusRegUFach,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istErsatzPflichtFS,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istFremdsprache,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istHKFS,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istKonfKoop,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).kuerzel,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).schluessel,
+				zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).nurSII);
 		this.reportingRepository = reportingRepository;
 		// Prüfe, ob es im Fachkatalog des Reporting-Repositories der Schule ein Fach gibt, dessen Kürzel identisch ist mir dem ASD-Kürzel dieses Statistikfaches.
 		final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
-				.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
+				.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).schluessel)).toList();
 		if (faecher.size() == 1) {
 			super.fach = faecher.getFirst();
 		}
@@ -97,27 +97,27 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 		this.reportingRepository = reportingRepository;
 
 		if ((kuerzelStatistik != null) && !kuerzelStatistik.isEmpty()) {
-			final ZulaessigesFach zulaessigesFach = ZulaessigesFach.getByKuerzelASD(kuerzelStatistik);
-			super.abJahrgang = zulaessigesFach.daten.abJahrgang;
-			super.aufgabenfeld = zulaessigesFach.daten.aufgabenfeld;
-			super.bezeichnung = zulaessigesFach.daten.bezeichnung;
-			super.exportASD = zulaessigesFach.daten.exportASD;
-			super.fachgruppe = zulaessigesFach.getFachgruppe();
-			super.gueltigBis = zulaessigesFach.daten.gueltigBis;
-			super.gueltigVon = zulaessigesFach.daten.gueltigVon;
-			super.htmlFarbeRGB = zulaessigesFach.getHMTLFarbeRGB();
-			super.idFachkatalog = zulaessigesFach.daten.id;
-			super.istAusRegUFach = zulaessigesFach.daten.istAusRegUFach;
-			super.istErsatzPflichtFS = zulaessigesFach.daten.istErsatzPflichtFS;
-			super.istFremdsprache = zulaessigesFach.daten.istFremdsprache;
-			super.istHKFS = zulaessigesFach.daten.istHKFS;
-			super.istKonfKoop = zulaessigesFach.daten.istKonfKoop;
-			super.kuerzel = zulaessigesFach.daten.kuerzel;
-			super.kuerzelASD = zulaessigesFach.daten.kuerzelASD;
-			super.nurSII = zulaessigesFach.daten.nurSII;
+			final Fach zulaessigesFach = Fach.data().getWertBySchluessel(kuerzelStatistik);
+			super.abJahrgang = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang;
+			super.aufgabenfeld = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).aufgabenfeld;
+			super.bezeichnung = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).text;
+			super.exportASD = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).exportASD;
+			super.fachgruppe = zulaessigesFach.getFachgruppe(reportingRepository.auswahlSchuljahr());
+			super.gueltigBis = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).gueltigBis;
+			super.gueltigVon = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).gueltigVon;
+			super.htmlFarbeRGB = zulaessigesFach.getHMTLFarbeRGB(reportingRepository.auswahlSchuljahr());
+			super.idFachkatalog = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).id;
+			super.istAusRegUFach = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istAusRegUFach;
+			super.istErsatzPflichtFS = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istErsatzPflichtFS;
+			super.istFremdsprache = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istFremdsprache;
+			super.istHKFS = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istHKFS;
+			super.istKonfKoop = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).istKonfKoop;
+			super.kuerzel = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).kuerzel;
+			super.kuerzelASD = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).schluessel;
+			super.nurSII = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).nurSII;
 			// Prüfe, ob es im Fachkatalog des Reporting-Repositories der Schule ein Fach gibt, dessen Kürzel identisch ist mir dem ASD-Kürzel dieses Statistikfaches.
 			final List<ReportingFach> faecher = this.reportingRepository.mapReportingFaecher().values().stream()
-					.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten.kuerzelASD)).toList();
+					.filter(f -> Objects.equals(f.kuerzel(), zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).schluessel)).toList();
 			if (faecher.size() == 1) {
 				super.fach = faecher.getFirst();
 			}

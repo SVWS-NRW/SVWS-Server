@@ -19,7 +19,7 @@ function prepareAttributeOrderForStringify() {
 export abstract class JavaObject implements TranspiledObject {
 
 	public getClass<T extends TranspiledObject>() : Class<T> {
-		return new Class(this);
+		return new Class(this.transpilerCanonicalName());
 	}
 
 	static _hashCode(str: string) : number {
@@ -39,8 +39,6 @@ export abstract class JavaObject implements TranspiledObject {
 		if (typeof obj !== "object")
 			return false;
 		if (!(obj instanceof JavaObject))
-			return false;
-		if (obj === null)
 			return false;
 		return (this === obj);
 	}
@@ -78,7 +76,7 @@ export abstract class JavaObject implements TranspiledObject {
 		if (obj === null)
 			return 0;
 		if (obj === undefined)
-			return Number.NaN;   // unspecified in Java
+			return Number.NaN; // unspecified in Java
 		if (typeof obj === "string")
 			return (JavaObject._hashCode(obj));
 		if (typeof obj === "number")
@@ -95,8 +93,6 @@ export abstract class JavaObject implements TranspiledObject {
 			if (obj instanceof Date)
 				return JavaObject._hashCode(JSON.stringify(obj));
 			if (obj instanceof Array) {
-				if (obj === null)
-					return 0;
 				let result : number = 1;
 				for (const e of obj) {
 					result *= 31;

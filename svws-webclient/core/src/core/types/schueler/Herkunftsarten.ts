@@ -2,9 +2,11 @@ import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HerkunftsartKatalogEintrag } from '../../../core/data/schule/HerkunftsartKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { HerkunftsartKatalogEintragBezeichnung } from '../../../core/data/schule/HerkunftsartKatalogEintragBezeichnung';
 
@@ -209,7 +211,7 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	/**
 	 * Die Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
 	 */
-	private readonly schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<string>>;
 
 	/**
 	 * Die Bezeichnungen bei den Schulformen, bei welchen die Herkunftsart vorkommt, für die einzelnen Historieneinträge
@@ -227,15 +229,13 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 		Herkunftsarten.all_values_by_name.set(name, this);
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
-		this.schulformen = Array(historie.length).fill(null);
-		this.bezeichnungen = Array(historie.length).fill(null);
+		this.schulformen = Array(historie.length).fill(null) as unknown as Array<ArrayList<string>>;
+		this.bezeichnungen = Array(historie.length).fill(null) as unknown as Array<ArrayList<string>>;
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList();
 			this.bezeichnungen[i] = new ArrayList();
 			for (const bez of historie[i].bezeichnungen) {
-				const sf : Schulform | null = Schulform.getByKuerzel(bez.schulform);
-				if (sf !== null)
-					this.schulformen[i].add(sf);
+				this.schulformen[i].add(bez.schulform);
 				this.bezeichnungen[i].add(bez.bezeichnung);
 			}
 		}
@@ -295,17 +295,21 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	/**
 	 * Liefert die Bezeichnung der Herkunftsart für die angegebene Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die Bezeichnung der Herkunftsart oder null, falls die Schulform nicht zulässig ist
 	 */
-	public getBezeichnung(schulform : Schulform | null) : string | null {
-		if ((schulform === null) || (schulform.daten === null))
+	public getBezeichnung(schuljahr : number, schulform : Schulform | null) : string | null {
+		if (schulform === null)
+			return null;
+		const sfe : SchulformKatalogEintrag | null = schulform.daten(schuljahr);
+		if (sfe === null)
 			return null;
 		if (this.daten.bezeichnungen !== null) {
 			for (const bez of this.daten.bezeichnungen) {
 				const sfKuerzel : string | null = bez.schulform;
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
+				if (JavaObject.equalsTranspiler(sfKuerzel, (sfe.kuerzel)))
 					return bez.bezeichnung;
 			}
 		}
@@ -317,24 +321,25 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public getSchulformen() : List<Schulform> {
+	public getSchulformen() : List<string> {
 		return this.schulformen[this.historie.length - 1];
 	}
 
 	/**
 	 * Liefert alle zulässigen Herkunftsarten für die angegebene Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die bei der Schulform zulässigen Herkunftsarten
 	 */
-	public static get(schulform : Schulform | null) : List<Herkunftsarten> {
+	public static get(schuljahr : number, schulform : Schulform | null) : List<Herkunftsarten> {
 		const result : ArrayList<Herkunftsarten> = new ArrayList<Herkunftsarten>();
 		if (schulform === null)
 			return result;
 		const herkunftsarten : Array<Herkunftsarten> = Herkunftsarten.values();
 		for (const herkunftsart of herkunftsarten) {
-			if (herkunftsart.hasSchulform(schulform))
+			if (herkunftsart.hasSchulform(schuljahr, schulform))
 				result.add(herkunftsart);
 		}
 		return result;
@@ -364,17 +369,21 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	/**
 	 * Prüft, ob die Schulform diese Herkunftsart hat oder nicht.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return true, falls die Herkunftsart bei der Schulform existiert und ansonsten false
 	 */
-	public hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null))
+	public hasSchulform(schuljahr : number, schulform : Schulform | null) : boolean {
+		if (schulform === null)
+			return false;
+		const sfe : SchulformKatalogEintrag | null = schulform.daten(schuljahr);
+		if (sfe === null)
 			return false;
 		if (this.daten.bezeichnungen !== null) {
 			for (const element of this.daten.bezeichnungen) {
 				const sfKuerzel : string | null = element.schulform;
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
+				if (JavaObject.equalsTranspiler(sfKuerzel, (sfe.kuerzel)))
 					return true;
 			}
 		}
@@ -409,6 +418,8 @@ export class Herkunftsarten extends JavaEnum<Herkunftsarten> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schueler.Herkunftsarten', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Herkunftsarten>('de.svws_nrw.core.types.schueler.Herkunftsarten');
 
 }
 

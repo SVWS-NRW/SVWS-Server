@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.gost.GostFach;
@@ -14,14 +16,12 @@ import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.reporting.ReportingParameter;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.data.schule.SchuleStammdaten;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.logger.LogConsumerList;
@@ -305,7 +305,7 @@ public class ReportingRepository {
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächerdaten.");
 			final Map<Long, FachDaten> mapFaecherDaten = new DataFachdaten(this.conn).getFaecherdaten();
-			final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten();
+			final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten(auswahlSchuljahresabschnitt().schuljahr);
 			for (final FachDaten fach : mapFaecherDaten.values()) {
 				mapReportingFaecher.put(fach.id, new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id)));
 			}
@@ -400,6 +400,15 @@ public class ReportingRepository {
 	 */
 	public Schuljahresabschnitt auswahlSchuljahresabschnitt() {
 		return auswahlSchuljahresabschnitt;
+	}
+
+	/**
+	 * Das Schuljahr des ausgewählten Schuljahresabschnitts, der für die Ausgabe der Reports ausgewählt wurde
+	 *
+	 * @return Schuljahr der Auswahl für den Druck
+	 */
+	public int auswahlSchuljahr() {
+		return auswahlSchuljahresabschnitt.schuljahr;
 	}
 
 

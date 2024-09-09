@@ -5,14 +5,25 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 
 /**
  * Diese Klasse dient dem Testen von Funktionen der Schema-Definition
  * der SVWS-Datenbank.
  */
 class TestSchema {
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	/**
 	 * Testet, ob die Definition des Schemas der SVWS-Datenbank korrekt ist,

@@ -14,9 +14,8 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerKompetenz, BenutzerManager } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
+	import type { BenutzerKompetenz, BenutzerManager } from "@core";
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;
@@ -26,11 +25,11 @@
 	}>();
 
 	// True wenn Benutzer Admin ist oder die Kompetenz von einer Gruppe geerbt wird.
-	const aktiviert : ComputedRef<boolean | undefined> = computed(() => {
+	const aktiviert = computed<boolean | undefined>(() => {
 		return props.getBenutzerManager().istAdmin() || (props.getBenutzerManager().getGruppen(props.kompetenz).size() !== 0)
 	});
 
-	const selected: WritableComputedRef<boolean> = computed({
+	const selected = computed<boolean>({
 		get: () => props.getBenutzerManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
 			if (value)

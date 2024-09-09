@@ -8,6 +8,7 @@ import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
@@ -65,7 +66,7 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 		if ((__param0 === undefined)) {
 			return this.getKeyList().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			return this.getKeyList().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -131,6 +132,8 @@ export class ArrayMapKeySet<K, V> extends JavaObject implements JavaSet<K> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'java.util.Set', 'de.svws_nrw.core.adt.map.ArrayMapKeySet', 'java.lang.Iterable'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapKeySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapKeySet');
 
 	public [Symbol.iterator](): Iterator<K> {
 		const iter : JavaIterator<K> = this.iterator();

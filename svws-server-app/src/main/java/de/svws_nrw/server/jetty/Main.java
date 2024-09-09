@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.api.ResourceFileManager;
 import de.svws_nrw.api.SVWSVersion;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
@@ -162,6 +163,9 @@ public class Main {
 		logger.logLn("  Gesamt: " + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 		logger.logLn("  Belegt: " + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G");
 		logger.logLn("  Frei: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G");
+
+		// Initialisiere die Core-Types
+		ASDCoreTypeUtils.initAll();
 
 		// Lese Konfiguration
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();

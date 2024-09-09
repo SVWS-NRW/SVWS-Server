@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ErzieherStammdaten extends JavaObject {
 
@@ -94,6 +95,8 @@ export class ErzieherStammdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.erzieher.ErzieherStammdaten'].includes(name);
 	}
+
+	public static class = new Class<ErzieherStammdaten>('de.svws_nrw.core.data.erzieher.ErzieherStammdaten');
 
 	public static transpilerFromJSON(json : string): ErzieherStammdaten {
 		const obj = JSON.parse(json) as Partial<ErzieherStammdaten>;

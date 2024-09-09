@@ -1,6 +1,8 @@
 {
   "id": 1,
   "idSchuljahresabschnitt": 1,
+  "schuljahr": 2019,
+  "abschnitt": 2,
   "gueltigAb": "2019-02-11",
   "gueltigBis": "2019-07-12",
   "bezeichnungStundenplan": "Stundenplan 2. Halbjahr",

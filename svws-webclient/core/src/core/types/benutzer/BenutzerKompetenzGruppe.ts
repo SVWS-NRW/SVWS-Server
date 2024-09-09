@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
+import { Class } from '../../../java/lang/Class';
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../../../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 
 export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
@@ -194,6 +195,8 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<BenutzerKompetenzGruppe>('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe');
 
 }
 

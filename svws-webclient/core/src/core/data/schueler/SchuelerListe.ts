@@ -5,6 +5,7 @@ import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeE
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
+import { Class } from '../../../java/lang/Class';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 
 export class SchuelerListe extends JavaObject {
@@ -51,6 +52,8 @@ export class SchuelerListe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerListe'].includes(name);
 	}
+
+	public static class = new Class<SchuelerListe>('de.svws_nrw.core.data.schueler.SchuelerListe');
 
 	public static transpilerFromJSON(json : string): SchuelerListe {
 		const obj = JSON.parse(json) as Partial<SchuelerListe>;

@@ -19,11 +19,11 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
@@ -111,7 +111,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			tempGostLaufbahnplanungBeratungsdaten =
 					new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
 			tempGostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
-			tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
+			tempGostFaecherManager =
+					DBUtilsFaecherGost.getFaecherManager(reportingRepository.auswahlSchuljahr(), this.reportingRepository.conn(), super.abiturjahr());
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Manager).", e,
@@ -359,13 +360,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			}
 
 			// Bestimme noch Einträge zu den Sprachdaten, wenn das Fach eine Sprache ist.
-			final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			final Fach zfach = Fach.data().getWertBySchluessel(fach.kuerzel);
 			Sprachbelegung sprachbelegung = null;
 			Sprachpruefung sprachpruefung = null;
 
 			if (checkIstFremdsprachenfach(fach, zfach)) {
-				sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-				sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+				sprachbelegung = sprachbelegungen.get(zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel);
+				sprachpruefung = sprachpruefungen.get(zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel);
 			}
 
 			if (sprachbelegung != null) {
@@ -375,7 +376,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
 					positionFremdsprachenfolge = (sprachbelegung.reihenfolge != null) ? sprachbelegung.reihenfolge.toString() : "";
 				}
-			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
+			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten,
+					zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel))) {
 				istFortfuehrbareFremdspracheInGOSt = true;
 				if (sprachpruefung.istFeststellungspruefung) {
 					jahrgangFremdsprachenbeginn = "SFP";
@@ -419,8 +421,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param zfach	Das zu prüfende zugehörige Fach
 	 * @return		true, wenn es eine reguläre Fremdsprache ist, sonst false.
 	 */
-	private static boolean checkIstFremdsprachenfach(final GostFach fach, final ZulaessigesFach zfach) {
-		return fach.istFremdsprache && (zfach != null) && !(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"));
+	private static boolean checkIstFremdsprachenfach(final GostFach fach, final Fach zfach) {
+		return fach.istFremdsprache && (zfach != null) && !(Fach.PX == zfach || Fach.VX == zfach);
 	}
 
 
@@ -430,13 +432,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param zfach 			Das zulässige Fach, gegen das der Sprachbeginn geprüft wird.
 	 * @return					true, wenn eine Belegung möglich war, sonst false
 	 */
-	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final ZulaessigesFach zfach) {
+	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
 		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-				&& ((zfach.daten.abJahrgang == null)
-						|| zfach.daten.abJahrgang.isEmpty()
-						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
+				&& ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang == null)
+						|| zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.isEmpty()
+						|| ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
 								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
+						|| ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
 								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
 	}
 
@@ -462,4 +464,5 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			return "AT";
 		return "";
 	}
+
 }

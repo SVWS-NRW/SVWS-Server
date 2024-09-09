@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { ReportingAusgabeformat } from '../../../core/types/reporting/ReportingAusgabeformat';
 
 export class ReportingParameter extends JavaObject {
@@ -57,6 +58,8 @@ export class ReportingParameter extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.reporting.ReportingParameter'].includes(name);
 	}
+
+	public static class = new Class<ReportingParameter>('de.svws_nrw.core.data.reporting.ReportingParameter');
 
 	public static transpilerFromJSON(json : string): ReportingParameter {
 		const obj = JSON.parse(json) as Partial<ReportingParameter>;

@@ -18,7 +18,7 @@
 				</template>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag>
+					<s-religionen-neu-modal v-slot="{ openModal }" :add-eintrag :schuljahr>
 						<svws-ui-button type="icon" @click="openModal()">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -36,6 +36,9 @@
 	import { computed, ref } from "vue";
 
 	const props = defineProps<ReligionenAuswahlProps>();
+
+	const schuljahr = computed<number>(() => props.religionListeManager().getSchuljahr());
+
 	const selected = ref<ReligionEintrag[]>([]);
 
 	const clicked = computed<ReligionEintrag | undefined>(() => {

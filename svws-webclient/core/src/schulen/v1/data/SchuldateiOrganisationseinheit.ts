@@ -6,6 +6,7 @@ import { SchuldateiOrganisationseinheitAdresse } from '../../../schulen/v1/data/
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchuldateiOrganisationseinheitGliederung } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitGliederung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { SchuldateiOrganisationseinheitErreichbarkeit } from '../../../schulen/v1/data/SchuldateiOrganisationseinheitErreichbarkeit';
 
 export class SchuldateiOrganisationseinheit extends JavaObject {
@@ -100,6 +101,8 @@ export class SchuldateiOrganisationseinheit extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheit'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiOrganisationseinheit>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheit');
 
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheit {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheit>;

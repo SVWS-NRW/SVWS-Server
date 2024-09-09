@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMZP10 extends JavaObject {
 
@@ -49,6 +50,8 @@ export class ENMZP10 extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMZP10'].includes(name);
 	}
+
+	public static class = new Class<ENMZP10>('de.svws_nrw.core.data.enm.ENMZP10');
 
 	public static transpilerFromJSON(json : string): ENMZP10 {
 		const obj = JSON.parse(json) as Partial<ENMZP10>;

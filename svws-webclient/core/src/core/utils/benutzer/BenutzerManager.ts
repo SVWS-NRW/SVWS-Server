@@ -9,6 +9,7 @@ import { BenutzerKompetenz } from '../../../core/types/benutzer/BenutzerKompeten
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { BenutzergruppeDaten } from '../../../core/data/benutzer/BenutzergruppeDaten';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { BenutzerKompetenzGruppe } from '../../../core/types/benutzer/BenutzerKompetenzGruppe';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -483,6 +484,8 @@ export class BenutzerManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.benutzer.BenutzerManager'].includes(name);
 	}
+
+	public static class = new Class<BenutzerManager>('de.svws_nrw.core.utils.benutzer.BenutzerManager');
 
 }
 

@@ -15,6 +15,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
@@ -58,17 +59,20 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, idSchueler);
 		if (dtoSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Schüler mit der ID %d gefunden.".formatted(idSchueler));
-
-		// Bestimme den Schüler und die Daten des Stundenplans
 		final DTOStundenplan dtoStundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (dtoStundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		final DTOSchuljahresabschnitte dtoSchuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dtoStundenplan.Schuljahresabschnitts_ID);
+		if (dtoSchuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Konnte den Schuljahresabschnitt für den Stundenplan nicht in der Datenban finden.");
 
 		// Erzeuge damit das Grundgerüst für den Stundenplan
 		final @NotNull StundenplanKomplett stundenplan = new StundenplanKomplett();
 		stundenplan.daten.id = idStundenplan;
 		stundenplan.unterrichtsverteilung.id = dtoStundenplan.ID;
 		stundenplan.daten.idSchuljahresabschnitt = dtoStundenplan.Schuljahresabschnitts_ID;
+		stundenplan.daten.schuljahr = dtoSchuljahresabschnitt.Jahr;
+		stundenplan.daten.abschnitt = dtoSchuljahresabschnitt.Abschnitt;
 		stundenplan.daten.gueltigAb = dtoStundenplan.Beginn;
 		stundenplan.daten.gueltigBis = dtoStundenplan.Ende;
 		stundenplan.daten.bezeichnungStundenplan = dtoStundenplan.Beschreibung;

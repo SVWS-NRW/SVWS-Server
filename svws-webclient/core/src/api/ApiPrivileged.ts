@@ -8,7 +8,7 @@ import { MigrateBody } from '../core/data/db/MigrateBody';
 import { SchemaListeEintrag } from '../core/data/db/SchemaListeEintrag';
 import { SchuleInfo } from '../core/data/schule/SchuleInfo';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
-import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
+import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 
 export class ApiPrivileged extends BaseApi {

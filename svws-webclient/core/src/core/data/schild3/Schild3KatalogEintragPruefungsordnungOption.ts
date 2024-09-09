@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 
@@ -94,6 +95,8 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption'].includes(name);
 	}
+
+	public static class = new Class<Schild3KatalogEintragPruefungsordnungOption>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragPruefungsordnungOption');
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragPruefungsordnungOption {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragPruefungsordnungOption>;

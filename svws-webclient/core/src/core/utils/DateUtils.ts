@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { StringUtils } from '../../core/utils/StringUtils';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class DateUtils extends JavaObject {
@@ -485,6 +486,8 @@ export class DateUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}
+
+	public static class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
 
 }
 

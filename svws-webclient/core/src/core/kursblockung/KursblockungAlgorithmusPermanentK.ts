@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 
 export abstract class KursblockungAlgorithmusPermanentK extends JavaObject {
@@ -60,6 +61,8 @@ export abstract class KursblockungAlgorithmusPermanentK extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmusPermanentK>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK');
 
 }
 

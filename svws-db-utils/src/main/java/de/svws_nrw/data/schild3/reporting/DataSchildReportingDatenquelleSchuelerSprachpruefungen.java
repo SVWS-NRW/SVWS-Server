@@ -62,8 +62,8 @@ public final class DataSchildReportingDatenquelleSchuelerSprachpruefungen
 						schuelerSprachpruefung.kannZweitePflichtfremdspracheErsetzen = dtoSP.KannZweitePflichtfremdspracheErsetzen;
 						schuelerSprachpruefung.kannWahlpflichtfremdspracheErsetzen = dtoSP.KannWahlpflichtfremdspracheErsetzen;
 						schuelerSprachpruefung.kannBelegungAlsFortgefuehrteSpracheErlauben = dtoSP.KannBelegungAlsFortgefuehrteSpracheErlauben;
-						schuelerSprachpruefung.referenzniveau = dtoSP.Referenzniveau.daten.kuerzel;
-						schuelerSprachpruefung.note = dtoSP.NotePruefung.kuerzel;
+						schuelerSprachpruefung.referenzniveau = dtoSP.Referenzniveau;
+						schuelerSprachpruefung.note = (dtoSP.NotePruefung == null) ? "" : "" + dtoSP.NotePruefung;
 						result.add(schuelerSprachpruefung);
 					}
 				} catch (final Exception ex) {

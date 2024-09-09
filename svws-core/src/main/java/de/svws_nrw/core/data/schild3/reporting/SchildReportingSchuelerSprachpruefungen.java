@@ -1,6 +1,5 @@
 package de.svws_nrw.core.data.schild3.reporting;
 
-import de.svws_nrw.base.annotations.SchildReportingDate;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -70,4 +69,5 @@ public class SchildReportingSchuelerSprachpruefungen {
 	/** Die Note, die in der Sprachprüfung erreicht wurde */
 	@Schema(description = "Die Note, die in der Sprachprüfung erreicht wurde", example = "3")
 	public @NotNull String note = "";
+
 }

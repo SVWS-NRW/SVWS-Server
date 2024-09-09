@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;

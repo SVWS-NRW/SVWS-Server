@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../../java/lang/JavaEnum';
 import { HashMap } from '../../../../java/util/HashMap';
+import { Class } from '../../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../../core/exceptions/DeveloperNotificationException';
 
 export class KlausurterminblockungModusQuartale extends JavaEnum<KlausurterminblockungModusQuartale> {
@@ -114,6 +115,8 @@ export class KlausurterminblockungModusQuartale extends JavaEnum<Klausurterminbl
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<KlausurterminblockungModusQuartale>('de.svws_nrw.core.types.gost.klausurplanung.KlausurterminblockungModusQuartale');
 
 }
 

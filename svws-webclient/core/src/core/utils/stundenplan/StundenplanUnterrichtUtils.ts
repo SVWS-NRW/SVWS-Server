@@ -12,6 +12,7 @@ import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSc
 import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { StundenplanUnterricht } from '../../../core/data/stundenplan/StundenplanUnterricht';
+import { Class } from '../../../java/lang/Class';
 import { Wochentag } from '../../../core/types/Wochentag';
 
 export class StundenplanUnterrichtUtils extends JavaObject {
@@ -110,6 +111,8 @@ export class StundenplanUnterrichtUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtUtils'].includes(name);
 	}
+
+	public static class = new Class<StundenplanUnterrichtUtils>('de.svws_nrw.core.utils.stundenplan.StundenplanUnterrichtUtils');
 
 }
 

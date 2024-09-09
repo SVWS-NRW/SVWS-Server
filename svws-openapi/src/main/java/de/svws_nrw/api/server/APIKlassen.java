@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
+import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;

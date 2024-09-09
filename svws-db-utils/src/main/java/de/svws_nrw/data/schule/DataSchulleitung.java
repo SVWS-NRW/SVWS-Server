@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
 
-import de.svws_nrw.core.data.schule.Schulleitung;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.data.schule.Schulleitung;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -129,12 +129,13 @@ public final class DataSchulleitung extends DataManager<Long> {
 			Map.entry("idLeitungsfunktion", (conn, dto, value, map) -> {
 				final long id = JSONMapper.convertToLong(value, false);
 				if (id != dto.LeitungsfunktionID) {
-					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(id);
+					final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.data().getWertByID(id);
 					if (funktion == null)
 						throw new ApiOperationException(Status.BAD_REQUEST, "Es gibt keine Leitungsfunktion mit der ID %d.".formatted(id));
+					final int schuljahr = conn.getUser().schuleGetSchuljahr();
 					dto.LeitungsfunktionID = id;
 					if ((dto.Funktionstext == null) || (dto.Funktionstext.isBlank()))
-						dto.Funktionstext = funktion.daten.bezeichnung;
+						dto.Funktionstext = funktion.daten(schuljahr).text;
 				}
 			}),
 			Map.entry("bezeichnung",

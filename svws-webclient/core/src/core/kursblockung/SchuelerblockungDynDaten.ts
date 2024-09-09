@@ -13,6 +13,7 @@ import { JavaInteger } from '../../java/lang/JavaInteger';
 import { SchuelerblockungInput } from '../../core/data/kursblockung/SchuelerblockungInput';
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
+import { Class } from '../../java/lang/Class';
 import { Arrays } from '../../java/util/Arrays';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -355,6 +356,8 @@ export class SchuelerblockungDynDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten'].includes(name);
 	}
+
+	public static class = new Class<SchuelerblockungDynDaten>('de.svws_nrw.core.kursblockung.SchuelerblockungDynDaten');
 
 }
 

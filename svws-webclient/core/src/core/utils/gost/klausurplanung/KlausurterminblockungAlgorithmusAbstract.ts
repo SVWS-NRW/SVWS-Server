@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
+import { Class } from '../../../../java/lang/Class';
 
 export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObject {
 
@@ -42,6 +43,8 @@ export abstract class KlausurterminblockungAlgorithmusAbstract extends JavaObjec
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
+
+	public static class = new Class<KlausurterminblockungAlgorithmusAbstract>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract');
 
 }
 

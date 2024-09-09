@@ -1,0 +1,112 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "SBO_2",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 6,
+			"kuerzel": "SBO 2",
+			"text": "Formen der Orientierung und Beratung",
+			"schluessel": "SBO 2",
+			"jahrgaenge": ["JG_08", "JG_09", "JG_10", "JG_EF", "JG_Q1", "JG_Q2"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_3",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 7,
+			"kuerzel": "SBO 3",
+			"text": "Strukturen an Schulen",
+			"schluessel": "SBO 3",
+			"jahrgaenge": ["JG_00"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_4",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 8,
+			"kuerzel": "SBO 4",
+			"text": "Potenziale entdecken und den eigenen Standort bestimmen",
+			"schluessel": "SBO 4",
+			"jahrgaenge": ["JG_08", "JG_09"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_5",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 9,
+			"kuerzel": "SBO 5",
+			"text": "Berufsfelder erkunden und Informationen sammeln",
+			"schluessel": "SBO 5",
+			"jahrgaenge": ["JG_08", "JG_09"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_6",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 10,
+			"kuerzel": "SBO 6",
+			"text": "Praxis der Arbeitswelt kennenlernen und erproben",
+			"schluessel": "SBO 6",
+			"jahrgaenge": ["JG_08", "JG_09", "JG_10"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_7",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 11,
+			"kuerzel": "SBO 7",
+			"text": "Nachholung der Erstberufsorientierung",
+			"schluessel": "SBO 7",
+			"jahrgaenge": ["JG_10"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_8",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 12,
+			"kuerzel": "SBO 8",
+			"text": "Sekundarstufe II - Individuelle Voraussetzungen für eine Ausbildung oder ein Studium überprüfen",
+			"schluessel": "SBO 8",
+			"jahrgaenge": ["JG_EF", "JG_Q1", "JG_Q2"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_9",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 13,
+			"kuerzel": "SBO 9",
+			"text": "Sekundarstufe II - Praxis vertiefen - Ausbildungs- und Studienwahl konkretisieren",
+			"schluessel": "SBO 9",
+			"jahrgaenge": ["JG_EF", "JG_Q1", "JG_Q2"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_10",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 14,
+			"kuerzel": "SBO 10",
+			"text": "Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II",
+			"schluessel": "SBO 10",
+			"jahrgaenge": ["JG_09", "JG_10", "JG_EF", "JG_Q1", "JG_Q2"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

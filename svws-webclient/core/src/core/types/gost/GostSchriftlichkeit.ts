@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 
 export class GostSchriftlichkeit extends JavaEnum<GostSchriftlichkeit> {
@@ -73,6 +74,8 @@ export class GostSchriftlichkeit extends JavaEnum<GostSchriftlichkeit> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostSchriftlichkeit', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostSchriftlichkeit>('de.svws_nrw.core.types.gost.GostSchriftlichkeit');
 
 }
 

@@ -58,7 +58,7 @@
 			props.vermerkartenManager().liste.auswahlAdd(item);
 		}
 
-		if (props.vermerkartenManager().auswahl())
+		if (props.vermerkartenManager().auswahlID())
 			await props.commit();
 	}
 

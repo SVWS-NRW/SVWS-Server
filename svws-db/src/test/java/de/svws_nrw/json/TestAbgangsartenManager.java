@@ -2,11 +2,13 @@ package de.svws_nrw.json;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.core.data.schule.AbgangsartKatalogEintrag;
-import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.utils.schule.AbgangsartenManager;
 
 /**
@@ -15,6 +17,14 @@ import de.svws_nrw.core.utils.schule.AbgangsartenManager;
  * auf Korrektheit geprüft.
  */
 class TestAbgangsartenManager {
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	/**
 	 * Prüft die Einträge der beiden Kataloge für die Abgangsarten

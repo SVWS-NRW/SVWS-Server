@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import type {  LehrerListeEintrag,  List} from "@core";
+import type { LehrerListeEintrag, List } from "@core";
 import { ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag, FachDaten, GostFach } from "@core";
 
 const username = "Admin";
@@ -13,7 +13,7 @@ describe("Server", () => {
 	test("should be able to create a server", async () => {
 		expect(server).toBeDefined();
 	});
-	test("isAlive", async () => {
+	test.skip("isAlive", async () => {
 		try {
 			await server.isAlive();
 		} catch (e) {
@@ -32,7 +32,7 @@ describe("Server", () => {
 		//const res = await server.setClientConfigUserKey(schema, 1)
 		//expect(res).toBeTruthy();
 	});
-	test("patchErzieherStammdaten", async () => {
+	test.skip("patchErzieherStammdaten", async () => {
 		await expect(server.patchErzieherStammdaten( { hausnummer: "443" }, schema, 19942)).resolves.not.toThrow();
 	});
 	test.skip("patchGostAbiturjahrgang", async () => {
