@@ -3939,14 +3939,23 @@ export class GostKlausurplanManager extends JavaObject {
 	 * Liefert eine Liste von {@link StundenplanRaum}en, die nicht für den übergebenen Klausurtermin verplant sind.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
+	 * @param multijahrgang ob die Liste für einen Termin oder für alle Termine des gleichen Datums gelten soll
 	 *
 	 * @return die Liste von {@link StundenplanRaum}en, die nicht für den übergebenen Klausurtermin verplant sind.
 	 */
-	public stundenplanraumVerfuegbarGetMengeByTermin(termin : GostKlausurtermin) : List<StundenplanRaum> {
+	public stundenplanraumVerfuegbarGetMengeByTermin(termin : GostKlausurtermin, multijahrgang : boolean) : List<StundenplanRaum> {
 		const raeume : List<StundenplanRaum> | null = new ArrayList<StundenplanRaum>();
-		for (const raum of this.getStundenplanManager().raumGetMengeAsList())
-			if (!this._raum_by_idTermin_and_idStundenplanraum.contains(termin.id, raum.id))
+		const termine : List<GostKlausurtermin> = multijahrgang ? this.terminSelbesDatumGetMengeByTermin(termin, true) : ListUtils.create1(termin);
+		for (const raum of this.getStundenplanManager().raumGetMengeAsList()) {
+			let raumVerwendet : boolean = false;
+			for (const t of termine)
+				if (this._raum_by_idTermin_and_idStundenplanraum.contains(t.id, raum.id)) {
+					raumVerwendet = true;
+					break;
+				}
+			if (!raumVerwendet)
 				raeume.add(raum);
+		}
 		return raeume;
 	}
 

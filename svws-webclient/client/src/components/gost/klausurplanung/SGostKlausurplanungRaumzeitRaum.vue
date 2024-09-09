@@ -122,7 +122,7 @@
 	});
 
 	const raeumeVerfuegbar = computed(() => {
-		const raeume = props.kMan().stundenplanraumVerfuegbarGetMengeByTermin(termin());
+		const raeume = props.kMan().stundenplanraumVerfuegbarGetMengeByTermin(termin(), props.multijahrgang());
 		if (props.raum.idStundenplanRaum !== null)
 			raeume.add(0, props.kMan().stundenplanraumGetByKlausurraum(props.raum));
 		return raeume;

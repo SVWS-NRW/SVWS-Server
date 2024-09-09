@@ -4260,7 +4260,8 @@ public class GostKlausurplanManager {
 	 *
 	 * @return die Menge aller {@link GostSchuelerklausurTermin}e zu einem {@link GostKlausurraum} und {@link GostKlausurtermin} zurück.
 	 */
-	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaumAndTermin(final @NotNull GostKlausurraum raum, final @NotNull GostKlausurtermin termin) {
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminGetMengeByRaumAndTermin(final @NotNull GostKlausurraum raum,
+			final @NotNull GostKlausurtermin termin) {
 		final List<GostSchuelerklausurTermin> schuelerklausuren =
 				_schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin.getOrNull(raum.id, termin.id);
 		return (schuelerklausuren == null) ? new ArrayList<>() : schuelerklausuren;
@@ -4270,14 +4271,23 @@ public class GostKlausurplanManager {
 	 * Liefert eine Liste von {@link StundenplanRaum}en, die nicht für den übergebenen Klausurtermin verplant sind.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
+	 * @param multijahrgang ob die Liste für einen Termin oder für alle Termine des gleichen Datums gelten soll
 	 *
 	 * @return die Liste von {@link StundenplanRaum}en, die nicht für den übergebenen Klausurtermin verplant sind.
 	 */
-	public @NotNull List<StundenplanRaum> stundenplanraumVerfuegbarGetMengeByTermin(final @NotNull GostKlausurtermin termin) {
+	public @NotNull List<StundenplanRaum> stundenplanraumVerfuegbarGetMengeByTermin(final @NotNull GostKlausurtermin termin, final boolean multijahrgang) {
 		final List<StundenplanRaum> raeume = new ArrayList<>();
-		for (final @NotNull StundenplanRaum raum : getStundenplanManager().raumGetMengeAsList())
-			if (!_raum_by_idTermin_and_idStundenplanraum.contains(termin.id, raum.id))
+		final @NotNull List<GostKlausurtermin> termine = multijahrgang ? terminSelbesDatumGetMengeByTermin(termin, true) : ListUtils.create1(termin);
+		for (final @NotNull StundenplanRaum raum : getStundenplanManager().raumGetMengeAsList()) {
+			boolean raumVerwendet = false;
+			for (final @NotNull GostKlausurtermin t : termine)
+				if (_raum_by_idTermin_and_idStundenplanraum.contains(t.id, raum.id)) {
+					raumVerwendet = true;
+					break;
+				}
+			if (!raumVerwendet)
 				raeume.add(raum);
+		}
 		return raeume;
 	}
 
