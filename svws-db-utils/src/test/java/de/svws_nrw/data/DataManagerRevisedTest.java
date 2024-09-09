@@ -1,5 +1,6 @@
 package de.svws_nrw.data;
 
+<<<<<<< Upstream, based on dev
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -35,6 +36,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+=======
+>>>>>>> b345d64 DataManagerRevised Tests angepasst
 import static de.svws_nrw.core.types.benutzer.BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN;
 import static de.svws_nrw.core.types.benutzer.BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,6 +57,40 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.InstanceOfAssertFactories;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import de.svws_nrw.core.data.klassen.KlassenDaten;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
+import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
+import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Diese Testklasse testet alle Core Funktionalitäten aus der Klasse DataManagerRevised. Dabei wurden sowohl Unit- als auch
@@ -352,7 +389,7 @@ class DataManagerRevisedTest {
 
 		final List<Map<String, Object>> input = List.of(Map.of("kuerzel", "55a"), Map.of("kuerzel", "66a"));
 
-		doNothing().when(cut).patch(anyLong(), anyMap());
+	    doReturn(mock(DTOKlassen.class)).when(cut).patch(anyLong(), anyMap()); // Verwende doReturn() mit der CoreDTO-Rückgabe
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMultipleMaps(any(InputStream.class))).thenReturn(input);
