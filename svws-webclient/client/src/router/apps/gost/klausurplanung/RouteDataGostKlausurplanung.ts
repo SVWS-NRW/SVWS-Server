@@ -173,11 +173,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.manager;
 	}
 
-	public getConfigValue(key: string): string {
-		return api.config.getValue("gost.klausurplan." + key);
-	}
+	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
 
+<<<<<<< Upstream, based on dev
 	public async setConfigValue(key: string, value: string) {
+=======
+	setConfigValue = async (key: string, value: string) => {
+>>>>>>> 0e1c24a Bugfix setConfigValue
 		await api.config.setValue('gost.klausurplan.' + key, value);
 	}
 
@@ -195,10 +197,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			return (value === 1 || value === 2) ? value : 0;
 		},
 		set: (value) => {
+<<<<<<< Upstream, based on dev
 			if (this.quartalsauswahl.value !== value) {
 				void this.setConfigValue("quartal", value.toString());
 				this.commit();
 			}
+=======
+			if (this.quartalsauswahl.value !== value)
+				this.setConfigValue("quartal", value.toString()).then(() => this.commit()).catch((e: unknown) => console.error(e));
+>>>>>>> 0e1c24a Bugfix setConfigValue
 		}
 	});
 
@@ -239,7 +246,11 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	setZeigeAlleJahrgaenge = (value: boolean) => {
+<<<<<<< Upstream, based on dev
 		void this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false");
+=======
+		this.setConfigValue('zeigeAlleJahrgaenge', value ? "true" : "false").catch((e: unknown) => console.error(e));
+>>>>>>> 0e1c24a Bugfix setConfigValue
 	}
 
 	erzeugeKlausurtermin = async (quartal: number, ht: boolean): Promise<GostKlausurtermin> => {

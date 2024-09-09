@@ -30,5 +30,5 @@ export interface GostKlausurplanungRaumzeitProps {
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	getConfigValue: (value: string) => string;
-	setConfigValue: (key: string, value: string) => void;
+	setConfigValue: (key: string, value: string) => Promise<void>;
 }

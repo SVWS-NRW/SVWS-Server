@@ -121,7 +121,7 @@
 		zeigeAlleJahrgaenge: () => boolean;
 		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		getConfigValue: (value: string) => string;
-		setConfigValue: (key: string, value: string) => void;
+		setConfigValue: (key: string, value: string) => Promise<void>;
 	}>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
@@ -153,10 +153,10 @@
 	const verteilen = async () => {
 		loading.value = true;
 		config._regel_forciere_selbe_kursklausur_im_selben_raum = true;
-		props.setConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", config._regel_forciere_selbe_klausurdauer_pro_raum ? "true" : "false");
-		props.setConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum", config._regel_forciere_selben_klausurstart_pro_raum ? "true" : "false");
-		props.setConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume ? "true" : "false");
-		props.setConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", config._regel_optimiere_blocke_in_moeglichst_wenig_raeume ? "true" : "false");
+		await props.setConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", config._regel_forciere_selbe_klausurdauer_pro_raum ? "true" : "false");
+		await props.setConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum", config._regel_forciere_selben_klausurstart_pro_raum ? "true" : "false");
+		await props.setConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume", config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume ? "true" : "false");
+		await props.setConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", config._regel_optimiere_blocke_in_moeglichst_wenig_raeume ? "true" : "false");
 		config.schuelerklausurtermine = props.kMan().enrichSchuelerklausurtermine(props.kMan().schuelerklausurterminGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
 		config.raeume = props.kMan().enrichKlausurraeume(props.kMan().raumGetMengeByTerminIncludingFremdtermine(props.termin, multijahrgang()));
 		const algo = new KlausurraumblockungAlgorithmus();
