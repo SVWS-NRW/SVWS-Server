@@ -381,10 +381,12 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param id              die ID des zu patchenden DTOs
 	 * @param is              der Input-Stream
 	 *
+	 * @return das Core-DTO
+	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void patchFromStream(final ID id, final InputStream is) throws ApiOperationException {
-		patch(id, JSONMapper.toMap(is));
+	public CoreDTO patchFromStream(final ID id, final InputStream is) throws ApiOperationException {
+		return patch(id, JSONMapper.toMap(is));
 		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 	}
 
@@ -655,9 +657,11 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param id              die ID des zu patchenden DTOs
 	 * @param attributesToPatch    die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
 	 *
+	 * @return das Core-DTO
+	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
+	public CoreDTO patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
 		// Prüfe, ob benötigte Parameter übergeben wurden
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
@@ -674,6 +678,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		// Patchings auf DTO anwenden und anschließend in DB persistieren
 		applyPatchMappings(dto, attributesToPatch, null, Collections.emptySet(), false);
 		saveDatabaseDTO(dto);
+		return map(dto);
 	}
 
 	/**
