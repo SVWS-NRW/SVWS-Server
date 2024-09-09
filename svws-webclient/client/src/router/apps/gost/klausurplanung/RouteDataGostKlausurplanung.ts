@@ -375,11 +375,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	}
 
 	patchKlausurtermin = async (id: number, termin: Partial<GostKlausurtermin>) => {
+		if (this._state.value.abschnitt === undefined)
+			throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt');
 		api.status.start();
 		try {
 			const oldTtermin = this.manager.terminGetByIdOrException(id);
-			await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id);
+			const raumDataChanged = await api.server.patchGostKlausurenKlausurtermin(termin, api.schema, id, this._state.value.abschnitt.id);
 			Object.assign(oldTtermin, termin);
+			this.manager.setzeRaumZuSchuelerklausuren(raumDataChanged);
 			this.manager.terminPatchAttributes(oldTtermin);
 		} finally {
 			this.commit();

@@ -19,7 +19,6 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmus;
-import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
@@ -32,7 +31,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -142,10 +141,10 @@ public final class DataGostKlausurenSchuelerklausurTermin
 				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.QUERY_BY_SCHUELERKLAUSURTERMIN_ID,
 				DTOGostKlausurenSchuelerklausurenTermineRaumstunden.class, lastTermin.ID);
 		conn.transactionRemoveAll(raumstunden);
-		final DTOGostKlausurenSchuelerklausurenTermine newTermin = new DTOGostKlausurenSchuelerklausurenTermine(
-				conn.transactionGetNextID(DTOGostKlausurenSchuelerklausurenTermine.class), id, lastTermin.Folge_Nr + 1);
-		conn.transactionPersist(newTermin);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(map(newTermin)).build();
+
+		final Map<String, Object> initAttributes = new HashMap<>();
+		initAttributes.put("folgeNr", lastTermin.Folge_Nr + 1);
+		return addFromMapAsResponse(initAttributes);
 	}
 
 	/**
@@ -200,25 +199,6 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	}
 
 	/**
-	 * Liefert die zu einer Liste von Klausurtermin-IDs gehörigen
-	 * GostSchuelerklausurtermin-Objekte zurück.
-	 *
-	 * @param listTerminIds die Liste der GostSchuelerklausurtermin-IDs
-	 *
-	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminids(final List<Long> listTerminIds)
-			throws ApiOperationException {
-		if (listTerminIds.isEmpty())
-			return new ArrayList<>();
-		final List<DTOGostKlausurenSchuelerklausurenTermine> terminDTOs = conn.queryList(
-				DTOGostKlausurenSchuelerklausurenTermine.QUERY_LIST_BY_TERMIN_ID, DTOGostKlausurenSchuelerklausurenTermine.class, listTerminIds);
-		return mapList(terminDTOs);
-	}
-
-	/**
 	 * Liefert die zu einer Liste von GostSchuelerklausurterminraumstunden gehörigen
 	 * GostSchuelerklausurtermin-Objekte zurück.
 	 *
@@ -269,6 +249,56 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	}
 
 	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * GostSchuelerklausur-Objekte zurück.
+	 *
+	 * @param terminIds die Liste der GostSchuelerklausurterminen
+	 * @param includeAbwesend inkludiert auch GostSchuelerklausurtermine, die als abwesend gemeldet sind
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminIds(final List<Long> terminIds,
+			final boolean includeAbwesend) throws ApiOperationException {
+		if (terminIds.isEmpty())
+			return new ArrayList<>();
+		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
+		final List<GostSchuelerklausur> schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(kursklausuren);
+		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
+		String skFilter = "";
+		if (!kkSkIds.isEmpty()) {
+			skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
+			if (!includeAbwesend)
+				skFilter +=
+						" AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
+			skFilter += ")";
+		}
+		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
+				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
+						DTOGostKlausurenSchuelerklausurenTermine.class);
+		if (!kkSkIds.isEmpty())
+			query.setParameter("skIds", kkSkIds);
+		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
+		return new DataGostKlausurenSchuelerklausurTermin(conn).mapList(skts);
+	}
+
+	/**
+	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
+	 * GostSchuelerklausur-Objekte zurück.
+	 *
+	 * @param terminIds die Liste der GostSchuelerklausurterminen
+	 *
+	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuTerminIds(final List<Long> terminIds)
+			throws ApiOperationException {
+		return getSchuelerklausurtermineZuTerminIds(terminIds, false);
+	}
+
+	/**
 	 * Startet den NachschreibterminblockungAlgorithmus mit den übergebenen
 	 * GostKlausurenDataCollection-Daten und persistiert die Blockung in der Datenbank.
 	 *
@@ -288,8 +318,12 @@ public final class DataGostKlausurenSchuelerklausurTermin
 
 		final List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
 		listSktsManager.addAll(config.schuelerklausurtermine);
+<<<<<<< Upstream, based on dev
 		listSktsManager
 				.addAll(new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuTerminIds(config.termine.stream().map(t -> t.id).toList(), true));
+=======
+		listSktsManager.addAll(getSchuelerklausurtermineZuTerminIds(config.termine.stream().map(t -> t.id).toList(), true));
+>>>>>>> 4e0a7c0 Verschieben von Terminen, die Teil einer jahrgangsübergreifenden Planung sind
 
 		final List<GostSchuelerklausur> listSks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(listSktsManager);
 		final List<GostKursklausur> listKks = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSks);
@@ -331,7 +365,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 
 		final GostKlausurenCollectionAllData blockungsDaten = new GostKlausurenCollectionAllData();
 		blockungsDaten.schuelerklausurtermine = mapList(mapNachschreiber.values());
-		blockungsDaten.termine = DTOMapper.mapList(mapNeueTermine.values(), DataGostKlausurenTermin.dtoMapper);
+		blockungsDaten.termine = new DataGostKlausurenTermin(conn).mapList(mapNeueTermine.values());
 		return blockungsDaten;
 	}
 

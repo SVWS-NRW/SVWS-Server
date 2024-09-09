@@ -66,12 +66,25 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final long idSchuljahresAbschnitt) throws ApiOperationException {
-		super(conn);
+		this(conn);
 		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
 		_idSchuljahresAbschnitt = idSchuljahresAbschnitt;
 		if ((idSchuljahresAbschnitt != -1) && (conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresAbschnitt) == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Schuljahresabschnitt nicht gefunden, ID: " + idSchuljahresAbschnitt);
+	}
+
+	/**
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * {@link GostKursklausur}.
+	 *
+	 * @param conn                   die Datenbank-Verbindung für den
+	 *                               Datenbankzugriff
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public DataGostKlausurenKursklausur(final DBEntityManager conn) throws ApiOperationException {
+		super(conn);
 	}
 
 	@Override
@@ -142,7 +155,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 	 */
 	public static List<GostKursklausur> getKursklausurenZuTerminids(final DBEntityManager conn, final List<Long> idsTermin) throws ApiOperationException {
 		for (final long idTermin : idsTermin)
-			if (DataGostKlausurenTermin.getKlausurterminZuId(conn, idTermin) == null)
+			if (new DataGostKlausurenTermin(conn).getById(idTermin) == null)
 				throw new ApiOperationException(Status.NOT_FOUND, "Klausurtermin mit ID %d existiert nicht.".formatted(idTermin));
 		final List<DTOGostKlausurenKursklausuren> kursKlausurDTOs = conn.queryList(DTOGostKlausurenKursklausuren.QUERY_LIST_BY_TERMIN_ID,
 				DTOGostKlausurenKursklausuren.class, idsTermin);
@@ -223,7 +236,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 		data.kursklausuren = getKursklausurenZuVorgaben(conn, data.vorgaben);
 		data.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(data.kursklausuren);
 		data.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(data.schuelerklausuren);
-		data.termine = DataGostKlausurenTermin.getKlausurtermine(conn, abiturjahr, halbjahr, ganzesSchuljahr, data.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
+		data.termine = new DataGostKlausurenTermin(conn).getKlausurtermine(abiturjahr, halbjahr, ganzesSchuljahr, data.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 		return data;
 	}
 
@@ -274,7 +287,7 @@ public final class DataGostKlausurenKursklausur extends DataManager<Long> {
 				termin = new DTOGostKlausurenTermine(terminId, vorgabe.abiJahrgang, GostHalbjahr.fromIDorException(vorgabe.halbjahr),
 						vorgabe.quartal, true, false);
 				conn.transactionPersist(termin);
-				blockung.termine.add(DataGostKlausurenTermin.dtoMapper.apply(termin));
+				blockung.termine.add(new DataGostKlausurenTermin(conn).map(termin));
 				conn.transactionFlush();
 			}
 			if ((termin.Abi_Jahrgang != vorgabe.abiJahrgang) || (termin.Halbjahr != GostHalbjahr.fromIDorException(vorgabe.halbjahr))

@@ -241,7 +241,7 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private readonly _schuelerklausurterminntaktuellmenge_by_abijahr_and_halbjahr_and_quartal_and_idTermin : HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>> = new HashMap4D<number, number, number, number, List<GostSchuelerklausurTermin>>();
 
-	private readonly _schuelerklausurterminmenge_by_idRaum_and_idTermin : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
+	private readonly _schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
 	private readonly _schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur : HashMap2D<number, number, List<GostSchuelerklausurTermin>> = new HashMap2D<number, number, List<GostSchuelerklausurTermin>>();
 
@@ -634,7 +634,7 @@ export class GostKlausurplanManager extends JavaObject {
 		this.update_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur();
 		this.update_schuelerklausurterminaktuellmenge_by_kw_and_abijahr_and_schuelerId();
 		this.update_schuelerklausurterminntaktuellmenge_by_halbjahr_and_idTermin_and_quartal();
-		this.update_schuelerklausurterminmenge_by_idRaum_and_idTermin();
+		this.update_schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin();
 		this.update_schuelerklausurterminaktuellmenge_by_idRaum_and_idKursklausur();
 		this.update_schuelerklausurterminraumstundenmenge_by_idRaumstunde();
 		this.update_schuelerklausurraumstundenmenge_by_idSchuelerklausur();
@@ -810,7 +810,7 @@ export class GostKlausurplanManager extends JavaObject {
 		for (const skt of this._schuelerklausurterminaktuellmenge) {
 			const termin : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(skt);
 			if (termin !== null) {
-				const raum : GostKlausurraum | null = this.klausurraumGetBySchuelerklausurtermin(skt);
+				const raum : GostKlausurraum | null = this.raumGetBySchuelerklausurtermin(skt);
 				if (raum !== null)
 					Map2DUtils.getOrCreateArrayList(this._raummenge_by_idTermin_and_idKursklausur, termin.id, this.kursklausurBySchuelerklausurTermin(skt).id).add(raum);
 			}
@@ -835,13 +835,13 @@ export class GostKlausurplanManager extends JavaObject {
 			MapUtils.getOrCreateArrayList(this._raumstundenmenge_by_idSchuelerklausurtermin, skrs.idSchuelerklausurtermin).add(DeveloperNotificationException.ifMapGetIsNull(this._raumstunde_by_id, skrs.idRaumstunde));
 	}
 
-	private update_schuelerklausurterminmenge_by_idRaum_and_idTermin() : void {
-		this._schuelerklausurterminmenge_by_idRaum_and_idTermin.clear();
-		for (const k of this._schuelerklausurterminmenge) {
+	private update_schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin() : void {
+		this._schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin.clear();
+		for (const k of this._schuelerklausurterminaktuellmenge) {
 			const termin : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(k);
 			if (termin !== null) {
 				const raumstunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idSchuelerklausurtermin.get(k.id);
-				Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminmenge_by_idRaum_and_idTermin, ((raumstunden === null) || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, termin.id).add(k);
+				Map2DUtils.getOrCreateArrayList(this._schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin, ((raumstunden === null) || raumstunden.isEmpty()) ? -1 : raumstunden.get(0).idRaum, termin.id).add(k);
 			}
 		}
 	}
@@ -1749,6 +1749,10 @@ export class GostKlausurplanManager extends JavaObject {
 				this.raumstundeRemoveOhneUpdateById(rs.id);
 	}
 
+	private raumRemoveIfExistsNoCascadeOhneUpdateById(idRaum : number) : void {
+		this._raum_by_id.remove(idRaum);
+	}
+
 	/**
 	 * Entfernt ein existierendes {@link GostKlausurraum}-Objekt.
 	 *
@@ -1757,6 +1761,17 @@ export class GostKlausurplanManager extends JavaObject {
 	public raumRemoveById(idRaum : number) : void {
 		this.raumRemoveOhneUpdateById(idRaum);
 		this.update_all();
+	}
+
+	/**
+	 * Entfernt alle {@link StundenplanRaum}-Objekte.
+	 *
+	 * @param listRaum Die Liste der zu entfernenden
+	 *                 {@link StundenplanRaum}-Objekte.
+	 */
+	private raumRemoveAllIfExistsNoCascadeOhneUpdate(listRaum : List<GostKlausurraum>) : void {
+		for (const raum of listRaum)
+			this.raumRemoveIfExistsNoCascadeOhneUpdateById(raum.id);
 	}
 
 	/**
@@ -3216,8 +3231,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die Liste von {@link GostSchuelerklausurTermin}en zu einem {@link GostKlausurtermin} zurück. Ggf. sind Fremdtermine am selben Datum aus anderen Jahrgangsstufen inkludiert.
 	 */
-	public schuelerklausurterminGetMengeByTerminIncludingFremdtermine(termin : GostKlausurtermin, fremdTermine : boolean) : List<GostSchuelerklausurTermin> {
-		return fremdTermine ? this.schuelerklausurterminGetMengeByTerminmenge(this.terminGetMengeByDatum(DeveloperNotificationException.ifNull("Termin muss ein Datum haben", termin.datum))) : this.schuelerklausurterminGetMengeByTermin(termin);
+	public schuelerklausurterminaktuellGetMengeByTerminIncludingFremdtermine(termin : GostKlausurtermin, fremdTermine : boolean) : List<GostSchuelerklausurTermin> {
+		return fremdTermine ? this.schuelerklausurterminaktuellGetMengeByTerminmenge(this.terminGetMengeByDatum(DeveloperNotificationException.ifNull("Termin muss ein Datum haben", termin.datum))) : this.schuelerklausurterminAktuellGetMengeByTermin(termin);
 	}
 
 	/**
@@ -3234,6 +3249,20 @@ export class GostKlausurplanManager extends JavaObject {
 			if (teilListe !== null)
 				ergebnis.addAll(teilListe);
 		}
+		return ergebnis;
+	}
+
+	/**
+	 * Gibt die Liste von {@link GostSchuelerklausurTermin}en zu einer Menge von {@link GostKlausurtermin}en zurück.
+	 *
+	 * @param termine die Liste der {@link GostKlausurtermin}e
+	 *
+	 * @return die Liste von zugehörigen {@link GostSchuelerklausurTermin}en
+	 */
+	public schuelerklausurterminaktuellGetMengeByTerminmenge(termine : List<GostKlausurtermin>) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		for (const termin of termine)
+			ergebnis.addAll(this.schuelerklausurterminAktuellGetMengeByTermin(termin));
 		return ergebnis;
 	}
 
@@ -3804,7 +3833,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die {@link GostKlausurraumstunde} zum übergebenen {@link GostKlausurraum} und {@link StundenplanZeitraster} zurück.
 	 */
-	public klausurraumstundeGetByRaumAndZeitraster(raum : GostKlausurraum, zeitraster : StundenplanZeitraster) : GostKlausurraumstunde | null {
+	public raumstundeGetByRaumAndZeitraster(raum : GostKlausurraum, zeitraster : StundenplanZeitraster) : GostKlausurraumstunde | null {
 		return this._raumstunde_by_idRaum_and_idZeitraster.getOrNull(raum.id, zeitraster.id);
 	}
 
@@ -3815,7 +3844,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return die Menge von {@link GostKlausurraumstunde}en zum übergebenen {@link GostKlausurraum}
 	 */
-	public klausurraumstundeGetMengeByRaum(raum : GostKlausurraum) : List<GostKlausurraumstunde> {
+	public raumstundeGetMengeByRaum(raum : GostKlausurraum) : List<GostKlausurraumstunde> {
 		const stunden : List<GostKlausurraumstunde> | null = this._raumstundenmenge_by_idRaum.get(raum.id);
 		return (stunden !== null) ? stunden : new ArrayList();
 	}
@@ -3826,6 +3855,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param collectionSkrsKrs die {@link GostKlausurenCollectionSkrsKrsData}
 	 */
 	public setzeRaumZuSchuelerklausuren(collectionSkrsKrs : GostKlausurenCollectionSkrsKrsData) : void {
+		this.raumRemoveAllIfExistsNoCascadeOhneUpdate(collectionSkrsKrs.raumdata.raeume);
+		this.raumAddAllOhneUpdate(collectionSkrsKrs.raumdata.raeume);
 		this.raumstundeAddAllOhneUpdate(collectionSkrsKrs.raumdata.raumstunden);
 		this.raumstundeRemoveAllOhneUpdate(collectionSkrsKrs.raumstundenGeloescht);
 		this.schuelerklausurraumstundeRemoveAllOhneUpdateByIdSchuelerklausurtermin(collectionSkrsKrs.idsSchuelerklausurtermine);
@@ -3880,14 +3911,27 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert die Menge aller {@link GostSchuelerklausurTermin}e  zu einem {@link GostKlausurtermin} zurück, die noch keinem {@link GostKlausurraum} zugewiesen sind.
+	 * Liefert die Menge aller {@link GostSchuelerklausurTermin}e zu einem {@link GostKlausurtermin} zurück, die noch keinem {@link GostKlausurraum} zugewiesen sind.
 	 *
 	 * @param termin der {@link GostKlausurtermin}
 	 *
 	 * @return die die Menge aller {@link GostSchuelerklausurTermin}e  zu einem {@link GostKlausurtermin}, die noch keinem {@link GostKlausurraum} zugewiesen sind.
 	 */
 	public schuelerklausurOhneRaumGetMengeByTermin(termin : GostKlausurtermin) : List<GostSchuelerklausurTermin> {
-		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminmenge_by_idRaum_and_idTermin.getOrNull(-1, termin.id);
+		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin.getOrNull(-1, termin.id);
+		return (schuelerklausuren === null) ? new ArrayList() : schuelerklausuren;
+	}
+
+	/**
+	 * Liefert die Menge aller {@link GostSchuelerklausurTermin}e zu einem {@link GostKlausurraum} und {@link GostKlausurtermin} zurück.
+	 *
+	 * @param raum der {@link GostKlausurraum}
+	 * @param termin der {@link GostKlausurtermin}
+	 *
+	 * @return die Menge aller {@link GostSchuelerklausurTermin}e zu einem {@link GostKlausurraum} und {@link GostKlausurtermin} zurück.
+	 */
+	public schuelerklausurterminGetMengeByRaumAndTermin(raum : GostKlausurraum, termin : GostKlausurtermin) : List<GostSchuelerklausurTermin> {
+		const schuelerklausuren : List<GostSchuelerklausurTermin> | null = this._schuelerklausurterminaktuellmenge_by_idRaum_and_idTermin.getOrNull(raum.id, termin.id);
 		return (schuelerklausuren === null) ? new ArrayList() : schuelerklausuren;
 	}
 
@@ -4006,7 +4050,51 @@ export class GostKlausurplanManager extends JavaObject {
 			if ((raum !== null) && (raum.idTermin !== this.terminOrExceptionBySchuelerklausurTermin(skt).id))
 				return true;
 		}
+		for (const raum of this.raumGetMengeByTermin(termin))
+			if (this.raumEnthaeltTerminfremdeKlausuren(raum))
+				return true;
 		return false;
+	}
+
+	/**
+	 * Liefert <code>true</code> zurück, falls {@link GostSchuelerklausurTermin}e des übergebenen {@link GostKlausurraum}s in zu {@link GostKlausurtermin}en anderer Jahrgangsstufen gehören, sonst <code>false</code>.
+	 *
+	 * @param raum der zu prüfende {@link GostKlausurraum}
+	 *
+	 * @return <code>true</code> zurück, falls {@link GostSchuelerklausurTermin}e des übergebenen {@link GostKlausurraum}s in zu {@link GostKlausurtermin}en anderer Jahrgangsstufen gehören, sonst <code>false</code>.
+	 */
+	public raumEnthaeltTerminfremdeKlausuren(raum : GostKlausurraum) : boolean {
+		return !this.schuelerklausurterminFremdterminGetMengeByRaum(raum).isEmpty();
+	}
+
+	/**
+	 * Liefert die Liste von {@link GostSchuelerklausurTermin}en aus dem übergebenen {@link GostKlausurraum}, die einem raumfremden Klausurtermin zugeordnet sind.
+	 *
+	 * @param raum der zu prüfende {@link GostKlausurraum}
+	 *
+	 * @return die Liste von {@link GostSchuelerklausurTermin}en aus dem übergebenen {@link GostKlausurraum}, die einem raumfremden Klausurtermin zugeordnet sind.
+	 */
+	public schuelerklausurterminFremdterminGetMengeByRaum(raum : GostKlausurraum) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		for (const skt of this.schuelerklausurterminGetMengeByRaum(raum))
+			if ((raum.idTermin !== this.terminOrExceptionBySchuelerklausurTermin(skt).id))
+				ergebnis.add(skt);
+		return ergebnis;
+	}
+
+	/**
+	 * Liefert die Liste von {@link GostSchuelerklausurTermin}en aus dem übergebenen {@link GostKlausurraum}, die dem Raumtermin zugeordnet sind.
+	 *
+	 * @param raum der zu prüfende {@link GostKlausurraum}
+	 *
+	 * @return die Liste von {@link GostSchuelerklausurTermin}en aus dem übergebenen {@link GostKlausurraum}, die dem Raumtermin zugeordnet sind.
+	 */
+	public schuelerklausurterminRaumterminGetMengeByRaum(raum : GostKlausurraum) : List<GostSchuelerklausurTermin> {
+		const ergebnis : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
+		for (const skt of this.schuelerklausurterminGetMengeByRaum(raum))
+			if ((raum.idTermin === this.terminOrExceptionBySchuelerklausurTermin(skt).id))
+				ergebnis.add(skt);
+		return ergebnis;
 	}
 
 	/**
@@ -4016,7 +4104,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 *
 	 * @return den {@link GostKlausurraum}, falls einer zugewiesen ist, sonst <code>null</code>.
 	 */
-	public klausurraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : GostKlausurraum | null {
+	public raumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : GostKlausurraum | null {
 		return this._klausurraum_by_idSchuelerklausurtermin.get(skt.id);
 	}
 
@@ -4028,7 +4116,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanRaum}, falls einer zugewiesen ist, sonst <code>null</code>
 	 */
 	public stundenplanraumGetBySchuelerklausurtermin(skt : GostSchuelerklausurTermin) : StundenplanRaum | null {
-		const raum : GostKlausurraum | null = this.klausurraumGetBySchuelerklausurtermin(skt);
+		const raum : GostKlausurraum | null = this.raumGetBySchuelerklausurtermin(skt);
 		return ((raum === null) || (raum.idStundenplanRaum === null)) ? null : this.getStundenplanManager().raumGetByIdOrException(raum.idStundenplanRaum);
 	}
 
@@ -4052,7 +4140,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return <code>true</code>, falls {@link GostSchuelerklausurTermin}e des als Parameter übergebenen {@link GostKlausurtermin}s bereits {@link GostKlausurraum}en zugeordnet sind.
 	 */
 	public isSchuelerklausurenInRaumByTermin(termin : GostKlausurtermin, fremdTermine : boolean) : boolean {
-		for (const teilTermin of this.schuelerklausurterminGetMengeByTerminIncludingFremdtermine(termin, fremdTermine))
+		for (const teilTermin of this.schuelerklausurterminaktuellGetMengeByTerminIncludingFremdtermine(termin, fremdTermine))
 			if (this._raumstundenmenge_by_idSchuelerklausurtermin.containsKey(teilTermin.id))
 				return true;
 		return false;
@@ -4138,7 +4226,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die Anzahl der benötigten Plätze für alle Schüler eines {@link GostKlausurtermin}s, ggf. jahrgangsübergreifend.
 	 */
 	public anzahlBenoetigtePlaetzeAlleKlausurenByTermin(termin : GostKlausurtermin, fremdTermine : boolean) : number {
-		return this.schuelerklausurterminGetMengeByTerminIncludingFremdtermine(termin, fremdTermine).size();
+		return this.schuelerklausurterminaktuellGetMengeByTerminIncludingFremdtermine(termin, fremdTermine).size();
 	}
 
 	/**
@@ -4270,7 +4358,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public zeitrasterGetMengeByRaum(raum : GostKlausurraum) : List<StundenplanZeitraster> {
 		const ergebnis : List<StundenplanZeitraster> = new ArrayList<StundenplanZeitraster>();
-		for (const rs of this.klausurraumstundeGetMengeByRaum(raum)) {
+		for (const rs of this.raumstundeGetMengeByRaum(raum)) {
 			ergebnis.add(this.getStundenplanManager().zeitrasterGetByIdOrException(rs.idZeitraster));
 		}
 		return ergebnis;

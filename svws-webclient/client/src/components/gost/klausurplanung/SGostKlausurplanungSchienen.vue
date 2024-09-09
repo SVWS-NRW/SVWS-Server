@@ -252,7 +252,7 @@
 			const klausur = dragData.value;
 			klausurMoveDropZone = zone;
 			klausurMoveDragData = dragData.value;
-			if (props.kMan().hatRaumzuteilungByKursklausur(klausur)) {
+			if (klausur.idTermin !== null && props.kMan().hatRaumzuteilungByKursklausur(klausur)) {
 				modalKlausurHatRaeume.value = true;
 				return;
 			} else {

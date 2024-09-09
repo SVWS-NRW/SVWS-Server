@@ -31,7 +31,6 @@ import de.svws_nrw.data.stundenplan.DataStundenplanPausenaufsichten;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterricht;
 import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaeume;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -236,8 +235,8 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final long idRaum = (pair.id != -1) ? pair.id : ermittleRaumidAusSchuelerklausurterminen(conn, pair.schuelerklausurterminIDs);
 
 			// Raum und Termin holen
-			final GostKlausurraum raum = DataGostKlausurenRaum.dtoMapper.apply(conn.queryByKey(DTOGostKlausurenRaeume.class, idRaum));
-			final GostKlausurtermin termin = DataGostKlausurenTermin.getKlausurterminZuId(conn, raum.idTermin);
+			final GostKlausurraum raum = new DataGostKlausurenRaum(conn).getById(idRaum);
+			final GostKlausurtermin termin = new DataGostKlausurenTermin(conn).getById(raum.idTermin);
 
 			// Neue Schülerklausuren ermitteln
 			final List<GostSchuelerklausurTermin> listSchuelerklausurtermineNeu =
@@ -261,7 +260,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			final List<GostKursklausur> listKursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuSchuelerklausuren(conn, listSchuelerklausuren);
 
 			final List<GostKlausurraumstunde> listRaumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaumid(conn, idRaum);
-			final List<GostKlausurtermin> listTermine = DataGostKlausurenTermin.getKlausurtermineZuSchuelerklausurterminen(conn, listSchuelerklausurtermine);
+			final List<GostKlausurtermin> listTermine = new DataGostKlausurenTermin(conn).getKlausurtermineZuSchuelerklausurterminen(listSchuelerklausurtermine);
 
 			// Manager erzeugen
 			final List<GostKlausurvorgabe> listVorgaben = DataGostKlausurenVorgabe.getKlausurvorgabenZuKursklausuren(conn, listKursklausuren);
@@ -278,6 +277,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 			manager.setStundenplanManager(stundenplanManager);
 
 			// Zeitraster_min und _max ermitteln
+			// TODO: durch Manager ersetzen
 			int minStart = 1440;
 			int maxEnd = -1;
 			for (final GostSchuelerklausurTermin sk : listSchuelerklausurtermine) {
@@ -305,7 +305,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 				throw new ApiOperationException(Status.NOT_FOUND, "Zeitraster konnte nicht ermittelt werden");
 
 			result.idsSchuelerklausurtermine.addAll(pair.schuelerklausurterminIDs);
-			result.raumdata.raeume.add(raum);
+//			result.raumdata.raeume.add(raum);
 
 			result.raumdata.raumstunden.addAll(createRaumStundenInDb(conn, raum, zeitrasterRaum, manager));
 			conn.transactionFlush();
@@ -333,7 +333,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		long idNextKrs = conn.transactionGetNextID(DTOGostKlausurenRaumstunden.class);
 		final List<GostKlausurraumstunde> result = new ArrayList<>();
 		for (final StundenplanZeitraster stunde : zeitrasterRaum) {
-			if (manager.klausurraumstundeGetByRaumAndZeitraster(raum, stunde) == null) {
+			if (manager.raumstundeGetByRaumAndZeitraster(raum, stunde) == null) {
 				final DTOGostKlausurenRaumstunden dtoStundeNeu = new DTOGostKlausurenRaumstunden(idNextKrs++, raum.id, stunde.id);
 				final GostKlausurraumstunde stundeNeu = DataGostKlausurenRaumstunde.dtoMapper.apply(dtoStundeNeu);
 				manager.raumstundeAdd(stundeNeu);
@@ -395,7 +395,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					"DELETE FROM DTOGostKlausurenSchuelerklausurenTermineRaumstunden v WHERE v.Schuelerklausurtermin_ID = %d".formatted(sk.id));
 			for (final StundenplanZeitraster stunde : zeitrasterSk) {
 				final DTOGostKlausurenSchuelerklausurenTermineRaumstunden skRaumStundeNeu = new DTOGostKlausurenSchuelerklausurenTermineRaumstunden(sk.id,
-						manager.klausurraumstundeGetByRaumAndZeitraster(raum, stunde).id);
+						manager.raumstundeGetByRaumAndZeitraster(raum, stunde).id);
 				conn.transactionPersist(skRaumStundeNeu);
 				result.add(DataGostKlausurenSchuelerklausurraumstunde.dtoMapper.apply(skRaumStundeNeu));
 			}
@@ -443,14 +443,20 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
+<<<<<<< Upstream, based on dev
 	public static GostKlausurenCollectionRaumData getSchuelerklausurraumstundenByTerminids(final DBEntityManager conn, final List<Long> pTerminIDs)
 			throws ApiOperationException {
 		final List<GostKlausurtermin> termin = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, pTerminIDs);
 		final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termin);
+=======
+	public static GostKlausurenCollectionRaumData getSchuelerklausurraumstundenByTerminids(final DBEntityManager conn, final List<Long> pTerminIDs) throws ApiOperationException {
+		final List<GostKlausurtermin> termin = new DataGostKlausurenTermin(conn).getKlausurtermineZuIds(pTerminIDs);
+		final List<GostKlausurtermin> termine = new DataGostKlausurenTermin(conn).getKlausurterminmengeSelbesDatumZuTerminMenge(termin);
+>>>>>>> 4e0a7c0 Verschieben von Terminen, die Teil einer jahrgangsübergreifenden Planung sind
 		final List<Long> terminIDs = termine.stream().map(t -> t.id).toList();
 		final GostKlausurenCollectionRaumData retCollection = new GostKlausurenCollectionRaumData();
 		retCollection.idsKlausurtermine = terminIDs;
-		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, terminIDs);
+		retCollection.raeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminen(terminIDs);
 		if (retCollection.raeume.isEmpty())
 			return retCollection;
 		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);
@@ -479,13 +485,13 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 		final List<GostSchuelerklausurTermin> skts =
 				new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(idSkts);
 		if (includeSelbesDatum) {
-			final List<GostKlausurtermin> termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, skts.stream().map(s -> s.idTermin).toList());
-			final List<GostKlausurtermin> termineSelbesDatum = DataGostKlausurenTermin.getKlausurterminmengeSelbesDatumZuTerminMenge(conn, termine);
+			final List<GostKlausurtermin> termine = new DataGostKlausurenTermin(conn).getKlausurtermineZuIds(skts.stream().map(s -> s.idTermin).toList());
+			final List<GostKlausurtermin> termineSelbesDatum = new DataGostKlausurenTermin(conn).getKlausurterminmengeSelbesDatumZuTerminMenge(termine);
 			retCollection.idsKlausurtermine = termineSelbesDatum.stream().map(t -> t.id).toList();
 		} else {
 			retCollection.idsKlausurtermine = skts.stream().map(s -> s.idTermin).toList();
 		}
-		retCollection.raeume = DataGostKlausurenRaum.getKlausurraeumeZuTerminen(conn, retCollection.idsKlausurtermine);
+		retCollection.raeume = new DataGostKlausurenRaum(conn).getKlausurraeumeZuTerminen(retCollection.idsKlausurtermine);
 		if (retCollection.raeume.isEmpty())
 			return retCollection;
 		retCollection.raumstunden = DataGostKlausurenRaumstunde.getKlausurraumstundenZuRaeumen(conn, retCollection.raeume);

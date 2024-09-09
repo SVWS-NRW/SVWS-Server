@@ -136,14 +136,17 @@
 			</svws-ui-content-card>
 		</div>
 	</template>
+	<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 </template>
 
 <script setup lang="ts">
+	import type { Ref } from "vue";
 	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
-	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList, BenutzerKompetenz} from "@core";
+	import { StundenplanZeitraster} from "@core";
+	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
 
@@ -156,6 +159,27 @@
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
 		return props.kMan().getStundenplanManager().kalenderwochenzuordnungGetMengeAsList();
 	}
+
+	const modalKlausurHatRaeume = ref<boolean>(false);
+	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
+		return () => modalKlausurHatRaeume;
+	}
+
+	let klausurMoveDragData: GostKlausurtermin | undefined = undefined;
+	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
+
+	async function verschiebeKlausurTrotzRaumzuweisung() {
+		if (klausurMoveDragData)
+			if (klausurMoveDropZone === undefined)
+				await props.patchKlausurtermin(klausurMoveDragData.id, {datum: null, startzeit: null});
+			else if (klausurMoveDropZone instanceof StundenplanZeitraster) {
+				const date = props.kMan().getStundenplanManager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, klausurMoveDropZone);
+				await props.patchKlausurtermin(klausurMoveDragData.id, {datum: date, startzeit: klausurMoveDropZone.stundenbeginn});
+			}
+		props.terminSelected.value = undefined;
+
+	}
+
 
 	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
 
@@ -242,14 +266,14 @@
 	};
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (props.terminSelected.value !== undefined)
-			if (zone === undefined)
-				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: null, startzeit: null});
-			else if (zone instanceof StundenplanZeitraster) {
-				const date = props.kMan().getStundenplanManager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zone);
-				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: date, startzeit: zone.stundenbeginn});
-			}
-		props.terminSelected.value = undefined;
+		if (props.terminSelected.value !== undefined) {
+			klausurMoveDropZone = zone;
+			klausurMoveDragData = props.terminSelected.value;
+			if (props.kMan().isKlausurenInFremdraeumenByTermin(props.terminSelected.value))
+				modalKlausurHatRaeume.value = true;
+			else
+				await verschiebeKlausurTrotzRaumzuweisung();
+		}
 	};
 
 	// const termineMit = computed(() => {

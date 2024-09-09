@@ -433,7 +433,7 @@ public class APIGostKlausuren {
 			description = "Der Post für die Klausurtermin-Daten", required = true,
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurtermin.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn).create(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -488,7 +488,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "die IDs der Klausurtermine", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final List<Long> terminIds,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn).delete(terminIds),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn).deleteMultipleAsResponse(terminIds),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -521,33 +521,34 @@ public class APIGostKlausuren {
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
 
-
 	/**
 	 * Die OpenAPI-Methode für das Patchen der Daten eines Gost-Klausurtermins.
 	 *
 	 * @param schema     das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param request    die Informationen zur HTTP-Anfrage
 	 * @param id		 die ID des Klausurtermins
+	 * @param abschnittid die ID des Schuljahresabschnitts
 	 * @param is         JSON-Objekt mit den Daten
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
-	@PATCH
-	@Path("/termine/{id : \\d+}")
+	@POST
+	@Path("/termine/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}")
 	@Operation(summary = "Patcht einen Gost-Klausurtermin.", description = "Patcht einen Gost-Klausurtermin."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.")
-	@ApiResponse(responseCode = "200", description = "Der Patch wurde erfolgreich in den Klausurtermin integriert.")
+	@ApiResponse(responseCode = "201", description = "Der Patch wurde erfolgreich in die Kursklausur integriert.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrsData.class)))
 	@ApiResponse(responseCode = "400", description = "Der Patch ist fehlerhaft aufgebaut.")
-	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.")
-	@ApiResponse(responseCode = "404", description = "Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Kursklausuren zu ändern.")
+	@ApiResponse(responseCode = "404", description = "Kein Kursklausur-Eintrag mit der angegebenen ID gefunden")
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchGostKlausurenKlausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id,
+	public Response patchGostKlausurenKlausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("abschnittid") final long abschnittid,
 			@RequestBody(description = "Der Patch für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurtermin.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenTermin(conn, abschnittid).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -574,7 +575,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Post für die Klausurraum-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurraum.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).create(is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -605,7 +606,7 @@ public class APIGostKlausuren {
 			@RequestBody(description = "Der Patch für die Klausurraum-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurraum.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).patch(id, is),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -630,7 +631,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteGostKlausurenRaum(@PathParam("schema") final String schema, @PathParam("id") final long id,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).delete(id),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenRaum(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}

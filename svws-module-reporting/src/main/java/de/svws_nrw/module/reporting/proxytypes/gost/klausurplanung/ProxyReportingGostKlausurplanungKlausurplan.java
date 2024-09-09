@@ -199,7 +199,7 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				for (final GostKlausurraum terminraum : this.gostKlausurplanManager.raumGetMengeByTermin(gostKlausurtermin)) {
 					termin.klausurraeume().add(
 							new ProxyReportingGostKlausurplanungKlausurraum(this.reportingRepository, termin, terminraum,
-									this.gostKlausurplanManager.klausurraumstundeGetMengeByRaum(terminraum)));
+									this.gostKlausurplanManager.raumstundeGetMengeByRaum(terminraum)));
 				}
 			}
 		}
@@ -236,9 +236,9 @@ public class ProxyReportingGostKlausurplanungKlausurplan extends ReportingGostKl
 				// 2. Den Klausurraum mit den Stunden zum Schülerklausurtermin ermitteln.
 				ReportingGostKlausurplanungKlausurraum klausurraum = null;
 
-				final GostKlausurraum gostKlausurraum = gostKlausurplanManager.klausurraumGetBySchuelerklausurtermin(skTermin);
+				final GostKlausurraum gostKlausurraum = gostKlausurplanManager.raumGetBySchuelerklausurtermin(skTermin);
 				if (gostKlausurraum != null) {
-					final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.klausurraumstundeGetMengeByRaum(gostKlausurraum);
+					final List<GostKlausurraumstunde> gostKlausurraumstundenSchueler = gostKlausurplanManager.raumstundeGetMengeByRaum(gostKlausurraum);
 					if (!gostKlausurraumstundenSchueler.isEmpty()) {
 						klausurraum = new ProxyReportingGostKlausurplanungKlausurraum(
 								this.reportingRepository, klausurtermin, gostKlausurraum, gostKlausurraumstundenSchueler);

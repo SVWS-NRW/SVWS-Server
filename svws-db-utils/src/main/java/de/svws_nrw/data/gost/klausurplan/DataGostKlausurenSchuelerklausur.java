@@ -16,11 +16,9 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
-import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -97,7 +95,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	protected void mapAttribute(final DTOGostKlausurenSchuelerklausuren dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
 		switch (name) {
-//			case "idSchuelerklausur" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false);
 			case "idKursklausur" -> dto.Kursklausur_ID = JSONMapper.convertToLong(value, false);
 			case "idSchueler" -> dto.Schueler_ID = JSONMapper.convertToLong(value, false);
 			case "bemerkung" -> dto.Bemerkungen =
@@ -247,62 +244,10 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 			final List<Long> terminIds = new ArrayList<>();
 			terminIds.addAll(result.schuelerklausurtermine.stream().filter(skt -> skt.idTermin != null).map(skt -> skt.idTermin).toList());
 			terminIds.addAll(result.kursklausuren.stream().filter(kk -> kk.idTermin != null).map(kk -> kk.idTermin).toList());
-			result.termine = DataGostKlausurenTermin.getKlausurtermineZuIds(conn, terminIds);
+			result.termine = new DataGostKlausurenTermin(conn).getKlausurtermineZuIds(terminIds);
 		}
 
 		return result;
 	}
-
-	/**
-	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
-	 * GostSchuelerklausur-Objekte zurück.
-	 *
-	 * @param terminIds die Liste der GostSchuelerklausurterminen
-	 * @param includeAbwesend inkludiert auch GostSchuelerklausurtermine, die als abwesend gemeldet sind
-	 *
-	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final List<Long> terminIds,
-			final boolean includeAbwesend) throws ApiOperationException {
-		if (terminIds.isEmpty())
-			return new ArrayList<>();
-		final List<GostKursklausur> kursklausuren = DataGostKlausurenKursklausur.getKursklausurenZuTerminids(conn, terminIds);
-		final List<GostSchuelerklausur> schuelerklausuren = getSchuelerKlausurenZuKursklausuren(kursklausuren);
-		final List<Long> kkSkIds = schuelerklausuren.stream().map(sk -> sk.id).toList();
-		String skFilter = "";
-		if (!kkSkIds.isEmpty()) {
-			skFilter += " OR (skt.Schuelerklausur_ID IN :skIds AND skt.Folge_Nr = 0";
-			if (!includeAbwesend)
-				skFilter +=
-						" AND NOT EXISTS (SELECT sktInner FROM DTOGostKlausurenSchuelerklausurenTermine sktInner WHERE sktInner.Schuelerklausur_ID = skt.Schuelerklausur_ID AND sktInner.Folge_Nr > 0)";
-			skFilter += ")";
-		}
-		final TypedQuery<DTOGostKlausurenSchuelerklausurenTermine> query =
-				conn.query("SELECT skt FROM DTOGostKlausurenSchuelerklausurenTermine skt WHERE skt.Termin_ID IN :tids" + skFilter,
-						DTOGostKlausurenSchuelerklausurenTermine.class);
-		if (!kkSkIds.isEmpty())
-			query.setParameter("skIds", kkSkIds);
-		final List<DTOGostKlausurenSchuelerklausurenTermine> skts = query.setParameter("tids", terminIds).getResultList();
-		return new DataGostKlausurenSchuelerklausurTermin(conn).mapList(skts);
-	}
-
-	/**
-	 * Liefert die zu einer Liste von GostSchuelerklausurterminen gehörigen
-	 * GostSchuelerklausur-Objekte zurück.
-	 *
-	 * @param terminIds die Liste der GostSchuelerklausurterminen
-	 *
-	 * @return die Liste der zugehörigen GostSchuelerklausur-Objekte
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public List<GostSchuelerklausurTermin> getSchuelerKlausurenZuTerminIds(final List<Long> terminIds)
-			throws ApiOperationException {
-		return getSchuelerKlausurenZuTerminIds(terminIds, false);
-	}
-
-
 
 }

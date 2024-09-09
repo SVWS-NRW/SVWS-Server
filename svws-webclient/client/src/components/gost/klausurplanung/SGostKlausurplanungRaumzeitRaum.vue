@@ -118,7 +118,7 @@
 	const termin = () => props.kMan().terminGetByIdOrException(props.raum.idTermin);
 
 	const anzahlRaumstunden = computed(() => {
-		return props.kMan().klausurraumstundeGetMengeByRaum(props.raum).size();
+		return props.kMan().raumstundeGetMengeByRaum(props.raum).size();
 	});
 
 	const raeumeVerfuegbar = computed(() => {
