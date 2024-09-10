@@ -13,7 +13,7 @@ describe("Server", () => {
 	test("should be able to create a server", async () => {
 		expect(server).toBeDefined();
 	});
-	test.skip("isAlive", async () => {
+	test("isAlive", async () => {
 		try {
 			await server.isAlive();
 		} catch (e) {
@@ -32,7 +32,7 @@ describe("Server", () => {
 		//const res = await server.setClientConfigUserKey(schema, 1)
 		//expect(res).toBeTruthy();
 	});
-	test.skip("patchErzieherStammdaten", async () => {
+	test("patchErzieherStammdaten", async () => {
 		await expect(server.patchErzieherStammdaten( { hausnummer: "443" }, schema, 19942)).resolves.not.toThrow();
 	});
 	test.skip("patchGostAbiturjahrgang", async () => {

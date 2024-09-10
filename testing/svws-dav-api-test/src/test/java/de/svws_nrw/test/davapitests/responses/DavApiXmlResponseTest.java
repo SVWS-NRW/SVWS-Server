@@ -26,7 +26,6 @@ import io.restassured.response.Response;
 /**
  * Testet die XML-Antworten der DavApi auf enthaltene Informationen
  */
-@Disabled
 class DavApiXmlResponseTest extends BaseApiUtil {
 
 	/**
