@@ -1,5 +1,5 @@
 <template>
-	<template v-if="auswahl !== undefined">
+	<template v-if="auswahl">
 		<svws-ui-header>
 			<div>
 				<span class="inline-block mr-3">{{ auswahl.kuerzel }}</span>

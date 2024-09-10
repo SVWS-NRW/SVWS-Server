@@ -1,5 +1,5 @@
-import type {AuswahlChildData} from "~/components/AuswahlChildData";
-import type {Einwilligungsart} from "@core";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { Einwilligungsart } from "@core";
 
 export interface SEinwilligungsartenAppProps {
 	auswahl: () => Einwilligungsart | undefined;

@@ -20,7 +20,6 @@
 <script setup lang="ts">
 
 	import type { StundenplanAuswahlProps } from "@comp";
-	import { ref, onMounted } from "vue";
 
 	defineProps<StundenplanAuswahlProps>();
 

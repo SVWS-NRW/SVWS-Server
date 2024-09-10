@@ -5,11 +5,11 @@
 				<svws-ui-checkbox :model-value="auswahl.istSichtbar" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
 				<svws-ui-input-number placeholder="Sortierung" :model-value="auswahl.sortierung" @change="sortierung=> sortierung && patch({ sortierung })" />
 				<svws-ui-text-input placeholder="Kürzel" :model-value="auswahl.kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel || null })" />
-				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="auswahl.kurzbezeichnung" @change="kurzbezeichnung => patch({ kurzbezeichnung: kurzbezeichnung || null })" />
-				<svws-ui-text-input placeholder="Schulnummer" :model-value="auswahl.schulnummer" @change="schulnummer => patch({ schulnummer })" />
-				<svws-ui-select title="Schulform" :model-value="Schulform.getByNummer(String(auswahl.schulformID || 1))" :items="Schulform.values()" :item-text="i=>i.daten.bezeichnung" @update:model-value="schulform => patch({ schulformID: schulform?.daten.id || null})" removable />
-				<svws-ui-text-input placeholder="Schulname" :model-value="auswahl.name" @change="name => patch({name})" />
-				<svws-ui-text-input placeholder="Schulleitung" :model-value="auswahl.schulleiter" @change="schulleiter => patch({ schulleiter: schulleiter || null })" />
+				<svws-ui-text-input placeholder="Kurzbezeichnung" :model-value="auswahl.kurzbezeichnung" @change="kurzbezeichnung => patch({ kurzbezeichnung })" />
+				<svws-ui-text-input placeholder="Schulnummer" :model-value="auswahl.schulnummer" @change="schulnummer => patch({ schulnummer: schulnummer ?? undefined })" />
+				<svws-ui-select title="Schulform" :model-value="auswahl.schulformID ? Schulform.data().getWertByID(auswahl.schulformID) : undefined" :items="Schulform.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" @update:model-value="schulform => patch({ schulformID: schulform?.daten(schuljahr)?.id ?? null})" removable />
+				<svws-ui-text-input placeholder="Schulname" :model-value="auswahl.name" @change="name => patch({name: name ?? undefined})" />
+				<svws-ui-text-input placeholder="Schulleitung" :model-value="auswahl.schulleiter" @change="schulleiter => patch({ schulleiter })" />
 				<svws-ui-text-input placeholder="Straße" :model-value="strasse" @change="patchStrasse" type="text" />
 				<svws-ui-text-input placeholder="PLZ" :model-value="auswahl.plz" @change="plz => patch({ plz: plz || null })" type="text" />
 				<svws-ui-text-input placeholder="Ort" :model-value="auswahl.ort" @change="ort => patch({ ort: ort || null })" type="text" />
@@ -30,11 +30,9 @@
 	const props = defineProps<SchuleDatenProps>();
 	const strasse = computed(() => AdressenUtils.combineStrasse(props.auswahl?.strassenname || "", props.auswahl?.hausnummer || "", props.auswahl?.hausnummerZusatz || ""))
 
-	const patchStrasse = (value: string ) => {
-		if (value) {
-			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
-		}
+	const patchStrasse = (value: string | null ) => {
+		const vals = AdressenUtils.splitStrasse(value);
+		void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
 	}
 
 </script>

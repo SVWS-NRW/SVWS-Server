@@ -11,7 +11,7 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns="cols" selectable v-model="liste">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste">
 				<template #cell(kurzbezeichnung)="{ rowData }">
 					<div class="text-ellipsis overflow-hidden whitespace-nowrap" :title="`${rowData.plz || ''} ${rowData.ort || ''}${rowData.ort ? ',': ''} ${rowData.name}`">{{ rowData.kurzbezeichnung }}</div>
 				</template>
@@ -37,7 +37,7 @@
 
 	const liste = ref([]);
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "kurzbezeichnung", label: "Bezeichnung", sortable: true, span: 4 }
 	];

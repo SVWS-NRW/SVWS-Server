@@ -28,6 +28,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKat
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {
 		return {
+			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			patch: routeKatalogFoerderschwerpunkte.data.patch,
 			data: routeKatalogFoerderschwerpunkte.data.daten,
 			mapKatalogeintraege: routeKatalogFoerderschwerpunkte.data.mapKatalogeintraege

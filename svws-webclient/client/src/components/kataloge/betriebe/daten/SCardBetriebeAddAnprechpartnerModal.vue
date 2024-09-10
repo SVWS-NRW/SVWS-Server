@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 
-	import { BetriebAnsprechpartner } from "@core";
 	import { ref } from "vue";
+	import { BetriebAnsprechpartner } from "@core";
 
 	const props = defineProps<{
 		addBetriebAnsprechpartner: (ansprechpartner: BetriebAnsprechpartner) => Promise<void>;

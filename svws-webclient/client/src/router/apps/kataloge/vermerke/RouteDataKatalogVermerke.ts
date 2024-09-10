@@ -1,4 +1,4 @@
-import type {VermerkartEintrag, List} from "@core";
+import type {VermerkartEintrag, List } from "@core";
 import { ArrayList, DeveloperNotificationException } from "@core";
 
 import { api } from "~/router/Api";

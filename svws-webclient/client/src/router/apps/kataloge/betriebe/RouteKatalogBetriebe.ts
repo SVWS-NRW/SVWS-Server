@@ -57,8 +57,7 @@ export class RouteKatalogBetriebe extends RouteNode<RouteDataKatalogBetriebe, Ro
 				return;
 			}
 		}
-		if (eintrag !== undefined)
-			await this.data.setEintrag(eintrag);
+		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

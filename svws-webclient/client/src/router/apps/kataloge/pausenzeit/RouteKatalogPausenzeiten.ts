@@ -46,7 +46,7 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 			return this.getRoute(this.data.auswahl.id);
 		if (!to_params.id) {
 			eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
-			return this.getRoute(eintrag?.id);
+			return this.getRoute(eintrag.id);
 		}
 		else {
 			const id = parseInt(to_params.id);

@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 
-	import type { WritableComputedRef} from "vue";
 	import { ref, computed } from "vue";
 	import type { KatalogEintrag, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { BetriebStammdaten } from "@core";
@@ -75,8 +74,8 @@
 	const betrieb = ref<BetriebStammdaten>(new BetriebStammdaten());
 	const beschaeftigungsart = ref<KatalogEintrag>();
 
-	const inputWohnortID: WritableComputedRef<OrtKatalogEintrag | undefined> = computed({
-		get: () => betrieb.value.ort_id ? props.mapOrte.get(betrieb.value.ort_id) : undefined,
+	const inputWohnortID = computed<OrtKatalogEintrag | null>({
+		get: () => betrieb.value.ort_id ? props.mapOrte.get(betrieb.value.ort_id) ?? null : null,
 		set: (val) =>	betrieb.value.ort_id = val?.id.valueOf() ? val.id : null
 	});
 

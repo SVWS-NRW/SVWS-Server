@@ -1,5 +1,5 @@
-import type {Einwilligungsart} from "@core";
-import type {AbschnittAuswahlDaten} from "@comp";
+import type { Einwilligungsart } from "@core";
+import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface SEinwilligungsartenAuswahlProps {
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;

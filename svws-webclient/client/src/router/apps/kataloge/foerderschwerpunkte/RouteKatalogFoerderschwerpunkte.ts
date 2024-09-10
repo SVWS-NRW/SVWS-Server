@@ -3,7 +3,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { FoerderschwerpunktEintrag} from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 

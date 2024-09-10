@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl()" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols">
+				<svws-ui-table :clicked="auswahl()" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns>
 					<template #cell(bezeichnung)="{ value, rowData }">
 						<div class="flex flex-row w-full">
 							<div class="flex-grow text-ellipsis overflow-hidden whitespace-nowrap">
@@ -39,7 +39,7 @@
 
 	const props = defineProps<JahrgaengeAuswahlProps>();
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc" },
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, span: 3 }
 	];

@@ -3,7 +3,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { StundenplanAufsichtsbereich } from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -52,11 +51,8 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 		else {
 			const id = parseInt(to_params.id);
 			eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
-			if (eintrag === undefined)
-				return this.getRoute(undefined);
 		}
-		if (eintrag !== undefined)
-			await this.data.setEintrag(eintrag);
+		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

@@ -41,8 +41,8 @@
 
 <script setup lang="ts">
 
-	import { Einwilligungsart, PersonTyp } from '@core';
 	import { computed, ref, shallowRef } from 'vue';
+	import { Einwilligungsart, PersonTyp } from '@core';
 
 	const props = defineProps<{
 		addEintrag: (einwilligungsart: Partial<Einwilligungsart>) => Promise<void>;
@@ -57,7 +57,7 @@
 	const personTypen = computed<PersonTyp[]>(() => PersonTyp.values());
 
 	const eintragBezeichnung = computed<string>({
-		get: () => einwilligung.value.bezeichnung ?? "",
+		get: () => einwilligung.value.bezeichnung,
 		set: (value) => {
 			const tmp = new Einwilligungsart();
 			tmp.bezeichnung = value;
@@ -69,7 +69,7 @@
 	});
 
 	const eintragSchluessel = computed<string>({
-		get: () => einwilligung.value.schluessel ?? "",
+		get: () => einwilligung.value.schluessel,
 		set: (value) => {
 			const tmp = new Einwilligungsart();
 			tmp.bezeichnung = einwilligung.value.bezeichnung;
@@ -105,7 +105,7 @@
 	});
 
 	function isValidBezeichnung(): boolean {
-		return !!einwilligung.value.bezeichnung && !existsBezeichnungFuerPersonTyp();
+		return (einwilligung.value.bezeichnung.length !== 0) && !existsBezeichnungFuerPersonTyp();
 	}
 
 	function existsBezeichnungFuerPersonTyp(): boolean {
@@ -116,7 +116,7 @@
 	}
 
 	function isValidSchluessel(): boolean {
-		return !!einwilligung.value.schluessel && !existsSchluesselFuerPersonTyp();
+		return (einwilligung.value.schluessel.length !== 0) && !existsSchluesselFuerPersonTyp();
 	}
 
 	function existsSchluesselFuerPersonTyp(): boolean {
@@ -127,7 +127,11 @@
 	}
 
 	function filterMapByPersonTyp(personTyp: number) {
-		return Array.from(props.mapKatalogeintraege.values()).filter(ele => ele.personTyp === personTyp);
+		const arr = [];
+		for (const ele of props.mapKatalogeintraege.values())
+			if (ele.personTyp === personTyp)
+				arr.push(ele);
+		return arr;
 	}
 
 	function getBezeichnungTyp(typId: number): string | undefined {

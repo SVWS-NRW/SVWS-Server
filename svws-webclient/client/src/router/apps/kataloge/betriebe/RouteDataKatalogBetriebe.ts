@@ -77,7 +77,7 @@ export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetrieb
 
 	setEintrag = async (auswahl: BetriebListeEintrag) => {
 		const daten = await api.server.getBetriebStammdaten(api.schema, auswahl.id)
-		const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema, auswahl?.id);
+		const listAnsprechpartner = await api.server.getBetriebAnsprechpartner(api.schema, auswahl.id);
 		const mapAnsprechpartner = new Map();
 		for( const l of listAnsprechpartner)
 			mapAnsprechpartner.set(l.id, l);
@@ -107,8 +107,6 @@ export class RouteDataKatalogBetriebe extends RouteData<RouteStateKatalogBetrieb
 	}
 
 	patch = async (data : Partial<BetriebStammdaten>) => {
-		if(this.daten === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.")
 		await api.server.patchBetriebStammdaten(data, api.schema, this.daten.id)
 		const daten = await api.server.getBetriebStammdaten(api.schema, this.daten.id)
 		const auswahl = new BetriebListeEintrag();

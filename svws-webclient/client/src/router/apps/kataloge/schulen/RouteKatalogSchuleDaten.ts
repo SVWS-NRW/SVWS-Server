@@ -7,6 +7,7 @@ import { routeKatalogSchulen, type RouteKatalogSchulen } from "~/router/apps/kat
 
 import type { SchuleDatenProps } from "~/components/kataloge/schulen/daten/SSchuleDatenProps";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
 
 const SSchuleDaten = () => import("~/components/kataloge/schulen/daten/SSchuleDaten.vue");
 
@@ -30,6 +31,7 @@ export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen>
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenProps {
 		return {
+			schuljahr: api.abschnitt.schuljahr,
 			patch: routeKatalogSchulen.data.patch,
 			mapKatalogeintraege: routeKatalogSchulen.data.mapKatalogeintraege,
 			auswahl: routeKatalogSchulen.data.auswahl,

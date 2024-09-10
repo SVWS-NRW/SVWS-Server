@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { ReligionDatenProps } from "./SReligionDatenProps";
 	import { Religion } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<ReligionDatenProps>();
 

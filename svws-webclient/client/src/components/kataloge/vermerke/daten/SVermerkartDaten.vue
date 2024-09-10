@@ -1,11 +1,11 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Vermerkart" class="w-full">
-			<svws-ui-text-input class="w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung })" type="text" />
+			<svws-ui-text-input class="w-5/5" placeholder="Bezeichnung" :model-value="vermerkartenManager().auswahl().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" type="text" />
 		</svws-ui-content-card>
 
 		<svws-ui-content-card :title="'Alle Schüler mit der Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '`'" class="w-full" v-if="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list().size() > 0">
-			<svws-ui-table :columns="colsSchueler" :items="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list()" class="w-full">
+			<svws-ui-table :columns :items="vermerkartenManager().getListSchuelerVermerkartZusammenfassung().list()" class="w-full">
 				<template #cell(status)="{ value }: { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ value }}</span>
 				</template>
@@ -33,7 +33,7 @@
 
 	defineProps<VermerkartDatenProps>();
 
-	const colsSchueler: DataTableColumn[] = [
+	const columns: DataTableColumn[] = [
 		{ key: "linkToSchueler", label: " ", fixedWidth: 1.75, align: "center" },
 		{ key: "nachname", label: "Nachname", sortable: true },
 		{ key: "vorname", label: "Vorname", sortable: true },

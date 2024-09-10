@@ -4,8 +4,7 @@
 			<div>
 				<span class="inline-block mr-3">{{ auswahl.name1 }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID:
-					{{ auswahl.id }}
+					ID: {{ auswahl.id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>

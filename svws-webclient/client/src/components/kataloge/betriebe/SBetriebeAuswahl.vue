@@ -11,13 +11,13 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns="cols" clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
+			<svws-ui-table :clicked="auswahl" @update:clicked="gotoEintrag" :items="rowsFiltered" :columns clickable scroll-into-view selectable :model-value="selected" @update:model-value="selected=$event" count>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag="addEintrag" :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten="mapBeschaeftigungsarten" :map-orte="mapOrte" :map-ortsteile="mapOrtsteile">
+					<s-betriebe-neu-modal v-slot="{ openModal }" :add-eintrag :delete-eintraege="doDeleteEintraege" :map-beschaeftigungsarten :map-orte :map-ortsteile>
 						<svws-ui-button type="icon" @click="openModal()">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -31,16 +31,15 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef, Ref} from "vue";
-	import type { BetriebListeEintrag } from "@core";
+	import { computed, ref } from "vue";
 	import type { BetriebeAuswahlProps } from "./SBetriebeAuswahlProps";
-	import { computed, ref} from "vue";
+	import type { BetriebListeEintrag } from "@core";
 
 	const props = defineProps<BetriebeAuswahlProps>();
-	const search: Ref<string> = ref("");
+	const search = ref("");
 	const selected = ref<BetriebListeEintrag[]>([]);
 
-	const cols = [
+	const columns = [
 		{ key: "name1", label: "Name", sortable: true, span: 2 },
 		{ key: "id", label: "ID", sortable: true, span: 0.5 },
 	]
@@ -50,7 +49,7 @@
 		selected.value = [];
 	}
 
-	const rowsFiltered: ComputedRef<BetriebListeEintrag[]> = computed(() => {
+	const rowsFiltered = computed<BetriebListeEintrag[]>(() => {
 		const res = [];
 		for(const k of props.mapKatalogeintraege.values())
 			if(k.name1?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))

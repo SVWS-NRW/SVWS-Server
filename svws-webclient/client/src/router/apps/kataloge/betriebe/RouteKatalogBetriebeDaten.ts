@@ -6,11 +6,11 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKatalogBetriebe, type RouteKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 
-import type { BetriebeDatenProps } from "~/components/kataloge/betriebe/daten/SBetriebeProps";
+import type { BetriebeDatenProps } from "~/components/kataloge/betriebe/daten/SBetriebeDatenProps";
 
 
 
-const SBetriebeDaten = () => import("~/components/kataloge/betriebe/daten/SBetriebedaten.vue")
+const SBetriebeDaten = () => import("~/components/kataloge/betriebe/daten/SBetriebeDaten.vue")
 
 export class RouteKatalogBetriebeDaten extends RouteNode<any, RouteKatalogBetriebe> {
 
@@ -36,7 +36,7 @@ export class RouteKatalogBetriebeDaten extends RouteNode<any, RouteKatalogBetrie
 			patchBetriebAnpsrechpartner: routeKatalogBetriebe.data.patchBetriebAnsprechpartner,
 			addBetriebAnsprechpartner: routeKatalogBetriebe.data.addBetriebAnsprechpartner,
 			removeBetriebAnsprechpartner: routeKatalogBetriebe.data.removeBetriebAnsprechpartner,
-			data: routeKatalogBetriebe.data.daten,
+			daten: routeKatalogBetriebe.data.daten,
 			mapBeschaeftigungsarten: routeKatalogBetriebe.data.mapBeschaeftigungsarten,
 			mapOrte: routeApp.data.mapOrte,
 			mapAnsprechpartner: routeKatalogBetriebe.data.mapAnsprechpartner,

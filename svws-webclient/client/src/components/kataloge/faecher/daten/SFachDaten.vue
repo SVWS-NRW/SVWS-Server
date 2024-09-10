@@ -2,11 +2,11 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Kürzel" :model-value="fachListeManager().daten().kuerzel" @change="kuerzel => patch({ kuerzel })" />
+				<svws-ui-text-input placeholder="Kürzel" :model-value="fachListeManager().daten().kuerzel" @change="kuerzel => patch({ kuerzel: kuerzel ?? undefined })" />
 				<svws-ui-select title="Statistik-Fach" :model-value="Fach.data().getWertBySchluessel(fachListeManager().daten().kuerzelStatistik)"
 					@update:model-value="value => patch({ kuerzelStatistik: (value === undefined) || (value === null) ? undefined : value.daten(schuljahr)?.schluessel })"
 					:items="Fach.values()" :item-text="(z: Fach) => z.daten(schuljahr)?.schluessel + ' : ' + z.daten(schuljahr)?.text" />
-				<svws-ui-text-input placeholder="Bezeichnung" :model-value="fachListeManager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung })" />
+				<svws-ui-text-input placeholder="Bezeichnung" :model-value="fachListeManager().daten().bezeichnung" @change="bezeichnung => patch({ bezeichnung: bezeichnung ?? undefined })" />
 				<svws-ui-text-input placeholder="Fachgruppe" :model-value="Fach.data().getWertBySchluessel(fachListeManager().daten().kuerzelStatistik)?.getFachgruppe(schuljahr)?.daten(schuljahr)?.text ?? '—'" disabled />
 				<svws-ui-select title="Bilinguale Sachfachsprache"
 					:model-value="(fachListeManager().daten().bilingualeSprache === null) ? null : BilingualeSprache.data().getWertByKuerzel(fachListeManager().daten().bilingualeSprache!)"
@@ -24,9 +24,9 @@
 					Auf Zeugnis
 				</svws-ui-checkbox>
 				<svws-ui-text-input placeholder="Bezeichnung (Zeugnis)" :model-value="fachListeManager().daten().bezeichnungZeugnis"
-					@change="value => patch({ bezeichnungZeugnis: value })" />
+					@change="bezeichnungZeugnis => patch({ bezeichnungZeugnis: bezeichnungZeugnis ?? undefined })" />
 				<svws-ui-text-input placeholder="Bezeichnung (Überweisungszeugnis)" :model-value="fachListeManager().daten().bezeichnungUeberweisungszeugnis"
-					@change="value => patch({ bezeichnungUeberweisungszeugnis: value })" />
+					@change="bezeichnungUeberweisungszeugnis => patch({ bezeichnungUeberweisungszeugnis: bezeichnungUeberweisungszeugnis ?? undefined })" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Sonstiges">

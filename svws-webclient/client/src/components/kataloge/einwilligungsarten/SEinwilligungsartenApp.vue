@@ -1,10 +1,10 @@
 <template>
-	<template v-if="auswahl()">
+	<template v-if="art">
 		<svws-ui-header>
 			<div>
-				<span class="inline-block mr-3 capitalize">{{ auswahl()!.bezeichnung }}</span>
+				<span class="inline-block mr-3 capitalize">{{ art.bezeichnung }}</span>
 				<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-					ID: {{ auswahl()!.id }}
+					ID: {{ art.id }}
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
@@ -19,8 +19,10 @@
 
 <script setup lang="ts">
 
-	import type {SEinwilligungsartenAppProps} from "./SEinwilligungsartenAppProps";
+	import { computed } from "vue";
+	import type { SEinwilligungsartenAppProps } from "./SEinwilligungsartenAppProps";
 
 	const props = defineProps<SEinwilligungsartenAppProps>();
+	const art = computed(() => props.auswahl())
 
 </script>

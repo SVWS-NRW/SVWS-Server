@@ -31,6 +31,7 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<any, RouteKatalogJahr
 
 	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {
 		return {
+			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			schulform: api.schulform,
 			patch: routeKatalogJahrgaenge.data.patch,
 			data: () => routeKatalogJahrgaenge.data.daten,

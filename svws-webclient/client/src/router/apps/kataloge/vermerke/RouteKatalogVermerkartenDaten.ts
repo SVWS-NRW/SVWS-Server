@@ -2,7 +2,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
-import type { SchuelerVermerkartZusammenfassung} from "@core";
+import type { SchuelerVermerkartZusammenfassung } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";

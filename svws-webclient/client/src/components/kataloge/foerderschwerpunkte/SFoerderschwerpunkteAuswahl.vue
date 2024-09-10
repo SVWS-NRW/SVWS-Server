@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns="cols" />
+				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege.values()" :columns />
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -24,7 +24,7 @@
 
 	const props = defineProps<FoerderschwerpunkteAuswahlProps>();
 
-	const cols = [
+	const columns = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: 'asc' },
 		{ key: "text", label: "Bezeichnung", sortable: true }
 	];

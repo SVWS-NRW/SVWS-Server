@@ -1,5 +1,5 @@
 <template>
-	<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+	<Teleport to=".svws-ui-header--actions" defer>
 		<svws-ui-button type="secondary" @click="print"><span class="icon i-ri-printer-line" />Drucken</svws-ui-button>
 		<svws-ui-modal-hilfe> <hilfe-lehrer-stundenplan /> </svws-ui-modal-hilfe>
 	</Teleport>
@@ -20,14 +20,10 @@
 <script setup lang="ts">
 
 	import type { StundenplanAuswahlProps } from "@comp";
-	import { ref, onMounted } from "vue";
 
 	defineProps<StundenplanAuswahlProps>();
 
 	const print = () => window.print();
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 </script>
 

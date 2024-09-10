@@ -29,9 +29,9 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { AufsichtsbereicheAuswahlProps } from "./SAufsichtsbereicheAuswahlProps";
 	import type { Aufsichtsbereich } from "@core";
-	import { ref } from "vue";
 
 	const props = defineProps<AufsichtsbereicheAuswahlProps>();
 	const selected = ref<Aufsichtsbereich[]>([]);

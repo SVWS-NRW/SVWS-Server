@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 
-	import type { List, StundenplanZeitraster} from "@core";
+	import type { List, StundenplanZeitraster } from "@core";
 
 	const props = defineProps<{
 		listKatalogeintraege: () => List<StundenplanZeitraster>;

@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<div class="container">
-				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="gotoEintrag" :items="props.vermerkartenManager().liste.list()" :columns="cols" selectable
+				<svws-ui-table clickable :clicked="clickedEintrag" @update:clicked="gotoEintrag" :items="props.vermerkartenManager().liste.list()" :columns selectable
 					:model-value="[...props.vermerkartenManager().liste.auswahl()]"
 					@update:model-value="items => setAuswahl(items)">
 					<template #cell(anzahlVermerke)="{ value, rowData }">
@@ -47,7 +47,7 @@
 
 	const props = defineProps<VermerkeAuswahlProps>();
 
-	const cols : DataTableColumn[] = [
+	const columns : DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", sortable: true, defaultSort: "asc", span: 2},
 		{ key: "anzahlVermerke", label: "Anzahl", sortable: true, defaultSort: "asc", span: 1, align: "right"},
 	];
