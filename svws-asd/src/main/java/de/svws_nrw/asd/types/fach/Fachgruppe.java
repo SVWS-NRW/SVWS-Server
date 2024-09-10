@@ -142,7 +142,7 @@ public enum Fachgruppe implements CoreType<FachgruppeKatalogEintrag, Fachgruppe>
 	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform sf) {
 		final FachgruppeKatalogEintrag ke = this.daten(schuljahr);
 		if (ke != null) {
-			final Set<@NotNull Schulform> result = _mapSchulformenByID.get(ke.id);
+			final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
 			if (result == null)
 				throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
 			return result.contains(sf);

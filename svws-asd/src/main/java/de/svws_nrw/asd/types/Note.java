@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Der Core-Type für die Noten
  */
-public enum Note implements @NotNull CoreType<@NotNull NoteKatalogEintrag, @NotNull Note> {
+public enum Note implements @NotNull CoreType<NoteKatalogEintrag, Note> {
 
 	/** leerer Noteneintrag */
 	KEINE,

@@ -902,7 +902,7 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 * @return die Liste aller atomaren Kürzeln von Fremdsprachen-Fächern
 	 */
 	public static @NotNull List<String> getListFremdsprachenKuerzelAtomar(final int schuljahr) {
-		List<@NotNull String> listFremdsprachen = _mapFremdsprachenKuerzelListe.get(schuljahr);
+		List<String> listFremdsprachen = _mapFremdsprachenKuerzelListe.get(schuljahr);
 		if (listFremdsprachen == null) {
 			listFremdsprachen = new ArrayList<>();
 			_mapFremdsprachenKuerzelListe.put(schuljahr, listFremdsprachen);

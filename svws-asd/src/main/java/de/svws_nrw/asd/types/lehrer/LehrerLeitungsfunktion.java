@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Dieser Core-Type enthält die unterschiedlichen Leitungsfunktionen von Lehrern.
  */
-public enum LehrerLeitungsfunktion implements @NotNull CoreType<@NotNull LehrerLeitungsfunktionKatalogEintrag, @NotNull LehrerLeitungsfunktion> {
+public enum LehrerLeitungsfunktion implements @NotNull CoreType<LehrerLeitungsfunktionKatalogEintrag, LehrerLeitungsfunktion> {
 
 	/** Schulleitung */
 	SL,
