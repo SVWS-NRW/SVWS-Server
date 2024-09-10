@@ -1,8 +1,8 @@
 <template>
 	<svws-ui-content-card :title="`${selected}. Stunde`">
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="value => start = value " />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => ende = value" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenbeginn ?? 0)" required placeholder="Stundenbeginn" @change="value => value && (start = value) " />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(first.stundenende ?? 0)" placeholder="Stundenende" @change="value => value && (ende = value)" />
 			<svws-ui-button v-if="!disabled && !ueberschneidung" type="secondary" @click="patchZeiten"> Stundenzeiten aktualisieren </svws-ui-button>
 			<div v-if="ueberschneidung" class="text-error col-span-2">Die Änderung der Stundenzeiten würde zu einer Überschneidung führen und ist nicht zulässig.</div>
 			<div class="col-span-full">

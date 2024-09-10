@@ -20,7 +20,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { StundenplanManager} from '@core';
-	import  { Wochentag } from '@core';
+	import { Wochentag } from '@core';
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;

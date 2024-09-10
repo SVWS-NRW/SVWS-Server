@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
+	import { ref } from "vue";
 	import type { StundenplanManager} from "@core";
 	import type { StundenplanZeitraster } from "@core";
-	import { ref } from "vue";
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;

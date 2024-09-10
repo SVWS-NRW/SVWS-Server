@@ -50,15 +50,15 @@
 		return cols;
 	}
 
-	async function patchBeginn(event: string | number) {
-		if (typeof event === 'number')
+	async function patchBeginn(event: string | null) {
+		if (event === null)
 			return;
 		const beginn = DateUtils.gibMinutenOfZeitAsString(event);
 		await props.patchPausenzeit({ beginn }, props.selected.id);
 	}
 
-	async function patchEnde(event: string | number) {
-		if (typeof event === 'number')
+	async function patchEnde(event: string | null) {
+		if (event === null)
 			return;
 		const ende = DateUtils.gibMinutenOfZeitAsString(event);
 		await props.patchPausenzeit({ ende }, props.selected.id);

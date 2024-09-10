@@ -3,7 +3,7 @@ import type { GostKursplanungAuswahlProps } from "~/components/gost/kursplanung/
 import type { GostKursplanungProps } from "~/components/gost/kursplanung/SGostKursplanungProps";
 
 import type { GostBlockungListeneintrag, GostBlockungsergebnis} from "@core";
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";

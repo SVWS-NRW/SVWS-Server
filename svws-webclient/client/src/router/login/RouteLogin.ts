@@ -1,4 +1,3 @@
-import type { Ref} from "vue";
 import { ref } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
@@ -20,7 +19,7 @@ export class RouteLogin extends RouteNode<any, any> {
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
 	public redirect = '';
-	protected schema: Ref<string | null> = ref(null);
+	protected schema = ref<string | null>(null);
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "login", "/login/:schemaname?", SLogin);

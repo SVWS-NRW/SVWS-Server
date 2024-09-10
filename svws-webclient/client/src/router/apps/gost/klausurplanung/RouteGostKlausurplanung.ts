@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, GostHalbjahr, ServerMode } from "@core";
 
 import { RouteManager } from "~/router/RouteManager";
 import { schulformenGymOb } from "~/router/RouteHelper";

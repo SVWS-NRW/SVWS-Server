@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts">
+	import { computed } from "vue";
 	import type { StundenplanManager, StundenplanPausenzeit, StundenplanZeitraster} from "@core";
 	import { Wochentag } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		selected: Wochentag;

@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostKlausurplanManager, Schulform, ServerMode, DeveloperNotificationException, GostHalbjahr } from "@core";
+import { BenutzerKompetenz, ServerMode, DeveloperNotificationException, GostHalbjahr } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";

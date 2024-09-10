@@ -172,47 +172,47 @@
 	const props = defineProps<StatistikAppProps>();
 
 	const schulname: ComputedRef<string> = computed(() => {
-		const name = props.schule?.bezeichnung1;
+		const name = props.schule.bezeichnung1;
 		return name ? name : "Schule";
 	});
 
 	const schulNr: ComputedRef<string> = computed(() => {
-		const nr = props.schule?.schulNr;
+		const nr = props.schule.schulNr;
 		return nr ? nr.toString() : "#";
 	});
 
 	const schulform: ComputedRef<string> = computed(() => {
-		const form = props.schule?.schulform;
+		const form = props.schule.schulform;
 		return form ? form : "";
 	});
 
 	const adresse: ComputedRef<string> = computed(() => {
-		const strassenname = props.schule?.strassenname;
-		const hausnummer = props.schule?.hausnummer;
-		const hausnummerZusatz = props.schule?.hausnummerZusatz;
-		const plz = props.schule?.plz;
-		const ort = props.schule?.ort;
+		const strassenname = props.schule.strassenname;
+		const hausnummer = props.schule.hausnummer;
+		const hausnummerZusatz = props.schule.hausnummerZusatz;
+		const plz = props.schule.plz;
+		const ort = props.schule.ort;
 
 		return `${strassenname} ${hausnummer}${hausnummerZusatz ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
 	});
 
 	const telefon: ComputedRef<string> = computed(() => {
-		const telefon = props.schule?.telefon;
+		const telefon = props.schule.telefon;
 		return telefon ? telefon : "";
 	});
 
 	const fax: ComputedRef<string> = computed(() => {
-		const fax = props.schule?.fax;
+		const fax = props.schule.fax;
 		return fax ? fax : "";
 	});
 
 	const email: ComputedRef<string> = computed(() => {
-		const email = props.schule?.email;
+		const email = props.schule.email;
 		return email ? email : "";
 	});
 
 	const webAdresse: ComputedRef<string> = computed(() => {
-		const webAdresse = props.schule?.webAdresse;
+		const webAdresse = props.schule.webAdresse;
 		return webAdresse ? webAdresse : "";
 	});
 
