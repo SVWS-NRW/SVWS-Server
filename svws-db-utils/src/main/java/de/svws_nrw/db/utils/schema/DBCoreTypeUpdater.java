@@ -821,10 +821,12 @@ public class DBCoreTypeUpdater {
 					sql.append(strNullValue);
 				else
 					sql.append("'").append(f.fachgruppe).append("'").append(",");
-				if (f.abJahrgang == null)
+				if (f.abJahrgang == null) {
 					sql.append(strNullValue);
-				else
-					sql.append("'").append(f.abJahrgang).append("'").append(",");
+				} else {
+					final Jahrgaenge tmpJahrgang = Jahrgaenge.data().getWertByBezeichner(f.abJahrgang);
+					sql.append("'").append(tmpJahrgang.historie().getLast().kuerzel).append("'").append(",");
+				}
 				sql.append(f.istFremdsprache ? 1 : 0).append(",");
 				sql.append(f.istHKFS ? 1 : 0).append(",");
 				sql.append(f.istAusRegUFach ? 1 : 0).append(",");
