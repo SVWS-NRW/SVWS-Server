@@ -944,6 +944,22 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 
 	/**
+	 * Gibt da Fach für den angegebene Schlüssel (bei Sprachen zweistelliges Kürzel, z.B. S8) zurück.
+	 * Ist der Schlüssel ungültig, so wird als Default VF zurückgegeben.
+	 *
+	 * @param schluessel   der Schlüssel
+	 *
+	 * @return das Fach oder bei einem ungültigen Schlüssel das Fach VF
+	 */
+	public static Fach getBySchluesselOrDefault(final @NotNull String schluessel) {
+		final Fach result = Fach.data().getWertBySchluessel(schluessel);
+		if (result != null)
+			return result;
+		return Fach.VF;
+	}
+
+
+	/**
 	 * Gibt die Fachgruppe zurück, der das Fach in dem angegebenen Schuljahr zugeordnet ist.
 	 *
 	 * @param schuljahr   das Schuljahr

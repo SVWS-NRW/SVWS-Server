@@ -58,7 +58,7 @@ public final class DBUtilsFaecherGost {
 		eintrag.istMoeglichQ12 = fach.IstMoeglichQ12;
 		eintrag.istMoeglichQ21 = fach.IstMoeglichQ21;
 		eintrag.istMoeglichQ22 = fach.IstMoeglichQ22;
-		final Fach tmpFach = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
+		final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		final int defaultWochenstundenQ_GK = (Jahrgaenge.EF == tmpFach.getJahrgangAb(schuljahr)) ? 4 : 3;
 		final int defaultWochenstundenQ = ((tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_VX) || (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX))
 				? 2 : defaultWochenstundenQ_GK;
@@ -122,7 +122,7 @@ public final class DBUtilsFaecherGost {
 			eintrag.istMoeglichQ21 = jf.WaehlbarQ21;
 			eintrag.istMoeglichQ22 = jf.WaehlbarQ22;
 		}
-		final Fach tmpFach = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
+		final Fach tmpFach = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		final int defaultWochenstundenQ_GK = (Jahrgaenge.EF == tmpFach.getJahrgangAb(schuljahr)) ? 4 : 3;
 		final int defaultWochenstundenQ = ((tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_VX) || (tmpFach.getFachgruppe(schuljahr) == Fachgruppe.FG_PX))
 				? 2 : defaultWochenstundenQ_GK;
@@ -210,8 +210,5 @@ public final class DBUtilsFaecherGost {
 					.toList();
 		return new GostFaecherManager(schuljahr, tmpFaecher);
 	}
-
-
-
 
 }

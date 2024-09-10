@@ -1518,6 +1518,21 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	}
 
 	/**
+	 * Gibt da Fach für den angegebene Schlüssel (bei Sprachen zweistelliges Kürzel, z.B. S8) zurück.
+	 * Ist der Schlüssel ungültig, so wird als Default VF zurückgegeben.
+	 *
+	 * @param schluessel   der Schlüssel
+	 *
+	 * @return das Fach oder bei einem ungültigen Schlüssel das Fach VF
+	 */
+	public static getBySchluesselOrDefault(schluessel : string) : Fach | null {
+		const result : Fach | null = Fach.data().getWertBySchluessel(schluessel);
+		if (result !== null)
+			return result;
+		return Fach.VF;
+	}
+
+	/**
 	 * Gibt die Fachgruppe zurück, der das Fach in dem angegebenen Schuljahr zugeordnet ist.
 	 *
 	 * @param schuljahr   das Schuljahr
