@@ -46,7 +46,8 @@ public final class DataSchulen extends DataManager<Long> {
 		daten.schulnummer = e.SchulNr;
 		daten.name = (e.Name == null) ? "" : e.Name;
 		final Schulform schulform = (e.SchulformNr == null) ? null : Schulform.data().getWertBySchluessel(e.SchulformNr);
-		daten.schulformID = (schulform == null) ? null : schulform.daten(conn.getUser().schuleGetSchuljahr()).id;
+		final SchulformKatalogEintrag schulformEintrag = (schulform == null) ? null : schulform.daten(conn.getUser().schuleGetSchuljahr());
+		daten.schulformID = (schulformEintrag == null) ? null : schulformEintrag.id;
 		daten.strassenname = e.Strassenname;
 		daten.hausnummer = e.HausNr;
 		daten.hausnummerZusatz = e.HausNrZusatz;
