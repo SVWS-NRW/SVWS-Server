@@ -47,10 +47,6 @@ public class GostKlausurenCollectionAllData {
 	@Schema(description = "die ID der Klausurraumstunde", example = "")
 	public @NotNull GostKlausurenCollectionRaumData raumdata = new GostKlausurenCollectionRaumData();
 
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public GostKlausurenCollectionAllData fehlend = null;
-
 	/**
 	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
 	 *
@@ -64,17 +60,8 @@ public class GostKlausurenCollectionAllData {
 		final Set<GostKlausurtermin> terminMenge = new HashSet<>(termine);
 		terminMenge.addAll(addData.termine);
 		termine = new ArrayList<>(terminMenge);
-
 		metadata.addAll(addData.metadata);
 		raumdata.addAll(addData.raumdata);
-
-		if (addData.fehlend != null) {
-			if (fehlend == null)
-				fehlend = addData.fehlend;
-			else
-				fehlend.addAll(addData.fehlend);
-		}
-
 	}
 
 }

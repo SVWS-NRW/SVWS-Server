@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
@@ -45,7 +46,7 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long, DTOGostKlausurenKursklausuren, GostKursklausur> {
 
-	private long _idSchuljahresAbschnitt = -1;
+	private Schuljahresabschnitt sja;
 	private GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
 
 	/**
@@ -56,19 +57,15 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 *                               Datenbankzugriff
 	 * @param abiturjahr             das Jahr, in welchem der Jahrgang Abitur machen
 	 *                               wird
-	 * @param idSchuljahresAbschnitt die ID des Schuljahresabschnitts. Wird nur
-	 *                               gebraucht, falls die Startzeit der Klausur
-	 *                               geändert werden muss.
+	 * @param halbjahr               das Gost-Halbjahr
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final long idSchuljahresAbschnitt) throws ApiOperationException {
+	public DataGostKlausurenKursklausur(final DBEntityManager conn, final int abiturjahr, final GostHalbjahr halbjahr) throws ApiOperationException {
 		this(conn);
 		if ((abiturjahr != -1) && (conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr) == null))
 			throw new ApiOperationException(Status.BAD_REQUEST, "Jahrgang nicht gefunden, ID: " + abiturjahr);
-		_idSchuljahresAbschnitt = idSchuljahresAbschnitt;
-		if ((idSchuljahresAbschnitt != -1) && (conn.queryByKey(DTOSchuljahresabschnitte.class, idSchuljahresAbschnitt) == null))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Schuljahresabschnitt nicht gefunden, ID: " + idSchuljahresAbschnitt);
+		sja = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abiturjahr, halbjahr);
 	}
 
 	/**
@@ -146,7 +143,6 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 			case "idTermin" -> {
 				final Long newTermin = JSONMapper.convertToLong(value, true);
 				if (!Objects.equals(newTermin, dto.Termin_ID)) {
-//				if (newTermin == null && dto.Termin_ID != null || newTermin != null && !newTermin.equals(dto.Termin_ID)) { // Bei Zuweisung eines neuen Termins wird individuelle Startzeit gelöscht
 					dto.Startzeit = null;
 					final GostKlausurraumRich krRich = new GostKlausurraumRich();
 					krRich.id = -1;
@@ -166,13 +162,13 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				if (((startzeitNeu == null) && (dto.Startzeit != null)) || ((startzeitNeu != null) && !startzeitNeu.equals(dto.Startzeit))) {
 					dto.Startzeit = startzeitNeu;
 					conn.transactionPersist(dto);
-					if (_idSchuljahresAbschnitt == -1)
-						throw new ApiOperationException(Status.FORBIDDEN, "idAbschnitt muss übergeben werden, um Klausurzeit zu ändern");
+					if (sja == null)
+						throw new ApiOperationException(Status.FORBIDDEN, "Schuljahresabschnitt muss gesetzt sein, um Klausurzeit zu ändern.");
 					final GostKlausurraumRich krRich = new GostKlausurraumRich();
 					krRich.id = -1;
 					krRich.schuelerklausurterminIDs = getSchuelerklausurIDs(dto);
 					raumDataChanged = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(ListUtils.create1(krRich),
-							_idSchuljahresAbschnitt);
+							sja);
 				}
 			}
 			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));

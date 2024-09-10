@@ -4985,7 +4985,72 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der GET-Methode getGostKlausurenMetaCollectionOberstufeFehlend für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 *
+	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Kursklausuren.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 404: Keine Klausurvorgaben definiert oder der Schuljahresabschnitt wurde nicht gefunden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die Liste der Kursklausuren.
+	 */
+	public async getGostKlausurenMetaCollectionOberstufeFehlend(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionAllData> {
+		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenMetaCollectionOberstufeFehlendGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/gzip
+	 *
+	 * Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *   Code 500: Es ist ein unerwarteter interner Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 */
+	public async getGostKlausurenMetaCollectionOberstufeFehlendGZip(schema : string, abiturjahr : number, halbjahr : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+		const data : ApiFile = await super.getOctetStream(path);
+		return data;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
 	 *
 	 * Patcht einen Gost-Kursklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
 	 *
@@ -5002,15 +5067,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5355,7 +5422,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
 	 *
 	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
@@ -5368,14 +5435,16 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}"
+	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;

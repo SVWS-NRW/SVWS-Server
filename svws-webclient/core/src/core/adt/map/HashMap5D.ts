@@ -223,6 +223,34 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	}
 
 	/**
+	 * Entfernt das Mapping (key1) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 */
+	public removeMap1(key1 : K1) : void {
+		let map1 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null)
+			return;
+		this._map.remove(key1);
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 */
+	public removeMap2(key1 : K1, key2 : K2) : void {
+		let map1 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null)
+			return;
+		map1.removeMap1(key2);
+		if (map1.isEmpty()) {
+			this._map.remove(key1);
+		}
+	}
+
+	/**
 	 * Liefert das KeySet des 1. Schlüssels.
 	 *
 	 * @return das KeySet der SubMap des 1. Schlüssels.

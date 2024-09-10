@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
@@ -24,7 +25,6 @@ import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -38,7 +38,6 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOGostKlausurenTermine, GostKlausurtermin> {
 
-	private final long _idSchuljahresAbschnitt;
 	private final GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
 
 	/**
@@ -50,7 +49,6 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public DataGostKlausurenTermin(final DBEntityManager conn, final long idSchuljahresAbschnitt) {
 		super(conn);
-		_idSchuljahresAbschnitt = idSchuljahresAbschnitt;
 		super.setAttributesNotPatchable("abijahr", "halbjahr", "istHaupttermin");
 		super.setAttributesRequiredOnCreation("abijahr", "halbjahr", "quartal");
 	}
@@ -314,8 +312,8 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(terminIDs);
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(skts);
 		final List<GostKursklausur> kks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(sks);
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, _idSchuljahresAbschnitt);
-		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.Jahr,
+		final Schuljahresabschnitt schuljahresabschnitt = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
+		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.schuljahr,
 				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kks),
 				kks,
 				termine,
@@ -355,7 +353,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			}
 		}
 		if (!raumListeNeu.isEmpty()) {
-			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu, _idSchuljahresAbschnitt).raumdata;
+			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu, schuljahresabschnitt).raumdata;
 			raumDataChanged.raumdata.raeume = raumListe;
 		}
 	}

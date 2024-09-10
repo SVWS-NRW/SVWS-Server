@@ -71,6 +71,8 @@ export class GostKlausurplanManager extends JavaObject {
 
 	private readonly _terminidmenge_manager_enthaelt_raumdata : JavaSet<number> = new HashSet<number>();
 
+	private readonly _fehlenddatenEnthalten : HashMap2D<number, number, boolean> = new HashMap2D<number, number, boolean>();
+
 	private readonly _compVorgabe : Comparator<GostKlausurvorgabe> = { compare : (a: GostKlausurvorgabe, b: GostKlausurvorgabe) => {
 		if (JavaString.compareTo(a.kursart, b.kursart) < 0)
 			return +1;
@@ -372,7 +374,6 @@ export class GostKlausurplanManager extends JavaObject {
 		this.initMetadata(allData.metadata);
 		this.addKlausurDataOhneUpdate(allData.vorgaben, allData.kursklausuren, allData.termine, allData.schuelerklausuren, allData.schuelerklausurtermine);
 		this.addRaumDataOhneUpdate(allData.raumdata);
-		this.addKlausurDataFehlendOhneUpdate(allData.fehlend);
 		this.update_all();
 	}
 
@@ -434,6 +435,22 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
+	 * Setzt die Problemdaten der Klausurplanung für einen bestimmten Abiturjahrgang und ein bestimmtes Halbjahr
+	 *
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param halbjahr das Halbjahr
+	 * @param fehlendData die GostKlausurenCollectionAllData mit den fehlenden Klausurdaten
+	 */
+	public setKlausurDataFehlend(abiJahrgang : number, halbjahr : GostHalbjahr, fehlendData : GostKlausurenCollectionAllData | null) : void {
+		this._vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.removeMap2(abiJahrgang, halbjahr.id);
+		this._kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.removeMap2(abiJahrgang, halbjahr.id);
+		this._schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.removeMap2(abiJahrgang, halbjahr.id);
+		this.addKlausurDataFehlendOhneUpdate(fehlendData);
+		this._fehlenddatenEnthalten.put(abiJahrgang, halbjahr.id, true);
+		this.update_all();
+	}
+
+	/**
 	 * Liefert <code>true</code>, falls der Manager Klausurvorgaben enthält.
 	 *
 	 * @return <code>true</code>, falls der Manager Klausurvorgaben enthält.
@@ -460,6 +477,18 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public hasRaumdataZuTermin(termin : GostKlausurtermin) : boolean {
 		return this._terminidmenge_manager_enthaelt_raumdata.contains(termin.id);
+	}
+
+	/**
+	 * Liefert <code>true</code>, falls der Manager Fehlenddaten zum übergebenen Abiturjahrgang und Halbjahr enthält.
+	 *
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param halbjahr das Halbjahr
+	 *
+	 * @return <code>true</code>, falls der Manager Fehlenddaten zum übergebenen Abiturjahrgang und Halbjahr enthält.
+	 */
+	public hasFehlenddatenZuAbijahrUndHalbjahr(abiJahrgang : number, halbjahr : GostHalbjahr) : boolean {
+		return this._fehlenddatenEnthalten.contains(abiJahrgang, halbjahr.id);
 	}
 
 	/**
@@ -589,6 +618,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param listSchueler Liste von {@link SchuelerListeEintrag}en
 	 */
 	public setSchuelerMap(listSchueler : List<SchuelerListeEintrag>) : void {
+		if (listSchueler.isEmpty())
+			return;
 		this._schuelerMap = new HashMap();
 		this._schuelermenge_by_abijahr.clear();
 		for (const sle of listSchueler) {

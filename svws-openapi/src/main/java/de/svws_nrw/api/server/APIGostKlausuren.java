@@ -250,13 +250,14 @@ public class APIGostKlausuren {
 	 * @param schema        das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param request       die Informationen zur HTTP-Anfrage
 	 * @param id		    die ID der Kursklausur
-	 * @param abschnittid   die ID des Schuljahresabschnitts
+	 * @param abiturjahr    das Abiturjahr
+	 * @param halbjahr      das Halbjahr
 	 * @param is            JSON-Objekt mit den Daten
 	 *
 	 * @return das Ergebnis der Patch-Operation
 	 */
 	@POST
-	@Path("/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}")
+	@Path("/kursklausuren/{id : \\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}")
 	@Operation(summary = "Patcht einen Gost-Kursklausur.", description = "Patcht einen Gost-Kursklausur."
 			+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.")
 	@ApiResponse(responseCode = "201", description = "Der Patch wurde erfolgreich in die Kursklausur integriert.",
@@ -268,10 +269,12 @@ public class APIGostKlausuren {
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response patchGostKlausurenKursklausur(@PathParam("schema") final String schema, @PathParam("id") final long id,
-			@PathParam("abschnittid") final long abschnittid, @RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true,
+			@PathParam("abiturjahr") final int abiturjahr,
+			@PathParam("halbjahr") final int halbjahr, @RequestBody(description = "Der Patch für die Kursklausur-Daten", required = true,
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKursklausur.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenKursklausur(conn, -1, abschnittid).patchAsResponse(id, is),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataGostKlausurenKursklausur(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr)).patchAsResponse(id, is),
 				request,
 				ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
@@ -361,7 +364,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response getGostKlausurenMetaCollectionOberstufe(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
-				array = @ArraySchema(schema = @Schema(implementation = Integer.class)))) final List<Integer> raumSchuelerZuteilung,
+					array = @ArraySchema(schema = @Schema(implementation = Integer.class)))) final List<Integer> raumSchuelerZuteilung,
 			@Context final HttpServletRequest request) {
 		final List<Pair<Integer, Integer>> select = new ArrayList<>();
 		for (int i = 0; i < raumSchuelerZuteilung.size(); i += 2)
@@ -405,6 +408,72 @@ public class APIGostKlausuren {
 			@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> DataGostKlausuren.getAllDataGZip(conn, null),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Schuelerklausuren zu einem Klausurtermin.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+	 *
+	 * @return die Liste der Gost-SchuelerklausurenTermine
+	 */
+	@GET
+	@Path("/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}")
+	@Operation(summary = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus.",
+			description = "Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Kursklausuren.",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionAllData.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Keine Klausurvorgaben definiert oder der Schuljahresabschnitt wurde nicht gefunden.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response getGostKlausurenMetaCollectionOberstufeFehlend(@PathParam("schema") final String schema,
+			@PathParam("abiturjahr") final int abiturjahr,
+			@PathParam("halbjahr") final int halbjahr,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)
+						.entity(DataGostKlausuren.getFehlendData(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr))).build(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
+	}
+
+	/**
+	 * Die OpenAPI-Methode für die Abfrage der Blockungsdaten der gymnasialen Oberstufe als GZip-komprimiertes JSON.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param halbjahr   das Gost-Halbjahr, für das die Klausuren erzeugt werden sollen
+	 *
+	 * @return die Blockungsdaten
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@Path("/collection/metaoberstufefehlend/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip")
+	@Operation(summary = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus.",
+			description = "Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. "
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID",
+			content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM, schema = @Schema(type = "string", format = "binary",
+					description = "Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID")))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "404", description = "Keine Blockung mit der angebenen ID gefunden.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	@ApiResponse(responseCode = "500", description = "Es ist ein unerwarteter interner Fehler aufgetreten.",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = SimpleOperationResponse.class)))
+	public Response getGostKlausurenMetaCollectionOberstufeFehlendGZip(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+			@PathParam("halbjahr") final int halbjahr, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
+				conn -> DataGostKlausuren.getFehlendDataGZip(conn, abiturjahr, GostHalbjahr.fromIDorException(halbjahr)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION);
@@ -459,7 +528,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createGostKlausurenSchuelerklausuren(@PathParam("schema") final String schema, @RequestBody(
 			description = "Der Post für die Klausurtermin-Daten", required = true,
-					content = @Content(mediaType = MediaType.APPLICATION_JSON,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = GostSchuelerklausur.class)))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostKlausurenSchuelerklausur(conn).addMultipleAsResponse(is),
@@ -544,7 +613,8 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "409", description = "Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde"
 			+ " (z.B. eine negative ID)")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response patchGostKlausurenKlausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id, @PathParam("abschnittid") final long abschnittid,
+	public Response patchGostKlausurenKlausurtermin(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@PathParam("abschnittid") final long abschnittid,
 			@RequestBody(description = "Der Patch für die Klausurtermin-Daten", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurtermin.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
@@ -641,13 +711,14 @@ public class APIGostKlausuren {
 	 *
 	 * @param schema                  das Datenbankschema
 	 * @param request                 die Informationen zur HTTP-Anfrage
-	 * @param abschnittid	          die Id des Schuljahresabschnitts
+	 * @param abiturjahr              das Abiturjahr
+	 * @param halbjahr                das Halbjahr
 	 * @param raumSchuelerZuteilung   die Ids der GostSchuelerklausuren
 	 *
 	 * @return die HTTP-Antwort
 	 */
 	@POST
-	@Path("/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}")
+	@Path("/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}")
 	@Operation(summary = "Weist die angegebenen Schülerklausuren dem Klausurraum zu.",
 			description = "Weist die angegebenen Schülerklausuren dem Klausurraum zu."
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.")
@@ -655,12 +726,13 @@ public class APIGostKlausuren {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionSkrsKrsData.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response setzeGostSchuelerklausurenZuRaum(@PathParam("schema") final String schema, @PathParam("abschnittid") final long abschnittid,
+	public Response setzeGostSchuelerklausurenZuRaum(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
+			@PathParam("halbjahr") final int halbjahr,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = false, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					array = @ArraySchema(schema = @Schema(implementation = GostKlausurraumRich.class)))) final List<GostKlausurraumRich> raumSchuelerZuteilung,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> new DataGostKlausurenSchuelerklausurraumstunde(conn).setzeRaumZuSchuelerklausuren(raumSchuelerZuteilung, abschnittid),
+				conn -> new DataGostKlausurenSchuelerklausurraumstunde(conn).setzeRaumZuSchuelerklausuren(raumSchuelerZuteilung, abiturjahr, GostHalbjahr.fromIDorException(halbjahr)),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}
@@ -718,7 +790,8 @@ public class APIGostKlausuren {
 					schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
-				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new DataGostKlausurenKursklausur(conn).blocken(blockungDaten)).build(),
+				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new DataGostKlausurenKursklausur(conn).blocken(blockungDaten))
+						.build(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN);
 	}

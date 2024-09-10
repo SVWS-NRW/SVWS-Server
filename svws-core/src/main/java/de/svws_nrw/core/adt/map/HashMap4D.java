@@ -31,6 +31,15 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 	}
 
 	/**
+	 * Liefert TRUE, falls die Map leer ist.
+	 *
+	 * @return TRUE, falls die Map leer ist.
+	 */
+	public boolean isEmpty() {
+		return _map1.isEmpty();
+	}
+
+	/**
 	 * Fügt die Zuordnung der Map hinzu. Falls es einen Teil-Pfad von (key1, key2,
 	 * key3, key4) nicht gibt, wird er erzeugt.
 	 *
@@ -259,8 +268,7 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 	}
 
 	/**
-	 * Entfernt das Mapping (key1, key2, key3, key4) falls es existiert<br>
-	 * .
+	 * Entfernt das Mapping (key1, key2, key3, key4) falls es existiert<br>.
 	 *
 	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
@@ -295,7 +303,72 @@ public class HashMap4D<K1, K2, K3, K4, V> {
 				}
 			}
 		}
+	}
 
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key3 Der 3. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 *
+	 */
+	public void removeMap3(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) {
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return;
+
+		final Map<K3, Map<K4, V>> map3 = map2.get(key2);
+		if (map3 == null)
+			return;
+
+		if (!map3.containsKey(key3))
+			return;
+
+		// Mapping-Baum abschneiden.
+		map3.remove(key3);
+		if (map3.isEmpty()) {
+			map2.remove(key2);
+			if (map2.isEmpty()) {
+				_map1.remove(key1);
+			}
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 *
+	 */
+	public void removeMap2(final @NotNull K1 key1, final @NotNull K2 key2) {
+		final Map<K2, Map<K3, Map<K4, V>>> map2 = _map1.get(key1);
+		if (map2 == null)
+			return;
+
+		if (!map2.containsKey(key2))
+			return;
+
+		// Mapping-Baum abschneiden.
+		map2.remove(key2);
+		if (map2.isEmpty()) {
+			_map1.remove(key1);
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel (key1).
+	 *
+	 */
+	public void removeMap1(final @NotNull K1 key1) {
+		if (!_map1.containsKey(key1))
+			return;
+
+		// Mapping-Baum abschneiden.
+		_map1.remove(key1);
 	}
 
 	/**

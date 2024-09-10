@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
@@ -18,6 +19,7 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumst
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintrag;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.types.Wochentag;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.stundenplan.StundenplanListUtils;
 import de.svws_nrw.core.utils.stundenplan.StundenplanManager;
@@ -30,7 +32,6 @@ import de.svws_nrw.data.stundenplan.DataStundenplanUnterrichtsverteilung;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -223,15 +224,17 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
 	 * @param raumSchuelerZuteilung die IDs der zuzuweisenden Schülerklausuren
-	 * @param idAbschnitt          die ID des Schuljahresabschnitts
+	 * @param abijahr              das Abiturjahr
+	 * @param halbjahr             das Halbjahr
 	 *
 	 * @return die Antwort
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response setzeRaumZuSchuelerklausuren(final List<GostKlausurraumRich> raumSchuelerZuteilung,
-			final long idAbschnitt) throws ApiOperationException {
-		final GostKlausurenCollectionSkrsKrsData result = transactionSetzeRaumZuSchuelerklausuren(raumSchuelerZuteilung, idAbschnitt);
+			final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {
+		final Schuljahresabschnitt schuljahresabschnitt = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abijahr, halbjahr);
+		final GostKlausurenCollectionSkrsKrsData result = transactionSetzeRaumZuSchuelerklausuren(raumSchuelerZuteilung, schuljahresabschnitt);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();
 	}
 
@@ -239,18 +242,15 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * Weist die übergebenen Schülerklausuren dem entsprechenden Klausurraum zu.
 	 *
 	 * @param raumSchuelerZuteilung die IDs der zuzuweisenden Schülerklausuren
-	 * @param idAbschnitt          die ID des Schuljahresabschnitts
+	 * @param schuljahresabschnitt          der Schuljahresabschnitt
 	 *
 	 * @return die Antwort
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionSkrsKrsData transactionSetzeRaumZuSchuelerklausuren(final List<GostKlausurraumRich> raumSchuelerZuteilung,
-			final long idAbschnitt) throws ApiOperationException {
+	public GostKlausurenCollectionSkrsKrsData transactionSetzeRaumZuSchuelerklausuren(final List<GostKlausurraumRich> raumSchuelerZuteilung, final Schuljahresabschnitt schuljahresabschnitt) throws ApiOperationException {
 		if (raumSchuelerZuteilung.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
-
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, idAbschnitt);
 
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
 		for (final GostKlausurraumRich pair : raumSchuelerZuteilung) {
@@ -289,11 +289,11 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 			// Manager erzeugen
 			final List<GostKlausurvorgabe> listVorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKursklausuren);
-			final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.Jahr, listVorgaben, listKursklausuren, listTermine,
+			final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.schuljahr, listVorgaben, listKursklausuren, listTermine,
 					listSchuelerklausuren, listSchuelerklausurtermine);
 			manager.raumAdd(raum);
 			manager.raumstundeAddAll(listRaumstunden);
-			final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, idAbschnitt), termin.datum);
+			final StundenplanListeEintrag sle = StundenplanListUtils.get(DataStundenplanListe.getStundenplaene(conn, schuljahresabschnitt.id), termin.datum);
 
 			final StundenplanManager stundenplanManager =
 					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),

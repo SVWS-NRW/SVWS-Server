@@ -163,6 +163,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
 			}
 			this.setPatchedState(result);
+			if (!this.manager.hasFehlenddatenZuAbijahrUndHalbjahr(this.abiturjahr, this._state.value.halbjahr)) {
+				void this.reloadFehlendData();
+			}
 			return true;
 		} finally {
 			api.status.stop();
@@ -182,7 +185,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	setRaumTermin = async (termin: GostKlausurtermin | null) => {
 		if (termin !== null && (this.terminSelected.value === undefined || !this.terminSelected.value.equals(termin))) {
 			this.terminSelected.value = termin;
-			// await this.erzeugeKlausurraummanager(termin);
 		}
 		this.commit();
 	}
@@ -199,6 +201,14 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 		}
 	});
+
+	reloadFehlendData = async () => {
+		const fehlendDataGzip = await api.server.getGostKlausurenMetaCollectionOberstufeFehlendGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
+		const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
+		const fehlendData = GostKlausurenCollectionAllData.transpilerFromJSON(await fehlendDataBlob.text());
+		this.manager.setKlausurDataFehlend(this.abiturjahr, this._state.value.halbjahr, fehlendData);
+		this.commit();
+	}
 
 	kalenderwoche = computed<StundenplanKalenderwochenzuordnung>({
 		get: () => this._state.value.kalenderwoche,
@@ -294,7 +304,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			if (klausur instanceof GostKursklausur) {
 				if (this._state.value.abschnitt === undefined)
 					throw new DeveloperNotificationException('Es wurde kein gültiger Abschnitt für diese Planung gesetzt')
-				const result = await api.server.patchGostKlausurenKursklausur(patch, api.schema, klausur.id, this._state.value.abschnitt.id);
+				const result = await api.server.patchGostKlausurenKursklausur(patch, api.schema, klausur.id, this.abiturjahr, this.halbjahr.id);
 				if (result.kursKlausurPatched !== null) {
 					this.manager.kursklausurPatchAttributes(result.kursKlausurPatched);
 					this.manager.setzeRaumZuSchuelerklausuren(result);
@@ -328,6 +338,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		try {
 			const neueVorgabe = await api.server.createGostKlausurenVorgabe(vorgabe, api.schema);
 			this.manager.vorgabeAdd(neueVorgabe);
+			void this.reloadFehlendData();
 		} finally {
 			this.commit();
 			api.status.stop();
@@ -381,6 +392,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		api.status.start();
 		const listKlausurvorgaben = await api.server.copyGostKlausurenVorgaben(api.schema, this.abiturjahr, this.halbjahr.id, quartal);
 		this.manager.vorgabeAddAll(listKlausurvorgaben);
+		void this.reloadFehlendData();
 		this.commit();
 		api.status.stop();
 	}
@@ -421,7 +433,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		const skids = new ArrayList<number>();
 		let collectionSkrsKrs;
 		if (!deleteFromRaeume) {
-			collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(rRaeume, api.schema, this._state.value.abschnitt.id);
+			collectionSkrsKrs = await api.server.setzeGostSchuelerklausurenZuRaum(rRaeume, api.schema, this.abiturjahr, this.halbjahr.id);
 		} else {
 			collectionSkrsKrs = await api.server.loescheGostSchuelerklausurenAusRaum(rRaeume, api.schema);
 		}

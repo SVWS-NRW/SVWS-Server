@@ -70,6 +70,7 @@ public class GostKlausurplanManager {
 	private boolean _vorgabenInitialized = false;
 	private boolean _klausurenInitialized = false;
 	private final @NotNull Set<Long> _terminidmenge_manager_enthaelt_raumdata = new HashSet<>();
+	private final @NotNull HashMap2D<Integer, Integer, Boolean> _fehlenddatenEnthalten = new HashMap2D<>();
 
 	// Comparators
 	private final @NotNull Comparator<GostKlausurvorgabe> _compVorgabe =
@@ -346,7 +347,7 @@ public class GostKlausurplanManager {
 		initMetadata(allData.metadata);
 		addKlausurDataOhneUpdate(allData.vorgaben, allData.kursklausuren, allData.termine, allData.schuelerklausuren, allData.schuelerklausurtermine);
 		addRaumDataOhneUpdate(allData.raumdata);
-		addKlausurDataFehlendOhneUpdate(allData.fehlend);
+//		addKlausurDataFehlendOhneUpdate(allData.fehlend);
 		update_all();
 	}
 
@@ -411,6 +412,23 @@ public class GostKlausurplanManager {
 	}
 
 	/**
+	 * Setzt die Problemdaten der Klausurplanung für einen bestimmten Abiturjahrgang und ein bestimmtes Halbjahr
+	 *
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param halbjahr das Halbjahr
+	 * @param fehlendData die GostKlausurenCollectionAllData mit den fehlenden Klausurdaten
+	 */
+	public void setKlausurDataFehlend(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr, final GostKlausurenCollectionAllData fehlendData) {
+		_vorgabefehlend_by_abijahr_and_halbjahr_and_quartal_and_kursartAllg_and_idFach.removeMap2(abiJahrgang, halbjahr.id);
+		_kursklausurfehlend_by_abijahr_and_halbjahr_and_quartal_and_idKurs.removeMap2(abiJahrgang, halbjahr.id);
+		_schuelerklausurfehlendmenge_by_abijahr_and_halbjahr_and_quartal_and_idSchueler_and_idKursklausur.removeMap2(abiJahrgang, halbjahr.id);
+		addKlausurDataFehlendOhneUpdate(fehlendData);
+		_fehlenddatenEnthalten.put(abiJahrgang, halbjahr.id, true);
+
+		update_all();
+	}
+
+	/**
 	 * Liefert <code>true</code>, falls der Manager Klausurvorgaben enthält.
 	 *
 	 * @return <code>true</code>, falls der Manager Klausurvorgaben enthält.
@@ -437,6 +455,18 @@ public class GostKlausurplanManager {
 	 */
 	public boolean hasRaumdataZuTermin(final @NotNull GostKlausurtermin termin) {
 		return _terminidmenge_manager_enthaelt_raumdata.contains(termin.id);
+	}
+
+	/**
+	 * Liefert <code>true</code>, falls der Manager Fehlenddaten zum übergebenen Abiturjahrgang und Halbjahr enthält.
+	 *
+	 * @param abiJahrgang der Abiturjahrgang
+	 * @param halbjahr das Halbjahr
+	 *
+	 * @return <code>true</code>, falls der Manager Fehlenddaten zum übergebenen Abiturjahrgang und Halbjahr enthält.
+	 */
+	public boolean hasFehlenddatenZuAbijahrUndHalbjahr(final int abiJahrgang, final @NotNull GostHalbjahr halbjahr) {
+		return _fehlenddatenEnthalten.contains(abiJahrgang, halbjahr.id);
 	}
 
 
@@ -568,6 +598,8 @@ public class GostKlausurplanManager {
 	 * @param listSchueler Liste von {@link SchuelerListeEintrag}en
 	 */
 	public void setSchuelerMap(final @NotNull List<SchuelerListeEintrag> listSchueler) {
+		if (listSchueler.isEmpty())
+			return;
 		_schuelerMap = new HashMap<>();
 		_schuelermenge_by_abijahr.clear();
 		for (final SchuelerListeEintrag sle : listSchueler) {

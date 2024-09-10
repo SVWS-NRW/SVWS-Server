@@ -49,11 +49,6 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 	 */
 	public raumdata : GostKlausurenCollectionRaumData = new GostKlausurenCollectionRaumData();
 
-	/**
-	 * Die Liste der Schülerklausuren.
-	 */
-	public fehlend : GostKlausurenCollectionAllData | null = null;
-
 
 	public constructor() {
 		super();
@@ -74,12 +69,6 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 		this.termine = new ArrayList(terminMenge);
 		this.metadata.addAll(addData.metadata);
 		this.raumdata.addAll(addData.raumdata);
-		if (addData.fehlend !== null) {
-			if (this.fehlend === null)
-				this.fehlend = addData.fehlend;
-			else
-				this.fehlend.addAll(addData.fehlend);
-		}
 	}
 
 	transpilerCanonicalName(): string {
@@ -126,7 +115,6 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 		if (obj.raumdata === undefined)
 			throw new Error('invalid json format, missing attribute raumdata');
 		result.raumdata = GostKlausurenCollectionRaumData.transpilerFromJSON(JSON.stringify(obj.raumdata));
-		result.fehlend = ((obj.fehlend === undefined) || (obj.fehlend === null)) ? null : GostKlausurenCollectionAllData.transpilerFromJSON(JSON.stringify(obj.fehlend));
 		return result;
 	}
 
@@ -174,7 +162,6 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 		result += ' ]' + ',';
 		result += '"metadata" : ' + GostKlausurenCollectionMetaData.transpilerToJSON(obj.metadata) + ',';
 		result += '"raumdata" : ' + GostKlausurenCollectionRaumData.transpilerToJSON(obj.raumdata) + ',';
-		result += '"fehlend" : ' + ((!obj.fehlend) ? 'null' : GostKlausurenCollectionAllData.transpilerToJSON(obj.fehlend)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -237,9 +224,6 @@ export class GostKlausurenCollectionAllData extends JavaObject {
 		}
 		if (obj.raumdata !== undefined) {
 			result += '"raumdata" : ' + GostKlausurenCollectionRaumData.transpilerToJSON(obj.raumdata) + ',';
-		}
-		if (obj.fehlend !== undefined) {
-			result += '"fehlend" : ' + ((!obj.fehlend) ? 'null' : GostKlausurenCollectionAllData.transpilerToJSON(obj.fehlend)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';
