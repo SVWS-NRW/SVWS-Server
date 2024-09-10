@@ -342,6 +342,20 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
 	 *
+	 * @return die Fach-Informationen oder null, wenn kein Fach zugeordnet ist
+	 */
+	public fachGetByLeistungId(idLeistung : number) : FachDaten | null {
+		const leistung : SchuelerLeistungsdaten | null = this._mapLeistungById.get(idLeistung);
+		if (leistung === null)
+			return null;
+		return this._mapFachByID.get(leistung.fachID);
+	}
+
+	/**
+	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
 	 * @return die Fach-Informationen.
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
@@ -355,12 +369,16 @@ export class SchuelerLernabschnittManager extends JavaObject {
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
 	 *
-	 * @return die Farbe
-	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
+	 * @return die Farbe und falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist, die Default-Farbe rgb(220,220,220)
 	 */
-	public fachFarbeGetByLeistungsIdOrException(idLeistung : number) : string {
-		const fach : FachDaten = this.fachGetByLeistungIdOrException(idLeistung);
-		return Fach.data().getWertBySchluesselOrException(fach.kuerzel).getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
+	public fachFarbeGetByLeistungsIdOrDefault(idLeistung : number) : string {
+		const fachDaten : FachDaten | null = this.fachGetByLeistungId(idLeistung);
+		if (fachDaten === null)
+			return "rgb(220,220,220)";
+		const fach : Fach | null = Fach.data().getWertBySchluessel(fachDaten.kuerzel);
+		if (fach === null)
+			return "rgb(220,220,220)";
+		return fach.getHMTLFarbeRGB(this._schuljahresabschnitt.schuljahr);
 	}
 
 	/**
