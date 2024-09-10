@@ -43,7 +43,7 @@
 			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
 		</button>
 	</div>
-	<Teleport to="body">
+	<Teleport to="body" defer>
 		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list :select-item ref="refList" />
 	</Teleport>
 </template>
@@ -126,7 +126,7 @@
 			case showList.value && props.autocomplete:
 				return searchText.value;
 			default:
-				return generateInputText() ?? '';
+				return generateInputText();
 		}
 	});
 
@@ -139,10 +139,8 @@
 	watch(() => props.modelValue, (value) => updateData(new Set(value)), { immediate: false });
 
 	function updateData(value: Set<Item>) {
-		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
-			return;
-		const a = ((data.value === null) || (data.value === undefined)) ? new Set<Item>() : data.value;
-		const b = ((value === null) || (value === undefined)) ? new Set<Item>() : value;
+		const a = data.value;
+		const b = value;
 		if (a.size === b.size) {
 			let diff : boolean = false;
 			for (const e of a) {
@@ -158,8 +156,12 @@
 		emit("update:modelValue", [...data.value]);
 	}
 
-	const selectedItem = computed<Item | null | undefined>({
-		get: () => data.value.entries().next().value,
+	const selectedItem = computed({
+		get: () => {
+			for (const e of data.value.keys())
+				return e;
+			return undefined;
+		},
 		set: (item) => {
 			if (item !== null && item !== undefined)
 				if (selectedItemList.value.has(item))
@@ -176,7 +178,7 @@
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
 	}
 
-	function selectItem(item: Item | null | undefined) {
+	function selectItem(item: Item) {
 		selectedItem.value = item;
 		if (props.autocomplete)
 			searchText.value = "";
@@ -196,17 +198,12 @@
 			arr = [...props.items.values()];
 		else
 			arr = [...props.items];
-		if (props.itemSort)
-			return arr.sort(props.itemSort);
-		return arr;
+		return arr.sort(props.itemSort);
 	});
 
 	const filteredList = computed<Item[]>(() => {
 		if (props.autocomplete)
-			if (props.itemFilter)
-				return props.itemFilter(sortedList.value, searchText.value);
-			else
-				return sortedList.value.filter(i => props.itemText(i).startsWith(searchText.value ?? ""));
+			return props.itemFilter(sortedList.value, searchText.value);
 		return sortedList.value;
 	});
 
@@ -216,7 +213,10 @@
 	}
 
 	function toggleListBox() {
-		showList.value ? closeListbox() : openListbox();
+		if (showList.value)
+			closeListbox();
+		else
+			openListbox();
 	}
 
 	function openListbox() {
@@ -273,7 +273,10 @@
 
 	function onSpace(e: InputEvent) {
 		if (!props.autocomplete)
-			showList.value ? selectCurrentActiveItem() : openListbox();
+			if (showList.value)
+				selectCurrentActiveItem();
+			else
+				openListbox();
 	}
 
 	function onTab(e: InputEvent) {

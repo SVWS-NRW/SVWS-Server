@@ -49,7 +49,7 @@
 		if (error === undefined)
 			return;
 		const reason = (typeof error === 'string') ? new Error(error) : error;
-		createCapturedError(reason).then(()=> showModal().value = true).catch(e => e);
+		createCapturedError(reason).then(()=> showModal().value = true).catch((e: unknown) => e);
 	}
 
 	async function createCapturedError(reason: Error) {

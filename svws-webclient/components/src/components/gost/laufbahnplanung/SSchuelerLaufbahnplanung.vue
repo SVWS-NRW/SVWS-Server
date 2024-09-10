@@ -44,7 +44,7 @@
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
-	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== undefined);
+	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== null);
 
 	const _showModalImport = ref<boolean>(false);
 	const showModalImport = () => _showModalImport;

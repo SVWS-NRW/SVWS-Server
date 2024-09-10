@@ -37,7 +37,7 @@ export class RouteApp extends RouteNode<RouteData, any> {
 	public async update(to: RouteNode<unknown, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		let cur: RouteNode<unknown, any> = to;
 		while (cur.parent !== this)
-		  cur = cur.parent;
+			cur = cur.parent;
 		if (cur !== this.data.view)
 			await this.data.setView(cur);
 	}
@@ -72,7 +72,7 @@ export class RouteApp extends RouteNode<RouteData, any> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new Error("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: {  } });
+		await RouteManager.doRoute({ name: value.name, params: { } });
 		await this.data.setView(node);
 	}
 
