@@ -44,6 +44,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
 import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
@@ -273,7 +274,8 @@ public class DBCoreTypeUpdater {
 				if (pruefeVersion(conn, tab.name(), ct.getCoreTypeVersion()))
 					continue;
 				_logger.logLn(strAktualisiereTabelle + tab.name());
-				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
+				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(),
+						ct.getSQLInsert(status_revision, conn.getDBDriver() == DBDriver.SQLITE));
 			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
 			for (final CoreTypeTable entry : tables)
@@ -583,7 +585,9 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		sql.append(" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Beschreibung=VALUES(Beschreibung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Beschreibung=VALUES(Beschreibung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.VERSION;
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
@@ -600,11 +604,13 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = new ArrayList<>();
-		kuerzel.addAll(Arrays.stream(HerkunftSonstige.values()).map(h -> h.daten.kuerzel).distinct().toList());
-		kuerzel.addAll(Arrays.stream(HerkunftBildungsgang.values()).map(h -> h.name()).distinct().toList());
-		kuerzel.addAll(Arrays.stream(HerkunftBildungsgangTyp.values()).map(h -> h.name()).distinct().toList());
-		kuerzel.addAll(Arrays.stream(HerkunftSchulform.values()).map(h -> h.daten.kuerzel).distinct().toList());
+		final List<String> kuerzel = new ArrayList<>(
+				Stream.concat(Arrays.stream(HerkunftSonstige.values()).map(h -> h.daten.kuerzel).distinct(),
+						Stream.concat(Arrays.stream(HerkunftBildungsgang.values()).flatMap(hb -> hb.historie().stream()).map(h -> h.kuerzel).distinct(),
+								Stream.concat(
+										Arrays.stream(HerkunftBildungsgangTyp.values()).flatMap(hb -> hb.historie().stream()).map(h -> h.kuerzel).distinct(),
+										Arrays.stream(HerkunftSchulform.values()).map(h -> h.daten.kuerzel).distinct()))
+				).distinct().toList());
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
@@ -613,7 +619,8 @@ public class DBCoreTypeUpdater {
 		}
 		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.VERSION;
-		sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
 	};
 
@@ -669,7 +676,8 @@ public class DBCoreTypeUpdater {
 				}
 			}
 		}
-		sql.append(" ON DUPLICATE KEY UPDATE Herkunft_ID=VALUES(Herkunft_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel)");
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Herkunft_ID=VALUES(Herkunft_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel)");
 		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
 				+ HerkunftSchulform.VERSION;
 		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());

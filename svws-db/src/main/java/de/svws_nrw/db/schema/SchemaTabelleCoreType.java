@@ -62,10 +62,11 @@ public class SchemaTabelleCoreType {
 	 * des Core-Types zurück.
 	 *
 	 * @param revision   die Revision des Datenbank-Schemas
+	 * @param isBackup   gibt an, ob ein SQL-Befehl für ein SQLite-Backup erzeugt wird und eine Duplikatprüfung entfallen kann/muss
 	 *
 	 * @return der SQL-Code zum Einfügen oder null, falls die Tabelle in der Revision nicht definiert ist.
 	 */
-	public String getSQLInsert(final long revision) {
+	public String getSQLInsert(final long revision, final boolean isBackup) {
 		if (!_tabelle.isDefined(revision))
 			return "";
 		final StringBuilder sql = new StringBuilder();
@@ -73,8 +74,10 @@ public class SchemaTabelleCoreType {
 		sql.append(_tabelle.name());
 		sql.append(_tabelle.getSpalten().stream().map(sp -> sp.name()).collect(Collectors.joining(", ", "(", ")")));
 		sql.append(valueSupplier.apply(revision).stream().collect(Collectors.joining("), (", " VALUES (", ")")));
-		sql.append(" ON DUPLICATE KEY UPDATE ");
-		sql.append(_tabelle.getSpalten().stream().map(sp -> sp.name() + "=VALUE(" + sp.name() + ")").collect(Collectors.joining(", ")));
+		if (!isBackup) {
+			sql.append(" ON DUPLICATE KEY UPDATE ");
+			sql.append(_tabelle.getSpalten().stream().map(sp -> sp.name() + "=VALUE(" + sp.name() + ")").collect(Collectors.joining(", ")));
+		}
 		return sql.toString();
 	}
 

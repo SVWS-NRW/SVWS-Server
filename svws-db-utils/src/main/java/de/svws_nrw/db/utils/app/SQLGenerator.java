@@ -101,7 +101,7 @@ public class SQLGenerator {
 			if (!tab.isDefined(rev))
 				continue;
 			if (tab.hasCoreType()) {
-				result.append(tab.getCoreType().getSQLInsert(rev)).append(";");
+				result.append(tab.getCoreType().getSQLInsert(rev, true)).append(";");
 				result.append(System.lineSeparator());
 				result.append(System.lineSeparator());
 				result.append(System.lineSeparator());

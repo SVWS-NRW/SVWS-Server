@@ -839,19 +839,20 @@ public final class DBMigrationManager {
 		}
 		final MigrationDTOEigeneSchule daten = entities.get(0);
 		// Passe ggf. das die Schulform an
-		if (daten.SchulformNr.equals(Schulform.PS.daten(daten.Schuljahr).schluessel)) {
+		final Schulform schulformDB = Schulform.data().getWertBySchluessel(daten.SchulformNr);
+		if (schulformDB == Schulform.PS) {
 			daten.SchulformKuerzel = Schulform.PS.daten(daten.Schuljahr).kuerzel;
 			daten.SchulformBez = Schulform.PS.daten(daten.Schuljahr).text;
-		} else if (daten.SchulformNr.equals(Schulform.SK.daten(daten.Schuljahr).schluessel)) {
+		} else if (schulformDB == Schulform.SK) {
 			daten.SchulformKuerzel = Schulform.SK.daten(daten.Schuljahr).kuerzel;
 			daten.SchulformBez = Schulform.SK.daten(daten.Schuljahr).text;
-		} else if (daten.SchulformNr.equals(Schulform.GM.daten(daten.Schuljahr).schluessel)) {
+		} else if (schulformDB == Schulform.GM) {
 			daten.SchulformKuerzel = Schulform.GM.daten(daten.Schuljahr).kuerzel;
 			daten.SchulformBez = Schulform.GM.daten(daten.Schuljahr).text;
-		} else if (daten.SchulformNr.equals(Schulform.HI.daten(daten.Schuljahr).schluessel)) {
+		} else if (schulformDB == Schulform.HI) {
 			daten.SchulformKuerzel = Schulform.HI.daten(daten.Schuljahr).kuerzel;
 			daten.SchulformBez = Schulform.HI.daten(daten.Schuljahr).text;
-		} else if (daten.SchulformNr.equals(Schulform.WF.daten(daten.Schuljahr).schluessel)) {
+		} else if (schulformDB == Schulform.WF) {
 			daten.SchulformKuerzel = Schulform.WF.daten(daten.Schuljahr).kuerzel;
 			daten.SchulformBez = Schulform.WF.daten(daten.Schuljahr).text;
 		}
