@@ -9,13 +9,11 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
@@ -32,7 +30,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
  * {@link GostKlausurvorgabe}.
  */
 public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTOGostKlausurenVorgaben, GostKlausurvorgabe> {
@@ -40,8 +38,8 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	private final int _abiturjahr;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
-	 * {@link GostKlausurtermin}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
+	 * {@link GostKlausurvorgabe}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
@@ -58,8 +56,8 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	}
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
-	 * {@link GostKlausurtermin}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
+	 * {@link GostKlausurvorgabe}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
 	 *
@@ -71,11 +69,11 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 
 
 	/**
-	 * Gibt die Daten einer Klasse zu deren ID zurück.
+	 * Gibt die Daten einer {@link GostKlausurvorgabe} zu deren ID zurück.
 	 *
-	 * @param id   Die ID der Klasse.
+	 * @param id   Die ID der {@link GostKlausurvorgabe}.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten der {@link GostKlausurvorgabe} zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -86,21 +84,21 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	}
 
 	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOKlassen} Objekt zur angegebenen Klassen ID.
+	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenVorgaben} Objekt zur angegebenen Klassen ID.
 	 *
-	 * @param id ID der Klasse
+	 * @param id ID der {@link DTOGostKlausurenVorgaben}
 	 *
-	 * @return Ein {@link DTOKlassen} Objekt.
+	 * @return Ein {@link DTOGostKlausurenVorgaben} Objekt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenVorgaben getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKlausurvorgabe darf nicht null sein.");
 
 		final DTOGostKlausurenVorgaben klasseDto = conn.queryByKey(DTOGostKlausurenVorgaben.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurvorgabe zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}

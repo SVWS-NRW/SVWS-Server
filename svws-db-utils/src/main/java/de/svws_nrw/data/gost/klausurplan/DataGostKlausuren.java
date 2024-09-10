@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
@@ -16,11 +17,9 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostFaecher;
@@ -51,7 +50,7 @@ public final class DataGostKlausuren {
 	private final DBEntityManager conn;
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen DataManager für den Core-DTO
 	 * {@link GostKlausurtermin}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff

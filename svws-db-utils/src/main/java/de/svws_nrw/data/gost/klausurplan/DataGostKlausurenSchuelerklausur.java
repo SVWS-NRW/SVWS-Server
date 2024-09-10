@@ -11,13 +11,11 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -26,13 +24,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
  * {@link GostSchuelerklausur}.
  */
 public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<Long, DTOGostKlausurenSchuelerklausuren, GostSchuelerklausur> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostSchuelerklausur}.
 	 *
 	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
@@ -44,11 +42,11 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	}
 
 	/**
-	 * Gibt die Daten einer Klasse zu deren ID zurück.
+	 * Gibt die Daten einer {@link GostSchuelerklausur} zu deren ID zurück.
 	 *
-	 * @param id   Die ID der Klasse.
+	 * @param id   Die ID der {@link GostSchuelerklausur}.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten der {@link GostSchuelerklausur} zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -59,21 +57,21 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	}
 
 	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOKlassen} Objekt zur angegebenen Klassen ID.
+	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenSchuelerklausuren} Objekt zur angegebenen ID.
 	 *
-	 * @param id ID der Klasse
+	 * @param id ID des {@link DTOGostKlausurenSchuelerklausuren} Objekts.
 	 *
-	 * @return Ein {@link DTOKlassen} Objekt.
+	 * @return Ein {@link DTOGostKlausurenSchuelerklausuren} Objekt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenSchuelerklausuren getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostSchuelerklausur darf nicht null sein.");
 
 		final DTOGostKlausurenSchuelerklausuren klasseDto = conn.queryByKey(DTOGostKlausurenSchuelerklausuren.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostSchuelerklausur zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}

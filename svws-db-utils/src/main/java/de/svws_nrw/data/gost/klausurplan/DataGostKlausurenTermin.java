@@ -20,12 +20,10 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -35,7 +33,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
  * {@link GostKlausurtermin}.
  */
 public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOGostKlausurenTermine, GostKlausurtermin> {
@@ -44,7 +42,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	private final GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostKlausurtermin}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
@@ -58,7 +56,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostKlausurtermin}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
@@ -68,11 +66,11 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	/**
-	 * Gibt die Daten einer Klasse zu deren ID zurück.
+	 * Gibt die Daten eines {@link GostKlausurtermin}s zu deren ID zurück.
 	 *
-	 * @param id   Die ID der Klasse.
+	 * @param id   Die ID des {@link GostKlausurtermin}s.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten des {@link GostKlausurtermin}s zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -83,21 +81,21 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOKlassen} Objekt zur angegebenen Klassen ID.
+	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenTermine} Objekt zur angegebenen Klassen ID.
 	 *
-	 * @param id ID der Klasse
+	 * @param id ID des {@link DTOGostKlausurenTermine} Objekts.
 	 *
-	 * @return Ein {@link DTOKlassen} Objekt.
+	 * @return Ein {@link DTOGostKlausurenTermine} Objekt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenTermine getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für den GostKlausurtermin darf nicht null sein.");
 
 		final DTOGostKlausurenTermine klasseDto = conn.queryByKey(DTOGostKlausurenTermine.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurtermin zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}

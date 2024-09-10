@@ -7,22 +7,20 @@ import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde;
 import de.svws_nrw.core.utils.ListUtils;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenRaumstunden;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
  * {@link GostKlausurraumstunde}.
  */
 public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, DTOGostKlausurenRaumstunden, GostKlausurraumstunde> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostKlausurraumstunde}.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
@@ -34,11 +32,11 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	}
 
 	/**
-	 * Gibt die Daten einer Klasse zu deren ID zurück.
+	 * Gibt die Daten einer {@link GostKlausurraumstunde} zu deren ID zurück.
 	 *
-	 * @param id   Die ID der Klasse.
+	 * @param id   Die ID der {@link GostKlausurraumstunde}.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten der {@link GostKlausurraumstunde} zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -49,21 +47,21 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	}
 
 	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOKlassen} Objekt zur angegebenen Klassen ID.
+	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenRaumstunden} Objekt zur angegebenen ID.
 	 *
-	 * @param id ID der Klasse
+	 * @param id ID der {@link DTOGostKlausurenRaumstunden}
 	 *
-	 * @return Ein {@link DTOKlassen} Objekt.
+	 * @return Ein {@link DTOGostKlausurenRaumstunden} Objekt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenRaumstunden getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKlausurraumstunde darf nicht null sein.");
 
 		final DTOGostKlausurenRaumstunden klasseDto = conn.queryByKey(DTOGostKlausurenRaumstunden.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKlausurraumstunde zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}

@@ -23,7 +23,6 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.utils.ListUtils;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmus;
-import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -32,7 +31,6 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenKursklausu
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausuren;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
-import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
@@ -42,7 +40,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den Core-DTO
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den Core-DTO
  * {@link GostKursklausur}.
  */
 public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long, DTOGostKlausurenKursklausuren, GostKursklausur> {
@@ -51,7 +49,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	private GostKlausurenCollectionSkrsKrsData raumDataChanged = new GostKlausurenCollectionSkrsKrsData();
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostKursklausur}.
 	 *
 	 * @param conn                   die Datenbank-Verbindung für den
@@ -74,7 +72,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	}
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO
 	 * {@link GostKursklausur}.
 	 *
 	 * @param conn                   die Datenbank-Verbindung für den
@@ -89,11 +87,11 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	}
 
 	/**
-	 * Gibt die Daten einer Klasse zu deren ID zurück.
+	 * Gibt die Daten einer {@link GostKursklausur} zu deren ID zurück.
 	 *
-	 * @param id   Die ID der Klasse.
+	 * @param id   Die ID der {@link GostKursklausur}.
 	 *
-	 * @return die Daten der KLasse zur ID.
+	 * @return die Daten der {@link GostKursklausur} zur ID.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
@@ -104,21 +102,21 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	}
 
 	/**
-	 * Die Methode ermittelt das entsprechende {@link DTOKlassen} Objekt zur angegebenen Klassen ID.
+	 * Die Methode ermittelt das entsprechende {@link DTOGostKlausurenKursklausuren} Objekt zur angegebenen ID.
 	 *
-	 * @param id ID der Klasse
+	 * @param id ID der {@link DTOGostKlausurenKursklausuren}
 	 *
-	 * @return Ein {@link DTOKlassen} Objekt.
+	 * @return Ein {@link DTOGostKlausurenKursklausuren} Objekt.
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public DTOGostKlausurenKursklausuren getDTO(final Long id) throws ApiOperationException {
 		if (id == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die Klasse darf nicht null sein.");
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ID für die GostKursklausur darf nicht null sein.");
 
 		final DTOGostKlausurenKursklausuren klasseDto = conn.queryByKey(DTOGostKlausurenKursklausuren.class, id);
 		if (klasseDto == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klasse zur ID " + id + " gefunden.");
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine GostKursklausur zur ID " + id + " gefunden.");
 
 		return klasseDto;
 	}

@@ -387,7 +387,6 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 */
 	public CoreDTO patchFromStream(final ID id, final InputStream is) throws ApiOperationException {
 		return patch(id, JSONMapper.toMap(is));
-		// TODO ggf. Anpassung, so dass Status.OK mit den veränderten Daten zurückgegeben wird
 	}
 
 
