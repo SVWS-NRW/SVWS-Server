@@ -77,6 +77,8 @@
 
 	const props = defineProps<SchuelerSchulbesuchProps>();
 
+	const schuljahr = computed<number>(() => props.schuelerListeManager().schuelerGetSchuljahrOrException());
+
 	const hatKompetenzAnsehen = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN));
 
@@ -98,14 +100,14 @@
 		const vorigeAllgHerkunft = props.data.vorigeAllgHerkunft;
 		if (vorigeAllgHerkunft === null)
 			return undefined;
-		const sgl = Schulgliederung.getByKuerzel(vorigeAllgHerkunft);
+		const sgl = Schulgliederung.data().getWertByKuerzel(vorigeAllgHerkunft);
 		if (sgl !== null)
 			return Schulform.BK;
-		return Schulform.getByKuerzel(vorigeAllgHerkunft) || undefined;
+		return Schulform.data().getWertByKuerzel(vorigeAllgHerkunft) || undefined;
 	});
 
 	function getBezeichnung(h: Herkunftsarten) {
-		return h.getBezeichnung(vorigeSchulform.value || Schulform.G);
+		return h.getBezeichnung(schuljahr.value, vorigeSchulform.value || Schulform.G);
 	}
 
 	const showstatistic = computed(() => true);

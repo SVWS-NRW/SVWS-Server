@@ -37,11 +37,12 @@ export class RouteSchuelerSchulbesuch extends RouteNode<RouteDataSchuelerSchulbe
 
 	public getProps(to: RouteLocationNormalized): SchuelerSchulbesuchProps {
 		return {
+			patch: this.data.patch,
+			schuelerListeManager: () => routeSchueler.data.schuelerListeManager,
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			data: this.data.daten,
-			patch: this.data.patch,
 			autofocus: routeSchueler.data.autofocus
 		};
 	}
