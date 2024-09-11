@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
@@ -274,11 +275,6 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				DTOSchuelerLernabschnittsdaten.class,
 				schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		final List<Long> listAktSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte =
-				conn.queryByKeyList(DTOSchuljahresabschnitte.class, listAktSchuljahresabschnitteIDs);
-		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte =
-				listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
 		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte = conn.queryList(
 				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
@@ -298,20 +294,20 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Erstelle die Schüler-Liste und sortiere sie
 		final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
-				.map(s -> erstelleSchuelerlistenEintrag(s, mapAktSchuljahresabschnitte.get(mapAbschnitte.get(s.ID).Schuljahresabschnitts_ID).Jahr,
+				.map(s -> erstelleSchuelerlistenEintrag(s, conn.getUser().schuleGetAbschnittById(mapAbschnitte.get(s.ID).Schuljahresabschnitts_ID).schuljahr,
 						mapAbschnitte.get(s.ID), mapJahrgaenge, schulform))
 				.sorted(dataComparator)
 				.toList();
 		// Ermittle die Kurse, welche von den Schülern belegt wurden.
 		getSchuelerKurse(conn, schuelerListe, abschnitt);
 		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
-		if (schulform.daten(mapAktSchuljahresabschnitte.get(abschnitt).Jahr).hatGymOb) {
+		if (schulform.daten(conn.getUser().schuleGetAbschnittById(abschnitt).schuljahr).hatGymOb) {
 			for (final SchuelerListeEintrag s : schuelerListe) {
-				final DTOSchuljahresabschnitte schuljahresabschnitt = mapAktSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
+				final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(s.idSchuljahresabschnitt);
 				if (schuljahresabschnitt == null)
 					continue;
 				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
-						schuljahresabschnitt.Jahr, s.jahrgang);
+						schuljahresabschnitt.schuljahr, s.jahrgang);
 			}
 		}
 		// Und gib die Schülerliste mit den belegten Kursen zurück...
