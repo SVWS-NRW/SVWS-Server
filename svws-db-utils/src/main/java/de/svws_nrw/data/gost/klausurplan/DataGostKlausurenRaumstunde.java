@@ -2,6 +2,7 @@ package de.svws_nrw.data.gost.klausurplan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraum;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
@@ -67,7 +68,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	}
 
 	@Override
-	protected void initDTO(final DTOGostKlausurenRaumstunden dto, final Long id) {
+	protected void initDTO(final DTOGostKlausurenRaumstunden dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 	}
 

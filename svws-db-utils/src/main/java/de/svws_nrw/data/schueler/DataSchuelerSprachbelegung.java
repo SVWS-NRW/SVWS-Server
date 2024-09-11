@@ -49,7 +49,7 @@ public final class DataSchuelerSprachbelegung extends DataManagerRevised<Long, D
 
 
 	@Override
-	protected void initDTO(final DTOSchuelerSprachenfolge dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOSchuelerSprachenfolge dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 		dto.Schueler_ID = idSchueler;
 	}

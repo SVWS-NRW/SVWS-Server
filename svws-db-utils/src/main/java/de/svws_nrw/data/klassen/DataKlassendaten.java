@@ -8,7 +8,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
@@ -244,20 +246,33 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	}
 
 	@Override
-	protected void initDTO(final DTOKlassen dtoKlassen, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOKlassen dtoKlassen, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		// Wenn ein Schuljahresabschnitt mitgeliefert wurde, wird dieser hinterlegt, ansonsten wird default der aktuelle Schuljahresabschnitt der Schule hinterlegt
 		final DTOTeilstandorte teilstandort = getDTOTeilstandort();
 
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
-		final int schuljahr = conn.getUser().schuleGetSchuljahr(); // TODO hier muss das Schuljahr mithilfe des idSchuljahresabschnitt aus der Klasse erzeugt werden! (siehe Defaults unten)
+		final long idSchuljahresabschnitt = JSONMapper.convertToLong(initAttributes.get("idSchuljahresabschnitt"), false);
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Eine Klasse kann nur mit einem gültigen Schuljahresabschnitt angelegt werden. Die ID %d ist ungültig.".formatted(idSchuljahresabschnitt));
 
 		dtoKlassen.ID = newId;
 		dtoKlassen.Sichtbar = true;
 		dtoKlassen.Sortierung = 0;
 		dtoKlassen.AdrMerkmal = teilstandort.AdrMerkmal;
-		dtoKlassen.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahr).kuerzel;
-		dtoKlassen.ASDSchulformNr = Schulgliederung.getDefault(schulform).daten(schuljahr).kuerzel;
-		dtoKlassen.Klassenart = Klassenart.getDefault(schulform).daten(schuljahr).kuerzel;
+		final OrganisationsformKatalogEintrag orgformEintrag = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahresabschnitt.schuljahr);
+		if (orgformEintrag == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Organisationsform.");
+		dtoKlassen.OrgFormKrz = orgformEintrag.kuerzel;
+		final SchulgliederungKatalogEintrag schulgliederungEintrag = Schulgliederung.getDefault(schulform).daten(schuljahresabschnitt.schuljahr);
+		if (schulgliederungEintrag == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Schulgliederung.");
+		dtoKlassen.ASDSchulformNr = schulgliederungEintrag.kuerzel;
+		final KlassenartKatalogEintrag klassenartEintrag = Klassenart.getDefault(schulform).daten(schuljahresabschnitt.schuljahr);
+		if (klassenartEintrag == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Anlegen des Default-Wertes für die Klassenart.");
+		dtoKlassen.Klassenart = klassenartEintrag.kuerzel;
 	}
 
 	@Override

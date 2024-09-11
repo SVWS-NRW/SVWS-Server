@@ -61,7 +61,7 @@ public final class DataSchuelerLernabschnittsdaten extends DataManagerRevised<Lo
 	}
 
 	@Override
-	protected void initDTO(final DTOSchuelerLernabschnittsdaten dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOSchuelerLernabschnittsdaten dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 	}
 

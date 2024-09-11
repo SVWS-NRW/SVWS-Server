@@ -143,19 +143,20 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Erstellt und initialisiert ein neues Datenbank-DTO.
 	 *
-	 * @param newID      	die neue ID für das DTO
+	 * @param newID      	   die neue ID für das DTO
+	 * @param initAttributes   die Attribute zur Initialisierung
 	 *
 	 * @return das neue DTO
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected DatabaseDTO newDTO(final ID newID) throws ApiOperationException {
+	protected DatabaseDTO newDTO(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		try {
 			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 			final Constructor<DatabaseDTO> constructor = classDatabaseDTO.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			final DatabaseDTO dto = constructor.newInstance();
-			initDTO(dto, newID);
+			initDTO(dto, newID, initAttributes);
 			return dto;
 		} catch (final Exception e) {
 			if (e instanceof final ApiOperationException apiOperationException)
@@ -169,10 +170,13 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * Initialisiert das Datenbank-DTO mit der übergebenen ID.<br>
 	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Add-Methoden ausführbar sind.
 	 *
-	 * @param dto   das Datenbank-DTO
-	 * @param id    die ID
+	 * @param dto              das Datenbank-DTO
+	 * @param id               die ID
+	 * @param initAttributes   die Attribute zur Initialisierung
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected void initDTO(final DatabaseDTO dto, final ID id) throws ApiOperationException {
+	protected void initDTO(final DatabaseDTO dto, final ID id, final Map<String, Object> initAttributes) throws ApiOperationException {
 		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode initDTO() ist standardmäßig nicht implementiert.");
 	}
 
@@ -740,7 +744,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		checkBeforeCreation(newID, initAttributes);
 
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-		final DatabaseDTO dto = newDTO(newID);
+		final DatabaseDTO dto = newDTO(newID, initAttributes);
 		applyPatchMappings(dto, initAttributes, null, attributesDelayedOnCreation, true);
 
 		// Persistiere das DTO in der Datenbank

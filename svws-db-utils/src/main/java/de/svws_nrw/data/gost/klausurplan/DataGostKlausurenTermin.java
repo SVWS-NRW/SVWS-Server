@@ -99,7 +99,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	}
 
 	@Override
-	protected void initDTO(final DTOGostKlausurenTermine dto, final Long id) {
+	protected void initDTO(final DTOGostKlausurenTermine dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 	}
 

@@ -46,7 +46,8 @@ public final class DataStundenplanKalenderwochenzuordnung
 
 
 	@Override
-	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long newId, final Map<String, Object> initAttributes)
+			throws ApiOperationException {
 		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}

@@ -51,7 +51,7 @@ public final class DataSchuelerSprachpruefung extends DataManagerRevised<Long, D
 
 
 	@Override
-	protected void initDTO(final DTOSchuelerSprachpruefungen dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOSchuelerSprachpruefungen dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 		dto.Schueler_ID = idSchueler;
 	}

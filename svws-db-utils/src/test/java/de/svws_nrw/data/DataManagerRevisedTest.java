@@ -136,7 +136,7 @@ class DataManagerRevisedTest {
 			}
 		};
 
-		final Throwable result = catchThrowable(() -> dmr.initDTO(null, null));
+		final Throwable result = catchThrowable(() -> dmr.initDTO(null, null, null));
 
 		assertThat(result).isInstanceOf(ApiOperationException.class)
 				.hasMessage("Die Methode initDTO() ist standardmäßig nicht implementiert.");
@@ -401,7 +401,7 @@ class DataManagerRevisedTest {
 
 		final Map<String, Object> input = Map.of("kuerzel", "55a", "idJahrgang", 1, "sortierung", 99);
 
-		doThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "Bad Request Test")).when(cut).initDTO(any(), any());
+		doThrow(new ApiOperationException(Response.Status.BAD_REQUEST, "Bad Request Test")).when(cut).initDTO(any(), any(), any());
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(input);
@@ -420,7 +420,7 @@ class DataManagerRevisedTest {
 
 		final Map<String, Object> input = Map.of("kuerzel", "55a", "idJahrgang", 1, "sortierung", 99);
 
-		doThrow(new RuntimeException("Bad Request Test")).when(cut).initDTO(any(), any());
+		doThrow(new RuntimeException("Bad Request Test")).when(cut).initDTO(any(), any(), any());
 
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(input);
@@ -687,7 +687,7 @@ class DataManagerRevisedTest {
 		}
 
 		@Override
-		protected void initDTO(final DTOKlassen dtoKlassen, final Long id) throws ApiOperationException {
+		protected void initDTO(final DTOKlassen dtoKlassen, final Long id, final Map<String, Object> initAttributes) throws ApiOperationException {
 			// for testing
 		}
 

@@ -43,7 +43,7 @@ public final class DataWiedervorlage extends DataManagerRevised<Long, DTOWiederv
 	}
 
 	@Override
-	protected void initDTO(final DTOWiedervorlage dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOWiedervorlage dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 		dto.Benutzer_ID = conn.getUser().getId();
 		dto.tsAngelegt = JSONMapper.tsFormatter.format(ZonedDateTime.now(ZoneId.of("Europe/Berlin")));

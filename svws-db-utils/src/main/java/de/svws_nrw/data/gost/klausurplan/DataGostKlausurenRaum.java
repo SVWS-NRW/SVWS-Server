@@ -69,7 +69,7 @@ public final class DataGostKlausurenRaum extends DataManagerRevised<Long, DTOGos
 	}
 
 	@Override
-	protected void initDTO(final DTOGostKlausurenRaeume dto, final Long id) {
+	protected void initDTO(final DTOGostKlausurenRaeume dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 	}
 

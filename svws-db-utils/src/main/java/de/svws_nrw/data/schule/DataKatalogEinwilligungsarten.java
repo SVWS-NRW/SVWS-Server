@@ -66,7 +66,7 @@ public final class DataKatalogEinwilligungsarten extends DataManagerRevised<Long
 
 
 	@Override
-	protected void initDTO(final DTOKatalogEinwilligungsart dto, final Long id) {
+	protected void initDTO(final DTOKatalogEinwilligungsart dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 		dto.Bezeichnung = "";
 		dto.Sichtbar = true;

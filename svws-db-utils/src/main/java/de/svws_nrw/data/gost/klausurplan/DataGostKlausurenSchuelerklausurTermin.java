@@ -53,7 +53,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	}
 
 	@Override
-	protected void initDTO(final DTOGostKlausurenSchuelerklausurenTermine dto, final Long id) {
+	protected void initDTO(final DTOGostKlausurenSchuelerklausurenTermine dto, final Long id, final Map<String, Object> initAttributes) {
 		dto.ID = id;
 	}
 
