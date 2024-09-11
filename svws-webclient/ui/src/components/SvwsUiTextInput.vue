@@ -135,13 +135,13 @@
 		);
 	}
 
-	const isValid = computed(()=>{
+	const isValid = computed(() => {
 		let tmpIsValid = true;
 		if ((props.required === true) && (data.value === null))
 			return false;
 		if ((props.type === "email") && (typeof data.value === 'string'))
 			tmpIsValid = validatorEmail(data.value);
-		if (tmpIsValid && (props.maxLen !== undefined) && (data.value !== null) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length > props.maxLen))
 			tmpIsValid = false;
 		if (tmpIsValid && ((data.value !== null) && (data.value !== '')))
 			tmpIsValid = props.valid(data.value);

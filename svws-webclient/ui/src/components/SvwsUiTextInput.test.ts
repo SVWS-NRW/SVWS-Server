@@ -239,10 +239,10 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		expect(isValid).toEqual(false);
 	});
 
-	test.skip("E-Mail-Validierung gibt false für ungültige E-Mail zurück", async () => {
+	test("E-Mail-Validierung gibt false für ungültige E-Mail zurück", async () => {
 		const props = {
 			type: "email" as InputType,
-			modelValue: "invalid-email" as InputDataType,
+			modelValue: "invalid-email@" as InputDataType,
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
@@ -263,7 +263,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		expect(isValid).toEqual(true);
 	});
 
-	test.skip("Maxlength-Validierung gibt false für zu langen String zurück", async () => {
+	test("Maxlength-Validierung gibt false für zu langen String zurück", async () => {
 		const props = { maxLen: 5, modelValue: "too long" };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
