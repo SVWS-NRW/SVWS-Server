@@ -97,7 +97,7 @@ public class ProxyReportingStatistikFach extends ReportingStatistikFach {
 		this.reportingRepository = reportingRepository;
 
 		if ((kuerzelStatistik != null) && !kuerzelStatistik.isEmpty()) {
-			final Fach zulaessigesFach = Fach.data().getWertBySchluessel(kuerzelStatistik);
+			final Fach zulaessigesFach = Fach.getBySchluesselOrDefault(kuerzelStatistik);
 			super.abJahrgang = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang;
 			super.aufgabenfeld = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).aufgabenfeld;
 			super.bezeichnung = zulaessigesFach.daten(reportingRepository.auswahlSchuljahr()).text;

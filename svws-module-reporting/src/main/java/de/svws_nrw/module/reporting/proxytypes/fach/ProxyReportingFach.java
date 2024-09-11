@@ -67,7 +67,7 @@ public class ProxyReportingFach extends ReportingFach {
 		this.reportingRepository = reportingRepository;
 
 		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, Fach.data().getWertBySchluessel(fachDaten.kuerzelStatistik));
+			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik));
 			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
 

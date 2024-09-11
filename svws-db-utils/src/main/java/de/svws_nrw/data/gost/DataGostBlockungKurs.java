@@ -233,11 +233,9 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Fach fachStatistik = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
-		if (fachStatistik == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Das zugehörige Fach der Schulstatistik konnte nicht gefunden werden.");
+		final Fach fachStatistik = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		if ((fachStatistik == Fach.VF) || (!fach.IstOberstufenFach))
-			throw new ApiOperationException(Status.CONFLICT);
+			throw new ApiOperationException(Status.CONFLICT, "Es handelt sich nicht um ein Fach der gymnasialen Oberstufe.");
 		// Bestimme die Kursart
 		GostKursart kursart = GostKursart.fromID(idKursart);
 		if (kursart == GostKursart.GK) {  // Korrigiere ggf. für Vertiefungs- und Projektkurse
@@ -473,11 +471,9 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Fach fachStatistik = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
-		if (fachStatistik == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Das zugehörige Fach der Schulstatistik konnte nicht gefunden werden.");
+		final Fach fachStatistik = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
 		if ((fachStatistik == Fach.VF) || (!fach.IstOberstufenFach))
-			throw new ApiOperationException(Status.CONFLICT);
+			throw new ApiOperationException(Status.CONFLICT, "Es handelt sich nicht um ein Fach der gymnasialen Oberstufe.");
 		// Bestimme die Kursart
 		GostKursart kursart = GostKursart.fromID(idKursart);
 		if (kursart == GostKursart.GK) {

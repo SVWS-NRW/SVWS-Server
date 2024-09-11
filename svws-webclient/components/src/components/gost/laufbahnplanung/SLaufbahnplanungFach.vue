@@ -161,16 +161,16 @@
 
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 
-	const fachgruppe = computed<Fachgruppe | null>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.getFachgruppe(schuljahr.value) ?? null);
+	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
 
-	const istFremdsprache = computed<boolean>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.istFremdsprache ?? false);
+	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
 
-	const bgColor = computed<string>(() => Fach.data().getWertBySchluessel(props.fach.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220, 220, 220)');
+	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
 	const sprachbelegung = computed<Sprachbelegung | null>(()=> {
-		const sprach_kuerzel = Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.kuerzel ?? null;
+		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null;
 		if (sprach_kuerzel === null)
 			return null;
 		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen) {
@@ -183,7 +183,7 @@
 	// Prüft, ob eine Sprache bisher schon unterrichtet wurde oder neu einsetzend ist
 	const getFallsSpracheMoeglich = computed<boolean>(()=> {
 		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
-			props.abiturdatenManager().getSprachendaten(), Fach.data().getWertBySchluessel(props.fach.kuerzel)?.daten(schuljahr.value)?.kuerzel ?? null
+			props.abiturdatenManager().getSprachendaten(), Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null
 		);
 		sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
 		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));

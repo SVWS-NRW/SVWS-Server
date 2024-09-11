@@ -169,7 +169,7 @@ export class Projektkurse extends GostBelegpruefung {
 				const lf : GostFach | null = this.manager.getFach(leitfach1);
 				if (lf === null)
 					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
-				const zf : Fach | null = Fach.data().getWertBySchluessel(lf.kuerzel);
+				const zf : Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown)))
 					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;
@@ -178,7 +178,7 @@ export class Projektkurse extends GostBelegpruefung {
 				const lf : GostFach | null = this.manager.getFach(leitfach2);
 				if (lf === null)
 					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
-				const zf : Fach | null = Fach.data().getWertBySchluessel(lf.kuerzel);
+				const zf : Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown)))
 					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;

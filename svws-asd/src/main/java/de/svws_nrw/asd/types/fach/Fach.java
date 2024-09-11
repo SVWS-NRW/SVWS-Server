@@ -951,7 +951,7 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	 *
 	 * @return das Fach oder bei einem ungültigen Schlüssel das Fach VF
 	 */
-	public static Fach getBySchluesselOrDefault(final @NotNull String schluessel) {
+	public static @NotNull Fach getBySchluesselOrDefault(final @NotNull String schluessel) {
 		final Fach result = Fach.data().getWertBySchluessel(schluessel);
 		if (result != null)
 			return result;

@@ -3694,7 +3694,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public fachHTMLFarbeRgbaByKursklausur(k : GostKursklausur) : string {
-		return Fach.data().getWertBySchluesselOrException(this.fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(this._schuljahr, 1.0);
+		return Fach.getBySchluesselOrDefault(this.fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(this._schuljahr, 1.0);
 	}
 
 	/**

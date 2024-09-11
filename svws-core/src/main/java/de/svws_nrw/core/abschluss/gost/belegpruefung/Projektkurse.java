@@ -232,7 +232,7 @@ public final class Projektkurse extends GostBelegpruefung {
 				if (lf == null)
 					throw new DeveloperNotificationException(
 							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
-				final Fach zf = Fach.data().getWertBySchluessel(lf.kuerzel);
+				final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 					addFehler(GostBelegungsfehler.PF_19);
 				continue;
@@ -243,7 +243,7 @@ public final class Projektkurse extends GostBelegpruefung {
 				if (lf == null)
 					throw new DeveloperNotificationException(
 							"Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.");
-				final Fach zf = Fach.data().getWertBySchluessel(lf.kuerzel);
+				final Fach zf = Fach.getBySchluesselOrDefault(lf.kuerzel);
 				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf == Fach.PX) || (zf == Fach.VX)))
 					addFehler(GostBelegungsfehler.PF_19);
 				continue;

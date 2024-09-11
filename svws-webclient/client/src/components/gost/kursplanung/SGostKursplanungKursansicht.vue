@@ -425,7 +425,7 @@
 				const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
 				const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
 				if (gostfach !== null) {
-					const zulFach = Fach.data().getWertBySchluessel(gostfach.kuerzel);
+					const zulFach = Fach.getBySchluesselOrDefault(gostfach.kuerzel);
 					switch (kursart) {
 						case GostKursart.LK: { anzahl = fach_halbjahr.wahlenLK; break; }
 						case GostKursart.GK: { anzahl = (zulFach === Fach.PX) || (zulFach === Fach.VX) ? 0 : fach_halbjahr.wahlenGK; break; }
@@ -781,7 +781,7 @@
 	function bgColor(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) : string {
 		if (fachwahl.fachwahlen.kuerzelStatistik === null)
 			return 'rgb(220,220,220)';
-		return Fach.data().getWertBySchluessel(fachwahl.fachwahlen.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fachwahl.fachwahlen.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	function toggleSchuelerFilterFachwahl(fachwahl: { fachwahlen: GostStatistikFachwahl, kursart: GostKursart }) {

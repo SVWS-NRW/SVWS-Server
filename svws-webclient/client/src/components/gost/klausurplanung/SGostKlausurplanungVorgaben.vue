@@ -204,7 +204,7 @@
 	function getBgColor(kuerzel: string | null) {
 		if (kuerzel === null)
 			return 'rgb(220,220,220)';
-		return Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	window.addEventListener('click', function(e) {

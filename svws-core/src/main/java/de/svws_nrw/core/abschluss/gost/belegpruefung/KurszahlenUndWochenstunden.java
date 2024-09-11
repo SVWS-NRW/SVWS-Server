@@ -124,7 +124,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			final GostFach fach = manager.getFach(fachbelegung);
 			if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
 				continue;
-			final Fach zulFach = Fach.data().getWertBySchluessel(fach.kuerzel);
+			final Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			boolean istLKFach = false;
 			for (final AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr == null)

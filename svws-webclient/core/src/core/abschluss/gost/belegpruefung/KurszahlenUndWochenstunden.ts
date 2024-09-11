@@ -96,7 +96,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 				continue;
-			const zulFach : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
+			const zulFach : Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			let istLKFach : boolean = false;
 			for (const fachbelegungHalbjahr of fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr === null)

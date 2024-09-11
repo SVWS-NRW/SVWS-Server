@@ -154,7 +154,7 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			throw new NullPointerException()
 		if (GostFachUtils.istBilingual(fach))
 			this.addFehler(GostBelegungsfehler.ZK_13);
-		const zFach : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
+		const zFach : Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		if ((zFach as unknown === Fach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE()))
 			this.addFehler(GostBelegungsfehler.ZK_14);
 		if ((zFach as unknown === Fach.SW as unknown) && (!this.manager.istErlaubtZusatzkursSW()))

@@ -208,7 +208,7 @@ public enum GostFachbereich {
 	public static @NotNull List<GostFachbereich> getBereiche(final GostFach fach) {
 		if (fach == null)
 			return new ArrayList<>();
-		final @NotNull Fach zulFach = Fach.data().getWertBySchluesselOrException(fach.kuerzel);
+		final @NotNull Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final List<GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
 		if (bereiche != null)
 			return bereiche;
@@ -282,7 +282,7 @@ public enum GostFachbereich {
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareFachByKuerzel(final String ka, final String kb) {
-		return compareFach((ka == null) ? null : Fach.data().getWertBySchluessel(ka), (kb == null) ? null : Fach.data().getWertBySchluessel(kb));
+		return compareFach((ka == null) ? null : Fach.getBySchluesselOrDefault(ka), (kb == null) ? null : Fach.getBySchluesselOrDefault(kb));
 	}
 
 

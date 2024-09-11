@@ -77,7 +77,7 @@
 	function getBgColor(fws: GostStatistikFachwahl) : string {
 		if (fws.kuerzelStatistik === null)
 			return 'rgb(220,220,220)';
-		return Fach.data().getWertBySchluessel(fws.kuerzelStatistik)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
 	}
 
 	function onClick(fws: GostStatistikFachwahl): void {

@@ -195,7 +195,7 @@ public final class DBUtilsGostLaufbahn {
 						: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 				if ("AT".equals(leistungenBelegung.notenKuerzel)) {
 					final GostFach gostFach = gostFaecher.get(fach.fachID);
-					if (Fach.SP == Fach.data().getWertBySchluessel(gostFach.kuerzel))
+					if (Fach.SP == Fach.getBySchluesselOrDefault(gostFach.kuerzel))
 						belegung.kursartKuerzel = "AT";
 				}
 				belegung.schriftlich = leistungenBelegung.istSchriftlich;
@@ -263,9 +263,8 @@ public final class DBUtilsGostLaufbahn {
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
 			if (gostFach == null)
 				continue;
-			final Fach zulFach = Fach.data().getWertBySchluessel(gostFach.kuerzel);
-			if (zulFach != null)
-				fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
+			final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
+			fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 			GostKursart fachKursart = GostKursart.GK;
@@ -350,9 +349,8 @@ public final class DBUtilsGostLaufbahn {
 			final GostFach gostFach = gostFaecher.get(fach.fachID);
 			if (gostFach == null)
 				continue;
-			final Fach zulFach = Fach.data().getWertBySchluessel(gostFach.kuerzel);
-			if (zulFach != null)
-				fach.istFSNeu = zulFach.daten(schuljahr).istFremdsprache && zulFach.daten(schuljahr).nurSII;
+			final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
+			fach.istFSNeu = zulFach.daten(schuljahr).istFremdsprache && zulFach.daten(schuljahr).nurSII;
 			final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 			fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 			GostKursart fachKursart = GostKursart.GK;
@@ -572,7 +570,7 @@ public final class DBUtilsGostLaufbahn {
 							: GostKursart.fromKuerzel(leistungenBelegung.kursartKuerzel).kuerzel;
 					if ("AT".equals(leistungenBelegung.notenKuerzel)) {
 						final GostFach gostFach = gostFaecher.get(fach.fachID);
-						if (Fach.SP == Fach.data().getWertBySchluessel(gostFach.kuerzel))
+						if (Fach.SP == Fach.getBySchluesselOrDefault(gostFach.kuerzel))
 							belegung.kursartKuerzel = "AT";
 					}
 					belegung.schriftlich = leistungenBelegung.istSchriftlich;
@@ -650,9 +648,8 @@ public final class DBUtilsGostLaufbahn {
 				final GostFach gostFach = gostFaecher.get(fach.fachID);
 				if (gostFach == null)
 					continue;
-				final Fach zulFach = Fach.data().getWertBySchluessel(gostFach.kuerzel);
-				if (zulFach != null)
-					fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
+				final Fach zulFach = Fach.getBySchluesselOrDefault(gostFach.kuerzel);
+				fach.istFSNeu = zulFach.daten(abidaten.schuljahrAbitur).istFremdsprache && zulFach.daten(abidaten.schuljahrAbitur).nurSII;
 				final GostAbiturFach tmpAbiturFach = GostAbiturFach.fromID(belegungPlanung.AbiturFach);
 				fach.abiturFach = (tmpAbiturFach == null) ? null : tmpAbiturFach.id;
 				GostKursart fachKursart = GostKursart.GK;

@@ -59,7 +59,7 @@
 	];
 
 	function getBgColor(fach: string): string {
-		return Fach.data().getWertBySchluessel(fach)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fach).getHMTLFarbeRGB(schuljahr.value);
 	}
 
 	async function patchBeginn(start: string | null) {

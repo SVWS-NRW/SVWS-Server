@@ -1416,9 +1416,7 @@ public class AbiturdatenManager {
 			final GostFach fach = faecherManager.get(fb.fachID);
 			if (fach == null)
 				continue;
-			final Fach zulFach = Fach.data().getWertBySchluessel(fach.kuerzel);
-			if (zulFach != null)
-				faecher.add(zulFach);
+			faecher.add(Fach.getBySchluesselOrDefault(fach.kuerzel));
 		}
 		return faecher;
 	}
@@ -1449,7 +1447,7 @@ public class AbiturdatenManager {
 					final GostFach fbFach = faecherManager.get(fb.fachID);
 					if (fbFach == null)
 						continue;
-					final @NotNull Fach fbZulFach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
+					final @NotNull Fach fbZulFach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 					if ((zulFach == fbZulFach) && (belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						belegung_vorhanden = true;
@@ -1473,7 +1471,7 @@ public class AbiturdatenManager {
 		final GostFach fbFach = faecherManager.get(fb.fachID);
 		if (fbFach == null)
 			return false;
-		final @NotNull Fach fbZulFach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
+		final @NotNull Fach fbZulFach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 		if (zulFach == fbZulFach) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 			if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {

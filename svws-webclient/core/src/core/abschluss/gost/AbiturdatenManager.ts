@@ -1323,9 +1323,7 @@ export class AbiturdatenManager extends JavaObject {
 			const fach : GostFach | null = this.faecherManager.get(fb.fachID);
 			if (fach === null)
 				continue;
-			const zulFach : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
-			if (zulFach !== null)
-				faecher.add(zulFach);
+			faecher.add(Fach.getBySchluesselOrDefault(fach.kuerzel));
 		}
 		return faecher;
 	}
@@ -1353,7 +1351,7 @@ export class AbiturdatenManager extends JavaObject {
 					const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 					if (fbFach === null)
 						continue;
-					const fbZulFach : Fach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
+					const fbZulFach : Fach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 					if ((zulFach as unknown === fbZulFach as unknown) && (belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						belegung_vorhanden = true;
@@ -1375,7 +1373,7 @@ export class AbiturdatenManager extends JavaObject {
 		const fbFach : GostFach | null = this.faecherManager.get(fb.fachID);
 		if (fbFach === null)
 			return false;
-		const fbZulFach : Fach = Fach.data().getWertBySchluesselOrException(fbFach.kuerzel);
+		const fbZulFach : Fach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 		if (zulFach as unknown === fbZulFach as unknown) {
 			const belegungHalbjahr : AbiturFachbelegungHalbjahr | null = fb.belegungen[halbjahr.id];
 			if ((belegungHalbjahr !== null) && (!AbiturdatenManager.istNullPunkteBelegungInQPhase(belegungHalbjahr))) {

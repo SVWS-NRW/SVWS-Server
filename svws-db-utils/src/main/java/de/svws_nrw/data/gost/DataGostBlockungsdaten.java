@@ -501,8 +501,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		long kurseID = (dbKurseID == null) ? 0 : dbKurseID.MaxID;
 		final List<GostBlockungKurs> kursListe_LK_GK_ZK = new ArrayList<>(); // Liste um alle Kurse zusammen hinzuzufügen.
 		for (final GostStatistikFachwahl fw : fachwahlen) {
-			final Fach zulFach = Fach.data().getWertBySchluessel(fw.kuerzelStatistik);
-			if ((zulFach == null) || (zulFach == Fach.VF))
+			final @NotNull Fach zulFach = Fach.getBySchluesselOrDefault(fw.kuerzelStatistik);
+			if (zulFach == Fach.VF)
 				continue;
 			final GostStatistikFachwahlHalbjahr fwHj = fw.fachwahlen[gostHalbjahr.id];
 			final int anzahlLK = (fwHj.wahlenLK + 10) / 20;
@@ -1085,7 +1085,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<Long> faecherCheckIDs = faecher.stream().map(f -> f.Fach_ID).toList();
 			final List<DTOFach> faecherCheck = conn.queryByKeyList(DTOFach.class, setFachIDs);
 			for (final DTOFach dtoFach : faecherCheck) {
-				final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
+				final @NotNull Fach fach = Fach.getBySchluesselOrDefault(dtoFach.StatistikKuerzel);
 				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().containsKey(fach))) {
 					dtoFach.IstOberstufenFach = true;
 					conn.transactionPersist(dtoFach);

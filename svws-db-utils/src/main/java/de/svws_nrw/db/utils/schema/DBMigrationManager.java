@@ -2146,14 +2146,19 @@ public final class DBMigrationManager {
 							"Korrigiere fehlerhaften Datensatz (ID %d): Ändere Das Statistik-Kürzel des Faches von E5 auf E.".formatted(daten.ID));
 					daten.StatistikKuerzel = "E";
 				}
+				if (Collator.getInstance().compare("CO", daten.StatistikKuerzel) == 0) {
+					logger.logLn(LogLevel.ERROR,
+							"Korrigiere fehlerhaften Datensatz (ID %d): Ändere Das Statistik-Kürzel des Faches von CO auf MU.".formatted(daten.ID));
+					daten.StatistikKuerzel = "MU";
+				}
 				final Fach zulFach = Fach.data().getWertBySchluessel(daten.StatistikKuerzel);
 				if (zulFach == null) {
 					logger.logLn(LogLevel.ERROR,
-							"Entferne ungültigen Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt."
+							"Korrigiere fehlerhaften Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt. Setze stattdessen den Wert VF."
 									.formatted(daten.ID, daten.StatistikKuerzel));
-					entities.remove(i);
-				} else
-					faecherIDs.add(daten.ID);
+					daten.StatistikKuerzel = "VF";
+				}
+				faecherIDs.add(daten.ID);
 			}
 		}
 		for (int i = entities.size() - 1; i >= 0; i--) {

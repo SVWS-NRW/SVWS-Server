@@ -238,7 +238,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	public static getBereiche(fach : GostFach | null) : List<GostFachbereich> {
 		if (fach === null)
 			return new ArrayList();
-		const zulFach : Fach = Fach.data().getWertBySchluesselOrException(fach.kuerzel);
+		const zulFach : Fach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		const bereiche : List<GostFachbereich> | null = GostFachbereich.getMapFachbereichByFach().get(zulFach);
 		if (bereiche !== null)
 			return bereiche;
@@ -307,7 +307,7 @@ export class GostFachbereich extends JavaEnum<GostFachbereich> {
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
 	public static compareFachByKuerzel(ka : string | null, kb : string | null) : number {
-		return GostFachbereich.compareFach((ka === null) ? null : Fach.data().getWertBySchluessel(ka), (kb === null) ? null : Fach.data().getWertBySchluessel(kb));
+		return GostFachbereich.compareFach((ka === null) ? null : Fach.getBySchluesselOrDefault(ka), (kb === null) ? null : Fach.getBySchluesselOrDefault(kb));
 	}
 
 	/**

@@ -211,7 +211,7 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			addFehler(GostBelegungsfehler.ZK_13);
 
 		// Prüfe, ob der Zusatzkurs in dem Fach angeboten wird.
-		final Fach zFach = Fach.data().getWertBySchluessel(fach.kuerzel);
+		final Fach zFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		if ((zFach == Fach.GE) && (!manager.istErlaubtZusatzkursGE()))
 			addFehler(GostBelegungsfehler.ZK_14);
 		if ((zFach == Fach.SW) && (!manager.istErlaubtZusatzkursSW()))

@@ -518,8 +518,7 @@ public final class DataUntis {
 				u.studentenZahl = ergebnisManager.getOfKursAnzahlSchueler(kurs.id);
 				u.wochenTyp = "WA";
 				u.jahreswert = 0.0048;
-				final Fach fach = Fach.data().getWertBySchluessel(ergebnisManager.getFach(kurs.fach_id).kuerzel);
-				final RGBFarbe fachFarbe = (fach == null) ? new RGBFarbe() : fach.getFarbe(schuljahresabschnitt.Jahr);
+				final RGBFarbe fachFarbe = Fach.getBySchluesselOrDefault(ergebnisManager.getFach(kurs.fach_id).kuerzel).getFarbe(schuljahresabschnitt.Jahr);
 				u.farbeHintergrund = "" + ((fachFarbe.red * 65536) + (fachFarbe.green * 256) + fachFarbe.blue);
 				u.kennzeichen = "n";
 				u.doppelStdMin = 1;

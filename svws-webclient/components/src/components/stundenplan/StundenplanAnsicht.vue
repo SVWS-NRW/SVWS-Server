@@ -440,7 +440,7 @@
 	}
 
 	function getBgColor(fach: string): string {
-		return Fach.data().getWertBySchluessel(fach)?.getHMTLFarbeRGB(props.manager().getSchuljahr()) ?? 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fach).getHMTLFarbeRGB(props.manager().getSchuljahr());
 	}
 
 	const draggable = computed<boolean>(() => props.useDragAndDrop);

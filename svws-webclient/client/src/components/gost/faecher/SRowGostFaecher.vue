@@ -83,7 +83,7 @@
 	})
 
 	function istPJK(fach: GostFach) : boolean {
-		return Fach.data().getWertBySchluessel(fach.kuerzel)?.getFachgruppe(schuljahr.value) === Fachgruppe.FG_PX;
+		return Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value) === Fachgruppe.FG_PX;
 	}
 
 	const leitfaecher1: ComputedRef<List<GostFach>> = computed(() => {
@@ -129,28 +129,28 @@
 	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(fach.value));
 
 	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
-		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
 	});
 
-	const bgColor: ComputedRef<string> = computed(() => Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)');
+	const bgColor: ComputedRef<string> = computed(() => Fach.getBySchluesselOrDefault(fach.value.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return !((fg === Fachgruppe.FG_ME) || (fg === Fachgruppe.FG_PX));
 	});
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = Fach.data().getWertBySchluessel(fach.value.kuerzel)?.getFachgruppe(schuljahr.value);
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 
 	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
-		const f = Fach.data().getWertBySchluessel(fach.value.kuerzel);
-		if ((f?.getJahrgangAb(schuljahr.value) === Jahrgaenge.EF) ||
+		const f = Fach.getBySchluesselOrDefault(fach.value.kuerzel);
+		if ((f.getJahrgangAb(schuljahr.value) === Jahrgaenge.EF) ||
 			((fach.value.biliSprache !== null) && (fach.value.biliSprache !== "D")))
 			return false;
-		const fg = f?.getFachgruppe(schuljahr.value);
+		const fg = f.getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 

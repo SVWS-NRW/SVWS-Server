@@ -395,10 +395,7 @@ public class SchuelerLernabschnittManager {
 		final FachDaten fachDaten = fachGetByLeistungId(idLeistung);
 		if (fachDaten == null)
 			return "rgb(220,220,220)";
-		final Fach fach = Fach.data().getWertBySchluessel(fachDaten.kuerzel);
-		if (fach == null)
-			return "rgb(220,220,220)";
-		return fach.getHMTLFarbeRGB(_schuljahresabschnitt.schuljahr);
+		return Fach.getBySchluesselOrDefault(fachDaten.kuerzel).getHMTLFarbeRGB(_schuljahresabschnitt.schuljahr);
 	}
 
 	/**

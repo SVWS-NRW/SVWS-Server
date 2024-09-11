@@ -35,6 +35,7 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import jakarta.validation.constraints.NotNull;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -360,7 +361,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			}
 
 			// Bestimme noch Einträge zu den Sprachdaten, wenn das Fach eine Sprache ist.
-			final Fach zfach = Fach.data().getWertBySchluessel(fach.kuerzel);
+			final @NotNull Fach zfach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			Sprachbelegung sprachbelegung = null;
 			Sprachpruefung sprachpruefung = null;
 

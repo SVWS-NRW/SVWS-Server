@@ -139,9 +139,7 @@ export class GostFaecherManager extends JavaObject {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
 		if (this._map.containsKey(fach.id))
 			return false;
-		const zf : Fach | null = Fach.data().getWertBySchluessel(fach.kuerzel);
-		if (zf === null)
-			return false;
+		const zf : Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		const fke : FachKatalogEintrag | null = zf.daten(this.schuljahr);
 		if (fke === null)
 			return false;
@@ -162,7 +160,7 @@ export class GostFaecherManager extends JavaObject {
 		}
 		const added : boolean = this._faecher.add(fach);
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
-			const fg : Fachgruppe | null = Fach.data().getWertBySchluesselOrException(fach.kuerzel).getFachgruppe(this.schuljahr);
+			const fg : Fachgruppe | null = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(this.schuljahr);
 			if ((fg as unknown !== Fachgruppe.FG_VX as unknown) && (fg as unknown !== Fachgruppe.FG_PX as unknown))
 				this._leitfaecher.add(fach);
 		}
@@ -351,7 +349,7 @@ export class GostFaecherManager extends JavaObject {
 	public getFaecherSchriftlichMoeglich() : List<GostFach> {
 		const faecherSchriftlichMoeglich : List<GostFach> = new ArrayList<GostFach>();
 		for (const f of this._faecher) {
-			const zf : Fach | null = Fach.data().getWertBySchluesselOrException(f.kuerzel);
+			const zf : Fach | null = Fach.getBySchluesselOrDefault(f.kuerzel);
 			if ((zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown) || (zf as unknown === Fach.VO as unknown) || (zf as unknown === Fach.IN as unknown))
 				continue;
 			faecherSchriftlichMoeglich.add(f);

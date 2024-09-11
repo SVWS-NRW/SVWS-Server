@@ -279,7 +279,7 @@
 			return "#f2f4f5";
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
-		const colors = klausuren.map(kuerzel => Fach.data().getWertBySchluessel(kuerzel)?.getHMTLFarbeRGBA(schuljahr.value, 1.0) ?? 'rgb(220,220,220)');
+		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0));
 
 		let gradient = '';
 

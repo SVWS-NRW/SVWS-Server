@@ -4006,7 +4006,7 @@ public class GostKlausurplanManager {
 	 * @return die RGBA-HTML-Farbdefinition als String
 	 */
 	public @NotNull String fachHTMLFarbeRgbaByKursklausur(final @NotNull GostKursklausur k) {
-		return Fach.data().getWertBySchluesselOrException(fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(_schuljahr, 1.0);
+		return Fach.getBySchluesselOrDefault(fachByKursklausur(k).kuerzel).getHMTLFarbeRGBA(_schuljahr, 1.0);
 	}
 
 	/**

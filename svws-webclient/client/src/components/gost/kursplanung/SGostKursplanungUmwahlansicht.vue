@@ -252,7 +252,7 @@
 		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs)) {
 			const k = props.getDatenmanager().kursGet(idKurs);
 			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
-			const zf = (f === null) ? null : Fach.data().getWertBySchluessel(f.kuerzel);
+			const zf = (f === null) ? null : Fach.getBySchluesselOrDefault(f.kuerzel);
 			return zf?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
 		}
 		return "";
@@ -322,7 +322,7 @@
 		if (fwKurszuordnung !== undefined)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
-		return Fach.data().getWertBySchluessel(f.kuerzel)?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,200)';
+		return Fach.getBySchluesselOrDefault(f.kuerzel).getHMTLFarbeRGB(schuljahr.value);
 	}
 
 	function getFachwahlKursname(idFach: number): string {

@@ -142,8 +142,8 @@ public class ReportingFach {
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
-		return GostFachbereich.compareFach(Fach.data().getWertBySchluessel(fach1.statistikfach().kuerzelASD()),
-				Fach.data().getWertBySchluessel(fach2.statistikfach().kuerzelASD()));
+		return GostFachbereich.compareFach(Fach.getBySchluesselOrDefault(fach1.statistikfach().kuerzelASD()),
+				Fach.getBySchluesselOrDefault(fach2.statistikfach().kuerzelASD()));
 	}
 
 

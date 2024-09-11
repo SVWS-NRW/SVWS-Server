@@ -115,9 +115,7 @@ public class GostFaecherManager {
 		DeveloperNotificationException.ifSmaller("fach.id", fach.id, 0);
 		if (_map.containsKey(fach.id))
 			return false;
-		final Fach zf = Fach.data().getWertBySchluessel(fach.kuerzel);
-		if (zf == null)
-			return false;
+		final Fach zf = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final FachKatalogEintrag fke = zf.daten(schuljahr);
 		if (fke == null)
 			return false;
@@ -139,7 +137,7 @@ public class GostFaecherManager {
 		final boolean added = _faecher.add(fach);
 		// Prüfe, ob das Fach als Leitfach geeignet ist, d.h. kein Vertiefungs-, Projekt- oder Ersatzfach ist
 		if (!GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach)) {
-			final Fachgruppe fg = Fach.data().getWertBySchluesselOrException(fach.kuerzel).getFachgruppe(schuljahr);
+			final Fachgruppe fg = Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr);
 			if ((fg != Fachgruppe.FG_VX) && (fg != Fachgruppe.FG_PX))
 				_leitfaecher.add(fach);
 		}
@@ -333,7 +331,7 @@ public class GostFaecherManager {
 	public @NotNull List<GostFach> getFaecherSchriftlichMoeglich() {
 		final @NotNull List<GostFach> faecherSchriftlichMoeglich = new ArrayList<>();
 		for (final @NotNull GostFach f : _faecher) {
-			final Fach zf = Fach.data().getWertBySchluesselOrException(f.kuerzel);
+			final Fach zf = Fach.getBySchluesselOrDefault(f.kuerzel);
 			if ((zf == Fach.PX) || (zf == Fach.VX) || (zf == Fach.VO) || (zf == Fach.IN))
 				continue;
 			faecherSchriftlichMoeglich.add(f);

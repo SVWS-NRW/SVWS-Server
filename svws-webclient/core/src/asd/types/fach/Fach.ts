@@ -1525,7 +1525,7 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	 *
 	 * @return das Fach oder bei einem ungültigen Schlüssel das Fach VF
 	 */
-	public static getBySchluesselOrDefault(schluessel : string) : Fach | null {
+	public static getBySchluesselOrDefault(schluessel : string) : Fach {
 		const result : Fach | null = Fach.data().getWertBySchluessel(schluessel);
 		if (result !== null)
 			return result;
