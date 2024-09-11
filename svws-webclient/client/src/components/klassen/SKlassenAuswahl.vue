@@ -21,9 +21,25 @@
 					{{ lehrerkuerzel(value) }}
 				</template>
 				<template #actions>
-					<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
-						<svws-ui-button type="secondary" @click="openModal">Standardsortierung anwenden …</svws-ui-button>
-					</s-klassen-auswahl-sortierung-modal>
+					<div class="flex gap-5">
+						<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
+							<svws-ui-tooltip position="bottom">
+								<svws-ui-button type="secondary" @click="openModal">Standardsortierung anwenden ...
+								</svws-ui-button>
+								<template #content>
+									Standardsortierung wiederherstellen
+								</template>
+							</svws-ui-tooltip>
+						</s-klassen-auswahl-sortierung-modal>
+						<svws-ui-tooltip position="bottom">
+							<svws-ui-button type="icon" @click="startCreationMode">
+								<span class="icon i-ri-add-line"/>
+							</svws-ui-button>
+							<template #content>
+								Neue Klasse anlegen
+							</template>
+						</svws-ui-tooltip>
+					</div>
 				</template>
 			</svws-ui-table>
 		</template>
@@ -117,20 +133,23 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => {
-		return props.klassenListeManager().liste.auswahlExists() ? null : props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null;
-	})
+	const clickedEintrag = computed(() => (props.klassenListeManager().liste.auswahlExists() || props.creationModeEnabled) ? null
+		: (props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null));
 
 	async function setAuswahl(items : KlassenDaten[]) {
 		props.klassenListeManager().liste.auswahlClear();
 		for (const item of items)
 			if (props.klassenListeManager().liste.hasValue(item))
 				props.klassenListeManager().liste.auswahlAdd(item);
-
 		if (props.klassenListeManager().liste.auswahlExists())
 			await props.gotoGruppenprozess(true);
 		else
 			await props.gotoEintrag(props.klassenListeManager().getVorherigeAuswahl()?.id);
+	}
+
+	async function startCreationMode(): Promise<void> {
+		props.klassenListeManager().liste.auswahlClear();
+		await props.gotoCreationMode(true)
 	}
 
 	function lehrerkuerzel(list: number[]) {

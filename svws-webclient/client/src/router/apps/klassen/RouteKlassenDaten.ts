@@ -10,7 +10,7 @@ import { routeApp } from "../RouteApp";
 
 const SKlassenDaten = () => import("~/components/klassen/daten/SKlassenDaten.vue");
 
-export class RouteKlasseDaten extends RouteNode<any, RouteKlassen> {
+export class RouteKlassenDaten extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN ], "klassen.daten", "daten", SKlassenDaten);
@@ -19,8 +19,8 @@ export class RouteKlasseDaten extends RouteNode<any, RouteKlassen> {
 		super.text = "Klasse";
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+	public getRoute(id: number): RouteLocationRaw {
+		return { name: this.name, params: {idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id} };
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenDatenProps {
@@ -44,5 +44,4 @@ export class RouteKlasseDaten extends RouteNode<any, RouteKlassen> {
 
 }
 
-export const routeKlasseDaten = new RouteKlasseDaten();
-
+export const routeKlassenDaten = new RouteKlassenDaten();

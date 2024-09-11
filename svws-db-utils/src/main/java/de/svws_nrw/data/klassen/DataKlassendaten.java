@@ -29,10 +29,10 @@ import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassenLeitung;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.schule.DTOTeilstandorte;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.json.JsonDaten;
 import jakarta.validation.constraints.NotNull;
@@ -253,14 +253,46 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 
 		dtoKlassen.ID = newId;
 		dtoKlassen.Sichtbar = true;
-		dtoKlassen.Sortierung = 32000;
+		dtoKlassen.Sortierung = 0;
 		dtoKlassen.AdrMerkmal = teilstandort.AdrMerkmal;
 		dtoKlassen.OrgFormKrz = AllgemeinbildendOrganisationsformen.NICHT_ZUGEORDNET.daten(schuljahr).kuerzel;
 		dtoKlassen.ASDSchulformNr = Schulgliederung.getDefault(schulform).daten(schuljahr).kuerzel;
 		dtoKlassen.Klassenart = Klassenart.getDefault(schulform).daten(schuljahr).kuerzel;
 	}
 
+	@Override
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		final Long idSchuljahresabschnitt = JSONMapper.convertToLong(initAttributes.get("idSchuljahresabschnitt"), false);
+		final String kuerzel = JSONMapper.convertToString(initAttributes.get("kuerzel"), false, false, Schema.tab_Klassen.col_Klasse.datenlaenge());
+		checkKuerzelExists(idSchuljahresabschnitt, kuerzel);
+	}
 
+	@Override
+	protected void mapAttribute(final DTOKlassen dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+		switch (name) {
+			case "kuerzel" -> mapKuerzel(dto, value);
+			case "idSchuljahresabschnitt" -> dto.Schuljahresabschnitts_ID = JSONMapper.convertToLong(value, false);
+			case "idJahrgang" -> mapJahrgang(dto, value);
+			case "parallelitaet" -> mapParallelitaet(dto, value);
+			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE);
+			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
+			case "teilstandort" -> mapTeilstandort(dto, value);
+			case "beschreibung" -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, Schema.tab_Klassen.col_Bezeichnung.datenlaenge());
+			case "idVorgaengerklasse" -> mapVorgaengerKlasse(dto, value);
+			case "idFolgeklasse" -> mapFolgeKlasse(dto, value);
+			case "idAllgemeinbildendOrganisationsform" -> mapAllgemeinbildendOrganisationsform(dto, value);
+			case "idBerufsbildendOrganisationsform" -> mapBerufsbildendOrganisationsform(dto, value);
+			case "idWeiterbildungOrganisationsform" -> mapWeiterbildungOrganisationsform(dto, value);
+			case "idSchulgliederung" -> mapIdSchulgliederung(dto, value);
+			case "idKlassenart" -> mapIdKlassenart(dto, value);
+			case "noteneingabeGesperrt" -> dto.NotenGesperrt = JSONMapper.convertToBoolean(value, false);
+			case "verwendungAnkreuzkompetenzen" -> dto.Ankreuzzeugnisse = JSONMapper.convertToBoolean(value, false);
+			case "idFachklasse" -> mapIdFachklasse(dto, value);
+			case "beginnSommersemester" -> dto.SommerSem = JSONMapper.convertToBoolean(value, false);
+			case "klassenLeitungen" -> mapKlassenleitungen(dto, value);
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
+		}
+	}
 
 	/**
 	 * Führt das Mapping der Klassenleitungen des Core-DTOs auf das zugehörige Datenbank-DTO durch.
@@ -391,11 +423,11 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			if (vk == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Die Vorgängerklasse mit der ID %d wurde nicht gefunden.".formatted(idVorgaengerklasse));
-			final DTOSchuljahresabschnitte a = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
-			if (a == null)
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, dto.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt == null)
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"Die ID des Schuljahresabschnitts %d der Klasse mit der ID %d ist ungültig.".formatted(dto.Schuljahresabschnitts_ID, dto.ID));
-			if (vk.Schuljahresabschnitts_ID != a.VorigerAbschnitt_ID)
+			if (vk.Schuljahresabschnitts_ID != schuljahresabschnitt.VorigerAbschnitt_ID)
 				throw new ApiOperationException(Status.BAD_REQUEST,
 						"Die ID für die Vorgängerklasse gehört nicht zu einer Klasse aus dem vorigen Schuljahresabschnitt.");
 			dto.VKlasse = vk.Klasse;
@@ -534,79 +566,78 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		}
 	}
 
+	/**
+	 * Prüft, ob das Klassenkürzel im Schuljahresabschnitt existiert.
+	 *
+	 * @param idSchuljahresabschnitt ID des Schuljahresabschnittes
+	 * @param kuerzel Kürzel der Klasse
+	 *
+	 * @throws ApiOperationException wenn das Kürzel bereits existiert
+	 */
+	void checkKuerzelExists(final Long idSchuljahresabschnitt, final String kuerzel) throws ApiOperationException {
+		final String existingKlasseQuery = "SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2";
+		final boolean klasseAlreadyExists = !conn.query(existingKlasseQuery, DTOKlassen.class)
+				.setParameter(1, idSchuljahresabschnitt)
+				.setParameter(2, kuerzel)
+				.getResultList()
+				.isEmpty();
 
-	@Override
-	protected void mapAttribute(final DTOKlassen dto, final String name, final Object value, final Map<String, Object> map) throws ApiOperationException {
+		if (klasseAlreadyExists)
+			throw new ApiOperationException(Status.BAD_REQUEST,
+					"Die Klasse %s existiert bereits im Schuljahresabschnitt %d".formatted(kuerzel, idSchuljahresabschnitt));
+	}
+
+	private void mapKuerzel(final DTOKlassen dto, final Object value) throws ApiOperationException {
+		final String kuerzel = JSONMapper.convertToString(value, false, false, Schema.tab_Klassen.col_Klasse.datenlaenge());
+		checkKuerzelExists(dto.Schuljahresabschnitts_ID, kuerzel);
+		dto.Klasse = kuerzel;
+	}
+
+	private static void mapIdFachklasse(final DTOKlassen dto, final Object value) throws ApiOperationException {
+		final Long idFachklasse = JSONMapper.convertToLong(value, true);
+		if (idFachklasse == null) {
+			dto.Fachklasse_ID = null;
+		} else {
+			final BerufskollegFachklassenKatalogDaten fachklasse = JsonDaten.fachklassenManager.getDatenByID(idFachklasse);
+			if (fachklasse == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Fachklasse für die ID %d gefunden werden.".formatted(idFachklasse));
+			dto.Fachklasse_ID = fachklasse.id;
+		}
+	}
+
+	private void mapIdKlassenart(final DTOKlassen dto, final Object value) throws ApiOperationException {
+		final Long idKlassenart = JSONMapper.convertToLong(value, true);
+		final Klassenart klassenart = Klassenart.data().getWertByID(idKlassenart);
+		if (klassenart == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es konnte keine Klassenart für die ID %d gefunden werden.".formatted(idKlassenart));
+		dto.Klassenart = klassenart.daten(conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID).schuljahr).kuerzel;
+	}
+
+	private void mapIdSchulgliederung(final DTOKlassen dto, final Object value) throws ApiOperationException {
 		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dto.Schuljahresabschnitts_ID);
-		switch (name) {
-			case "kuerzel" -> {
-				// Prüfen, ob das Klassenkürzel bereits im Schuljahresabschnitt existiert
-				final String existingKlasseQuery = "SELECT e FROM DTOKlassen e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.Klasse = ?2";
-				final boolean klasseAlreadyExists = !conn.query(existingKlasseQuery, DTOKlassen.class)
-						.setParameter(1, dto.Schuljahresabschnitts_ID)
-						.setParameter(2, value)
-						.getResultList()
-						.isEmpty();
-				if (klasseAlreadyExists)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die Klasse %s existiert bereits im definierten Schuljahresabschnitt".formatted(value));
-
-				dto.Klasse = JSONMapper.convertToString(value, false, false, 15);
-			}
-			case "idJahrgang" -> mapJahrgang(dto, value);
-			case "parallelitaet" -> mapParallelitaet(dto, value);
-			case "sortierung" -> dto.Sortierung = JSONMapper.convertToIntegerInRange(value, false, 0, Integer.MAX_VALUE);
-			case "istSichtbar" -> dto.Sichtbar = JSONMapper.convertToBoolean(value, false);
-			case "teilstandort" -> {
-				final String t = JSONMapper.convertToString(value, false, false, 1);
-				final DTOTeilstandorte teilstandort = conn.queryByKey(DTOTeilstandorte.class, t);
-				if (teilstandort == null)
-					throw new ApiOperationException(Status.NOT_FOUND, "Der Teilstandort %s wurde nicht gefunden.".formatted(t));
-				dto.AdrMerkmal = t;
-			}
-			case "beschreibung" -> dto.Bezeichnung = JSONMapper.convertToString(value, true, true, 151);
-			case "idVorgaengerklasse" -> mapVorgaengerKlasse(dto, value);
-			case "idFolgeklasse" -> mapFolgeKlasse(dto, value);
-			case "idAllgemeinbildendOrganisationsform" -> mapAllgemeinbildendOrganisationsform(dto, value);
-			case "idBerufsbildendOrganisationsform" -> mapBerufsbildendOrganisationsform(dto, value);
-			case "idWeiterbildungOrganisationsform" -> mapWeiterbildungOrganisationsform(dto, value);
-			case "idSchulgliederung" -> {
-				final Long idSchulgliederung = JSONMapper.convertToLong(value, true);
-				if (((idSchulgliederung == null) || (idSchulgliederung == -1)) && (Schulgliederung.getDefault(schulform) == null)) {
-					dto.ASDSchulformNr = null;
-					return;
-				}
-				final Schulgliederung sgl = ((idSchulgliederung == null) || (idSchulgliederung == -1))
-						? Schulgliederung.getDefault(schulform)
-						: Schulgliederung.data().getWertByID(idSchulgliederung);
-				if (!sgl.hatSchulform(abschnitt.schuljahr, schulform))
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulgliederung wird von der angegeben Schulform nicht unterstützt.");
-				dto.ASDSchulformNr = sgl.daten(abschnitt.schuljahr).kuerzel;
-			}
-			case "idKlassenart" -> {
-				final Long idKlassenart = JSONMapper.convertToLong(value, true);
-				final Klassenart k = Klassenart.data().getWertByID(idKlassenart);
-				if (k == null)
-					throw new ApiOperationException(Status.BAD_REQUEST, "Die Klassenart für die ID %d konnte nicht gefunden werden.".formatted(idKlassenart));
-				dto.Klassenart = k.daten(abschnitt.schuljahr).kuerzel;
-			}
-			case "noteneingabeGesperrt" -> dto.NotenGesperrt = JSONMapper.convertToBoolean(value, false);
-			case "verwendungAnkreuzkompetenzen" -> dto.Ankreuzzeugnisse = JSONMapper.convertToBoolean(value, false);
-			case "idFachklasse" -> {
-				final Long idFachklasse = JSONMapper.convertToLong(value, true);
-				if (idFachklasse == null) {
-					dto.Fachklasse_ID = null;
-				} else {
-					final BerufskollegFachklassenKatalogDaten fachklasse = JsonDaten.fachklassenManager.getDatenByID(idFachklasse);
-					if (fachklasse == null)
-						throw new ApiOperationException(Status.BAD_REQUEST, "Keine Fachklasse die ID %d gefunden.".formatted(idFachklasse));
-					dto.Fachklasse_ID = fachklasse.id;
-				}
-			}
-			case "beginnSommersemester" -> dto.SommerSem = JSONMapper.convertToBoolean(value, false);
-			case "klassenLeitungen" -> mapKlassenleitungen(dto, value);
-			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Das Patchen des Attributes %s wird nicht unterstützt.".formatted(name));
+		final Long idSchulgliederung = JSONMapper.convertToLong(value, true);
+		if (((idSchulgliederung == null) || (idSchulgliederung == -1)) && (Schulgliederung.getDefault(schulform) == null)) {
+			dto.ASDSchulformNr = null;
+			return;
 		}
+
+		final Schulgliederung schulgliederung = ((idSchulgliederung == null) || (idSchulgliederung == -1))
+				? Schulgliederung.getDefault(schulform)
+				: Schulgliederung.data().getWertByID(idSchulgliederung);
+		if (!schulgliederung.hatSchulform(abschnitt.schuljahr, schulform))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Schulgliederung wird von der angegeben Schulform nicht unterstützt.");
+
+		dto.ASDSchulformNr = schulgliederung.daten(abschnitt.schuljahr).kuerzel;
+	}
+
+	private void mapTeilstandort(final DTOKlassen dto, final Object value) throws ApiOperationException {
+		final String teilstandortStr = JSONMapper.convertToString(value, false, false, 1);
+		final DTOTeilstandorte teilstandort = conn.queryByKey(DTOTeilstandorte.class, teilstandortStr);
+		if (teilstandort == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Der Teilstandort %s wurde nicht gefunden.".formatted(teilstandortStr));
+
+		dto.AdrMerkmal = teilstandortStr;
 	}
 
 	/**
@@ -844,15 +875,6 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler.".formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
 
 		return operationResponse;
-	}
-
-	// TODO: Methode sollte später durch eigene Methode in zugehöriger DataManager Klasse abgelöst werden
-	@NotNull
-	DTOEigeneSchule getDTOEigeneSchule() throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es konnten keine Informationen zur Schule gefunden werden.");
-		return schule;
 	}
 
 	// TODO: Methode sollte später durch eigene Methode in zugehöriger DataManager Klasse abgelöst werden

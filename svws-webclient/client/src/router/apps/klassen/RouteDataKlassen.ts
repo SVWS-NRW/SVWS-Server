@@ -6,11 +6,13 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
-import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
-import { type RouteNode } from "~/router/RouteNode";
+import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
+import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
+import { routeApp } from "~/router/apps/RouteApp";
 
 
 interface RouteStateKlassen extends RouteStateInterface {
@@ -20,6 +22,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
 	gruppenprozesseEnabled: boolean;
+	creationModeEnabled: boolean;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -27,9 +30,10 @@ const defaultState = <RouteStateKlassen> {
 	klassenListeManager: undefined,
 	mapKlassenVorigerAbschnitt: new Map<number, KlassenDaten>(),
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
-	view: routeKlasseDaten,
+	view: routeKlassenDaten,
 	oldView: undefined,
 	gruppenprozesseEnabled: false,
+	creationModeEnabled: false
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -56,6 +60,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return this._state.value.gruppenprozesseEnabled;
 	}
 
+	get creationModeEnabled(): boolean {
+		return this._state.value.creationModeEnabled;
+	}
+
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
 		const schuljahresabschnitt = api.mapAbschnitte.value.get(idSchuljahresabschnitt);
 		if (schuljahresabschnitt === undefined)
@@ -80,14 +88,16 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		// Versuche die ausgewählte Klasse von vorher zu laden
 		const vorherigeAuswahl = ((this._state.value.klassenListeManager !== undefined) && this.klassenListeManager.hasDaten()) ? this.klassenListeManager.auswahl() : null;
 		if ((vorherigeAuswahl !== null) && (vorherigeAuswahl.kuerzel !== null)) {
-			const auswahl = klassenListeManager.getByKuerzelOrNull(vorherigeAuswahl.kuerzel);
-			klassenListeManager.setDaten(auswahl ?? klassenListeManager.liste.list().get(0));
+			const auswahl = this.klassenListeManager.getByKuerzelOrNull(vorherigeAuswahl.kuerzel);
+			this.klassenListeManager.setDaten(auswahl ?? klassenListeManager.liste.list().get(0));
 		}
 
 		// Aktualisiere den State
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt,
-			gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled });
-		return klassenListeManager.auswahlID();
+			gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled,
+			creationModeEnabled: this._state.value.creationModeEnabled
+		});
+		return this.klassenListeManager.auswahlID();
 	}
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -108,20 +118,16 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	public async setEintrag(klasse: KlassenDaten | null) {
 		if ((klasse === null) && (!this.klassenListeManager.hasDaten()))
 			return;
-
 		if ((klasse === null) || (this.klassenListeManager.liste.list().isEmpty())) {
 			this.klassenListeManager.setDaten(null);
 			this.commit();
 			return;
 		}
-
 		if (this.klassenListeManager.hasDaten() && (klasse.id === this.klassenListeManager.auswahl().id))
 			return;
-
 		let daten = this.klassenListeManager.liste.get(klasse.id);
 		if (daten === null)
 			daten = this.klassenListeManager.filtered().isEmpty() ? null : this.klassenListeManager.filtered().get(0);
-
 		this.klassenListeManager.setDaten(daten);
 		this.commit();
 	}
@@ -184,36 +190,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	gotoEintrag = async (eintragId?: number | null) => {
-		if ((eintragId !== null) && (eintragId !== undefined)) {
-			// Deaktivieren des Gruppenprozess Modus falls noch aktiv
-			this.klassenListeManager.liste.auswahlClear()
-			this._state.value.gruppenprozesseEnabled = false;
-
-			const view = this._state.value.view === routeKlasseGruppenprozesse ? routeKlasseDaten : this.view;
-			if (this.klassenListeManager.liste.has(eintragId)){
-				await RouteManager.doRoute(view.getRoute(eintragId));
-				await this.setEintrag(this.klassenListeManager.liste.get(eintragId))
-				return
-			}
-		}
-
-		const filtered = this.klassenListeManager.filtered();
-		if (!filtered.isEmpty()) {
-			const klasse = this.klassenListeManager.filtered().getFirst();
-			await RouteManager.doRoute(routeKlasseDaten.getRoute(klasse.id));
-			await this.setEintrag(klasse);
-		}
-	}
-
-	gotoSchueler = async (eintrag: Schueler) => {
-		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
-	}
-
-	gotoLehrer = async (eintrag: LehrerListeEintrag) => {
-		await RouteManager.doRoute(routeLehrer.getRoute(eintrag.id));
-	}
-
 	addKlassenleitung = async (idLehrer : number, idKlasse : number) : Promise<void> => {
 		// Prüfe zunächst, ob die Lehrer-ID bereits in der Liste der Klassenleitungen vorkommt
 		if (this.klassenListeManager.daten().klassenLeitungen.contains(idLehrer))
@@ -269,22 +245,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	gotoGruppenprozess = async (navigate: boolean) => {
-		if (this._state.value.gruppenprozesseEnabled || this._state.value.view === routeKlasseGruppenprozesse) {
-			this.commit();
-			return;
-		}
-
-		this._state.value.gruppenprozesseEnabled = true;
-		this._state.value.oldView = this._state.value.view;
-
-		if (navigate)
-			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute());
-
-		this._state.value.view = routeKlasseGruppenprozesse;
-		this.klassenListeManager.setDaten(null);
-	}
-
 	setFilter = async () => {
 		if (!this.klassenListeManager.hasDaten()) {
 			const listFiltered = this.klassenListeManager.filtered();
@@ -303,6 +263,79 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await api.server.setKlassenSortierungFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 		await this.setEintrag(this.klassenListeManager.liste.get(auswahl_id));
+	}
+
+	addKlasse = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
+		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
+		await this.ladeSchuljahresabschnitt(this.idSchuljahresabschnitt);
+		await this.gotoEintrag(neueKlasse.id);
+	}
+
+	gotoEintrag = async (eintragId?: number | null) => {
+		this.klassenListeManager.liste.auswahlClear();
+		this._state.value.gruppenprozesseEnabled = false;
+		this._state.value.creationModeEnabled = false;
+
+		if ((eintragId !== null) && (eintragId !== undefined)) {
+			// Deaktivieren des Gruppenprozess Modus falls noch aktiv
+			const view = ((this._state.value.view === routeKlasseGruppenprozesse) || (this._state.value.view === routeKlassenDatenNeu))
+				? routeKlassenDaten : this.view;
+			if (this.klassenListeManager.liste.has(eintragId)) {
+				await RouteManager.doRoute(view.getRoute(eintragId));
+				await this.setEintrag(this.klassenListeManager.liste.get(eintragId));
+				return;
+			}
+		}
+
+		const filtered = this.klassenListeManager.filtered();
+		if (!filtered.isEmpty()) {
+			const klasse = this.klassenListeManager.filtered().getFirst();
+			await RouteManager.doRoute(routeKlassenDaten.getRoute(klasse.id));
+			await this.setEintrag(klasse);
+		}
+	}
+
+	gotoSchueler = async (eintrag: Schueler) => {
+		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+	}
+
+	gotoLehrer = async (eintrag: LehrerListeEintrag) => {
+		await RouteManager.doRoute(routeLehrer.getRoute(eintrag.id));
+	}
+
+	gotoCreationMode = async (navigate: boolean) => {
+		if (this._state.value.creationModeEnabled || (this._state.value.view === routeKlassenDatenNeu)) {
+			this.commit();
+			return;
+		}
+
+		this.klassenListeManager.setAuswahlKlassenLeitung(null);
+		this._state.value.creationModeEnabled = true;
+		this._state.value.gruppenprozesseEnabled = false;
+		this._state.value.oldView = this._state.value.view;
+
+		if (navigate)
+			await RouteManager.doRoute(routeKlassenDatenNeu.getRoute());
+
+		this._state.value.view = routeKlassenDatenNeu;
+		this.klassenListeManager.setDaten(null);
+	}
+
+	gotoGruppenprozess = async (navigate: boolean) => {
+		if (this._state.value.gruppenprozesseEnabled || (this._state.value.view === routeKlasseGruppenprozesse)) {
+			this.commit();
+			return;
+		}
+
+		this._state.value.gruppenprozesseEnabled = true;
+		this._state.value.creationModeEnabled = false;
+		this._state.value.oldView = this._state.value.view;
+
+		if (navigate)
+			await RouteManager.doRoute(routeKlasseGruppenprozesse.getRoute());
+
+		this._state.value.view = routeKlasseGruppenprozesse;
+		this.klassenListeManager.setDaten(null);
 	}
 
 }

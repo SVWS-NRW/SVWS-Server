@@ -6,7 +6,7 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 import { RouteDataKlassen } from "~/router/apps/klassen/RouteDataKlassen";
 
@@ -15,6 +15,7 @@ import type { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
+import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -29,11 +30,12 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKlasseDaten,
+			routeKlassenDaten,
+			routeKlassenDatenNeu,
 			routeKlassenStundenplan,
-			routeKlasseGruppenprozesse,
+			routeKlasseGruppenprozesse
 		];
-		super.defaultChild = routeKlasseDaten;
+		super.defaultChild = routeKlassenDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -41,17 +43,22 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
-			const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (neueIdKlasse && neueIdKlasse !== id)
-				return routeKlasseDaten.getRoute(neueIdKlasse);
+			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if (idNeu && idNeu !== id)
+				return routeKlassenDaten.getRoute(idNeu);
 
 			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
 			if (this.isGruppenprozessRoute(to) && id !== undefined)
 				return routeKlasseGruppenprozesse.getRoute();
+			else if (this.isKlassenDatenNeuRoute(to) && id !== undefined)
+				return routeKlassenDatenNeu.getRoute();
 
 			if (this.isGruppenprozessRoute(to))
 				await this.data.gotoGruppenprozess(false);
+			else if (this.isKlassenDatenNeuRoute(to))
+				await this.data.gotoCreationMode(false);
 			else
 				await this.data.gotoEintrag(id)
 
@@ -75,7 +82,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeKlassenStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
-		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
+		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlassenDaten.name : routeKlassen.selectedChild.name;
 		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
@@ -87,24 +94,25 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
 			gotoGruppenprozess: this.data.gotoGruppenprozess,
-			setzeDefaultSortierung: this.data.setzeDefaultSortierung
+			gotoCreationMode: this.data.gotoCreationMode,
+			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
+			creationModeEnabled: this.data.creationModeEnabled,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsGruppenprozesse: this.getTabsGruppenprozesse(),
+			setSelectedTab: this.setTab,
+			selectedTab: this.getSelectedTab(),
+			tabs: () => this.getTabs(),
 			tabsHidden: this.children_hidden().value,
 			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
+			creationModeEnabled: this.data.creationModeEnabled,
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getSelectedTab(): AuswahlChildData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
@@ -112,19 +120,21 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return (child === routeKlasseGruppenprozesse);
 	}
 
+	private isKlassenDatenNeuRoute(child: RouteNode<any, any>): boolean {
+		return (child === routeKlassenDatenNeu);
+	}
+
+
 	private getTabs(): AuswahlChildData[] {
 		const result: AuswahlChildData[] = [];
 		for (const c of super.children) {
-			if (!this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
+			if (!c.hatEineKompetenz() || !c.hatSchulform())
+				continue;
+			if (!this.data.gruppenprozesseEnabled && !this.data.creationModeEnabled && !this.isGruppenprozessRoute(c) && !this.isKlassenDatenNeuRoute(c))
 				result.push({ name: c.name, text: c.text });
-		}
-		return result;
-	}
-
-	private getTabsGruppenprozesse(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		for (const c of super.children) {
-			if (this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
+			if (this.data.gruppenprozesseEnabled && this.isGruppenprozessRoute(c) && !this.isKlassenDatenNeuRoute(c))
+				result.push({name: c.name, text: c.text});
+			if (this.data.creationModeEnabled && !this.isGruppenprozessRoute(c) && this.isKlassenDatenNeuRoute(c))
 				result.push({ name: c.name, text: c.text });
 		}
 		return result;

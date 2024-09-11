@@ -3,10 +3,10 @@ import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface KlassenAppProps {
 	klassenListeManager: () => KlassenListeManager;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
-	tabsGruppenprozesse: AuswahlChildData[];
+	setSelectedTab: (value: AuswahlChildData) => Promise<void>;
+	selectedTab: AuswahlChildData;
+	tabs: () => AuswahlChildData[];
 	tabsHidden: boolean[];
 	gruppenprozesseEnabled: boolean;
+	creationModeEnabled: boolean;
 }
