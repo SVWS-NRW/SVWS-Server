@@ -63,7 +63,6 @@
 			list.add(zeitraster);
 		}
 		const ignoreList = props.stundenplanManager().getListZeitrasterZuStunde(props.selected);
-		console.log(list.toArray(), ignoreList.toArray())
 		return props.stundenplanManager().zeitrasterGetSchneidenSichListeMitIgnore(list, ignoreList);
 	})
 
