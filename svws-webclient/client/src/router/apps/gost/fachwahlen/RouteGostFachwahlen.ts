@@ -68,8 +68,10 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 		if (to_params.abiturjahr instanceof Array)
 			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined || abiturjahr === -1)
-			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: routeGost.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
+		if (abiturjahr === undefined || abiturjahr === -1) {
+			const [ jahrgang ] = routeGost.data.mapAbiturjahrgaenge.values();
+			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr }};
+		}
 		await this.data.setEintrag(abiturjahr);
 		if (to.name === this.name)
 			return this.defaultChild!.getRoute(abiturjahr);

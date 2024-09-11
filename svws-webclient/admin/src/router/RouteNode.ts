@@ -65,7 +65,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
-				text: name 	// Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				text: name // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
 			}
 		};
 		this._children = [];
@@ -251,7 +251,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 * TODO
 	 */
 	public set selectedChildRecord(record : RouteRecordRaw | undefined) {
-		this._selectedChild.value = (record === undefined) || (record.name === undefined) ? undefined : RouteNode.mapNodesByName.get(record.name?.toString());
+		this._selectedChild.value = ((record === undefined) || (record.name === undefined))
+			? undefined : this._selectedChild.value = RouteNode.mapNodesByName.get(record.name.toString());
 	}
 
 	/**
@@ -279,7 +280,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 * Setzt der Property-Handler für die Default-View
 	 */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })["default"] = handler;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>).default = handler;
 	}
 
 	/**
@@ -320,8 +321,8 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		if ((this._record.components === undefined) || (this._record.props === undefined))
 			throw new Error("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
-		(this._record.components as { [key: string] : RouteComponent })[name] = component;
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })[name] = prop_handler;
+		(this._record.components as Record<string, RouteComponent>)[name] = component;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>)[name] = prop_handler;
 	}
 
 
@@ -360,7 +361,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 */
 	public async doBeforeEach(to: RouteNode<unknown, any>, to_params: RouteParams, from: RouteNode<unknown, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		try {
-			return this.beforeEach(to, to_params, from, from_params);
+			return await this.beforeEach(to, to_params, from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doBeforeEach(" + to.name + ", " + from?.name + ")");
@@ -497,7 +498,7 @@ export abstract class RouteNode<TRouteData, TRouteParent extends RouteNode<unkno
 	 */
 	public async doLeaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-		  return await this.leaveBefore(from, from_params);
+			return await this.leaveBefore(from, from_params);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new Error("Fehler beim Routing in doLeaveBefore(" + from.name + ")");

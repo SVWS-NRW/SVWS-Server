@@ -21,7 +21,7 @@
 	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
-		importSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
+		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
@@ -36,7 +36,7 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files) {
 			file.value = target.files[0];
 		}
 	}

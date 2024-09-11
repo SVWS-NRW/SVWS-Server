@@ -89,9 +89,8 @@
 
 	const textarea = ref<HTMLTextAreaElement | null>(null);
 	watch([data], () => nextTick(() => {
-		if (textarea.value !== null) {
-			textarea.value.style.height = `${textarea.value.scrollHeight > textarea.value.clientHeight ? textarea.value.scrollHeight :  {}}px`;
-		}
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
 	}), { immediate: true })
 
 	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
@@ -100,9 +99,9 @@
 		let tmpIsValid = true;
 		if ((props.required === true) && (data.value === null))
 			return false;
-		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if ((props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
 			tmpIsValid = false;
-		if (tmpIsValid && (((data.value !== null) || (data.value !== ''))))
+		if (tmpIsValid && (data.value !== null) && (data.value !== ''))
 			tmpIsValid = props.valid(data.value);
 		return tmpIsValid;
 	})

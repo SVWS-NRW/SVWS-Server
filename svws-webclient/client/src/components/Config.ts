@@ -172,7 +172,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value);
 			this._mapGlobal.set(key, value);
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value);
 			this._mapUser.set(key, value);
 		}
@@ -214,7 +214,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value.toString());
 			this._mapUser.set(key, value.toString());
 		}
@@ -256,7 +256,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value.toString());
 			this._mapUser.set(key, value.toString());
 		}
@@ -307,7 +307,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, strValue);
 			this._mapGlobal.set(key, strValue);
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, strValue);
 			this._mapUser.set(key, strValue);
 		}

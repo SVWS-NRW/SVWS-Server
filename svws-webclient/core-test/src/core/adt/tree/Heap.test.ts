@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import { describe, test, expect, beforeEach } from "vitest";
 import { MinHeap, LehrerListeEintrag, IllegalArgumentException, NoSuchElementException } from "@core";
 import { TestMinComparator } from "../../../shared/TestComparator";
@@ -24,59 +23,29 @@ const l = {
 };
 const s = {
 	name: "String",
-	data: [
-		new String("5"),
-		new String("5"),
-		new String("4"),
-		new String("3"),
-		new String("2"),
-		new String("7"),
-		new String("1"),
-	],
-	data2: [
-		new String("3"),
-		new String("42"),
-		new String("0"),
-		new String("7"),
-		new String("8"),
-		new String("9"),
-	],
+	data: ["5","5","4","3","2","7","1"],
+	data2: ["2","42","0","7","8","9"],
 };
 const n = {
 	name: "Number",
-	data: [
-		new Number(5), //0, 3
-		new Number(5), //1, 4
-		new Number(4), //2, 3
-		new Number(3), //3, 2
-		new Number(2), //4, 1
-		new Number(7), //5, 6
-		new Number(1), //6, 0
-	],
-	data2: [
-		new Number(3),
-		new Number(42),
-		new Number(0),
-		new Number(7),
-		new Number(8),
-		new Number(9),
-	],
+	data: [5,5,4,3,2,7,1],
+	data2: [3,42,0,7,8,9],
 };
 
-let coll: MinHeap<Number | String | LehrerListeEintrag>;
-let empty: MinHeap<Number | String | LehrerListeEintrag>;
+let coll: MinHeap<number | string | LehrerListeEintrag>;
+let empty: MinHeap<number | string | LehrerListeEintrag>;
 
 //TODO: test for MaxHeap mit maxComparator
-describe.each([s, n, l])("MinHeap mit $name", ({ data }: {data: string[] | number[]}) => {
+describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 	beforeEach(() => {
-		coll = new MinHeap<Number | String | LehrerListeEintrag>(
+		coll = new MinHeap<number | string | LehrerListeEintrag>(
 			minComparator,
 			1
 		);
 		for (let index = 0; index < data.length; index++) {
 			coll.add(data[index]);
 		}
-		empty = new MinHeap<Number | String | LehrerListeEintrag>(
+		empty = new MinHeap<number | string | LehrerListeEintrag>(
 			minComparator,
 			1
 		);

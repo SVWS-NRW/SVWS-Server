@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-	import type { WritableComputedRef } from 'vue';
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 	import type { RouteRecordRaw } from 'vue-router';
 	import type { AuswahlChildData } from '../../types';
@@ -51,13 +50,13 @@
 	}
 
 	const tabsListElement = ref();
-	const selected: WritableComputedRef<RouteRecordRaw | AuswahlChildData> = computed({
+	const selected = computed<RouteRecordRaw | AuswahlChildData>({
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	});
 
 	function isHidden(index: number) {
-		if ((props.hidden === undefined) || props.hidden[index] === undefined)
+		if (props.hidden?.[index] === undefined)
 			return false;
 		return props.hidden[index];
 	}

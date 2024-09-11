@@ -1,6 +1,6 @@
 import type { SchuelerListeEintrag, SchuelerStammdaten, Schuljahresabschnitt } from "@core";
 
-import { SchuelerListeManager, ArrayList, DeveloperNotificationException, SchuelerListe } from "@core";
+import { SchuelerListeManager, DeveloperNotificationException, SchuelerListe } from "@core";
 import { SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
@@ -152,7 +152,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	gotoSchueler = async (value: SchuelerListeEintrag | null) => {
-		if (value === null || value === undefined) {
+		if (value === null) {
 			await RouteManager.doRoute({ name: routeSchueler.name, params: { } });
 			return;
 		}

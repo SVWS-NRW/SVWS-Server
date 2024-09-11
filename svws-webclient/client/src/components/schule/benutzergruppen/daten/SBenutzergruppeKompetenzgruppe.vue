@@ -40,7 +40,7 @@
 
 	const collapsed = ref(true);
 
-	const hatSubKompetenzen = computed<number>(() =>  props.benutzerKompetenzen(props.kompetenzgruppe).size());
+	const hatSubKompetenzen = computed<number>(() => props.benutzerKompetenzen(props.kompetenzgruppe).size());
 
 	const selectedHatAlle = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzen(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));
 	const selectedMindestensEine = computed<boolean>(() => props.getBenutzergruppenManager().hatKompetenzenMindestensEine(BenutzerKompetenz.getKompetenzen(props.kompetenzgruppe)));

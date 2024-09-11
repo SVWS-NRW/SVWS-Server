@@ -44,10 +44,11 @@
 	}
 
 	const slots = useSlots();
-	const hatlabel = computed(()=> {
+
+	const hatlabel = computed(() => {
 		const label = slots.label?.()
-		if (label && label.length > 0 && label[0].children)
-			return label[0].children.toString();
+		if ((label !== undefined) && (label.length > 0) && (typeof label[0].children === 'string'))
+			return label[0].children;
 		return "";
 	})
 </script>

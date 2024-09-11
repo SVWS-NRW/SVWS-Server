@@ -86,10 +86,10 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, ref, shallowRef, type Ref } from "vue";
+	import { computed, nextTick, ref, shallowRef } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException, BaseApi } from "@core";
+	import { ArrayList, DeveloperNotificationException } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -98,7 +98,7 @@
 
 	const props = defineProps<LoginProps>();
 
-	const refUsername : Ref<ComponentExposed<typeof SvwsUiTextInput> | null> = ref(null);
+	const refUsername = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 
 	const firstauth = ref(true);
 	const schema = shallowRef<DBSchemaListeEintrag | undefined>();

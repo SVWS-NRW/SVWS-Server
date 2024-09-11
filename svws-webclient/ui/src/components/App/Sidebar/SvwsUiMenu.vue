@@ -106,32 +106,28 @@
 	const showModalInfo = () => _showModalInfo;
 
 
-	const updateFontSize = (size: string) => {
+	const updateFontSize = (size: string | null) => {
+		if (size === null)
+			return;
 		document.documentElement.classList.remove('font-size-small', 'font-size-large');
-		if (size !== 'default') {
+		if (size !== 'default')
 			document.documentElement.classList.add(`font-size-${size}`);
-		}
 		localStorage.setItem('fontSize', size);
+		fontSize.value = size;
 	};
 
-	const updateTheme = (theme: string) => {
+	const updateTheme = (theme: string | null) => {
+		if (theme === null)
+			return;
 		document.documentElement.classList.remove('light', 'dark');
-		if (theme !== 'auto') {
-			document.documentElement.classList.add(`${theme}`);
-		}
+		if (theme !== 'auto')
+			document.documentElement.classList.add(theme);
 		localStorage.setItem('theme', theme);
 		themeRef.value = theme;
 	};
 
-	if (localStorage.getItem('theme')) {
-		themeRef.value = localStorage.getItem('theme') as string;
-		updateTheme(themeRef.value);
-	}
-
-	if (localStorage.getItem('fontSize')) {
-		fontSize.value = localStorage.getItem('fontSize') as string;
-		updateFontSize(fontSize.value);
-	}
+	updateTheme(localStorage.getItem('theme'));
+	updateFontSize(localStorage.getItem('fontSize'));
 
 	function handleBeforePrint() {
 		if (themeRef.value === 'dark') {
@@ -210,6 +206,7 @@
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 1;
+		line-clamp: 1;
 		word-break: break-all;
 	}
 

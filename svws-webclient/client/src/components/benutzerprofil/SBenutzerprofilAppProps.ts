@@ -10,5 +10,5 @@ export interface BenutzerprofilAppProps {
 	aes: AES;
 	// Config
 	backticks: () => boolean;
-	setBackticks: (value: boolean) => void;
+	setBackticks: (value: boolean) => Promise<void>;
 }

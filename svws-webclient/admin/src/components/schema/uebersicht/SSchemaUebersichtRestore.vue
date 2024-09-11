@@ -13,7 +13,7 @@
 	import { type ShallowRef, ref } from "vue";
 
 	const props = defineProps<{
-		restoreSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
+		restoreSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
@@ -24,7 +24,7 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files) {
 			file.value = target.files[0];
 		}
 		clear();

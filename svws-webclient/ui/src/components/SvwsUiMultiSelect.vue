@@ -94,7 +94,7 @@
 		(e: "blur"): void;
 	}>();
 
-	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
+	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
 
 	const showList = ref(false);
 	const listIdPrefix = genId();
@@ -105,7 +105,7 @@
 	const searchText = ref("");
 
 	onMounted(() => {
-		if (props.autofocus === true) {
+		if (props.autofocus) {
 			onInputFocus();
 			toggleListBox();
 		}
@@ -158,9 +158,8 @@
 
 	const selectedItem = computed({
 		get: () => {
-			for (const e of data.value.keys())
-				return e;
-			return undefined;
+			const [ e ] = data.value.keys()
+			return e;
 		},
 		set: (item) => {
 			if (item !== null && item !== undefined)
@@ -221,7 +220,7 @@
 
 	function openListbox() {
 		showList.value = true;
-		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && refList.value !== null) {
+		if ((selectedItem.value !== null) && (selectedItem.value !== undefined) && (refList.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
@@ -230,13 +229,13 @@
 	}
 
 	function closeListbox() {
-		showList.value = false;
-		if (refList.value !== null)
+		if ((refList.value !== undefined) && (refList.value !== null))
 			refList.value.activeItemIndex = -1;
+		showList.value = false;
 	}
 
 	function selectCurrentActiveItem() {
-		if (showList.value && refList.value !== null) {
+		if (showList.value && (refList.value !== undefined) && (refList.value !== null)) {
 			if (filteredList.value.length === 0)
 				toggleListBox();
 			selectItem(filteredList.value[refList.value.activeItemIndex]);
@@ -245,7 +244,7 @@
 
 	// Arrow Navigation
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
 			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex < listLength - 1)
@@ -256,7 +255,7 @@
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
 			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex <= 0)
@@ -271,7 +270,7 @@
 			openListbox();
 	}
 
-	function onSpace(e: InputEvent) {
+	function onSpace() {
 		if (!props.autocomplete)
 			if (showList.value)
 				selectCurrentActiveItem();
@@ -279,8 +278,8 @@
 				openListbox();
 	}
 
-	function onTab(e: InputEvent) {
-		if (props.autocomplete && refList.value !== null) {
+	function onTab() {
+		if (props.autocomplete && (refList.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
@@ -290,7 +289,7 @@
 		refList.value?.itemRefs[refList.value.activeItemIndex]?.scrollIntoView();
 	}
 
-	const {x, y, strategy} = useFloating(
+	const { x, y, strategy } = useFloating(
 		inputElTags,
 		refList as Readonly<Ref<MaybeElement<HTMLElement>>>,
 		{
@@ -306,8 +305,8 @@
 		}
 	);
 
-	const floatingTop = computed(() => `${y.value ?? 0}px`);
-	const floatingLeft = computed(() => `${x.value ?? 0}px`);
+	const floatingTop = computed(() => `${y.value}px`);
+	const floatingLeft = computed(() => `${x.value}px`);
 
 	const content = computed<Item[]>(() => [...data.value]);
 

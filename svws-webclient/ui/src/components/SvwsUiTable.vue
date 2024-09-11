@@ -274,7 +274,7 @@
 	const emit = defineEmits<{
 		"update:modelValue": [items: any[]];
 		"update:sortByAndOrder": [obj: SortByAndOrder];
-		"update:clicked": [items: any | null];
+		"update:clicked": [items: unknown];
 		"update:filterOpen": [open: boolean];
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
@@ -340,9 +340,8 @@
 	const sortedRows = computed(() => {
 		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
 			return rowsComputed.value;
-		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => internalSortByAndOrder.value.key === key && sortable, );
-		const column = columnsComputed.value[columnIndex];
-		if (!column)
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => (internalSortByAndOrder.value.key === key) && sortable);
+		if ((columnIndex < 0) || (columnIndex > columnsComputed.value.length -1))
 			return rowsComputed.value;
 		const sortingOrderRatio = internalSortByAndOrder.value.order === false ? -1 : 1
 		return [...rowsComputed.value].sort((a, b) => {

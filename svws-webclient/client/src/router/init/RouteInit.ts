@@ -60,19 +60,22 @@ export class RouteInit extends RouteNode<any, any> {
 		try {
 			switch (db) {
 				case 'mariadb':
-					await (schulnummer
-						? api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer)
-						: api.server.migrateMariaDB(data, api.schema));
+					if (schulnummer)
+						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMariaDB(data, api.schema);
 					break;
 				case 'mysql':
-					await (schulnummer
-						? api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer)
-						: api.server.migrateMySql(data, api.schema));
+					if (schulnummer)
+						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMySql(data, api.schema);
 					break;
 				case 'mssql':
-					await (schulnummer
-						? api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer)
-						: api.server.migrateMsSqlServer(data, api.schema));
+					if (schulnummer)
+						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMsSqlServer(data, api.schema);
 					break;
 				case 'mdb':
 					await api.server.migrateMDB(formData, api.schema);

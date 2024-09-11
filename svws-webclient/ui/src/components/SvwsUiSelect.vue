@@ -35,7 +35,7 @@
 			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
 		</button>
 	</div>
-	<Teleport to="body">
+	<Teleport to="body" defer>
 		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :filtered-list="filteredList" :item-text="itemText"
 			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
 			:select-item="selectItem" ref="refList" :search-text="searchText" :highlight-item="(highlightItem as Item|undefined)" />
@@ -47,7 +47,6 @@
 	import type { ComputedRef, Ref } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
-	import type TextInput from "./SvwsUiTextInput.vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
 	import { computed, nextTick, ref, shallowRef, toRaw, watch } from "vue";
 	import { genId } from "../utils";
@@ -95,9 +94,9 @@
 		(e: "update:modelValue", items: SelectDataType): void;
 	}>();
 
-	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList> | null>(null);
+	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
 	const showList = ref(false);
-	const inputEl = ref(null);
+	const inputEl = ref();
 	const hasFocus = ref(false);
 	const searchText = ref("");
 	const listIdPrefix = genId();
@@ -122,19 +121,19 @@
 	}
 
 	function onInput(value: string | null) {
-		if (props.autocomplete && (refList.value === null) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
+		if (props.autocomplete && ((refList.value === undefined) || (refList.value === null)) && (document.hasFocus()) && (inputEl.value !== null) && (document.activeElement === inputEl.value))
 			openListbox();
-		const activeItem = refList.value === null ? undefined : filteredList.value.at(refList.value.activeItemIndex);
+		const activeItem = ((refList.value === undefined) || (refList.value === null)) ? undefined : filteredList.value.at(refList.value.activeItemIndex);
 		searchText.value = value ?? "";
 		if (props.autocomplete) {
 			void nextTick(() => {
-				if (refList.value !== null) {
+				if ((refList.value !== undefined) && (refList.value !== null)) {
 					let index = 0;
 					if (activeItem !== undefined) {
 						const tmpIndex = filteredList.value.findIndex(item => item === activeItem);
 						if (tmpIndex >= 0)
 							index = tmpIndex;
-					} else if ((selectedItem.value !== null) || (selectedItem.value === undefined)) {
+					} else if ((selectedItem.value !== null) && (selectedItem.value !== undefined)) {
 						const tmpIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 						if (tmpIndex >= 0)
 							index = tmpIndex;
@@ -147,9 +146,7 @@
 
 	const data = shallowRef<SelectDataType>(props.modelValue);
 
-	watch(() => props.modelValue, (value: SelectDataType) => {
-		updateData(toRaw(value), true);
-	}, { immediate: false });
+	watch(() => props.modelValue, (value: SelectDataType) => updateData(toRaw(value), true), { immediate: false });
 
 	function updateData(value: SelectDataType, fromModelValue : boolean) {
 		if (((value === null) || (value === undefined)) && ((data.value === null) || (data.value === undefined)))
@@ -195,7 +192,7 @@
 			selectedItem.value = props.modelValue;
 		else
 			selectedItem.value = props.useNull ? null : undefined;
-		const el: typeof TextInput = inputEl.value!;
+		const el = inputEl.value;
 		el?.input.blur();
 	}
 
@@ -207,9 +204,7 @@
 			arr = [...props.items.values()];
 		else
 			arr = [...props.items];
-		if (props.itemSort)
-			return arr.sort(props.itemSort);
-		return arr;
+		return arr.sort(props.itemSort);
 	});
 
 	watch(sortedList, items => {
@@ -230,19 +225,22 @@
 	});
 
 	function doFocus() {
-		const el: typeof TextInput = inputEl.value!;
+		const el = inputEl.value;
 		el?.input.focus();
 	}
 
 	function toggleListBox() {
-		showList.value ? closeListbox() : openListbox();
+		if (showList.value)
+			closeListbox();
+		else
+			openListbox();
 	}
 
 	function openListbox() {
 		doFocus();
 		showList.value = true;
 		void nextTick(() => {
-			if (refList.value === null)
+			if (((refList.value === undefined) || (refList.value === null)))
 				return;
 			if ((selectedItem.value !== null) && (selectedItem.value !== undefined))
 				refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
@@ -254,19 +252,19 @@
 	}
 
 	function closeListbox() {
-		showList.value = false;
-		if (refList.value !== null)
+		if ((refList.value !== undefined) && (refList.value !== null))
 			refList.value.activeItemIndex = -1;
+		showList.value = false;
 	}
 
 	function selectCurrentActiveItem() {
-		if ((refList.value === null) || (refList.value.activeItemIndex < 0))
+		if ((refList.value === undefined) || (refList.value === null) || (refList.value.activeItemIndex < 0))
 			return;
 		selectItem(filteredList.value[refList.value.activeItemIndex]);
 	}
 
 	function onArrowDown() {
-		if ((!showList.value) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
 			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex < listLength - 1)
@@ -277,7 +275,7 @@
 	}
 
 	function onArrowUp() {
-		if ((!showList.value) || (refList.value === null))
+		if ((!showList.value) || (refList.value === undefined) || (refList.value === null))
 			return openListbox();
 		const listLength = filteredList.value.length;
 		if (refList.value.activeItemIndex === 0)
@@ -301,20 +299,20 @@
 	}
 
 	function onTab() {
-		if (props.autocomplete && refList.value !== null) {
+		if (props.autocomplete && (refList.value !== undefined) && (refList.value !== null)) {
 			refList.value.activeItemIndex = 0;
 			selectCurrentActiveItem();
 		}
 	}
 
-	const {x, y, strategy} = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
+	const { x, y, strategy } = useFloating( inputEl, refList as Readonly<Ref<MaybeElement<HTMLElement>>>, {
 		placement: 'bottom',
 		middleware: [flip(), shift(), offset(2), size({ apply({rects, elements}) { Object.assign(elements.floating.style, { width: `${rects.reference.width}px` }); } })],
 		whileElementsMounted: autoUpdate,
 	});
 
-	const floatingTop = computed(() => `${y.value ?? 0}px`);
-	const floatingLeft = computed(() => `${x.value ?? 0}px`);
+	const floatingTop = computed(() => `${y.value}px`);
+	const floatingLeft = computed(() => `${x.value}px`);
 
 	const content = computed<SelectDataType>(() => data.value);
 

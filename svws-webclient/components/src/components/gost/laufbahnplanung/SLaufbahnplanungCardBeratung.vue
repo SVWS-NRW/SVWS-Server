@@ -23,7 +23,6 @@
 
 <script setup lang="ts">
 
-	import type { Ref } from "vue";
 	import type { ComponentExposed } from 'vue-component-type-helpers'
 	import { ref, computed, watch } from "vue";
 	import SvwsUiSelect from "../../../../../ui/src/components/SvwsUiSelect.vue";
@@ -41,15 +40,15 @@
 		id?: number;
 	}>();
 
-	const refLehrer: Ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>> | null> = ref(null);
-	const refBeratungsdatum: Ref<InstanceType<typeof SvwsUiTextInput> | null> = ref(null);
-	const refKommentar: Ref<InstanceType<typeof SvwsUiTextareaInput> | null> = ref(null);
-	const show: Ref<boolean> = ref<boolean>(false);
+	const refLehrer = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
+	const refBeratungsdatum = ref<ComponentExposed<typeof SvwsUiTextInput>>();
+	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
+	const show = ref<boolean>(false);
 
 	const beratungsdatum = computed<string>(()=> props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
 
-	watch(()=> props.schueler, (alt, neu)=> {
-		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value === null)
+	watch(()=> props.schueler, () => {
+		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined)
 			return;
 		refBeratungsdatum.value.input.value = beratungsdatum.value;
 		refKommentar.value.content = props.gostLaufbahnBeratungsdaten().kommentar;
@@ -76,8 +75,8 @@
 		const result = new GostLaufbahnplanungBeratungsdaten();
 		result.beratungslehrerID = (refLehrer.value?.content instanceof LehrerListeEintrag)
 			? refLehrer.value.content.id : null;
-		result.beratungsdatum = ((refBeratungsdatum.value === null) || (refBeratungsdatum.value.content === null)) ? null : String(refBeratungsdatum.value.content);
-		result.kommentar = ((refKommentar.value === null) || (refKommentar.value.content === null)) ? null : String(refKommentar.value.content);
+		result.beratungsdatum = (refBeratungsdatum.value?.content === undefined) ? null : refBeratungsdatum.value.content;
+		result.kommentar = (refKommentar.value?.content === undefined) ? null : refKommentar.value.content;
 		await props.patchBeratungsdaten(result);
 	}
 

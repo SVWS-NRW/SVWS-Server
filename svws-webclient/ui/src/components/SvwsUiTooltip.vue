@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
-	import { Teleport, Transition, ref, computed } from "vue";
+	import { ref, computed } from "vue";
 	import { onClickOutside } from '@vueuse/core'
 
 	const props = withDefaults(defineProps<{

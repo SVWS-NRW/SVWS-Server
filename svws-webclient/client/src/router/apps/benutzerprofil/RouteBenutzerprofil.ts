@@ -26,7 +26,7 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		if (this.data.benutzerEMailDaten.id !== id)
-			this.data.ladeDaten();
+			await this.data.ladeDaten();
 	}
 
 	public getRoute() : RouteLocationRaw {

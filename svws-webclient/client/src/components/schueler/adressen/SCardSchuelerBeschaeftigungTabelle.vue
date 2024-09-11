@@ -64,12 +64,12 @@
 	});
 
 	const praktikum = computed<boolean>({
-		get: () => props.betrieb.praktikum === null ? false : props.betrieb.praktikum,
+		get: () => props.betrieb.praktikum,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ praktikum: value }, props.betrieb.id)
 	});
 
 	const anschreiben = computed<boolean>({
-		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
+		get: () => props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 

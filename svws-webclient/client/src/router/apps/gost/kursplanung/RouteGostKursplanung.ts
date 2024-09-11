@@ -111,7 +111,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 					}
 				}
 				if (blockungsEintrag === undefined)
-					blockungsEintrag = this.data.mapBlockungen.values().next().value as GostBlockungListeneintrag;
+					[blockungsEintrag] = this.data.mapBlockungen.values();
 				return this.getRouteBlockung(abiturjahr, halbjahr.id, blockungsEintrag.id);
 			}
 			if (this.data.hatBlockung)

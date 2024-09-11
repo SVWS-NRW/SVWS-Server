@@ -1,6 +1,6 @@
 import { type Ref, ref, shallowRef } from "vue";
 
-import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo, SchulenKatalogEintrag } from "@core";
+import type { BenutzerKennwort , BenutzerListeEintrag, Comparator, List, SchuleInfo, SchulenKatalogEintrag } from "@core";
 import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
 
 import { api } from "~/router/Api";
@@ -196,7 +196,7 @@ export class RouteDataSchema {
 	}
 
 	gotoSchema = async (auswahl: SchemaListeEintrag | undefined) => {
-		if (auswahl === undefined || auswahl === null) {
+		if (auswahl === undefined) {
 			await RouteManager.doRoute({ name: routeSchema.name });
 			return;
 		}
@@ -209,12 +209,12 @@ export class RouteDataSchema {
 		await RouteManager.doRoute('/schemaneu');
 	}
 
-	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	{
+	setAuswahlGruppe = async (auswahlGruppe: SchemaListeEintrag[]) =>	{
 		this.setPatchedState({ auswahlGruppe });
 		if ((auswahlGruppe.length > 0) && ((routeApp.selectedChild?.name === 'schema') || (routeApp.selectedChild?.name === 'schemaneu')))
-			RouteManager.doRoute('/schemagruppe');
+			await RouteManager.doRoute('/schemagruppe');
 		else if ((auswahlGruppe.length === 0) && (routeApp.selectedChild?.name === 'schemagruppe'))
-			RouteManager.doRoute('schema');
+			await RouteManager.doRoute('schema');
 	}
 
 	upgradeSchema = async () => {
@@ -238,7 +238,7 @@ export class RouteDataSchema {
 			this._state.value.auswahl = undefined;
 			await this.gotoSchema(undefined);
 		}
-		this.setAuswahlGruppe([]);
+		await this.setAuswahlGruppe([]);
 	}
 
 	addSchema = async (data: BenutzerKennwort, schema: string) => {
@@ -283,7 +283,7 @@ export class RouteDataSchema {
 		let result = new SimpleOperationResponse();
 		try {
 			result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
-		} catch (error) {
+		} catch (error: unknown) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response)) {
 				try {
 					const json = await error.response.text();
@@ -296,7 +296,8 @@ export class RouteDataSchema {
 			} else {
 				result = new SimpleOperationResponse();
 				result.success = false;
-				result.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unterwarteten Fehler: " + error);
+				const out = error instanceof Error ? error.message : 'unbekannter Fehler';
+				result.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unerwarteten Fehler: " + out);
 			}
 		}
 		api.status.stop();
@@ -403,7 +404,8 @@ export class RouteDataSchema {
 			} else {
 				result = new SimpleOperationResponse();
 				result.success = false;
-				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + error);
+				const out = error instanceof Error ? error.message : 'unbekannter Fehler';
+				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + out);
 			}
 		}
 		await this.init(schema ?? undefined);
@@ -423,7 +425,7 @@ export class RouteDataSchema {
 	}
 
 	addExistingSchemaToConfig = async(data: BenutzerKennwort, schema: string) => {
-		if ((schema === undefined) || (schema === ""))
+		if (schema === "")
 			throw new DeveloperNotificationException("Es soll ein Schema zur Konfiguration hinzugefügt werden, aber es ist kein Schemaname angegeben.");
 		api.status.start();
 		await api.privileged.importExistingSchema(data, schema);

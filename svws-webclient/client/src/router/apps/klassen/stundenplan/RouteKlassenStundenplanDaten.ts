@@ -58,7 +58,7 @@ export class RouteKlassenStundenplanDaten extends RouteNode<any, RouteKlassenStu
 		await routeKlassenStundenplan.data.setEintrag(-1, undefined, 0, undefined, undefined);
 	}
 
-	public getRoute(id: number, idStundenplan: number | undefined, wochentyp: number, kwjahr?: number | undefined, kw?: number | undefined) : RouteLocationRaw {
+	public getRoute(id: number, idStundenplan: number | undefined, wochentyp: number, kwjahr?: number, kw?: number) : RouteLocationRaw {
 		if (idStundenplan === undefined) {
 			if (routeKlassenStundenplan.data.hatAuswahl)
 				return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, idStundenplan: routeKlassenStundenplan.data.auswahl.id }};

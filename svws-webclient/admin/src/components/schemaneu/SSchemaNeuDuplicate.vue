@@ -16,7 +16,7 @@
 	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
-		duplicateSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
+		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;

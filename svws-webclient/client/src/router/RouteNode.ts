@@ -270,7 +270,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * TODO
 	 */
 	public set selectedChildRecord(record : RouteRecordRaw | undefined) {
-		this._selectedChild.value = (record === undefined) || (record.name === undefined) ? undefined : RouteNode.mapNodesByName.get(record.name?.toString());
+		this._selectedChild.value = ((record === undefined) || (record.name === undefined))
+			? undefined : this._selectedChild.value = RouteNode.mapNodesByName.get(record.name.toString());
 	}
 
 	/**
@@ -326,7 +327,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Setzt der Property-Handler für die Default-View
 	 */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })["default"] = handler;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>).default = handler;
 	}
 
 	/**
@@ -370,8 +371,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		if ((this._record.components === undefined) || (this._record.props === undefined))
 			throw new DeveloperNotificationException("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
-		(this._record.components as { [key: string] : RouteComponent })[name] = component;
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })[name] = prop_handler;
+		(this._record.components as Record<string, RouteComponent>)[name] = component;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>)[name] = prop_handler;
 	}
 
 
@@ -383,7 +384,10 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, wenn die View vorhanden ist, und ansonsten false
 	 */
 	public hasView(name : string): boolean {
-		return (this._record.components as { [key: string] : RouteComponent })[name] !== undefined;
+		const comp : Record<string, RouteComponent | undefined> | null | undefined = this._record.components;
+		if ((comp === undefined) || (comp === null))
+			return false;
+		return (comp[name] !== undefined);
 	}
 
 

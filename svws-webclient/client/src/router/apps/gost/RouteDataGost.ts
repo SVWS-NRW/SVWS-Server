@@ -161,15 +161,15 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return this._state.value.faecherManager;
 	}
 
-	get mapAbiturjahrgaenge() {
+	get mapAbiturjahrgaenge(): Map<number, GostJahrgang> {
 		return this._state.value.mapAbiturjahrgaenge;
 	}
 
-	get mapJahrgaenge() {
+	get mapJahrgaenge(): Map<number, JahrgangsDaten> {
 		return this._state.value.mapJahrgaenge;
 	}
 
-	get mapJahrgaengeOhneAbiJahrgang() {
+	get mapJahrgaengeOhneAbiJahrgang(): Map<number, JahrgangsDaten> {
 		return this._state.value.mapJahrgaengeOhneAbiJahrgang;
 	}
 

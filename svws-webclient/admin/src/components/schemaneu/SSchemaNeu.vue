@@ -82,9 +82,7 @@
 	}
 
 	const validatorUsername = (username: InputDataType) => {
-		if ((username === undefined) || (username === null) || (typeof username === "number"))
-			return false;
-		if ((username === 'root') || (username === props.apiUsername))
+		if (!username || (username === 'root') || (username === props.apiUsername))
 			return false;
 		return true;
 	}

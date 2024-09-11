@@ -30,14 +30,13 @@
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
-		let result = new SimpleOperationResponse();
+		const result = new SimpleOperationResponse();
 		result.success = true;
 		await props.addExistingSchemaToConfig(data, props.schema);
 		user.value = '';
 		password.value = '';
 		props.loadingFunction().value = false;
-		if (result.success)
-			clear();
+		clear();
 	}
 
 	function clear() {

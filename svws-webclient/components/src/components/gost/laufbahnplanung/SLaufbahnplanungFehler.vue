@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef} from 'vue';
 	import { computed } from 'vue';
 	import type { List } from '../../../../../core/src/java/util/List';
 	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
@@ -43,16 +42,12 @@
 		belegpruefungsArt: () => GostBelegpruefungsArt;
 	}>();
 
-	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
+	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
 		for (const fehler of props.fehlerliste())
-			if (!!fehler &&
-				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.BELEGUNG ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHULSPEZIFISCH))
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.BELEGUNG
+				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHRIFTLICHKEIT
+				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH)
 				res.add(fehler);
 		return res;
 	});

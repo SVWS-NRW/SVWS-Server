@@ -185,7 +185,7 @@
 		const ist_fortfuehrbar = SprachendatenUtils.istFortfuehrbareSpracheInGOSt(
 			props.abiturdatenManager().getSprachendaten(), Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null
 		);
-		sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
+		// sprachbelegung.value; // TODO warum muss diese Zeile hier rein? Sonst Fehler mit Sprachenfolge in Laufbahnplanung  <--- ENTFERNEN ?!
 		return ((ist_fortfuehrbar && !props.fach.istFremdSpracheNeuEinsetzend) || (!ist_fortfuehrbar && props.fach.istFremdSpracheNeuEinsetzend));
 	})
 
@@ -221,15 +221,13 @@
 		if ((!props.fach.istPruefungsordnungsRelevant) || (fachgruppe.value === Fachgruppe.FG_VX))
 			return false;
 		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		if (fachbelegungen !== undefined) {
-			for (const fachbelegung of fachbelegungen) {
-				const fach2 = props.abiturdatenManager().faecher().get(fachbelegung.fachID);
-				if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
-					continue;
-				if (props.abiturdatenManager().pruefeBelegung(fachbelegung, hj)) {
-					if (fachbelegung.fachID !== props.fach.id)
-						return true;
-				}
+		for (const fachbelegung of fachbelegungen) {
+			const fach2 = props.abiturdatenManager().faecher().get(fachbelegung.fachID);
+			if ((fach2 === null) || !fach2.istPruefungsordnungsRelevant)
+				continue;
+			if (props.abiturdatenManager().pruefeBelegung(fachbelegung, hj)) {
+				if (fachbelegung.fachID !== props.fach.id)
+					return true;
 			}
 		}
 		return false;
@@ -269,8 +267,6 @@
 			return ["", "", "", "", "", ""];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
-			if (b.halbjahrKuerzel === undefined)
-				return "";
 			if (AbiturdatenManager.istNullPunkteBelegungInQPhase(b))
 				return "6";
 			const kursart = GostKursart.fromKuerzel(b.kursartKuerzel);
@@ -291,8 +287,6 @@
 			return [null, null, null, null, null, null];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
 			b = b !== null ? b : new AbiturFachbelegungHalbjahr();
-			if (b.halbjahrKuerzel === undefined)
-				return null;
 			return b.notenkuerzel === null ? null : Note.fromKuerzel(b.notenkuerzel); // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
 		});
 	});
@@ -380,10 +374,9 @@
 		if (fachgruppe.value === Fachgruppe.FG_VX)
 			return null;
 		const fachbelegungen = props.abiturdatenManager().getFachbelegungByFachkuerzel(props.fach.kuerzel);
-		if (fachbelegungen !== undefined)
-			for (const fachbelegung of fachbelegungen)
-				if (fachbelegung.fachID !== props.fach.id)
-					return props.abiturdatenManager().getSchuelerFachwahl(fachbelegung.fachID)
+		for (const fachbelegung of fachbelegungen)
+			if (fachbelegung.fachID !== props.fach.id)
+				return props.abiturdatenManager().getSchuelerFachwahl(fachbelegung.fachID)
 		return null;
 	})
 
@@ -408,15 +401,19 @@
 			stepper_manuell(halbjahr);
 			return;
 		}
-		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr === undefined ? GostHalbjahr.Q22 : halbjahr))
+		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
-		if (halbjahr === undefined)
-			setAbiturWahl(wahl);
-		else if (halbjahr === GostHalbjahr.EF1)
-			props.modus === 'normal' ? setEF1Wahl(wahl) : setEF1WahlHochschreiben(wahl);
+		if (halbjahr === GostHalbjahr.EF1)
+			if (props.modus === 'normal')
+				setEF1Wahl(wahl);
+			else
+				setEF1WahlHochschreiben(wahl);
 		else if (halbjahr === GostHalbjahr.EF2)
-			props.modus === 'normal' ? setEF2Wahl(wahl) : setEF2WahlHochschreiben(wahl);
+			if (props.modus === 'normal')
+				setEF2Wahl(wahl);
+			else
+				setEF2WahlHochschreiben(wahl);
 		else if (halbjahr === GostHalbjahr.Q11)
 			setQ11Wahl(wahl);
 		else if (halbjahr === GostHalbjahr.Q12)
@@ -429,7 +426,7 @@
 	}
 
 	function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
-		if (halbjahr === undefined || wahlen.value[halbjahr.id] === null)
+		if (halbjahr === undefined)
 			return;
 		if (istMoeglich.value[halbjahr.id] && (!istBewertet(halbjahr) || noten.value[halbjahr.id] !== null))
 			return;

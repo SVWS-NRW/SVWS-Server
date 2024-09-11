@@ -153,7 +153,7 @@
 	const selectedRoute = loadingSkeletonRoutes[0];
 
 	function is_active(current: AuswahlChildData): boolean {
-		const routename = props.app.name?.toString().split('.')[0];
+		const routename = props.app.name.split('.')[0];
 		const title = current.text + " - " + schulname.value;
 		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
 			return true;

@@ -92,7 +92,7 @@ export class RouteData {
 		return this._state.value.view;
 	}
 
-	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager | undefined, daten?: Abiturdaten): AbiturdatenManager | undefined {
+	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager, daten?: Abiturdaten): AbiturdatenManager | undefined {
 		const abiturdaten = (daten === undefined) ? this._state.value.abiturdaten : daten;
 		const fachManager = (faecherManager === undefined) ? this._state.value.faecherManager : faecherManager;
 		if ((abiturdaten === undefined) || (fachManager === undefined))

@@ -178,7 +178,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
 
-	public async setConfigValue(key: string, value: string) {
+	setConfigValue = async (key: string, value: string) => {
 		await api.config.setValue('gost.klausurplan.' + key, value);
 	}
 

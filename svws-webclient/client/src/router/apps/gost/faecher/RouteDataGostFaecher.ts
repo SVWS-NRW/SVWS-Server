@@ -61,8 +61,7 @@ export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
 			return undefined;
 		const result = await api.server.addGostAbiturjahrgangFachkombination(api.schema, this.abiturjahr, typ.getValue());
 		const mapFachkombinationen = this.mapFachkombinationen;
-		if (result !== undefined)
-			mapFachkombinationen.set(result.id, result);
+		mapFachkombinationen.set(result.id, result);
 		this.setPatchedState({mapFachkombinationen});
 		return result;
 	}
@@ -70,8 +69,7 @@ export class RouteDataGostFaecher extends RouteData<RouteStateDataGostFaecher> {
 	removeFachkombination = async (id: number) => {
 		const result = await api.server.deleteGostFachkombination(api.schema, id);
 		const mapFachkombinationen = this.mapFachkombinationen;
-		if (result !== undefined)
-			mapFachkombinationen.delete(id);
+		mapFachkombinationen.delete(id);
 		this.setPatchedState({mapFachkombinationen});
 		return result;
 	}

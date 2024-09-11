@@ -142,7 +142,7 @@
 	/** Der Filter für Schulen */
 	const schulen_filter = (items: SchulenKatalogEintrag[], search: string): SchulenKatalogEintrag[] => {
 		// Teilmatch Schulnummer
-		const nrmatch = search.match(/\d+/);
+		const nrmatch = /\d+/.exec(search);
 		const nr = nrmatch ? nrmatch[0] : undefined;
 		//Teilmatch Name
 		const ort = search.replace(/\d+\s*/, "").trim();
@@ -151,7 +151,7 @@
 		}
 		if (!nr) {
 			return items.filter((item: SchulenKatalogEintrag) => {
-				if (item && item.Ort !== null) {
+				if (item.Ort !== null) {
 					return item.Ort
 						.toLocaleLowerCase("de-DE")
 						.startsWith(ort.toLocaleLowerCase("de-DE"));

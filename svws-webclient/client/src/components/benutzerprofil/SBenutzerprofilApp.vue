@@ -57,7 +57,7 @@
 
 	const toggleBackticks = computed<boolean>({
 		get: () => props.backticks(),
-		set: (value) => props.setBackticks(value)
+		set: (value) => void props.setBackticks(value)
 	});
 
 	async function decryptSMTPPassword() {

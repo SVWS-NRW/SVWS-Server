@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { type LehrerListeEintrag, type Consumer } from "@core";
+import type { Consumer, LehrerListeEintrag } from "@core";
 
 export class TestConsumer implements Consumer<string | number | LehrerListeEintrag> {
 	public value: (string | number | LehrerListeEintrag)[] = [];

@@ -33,7 +33,7 @@
 	}
 
 	const checkDeletable = computed<[boolean, List<string>]>(() => {
-		let log : List<string> = new ArrayList();
+		const log : List<string> = new ArrayList();
 		let result : boolean = true;
 		if (currentAction.value === 'delete') {
 			for (const schema of props.auswahlGruppe) {

@@ -97,7 +97,7 @@
 	}
 
 	function is_active(current: AuswahlChildData): boolean {
-		const routename = props.app.name?.toString().split('.')[0];
+		const routename = props.app.name.split('.')[0];
 		const title = current.text;
 		if (routename !== current.name)
 			return false;

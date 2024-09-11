@@ -10,7 +10,7 @@ export const orte_sort = (a: OrtKatalogEintrag, b: OrtKatalogEintrag): number =>
 /** Der Filter für Ortsteile */
 export const orte_filter = (items: OrtKatalogEintrag[], search: string): OrtKatalogEintrag[] => {
 	// Teilmatch PLZ
-	const plzmatch = search.match(/\d+/);
+	const plzmatch = /\d+/.exec(search);
 	const plz = plzmatch ? plzmatch[0] : undefined;
 	//Teilmatch Ort
 	const ortsname = search.replace(/\d+\s*/, "").trim();
@@ -19,7 +19,7 @@ export const orte_filter = (items: OrtKatalogEintrag[], search: string): OrtKata
 	}
 	if (!plz) {
 		return items.filter((item: OrtKatalogEintrag) => {
-			if (item && item.ortsname !== null) {
+			if (item.ortsname !== null) {
 				return item.ortsname
 					.toLocaleLowerCase("de-DE")
 					.startsWith(ortsname.toLocaleLowerCase("de-DE"));
@@ -101,7 +101,7 @@ export const nationalitaetenKatalogEintragSort = (a: Nationalitaeten, b: Nationa
 
 export const katalogEintragSort = (a: KatalogEintrag | null, b: KatalogEintrag | null) => {
 	if (a?.text && b?.text) {
-		return a?.text.localeCompare(b.text);
+		return a.text.localeCompare(b.text);
 	} else if (a && !b) {
 		return -1;
 	} else if (!a && !b) {

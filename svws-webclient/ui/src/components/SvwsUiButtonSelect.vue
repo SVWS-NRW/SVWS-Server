@@ -80,7 +80,7 @@
 		void item.action();
 	}
 
-	const {x, y, strategy} = useFloating( inputEl, refList, {
+	const { x, y, strategy } = useFloating( inputEl, refList, {
 		placement: 'bottom-start',
 		middleware: [flip(), shift(), offset(2), size({
 			apply({rects, elements}) {
@@ -90,8 +90,8 @@
 		whileElementsMounted: autoUpdate,
 	});
 
-	const floatingTop = computed(() => `${y.value ?? 0}px`);
-	const floatingLeft = computed(() => `${x.value ?? 0}px`);
+	const floatingTop = computed(() => `${y.value}px`);
+	const floatingLeft = computed(() => `${x.value}px`);
 
 	onClickOutside(button, ()=> dropdownOpen.value = false);
 

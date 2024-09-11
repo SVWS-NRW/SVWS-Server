@@ -36,7 +36,7 @@
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 
 	const props = defineProps<{
-		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
+		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
@@ -90,7 +90,7 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files) {
 			file.value = target.files[0];
 		}
 	}

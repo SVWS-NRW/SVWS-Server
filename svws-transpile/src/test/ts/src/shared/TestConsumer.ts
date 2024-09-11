@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { type Consumer } from "@transpiled";
-import { type TestPerson } from "./TestPerson";
+import type { Consumer } from "@transpiled";
+import type { TestPerson } from "./TestPerson";
 
 export class TestConsumer implements Consumer<string | number | TestPerson> {
 	public value: (string | number | TestPerson)[] = [];

@@ -46,10 +46,7 @@
 	const schuelerBetriebsdaten = ref<SchuelerBetriebsdaten>(new SchuelerBetriebsdaten());
 
 	const betrieb = computed<BetriebListeEintrag | undefined>({
-		get: () => {
-			const betrieb = props.mapBetriebe.get(schuelerBetriebsdaten.value.betrieb_id);
-			return betrieb === null ? undefined : betrieb;
-		},
+		get: () => props.mapBetriebe.get(schuelerBetriebsdaten.value.betrieb_id),
 		set: (value) => {
 			if (value === undefined)
 				throw new DeveloperNotificationException("Ungültiger Betrieb ausgewählt");
@@ -81,10 +78,6 @@
 
 	async function save() {
 		schuelerBetriebsdaten.value.schueler_id = props.idSchueler;
-		if (schuelerBetriebsdaten.value.betrieb_id === undefined){
-			alert("Es muss ein Betrieb ausgewählt werden.");
-			return;
-		}
 		await props.createSchuelerBetriebsdaten(schuelerBetriebsdaten.value);
 		showModal().value = false;
 	}

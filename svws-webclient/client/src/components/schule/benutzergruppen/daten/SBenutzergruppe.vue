@@ -26,6 +26,6 @@
 
 	const props = defineProps<BenutzergruppeProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl !== undefined);
+	const visible: ComputedRef<boolean> = computed(() => props.auswahl() !== undefined);
 
 </script>

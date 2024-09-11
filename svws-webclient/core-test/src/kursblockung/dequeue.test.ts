@@ -531,7 +531,7 @@ describe("TestDequeRandom", () => {
 							) as LinkedCollection<number>;
 							temp1.sort(new TestRandomComparator());
 
-							let old: null | any = null;
+							let old: any = null;
 							for (const value of temp1) {
 								if (old !== null) expect(old - value).toBeLessThanOrEqual(0);
 								old = value;

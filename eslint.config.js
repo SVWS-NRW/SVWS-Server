@@ -71,7 +71,6 @@ export default tseslint.config(
 			"@typescript-eslint/no-misused-promises": "error",
 			"@typescript-eslint/no-floating-promises": "error",
 			// "@typescript-eslint/array-type": ["error", {"default": "array-simple", "readonly": "array-simple"}],
-
 			"@typescript-eslint/restrict-plus-operands": ["error", {'allowNumberAndString': true}],
 			"@typescript-eslint/restrict-template-expressions": ["error", {'allowNumber': true}],
 			"@typescript-eslint/consistent-type-imports": "warn",

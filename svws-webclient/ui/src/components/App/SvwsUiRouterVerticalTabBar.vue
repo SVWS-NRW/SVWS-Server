@@ -24,7 +24,6 @@
 </template>
 
 <script lang="ts" setup>
-	import type { WritableComputedRef } from 'vue';
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
 	import type { RouteRecordRaw } from "vue-router";
 
@@ -44,7 +43,7 @@
 	}
 
 	const contentEl = ref();
-	const selected: WritableComputedRef<RouteRecordRaw> = computed({
+	const selected = computed<RouteRecordRaw>({
 		get() : RouteRecordRaw {
 			return props.modelValue;
 		},
@@ -54,7 +53,7 @@
 	});
 
 	function isHidden(index: number) {
-		if ((props.hidden === undefined) || props.hidden[index] === undefined)
+		if (props.hidden?.[index] === undefined)
 			return false;
 		return props.hidden[index];
 	}
