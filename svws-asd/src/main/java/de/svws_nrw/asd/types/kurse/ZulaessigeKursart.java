@@ -345,12 +345,10 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 			return result;
 		}
 		// Normaler Aufruf
-		final Map<String, List<ZulaessigeKursart>> mapByAllgemeinerKursart = _mapBySchuljahrAndAllgemeinerKursart.get(schuljahr);
-		if (mapByAllgemeinerKursart == null) {
-			final List<ZulaessigeKursart> result = new ArrayList<>();
-			result.add(ZulaessigeKursart.PUK);
-			return result;
-		}
+		final Map<String, List<ZulaessigeKursart>> mapByAllgemeinerKursart =
+				_mapBySchuljahrAndAllgemeinerKursart.computeIfAbsent(schuljahr, k -> new HashMap<String, List<ZulaessigeKursart>>());
+		if (mapByAllgemeinerKursart == null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
 		List<ZulaessigeKursart> result = mapByAllgemeinerKursart.get(allgKursart);
 		if (result == null) {
 			result = new ArrayList<>();
@@ -359,7 +357,8 @@ public enum ZulaessigeKursart implements CoreType<ZulaessigeKursartKatalogEintra
 				final ZulaessigeKursartKatalogEintrag zkke = kursart.daten(schuljahr);
 				if (zkke == null)
 					continue;
-				if (("".equals(allgKursart) && (zkke.kuerzel == null)) || (allgKursart.equals(zkke.kuerzelAllg)))
+				if (("".equals(allgKursart) && (zkke.kuerzel == null)) || (allgKursart.equals(zkke.kuerzelAllg))
+						|| ((zkke.kuerzelAllg == null) && (allgKursart.equals(zkke.kuerzel))))
 					result.add(kursart);
 			}
 			mapByAllgemeinerKursart.put(allgKursart, result);

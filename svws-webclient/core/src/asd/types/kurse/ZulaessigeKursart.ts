@@ -491,12 +491,9 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 			result.add(JavaObject.equalsTranspiler("E", (allgKursart)) ? ZulaessigeKursart.E : ZulaessigeKursart.G);
 			return result;
 		}
-		const mapByAllgemeinerKursart : JavaMap<string, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.get(schuljahr);
-		if (mapByAllgemeinerKursart === null) {
-			const result : List<ZulaessigeKursart> | null = new ArrayList<ZulaessigeKursart>();
-			result.add(ZulaessigeKursart.PUK);
-			return result;
-		}
+		const mapByAllgemeinerKursart : JavaMap<string, List<ZulaessigeKursart>> | null = ZulaessigeKursart._mapBySchuljahrAndAllgemeinerKursart.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<string, List<ZulaessigeKursart>>() });
+		if (mapByAllgemeinerKursart === null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
 		let result : List<ZulaessigeKursart> | null = mapByAllgemeinerKursart.get(allgKursart);
 		if (result === null) {
 			result = new ArrayList();
@@ -505,7 +502,7 @@ export class ZulaessigeKursart extends JavaEnum<ZulaessigeKursart> implements Co
 				const zkke : ZulaessigeKursartKatalogEintrag | null = kursart.daten(schuljahr);
 				if (zkke === null)
 					continue;
-				if ((JavaObject.equalsTranspiler("", (allgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzelAllg))))
+				if ((JavaObject.equalsTranspiler("", (allgKursart)) && (zkke.kuerzel === null)) || (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzelAllg))) || ((zkke.kuerzelAllg === null) && (JavaObject.equalsTranspiler(allgKursart, (zkke.kuerzel)))))
 					result.add(kursart);
 			}
 			mapByAllgemeinerKursart.put(allgKursart, result);
