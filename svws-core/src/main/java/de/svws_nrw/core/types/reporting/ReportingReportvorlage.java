@@ -43,7 +43,10 @@ public enum ReportingReportvorlage {
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT("Schueler-GostLaufbahnplanungErgebnisuebersicht"),
 
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen */
-	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen");
+	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen"),
+
+	/** Report-Vorlage: Schüler - Stammdaten - Liste */
+	SCHUELER_v_STAMMDATEN_LISTE("Schueler-Stammdatenliste");
 
 
 

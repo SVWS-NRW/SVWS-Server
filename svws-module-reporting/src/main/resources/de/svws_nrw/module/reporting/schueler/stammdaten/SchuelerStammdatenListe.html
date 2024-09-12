@@ -1,0 +1,62 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width"/>
+	<title>Schüler mit Klausuren</title>
+	<link rel="stylesheet" href="SchuelerStammdatenListe.css"/>
+</head>
+
+<body>
+	<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+	<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+	<div class="pageTopRight"
+		 th:utext="'Schülerliste ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">
+		Klausurplanung<br/><br/>Schulnummer: 123456
+	</div>
+	<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+	<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
+	<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+    <table class="fixed-layout-100 no-space-pad">
+        <colgroup>
+            <col style="width: 6%;"/>
+            <col style="width: 15%;"/>
+            <col style="width: 20%;"/>
+            <col style="width: 7%;"/>
+            <col style="width: 8%;"/>
+            <col style="width: 15%;"/>
+            <col style="width: 6%;"/>
+            <col style="width: 15%;"/>
+            <col style="width: 8%;"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <td colspan="9" class="bob-grey"><h2>Schülerliste</h2></td>
+        </tr>
+        <tr>
+            <td class="spaltenkopf"></td>
+            <td class="spaltenkopf">Name</td>
+            <td class="spaltenkopf">Vorname</td>
+            <td class="spaltenkopf">Geschl.</td>
+            <td class="spaltenkopf">Geb. am</td>
+            <td class="spaltenkopf">Straße</td>
+            <td class="spaltenkopf ta-r">PLZ</td>
+            <td class="spaltenkopf ta-r">Ort</td>
+            <td class="spaltenkopf ta-r">Klasse</td>
+        </tr>
+        </thead>
+        <tbody>
+            <tr style="page-break-inside: avoid;" th:each="schueler,iterStatSchueler : ${Schueler}">
+                <td class="small ta-r bot-grey pad-1001" th:text="${iterStatSchueler.count + '. '}">1. </td>
+                <td class="small bot-grey pad-1001" th:text="${schueler.nachname()}">Mustermann</td>
+                <td class="small bot-grey pad-1001" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
+                <td class="small bot-grey pad-1001" th:text="${schueler.geschlecht().text}">m</td>
+                <td class="small bot-grey pad-1001" th:text="${schueler.strassenname() + (!schueler.hausnummer().isEmpty() ? (' ' + schueler.hausnummer() + schueler.hausnummerZusatz()) : '')}">Musterstraße 13a</td>
+                <td class="small bot-grey pad-1001" th:text="${schueler.wohnort().plz}">12345</td>
+                <td class="small bot-grey pad-1001 ta-r" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
+                <td class="small bot-grey pad-1001 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

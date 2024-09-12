@@ -211,7 +211,7 @@ public class ReportingRepository {
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8,
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
 		}
 
@@ -246,7 +246,7 @@ public class ReportingRepository {
 		} catch (final Exception e) {
 			this.mapLehrerStammdaten = new HashMap<>();
 			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Lehrerstammdaten konnten nicht ermittelt werden.");
 		}
 	}
@@ -261,7 +261,7 @@ public class ReportingRepository {
 			this.mapJahrgaenge = new DataJahrgangsdaten(this.conn).getJahrgaenge().stream().collect(Collectors.toMap(j -> j.id, j -> j));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Jahrgangsdaten konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Jahrgangsdaten. konnten nicht ermittelt werden.");
 		}
 		try {
@@ -273,7 +273,7 @@ public class ReportingRepository {
 						.collect(Collectors.toMap(k -> k.id, k -> k)));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassendaten konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Klassendaten. konnten nicht ermittelt werden.");
 		}
 	}
@@ -292,7 +292,7 @@ public class ReportingRepository {
 			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
 		}
 	}
@@ -311,7 +311,7 @@ public class ReportingRepository {
 			}
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
 		}
 	}
@@ -338,7 +338,7 @@ public class ReportingRepository {
 			}
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8, "Die Daten der Stundenpläne konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND,
+			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Daten der Stundenpläne konnten nicht ermittelt werden.");
 		}
 	}

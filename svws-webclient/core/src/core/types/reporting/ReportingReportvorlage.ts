@@ -57,6 +57,11 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 8, "Schueler-GostLaufbahnplanungWahlbogen");
 
 	/**
+	 * Report-Vorlage: Schüler - Stammdaten - Liste
+	 */
+	public static readonly SCHUELER_v_STAMMDATEN_LISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATEN_LISTE", 9, "Schueler-Stammdatenliste");
+
+	/**
 	 * Die Bezeichnung der Report-Vorlage
 	 */
 	private readonly bezeichnung : string | null;

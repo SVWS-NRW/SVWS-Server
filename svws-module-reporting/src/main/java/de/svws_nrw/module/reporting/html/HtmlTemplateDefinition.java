@@ -145,7 +145,21 @@ public enum HtmlTemplateDefinition {
 			        </th:block>
 			""",
 			Arrays.asList(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
-					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN));
+					BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)),
+
+	/** Report-Vorlage: Schüler - Stammdaten - Liste */
+	SCHUELER_v_STAMMDATEN_LISTE(
+			ReportingReportvorlage.SCHUELER_v_STAMMDATEN_LISTE,
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html",
+			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.css",
+			"Schueler-Liste",
+			"""
+			        <p th:if="${Schueler.isEmpty()}">Schueler-Liste"</p>
+			        <th:block th:if="${!Schueler.isEmpty()}" th:each="schueler,iterState : ${Schueler}">
+			            <p th:if="${iterState.first}" th:text="${'Schueler-Liste_' + #dates.format(#dates.createNow(), 'yyyyMMdd-HHmm')}"></p>
+			        </th:block>
+			""",
+			Arrays.asList(BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_ANSEHEN));
 
 
 
