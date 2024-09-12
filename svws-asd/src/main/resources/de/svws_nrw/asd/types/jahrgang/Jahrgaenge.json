@@ -176,8 +176,16 @@
 			"schluessel": "11",
 			"kuerzel": "11",
 			"text": "11. Jahrgang",
-			"schulformen": [ "FW", "HI", "WF" ],
+			"schulformen": [ "FW", "HI", "GE", "GM", "GY", "PS", "SG", "WF" ],
 			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 11000001,
+			"schluessel": "11",
+			"kuerzel": "11",
+			"text": "11. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF" ],
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -188,8 +196,16 @@
 			"schluessel": "12",
 			"kuerzel": "12",
 			"text": "12. Jahrgang",
-			"schulformen": [ "FW", "HI", "WF" ],
+			"schulformen": [ "FW", "HI", "GE", "GM", "GY", "PS", "SG", "WF" ],
 			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 12000001,
+			"schluessel": "12",
+			"kuerzel": "12",
+			"text": "12. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF" ],
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -200,8 +216,16 @@
 			"schluessel": "13",
 			"kuerzel": "13",
 			"text": "13. Jahrgang",
-			"schulformen": [ "FW", "WF" ],
+			"schulformen": [ "FW", "GE", "GM", "GY", "PS", "SG", "WF" ],
 			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 13000001,
+			"schluessel": "13",
+			"kuerzel": "13",
+			"text": "13. Jahrgang",
+			"schulformen": [ "FW", "WF" ],
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
