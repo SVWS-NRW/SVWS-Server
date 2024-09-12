@@ -3,35 +3,34 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import type { JahrgangsDaten } from "@core";
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
-import { routeKatalogJahrgaengeDaten } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaengeDaten";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleJahrgaengeDaten } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaengeDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { JahrgaengeAppProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAppProps";
-import type { JahrgaengeAuswahlProps } from "~/components/kataloge/jahrgaenge/SJahrgaengeAuswahlProps";
-import { RouteDataKatalogJahrgaenge } from "./RouteDataKatalogJahrgaenge";
+import type { JahrgaengeAppProps } from "~/components/schule/jahrgaenge/SJahrgaengeAppProps";
+import type { JahrgaengeAuswahlProps } from "~/components/schule/jahrgaenge/SJahrgaengeAuswahlProps";
+import { RouteDataSchuleJahrgaenge } from "./RouteDataSchuleJahrgaenge";
 
-const SJahrgaengeAuswahl = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeAuswahl.vue")
-const SJahrgaengeApp = () => import("~/components/kataloge/jahrgaenge/SJahrgaengeApp.vue")
+const SJahrgaengeAuswahl = () => import("~/components/schule/jahrgaenge/SJahrgaengeAuswahl.vue")
+const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeApp.vue")
 
-export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge, RouteApp> {
+export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge", "kataloge/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataKatalogJahrgaenge());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.jahrgaenge", "schule/jahrgaenge/:id(\\d+)?", SJahrgaengeApp, new RouteDataSchuleJahrgaenge());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogJahrgaengeDaten
+			routeSchuleJahrgaengeDaten
 		];
-		super.defaultChild = routeKatalogJahrgaengeDaten;
+		super.defaultChild = routeSchuleJahrgaengeDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -48,14 +47,11 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 			eintrag = this.data.mapKatalogeintraege.get(0);
 			return this.getRoute(eintrag?.id);
 		}
-		else {
-			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined)
-				return this.getRoute(undefined);
-		}
-		if (eintrag !== undefined)
-			await this.data.setEintrag(eintrag);
+		const id = parseInt(to_params.id);
+		eintrag = this.data.mapKatalogeintraege.get(id);
+		if (eintrag === undefined)
+			return this.getRoute(undefined);
+		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {
@@ -68,7 +64,7 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeKataloge.returnToKataloge
+			gotoSchule: routeSchule.gotoSchule
 		};
 	}
 
@@ -106,4 +102,4 @@ export class RouteKatalogJahrgaenge extends RouteNode<RouteDataKatalogJahrgaenge
 	}
 }
 
-export const routeKatalogJahrgaenge = new RouteKatalogJahrgaenge();
+export const routeSchuleJahrgaenge = new RouteSchuleJahrgaenge();

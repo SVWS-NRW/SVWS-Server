@@ -1,11 +1,11 @@
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
+import { routeKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 
 type RouteStateKataloge = RouteStateInterface
 
 const defaultState: RouteStateKataloge = {
-	view: routeKatalogFaecher,
+	view: routeKatalogReligionen,
 };
 
 export class RouteDataKataloge extends RouteData<RouteStateKataloge> {

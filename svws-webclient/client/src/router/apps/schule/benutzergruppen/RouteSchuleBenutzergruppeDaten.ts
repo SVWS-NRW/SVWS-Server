@@ -15,7 +15,7 @@ const SBenutzergruppe = () => import("~/components/schule/benutzergruppen/daten/
 export class RouteSchuleBenutzergruppeDaten extends RouteNode<any, RouteSchuleBenutzergruppe> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzergruppe_daten", "daten", SBenutzergruppe);
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "schule.benutzergruppe.daten", "daten", SBenutzergruppe);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppe";

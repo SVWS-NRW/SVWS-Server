@@ -3,7 +3,7 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogReligion, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogReligionen, type RouteKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 
 import type { ReligionDatenProps } from "~/components/kataloge/religionen/daten/SReligionDatenProps";
 import { routeApp } from "../../RouteApp";
@@ -20,8 +20,8 @@ export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligi
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogReligion.data.religionListeManager.auswahlID() === null)
-			return routeKatalogReligion.getRoute(undefined)
+		if (routeKatalogReligionen.data.religionListeManager.auswahlID() === null)
+			return routeKatalogReligionen.getRoute(undefined)
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -30,8 +30,8 @@ export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligi
 
 	public getProps(to: RouteLocationNormalized): ReligionDatenProps {
 		return {
-			religionListeManager: () => routeKatalogReligion.data.religionListeManager,
-			patch: routeKatalogReligion.data.patch,
+			religionListeManager: () => routeKatalogReligionen.data.religionListeManager,
+			patch: routeKatalogReligionen.data.patch,
 		};
 	}
 

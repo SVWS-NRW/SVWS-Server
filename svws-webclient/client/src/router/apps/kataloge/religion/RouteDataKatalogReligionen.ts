@@ -7,7 +7,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogReligionDaten } from "./RouteKatalogReligionDaten";
-import { routeKatalogReligion } from "./RouteKatalogReligionen";
+import { routeKatalogReligionen } from "./RouteKatalogReligionen";
 
 interface RouteStateKatalogeReligionen extends RouteStateInterface {
 	religionListeManager: ReligionListeManager;
@@ -63,7 +63,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 	}
 
 	gotoEintrag = async (eintrag: ReligionEintrag) => {
-		await RouteManager.doRoute(routeKatalogReligion.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKatalogReligionen.getRoute(eintrag.id));
 	}
 
 	addEintrag = async (eintrag: Partial<ReligionEintrag>) => {

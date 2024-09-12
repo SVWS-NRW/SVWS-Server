@@ -3,26 +3,26 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogJahrgaenge, type RouteKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
+import { routeSchuleJahrgaenge, type RouteSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 
-import type { JahrgangDatenProps } from "~/components/kataloge/jahrgaenge/daten/SJahrgangDatenProps";
+import type { JahrgangDatenProps } from "~/components/schule/jahrgaenge/daten/SJahrgangDatenProps";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
 
-const SJahrgangDaten = () => import("~/components/kataloge/jahrgaenge/daten/SJahrgangDaten.vue");
+const SJahrgangDaten = () => import("~/components/schule/jahrgaenge/daten/SJahrgangDaten.vue");
 
-export class RouteKatalogJahrgaengeDaten extends RouteNode<any, RouteKatalogJahrgaenge> {
+export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrgaenge> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.jahrgaenge.daten", "daten", SJahrgangDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.jahrgaenge.daten", "daten", SJahrgangDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgang";
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (routeKatalogJahrgaenge.data.auswahl === undefined)
-			return routeKatalogJahrgaenge.getRoute(undefined)
+		if (routeSchuleJahrgaenge.data.auswahl === undefined)
+			return routeSchuleJahrgaenge.getRoute(undefined)
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -33,13 +33,13 @@ export class RouteKatalogJahrgaengeDaten extends RouteNode<any, RouteKatalogJahr
 		return {
 			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			schulform: api.schulform,
-			patch: routeKatalogJahrgaenge.data.patch,
-			data: () => routeKatalogJahrgaenge.data.daten,
-			mapJahrgaenge: routeKatalogJahrgaenge.data.mapKatalogeintraege
+			patch: routeSchuleJahrgaenge.data.patch,
+			data: () => routeSchuleJahrgaenge.data.daten,
+			mapJahrgaenge: routeSchuleJahrgaenge.data.mapKatalogeintraege
 		};
 	}
 
 }
 
-export const routeKatalogJahrgaengeDaten = new RouteKatalogJahrgaengeDaten();
+export const routeSchuleJahrgaengeDaten = new RouteSchuleJahrgaengeDaten();
 

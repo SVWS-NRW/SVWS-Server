@@ -4,24 +4,24 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
-import { routeKatalogJahrgaenge } from "./RouteKatalogJahrgaenge";
-import { routeKatalogJahrgaengeDaten } from "./RouteKatalogJahrgaengeDaten";
+import { routeSchuleJahrgaenge } from "./RouteSchuleJahrgaenge";
+import { routeSchuleJahrgaengeDaten } from "./RouteSchuleJahrgaengeDaten";
 
-interface RouteStateKatalogJahrgaenge extends RouteStateInterface {
+interface RouteStateSchuleJahrgaenge extends RouteStateInterface {
 	auswahl: JahrgangsDaten | undefined;
 	daten: JahrgangsDaten | undefined;
 	mapKatalogeintraege: Map<number, JahrgangsDaten>;
 }
 
-const defaultState = <RouteStateKatalogJahrgaenge> {
+const defaultState = <RouteStateSchuleJahrgaenge> {
 	auswahl: undefined,
 	daten: undefined,
 	mapKatalogeintraege: new Map(),
-	view: routeKatalogJahrgaengeDaten,
+	view: routeSchuleJahrgaengeDaten,
 };
 
 
-export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrgaenge> {
+export class RouteDataSchuleJahrgaenge extends RouteData<RouteStateSchuleJahrgaenge> {
 
 	public constructor() {
 		super(defaultState);
@@ -56,7 +56,7 @@ export class RouteDataKatalogJahrgaenge extends RouteData<RouteStateKatalogJahrg
 	}
 
 	gotoEintrag = async (eintrag: JahrgangsDaten) => {
-		await RouteManager.doRoute(routeKatalogJahrgaenge.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchuleJahrgaenge.getRoute(eintrag.id));
 	}
 
 	patch = async (data : Partial<JahrgangsDaten>) => {

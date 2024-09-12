@@ -5,22 +5,22 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
-import { routeKatalogFachDaten } from "./RouteKatalogFachDaten";
-import { routeKatalogFaecher } from "./RouteKatalogFaecher";
+import { routeSchuleFachDaten } from "./RouteSchuleFachDaten";
+import { routeSchuleFaecher } from "./RouteSchuleFaecher";
 import { routeApp } from "../../RouteApp";
 
-interface RouteStateKatalogFaecher extends RouteStateInterface {
+interface RouteStateSchuleFaecher extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	fachListeManager: FachListeManager;
 }
 
-const defaultState = <RouteStateKatalogFaecher> {
+const defaultState = <RouteStateSchuleFaecher> {
 	idSchuljahresabschnitt: -1,
 	fachListeManager: new FachListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-	view: routeKatalogFachDaten,
+	view: routeSchuleFachDaten,
 };
 
-export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher> {
+export class RouteDataSchuleFaecher extends RouteData<RouteStateSchuleFaecher> {
 
 	public constructor() {
 		super(defaultState);
@@ -92,7 +92,7 @@ export class RouteDataKatalogFaecher extends RouteData<RouteStateKatalogFaecher>
 	}
 
 	gotoEintrag = async (eintrag: FachDaten) => {
-		const redirect_name: string = (routeKatalogFaecher.selectedChild === undefined) ? routeKatalogFachDaten.name : routeKatalogFaecher.selectedChild.name;
+		const redirect_name: string = (routeSchuleFaecher.selectedChild === undefined) ? routeSchuleFachDaten.name : routeSchuleFaecher.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
 	}
 

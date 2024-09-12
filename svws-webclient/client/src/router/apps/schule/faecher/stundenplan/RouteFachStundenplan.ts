@@ -4,21 +4,21 @@ import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMod
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
-import { routeKatalogFaecher, type RouteKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
-import { routeFachStundenplanDaten } from "~/router/apps/kataloge/faecher/stundenplan/RouteFachStundenplanDaten";
-import { RouteDataFachStundenplan } from "~/router/apps/kataloge/faecher/stundenplan/RouteDataFachStundenplan";
+import { routeSchuleFaecher, type RouteSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
+import { routeFachStundenplanDaten } from "~/router/apps/schule/faecher/stundenplan/RouteFachStundenplanDaten";
+import { RouteDataFachStundenplan } from "~/router/apps/schule/faecher/stundenplan/RouteDataFachStundenplan";
 
 import type { StundenplanAuswahlProps } from "@comp";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 
-const SFachStundenplan = () => import("~/components/kataloge/faecher/stundenplan/SFachStundenplan.vue");
+const SFachStundenplan = () => import("~/components/schule/faecher/stundenplan/SFachStundenplan.vue");
 
-export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, RouteKatalogFaecher> {
+export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, RouteSchuleFaecher> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "kataloge.faecher.stundenplan", "stundenplan", SFachStundenplan, new RouteDataFachStundenplan());
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "schule.faecher.stundenplan", "stundenplan", SFachStundenplan, new RouteDataFachStundenplan());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -27,7 +27,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 		];
 		super.defaultChild = routeFachStundenplanDaten;
 		api.config.addElements([
-			new ConfigElement("kataloge.faecher.stundenplan.ganzerStundenplan", "user", "true"),
+			new ConfigElement("schule.faecher.stundenplan.ganzerStundenplan", "user", "true"),
 		]);
 	}
 
@@ -39,7 +39,7 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 		// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.
 		const idFach = to_params.id === undefined ? undefined : parseInt(to_params.id);
 		if (idFach === undefined)
-			return routeKatalogFaecher.getRoute(undefined);
+			return routeSchuleFaecher.getRoute(undefined);
 		// Prüfe, ob diese Route das Ziel ist. Wenn dies der fall ist, dann muss ggf. noch ein Stundenplan geladen werden
 		if (to.name === this.name) {
 			// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist

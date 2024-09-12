@@ -8,10 +8,8 @@ import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
-import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
-import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
@@ -41,11 +39,9 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 		super.children = [
 		];
 		super.menu = [
-			routeKatalogFaecher,
-			routeKatalogReligion,
+			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
-			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,
 			routeKatalogAufsichtsbereiche,

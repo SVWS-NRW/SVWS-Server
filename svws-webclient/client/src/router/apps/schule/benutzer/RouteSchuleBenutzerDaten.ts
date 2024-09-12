@@ -14,7 +14,7 @@ const SBenutzer = () => import("~/components/schule/benutzer/daten/SBenutzer.vue
 export class RouteSchuleBenutzerDaten extends RouteNode<any, RouteSchuleBenutzer> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "benutzer_daten", "daten", SBenutzer);
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "schule.benutzer.daten", "daten", SBenutzer);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";

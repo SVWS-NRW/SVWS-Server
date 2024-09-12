@@ -7,32 +7,32 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge";
-import { routeKatalogFachDaten } from "~/router/apps/kataloge/faecher/RouteKatalogFachDaten";
+import { routeSchule } from "~/router/apps/schule/RouteSchule";
+import { routeSchuleFachDaten } from "~/router/apps/schule/faecher/RouteSchuleFachDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { FaecherAppProps } from "~/components/kataloge/faecher/SFaecherAppProps";
-import type { FaecherAuswahlProps } from "~/components/kataloge/faecher/SFaecherAuswahlProps";
-import { RouteDataKatalogFaecher } from "./RouteDataKatalogFaecher";
+import type { FaecherAppProps } from "~/components/schule/faecher/SFaecherAppProps";
+import type { FaecherAuswahlProps } from "~/components/schule/faecher/SFaecherAuswahlProps";
+import { RouteDataSchuleFaecher } from "./RouteDataSchuleFaecher";
 import { routeError } from "~/router/error/RouteError";
 import { routeFachStundenplan } from "./stundenplan/RouteFachStundenplan";
 
-const SFaecherAuswahl = () => import("~/components/kataloge/faecher/SFaecherAuswahl.vue")
-const SFaecherApp = () => import("~/components/kataloge/faecher/SFaecherApp.vue")
+const SFaecherAuswahl = () => import("~/components/schule/faecher/SFaecherAuswahl.vue")
+const SFaecherApp = () => import("~/components/schule/faecher/SFaecherApp.vue")
 
-export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, RouteApp> {
+export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "kataloge.faecher", "kataloge/faecher/:id(\\d+)?", SFaecherApp, new RouteDataKatalogFaecher());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.faecher", "schule/faecher/:id(\\d+)?", SFaecherApp, new RouteDataSchuleFaecher());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogFachDaten,
+			routeSchuleFachDaten,
 			routeFachStundenplan,
 		];
-		super.defaultChild = routeKatalogFachDaten;
+		super.defaultChild = routeSchuleFachDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -84,7 +84,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeFachStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
-		const redirect_name: string = (this.selectedChild === undefined) ? routeKatalogFachDaten.name : this.selectedChild.name;
+		const redirect_name: string = (this.selectedChild === undefined) ? routeSchuleFachDaten.name : this.selectedChild.name;
 		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
@@ -95,7 +95,7 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
-			returnToKataloge: routeKataloge.returnToKataloge,
+			gotoSchule: routeSchule.gotoSchule,
 			setzeDefaultSortierungSekII: this.data.setzeDefaultSortierungSekII,
 		};
 	}
@@ -134,4 +134,4 @@ export class RouteKatalogFaecher extends RouteNode<RouteDataKatalogFaecher, Rout
 	}
 }
 
-export const routeKatalogFaecher = new RouteKatalogFaecher();
+export const routeSchuleFaecher = new RouteSchuleFaecher();

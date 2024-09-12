@@ -22,7 +22,7 @@ const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue
 export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "benutzer", "schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "schule.benutzer", "schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";

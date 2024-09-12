@@ -3,8 +3,8 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
-import { routeFachStundenplan, type RouteFachStundenplan } from "~/router/apps/kataloge/faecher/stundenplan/RouteFachStundenplan";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
+import { routeFachStundenplan, type RouteFachStundenplan } from "~/router/apps/schule/faecher/stundenplan/RouteFachStundenplan";
 
 import { StundenplanFach } from "@comp";
 import type { StundenplanFachProps } from "@comp";
@@ -13,7 +13,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 export class RouteFachStundenplanDaten extends RouteNode<any, RouteFachStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "kataloge.faecher.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanFach);
+		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "schule.faecher.stundenplan.daten", ":idStundenplan(\\d+)?/:wochentyp(\\d+)?/:kw(\\d+\\.\\d+)?", StundenplanFach);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stundenplan";
@@ -39,7 +39,7 @@ export class RouteFachStundenplanDaten extends RouteNode<any, RouteFachStundenpl
 		}
 		// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.
 		if (idFach === undefined)
-			return routeKatalogFaecher.getRoute(undefined);
+			return routeSchuleFaecher.getRoute(undefined);
 			// Prüfe, ob die Stundenplan-ID definiert ist, wenn nicht, dann versuche einen zu laden
 		if (to_params.idStundenplan === undefined) {
 			if (routeFachStundenplan.data.mapStundenplaene.size === 0)
@@ -65,7 +65,7 @@ export class RouteFachStundenplanDaten extends RouteNode<any, RouteFachStundenpl
 	public getProps(to: RouteLocationNormalized): StundenplanFachProps {
 		return {
 			modePausenaufsichten: 'aus',
-			id: routeKatalogFaecher.data.fachListeManager.daten().id,
+			id: routeSchuleFaecher.data.fachListeManager.daten().id,
 			ignoreEmpty: routeFachStundenplan.data.ganzerStundenplan,
 			manager: () => routeFachStundenplan.data.manager,
 			wochentyp: () => routeFachStundenplan.data.wochentyp,

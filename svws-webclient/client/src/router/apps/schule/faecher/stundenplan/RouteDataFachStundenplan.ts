@@ -5,9 +5,9 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 
-import { routeFachStundenplanDaten } from "~/router/apps/kataloge/faecher/stundenplan/RouteFachStundenplanDaten";
+import { routeFachStundenplanDaten } from "~/router/apps/schule/faecher/stundenplan/RouteFachStundenplanDaten";
 
 
 interface RouteStateFachDataStundenplan extends RouteStateInterface {
@@ -60,11 +60,11 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 	}
 
 	get ganzerStundenplan(): boolean {
-		return api.config.getValue("kataloge.faecher.stundenplan.ganzerStundenplan") === 'true';
+		return api.config.getValue("schule.faecher.stundenplan.ganzerStundenplan") === 'true';
 	}
 
 	setGanzerStundenplan = async (value: boolean) => {
-		await api.config.setValue("kataloge.faecher.stundenplan.ganzerStundenplan", value ? "true" : "false");
+		await api.config.setValue("schule.faecher.stundenplan.ganzerStundenplan", value ? "true" : "false");
 	}
 
 	public async ladeListe() {
@@ -127,18 +127,18 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeKatalogFaecher.data.fachListeManager.daten().id, value.id, 0));
+		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, value.id, 0));
 	}
 
 	public gotoWochentyp = async (value: number) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeKatalogFaecher.data.fachListeManager.daten().id, this.auswahl.id, value));
+		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, value));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
 		if (value === undefined)
-			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeKatalogFaecher.data.fachListeManager.daten().id, this.auswahl.id, this.wochentyp));
+			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, this.wochentyp));
 		else
-			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeKatalogFaecher.data.fachListeManager.daten().id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
+			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
 	}
 
 }

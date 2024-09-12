@@ -10,6 +10,8 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
+import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
@@ -38,6 +40,8 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			// TODO { title: "Werkzeuge", value: "werkzeuge" },
 			routeSchuleBenutzer,
 			routeSchuleBenutzergruppe,
+			routeSchuleJahrgaenge,
+			routeSchuleFaecher,
 			routeSchuleDatenaustausch,
 		];
 		super.defaultChild = undefined;

@@ -10,13 +10,13 @@ import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
 import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
+import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge"
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
 import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
-import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
+import { routeKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
-import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
@@ -48,14 +48,14 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchule,
 			routeSchuleBenutzer,
 			routeSchuleBenutzergruppe,
+			routeSchuleJahrgaenge,
+			routeSchuleFaecher,
 			routeSchuleDatenaustausch,
 			routeKataloge,
-			routeKatalogFaecher,
-			routeKatalogReligion,
+			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
 			routeKatalogBetriebe,
-			routeKatalogJahrgaenge,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,
 			routeKatalogAufsichtsbereiche,

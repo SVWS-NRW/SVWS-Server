@@ -6,5 +6,5 @@ export interface JahrgaengeAuswahlProps {
 	mapKatalogeintraege: () => Map<number, JahrgangsDaten>;
 	gotoEintrag: (eintrag: JahrgangsDaten) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

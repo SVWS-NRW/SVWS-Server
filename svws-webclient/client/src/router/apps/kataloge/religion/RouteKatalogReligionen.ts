@@ -2,7 +2,6 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
@@ -104,4 +103,4 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 	}
 }
 
-export const routeKatalogReligion = new RouteKatalogReligionen();
+export const routeKatalogReligionen = new RouteKatalogReligionen();

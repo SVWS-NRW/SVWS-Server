@@ -5,7 +5,7 @@ export interface FaecherAuswahlProps {
 	fachListeManager: () => FachListeManager;
 	gotoEintrag: (eintrag: FachDaten) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 	setFilter: () => Promise<void>;
 	setzeDefaultSortierungSekII: () => Promise<void>;
 }
