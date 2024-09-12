@@ -101,7 +101,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const list = new ArrayList<Partial<Raum>>();
 		const raumListeManager = this.raumListeManager;
 		for (const item of raeume)
-			if (item.kuerzel && raumListeManager.getByKuerzelOrNull(item.kuerzel) !== null) {
+			if ((item.kuerzel !== undefined) && (raumListeManager.getByKuerzelOrNull(item.kuerzel) === null)) {
 				delete item.id;
 				list.add(item);
 			}
