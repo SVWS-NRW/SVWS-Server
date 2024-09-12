@@ -86,7 +86,7 @@
 	const state = reactive({
 		disableHeader: false,
 		clickable: true,
-		allowUnclick: true,
+		// allowUnclick: true,
 		clicked: undefined,
 		selectable: true,
 		sortBy: undefined,

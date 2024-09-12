@@ -1,5 +1,5 @@
 <template>
-	<button v-if="text" @click="select()" class="svws-ui-tab-button flex flex-row" :class="{'svws-active': isSelected}">
+	<button v-if="text && !hidden" @click="select()" class="svws-ui-tab-button flex flex-row" :class="{'svws-active': isSelected}">
 		<span>{{ text }}</span>
 		<!--<span class="icon i-ri-loader-4-line svws-ui-spinner"v-if="isSelected" />-->
 		<template v-if="$slots.badge">
@@ -10,22 +10,24 @@
 
 <script lang="ts" setup>
 
-	import type { ComputedRef } from 'vue';
 	import { computed } from 'vue';
 	import type { RouteRecordRaw } from "vue-router";
 	import type { AuswahlChildData } from '../../types';
 
 	const emit = defineEmits<{
-		(e: 'select', value: RouteRecordRaw | AuswahlChildData) : void
+		(e: 'select', value: RouteRecordRaw | AuswahlChildData) : void;
 	}>();
 
 	const props = defineProps<{
-		route: RouteRecordRaw | AuswahlChildData
-		selected: RouteRecordRaw | AuswahlChildData
+		route: RouteRecordRaw | AuswahlChildData;
+		selected: RouteRecordRaw | AuswahlChildData;
+		hidden?: boolean;
 	}>();
 
-	const isSelected: ComputedRef<boolean> = computed(() => {
-		return props.route.name?.toString() === props.selected.name?.toString();
+	const isSelected = computed<boolean>(() => {
+		if ((props.route.name === undefined) || (props.selected.name === undefined))
+			return false;
+		return props.route.name.toString() === props.selected.name.toString();
 	});
 
 	function select() {
@@ -34,7 +36,8 @@
 
 	const record = () => props.route as RouteRecordRaw;
 	const auswahl = () => props.route as AuswahlChildData;
-	const text: ComputedRef<string> = computed(()=> {
+
+	const text = computed<string>(() => {
 		if ("meta" in props.route)
 			return record().meta?.text as string || "";
 		else

@@ -222,7 +222,7 @@
 			modelValue?: DataTableItem[];
 			uniqueKey?: string;
 			clickable?: boolean;
-			allowUnclick?: boolean;
+			// allowUnclick?: boolean;
 			clicked?: DataTableItem | undefined | null;
 			selectable?: boolean;
 			disableHeader?: boolean;
@@ -250,7 +250,7 @@
 			uniqueKey: undefined,
 			disableHeader: false,
 			clickable: false,
-			allowUnclick: false,
+			// allowUnclick: false,
 			clicked: undefined,
 			selectable: false,
 			disableFooter: false,
@@ -274,7 +274,7 @@
 	const emit = defineEmits<{
 		"update:modelValue": [items: any[]];
 		"update:sortByAndOrder": [obj: SortByAndOrder];
-		"update:clicked": [items: unknown];
+		"update:clicked": [items: DataTableItem];
 		"update:filterOpen": [open: boolean];
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
@@ -437,18 +437,18 @@
 		return true;
 	}
 
-	function resetClickedRow() {
-		if (props.allowUnclick)
-			emit('update:clicked', null);
-	}
+	// function resetClickedRow() {
+	// 	if (props.allowUnclick)
+	// 		emit('update:clicked', null);
+	// }
 
 	function toggleRowClick(row: DataTableRow) {
 		if (!props.clickable)
 			return;
-		if (isRowClicked(row))
-			resetClickedRow();
-		else
-			setClickedRow(row);
+		// if (isRowClicked(row))
+		// 	resetClickedRow();
+		// else
+		setClickedRow(row);
 	}
 
 	function setClickedRow(row: DataTableRow) {

@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-table clickable :clicked="halbjahr" @update:clicked="gotoHalbjahr" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]"
 		:items="GostHalbjahr.values()" />
-	<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+	<Teleport to=".svws-sub-nav-target" defer>
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
 				:hidden="childrenHidden[index]" @select="setChild(c)" :key="index">
@@ -19,16 +19,11 @@
 
 	import { GostHalbjahr } from "@core";
 	import type { GostKlausurplanungAuswahlProps } from './SGostKlausurplanungAuswahlProps';
-	import { ref, onMounted, computed } from 'vue';
+	import { computed } from 'vue';
 
 	const props = defineProps<GostKlausurplanungAuswahlProps>();
 
 	const numErrors = computed<number>(() => props.kMan().planungsfehlerGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
 	const numWarnings = computed<number>(() => props.kMan().planungshinweiseGetAnzahlByHalbjahrAndQuartal(props.jahrgangsdaten!.abiturjahr, props.halbjahr, props.quartalsauswahl.value));
-
-	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
 
 </script>
