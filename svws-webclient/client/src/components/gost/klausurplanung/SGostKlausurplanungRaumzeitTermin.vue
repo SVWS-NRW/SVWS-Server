@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-modal :show="showModalAutomatischVerteilen" size="small">
+	<svws-ui-modal :show="() => ref(_showModalAutomatischVerteilen)" size="small">
 		<template #modalTitle>
 			Automatisch Verteilen
 		</template>
@@ -25,7 +25,7 @@
 			</svws-ui-checkbox>
 		</template>
 		<template #modalActions>
-			<svws-ui-button type="secondary" @click="showModalAutomatischVerteilen().value = false"> Abbrechen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="_showModalAutomatischVerteilen = false"> Abbrechen </svws-ui-button>
 			<svws-ui-button type="primary" @click="verteilen"> Verteilen <svws-ui-spinner :spinning="loading" /> </svws-ui-button>
 		</template>
 	</svws-ui-modal>
@@ -72,7 +72,7 @@
 		</svws-ui-content-card>
 		<div class="flex flex-wrap gap-1 my-5 py-1 w-full">
 			<svws-ui-button :disabled="!hatKompetenzUpdate" @click="createKlausurraum({idTermin: termin.id})"><span class="icon i-ri-add-line -ml-1" /> {{ kMan().raumGetMengeByTerminIncludingFremdtermine(termin, multijahrgang()).size() ? 'Raum hinzufügen' : 'Klausurraum anlegen' }}</svws-ui-button>
-			<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || !kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen().value = true"><span class="icon i-ri-sparkling-line -ml-1 mr-1" />{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }} </svws-ui-button>
+			<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate || !kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) || !kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang())" @click="showModalAutomatischVerteilen"><span class="icon i-ri-sparkling-line -ml-1 mr-1" />{{ kMan().isPlatzkapazitaetAusreichendByTermin(termin, multijahrgang()) && kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Automatisch verteilen" : (kMan().alleRaeumeHabenStundenplanRaumByTermin(termin, multijahrgang(), false) ? "Raumkapazität nicht ausreichend" : "Raumnummern nicht zugewiesen") }} </svws-ui-button>
 		</div>
 		<div class="grid grid-cols-[repeat(auto-fill,minmax(26rem,1fr))] gap-4">
 			<!--<template v-if="raummanager().raumGetMengeTerminOnlyAsList(!zeigeAlleJahrgaenge() || !raummanager().isKlausurenInFremdraeumen()).size()">-->
@@ -98,14 +98,12 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrsData, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich} from '@core';
-	import { BenutzerKompetenz } from '@core';
-	import { GostKlausurraumRich, ListUtils, ArrayList } from '@core';
-	import { DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus } from '@core';
+	import { computed, ref } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
+	import type { GostKlausurplanManager, GostKlausurtermin, GostKursklausur, GostKlausurraum, GostKlausurenCollectionSkrsKrsData, List, GostSchuelerklausurTermin, GostSchuelerklausurTerminRich} from '@core';
+	import { ArrayList, DateUtils, GostHalbjahr, GostKlausurraumblockungKonfiguration, KlausurraumblockungAlgorithmus, ListUtils, BenutzerKompetenz, GostKlausurraumRich } from '@core';
 	import { RouteManager } from '~/router/RouteManager';
 	import { routeGostKlausurplanungRaumzeit } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit';
-	import { computed, ref } from 'vue';
 
 	const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -127,20 +125,28 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const _showModalAutomatischVerteilen = ref<boolean>(false);
-	const showModalAutomatischVerteilen = () => {
+
+	function showModalAutomatischVerteilen() {
 		config._regel_forciere_selbe_klausurdauer_pro_raum = props.getConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum") === "true";
 		config._regel_forciere_selben_klausurstart_pro_raum = props.getConfigValue("raumblockung_regel_forciere_selben_klausurstart_pro_raum") === "true";
 		config._regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume = props.getConfigValue("raumblockung_regel_optimiere_blocke_gleichmaessig_verteilt_auf_raeume") === "true";
 		config._regel_optimiere_blocke_in_moeglichst_wenig_raeume = props.getConfigValue("raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume") === "true";
-		return _showModalAutomatischVerteilen;
+		_showModalAutomatischVerteilen.value = true;
 	}
+
 	const loading = ref<boolean>(false);
 	const _showModalNichtVerteilt = ref<boolean>(false);
-	const showModalNichtVerteilt = () => _showModalNichtVerteilt;
+
+	function showModalNichtVerteilt() {
+		return _showModalNichtVerteilt;
+	}
 
 	const config = new GostKlausurraumblockungKonfiguration();
 
-	const multijahrgang = () => props.zeigeAlleJahrgaenge() || props.kMan().isKlausurenInFremdraeumenByTermin(props.termin);
+	function multijahrgang() {
+		return props.zeigeAlleJahrgaenge() || props.kMan().isKlausurenInFremdraeumenByTermin(props.termin);
+	}
+
 	let nichtVerteilt = 0;
 
 	function mapIDs(skts: List<GostSchuelerklausurTermin | GostSchuelerklausurTerminRich>) {
@@ -150,7 +156,7 @@
 		return numList;
 	}
 
-	const verteilen = async () => {
+	async function verteilen() {
 		loading.value = true;
 		config._regel_forciere_selbe_kursklausur_im_selben_raum = true;
 		await props.setConfigValue("raumblockung_regel_forciere_selbe_klausurdauer_pro_raum", config._regel_forciere_selbe_klausurdauer_pro_raum ? "true" : "false");
@@ -169,7 +175,7 @@
 		loading.value = false;
 		if (nichtVerteilt > 0)
 			showModalNichtVerteilt().value = true;
-		showModalAutomatischVerteilen().value = false;
+		_showModalAutomatischVerteilen.value = false;
 	}
 
 </script>
