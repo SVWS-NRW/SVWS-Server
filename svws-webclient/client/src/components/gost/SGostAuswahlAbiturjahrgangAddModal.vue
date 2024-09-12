@@ -13,15 +13,15 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="close()"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="clickAddAbiturjahrgang()" :disabled="![...jahrgaenge.values()].includes(true)"> Abiturjahrgänge anlegen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="clickAddAbiturjahrgang()" :disabled="![...jahrgaenge.values()].includes(true)"> Abiturjahrgänge anlegen <svws-ui-spinner :spinning /></svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import type { JahrgangsDaten } from "@core";
 	import { ref } from "vue";
+	import type { JahrgangsDaten } from "@core";
 
 	const props = defineProps<{
 		mapJahrgaengeOhneAbiJahrgang: () => Map<number, JahrgangsDaten>;
@@ -32,6 +32,8 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
+	const spinning = ref<boolean>(false);
+
 	const jahrgaenge = ref(new Map<number, boolean>());
 
 	function updateMap(id: number, ok: any) {
@@ -40,13 +42,12 @@
 	}
 
 	const clickAddAbiturjahrgang = async () => {
-		for (const [id, ok] of jahrgaenge.value.entries()) {
-			if (ok === true) {
+		spinning.value = true;
+		for (const [id, ok] of jahrgaenge.value.entries())
+			if (ok === true)
 				await props.addAbiturjahrgang(id);
-				console.log(id, ok)
-			}
-		}
 		jahrgaenge.value.clear();
+		spinning.value = false;
 		_showModal.value = false;
 	}
 
