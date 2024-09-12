@@ -109,10 +109,11 @@
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)">
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
+							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
-								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
+								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`" >
+									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 								</div>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
@@ -281,6 +282,7 @@
 
 	const attrs = useAttrs();
 	const itemRefs = ref(new Map());
+	const selectionRefs = ref(new Map());
 
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
@@ -290,6 +292,18 @@
 			return {...accumulator, ...value};
 		}, {});
 		return Object.keys(accumulatedObject);
+	}
+
+	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement>, index: number, backwards: boolean) {
+		let targetIndex;
+		if (index === list.size-1 && !backwards)
+			targetIndex = 0;
+		else if (index === 0 && backwards)
+			targetIndex = list.size-1;
+		else
+			targetIndex = backwards ? index-1 : index+1;
+		const ele = list.get(targetIndex);
+		ele?.focus();
 	}
 
 	const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
