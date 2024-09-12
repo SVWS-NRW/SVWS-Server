@@ -242,6 +242,7 @@
 			sortByMulti?: Map<string, (boolean | null)>;
 			toggleColumns?: boolean;
 			scroll?: boolean;
+			allowArrowKeySelection?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -269,6 +270,7 @@
 			sortByMulti: undefined,
 			toggleColumns: false,
 			scroll: false,
+			allowArrowKeySelection: false,
 		}
 	);
 
@@ -295,6 +297,8 @@
 	}
 
 	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement>, index: number, backwards: boolean) {
+		if (!props.allowArrowKeySelection)
+			return;
 		let targetIndex;
 		if (index === list.size-1 && !backwards)
 			targetIndex = 0;
