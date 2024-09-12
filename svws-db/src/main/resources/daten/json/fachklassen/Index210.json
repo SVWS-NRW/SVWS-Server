@@ -1,6 +1,6 @@
 {
 	"index": 210,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "FS Agrarwirtschaft Gartenbau - Friedhofsgärtnerei",
 				"bezeichnungW": "FS Agrarwirtschaft Gartenbau - Friedhofsgärtnerei",
 				"gueltigVon": null,
-				"gueltigBis": 2013
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "FS Agrarwirtschaft Gartenbau - Garten- und Landschaftsbau",
 				"bezeichnungW": "FS Agrarwirtschaft Gartenbau - Garten- und Landschaftsbau",
 				"gueltigVon": null,
-				"gueltigBis": 2013
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -67,7 +67,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
 				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
 				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau - Dienstleistungsgartenbau",
-				"gueltigVon": null,
+				"gueltigVon": 2005,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -102,7 +102,7 @@
 				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Ernährung u. Hauswirtschaft",
 				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Ernährung u. Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "104",
@@ -119,13 +119,52 @@
 				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) - ambulante hauswirtschaftliche Dienstl.",
 				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) - ambulante hauswirtschaftliche Dienstl.",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "104",
 			"schluessel2": "02",
 			"historie": [ {
 				"id": 1327000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) – Großhaushalt",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) – Großhaushalt",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft (2-jährig) – Großhaushalt",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1327001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft – Großhaushalt",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft – Großhaushalt",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft – Großhaushalt",
+				"gueltigVon": 2012,
+				"gueltigBis": 2012
+			}, {
+				"id": 1327002,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Hauswirtschaft – Großhaushalt",
+				"bezeichnungM": "FS Hauswirtschaft – Großhaushalt",
+				"bezeichnungW": "FS Hauswirtschaft – Großhaushalt",
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
+			}, {
+				"id": 1327003,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "E",
 				"berufsfeld": "EH",
@@ -135,7 +174,7 @@
 				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
 				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
 				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -153,13 +192,39 @@
 				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaftsmeister",
 				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaftsmeisterinnen",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "106",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1329000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "HG",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Hotel u. Gaststätten",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hotel u. Gaststätten",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hotel u. Gaststätten",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1329001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "HG",
+				"ebene3": null,
+				"bezeichnung": "FS Hauswirtschaft/Hotel u. Gaststätten",
+				"bezeichnungM": "FS Hauswirtschaft/Hotel u. Gaststätten",
+				"bezeichnungW": "FS Hauswirtschaft/Hotel u. Gaststätten",
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
+			}, {
+				"id": 1329002,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "E",
 				"berufsfeld": "EH",
@@ -169,7 +234,7 @@
 				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
 				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
 				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Hotel und Gaststätten",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -177,6 +242,32 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1330000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1330001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "OZ",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"bezeichnungM": "FS Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"bezeichnungW": "FS Hauswirtschaft/Lehrgänge f. Hauswirtschaftmeisterinnen",
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
+			}, {
+				"id": 1330002,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "E",
 				"berufsfeld": "EH",
@@ -186,7 +277,7 @@
 				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
 				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
 				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Lehrgänge für Hauswirtschaftsmeisterinnen",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -204,7 +295,7 @@
 				"bezeichnungM": "FS Familienpflege",
 				"bezeichnungW": "FS Familienpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "109",
@@ -228,7 +319,7 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1333000,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": "G",
 				"berufsfeld": "GS",
 				"ebene1": null,
@@ -238,6 +329,19 @@
 				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung",
 				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung",
 				"gueltigVon": null,
+				"gueltigBis": 2014
+			}, {
+				"id": 1333001,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "G",
+				"berufsfeld": "GS",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung",
+				"gueltigVon": 2022,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -254,7 +358,7 @@
 				"bezeichnung": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
 				"bezeichnungM": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
 				"bezeichnungW": "FS Gestaltung/Farbe, Gestaltung, Werbung - Mediendesign",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2021
 			} ]
 		}, {
@@ -271,8 +375,8 @@
 				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
 				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
 				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung - Industrie-, Objekt-, Raumdesign",
-				"gueltigVon": null,
-				"gueltigBis": 2018
+				"gueltigVon": 2012,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "110",
@@ -288,8 +392,8 @@
 				"bezeichnung": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
 				"bezeichnungM": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
 				"bezeichnungW": "FS Gestaltung - Farbe, Gestaltung, Werbung - Medien-Design",
-				"gueltigVon": null,
-				"gueltigBis": 2018
+				"gueltigVon": 2012,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "111",
@@ -306,7 +410,7 @@
 				"bezeichnungM": "FS Sozial- u. Gesundheitswesen - Heilerziehungspflege",
 				"bezeichnungW": "FS Sozial- u. Gesundheitswesen - Heilerziehungspflege",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "111",
@@ -340,7 +444,7 @@
 				"bezeichnungM": "FS Technik/Abfalltechnik",
 				"bezeichnungW": "FS Technik/Abfalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "113",
@@ -374,7 +478,7 @@
 				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Farbe/Stuck",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Farbe/Stuck",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "114",
@@ -391,7 +495,7 @@
 				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Holz",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Holz",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "114",
@@ -408,7 +512,7 @@
 				"bezeichnungM": "FS Technik/Baudenkmalpflege u. Altbauerhaltung - Metall",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege u. Altbauerhaltung - Metall",
 				"gueltigVon": null,
-				"gueltigBis": 2011
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "114",
@@ -425,7 +529,7 @@
 				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Stein",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerhaltung - Stein",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "114",
@@ -441,7 +545,7 @@
 				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
 				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerneuerung - angewandte Baudenkmalpflege",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -458,7 +562,7 @@
 				"bezeichnung": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
 				"bezeichnungM": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
 				"bezeichnungW": "FS Technik/Baudenkmalpflege und Altbauerneuerung - energieeffiziente ökologische Altbauerneuerung",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -509,7 +613,7 @@
 				"bezeichnung": "FS Technik/Bautechnik - Ausbau",
 				"bezeichnungM": "FS Technik/Bautechnik - Ausbau",
 				"bezeichnungW": "FS Technik/Bautechnik - Ausbau",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -526,7 +630,7 @@
 				"bezeichnung": "FS Technik/Bekleidungstechnik",
 				"bezeichnungM": "FS Technik/Bekleidungstechnik",
 				"bezeichnungW": "FS Technik/Bekleidungstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -544,7 +648,7 @@
 				"bezeichnungM": "FS Technik/Bekleidungstechnik - Bekleidungsfertigung",
 				"bezeichnungW": "FS Technik/Bekleidungstechnik - Bekleidungsfertigung",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "116",
@@ -561,7 +665,7 @@
 				"bezeichnungM": "FS Technik/Bekleidungstechnik - Bekleidungsgestaltung",
 				"bezeichnungW": "FS Technik/Bekleidungstechnik - Bekleidungsgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "117",
@@ -577,7 +681,7 @@
 				"bezeichnung": "FS Technik/Bergbautechnik",
 				"bezeichnungM": "FS Technik/Bergbautechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -595,7 +699,7 @@
 				"bezeichnungM": "FS Technik/Bergbautechnik - Tagebautechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Tagebautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "117",
@@ -612,7 +716,7 @@
 				"bezeichnungM": "FS Technik/Bergbautechnik - Tiefbautechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Tiefbautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "117",
@@ -629,7 +733,7 @@
 				"bezeichnungM": "FS Technik/Bergbautechnik - Verfahrenstechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Verfahrenstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "117",
@@ -645,7 +749,7 @@
 				"bezeichnung": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
 				"bezeichnungM": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Kokerei/Aufbereitungstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -662,7 +766,7 @@
 				"bezeichnung": "FS Technik/Bergbautechnik - Tagebautechnik",
 				"bezeichnungM": "FS Technik/Bergbautechnik - Tagebautechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Tagebautechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -679,7 +783,7 @@
 				"bezeichnung": "FS Technik/Bergbautechnik - Tiefbautechnik",
 				"bezeichnungM": "FS Technik/Bergbautechnik - Tiefbautechnik",
 				"bezeichnungW": "FS Technik/Bergbautechnik - Tiefbautechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -748,7 +852,7 @@
 				"bezeichnungM": "FS Technik/Chemietechnik",
 				"bezeichnungW": "FS Technik/Chemietechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "121",
@@ -782,7 +886,7 @@
 				"bezeichnungM": "FS Technik/Drucktechnik",
 				"bezeichnungW": "FS Technik/Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "123",
@@ -798,7 +902,7 @@
 				"bezeichnung": "FS Technik/Elektrotechnik",
 				"bezeichnungM": "FS Technik/Elektrotechnik",
 				"bezeichnungW": "FS Technik/Elektrotechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -816,7 +920,7 @@
 				"bezeichnungM": "FS Technik/Elektrotechnik - Datenverarbeitungstechnik",
 				"bezeichnungW": "FS Technik/Elektrotechnik - Datenverarbeitungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "123",
@@ -833,7 +937,7 @@
 				"bezeichnungM": "FS Technik/Elektrotechnik - Elektronik",
 				"bezeichnungW": "FS Technik/Elektrotechnik - Elektronik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "123",
@@ -850,7 +954,7 @@
 				"bezeichnungM": "FS Technik/Elektrotechnik - Energietechnik u. Prozeßautomatisierung",
 				"bezeichnungW": "FS Technik/Elektrotechnik - Energietechnik u. Prozeßautomatisierung",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "123",
@@ -867,7 +971,7 @@
 				"bezeichnungM": "FS Technik/Elektrotechnik - Gebäudetechnik",
 				"bezeichnungW": "FS Technik/Elektrotechnik - Gebäudetechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "123",
@@ -884,7 +988,7 @@
 				"bezeichnungM": "FS Technik/Elektrotechnik - Kommunikationstechnik",
 				"bezeichnungW": "FS Technik/Elektrotechnik - Kommunikationstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2007
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "124",
@@ -914,11 +1018,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "FS Technik/Feinwerktechnik – System- u. Automatisierungstechnik",
+				"bezeichnungM": "FS Technik/Feinwerktechnik – System- u. Automatisierungstechnik",
+				"bezeichnungW": "FS Technik/Feinwerktechnik – System- u. Automatisierungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1373001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "FS Technik/Feinwerktechnik",
 				"bezeichnungM": "FS Technik/Feinwerktechnik",
 				"bezeichnungW": "FS Technik/Feinwerktechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2017
+				"gueltigVon": 2012,
+				"gueltigBis": 2016
 			} ]
 		}, {
 			"schluessel": "126",
@@ -934,7 +1051,7 @@
 				"bezeichnung": "FS Technik/Galvanotechnik",
 				"bezeichnungM": "FS Technik/Galvanotechnik",
 				"bezeichnungW": "FS Technik/Galvanotechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -952,7 +1069,7 @@
 				"bezeichnungM": "FS Technik/Galvanotechnik - Leiterplattentechnik",
 				"bezeichnungW": "FS Technik/Galvanotechnik - Leiterplattentechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "126",
@@ -969,13 +1086,26 @@
 				"bezeichnungM": "FS Technik/Galvanotechnik - Oberflächentechnik",
 				"bezeichnungW": "FS Technik/Galvanotechnik - Oberflächentechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "127",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1377000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "GL",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Glastechnik - Glasfertigungstechnik",
+				"bezeichnungM": "FS Technik/Glastechnik - Glasfertigungstechnik",
+				"bezeichnungW": "FS Technik/Glastechnik - Glasfertigungstechnik",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1377001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "T",
 				"berufsfeld": "TC",
@@ -985,7 +1115,7 @@
 				"bezeichnung": "FS Technik/Glastechnik",
 				"bezeichnungM": "FS Technik/Glastechnik",
 				"bezeichnungW": "FS Technik/Glastechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1037,7 +1167,7 @@
 				"bezeichnungM": "FS Technik/Informatik",
 				"bezeichnungW": "FS Technik/Informatik",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "130",
@@ -1053,7 +1183,7 @@
 				"bezeichnung": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
 				"bezeichnungM": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
 				"bezeichnungW": "FS Technik/Informatik - Computer- und Kommunikationstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -1070,7 +1200,7 @@
 				"bezeichnung": "FS Technik/Informatik - CNC-Systemtechnik",
 				"bezeichnungM": "FS Technik/Informatik - CNC-Systemtechnik",
 				"bezeichnungW": "FS Technik/Informatik - CNC-Systemtechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -1087,7 +1217,7 @@
 				"bezeichnung": "FS Technik/Informatik - Technische Informatik",
 				"bezeichnungM": "FS Technik/Informatik - Technische Informatik",
 				"bezeichnungW": "FS Technik/Informatik - Technische Informatik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -1152,11 +1282,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "FS Technik/Kraftfahrzeugtechnik Instandhaltung",
+				"bezeichnungM": "FS Technik/Kraftfahrzeugtechnik Instandhaltung",
+				"bezeichnungW": "FS Technik/Kraftfahrzeugtechnik Instandhaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1387001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "FS Technik/Kraftfahrzeugtechnik",
 				"bezeichnungM": "FS Technik/Kraftfahrzeugtechnik",
 				"bezeichnungW": "FS Technik/Kraftfahrzeugtechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2017
+				"gueltigVon": 2012,
+				"gueltigBis": 2016
 			} ]
 		}, {
 			"schluessel": "135",
@@ -1189,7 +1332,7 @@
 				"bezeichnung": "FS Technik/Lebensmitteltechnik",
 				"bezeichnungM": "FS Technik/Lebensmitteltechnik",
 				"bezeichnungW": "FS Technik/Lebensmitteltechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1207,7 +1350,7 @@
 				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Bäckereitechnik",
 				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Bäckereitechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "136",
@@ -1224,7 +1367,7 @@
 				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Fleischereitechnik",
 				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Fleischereitechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "136",
@@ -1241,7 +1384,7 @@
 				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Konservierungstechnik",
 				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Konservierungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "136",
@@ -1258,7 +1401,7 @@
 				"bezeichnungM": "FS Technik/Lebensmitteltechnik - Lebensmittelverarbeitungstechnik",
 				"bezeichnungW": "FS Technik/Lebensmitteltechnik - Lebensmittelverarbeitungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1274,7 +1417,7 @@
 				"bezeichnung": "FS Technik/Maschinenbautechnik",
 				"bezeichnungM": "FS Technik/Maschinenbautechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1292,7 +1435,7 @@
 				"bezeichnungM": "FS Technik/Maschinenbautechnik - Betriebstechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik - Betriebstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2007
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1309,7 +1452,7 @@
 				"bezeichnungM": "FS Technik/Maschinenbautechnik - Entwicklungstechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik - Entwicklungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1326,7 +1469,7 @@
 				"bezeichnungM": "FS Technik/Maschinenbautechnik - Fertigungstechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik - Fertigungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1343,7 +1486,7 @@
 				"bezeichnungM": "FS Technik/Maschinenbautechnik - Luftfahrzeugtechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik - Luftfahrzeugtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1360,7 +1503,7 @@
 				"bezeichnungM": "FS Technik/Maschinenbautechnik - System- u. Automatisierungstechnik",
 				"bezeichnungW": "FS Technik/Maschinenbautechnik - System- u. Automatisierungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2008
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "138",
@@ -1384,6 +1527,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1401000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "ML",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Metallbautechnik – Stahl- u. Behälterbau",
+				"bezeichnungM": "FS Technik/Metallbautechnik – Stahl- u. Behälterbau",
+				"bezeichnungW": "FS Technik/Metallbautechnik – Stahl- u. Behälterbau",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1401001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "T",
 				"berufsfeld": "TC",
@@ -1393,7 +1549,7 @@
 				"bezeichnung": "FS Technik/Metallbautechnik",
 				"bezeichnungM": "FS Technik/Metallbautechnik",
 				"bezeichnungW": "FS Technik/Metallbautechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1461,7 +1617,7 @@
 				"bezeichnung": "FS Technik/Textiltechnik",
 				"bezeichnungM": "FS Technik/Textiltechnik",
 				"bezeichnungW": "FS Technik/Textiltechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1479,7 +1635,7 @@
 				"bezeichnungM": "FS Technik/Textiltechnik - Textilerzeugung",
 				"bezeichnungW": "FS Technik/Textiltechnik - Textilerzeugung",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "143",
@@ -1496,7 +1652,7 @@
 				"bezeichnungM": "FS Technik/Textiltechnik - Textilveredlung",
 				"bezeichnungW": "FS Technik/Textiltechnik - Textilveredlung",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "144",
@@ -1598,7 +1754,7 @@
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Allg. Betriebswirtschaft",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Allg. Betriebswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2002
 			} ]
 		}, {
 			"schluessel": "148",
@@ -1818,7 +1974,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Logistik",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Logistik",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Logistik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1835,7 +1991,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Sport und Freizeit",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1852,7 +2008,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Finanzdienstleistungen",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1869,7 +2025,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Handelsmanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2011,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1886,7 +2042,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Marketing-Kommunikation",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1903,7 +2059,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Gesundheitsökonomie und -management",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1920,7 +2076,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Medien- und Eventmanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": 2021
 			} ]
 		}, {
@@ -1937,7 +2093,7 @@
 				"bezeichnung": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
 				"bezeichnungM": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
 				"bezeichnungW": "FS Wirtschaft/Betriebswirtschaft - Kulturmanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2013,6 +2169,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1438000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "MG",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Marketing – Kommunikation",
+				"bezeichnungM": "FS Wirtschaft/Marketing – Kommunikation",
+				"bezeichnungW": "FS Wirtschaft/Marketing – Kommunikation",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1438001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WI",
@@ -2022,7 +2191,7 @@
 				"bezeichnung": "FS Wirtschaft/Marketing",
 				"bezeichnungM": "FS Wirtschaft/Marketing",
 				"bezeichnungW": "FS Wirtschaft/Marketing",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2073,7 +2242,7 @@
 				"bezeichnung": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
 				"bezeichnungM": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
 				"bezeichnungW": "FS Wirtschaft/Informatik - Wirtschaftsinformatik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -2108,7 +2277,7 @@
 				"bezeichnungM": "Höhere FS für Sozialarbeit",
 				"bezeichnungW": "Höhere FS für Sozialarbeit",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "157",
@@ -2125,7 +2294,7 @@
 				"bezeichnungM": "FS Technik/Denkmalpflege - Möbel und Raumausstattung",
 				"bezeichnungW": "FS Technik/Denkmalpflege - Möbel und Raumausstattung",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "158",
@@ -2159,7 +2328,7 @@
 				"bezeichnungM": "FS Wirtschaft/Logistik",
 				"bezeichnungW": "FS Wirtschaft/Logistik",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "160",
@@ -2295,7 +2464,7 @@
 				"bezeichnungM": "FS Technik/Luftfahrttechnik",
 				"bezeichnungW": "FS Technik/Luftfahrttechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "167",
@@ -2311,7 +2480,7 @@
 				"bezeichnung": "FS Technik/Luftfahrttechnik - Avionik",
 				"bezeichnungM": "FS Technik/Luftfahrttechnik - Avionik",
 				"bezeichnungW": "FS Technik/Luftfahrttechnik - Avionik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2328,7 +2497,7 @@
 				"bezeichnung": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
 				"bezeichnungM": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
 				"bezeichnungW": "FS Technik/Luftfahrttechnik - Flugwerk/Triebwerk",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2336,7 +2505,7 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1457000,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": "T",
 				"berufsfeld": "TC",
 				"ebene1": "TE",
@@ -2346,6 +2515,19 @@
 				"bezeichnungM": "FS Technik/Umweltschutztechnik",
 				"bezeichnungW": "FS Technik/Umweltschutztechnik",
 				"gueltigVon": null,
+				"gueltigBis": 2006
+			}, {
+				"id": 1457001,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "TC",
+				"ebene1": "TE",
+				"ebene2": "US",
+				"ebene3": null,
+				"bezeichnung": "FS Technik/Umweltschutztechnik",
+				"bezeichnungM": "FS Technik/Umweltschutztechnik",
+				"bezeichnungW": "FS Technik/Umweltschutztechnik",
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2362,7 +2544,7 @@
 				"bezeichnung": "FS Technik/Umweltschutztechnik - Abfalltechnik",
 				"bezeichnungM": "FS Technik/Umweltschutztechnik - Abfalltechnik",
 				"bezeichnungW": "FS Technik/Umweltschutztechnik - Abfalltechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2016
 			} ]
 		}, {
@@ -2379,7 +2561,7 @@
 				"bezeichnung": "FS Technik/Umweltschutztechnik - Abwassertechnik",
 				"bezeichnungM": "FS Technik/Umweltschutztechnik - Abwassertechnik",
 				"bezeichnungW": "FS Technik/Umweltschutztechnik - Abwassertechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2016
 			} ]
 		}, {
@@ -2396,7 +2578,7 @@
 				"bezeichnung": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
 				"bezeichnungM": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
 				"bezeichnungW": "FS Technik/Umweltschutztechnik - Wasserversorgungstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -2413,7 +2595,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Landwirtschaft",
 				"bezeichnungM": "FS Agrarwirtschaft/Landwirtschaft",
 				"bezeichnungW": "FS Agrarwirtschaft/Landwirtschaft",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2430,7 +2612,7 @@
 				"bezeichnung": "FS Gestaltung/Mode",
 				"bezeichnungM": "FS Gestaltung/Mode",
 				"bezeichnungW": "FS Gestaltung/Mode",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2447,7 +2629,7 @@
 				"bezeichnung": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
 				"bezeichnungM": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
 				"bezeichnungW": "FS Wirtschaft/Bank- und Finanzdienstleistungen",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -2464,7 +2646,7 @@
 				"bezeichnung": "FS Technik/Augenoptik",
 				"bezeichnungM": "FS Technik/Augenoptik",
 				"bezeichnungW": "FS Technik/Augenoptik",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2481,8 +2663,8 @@
 				"bezeichnung": "FS Informatik - Technische Informatik",
 				"bezeichnungM": "FS Informatik - Technische Informatik",
 				"bezeichnungW": "FS Informatik - Technische Informatik",
-				"gueltigVon": null,
-				"gueltigBis": 2021
+				"gueltigVon": 2013,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "173",
@@ -2498,7 +2680,7 @@
 				"bezeichnung": "FS Informatik/Wirtschaftsinformatik",
 				"bezeichnungM": "FS Informatik/Wirtschaftsinformatik",
 				"bezeichnungW": "FS Informatik/Wirtschaftsinformatik",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2515,7 +2697,7 @@
 				"bezeichnung": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
 				"bezeichnungM": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
 				"bezeichnungW": "FS Informatik/Technische Informatik - Computer- und Kommunikationstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2532,7 +2714,7 @@
 				"bezeichnung": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
 				"bezeichnungM": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
 				"bezeichnungW": "FS Informatik/Technische Informatik - CNC-Systemtechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2549,7 +2731,7 @@
 				"bezeichnung": "FS Technik/Fahrzeugtechnik",
 				"bezeichnungM": "FS Technik/Fahrzeugtechnik",
 				"bezeichnungW": "FS Technik/Fahrzeugtechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2583,7 +2765,7 @@
 				"bezeichnung": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
 				"bezeichnungM": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
 				"bezeichnungW": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2017,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -2619,40 +2801,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1474000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2014
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "02",
-			"historie": [ {
-				"id": 1475000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2017
 			} ]
 		}
 	]

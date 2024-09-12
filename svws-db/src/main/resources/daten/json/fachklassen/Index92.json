@@ -1,6 +1,6 @@
 {
 	"index": 92,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Agrarwirtschaft",
 				"bezeichnungM": "Agrarwirtschaft",
 				"bezeichnungW": "Agrarwirtschaft",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -33,7 +33,7 @@
 				"bezeichnung": "Ernährungs- und Versorgungsmanagement",
 				"bezeichnungM": "Ernährungs- und Versorgungsmanagement",
 				"bezeichnungW": "Ernährungs- und Versorgungsmanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -50,7 +50,7 @@
 				"bezeichnung": "Farbtechnik und Raumgestaltung",
 				"bezeichnungM": "Farbtechnik und Raumgestaltung",
 				"bezeichnungW": "Farbtechnik und Raumgestaltung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -67,7 +67,7 @@
 				"bezeichnung": "Medien/Medientechnologie",
 				"bezeichnungM": "Medien/Medientechnologie",
 				"bezeichnungW": "Medien/Medientechnologie",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -84,7 +84,7 @@
 				"bezeichnung": "Gesundheitswesen",
 				"bezeichnungM": "Gesundheitswesen",
 				"bezeichnungW": "Gesundheitswesen",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -101,7 +101,7 @@
 				"bezeichnung": "Sozialwesen",
 				"bezeichnungM": "Sozialwesen",
 				"bezeichnungW": "Sozialwesen",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -118,7 +118,7 @@
 				"bezeichnung": "Körperpflege",
 				"bezeichnungM": "Körperpflege",
 				"bezeichnungW": "Körperpflege",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -135,7 +135,7 @@
 				"bezeichnung": "Informatik",
 				"bezeichnungM": "Informatik",
 				"bezeichnungW": "Informatik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -152,7 +152,7 @@
 				"bezeichnung": "Bau und Holztechnik",
 				"bezeichnungM": "Bau und Holztechnik",
 				"bezeichnungW": "Bau und Holztechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -169,7 +169,7 @@
 				"bezeichnung": "Drucktechnik",
 				"bezeichnungM": "Drucktechnik",
 				"bezeichnungW": "Drucktechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -186,7 +186,7 @@
 				"bezeichnung": "Elektrotechnik",
 				"bezeichnungM": "Elektrotechnik",
 				"bezeichnungW": "Elektrotechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -203,7 +203,7 @@
 				"bezeichnung": "Fahrzeugtechnik",
 				"bezeichnungM": "Fahrzeugtechnik",
 				"bezeichnungW": "Fahrzeugtechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -220,7 +220,7 @@
 				"bezeichnung": "Medizintechnik",
 				"bezeichnungM": "Medizintechnik",
 				"bezeichnungW": "Medizintechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -237,7 +237,7 @@
 				"bezeichnung": "Metalltechnik",
 				"bezeichnungM": "Metalltechnik",
 				"bezeichnungW": "Metalltechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -254,7 +254,7 @@
 				"bezeichnung": "Physik/Chemie/Biologie",
 				"bezeichnungM": "Physik/Chemie/Biologie",
 				"bezeichnungW": "Physik/Chemie/Biologie",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -271,7 +271,7 @@
 				"bezeichnung": "Textiltechnik und Bekleidung",
 				"bezeichnungM": "Textiltechnik und Bekleidung",
 				"bezeichnungW": "Textiltechnik und Bekleidung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -288,7 +288,24 @@
 				"bezeichnung": "Informations- und Telekommunikationstechnik",
 				"bezeichnungM": "Informations- und Telekommunikationstechnik",
 				"bezeichnungW": "Informations- und Telekommunikationstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "106",
+			"schluessel2": "10",
+			"historie": [ {
+				"id": 2119000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "TN",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Ingenieurtechnik",
+				"bezeichnungM": "Ingenieurtechnik",
+				"bezeichnungW": "Ingenieurtechnik",
+				"gueltigVon": 2024,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -305,7 +322,7 @@
 				"bezeichnung": "Wirtschaft und Verwaltung",
 				"bezeichnungM": "Wirtschaft und Verwaltung",
 				"bezeichnungW": "Wirtschaft und Verwaltung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {

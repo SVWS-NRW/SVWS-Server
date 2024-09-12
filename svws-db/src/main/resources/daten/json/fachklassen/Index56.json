@@ -1,6 +1,6 @@
 {
 	"index": 56,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "177",
@@ -16,8 +16,8 @@
 				"bezeichnung": "Elektroniker/-in für Betriebstechnik",
 				"bezeichnungM": "Elektroniker für Betriebstechnik",
 				"bezeichnungW": "Elektronikerin für Betriebstechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "177",
@@ -33,8 +33,8 @@
 				"bezeichnung": "Elektroniker/-in für Geräte und Systeme",
 				"bezeichnungM": "Elektroniker für Geräte und Systeme",
 				"bezeichnungW": "Elektronikerin für Geräte und Systeme",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "217",
@@ -50,8 +50,8 @@
 				"bezeichnung": "Florist/-in",
 				"bezeichnungM": "Florist",
 				"bezeichnungW": "Floristin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "228",
@@ -67,8 +67,8 @@
 				"bezeichnung": "Friseur/-in",
 				"bezeichnungM": "Friseur",
 				"bezeichnungW": "Friseurin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "242",
@@ -84,8 +84,8 @@
 				"bezeichnung": "Glaser/-in - Verglasung und Glasbau",
 				"bezeichnungM": "Glaser - Verglasung und Glasbau",
 				"bezeichnungW": "Glaserin - Verglasung und Glasbau",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "248",
@@ -101,8 +101,8 @@
 				"bezeichnung": "Glasveredler/-in - Schliff und Gravur",
 				"bezeichnungM": "Glasveredler - Schliff und Gravur",
 				"bezeichnungW": "Glasveredlerin - Schliff und Gravur",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "248",
@@ -118,8 +118,8 @@
 				"bezeichnung": "Glasveredler/-in - Glasmalerei und Kunstverglasung",
 				"bezeichnungM": "Glasveredler - Glasmalerei und Kunstverglasung",
 				"bezeichnungW": "Glasveredlerin - Glasmalerei und Kunstverglasung",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "248",
@@ -135,8 +135,8 @@
 				"bezeichnung": "Glasveredler/-in - Kanten- und Flächenveredlung",
 				"bezeichnungM": "Glasveredler - Kanten- und Flächenveredlung",
 				"bezeichnungW": "Glasveredlerin - Kanten- und Flächenveredlung",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "257",
@@ -152,8 +152,8 @@
 				"bezeichnung": "Hauswirtschafter/-in",
 				"bezeichnungM": "Hauswirtschafter",
 				"bezeichnungW": "Hauswirtschafterin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "276",
@@ -169,8 +169,8 @@
 				"bezeichnung": "Industriemechaniker/-in",
 				"bezeichnungM": "Industriemechaniker",
 				"bezeichnungW": "Industriemechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "279",
@@ -186,8 +186,8 @@
 				"bezeichnung": "Informations- und Telekommunikationssystemelektroniker/-in",
 				"bezeichnungM": "Informations- und Telekommunikationssystemelektroniker",
 				"bezeichnungW": "Informations- und Telekommunikationssystemelektronikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "335",
@@ -203,8 +203,8 @@
 				"bezeichnung": "Mechatroniker/-in",
 				"bezeichnungM": "Mechatroniker",
 				"bezeichnungW": "Mechatronikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "339",
@@ -220,8 +220,8 @@
 				"bezeichnung": "Metallbauer/-in - Konstruktionstechnik",
 				"bezeichnungM": "Metallbauer - Konstruktionstechnik",
 				"bezeichnungW": "Metallbauerin - Konstruktionstechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "456",
@@ -237,8 +237,8 @@
 				"bezeichnung": "Uhrmacher/-in",
 				"bezeichnungM": "Uhrmacher",
 				"bezeichnungW": "Uhrmacherin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "463",
@@ -254,8 +254,8 @@
 				"bezeichnung": "Verkäufer/-in",
 				"bezeichnungM": "Verkäufer",
 				"bezeichnungW": "Verkäuferin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "482",
@@ -271,8 +271,8 @@
 				"bezeichnung": "Werkzeugmechaniker/-in",
 				"bezeichnungM": "Werkzeugmechaniker",
 				"bezeichnungW": "Werkzeugmechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "487",
@@ -288,8 +288,8 @@
 				"bezeichnung": "Zerspanungsmechaniker/-in",
 				"bezeichnungM": "Zerspanungsmechaniker",
 				"bezeichnungW": "Zerspanungsmechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "515",
@@ -305,8 +305,8 @@
 				"bezeichnung": "Kosmetiker/-in",
 				"bezeichnungM": "Kosmetiker",
 				"bezeichnungW": "Kosmetikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "527",
@@ -322,8 +322,8 @@
 				"bezeichnung": "Fachkraft für Lagerlogistik",
 				"bezeichnungM": "Fachkraft für Lagerlogistik",
 				"bezeichnungW": "Fachkraft für Lagerlogistik",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "528",
@@ -339,8 +339,8 @@
 				"bezeichnung": "Fachlagerist/-in",
 				"bezeichnungM": "Fachlagerist",
 				"bezeichnungW": "Fachlageristin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "531",
@@ -356,8 +356,8 @@
 				"bezeichnung": "Maschinen- und Anlagenführer/-in",
 				"bezeichnungM": "Maschinen- und Anlagenführer",
 				"bezeichnungW": "Maschinen- und Anlagenführerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "532",
@@ -373,8 +373,8 @@
 				"bezeichnung": "Maßschneider/-in",
 				"bezeichnungM": "Maßschneider",
 				"bezeichnungW": "Maßschneiderin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "538",
@@ -390,8 +390,8 @@
 				"bezeichnung": "Änderungsschneider/-in",
 				"bezeichnungM": "Änderungsschneider",
 				"bezeichnungW": "Änderungsschneiderin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "541",
@@ -407,8 +407,8 @@
 				"bezeichnung": "Oberflächenbeschichter/-in",
 				"bezeichnungM": "Oberflächenbeschichter",
 				"bezeichnungW": "Oberflächenbeschichterin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "607",
@@ -424,8 +424,8 @@
 				"bezeichnung": "Kaufmann/-frau für Büromanagement",
 				"bezeichnungM": "Kaufmann für Büromanagement",
 				"bezeichnungW": "Kauffrau für Büromanagement",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2015,
+				"gueltigBis": 2018
 			} ]
 		}, {
 			"schluessel": "999",
@@ -441,7 +441,7 @@
 				"bezeichnung": "Sonstiger Bildungsgang",
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": 2015
 			} ]
 		}

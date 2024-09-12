@@ -1,6 +1,6 @@
 {
 	"index": 146,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "110",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
 				"bezeichnungM": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
 				"bezeichnungW": "Ingenieurtechnik (Klasse 11 und 12) (Jahrgangsstufe 01 und 02)",
-				"gueltigVon": null,
+				"gueltigVon": 2019,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -33,7 +33,7 @@
 				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Bautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
-				"gueltigVon": null,
+				"gueltigVon": 2019,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -50,7 +50,7 @@
 				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Elektrotechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
-				"gueltigVon": null,
+				"gueltigVon": 2019,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -67,7 +67,7 @@
 				"bezeichnung": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungM": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
 				"bezeichnungW": "Ingenieurtechnik: Berufsabschluss Maschinenbautechnische/-r Assistent/-in (Klasse 13) (Jg 03)",
-				"gueltigVon": null,
+				"gueltigVon": 2019,
 				"gueltigBis": null
 			} ]
 		}

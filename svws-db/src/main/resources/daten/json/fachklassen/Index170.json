@@ -1,6 +1,6 @@
 {
 	"index": 170,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -24,6 +24,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1249000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "BW",
+				"bezeichnung": "Allgemeine Hochschulreife / Betriebswirtschaftslehre mit Rechnungswesen und Controlling",
+				"bezeichnungM": "Allgemeine Hochschulreife / Betriebswirtschaftslehre mit Rechnungswesen und Controlling",
+				"bezeichnungW": "Allgemeine Hochschulreife / Betriebswirtschaftslehre mit Rechnungswesen und Controlling",
+				"gueltigVon": null,
+				"gueltigBis": 2013
+			}, {
+				"id": 1249001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WW",
@@ -33,7 +46,7 @@
 				"bezeichnung": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
 				"bezeichnungM": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
 				"bezeichnungW": "Allgemeine Hochschulreife / Betriebswirtschaftslehre",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -85,7 +98,7 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Chemietechnik",
 				"bezeichnungW": "Allgemeine Hochschulreife / Chemietechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "106",
@@ -136,7 +149,7 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Ernährung u. Hauswirtschaft",
 				"bezeichnungW": "Allgemeine Hochschulreife / Ernährung u. Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "109",
@@ -177,6 +190,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1258000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "ES",
+				"ebene1": "GU",
+				"ebene2": "GS",
+				"ebene3": "FL",
+				"bezeichnung": "Allgemeine Hochschulreife / Freizeitsportleiter/-in (Sport/Biologie)",
+				"bezeichnungM": "Allgemeine Hochschulreife / Freizeitsportleiter (Sport/Biologie)",
+				"bezeichnungW": "Allgemeine Hochschulreife / Freizeitsportleiterin (Sport/Biologie)",
+				"gueltigVon": null,
+				"gueltigBis": 2013
+			}, {
+				"id": 1258001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "S",
 				"berufsfeld": "ES",
@@ -186,7 +212,7 @@
 				"bezeichnung": "Allgemeine Hochschulreife / Freizeitsportleiter/-in (Sport, Gesundheitsförderung, Biologie)",
 				"bezeichnungM": "Allgemeine Hochschulreife / Freizeitsportleiter (Sport, Gesundheitsförderung, Biologie)",
 				"bezeichnungW": "Allgemeine Hochschulreife / Freizeitsportleiterin (Sport, Gesundheitsförderung, Biologie)",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -194,6 +220,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1259000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WW",
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": "FK",
+				"bezeichnung": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent/-in",
+				"bezeichnungM": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent",
+				"bezeichnungW": "Allgemeine Hochschulreife / Fremdsprachenkorrespondentin",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			}, {
+				"id": 1259001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WW",
@@ -203,7 +242,7 @@
 				"bezeichnung": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent/-in (Betriebswirtschaftslehre, Sprachen)",
 				"bezeichnungM": "Allgemeine Hochschulreife / Fremdsprachenkorrespondent (Betriebswirtschaftslehre, Sprachen)",
 				"bezeichnungW": "Allgemeine Hochschulreife / Fremdsprachenkorrespondentin (Betriebswirtschaftslehre, Sprachen)",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -272,7 +311,7 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Sozial- u. Gesundheitswesen",
 				"bezeichnungW": "Allgemeine Hochschulreife / Sozial- u. Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "117",
@@ -289,7 +328,7 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Textiltechnik, Physik",
 				"bezeichnungW": "Allgemeine Hochschulreife / Textiltechnik, Physik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "118",
@@ -323,7 +362,7 @@
 				"bezeichnungM": "Allgemeine Hochschulreife / Wirtschaft u. Verwaltung",
 				"bezeichnungW": "Allgemeine Hochschulreife / Wirtschaft u. Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2006
+				"gueltigBis": 2005
 			} ]
 		}, {
 			"schluessel": "120",
@@ -339,7 +378,7 @@
 				"bezeichnung": "Allgemeine Hochschulreife / Gesundheit",
 				"bezeichnungM": "Allgemeine Hochschulreife / Gesundheit",
 				"bezeichnungW": "Allgemeine Hochschulreife / Gesundheit",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -356,7 +395,7 @@
 				"bezeichnung": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"bezeichnungM": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
 				"bezeichnungW": "Allgemeine Hochschulreife / Ingenieurwissenschaften",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -375,23 +414,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1270000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2014
 			} ]
 		}
 	]

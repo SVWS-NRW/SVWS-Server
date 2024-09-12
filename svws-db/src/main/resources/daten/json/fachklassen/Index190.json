@@ -1,6 +1,6 @@
 {
 	"index": 190,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "Berufspraktikum f. Erzieher / AHR",
 				"bezeichnungW": "Berufspraktikum f. Erzieherinnen / AHR",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "999",

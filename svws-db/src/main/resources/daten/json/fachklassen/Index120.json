@@ -1,13 +1,13 @@
 {
 	"index": 120,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1136000,
-				"istAusgelaufen": false,
+				"istAusgelaufen": true,
 				"berufsfeldGruppe": "A",
 				"berufsfeld": "AW",
 				"ebene1": "AW",
@@ -17,6 +17,32 @@
 				"bezeichnungM": "Agrarwirtschaft",
 				"bezeichnungW": "Agrarwirtschaft",
 				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1136001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
+			}, {
+				"id": 1136002,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft",
+				"bezeichnungM": "Agrarwirtschaft",
+				"bezeichnungW": "Agrarwirtschaft",
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -153,13 +179,26 @@
 				"bezeichnungM": "Physik, Chemie, Biologie",
 				"bezeichnungW": "Physik, Chemie, Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2010
+				"gueltigBis": 2009
 			} ]
 		}, {
 			"schluessel": "110",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1145000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "GS",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozial- u. Gesundheitswesen",
+				"bezeichnungM": "Sozial- u. Gesundheitswesen",
+				"bezeichnungW": "Sozial- u. Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1145001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "S",
 				"berufsfeld": "SG",
@@ -169,7 +208,7 @@
 				"bezeichnung": "Gesundheit und Soziales",
 				"bezeichnungM": "Gesundheit und Soziales",
 				"bezeichnungW": "Gesundheit und Soziales",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -220,7 +259,7 @@
 				"bezeichnung": "Labor- und Verfahrenstechnik",
 				"bezeichnungM": "Labor- und Verfahrenstechnik",
 				"bezeichnungW": "Labor- und Verfahrenstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2010,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -237,7 +276,7 @@
 				"bezeichnung": "Energie-/Automatisierungstechnik",
 				"bezeichnungM": "Energie-/Automatisierungstechnik",
 				"bezeichnungW": "Energie-/Automatisierungstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2017,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -254,7 +293,7 @@
 				"bezeichnung": "Informations- und Kommunikationstechnik",
 				"bezeichnungM": "Informations- und Kommunikationstechnik",
 				"bezeichnungW": "Informations- und Kommunikationstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2017,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -273,23 +312,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1152000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2014
 			} ]
 		}
 	]

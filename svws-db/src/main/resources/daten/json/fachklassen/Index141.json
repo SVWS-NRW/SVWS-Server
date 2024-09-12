@@ -1,6 +1,6 @@
 {
 	"index": 141,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
 				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
 				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -33,7 +33,7 @@
 				"bezeichnung": "Bau- und Holztechnik",
 				"bezeichnungM": "Bau- und Holztechnik",
 				"bezeichnungW": "Bau- und Holztechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -50,7 +50,7 @@
 				"bezeichnung": "Drucktechnik",
 				"bezeichnungM": "Drucktechnik",
 				"bezeichnungW": "Drucktechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -67,7 +67,7 @@
 				"bezeichnung": "Elektrotechnik",
 				"bezeichnungM": "Elektrotechnik",
 				"bezeichnungW": "Elektrotechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -84,7 +84,7 @@
 				"bezeichnung": "Ernährung und Hauswirtschaft",
 				"bezeichnungM": "Ernährung und Hauswirtschaft",
 				"bezeichnungW": "Ernährung und Hauswirtschaft",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -101,7 +101,7 @@
 				"bezeichnung": "Gestaltung",
 				"bezeichnungM": "Gestaltung",
 				"bezeichnungW": "Gestaltung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -118,7 +118,7 @@
 				"bezeichnung": "Metalltechnik",
 				"bezeichnungM": "Metalltechnik",
 				"bezeichnungW": "Metalltechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -135,7 +135,7 @@
 				"bezeichnung": "Physik, Chemie, Biologie",
 				"bezeichnungM": "Physik, Chemie, Biologie",
 				"bezeichnungW": "Physik, Chemie, Biologie",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -152,7 +152,7 @@
 				"bezeichnung": "Gesundheit und Soziales",
 				"bezeichnungM": "Gesundheit und Soziales",
 				"bezeichnungW": "Gesundheit und Soziales",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -169,7 +169,7 @@
 				"bezeichnung": "Textiltechnik und Bekleidung",
 				"bezeichnungM": "Textiltechnik und Bekleidung",
 				"bezeichnungW": "Textiltechnik und Bekleidung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -186,7 +186,41 @@
 				"bezeichnung": "Wirtschaft und Verwaltung",
 				"bezeichnungM": "Wirtschaft und Verwaltung",
 				"bezeichnungW": "Wirtschaft und Verwaltung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "112",
+			"schluessel2": "01",
+			"historie": [ {
+				"id": 2126000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung – Polizeivollzugsdienst",
+				"bezeichnungM": "Wirtschaft und Verwaltung – Polizeivollzugsdienst",
+				"bezeichnungW": "Wirtschaft und Verwaltung – Polizeivollzugsdienst",
+				"gueltigVon": 2022,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "115",
+			"schluessel2": "00",
+			"historie": [ {
+				"id": 2127000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "WV",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Informatik",
+				"bezeichnungM": "Informatik",
+				"bezeichnungW": "Informatik",
+				"gueltigVon": 2020,
 				"gueltigBis": null
 			} ]
 		}, {

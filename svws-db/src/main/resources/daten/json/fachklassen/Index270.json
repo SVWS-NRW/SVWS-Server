@@ -1,6 +1,6 @@
 {
 	"index": 270,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "FS - Berufspraktikum für Erzieher",
 				"bezeichnungW": "FS - Berufspraktikum für Erzieherinnen",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "FS - Berufspraktikum für Sozialarbeiter",
 				"bezeichnungW": "FS - Berufspraktikum für Sozialarbeiterinnen",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}
 	]

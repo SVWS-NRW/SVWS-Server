@@ -1,6 +1,6 @@
 {
 	"index": 94,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "102",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Berufsbegleitende/-r Kinderpfleger/-in",
 				"bezeichnungM": "Berufsbegleitender Kinderpfleger",
 				"bezeichnungW": "Berufsbegleitende Kinderpflegerin",
-				"gueltigVon": null,
+				"gueltigVon": 2021,
 				"gueltigBis": 2021
 			} ]
 		}

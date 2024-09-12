@@ -1,6 +1,6 @@
 {
 	"index": 90,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "Energiegeräteelektroniker",
 				"bezeichnungW": "Energiegeräteelektronikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "Funkelektroniker",
 				"bezeichnungW": "Funkelektronikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "103",
@@ -51,7 +51,7 @@
 				"bezeichnungM": "Galvaniseur",
 				"bezeichnungW": "Galvaniseurin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "104",
@@ -68,7 +68,7 @@
 				"bezeichnungM": "Glas- und Porzellanmaler",
 				"bezeichnungW": "Glas- und Porzellanmalerin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "105",
@@ -85,7 +85,7 @@
 				"bezeichnungM": "Glaser",
 				"bezeichnungW": "Glaserin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "105",
@@ -102,7 +102,7 @@
 				"bezeichnungM": "Glaser - Fenster und Glasfassadenbau",
 				"bezeichnungW": "Glaserin - Fenster und Glasfassadenbau",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "105",
@@ -136,7 +136,7 @@
 				"bezeichnungM": "Glasveredler - Flächenveredler",
 				"bezeichnungW": "Glasveredlerin - Flächenveredler",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2005
 			} ]
 		}, {
 			"schluessel": "106",
@@ -153,7 +153,7 @@
 				"bezeichnungM": "Glasveredler - Glasgraveur",
 				"bezeichnungW": "Glasveredlerin- Glasgraveur",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2005
 			} ]
 		}, {
 			"schluessel": "106",
@@ -170,7 +170,7 @@
 				"bezeichnungM": "Glasveredler - Glasschleifer",
 				"bezeichnungW": "Glasveredlerin - Glasschleifer",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2005
 			} ]
 		}, {
 			"schluessel": "106",
@@ -186,8 +186,8 @@
 				"bezeichnung": "Glasveredler/-in - Glasmalerei und Kunstverglasung",
 				"bezeichnungM": "Glasveredler - Glasmalerei und Kunstverglasung",
 				"bezeichnungW": "Glasveredlerin - Glasmalerei und Kunstverglasung",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2005,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "106",
@@ -203,8 +203,8 @@
 				"bezeichnung": "Glasveredler/-in - Kanten- und Flächenveredlung",
 				"bezeichnungM": "Glasveredler - Kanten- und Flächenveredlung",
 				"bezeichnungW": "Glasveredlerin - Kanten- und Flächenveredlung",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2005,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "106",
@@ -220,8 +220,8 @@
 				"bezeichnung": "Glasveredler/-in - Schliff und Gravur",
 				"bezeichnungM": "Glasveredler - Schliff und Gravur",
 				"bezeichnungW": "Glasveredlerin - Schliff und Gravur",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2005,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "107",
@@ -238,7 +238,7 @@
 				"bezeichnungM": "Informationselektroniker",
 				"bezeichnungW": "Informationselektronikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "108",
@@ -255,7 +255,7 @@
 				"bezeichnungM": "Maschinenschlosser",
 				"bezeichnungW": "Maschinenschlosserin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "109",
@@ -272,7 +272,7 @@
 				"bezeichnungM": "Weber",
 				"bezeichnungW": "Weberin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "110",
@@ -289,7 +289,7 @@
 				"bezeichnungM": "Werkzeugmacher",
 				"bezeichnungW": "Werkzeugmacherin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2004
 			} ]
 		}, {
 			"schluessel": "111",
@@ -306,7 +306,7 @@
 				"bezeichnungM": "Damenschneider",
 				"bezeichnungW": "Damenschneiderin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "112",
@@ -323,7 +323,7 @@
 				"bezeichnungM": "Elektroniker für Automatisierungstechnik",
 				"bezeichnungW": "Elektronikerin für Automatisierungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -340,7 +340,7 @@
 				"bezeichnungM": "Elektroniker für Betriebstechnik",
 				"bezeichnungW": "Elektronikerin für Betriebstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -357,7 +357,7 @@
 				"bezeichnungM": "Elektroniker für Energie- und Gebäudetechnik",
 				"bezeichnungW": "Elektronikerin für Energie- und Gebäudetechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -374,7 +374,7 @@
 				"bezeichnungM": "Elektroniker für Gebäude- und Infrastruktursysteme",
 				"bezeichnungW": "Elektronikerin für Gebäude- und Infrastruktursysteme",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -391,7 +391,7 @@
 				"bezeichnungM": "Elektroniker für Geräte und Systeme",
 				"bezeichnungW": "Elektronikerin für Geräte und Systeme",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -408,7 +408,7 @@
 				"bezeichnungM": "Elektroniker für Informations- und Telekommunikationstechnik",
 				"bezeichnungW": "Elektronikerin für Informations- und Telekommunikationstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "112",
@@ -425,7 +425,7 @@
 				"bezeichnungM": "Elektroniker für Maschinen und Antriebstechnik",
 				"bezeichnungW": "Elektronikerin für Maschinen und Antriebstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "113",
@@ -442,7 +442,7 @@
 				"bezeichnungM": "Industriemechaniker",
 				"bezeichnungW": "Industriemechanikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "113",
@@ -459,7 +459,7 @@
 				"bezeichnungM": "Industriemechaniker - Betriebstechnik",
 				"bezeichnungW": "Industriemechanikerin - Betriebstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "113",
@@ -476,7 +476,7 @@
 				"bezeichnungM": "Industriemechaniker - Geräte- und Feinwerktechnik",
 				"bezeichnungW": "Industriemechanikerin - Geräte- und Feinwerktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "113",
@@ -493,7 +493,7 @@
 				"bezeichnungM": "Industriemechaniker - Maschinen- und Systemtechnik",
 				"bezeichnungW": "Industriemechanikerin - Maschinen- und Systemtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "113",
@@ -510,7 +510,7 @@
 				"bezeichnungM": "Industriemechaniker - Produktionstechnik",
 				"bezeichnungW": "Industriemechanikerin - Produktionstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "114",
@@ -527,7 +527,7 @@
 				"bezeichnungM": "Werkzeugmechaniker",
 				"bezeichnungW": "Werkzeugmechanikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "114",
@@ -544,7 +544,7 @@
 				"bezeichnungM": "Werkzeugmechaniker - Formentechnik",
 				"bezeichnungW": "Werkzeugmechanikerin - Formentechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "114",
@@ -561,7 +561,7 @@
 				"bezeichnungM": "Werkzeugmechaniker - Instrumententechnik",
 				"bezeichnungW": "Werkzeugmechanikerin - Instrumententechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "114",
@@ -578,7 +578,7 @@
 				"bezeichnungM": "Werkzeugmechaniker - Stanz- und Umformtechnik",
 				"bezeichnungW": "Werkzeugmechanikerin- Stanz- und Umformtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2006
 			} ]
 		}, {
 			"schluessel": "115",
@@ -595,7 +595,7 @@
 				"bezeichnungM": "Energieelektroniker",
 				"bezeichnungW": "Energieelektronikerin",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "116",
@@ -612,7 +612,7 @@
 				"bezeichnungM": "Kommunikationselektroniker - Funktechnik",
 				"bezeichnungW": "Kommunikationselektronikerin - Funktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "117",
@@ -628,8 +628,8 @@
 				"bezeichnung": "Mechatroniker/-in",
 				"bezeichnungM": "Mechatroniker",
 				"bezeichnungW": "Mechatronikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2004,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "118",
@@ -645,8 +645,8 @@
 				"bezeichnung": "Maßschneider/-in",
 				"bezeichnungM": "Maßschneider",
 				"bezeichnungW": "Maßschneiderin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2004,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "119",
@@ -662,8 +662,8 @@
 				"bezeichnung": "Informations- und Telekommunikationssystemelektroniker/-in",
 				"bezeichnungM": "Informations- und Telekommunikationssystemelektroniker",
 				"bezeichnungW": "Informations- und Telekommunikationssystemelektronikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2004,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "120",
@@ -679,8 +679,8 @@
 				"bezeichnung": "Kommunikationselektroniker/-in - Informationstechnik",
 				"bezeichnungM": "Kommunikationselektroniker - Informationstechnik",
 				"bezeichnungW": "Kommunikationselektronikerin - Informationstechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2005,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "121",
@@ -696,8 +696,8 @@
 				"bezeichnung": "Oberflächenbeschichter/-in",
 				"bezeichnungM": "Oberflächenbeschichter",
 				"bezeichnungW": "Oberflächenbeschichterin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2005,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "122",
@@ -713,8 +713,8 @@
 				"bezeichnung": "Kaufmann/-frau für Bürokommunikation",
 				"bezeichnungM": "Kaufmann für Bürokommunikation",
 				"bezeichnungW": "Kauffrau für Bürokommunikation",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "123",
@@ -730,8 +730,8 @@
 				"bezeichnung": "Bauten- und Objektbeschichter/-in",
 				"bezeichnungM": "Bauten- und Objektbeschichter",
 				"bezeichnungW": "Bauten- und Objektbeschichterin",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "124",
@@ -747,8 +747,8 @@
 				"bezeichnung": "Bürokaufmann/-frau",
 				"bezeichnungM": "Bürokaufmann",
 				"bezeichnungW": "Bürokauffrau",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "125",
@@ -764,8 +764,8 @@
 				"bezeichnung": "Friseur/-in",
 				"bezeichnungM": "Friseur",
 				"bezeichnungW": "Friseurin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "126",
@@ -778,11 +778,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "Konstruktionsmechaniker/-in Schweißtechnik",
+				"bezeichnungM": "Konstruktionsmechaniker Schweißtechnik",
+				"bezeichnungW": "Konstruktionsmechanikerin Schweißtechnik",
+				"gueltigVon": 2007,
+				"gueltigBis": 2008
+			}, {
+				"id": 2032001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "T",
+				"berufsfeld": "MT",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "Konstruktionsmechaniker/-in",
 				"bezeichnungM": "Konstruktionsmechaniker",
 				"bezeichnungW": "Konstruktionsmechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2009,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "127",
@@ -798,8 +811,8 @@
 				"bezeichnung": "Hauswirtschafter/-in",
 				"bezeichnungM": "Hauswirtschafter",
 				"bezeichnungW": "Hauswirtschafterin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "128",
@@ -815,8 +828,8 @@
 				"bezeichnung": "Maschinen- und Anlagenführer/-in",
 				"bezeichnungM": "Maschinen- und Anlagenführer",
 				"bezeichnungW": "Maschinen- und Anlagenführerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "129",
@@ -832,8 +845,8 @@
 				"bezeichnung": "Verfahrensmechaniker/-in im Kunststoff- und Kautschukbereich",
 				"bezeichnungM": "Verfahrensmechaniker im Kunststoff- und Kautschukbereich",
 				"bezeichnungW": "Verfahrensmechanikerin im Kunststoff- und Kautschukbereich",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "130",
@@ -849,8 +862,8 @@
 				"bezeichnung": "Fachkraft für Lagerlogistik",
 				"bezeichnungM": "Fachkraft für Lagerlogistik",
 				"bezeichnungW": "Fachkraft für Lagerlogistik",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "131",
@@ -866,8 +879,8 @@
 				"bezeichnung": "Fachlagerist/-in",
 				"bezeichnungM": "Fachlagerist",
 				"bezeichnungW": "Fachlageristin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "132",
@@ -883,8 +896,8 @@
 				"bezeichnung": "Holzmechaniker/-in",
 				"bezeichnungM": "Holzmechaniker",
 				"bezeichnungW": "Holzmechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "133",
@@ -900,8 +913,8 @@
 				"bezeichnung": "Kaufmann/-frau im Einzelhandel",
 				"bezeichnungM": "Kaufmann im Einzelhandel",
 				"bezeichnungW": "Kauffrau im Einzelhandel",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "134",
@@ -917,8 +930,8 @@
 				"bezeichnung": "Verkäufer/-in",
 				"bezeichnungM": "Verkäufer",
 				"bezeichnungW": "Verkäuferin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "135",
@@ -934,8 +947,8 @@
 				"bezeichnung": "Zerspanungsmechaniker/-in",
 				"bezeichnungM": "Zerspanungsmechaniker",
 				"bezeichnungW": "Zerspanungsmechanikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2007,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "136",
@@ -951,8 +964,8 @@
 				"bezeichnung": "Fachverkäufer/-in im Lebensmittelhandwerk",
 				"bezeichnungM": "Fachverkäufer im Lebensmittelhandwerk",
 				"bezeichnungW": "Fachverkäuferin im Lebensmittelhandwerk",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2008,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "137",
@@ -968,8 +981,8 @@
 				"bezeichnung": "Metallbauer/-in - Konstruktionstechnik",
 				"bezeichnungM": "Metallbauer - Konstruktionstechnik",
 				"bezeichnungW": "Metallbauerin - Konstruktionstechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2008,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "137",
@@ -985,8 +998,8 @@
 				"bezeichnung": "Metallbauer/-in - Metallgestaltung",
 				"bezeichnungM": "Metallbauer - Metallgestaltung",
 				"bezeichnungW": "Metallbauerin - Metallgestaltung",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2008,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "137",
@@ -1002,8 +1015,8 @@
 				"bezeichnung": "Metallbauer/-in - Nutzfahrzeugbau",
 				"bezeichnungM": "Metallbauer - Nutzfahrzeugbau",
 				"bezeichnungW": "Metallbauerin - Nutzfahrzeugbau",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigVon": 2008,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "138",
@@ -1019,8 +1032,8 @@
 				"bezeichnung": "Florist/-in",
 				"bezeichnungM": "Florist",
 				"bezeichnungW": "Floristin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2009,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "139",
@@ -1036,8 +1049,8 @@
 				"bezeichnung": "Änderungsschneider/-in",
 				"bezeichnungM": "Änderungsschneider",
 				"bezeichnungW": "Änderungsschneiderin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2012,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "140",
@@ -1053,8 +1066,8 @@
 				"bezeichnung": "Kosmetiker/-in",
 				"bezeichnungM": "Kosmetiker",
 				"bezeichnungW": "Kosmetikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2012,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "141",
@@ -1070,8 +1083,8 @@
 				"bezeichnung": "Uhrmacher/-in",
 				"bezeichnungM": "Uhrmacher",
 				"bezeichnungW": "Uhrmacherin",
-				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigVon": 2013,
+				"gueltigBis": 2017
 			} ]
 		}, {
 			"schluessel": "999",
@@ -1088,24 +1101,7 @@
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": null,
-				"gueltigBis": 2014
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 2051000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2017
 			} ]
 		}
 	]

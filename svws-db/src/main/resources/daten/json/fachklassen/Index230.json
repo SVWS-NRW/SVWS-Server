@@ -1,6 +1,6 @@
 {
 	"index": 230,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "FS Sozialwesen - Heilerziehungspflege",
 				"bezeichnungW": "FS Sozialwesen - Heilerziehungspflege",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "101",
@@ -67,7 +67,7 @@
 				"bezeichnung": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
 				"bezeichnungM": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
 				"bezeichnungW": "FS Sozialwesen/Heilerziehungspflege (integrierte Form)",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -85,7 +85,7 @@
 				"bezeichnungM": "FS Sozialwesen - Sozialpädagogik",
 				"bezeichnungW": "FS Sozialwesen - Sozialpädagogik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "102",
@@ -135,7 +135,7 @@
 				"bezeichnung": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
 				"bezeichnungM": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
 				"bezeichnungW": "FS Sozialwesen/Sozialpädagogik (integrierte Form)",
-				"gueltigVon": null,
+				"gueltigVon": 2009,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -188,23 +188,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1555000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "S",
-				"berufsfeld": "SG",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2010
 			} ]
 		}
 	]
