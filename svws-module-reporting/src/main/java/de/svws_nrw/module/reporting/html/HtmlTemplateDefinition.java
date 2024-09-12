@@ -150,8 +150,8 @@ public enum HtmlTemplateDefinition {
 	/** Report-Vorlage: Schüler - Stammdaten - Liste */
 	SCHUELER_v_STAMMDATEN_LISTE(
 			ReportingReportvorlage.SCHUELER_v_STAMMDATEN_LISTE,
-			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.html",
-			"de/svws_nrw/module/reporting/schueler/gost/laufbahnplanung/SchuelerGostLaufbahnplanungErgebnisuebersicht.css",
+			"de/svws_nrw/module/reporting/schueler/stammdaten/SchuelerStammdatenListe.html",
+			"de/svws_nrw/module/reporting/schueler/stammdaten/SchuelerStammdatenListe.css",
 			"Schueler-Liste",
 			"""
 			        <p th:if="${Schueler.isEmpty()}">Schueler-Liste"</p>

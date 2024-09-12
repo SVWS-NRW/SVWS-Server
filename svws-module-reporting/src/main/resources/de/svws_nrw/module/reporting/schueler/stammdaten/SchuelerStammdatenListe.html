@@ -19,15 +19,15 @@
 
     <table class="fixed-layout-100 no-space-pad">
         <colgroup>
-            <col style="width: 6%;"/>
+            <col style="width: 4%;"/>
             <col style="width: 15%;"/>
             <col style="width: 20%;"/>
             <col style="width: 7%;"/>
-            <col style="width: 8%;"/>
-            <col style="width: 15%;"/>
+            <col style="width: 10%;"/>
+            <col style="width: 17%;"/>
             <col style="width: 6%;"/>
-            <col style="width: 15%;"/>
-            <col style="width: 8%;"/>
+            <col style="width: 14%;"/>
+            <col style="width: 6%;"/>
         </colgroup>
         <thead>
         <tr>
@@ -37,11 +37,11 @@
             <td class="spaltenkopf"></td>
             <td class="spaltenkopf">Name</td>
             <td class="spaltenkopf">Vorname</td>
-            <td class="spaltenkopf">Geschl.</td>
+            <td class="spaltenkopf ta-c">Geschl.</td>
             <td class="spaltenkopf">Geb. am</td>
             <td class="spaltenkopf">Straße</td>
             <td class="spaltenkopf ta-r">PLZ</td>
-            <td class="spaltenkopf ta-r">Ort</td>
+            <td class="spaltenkopf">Ort</td>
             <td class="spaltenkopf ta-r">Klasse</td>
         </tr>
         </thead>
@@ -50,10 +50,11 @@
                 <td class="small ta-r bot-grey pad-1001" th:text="${iterStatSchueler.count + '. '}">1. </td>
                 <td class="small bot-grey pad-1001" th:text="${schueler.nachname()}">Mustermann</td>
                 <td class="small bot-grey pad-1001" th:text="${Parameter.detailLevel == 0 ? schueler.vorname() : schueler.vornamen()}">Maximilian Moritz</td>
-                <td class="small bot-grey pad-1001" th:text="${schueler.geschlecht().text}">m</td>
+                <td class="small bot-grey pad-1001 ta-c" th:text="${schueler.geschlecht().kuerzel}">m</td>
+				<td class="small bot-grey pad-1001" th:text="${#convert.toDateDE(schueler.geburtsdatum())}">07.08.2010</td>
                 <td class="small bot-grey pad-1001" th:text="${schueler.strassenname() + (!schueler.hausnummer().isEmpty() ? (' ' + schueler.hausnummer() + schueler.hausnummerZusatz()) : '')}">Musterstraße 13a</td>
-                <td class="small bot-grey pad-1001" th:text="${schueler.wohnort().plz}">12345</td>
-                <td class="small bot-grey pad-1001 ta-r" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
+                <td class="small bot-grey pad-1001 ta-r" th:text="${schueler.wohnort().plz}">12345</td>
+                <td class="small bot-grey pad-1001" th:text="${schueler.wohnort().ortsname}">Musterstadt</td>
                 <td class="small bot-grey pad-1001 ta-r" th:text="${(schueler.auswahlLernabschnitt().klasse().kuerzel())}">07A</td>
             </tr>
         </tbody>

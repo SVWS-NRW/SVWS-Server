@@ -203,7 +203,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 				try {
 					final GostFachwahl gostFachwahl = ergebnisManager.getOfSchuelerOfKursFachwahl(idKursschueler, kurs.id);
 					if (gostFachwahl != null) {
-						fachwahlAbiturfach = "" + gostFachwahl.abiturfach;
+						fachwahlAbiturfach = "" + (gostFachwahl.abiturfach != null ? gostFachwahl.abiturfach : "");
 						fachwahlGueltig = true;
 						fachwahlSchriftlich = gostFachwahl.istSchriftlich;
 					}
