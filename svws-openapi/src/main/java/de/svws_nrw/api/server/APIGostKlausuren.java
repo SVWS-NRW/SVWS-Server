@@ -784,12 +784,13 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "200", description = "Gost-Klausurraumstunde wurde erfolgreich angelegt.",
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = GostKlausurenCollectionAllData.class)))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.")
-	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)",
+			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = SimpleOperationResponse.class)))
 	public Response blockenGostKursklausuren(@PathParam("schema") final String schema,
 			@RequestBody(description = "Die IDs der Schülerklausuren", required = true, content = @Content(mediaType = MediaType.APPLICATION_JSON,
 					schema = @Schema(implementation = GostKlausurterminblockungDaten.class))) final GostKlausurterminblockungDaten blockungDaten,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(
 				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new DataGostKlausurenKursklausur(conn).blocken(blockungDaten))
 						.build(),
 				request, ServerMode.STABLE,

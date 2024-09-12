@@ -65,7 +65,7 @@
 							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 						</div>
 					</template>

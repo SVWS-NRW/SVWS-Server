@@ -4878,6 +4878,8 @@ export class ApiServer extends BaseApi {
 	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *
 	 * @param {GostKlausurterminblockungDaten} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema

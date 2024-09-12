@@ -146,21 +146,19 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			if (!this.manager.getStundenplanManagerOrNull()) {
 				const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
-				if (listStundenplaene.isEmpty()) {
-					this.setPatchedState(result);
-					return true;
+				if (!listStundenplaene.isEmpty()) {
+					const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
+					if (stundenplan === null)
+						throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
+					const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
+					const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
+					const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
+					const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
+					const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
+					this.manager.setStundenplanManager(stundenplanmanager);
+					if (this.kalenderwoche.value.jahr === -1)
+						this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
 				}
-				const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
-				if (stundenplan === null)
-					throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
-				const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
-				const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
-				const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
-				const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
-				const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
-				this.manager.setStundenplanManager(stundenplanmanager);
-				if (this.kalenderwoche.value.jahr === -1)
-					this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
 			}
 			this.setPatchedState(result);
 			if (!this.manager.hasFehlenddatenZuAbijahrUndHalbjahr(this.abiturjahr, this._state.value.halbjahr)) {

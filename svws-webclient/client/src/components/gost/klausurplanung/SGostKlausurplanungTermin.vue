@@ -91,7 +91,7 @@
 											<template #content>
 												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
 											</template>
-											<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
@@ -109,7 +109,7 @@
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td svws-align-right" :class="{'pr-3': inTooltip}" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 									<div v-if="kMan().quartalGetByTermin(termin) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 									<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 								</div>

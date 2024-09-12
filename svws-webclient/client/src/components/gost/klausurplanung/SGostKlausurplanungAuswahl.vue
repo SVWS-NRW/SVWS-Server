@@ -5,7 +5,7 @@
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child"
 				:hidden="childrenHidden[index]" @select="setChild(c)" :key="index">
-				<template #badge v-if="c.name === 'gost.klausurplanung.probleme' && kMan().getStundenplanManagerOrNull()">
+				<template #badge v-if="c.name === 'gost.klausurplanung.probleme' && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
 					<div class="font-bold text-white bg-error rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
 					<div class="font-bold text-black bg-yellow-200 rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
 				</template>

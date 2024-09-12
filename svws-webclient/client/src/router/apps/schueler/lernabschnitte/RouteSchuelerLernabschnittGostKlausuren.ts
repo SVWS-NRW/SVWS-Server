@@ -11,6 +11,7 @@ import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schue
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 
 const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausuren.vue");
 
@@ -27,17 +28,18 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 		super.children = [
 		];
 		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
+			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array) || (params.abschnitt === undefined) || (params.abschnitt instanceof Array) || (params.wechselNr === undefined) || (params.wechselNr instanceof Array))
 				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			const manager = routeSchueler.data.schuelerListeManager;
-			if (!manager.hasDaten())
+			if (!routeSchueler.data.schuelerListeManager.hasDaten()) {
 				return false;
-			const abiturjahr = manager.auswahl().abiturjahrgang;
-			const jahrgang = manager.jahrgaenge.get(manager.auswahl().idJahrgang);
-			if (((abiturjahr !== null) && (manager.abiturjahrgaenge.get(abiturjahr) !== null))
-				&& ((jahrgang !== null) && (JahrgangsUtils.istGymOb(jahrgang.kuerzelStatistik))))
+			}
+			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
+			if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
+				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
+					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 				return false;
-			return routeSchueler.getRoute(parseInt(params.id));
+			}
+			return routeSchuelerLernabschnittAllgemein.getRoute(parseInt(params.id), parseInt(params.abschnitt), parseInt(params.wechselNr));
 		}
 	}
 

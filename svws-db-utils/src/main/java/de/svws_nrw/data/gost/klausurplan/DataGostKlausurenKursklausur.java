@@ -435,8 +435,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 				try {
 					kkr.kursSchiene = Stream.of(kurs.Schienen.split(",")).mapToInt(Integer::parseInt).toArray();
 				} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
-					throw new ApiOperationException(Status.BAD_REQUEST,
-							"Falsche Formatierung des Attributs Schienen (%s) bei Kurs %d.".formatted(kurs.Schienen, kurs.ID));
+					kkr.kursSchiene = new int[0];
 				}
 				kkr.quartal = v.quartal;
 				kkr.schuelerIds = sKlausuren.stream().map(s -> s.Schueler_ID).toList();

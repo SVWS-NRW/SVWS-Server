@@ -112,7 +112,7 @@
 			<svws-ui-table :items="termineOhneDatum()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( rowData.abijahr, rowData.halbjahr, undefined, rowData.id ))" title="Datum setzen" size="small"><span class="icon i-ri-link" /> datieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( rowData.abijahr, rowData.halbjahr, undefined, rowData.id ))" title="Datum setzen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> datieren</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}

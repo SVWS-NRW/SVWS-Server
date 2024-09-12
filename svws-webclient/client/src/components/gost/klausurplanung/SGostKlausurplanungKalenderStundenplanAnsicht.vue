@@ -96,7 +96,6 @@
 								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
-								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
 										<span class="line-clamp-4">{{ terminBezeichnung(termin) }}</span>

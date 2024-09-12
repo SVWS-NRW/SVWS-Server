@@ -46,7 +46,7 @@
 								<template #content>
 									<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin="kMan().terminOrNullByKursklausur(klausur)!" />
 								</template>
-								<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+								<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 							</svws-ui-tooltip>
 						</div>
 
