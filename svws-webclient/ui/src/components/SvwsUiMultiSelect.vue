@@ -43,7 +43,7 @@
 			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
 		</button>
 	</div>
-	<Teleport to="body" defer>
+	<Teleport to="body" v-if="isMounted">
 		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list :select-item ref="refList" />
 	</Teleport>
 </template>
@@ -103,8 +103,10 @@
 	const inputElTags = ref(null);
 	const hasFocus = ref(false);
 	const searchText = ref("");
+	const isMounted = ref(false);
 
 	onMounted(() => {
+		isMounted.value = true;
 		if (props.autofocus) {
 			onInputFocus();
 			toggleListBox();

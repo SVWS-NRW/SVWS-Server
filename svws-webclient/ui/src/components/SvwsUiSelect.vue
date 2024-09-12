@@ -35,7 +35,7 @@
 			<span class="icon i-ri-expand-up-down-fill my-1" v-else />
 		</button>
 	</div>
-	<Teleport to="body" defer>
+	<Teleport to="body" v-if="isMounted">
 		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :filtered-list="filteredList" :item-text="itemText"
 			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
 			:select-item="selectItem" ref="refList" :search-text="searchText" :highlight-item="(highlightItem as Item|undefined)" />
@@ -48,7 +48,7 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { computed, nextTick, ref, shallowRef, toRaw, watch } from "vue";
+	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, watch } from "vue";
 	import { genId } from "../utils";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
@@ -100,6 +100,8 @@
 	const hasFocus = ref(false);
 	const searchText = ref("");
 	const listIdPrefix = genId();
+	const isMounted = ref(false);
+	onMounted(() => isMounted.value = true);
 
 	function onInputFocus() {
 		hasFocus.value = true;
