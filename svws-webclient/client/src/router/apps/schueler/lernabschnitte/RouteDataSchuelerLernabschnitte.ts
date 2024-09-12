@@ -14,6 +14,7 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 	// Daten, die in Abhängigkeit des ausgewählten Schülers geladen werden
 	idSchueler: number;
 	listAbschnitte: List<SchuelerLernabschnittListeEintrag>;
+	hatGymOb: boolean;
 	listFaecher: List<FachDaten>;
 	listFoerderschwerpunkte: List<FoerderschwerpunktEintrag>;
 	listJahrgaenge: List<JahrgangsDaten>;
@@ -28,6 +29,7 @@ interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
 const defaultState = <RouteStateDataSchuelerLernabschnitte> {
 	idSchueler: -1,
 	listAbschnitte: new ArrayList<SchuelerLernabschnittListeEintrag>(),
+	hatGymOb: false,
 	listFaecher: new ArrayList(),
 	listFoerderschwerpunkte: new ArrayList(),
 	listJahrgaenge: new ArrayList(),
@@ -52,6 +54,10 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	get listAbschnitte(): List<SchuelerLernabschnittListeEintrag> {
 		return this._state.value.listAbschnitte;
+	}
+
+	get hatGymOb(): boolean {
+		return this._state.value.hatGymOb;
 	}
 
 	get manager(): SchuelerLernabschnittManager {
@@ -141,11 +147,18 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		if ((!force) && (idSchueler === this._state.value.idSchueler))
 			return;
 		const listAbschnitte = await api.server.getSchuelerLernabschnittsliste(api.schema, idSchueler);
+		let hatGymOb : boolean = false;
+		for (const abschnitt of listAbschnitte) {
+			if (("EF" === abschnitt.jahrgang) || ("Q1" === abschnitt.jahrgang) || ("Q2" === abschnitt.jahrgang)) {
+				hatGymOb = true;
+				break;
+			}
+		}
 		const listFaecher = await api.server.getFaecher(api.schema);
 		const listFoerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
+		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
 			alteAuswahl === undefined ? undefined : alteAuswahl.schuljahresabschnitt,

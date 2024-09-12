@@ -62,7 +62,7 @@
 				</svws-ui-button></div>
 		</svws-ui-content-card>
 		<div v-else>
-			Kein Gost-Lernabschnitt ausgewählt.
+			Es ist kein Lernabschnitt der gymnasialen Oberstufe ausgewält.
 		</div>
 	</div>
 </template>

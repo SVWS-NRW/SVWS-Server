@@ -30,7 +30,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/** Ein Set mit den Kompetenzen die ein angemeldeter Benutzer für die Route benötigt */
 	protected _kompetenzenBenoetigt: Set<BenutzerKompetenz> = new Set();
 
-	/** Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht */
+	/**
+	 * Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
+	 *
+	 * Wird eine Route als hidden erkannt, wird eine Umleitungsroute als Return-Statement zurückgegeben.
+	 * Auf diese Route wird umgeleitet, wenn diese Route vorher aktiv war, ggf. mit anderen Daten.
+	 * Diese Methode wird auch zur Erstellung der hiddenChildren verwendet, das dann tatsächlich ein Array
+	 * mit Boolean-Werten zurückgibt.
+	 * */
 	protected isHidden: ((params?: RouteParams) => RouteLocationRaw | false) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */

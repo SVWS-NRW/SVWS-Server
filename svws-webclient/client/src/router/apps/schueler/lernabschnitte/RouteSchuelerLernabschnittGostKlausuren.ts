@@ -30,14 +30,14 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array) || (params.abschnitt === undefined) || (params.abschnitt instanceof Array) || (params.wechselNr === undefined) || (params.wechselNr instanceof Array))
 				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			if (!routeSchueler.data.schuelerListeManager.hasDaten()) {
-				return false;
-			}
-			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
-			if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
-				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
-					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
-				return false;
+			if (routeSchueler.data.schuelerListeManager.hasDaten()) {
+				const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
+				if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
+					&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
+						|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+					if (routeSchuelerLernabschnitte.data.hatGymOb)
+						return false;
+				}
 			}
 			return routeSchuelerLernabschnittAllgemein.getRoute(parseInt(params.id), parseInt(params.abschnitt), parseInt(params.wechselNr));
 		}
