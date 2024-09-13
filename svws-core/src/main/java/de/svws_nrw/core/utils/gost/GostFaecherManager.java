@@ -167,13 +167,13 @@ public class GostFaecherManager {
 		// Füge die Fachkombination hinzu, falls sie noch nicht enthalten ist...
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID1", fachkombi.fachID1, 0);
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID2", fachkombi.fachID2, 0);
-		DeveloperNotificationException.ifMapNotContains("_map", _map, fachkombi.fachID1);
-		DeveloperNotificationException.ifMapNotContains("_map", _map, fachkombi.fachID2);
 		DeveloperNotificationException.ifNotInRange("fachkombi.typ", fachkombi.typ, 0, 1);
+		final GostFach fach1 = get(fachkombi.fachID1);
+		final GostFach fach2 = get(fachkombi.fachID2);
+		if ((fach1 == null) || (fach2 == null))
+			return false;
 		final @NotNull GostLaufbahnplanungFachkombinationTyp typ = GostLaufbahnplanungFachkombinationTyp.fromValue(fachkombi.typ);
 		if (fachkombi.hinweistext.isBlank()) {
-			final @NotNull GostFach fach1 = getOrException(fachkombi.fachID1);
-			final @NotNull GostFach fach2 = getOrException(fachkombi.fachID2);
 			final @NotNull String kursart1 = ((fachkombi.kursart1 == null) || fachkombi.kursart1.isBlank()) ? "" : (" als " + fachkombi.kursart1);
 			final @NotNull String kursart2 = ((fachkombi.kursart2 == null) || fachkombi.kursart2.isBlank()) ? "" : (" als " + fachkombi.kursart2);
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1

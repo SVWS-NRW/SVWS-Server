@@ -187,13 +187,13 @@ export class GostFaecherManager extends JavaObject {
 	private addFachkombinationInternal(fachkombi : GostJahrgangFachkombination) : boolean {
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID1", fachkombi.fachID1, 0);
 		DeveloperNotificationException.ifSmaller("fachkombi.fachID2", fachkombi.fachID2, 0);
-		DeveloperNotificationException.ifMapNotContains("_map", this._map, fachkombi.fachID1);
-		DeveloperNotificationException.ifMapNotContains("_map", this._map, fachkombi.fachID2);
 		DeveloperNotificationException.ifNotInRange("fachkombi.typ", fachkombi.typ, 0, 1);
+		const fach1 : GostFach | null = this.get(fachkombi.fachID1);
+		const fach2 : GostFach | null = this.get(fachkombi.fachID2);
+		if ((fach1 === null) || (fach2 === null))
+			return false;
 		const typ : GostLaufbahnplanungFachkombinationTyp = GostLaufbahnplanungFachkombinationTyp.fromValue(fachkombi.typ);
 		if (JavaString.isBlank(fachkombi.hinweistext)) {
-			const fach1 : GostFach = this.getOrException(fachkombi.fachID1);
-			const fach2 : GostFach = this.getOrException(fachkombi.fachID2);
 			const kursart1 : string = ((fachkombi.kursart1 === null) || JavaString.isBlank(fachkombi.kursart1)) ? "" : (" als " + fachkombi.kursart1);
 			const kursart2 : string = ((fachkombi.kursart2 === null) || JavaString.isBlank(fachkombi.kursart2)) ? "" : (" als " + fachkombi.kursart2);
 			fachkombi.hinweistext = fach1.kuerzelAnzeige + kursart1! + ((typ as unknown === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH as unknown) ? " erfordert " : " erlaubt kein ") + fach2.kuerzelAnzeige + kursart2!;
