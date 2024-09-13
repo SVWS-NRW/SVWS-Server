@@ -198,8 +198,8 @@ else
     		export SVWS_TLS_KEYSTORE_PATH=${SVWS_TLS_KEYSTORE_PATH:-$CONF_PATH/keystore}
     		read -p "SVWS_TLS_KEYSTORE_PASSWORD (default: 'test123'): " SVWS_TLS_KEYSTORE_PASSWORD
     		export SVWS_TLS_KEYSTORE_PASSWORD=${SVWS_TLS_KEYSTORE_PASSWORD:-test123}
-    		read -p "SVWS_TLS_KEY_ALIAS (default: ''): " SVWS_TLS_KEY_ALIAS
-    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS}
+    		read -p "SVWS_TLS_KEY_ALIAS (default: 'alias1'): " SVWS_TLS_KEY_ALIAS
+    		export SVWS_TLS_KEY_ALIAS=${SVWS_TLS_KEY_ALIAS:-alias1}
 			echo "Bitte geben Sie die folgenden Informationen für den Distinguished Name (dname) ein:"
 			read -p "Common Name (CN): " INPUT_common_name
 			export INPUT_common_name=${INPUT_common_name}
@@ -392,8 +392,8 @@ if [ "$CREATE_KEYSTORE" = "j" ] || [ "$CREATE_KEYSTORE" = "J" ]; then
 	# Keystore erstellen
 	#mkdir -p $SVWS_TLS_KEYSTORE_PATH
     echo "Erstelle Keystore in $SVWS_TLS_KEYSTORE_PATH/keystore ..."
-    keytool -genkey -noprompt -alias alias1 -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
-    keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias alias1 -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
+    keytool -genkey -noprompt -alias $SVWS_TLS_KEY_ALIAS -validity $validity_days -dname "CN=${INPUT_common_name}, OU=${INPUT_organizational_unit}, O=${INPUT_organization}, L=${INPUT_locality}, S=${INPUT_state}, C=${INPUT_country}" -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -storepass $SVWS_TLS_KEYSTORE_PASSWORD -keypass $SVWS_TLS_KEYSTORE_PASSWORD  -keyalg RSA
+    keytool -export -keystore $SVWS_TLS_KEYSTORE_PATH/keystore -alias $SVWS_TLS_KEY_ALIAS -file ./SVWS.cer -storepass $SVWS_TLS_KEYSTORE_PASSWORD
 else
 	mv  $SVWS_TLS_KEYSTORE_PATH $APP_PATH
 fi
