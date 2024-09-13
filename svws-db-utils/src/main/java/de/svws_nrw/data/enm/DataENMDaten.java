@@ -1,6 +1,5 @@
 package de.svws_nrw.data.enm;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
@@ -63,7 +62,6 @@ import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
-import de.svws_nrw.json.JsonReader;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -502,7 +500,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		try {
 			importDaten(conn, JSONMapper.toObjectGZip(daten, ENMDaten.class));
 		} catch (final CompressionException e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler bei entpacken der komprimierten ENM-Daten");
+			throw new ApiOperationException(Status.BAD_REQUEST, e, "Fehler bei entpacken der komprimierten ENM-Daten: " + e.getMessage());
 		}
 	}
 
@@ -750,26 +748,6 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
-	 * Importiert die gegebenen ENMSchueler-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
-	 * der einzelnen Felder und aktualisiert neuere Datensätze und deren Zeitstempel.
-	 *
-	 * @param conn       die Datenbank-Verbindung
-	 * @param enmBytes   das byte[] mit dem JSON-Array der zu importierenden Schüler
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static void importEnmSchuelerFromByteArray(final DBEntityManager conn, final byte[] enmBytes) throws ApiOperationException {
-		try {
-			// TODO bei GZIP vorher: enmBytes = GZip.decode(enmBytes);
-			final List<ENMSchueler> listEnmSchueler = JsonReader.fromByteArray(enmBytes);
-			importEnmSchueler(conn, listEnmSchueler);
-		} catch (final IOException e) {
-			throw new ApiOperationException(Status.BAD_REQUEST, e, "Die ENM-Daten konnten nicht erfolgreich eingelesen werden: " + e.getMessage());
-		}
-	}
-
-
-	/**
 	 * Prüft, ob der gegebene Timestamp-String tsCheckStr nach dem Timestamp-String tsOtherStr
 	 * liegt.
 	 *
@@ -822,7 +800,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (httpResponse.statusCode() != Status.OK.getStatusCode()) {
 			throw new ApiOperationException(Status.BAD_GATEWAY, httpResponse.body());
 		}
-		importEnmSchuelerFromByteArray(conn, httpResponse.body());
+		importDatenGZip(conn, httpResponse.body());
 	}
 
 
