@@ -40,6 +40,27 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode für die Abfrage einer leeren Datendatei für das Externe Datenmodul (ENM).
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die leeren ENM-Daten
+	 */
+	@GET
+	@Path("/empty")
+	@Operation(summary = "Liefert leere Daten des Externen Notenmoduls (ENM).",
+			description = "Liefert leere Daten des Externen Notenmoduls (ENM).")
+	@ApiResponse(responseCode = "200", description = "Die Daten des Externen Notenmoduls (ENM)",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = ENMDaten.class)))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.")
+	public Response getENMDatenLeer(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(new ENMDaten()).build();
+	}
+
+
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Daten für das Externe Datenmodul (ENM) in Bezug auf alle Lehrer
 	 * des aktuellen Schuljahresabschnitts der Schule.
 	 *

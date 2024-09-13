@@ -1941,6 +1941,30 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getENMDatenLeer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/empty
+	 *
+	 * Liefert leere Daten des Externen Notenmoduls (ENM).
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM)
+	 */
+	public async getENMDatenLeer(schema : string) : Promise<ENMDaten> {
+		const path = "/db/{schema}/enm/empty"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMDaten.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der POST-Methode importENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/import
 	 *
 	 * Importiert die übergebenen ENM-Daten. Dabei wird die Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
