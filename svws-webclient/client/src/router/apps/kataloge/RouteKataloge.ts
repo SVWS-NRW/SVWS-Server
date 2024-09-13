@@ -15,7 +15,6 @@ import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeu
 import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
 import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
-import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 
 import { RouteDataKataloge } from "~/router/apps/kataloge/RouteDataKataloge";
 
@@ -47,7 +46,6 @@ export class RouteKataloge extends RouteNode<RouteDataKataloge, RouteApp> {
 			routeKatalogAufsichtsbereiche,
 			routeKatalogPausenzeiten,
 			routeKatalogZeitraster,
-			routeKatalogBetriebe,
 			routeKatalogSchulen,
 		];
 		super.defaultChild = undefined;

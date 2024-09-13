@@ -14,7 +14,6 @@ import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchu
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge"
-import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
 import { routeKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
 import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
 import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
@@ -34,6 +33,7 @@ import { routeLogin } from "~/router/login/RouteLogin";
 import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
 import { routeError } from "../error/RouteError";
 import SApp from "~/components/SApp.vue";
+import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -55,7 +55,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
-			routeKatalogBetriebe,
+			routeSchuleBetriebe,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogRaeume,
 			routeKatalogAufsichtsbereiche,

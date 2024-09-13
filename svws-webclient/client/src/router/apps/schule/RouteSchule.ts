@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { BenutzerKompetenzGruppe, List} from "@core";
+import type { BenutzerKompetenzGruppe, List } from "@core";
 import { ArrayList, BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
@@ -19,6 +19,7 @@ import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
+import { routeSchuleBetriebe } from "./betriebe/RouteSchuleBetriebe";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
@@ -42,6 +43,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleBenutzergruppe,
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
+			routeSchuleBetriebe,
 			routeSchuleDatenaustausch,
 		];
 		super.defaultChild = undefined;
