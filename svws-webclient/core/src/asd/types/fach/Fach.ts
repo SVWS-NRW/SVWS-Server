@@ -1533,6 +1533,22 @@ export class Fach extends JavaEnum<Fach> implements CoreType<FachKatalogEintrag,
 	}
 
 	/**
+	 * Bestimmt den Fach-Katalogeintrag für das angegebene Schuljahr. Ist der Wert
+	 * in diesem Schuljahr nicht mehr gültig, so wird ersatzweise der letzte gültige Wert
+	 * zurückgegeben.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 *
+	 * @return der Fach-Katalogeintrag
+	 */
+	public getEintragOrLast(schuljahr : number) : FachKatalogEintrag | null {
+		const result : FachKatalogEintrag | null = Fach.data().getEintragBySchuljahrUndWert(schuljahr, this);
+		if (result !== null)
+			return result;
+		return this.historie().getLast();
+	}
+
+	/**
 	 * Gibt die Fachgruppe zurück, der das Fach in dem angegebenen Schuljahr zugeordnet ist.
 	 *
 	 * @param schuljahr   das Schuljahr
