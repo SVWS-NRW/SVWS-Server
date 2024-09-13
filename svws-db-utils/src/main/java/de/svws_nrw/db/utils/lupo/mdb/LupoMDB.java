@@ -22,6 +22,7 @@ import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -355,6 +356,19 @@ public class LupoMDB {
 				logger.logLn(0, "FEHLER - Fach in der DB nicht definiert!");
 				continue;
 			}
+			final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
+			if (fach == null) {
+				logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+						.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
+				continue;
+			}
+			final FachKatalogEintrag fke = fach.daten(abiJahrgang - 1);
+			if (fke == null) {
+				logger.logLn(0,
+						"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+								.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
+				continue;
+			}
 			final DTOGostJahrgangFaecher lupoFach = new DTOGostJahrgangFaecher(abiJahrgang, dtoFach.ID,
 					abpFach.E1, abpFach.E2, abpFach.Q1, abpFach.Q2, abpFach.Q3, abpFach.Q4, abpFach.Abi_Moegl,
 					abpFach.LK_Moegl);
@@ -382,6 +396,19 @@ public class LupoMDB {
 					logger.logLn(0, "FEHLER - Fach 1 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
 					continue;
 				}
+				final Fach fach1 = Fach.data().getWertBySchluessel(dtoFach1.StatistikKuerzel);
+				if (fach1 == null) {
+					logger.logLn(0, "FEHLER - Das erste Fach %s in der Fächerkombination ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+							.formatted(dtoFach1.Kuerzel, dtoFach1.StatistikKuerzel));
+					continue;
+				}
+				final FachKatalogEintrag fke1 = fach1.daten(abiJahrgang - 1);
+				if (fke1 == null) {
+					logger.logLn(0,
+							"FEHLER - Das erste Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+									.formatted(dtoFach1.Kuerzel, dtoFach1.StatistikKuerzel));
+					continue;
+				}
 				final DTOFach dtoFach2 = dtoFaecher.get(nmk.Fach2_Krz);
 				if (dtoFach2 == null) {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination in der DB nicht definiert!");
@@ -389,6 +416,19 @@ public class LupoMDB {
 				}
 				if (Boolean.FALSE.equals(dtoFach2.IstOberstufenFach)) {
 					logger.logLn(0, "FEHLER - Fach 2 der Kombination ist nicht als Fach der Oberstufe gekennzeichnet!");
+					continue;
+				}
+				final Fach fach2 = Fach.data().getWertBySchluessel(dtoFach1.StatistikKuerzel);
+				if (fach2 == null) {
+					logger.logLn(0, "FEHLER - Das zweite Fach %s in der Fächerkombination ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+							.formatted(dtoFach2.Kuerzel, dtoFach2.StatistikKuerzel));
+					continue;
+				}
+				final FachKatalogEintrag fke2 = fach2.daten(abiJahrgang - 1);
+				if (fke2 == null) {
+					logger.logLn(0,
+							"FEHLER - Das zweite Fach %s in der Fächerkombination ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+									.formatted(dtoFach2.Kuerzel, dtoFach2.StatistikKuerzel));
 					continue;
 				}
 				GostLaufbahnplanungFachkombinationTyp typ = GostLaufbahnplanungFachkombinationTyp.VERBOTEN;
@@ -425,12 +465,13 @@ public class LupoMDB {
 	 * werden ggf. ersetzt.
 	 *
 	 * @param conn                 die Datenbank-Verbindung mit aktiver Transaktion
+	 * @param abiJahrgang          der Abitur-Jahrgang, für den die Informationen gesetzt werden sollen.
 	 * @param mapFaecher           eine Map mit den Fächern aus der SVWS-DB
 	 * @param dtoSchueler          das Schüler-DTO aus der SVWS-DTO
 	 * @param abpSchueler          das zu schreibende Schüler-Objekt aus der LuPO-Datei
 	 * @param mapSchuelerFaecher   die zu schreibenden Fachwahlen des Schülers
 	 */
-	private void setLUPOSchueler(final DBEntityManager conn, final Map<String, DTOFach> mapFaecher, final DTOSchueler dtoSchueler,
+	private void setLUPOSchueler(final DBEntityManager conn, final int abiJahrgang, final Map<String, DTOFach> mapFaecher, final DTOSchueler dtoSchueler,
 			final ABPSchueler abpSchueler, final HashMap<Integer, ArrayList<ABPSchuelerFaecher>> mapSchuelerFaecher) {
 		logger.logLn("- Schreibe Allgemeine Schüler-Daten in die DB... ");
 		DTOGostSchueler lupoSchueler = conn.queryByKey(DTOGostSchueler.class, dtoSchueler.ID);
@@ -461,6 +502,19 @@ public class LupoMDB {
 				final DTOFach dtoFach = mapFaecher.get(abpSFach.FachKrz);
 				if (dtoFach == null) {
 					logger.logLn(0, "FEHLER! Ignoriere das Fach beim Einlesen...");
+					continue;
+				}
+				final Fach fach = Fach.data().getWertBySchluessel(dtoFach.StatistikKuerzel);
+				if (fach == null) {
+					logger.logLn(0, "FEHLER - Das Fach %s ist einem unbekanntem Statistik-Kürzel %s zugeordnet.!"
+							.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
+					continue;
+				}
+				final FachKatalogEintrag fke = fach.daten(abiJahrgang - 1);
+				if (fke == null) {
+					logger.logLn(0,
+							"FEHLER - Das Fach %s ist einem Statistik-Kürzel %s zugeordnet, welches in dem angegebenen Abiturjahrgang nicht mehr zulässig ist.!"
+									.formatted(dtoFach.Kuerzel, dtoFach.StatistikKuerzel));
 					continue;
 				}
 				final DTOGostSchuelerFachbelegungen lupoSFach = new DTOGostSchuelerFachbelegungen(dtoSchueler.ID, dtoFach.ID);
@@ -618,7 +672,7 @@ public class LupoMDB {
 						}
 						logger.logLn("  - HINWEIS: Für den Schüler liegen bereits Laufbahnplanungsdaten vor. Diese werden ersetzt...");
 					}
-					setLUPOSchueler(conn, mapFaecher, dtoSchueler, abpSchueler, mapSchuelerFaecher);
+					setLUPOSchueler(conn, abiJahrgang, mapFaecher, dtoSchueler, abpSchueler, mapSchuelerFaecher);
 				}
 				if (!conn.transactionCommit())
 					throw new UserNotificationException("Fehler beim Erstellen des Schemas - Datenbank-Transaktion konnte nicht abgeschlossen werden.");
@@ -921,8 +975,7 @@ public class LupoMDB {
 			belegung.kursartKuerzel = "LK";
 		else if ("ZK".equals(belegungPlanungKursart))
 			belegung.kursartKuerzel = "ZK";
-		belegung.schriftlich = (belegungPlanungKursart == null) ? null
-				: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
+		belegung.schriftlich = (belegungPlanungKursart == null) ? null : ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		if ("LK".equals(belegungPlanungKursart))
 			belegung.wochenstunden = 5;
 		else if (wochenstunden == null)
