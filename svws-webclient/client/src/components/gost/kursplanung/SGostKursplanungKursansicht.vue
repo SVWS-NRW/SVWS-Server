@@ -85,7 +85,7 @@
 					<div role="row" class="svws-ui-tr select-none">
 						<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
 							<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
-								@update:model-value="updateKursauswahl" headless />
+								@update:model-value="updateKursauswahlAlle" headless />
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allowRegeln, 'col-span-1': !allowRegeln}">
 							<span>Kurs</span>
@@ -155,7 +155,7 @@
 								<template v-for="kurs in listeDerKurse(fachwahl)" :key="kurs.id">
 									<div role="row" class="svws-ui-tr select-none" :style="{ '--background-color': bgColor(fachwahl) }" :class="{'font-bold': (schuelerFilter().fach === kurs.fach_id) && ((schuelerFilter().kursart?.id === kurs.kursart) || (schuelerFilter().kursart === undefined)), 'svws-expanded': kursdetailAnzeigen === kurs.id}">
 										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
-											<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="getKursauswahl().contains(kurs.id) ? getKursauswahl().remove(kurs.id) : getKursauswahl().add(kurs.id)" headless />
+											<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="updateKursauswahl(kurs)" headless />
 										</div>
 										<template v-if="allowRegeln">
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="setKursdetailAnzeigen(kurs.id)"
@@ -326,6 +326,7 @@
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getKursauswahl: () => JavaSet<number>,
+		setKursauswahl: (value: JavaSet<number>) => void;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		updateKursSchienenZuordnung: (idKurs: number, idSchieneAlt: number, idSchieneNeu: number) => Promise<boolean>;
@@ -456,14 +457,23 @@
 		return props.getDatenmanager().schieneGetIsRemoveAllowed(schiene.id) && props.getErgebnismanager().getOfSchieneRemoveAllowed(schiene.id);
 	}
 
-	function updateKursauswahl() {
+	function updateKursauswahlAlle() {
 		const auswahl = props.getKursauswahl();
 		const allSelected = (props.getDatenmanager().kursGetAnzahl() === auswahl.size());
-		if (allSelected)
-			auswahl.clear();
-		else
+		const set = new HashSet<number>();
+		if (!allSelected)
 			for (const kurs of props.getDatenmanager().kursGetListeSortiertNachFachKursartNummer())
-				auswahl.add(kurs.id);
+				set.add(kurs.id);
+		props.setKursauswahl(set);
+	}
+
+	function updateKursauswahl(kurs: GostBlockungKurs) {
+		const set = props.getKursauswahl();
+		if (set.contains(kurs.id))
+			set.remove(kurs.id);
+		else
+			set.add(kurs.id);
+		props.setKursauswahl(set);
 	}
 
 	function getAnzahlKollisionenSchiene(idSchiene: number): number {

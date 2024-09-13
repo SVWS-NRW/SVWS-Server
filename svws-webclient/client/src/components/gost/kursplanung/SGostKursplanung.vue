@@ -97,7 +97,7 @@
 			</Teleport>
 			<s-gost-kursplanung-kursansicht :zeige-schienenbezeichnungen :set-zeige-schienenbezeichnungen
 				:halbjahr :faecher-manager :hat-ergebnis :ergebnis-hochschreiben :api-status :toggle-blockungstabelle
-				:get-datenmanager :get-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
+				:get-datenmanager :get-kursauswahl :set-kursauswahl :get-ergebnismanager :map-fachwahl-statistik :map-lehrer :schueler-filter :kurssortierung
 				:regeln-update :update-kurs-schienen-zuordnung :patch-kurs :add-kurs :remove-kurse :add-kurs-lehrer
 				:patch-schiene :add-schiene :remove-schiene :remove-kurs-lehrer :ergebnis-aktivieren :existiert-schuljahresabschnitt
 				:blockungstabelle-visible="!blockungstabelleHidden()" :add-schiene-kurs :remove-schiene-kurs :combine-kurs :split-kurs :hat-update-kompetenz />

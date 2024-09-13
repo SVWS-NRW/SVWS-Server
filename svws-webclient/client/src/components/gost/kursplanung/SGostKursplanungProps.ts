@@ -13,6 +13,7 @@ export interface GostKursplanungProps {
 	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getKursauswahl: () => JavaSet<number>,
+	setKursauswahl: (value: JavaSet<number>) => void;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addBlockung: () => Promise<void>;
 	restoreBlockung: () => Promise<void>;
