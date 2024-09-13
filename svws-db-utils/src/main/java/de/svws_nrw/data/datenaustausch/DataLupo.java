@@ -80,8 +80,8 @@ public final class DataLupo {
 			// Schreibe in die LuPO-Datenbank
 			lupoMDB.setLUPOTables(user, replaceJahrgang, replaceSchueler);
 			logger.logLn("  Import beendet");
-		} catch (@SuppressWarnings("unused") final IOException e1) {
-			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank.");
+		} catch (final IOException e1) {
+			logger.logLn("  [FEHLER] beim Zugriff auf die temporäre LuPO-Datenbank: " + e1.getMessage());
 			final SimpleOperationResponse daten = new SimpleOperationResponse();
 			daten.log = log.getStrings();
 			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
