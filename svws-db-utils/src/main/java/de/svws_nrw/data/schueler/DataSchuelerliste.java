@@ -293,11 +293,18 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Erstelle die Schüler-Liste und sortiere sie
-		final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
-				.map(s -> erstelleSchuelerlistenEintrag(s, conn.getUser().schuleGetAbschnittById(mapAbschnitte.get(s.ID).Schuljahresabschnitts_ID).schuljahr,
-						mapAbschnitte.get(s.ID), mapJahrgaenge, schulform))
-				.sorted(dataComparator)
-				.toList();
+		final List<SchuelerListeEintrag> schuelerListe = new ArrayList<>();
+		for (final DTOSchueler s : schueler) {
+			final DTOSchuelerLernabschnittsdaten sla = mapAbschnitte.get(s.ID);
+			if (sla == null)
+				continue;
+			final Schuljahresabschnitt sja = conn.getUser().schuleGetAbschnittById(sla.Schuljahresabschnitts_ID);
+			if (sja == null)
+				continue;
+			final SchuelerListeEintrag sle = erstelleSchuelerlistenEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
+			schuelerListe.add(sle);
+		}
+		schuelerListe.sort(dataComparator);
 		// Ermittle die Kurse, welche von den Schülern belegt wurden.
 		getSchuelerKurse(conn, schuelerListe, abschnitt);
 		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
