@@ -16,7 +16,7 @@
 					</svws-ui-button>
 					<template v-if="(stundenplanManager().unterrichtsgruppenMergeableGet().size() > 0) && hatUpdateKompetenz">
 						<span class="ml-4">Unterricht:</span>
-						<s-stundenplan-klasse-modal-merge :stundenplan-manager v-slot="{ openModal }">
+						<s-stundenplan-klasse-modal-merge :stundenplan-manager :merge-unterrichte v-slot="{ openModal }">
 							<svws-ui-button type="error" size="small" class="ml-1" @click="openModal()" title="Unterricht, der zusammengelegt werden kann, weil es Doppelungen gibt">
 								<span class="icon-sm icon-error i-ri-error-warning-line" />zusammenlegen
 							</svws-ui-button>

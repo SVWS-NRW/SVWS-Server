@@ -550,6 +550,22 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
+	mergeUnterrichte = async (list: Array<List<StundenplanUnterricht>>) => {
+		const listRemove = new ArrayList<StundenplanUnterricht>();
+		const listAdd = new ArrayList<Partial<StundenplanUnterricht>>();
+		for (const unterricht of list) {
+			if (unterricht.isEmpty())
+				continue;
+			const add: Partial<StundenplanUnterricht> = unterricht.get(0).clone() as StundenplanUnterricht;
+			delete add.id;
+			add.wochentyp = 0;
+			listAdd.add(add);
+			listRemove.addAll(unterricht);
+		}
+		await this.removeUnterrichtKlasse(listRemove);
+		await this.addUnterrichtKlasse(listAdd);
+	}
+
 	addJahrgang = async (id: number) => {
 		api.status.start();
 		const jahrgang = new StundenplanJahrgang();

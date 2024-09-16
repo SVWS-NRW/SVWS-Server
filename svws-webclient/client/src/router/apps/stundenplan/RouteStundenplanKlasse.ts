@@ -35,6 +35,7 @@ export class RouteStundenplanKlasse extends RouteNode<any, RouteStundenplan> {
 			patchUnterricht: routeStundenplan.data.patchUnterricht,
 			addUnterrichtKlasse: routeStundenplan.data.addUnterrichtKlasse,
 			removeUnterrichtKlasse: routeStundenplan.data.removeUnterrichtKlasse,
+			mergeUnterrichte: routeStundenplan.data.mergeUnterrichte,
 		};
 	}
 

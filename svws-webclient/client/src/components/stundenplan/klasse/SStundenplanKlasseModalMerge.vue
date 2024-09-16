@@ -4,32 +4,42 @@
 		<template #modalTitle>Unterricht zusammenlegen</template>
 		<template #modalDescription>
 			Sollen die unten angezeigten Unterrichtsgruppen zu einem einzigen Unterricht des Wochentyps 0 (jede Woche) zusammengeführt werden?
-			<svws-ui-table selectable v-model="selected" :items :columns disable-footer>
-				<template #cell(id)="{value}">{{ stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(value) }}</template>
-				<template #cell(idZeitraster)="{value}">{{ Wochentag.fromIDorException(stundenplanManager().zeitrasterGetByIdOrException(value).wochentag).beschreibung }}: {{ stundenplanManager().zeitrasterGetByIdOrException(value).unterrichtstunde }}. Stunde</template>
+			<svws-ui-table selectable v-model="selected" :items="stundenplanManager().unterrichtsgruppenMergeableGet()" :columns disable-footer>
+				<template #cell(id)="{rowData: list}">{{ kuerzel(list) }}</template>
+				<template #cell(idZeitraster)="{rowData: list}">{{ zeitraster(list) }}</template>
 			</svws-ui-table>
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false">Abbrechen</svws-ui-button>
-			<svws-ui-button type="primary" @click="()=>{}">OK</svws-ui-button>
+			<svws-ui-button type="primary" @click="mergeUnterrichte(selected)">OK</svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
-	import type { StundenplanManager} from '@core';
+	import { ref } from 'vue';
+	import type { List, StundenplanManager, StundenplanUnterricht} from '@core';
 	import { Wochentag } from '@core';
 
 	const props = defineProps<{
 		stundenplanManager: () => StundenplanManager;
+		mergeUnterrichte: (list: Array<List<StundenplanUnterricht>>) => Promise<void>;
 	}>();
 
 	const columns = [{key: 'id', label: 'Untericht'}, {key: 'idZeitraster', label: 'Stunde'}];
 
 	const selected = ref([]);
-	const items = computed(() => [...props.stundenplanManager().unterrichtsgruppenMergeableGet()].map(e => e.getFirst()));
+
+	function kuerzel(list: List<StundenplanUnterricht>) {
+		const [item] = list;
+		return props.stundenplanManager().unterrichtGetByIDStringOfFachOderKursKuerzel(item.id)
+	}
+
+	function zeitraster(list: List<StundenplanUnterricht>) {
+		const [item] = list;
+		return `${Wochentag.fromIDorException(props.stundenplanManager().zeitrasterGetByIdOrException(item.idZeitraster).wochentag).beschreibung}: ${props.stundenplanManager().zeitrasterGetByIdOrException(item.idZeitraster).unterrichtstunde}. Stunde`;
+	}
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
