@@ -166,7 +166,6 @@ describe("Prop Tests für onInputNumber()", async () => {
 				placeholder: "Enter a number",
 				disabled: true,
 				required: true,
-				readonly: true,
 				headless: true,
 				rounded: true,
 				hideStepper: true,
@@ -178,7 +177,6 @@ describe("Prop Tests für onInputNumber()", async () => {
 		expect(input.attributes("placeholder")).toBe("Enter a number");
 		expect(input.attributes("disabled")).toBeDefined();
 		expect(input.attributes("required")).toBeDefined();
-		expect(input.attributes("readonly")).toBeDefined();
 	});
 
 	test("Initialer Wert wird korrekt gesetzt.", () => {

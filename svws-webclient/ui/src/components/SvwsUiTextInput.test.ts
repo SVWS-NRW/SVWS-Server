@@ -57,9 +57,14 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		expect(wrapper.find('input').html()).not.includes('required');
 	});
 
-	test('Prop readonly wird an das Input Feld übergeben', () => {
-		const wrapper = mount(SvwsUiTextInput, { props: { readonly: true } });
+	test('Prop readonly wird an das Input Feld übergeben, sofern es sich um ein Input-Feld für ein Select handelt', () => {
+		const wrapper = mount(SvwsUiTextInput, { props: { readonly: true, isSelectInput: true } });
 		expect(wrapper.find('input').attributes('readonly')).toBe("");
+	});
+
+	test("Wird mit der Klasse 'text-input--readonly' wiedergegeben, wenn readonly true ist", () => {
+		const wrapper = mount(SvwsUiTextInput, { props: { readonly: true } });
+		expect(wrapper.find(".text-input--readonly").exists()).toBe(true);
 	});
 
 	test('Mit Prop readonly = false ist der input nicht readonly', () => {

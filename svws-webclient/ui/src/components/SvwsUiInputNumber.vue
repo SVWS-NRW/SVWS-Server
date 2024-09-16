@@ -12,13 +12,12 @@
 			'col-span-2': span === '2',
 		}">
 		<label :for="id" />
-		<input ref="input" :name="id"
+		<div v-if="readonly" :class="{ 'input-number--control': !headless, 'input-number--headless': headless, 'input-number--rounded': rounded, }">
+			{{ data }}
+		</div>
+		<input v-else ref="input" :name="id"
 			v-focus
-			:class="{
-				'input-number--control': !headless,
-				'input-number--headless': headless,
-				'input-number--rounded': rounded,
-			}"
+			:class="{ 'input-number--control': !headless, 'input-number--headless': headless, 'input-number--rounded': rounded, }"
 			v-bind="{ ...$attrs }"
 			type="number"
 			:value="data"
@@ -327,6 +326,14 @@
 		@apply border-violet-500;
 	}
 
+	.input-number--readonly:hover .input-number--control {
+		@apply border-black/5 dark:border-white/5;
+	}
+
+	.input-number--readonly.input-number--filled:hover .input-number--control {
+		@apply border-black/25 dark:border-white/25;
+	}
+
 	.input-number--control--multiselect-tags {
 		@apply border-b-0 rounded-b-none pt-1 pb-0;
 	}
@@ -374,7 +381,7 @@
 		}
 	}
 
-	.input-number-component:not(.input-number--filled):not(:focus-within):not(.input-number--disabled):hover .input-number--placeholder {
+	.input-number-component:not(.input-number--filled):not(:focus-within):not(.input-number--disabled):not(.input-number--readonly):hover .input-number--placeholder {
 		@apply opacity-100;
 	}
 
