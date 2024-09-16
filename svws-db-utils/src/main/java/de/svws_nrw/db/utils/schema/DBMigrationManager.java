@@ -1903,6 +1903,19 @@ public final class DBMigrationManager {
 	private boolean checkSchueler(final List<MigrationDTOSchueler> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchueler daten = entities.get(i);
+			// Entferne Datensätze mit einer ungültigien ID
+			if (daten.ID < 1) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die ID des Schüler muss größer als 0 sein, ist aber %d.".formatted(daten.ID));
+				entities.remove(i);
+				continue;
+			}
+//			// Schüler-Einträge ohne Namen sind unzulässig
+//			if (((daten.Nachname == null) || (daten.Nachname.isBlank())) && ((daten.Vorname == null) || (daten.Vorname.isBlank()))) {
+//				logger.logLn(LogLevel.ERROR,
+//						"Entferne ungültigen Datensatz: Der Schüler mit der ID %d hat weder Vor- noch Nachnamen gesetzt.".formatted(daten.ID));
+//				entities.remove(i);
+//				continue;
+//			}
 			// Füge GU_IDs zu der Tabelle Schueler hinzu falls diese NULL sind.
 			if ((daten.GU_ID == null) || ("".equals(daten.GU_ID)))
 				daten.GU_ID = "{" + UUID.randomUUID().toString() + "}";
