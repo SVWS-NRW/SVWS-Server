@@ -1,0 +1,113 @@
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+
+import type { StundenplanPausenzeit } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+
+import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
+
+import type { RouteApp } from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
+import { routeKatalogPausenzeitDaten } from "~/router/apps/stundenplan/kataloge/pausenzeit/RouteKatalogPausenzeitDaten";
+
+import type { PausenzeitenAuswahlProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
+import type { PausenzeitenAppProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAppProps";
+import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import { RouteDataKatalogPausenzeiten } from "./RouteDataKatalogPausenzeiten";
+import { routeStundenplan } from "../../RouteStundenplan";
+import { routeStundenplanKataloge } from "../RouteStundenplanKataloge";
+
+const SPausenzeitenAuswahl = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue")
+const SPausenzeitenApp = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenApp.vue")
+
+export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenzeiten, RouteApp> {
+
+	public constructor() {
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "stundenplan.kataloge.pausenzeiten", "stundenplan/kataloge/pausenzeiten/:id(\\d+)?", SPausenzeitenApp, new RouteDataKatalogPausenzeiten());
+		super.mode = ServerMode.STABLE;
+		super.propHandler = (route) => this.getProps(route);
+		super.text = "Pausenzeiten";
+		super.setView("liste", SPausenzeitenAuswahl, (route) => this.getAuswahlProps(route));
+		super.children = [
+			routeKatalogPausenzeitDaten,
+		];
+		super.defaultChild = routeKatalogPausenzeitDaten;
+	}
+
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (isEntering)
+			await this.data.ladeListe();
+		if (to_params.id instanceof Array)
+			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
+		if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty())
+			return;
+		let eintrag: StundenplanPausenzeit | null = null;
+		if (!to_params.id && this.data.auswahl)
+			return this.getRoute(this.data.auswahl.id);
+		if (!to_params.id) {
+			eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
+			return this.getRoute(eintrag.id);
+		}
+		else {
+			const id = parseInt(to_params.id);
+			eintrag = this.data.stundenplanManager.pausenzeitGetByIdOrException(id);
+		}
+		if (eintrag !== undefined)
+			await this.data.setEintrag(eintrag);
+	}
+
+	public getRoute(id: number | undefined) : RouteLocationRaw {
+		const name = (this.data.auswahl === undefined && id === undefined) ? this.name : this.defaultChild!.name;
+		return { name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	}
+
+	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {
+		return {
+			auswahl: this.data.auswahl,
+			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
+			gotoEintrag: this.data.gotoEintrag,
+			addPausenzeiten: this.data.addPausenzeiten,
+			deleteEintraege: this.data.deleteEintraege,
+			returnToKataloge: routeStundenplanKataloge.returnToKataloge,
+			returnToStundenplan: routeStundenplan.returnToStundenplan,
+			setKatalogPausenzeitenImportJSON: this.data.setKatalogRaeumeImportJSON,
+			stundenplanManager: () => this.data.stundenplanManager,
+		};
+	}
+
+	public getProps(to: RouteLocationNormalized): PausenzeitenAppProps {
+		return {
+			auswahl: this.data.auswahl,
+			// Props für die Navigation
+			setTab: this.setTab,
+			tab: this.getTab(),
+			tabs: this.getTabs(),
+			tabsHidden: this.children_hidden().value,
+		};
+	}
+
+	private getTab(): AuswahlChildData {
+		return { name: this.data.view.name, text: this.data.view.text };
+	}
+
+	private getTabs(): AuswahlChildData[] {
+		const result: AuswahlChildData[] = [];
+		for (const c of super.children)
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				result.push({ name: c.name, text: c.text });
+		return result;
+	}
+
+	private setTab = async (value: AuswahlChildData) => {
+		if (value.name === this.data.view.name)
+			return;
+		const node = RouteNode.getNodeByName(value.name);
+		if (node === undefined)
+			throw new DeveloperNotificationException("Unbekannte Route");
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+		this.data.setView(node, this.children);
+	}
+
+}
+
+export const routeKatalogPausenzeiten = new RouteKatalogPausenzeiten();

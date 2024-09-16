@@ -13,15 +13,10 @@ import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/
 import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
-import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge"
-import { routeKatalogReligionen } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
-import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
-import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
-import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
-import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
-import { routeKatalogEinwilligungsarten } from "~/router/apps/kataloge/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeStundenplanKataloge } from "./stundenplan/kataloge/RouteStundenplanKataloge";
+import { routeKatalogAufsichtsbereiche } from "~/router/apps/stundenplan/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
+import { routeKatalogPausenzeiten } from "~/router/apps/stundenplan/kataloge/pausenzeit/RouteKatalogPausenzeiten";
+import { routeKatalogZeitraster } from "~/router/apps/stundenplan/kataloge/zeitraster/RouteKatalogZeitraster";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -30,10 +25,16 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
-import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
 import { routeError } from "../error/RouteError";
-import SApp from "~/components/SApp.vue";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
+import { routeSchuleKataloge } from "./schule/kataloge/RouteSchuleKataloge";
+import { routeKatalogEinwilligungsarten } from "./schule/kataloge/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogFoerderschwerpunkte } from "./schule/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogReligionen } from "./schule/kataloge/religionen/RouteKatalogReligionen";
+import { routeKatalogSchulen } from "./schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeKatalogVermerkarten } from "./schule/kataloge/vermerke/RouteKatalogVermerkarten";
+import { routeKatalogRaeume } from "./stundenplan/kataloge/raum/RouteKatalogRaeume";
+import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -51,7 +52,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleDatenaustausch,
-			routeKataloge,
+			routeSchuleKataloge,
 			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
@@ -69,10 +70,10 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
+			routeStundenplanKataloge,
 		];
 		super.menu = [
 			routeSchule,
-			routeKataloge,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,

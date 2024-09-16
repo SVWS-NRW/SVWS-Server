@@ -1,7 +1,10 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<span class="line-clamp-2">Schule</span>
+			<nav class="secondary-menu--breadcrumbs">
+				<a @click="returnToSchule">Schule</a>
+				<span title="Kataloge">Kataloge</span>
+			</nav>
 		</template>
 		<template #abschnitt>
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
@@ -13,9 +16,7 @@
 					<svws-ui-menu-item @click="setChild(child_item)">
 						<template #label> <span>{{ child_item.text }}</span> </template>
 					</svws-ui-menu-item>
-					<svws-ui-spacing v-if="child_item.name === 'schule.benutzergruppen'" />
-					<svws-ui-spacing v-if="child_item.name === 'schule.faecher'" />
-					<svws-ui-spacing v-if="child_item.name === 'schule.datenaustausch'" />
+					<svws-ui-spacing v-if="child_item.name === 'schule.kataloge.foerderschwerpunkte' || child_item.name === 'schule.kataloge.zeitraster'" />
 				</template>
 			</div>
 		</template>
@@ -24,8 +25,8 @@
 
 <script setup lang="ts">
 
-	import type { SchuleAuswahlProps } from './SSchuleAuswahlProps';
+	import type { KatalogeAuswahlProps } from "./SKatalogeAuswahlProps";
 
-	const props = defineProps<SchuleAuswahlProps>();
+	const props = defineProps<KatalogeAuswahlProps>();
 
 </script>

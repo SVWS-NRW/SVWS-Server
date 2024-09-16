@@ -7,9 +7,9 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { routeKatalogPausenzeiten } from "../kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogAufsichtsbereiche } from "../kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
-import { routeKatalogRaeume } from "../kataloge/raum/RouteKatalogRaeume";
+import { routeKatalogPausenzeiten } from "./kataloge/pausenzeit/RouteKatalogPausenzeiten";
+import { routeKatalogAufsichtsbereiche } from "./kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
+import { routeKatalogRaeume } from "./kataloge/raum/RouteKatalogRaeume";
 import { routeApp } from "../RouteApp";
 
 interface RouteStateStundenplan extends RouteStateInterface {

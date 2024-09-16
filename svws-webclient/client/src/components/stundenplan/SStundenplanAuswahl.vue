@@ -5,6 +5,12 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
+			<div class="secondary-menu--navigation">
+				<svws-ui-menu-item @click="gotoVorgaben">
+					<template #label> <span>Kataloge</span> </template>
+				</svws-ui-menu-item>
+				<svws-ui-spacing />
+			</div>
 			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns selectable v-model="selected">
 				<template #actions>
 					<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer" :disabled="selected.length === 0" />

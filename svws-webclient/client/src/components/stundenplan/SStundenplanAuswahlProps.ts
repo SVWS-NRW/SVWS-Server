@@ -6,6 +6,7 @@ export interface StundenplanAuswahlProps {
 	auswahl: StundenplanListeEintrag | undefined;
 	mapKatalogeintraege: () => Map<number, StundenplanListeEintrag>;
 	gotoEintrag: (religion: StundenplanListeEintrag) => Promise<void>;
+	gotoVorgaben: () => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	removeEintraege: (eintraege: StundenplanListeEintrag[]) => Promise<void>;
 	addEintrag: () => Promise<void>;

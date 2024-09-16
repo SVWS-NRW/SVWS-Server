@@ -17,11 +17,10 @@ import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen
 import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
 import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
-
+import { routeStundenplanKataloge } from "./kataloge/RouteStundenplanKataloge";
 import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeError } from "~/router/error/RouteError";
-
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -45,6 +44,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanKlasse,
 			routeStundenplanUnterrichte,
 		];
+		super.menu = [
+		]
 		super.defaultChild = routeStundenplanDaten;
 	}
 
@@ -95,6 +96,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			gotoEintrag: this.data.gotoEintrag,
+			gotoVorgaben: routeStundenplanKataloge.returnToKataloge,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			addEintrag: this.data.addEintrag,
 			removeEintraege: this.data.removeEintraege,
@@ -132,6 +134,9 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, routeStundenplan.children);
 	}
+
+	returnToStundenplan = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+
 }
 
 export const routeStundenplan = new RouteStundenplan();
