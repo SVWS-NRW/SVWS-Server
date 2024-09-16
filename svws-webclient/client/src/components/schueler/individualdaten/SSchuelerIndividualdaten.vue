@@ -9,7 +9,7 @@
 				<svws-ui-text-input placeholder="Alle Vornamen" :readonly="!hatKompetenzUpdate" :model-value="data.alleVornamen"
 					@change="alleVornamen => patch({ alleVornamen })" type="text" />
 				<svws-ui-spacing />
-				<svws-ui-select title="Geschlecht" :disabled="!hatKompetenzUpdate" v-model="geschlecht" :items="Geschlecht.values()"
+				<svws-ui-select title="Geschlecht" :readonly="!hatKompetenzUpdate" v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
 				<svws-ui-text-input placeholder="Geburtsdatum" :readonly="!hatKompetenzUpdate" :model-value="data.geburtsdatum"
 					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" :valid="istGeburtsdatumGueltig" required statistics />
@@ -22,9 +22,9 @@
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
-				<svws-ui-select title="Wohnort" :disabled="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
+				<svws-ui-select title="Wohnort" :readonly="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
 					:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
-				<svws-ui-select title="Ortsteil" :disabled="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
+				<svws-ui-select title="Ortsteil" :readonly="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
 					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 				<svws-ui-spacing />
 				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
@@ -38,13 +38,13 @@
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Staatsangehörigkeit und Konfession" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="1. Staatsangehörigkeit" :disabled="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
+				<svws-ui-select title="1. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit" autocomplete
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" required statistics />
-				<svws-ui-select title="2. Staatsangehörigkeit" :disabled="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
+				<svws-ui-select title="2. Staatsangehörigkeit" :readonly="!hatKompetenzUpdate" v-model="staatsangehoerigkeit2" autocomplete removable
 					:items="Nationalitaeten.values()" :item-text="i => i.daten.staatsangehoerigkeit"
 					:item-sort="staatsangehoerigkeitKatalogEintragSort" :item-filter="staatsangehoerigkeitKatalogEintragFilter" />
-				<svws-ui-select title="Konfession" :disabled="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i=>i.text ?? ''" required statistics />
+				<svws-ui-select title="Konfession" :readonly="!hatKompetenzUpdate" v-model="religion" :items="mapReligionen" :item-text="i=>i.text ?? ''" required statistics />
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
@@ -63,19 +63,19 @@
 			</template>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-input-number placeholder="Zuzugsjahr" :model-value="data.zuzugsjahr" @change="zuzugsjahr => patch({zuzugsjahr})"
-					:disabled="!hatMigrationshintergrund || !hatKompetenzUpdate" statistics hide-stepper :min :max />
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" statistics hide-stepper :min :max />
 				<svws-ui-select title="Geburtsland" v-model="geburtsland" :items="Nationalitaeten.values()" :item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`"
 					:item-sort="nationalitaetenKatalogEintragSort" :item-filter="nationalitaetenKatalogEintragFilter"
-					:disabled="!hatMigrationshintergrund || !hatKompetenzUpdate" autocomplete statistics />
+					:disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Verkehrssprache" v-model="verkehrsprache" autocomplete :items="Verkehrssprache.values()"
 					:item-text="i => `${i.daten.bezeichnung} (${i.daten.kuerzel})`" :item-sort="verkehrsspracheKatalogEintragSort"
-					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund || !hatKompetenzUpdate" class="col-span-full" statistics />
+					:item-filter="verkehrsspracheKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" class="col-span-full" statistics />
 				<svws-ui-select title="Geburtsland Mutter" v-model="geburtslandMutter" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund || !hatKompetenzUpdate" autocomplete statistics />
+					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 				<svws-ui-select title="Geburtsland Vater" v-model="geburtslandVater" :items="Nationalitaeten.values()"
 					:item-text="i => `${i.daten.bezeichnung} (${i.daten.iso3})`" :item-sort="nationalitaetenKatalogEintragSort"
-					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund || !hatKompetenzUpdate" autocomplete statistics />
+					:item-filter="nationalitaetenKatalogEintragFilter" :disabled="!hatMigrationshintergrund" :readonly="hatMigrationshintergrund && !hatKompetenzUpdate" autocomplete statistics />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Statusdaten" v-if="hatKompetenzAnsehen">
@@ -83,15 +83,15 @@
 				<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istDuplikat" @update:model-value="istDuplikat => patch({istDuplikat})">Ist Duplikat</svws-ui-checkbox>
 			</template>
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-select title="Status" :disabled="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
+				<svws-ui-select title="Status" :readonly="!hatKompetenzUpdate" :model-value="SchuelerStatus.data().getWertByKuerzel('' + data.status)"
 					@update:model-value="status => (status?.daten(schuljahr)?.id !== undefined) && patch({ status: status?.daten(schuljahr)?.id })"
 					:items="SchuelerStatus.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" statistics />
-				<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id" :disabled="!hatKompetenzUpdate"
+				<svws-ui-select v-if="schuelerListeManager().daten().status === SchuelerStatus.EXTERN.daten(schuljahr)?.id" :readonly="!hatKompetenzUpdate"
 					title="Stammschule" v-model="inputStammschule" :items="mapSchulen.values()" :item-text="i => i.kuerzel ?? i.schulnummer" removable />
 				<div v-else />
-				<svws-ui-select title="Fahrschüler" :disabled="!hatKompetenzUpdate" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
+				<svws-ui-select title="Fahrschüler" :readonly="!hatKompetenzUpdate" v-model="inputFahrschuelerArtID" :items="mapFahrschuelerarten"
 					:item-text="i => i.text ?? ''" removable />
-				<svws-ui-select title="Haltestelle" :disabled="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
+				<svws-ui-select title="Haltestelle" :readonly="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
 					@change="d => patch({ anmeldedatum : d ?? null })" type="date" removable />

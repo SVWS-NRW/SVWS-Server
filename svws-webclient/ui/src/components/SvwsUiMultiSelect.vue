@@ -1,9 +1,10 @@
 <template>
-	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless, 'svws-statistik': statistics, 'svws-danger': danger, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
+	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless,
+		'svws-statistik': statistics, 'svws-danger': danger, 'svws-readonly': readonly, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
 		<div v-if="!headless && selectedItemList.size" class="svws-tags">
 			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
-				<button role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
+				<button v-if="!readonly" role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
 					<span class="icon i-ri-close-line -my-0.5" />
 				</button>
 			</span>
@@ -11,8 +12,8 @@
 		<div class="flex-grow">
 			<svws-ui-text-input ref="inputEl"
 				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
-				:readonly="!autocomplete"
-				is-select-input
+				:readonly="!autocomplete || readonly"
+				:is-select-input="!readonly"
 				:placeholder="label || title"
 				:statistics
 				:headless
@@ -39,7 +40,7 @@
 				@keydown.space.prevent="onSpace"
 				@keydown.tab="onTab" />
 		</div>
-		<button role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
+		<button v-if="!readonly" role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
 			<span class="icon i-ri-expand-up-down-line my-0.5" v-if="headless" />
 			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
 		</button>
@@ -66,6 +67,7 @@
 		title?: string;
 		autocomplete?: boolean;
 		disabled?: boolean;
+		readonly?: boolean;
 		statistics?: boolean;
 		danger?: boolean;
 		items: Iterable<Item> | Map<number, Item>;
@@ -82,6 +84,7 @@
 		title: '',
 		autocomplete: false,
 		disabled: false,
+		readonly: false,
 		statistics: false,
 		danger: false,
 		itemSort: (a: Item, b: Item) => 0,
@@ -321,244 +324,254 @@
 
 
 <style lang="postcss">
-.svws-ui-multi-select {
-	&:not(.svws-headless) {
-		@apply bg-white dark:bg-black;
-		@apply rounded-md border border-black/5 dark:border-white/5;
 
-		&:hover {
-			@apply border-black/25 dark:border-white/25;
-		}
-	}
+	.svws-ui-multi-select {
+		&:not(.svws-headless) {
+			@apply bg-white dark:bg-black;
+			@apply rounded-md border border-black/5 dark:border-white/5;
 
-	.text-input--control {
-		@apply bg-transparent border-none;
-	}
-
-  &.svws-ui-select .svws-dropdown-icon {
-    height: calc(100% - 0.5rem);
-  }
-
-  &.svws-open.svws-autocomplete .svws-tags {
-	@apply mb-[2rem];
-  }
-
-  &:not(.svws-headless) {
-    @apply min-h-[2.25rem];
-
-    .text-input-component {
-      @apply absolute top-0 left-0 w-full h-full cursor-pointer;
-    }
-
-	&.svws-open.svws-autocomplete {
-		.text-input--control {
-			@apply h-[2.25rem] mt-auto pl-3;
-		}
-	}
-
-	&:not(.svws-open) {
-		.text-input--control {
-			@apply hidden;
-		}
-	}
-  }
-
-  .svws-tags {
-    @apply relative z-10 flex flex-wrap gap-0.5 pl-1 pt-2 pb-1 pr-7 pointer-events-none;
-
-    .svws-remove {
-      @apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
 			&:hover {
-				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				@apply border-black/25 dark:border-white/25;
 			}
-    }
-  }
+		}
 
-  .svws-tag {
-    @apply inline-flex items-center gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
-  }
+		.text-input--control {
+			@apply bg-transparent border-none;
+		}
 
-  &.svws-disabled {
-    .svws-tags {
-      @apply opacity-25;
+		&.svws-ui-select .svws-dropdown-icon {
+			height: calc(100% - 0.5rem);
+		}
 
-      .svws-remove {
-        @apply invisible -mr-3;
-      }
-    }
-  }
-}
+		&.svws-open.svws-autocomplete .svws-tags {
+			@apply mb-[2rem];
+		}
+
+		&:not(.svws-headless) {
+			@apply min-h-[2.25rem];
+
+			.text-input-component {
+				@apply absolute top-0 left-0 w-full h-full cursor-pointer;
+			}
+
+		&.svws-open.svws-autocomplete {
+			.text-input--control {
+				@apply h-[2.25rem] mt-auto pl-3;
+			}
+		}
+
+		&:not(.svws-open) {
+			.text-input--control {
+				@apply hidden;
+			}
+		}
+		}
+
+		.svws-tags {
+			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pt-2 pb-1 pr-7 pointer-events-none;
+
+			.svws-remove {
+				@apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
+				&:hover {
+					-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+					filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+				}
+			}
+		}
+
+		.svws-tag {
+			@apply inline-flex items-center gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
+		}
+
+		&.svws-disabled {
+			.svws-tags {
+				@apply opacity-25;
+
+				.svws-remove {
+					@apply invisible -mr-3;
+				}
+			}
+		}
+	}
 </style>
 
 <!--TODO: Duplicate CSS und JS Functions (identisch zu SvwsUiSelect) entfernen-->
 <style lang="postcss">
 
-.svws-ui-select {
-  @apply relative w-full cursor-pointer flex;
+	.svws-ui-select {
+		@apply relative w-full cursor-pointer flex;
 
-  .svws-ui-table & {
-    @apply p-0;
-  }
+		.svws-ui-table & {
+			@apply p-0;
+		}
 
-  .svws-dropdown-icon,
-  .svws-remove {
-    @apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded;
+		.svws-dropdown-icon,
+		.svws-remove {
+			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded;
 
-    svg {
-      @apply my-auto;
-    }
-  }
+			svg {
+				@apply my-auto;
+			}
+		}
 
-  .svws-dropdown-icon {
-    @apply pointer-events-none right-1 bg-light dark:bg-white/5 border border-black/10 dark:border-white/10;
-  }
+		.svws-dropdown-icon {
+			@apply pointer-events-none right-1 bg-light dark:bg-white/5 border border-black/10 dark:border-white/10;
+		}
 
-  &.svws-statistik {
-    .svws-dropdown-icon {
-      @apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
-    }
+		&.svws-statistik {
+			.svws-dropdown-icon {
+				@apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+			}
 
-    .text-input-component {
-      &:hover,
-      &:focus-visible,
-      &:focus-within {
-        ~ .svws-dropdown-icon {
-          @apply bg-violet-500/10 dark:bg-violet-500/20;
-        }
-      }
-    }
-  }
+			.text-input-component {
+				&:hover,
+				&:focus-visible,
+				&:focus-within {
+					~ .svws-dropdown-icon {
+						@apply bg-violet-500/10 dark:bg-violet-500/20;
+					}
+				}
+			}
+		}
 
-  .svws-remove {
-    @apply right-7 text-black/50 dark:text-white/50;
+		.svws-remove {
+			@apply right-7 text-black/50 dark:text-white/50;
 
-    &:hover {
-      @apply text-error;
-    }
+			&:hover {
+				@apply text-error;
+			}
 
-    &:focus,
-    &:focus-visible {
-      @apply outline-none;
-    }
+			&:focus,
+			&:focus-visible {
+				@apply outline-none;
+			}
 
-    &:focus-visible {
-      @apply ring ring-error/25 bg-error text-white dark:text-white;
-    }
-  }
+			&:focus-visible {
+				@apply ring ring-error/25 bg-error text-white dark:text-white;
+			}
+		}
 
-  .text-input-component {
-    &:hover,
-    &:focus-visible,
-    &:focus-within {
-      ~ .svws-dropdown-icon {
-        @apply bg-black/10 dark:bg-white/10;
-      }
-    }
-  }
+		.text-input-component {
+			&:hover,
+			&:focus-visible,
+			&:focus-within {
+				~ .svws-dropdown-icon {
+					@apply bg-black/10 dark:bg-white/10;
+				}
+			}
+		}
 
-  &.svws-open {
-    @apply z-50;
-  }
+		&.svws-open {
+			@apply z-50;
+		}
 
-  .text-input--control,
-  .text-input--headless {
-    @apply text-ellipsis break-all cursor-pointer;
-  }
+		&:not(.svws-readonly) {
+			.text-input--control,
+			.text-input--headless {
+				@apply text-ellipsis break-all cursor-pointer;
+			}
+		}
 
-  .text-input--control {
-    @apply pr-8;
-  }
+		&.svws-readonly {
+			.text-input--control,
+			.text-input--headless {
+				@apply text-ellipsis break-all cursor-default;
+			}
+		}
 
-  .text-input--headless {
-    @apply pl-4;
-  }
+		.text-input--control {
+			@apply pr-8;
+		}
 
-  &.svws-removable&.svws-has-value {
-    .text-input--control {
-      @apply pr-12;
-    }
+		.text-input--headless {
+			@apply pl-4;
+		}
 
-    .text-input--headless {
-      @apply pl-[2.1rem];
-    }
-  }
+		&.svws-removable&.svws-has-value {
+			.text-input--control {
+				@apply pr-12;
+			}
 
-  &.svws-headless {
-    .svws-dropdown-icon,
-    .svws-remove {
-      @apply right-auto h-5 top-0;
-    }
+			.text-input--headless {
+				@apply pl-[2.1rem];
+			}
+		}
 
-    .svws-dropdown-icon {
-      @apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
-    }
+		&.svws-headless {
+			.svws-dropdown-icon,
+			.svws-remove {
+				@apply right-auto h-5 top-0;
+			}
 
-    .svws-remove {
-      @apply right-auto left-4 inline-flex items-center justify-center w-4;
+			.svws-dropdown-icon {
+				@apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
+			}
 
-      svg {
-        @apply -m-px;
-      }
-    }
+			.svws-remove {
+				@apply right-auto left-4 inline-flex items-center justify-center w-4;
 
-    .text-input-component {
-      @apply pr-1;
+				svg {
+					@apply -m-px;
+				}
+			}
 
-      &:hover,
-      &:focus-visible,
-      &:focus-within {
-        ~ .svws-dropdown-icon {
-          @apply text-black dark:text-white;
-        }
-      }
-    }
+			.text-input-component {
+				@apply pr-1;
 
-    &:not(.svws-open) {
-      .text-input-component {
-        &:focus-visible {
-          ~ .svws-dropdown-icon {
-            @apply ring-2 ring-black/25 dark:ring-white/25;
-          }
-        }
-      }
-    }
+				&:hover,
+				&:focus-visible,
+				&:focus-within {
+					~ .svws-dropdown-icon {
+						@apply text-black dark:text-white;
+					}
+				}
+			}
 
-    &.svws-statistik {
-      .svws-dropdown-icon {
-        @apply text-violet-500/75 dark:text-violet-500/75;
-      }
+			&:not(.svws-open) {
+				.text-input-component {
+					&:focus-visible {
+						~ .svws-dropdown-icon {
+							@apply ring-2 ring-black/25 dark:ring-white/25;
+						}
+					}
+				}
+			}
 
-      .text-input-component {
-        &:hover,
-        &:focus-visible,
-        &:focus-within {
-          ~ .svws-dropdown-icon {
-            @apply text-violet-500 dark:text-violet-500;
-          }
-        }
+			&.svws-statistik {
+				.svws-dropdown-icon {
+					@apply text-violet-500/75 dark:text-violet-500/75;
+				}
 
-        &:focus-visible {
-          ~ .svws-dropdown-icon {
-            @apply ring-violet-500/25 dark:ring-violet-500/25;
-          }
-        }
-      }
-    }
-  }
+				.text-input-component {
+					&:hover,
+					&:focus-visible,
+					&:focus-within {
+						~ .svws-dropdown-icon {
+							@apply text-violet-500 dark:text-violet-500;
+						}
+					}
 
-  &.svws-disabled {
-    @apply cursor-default pointer-events-none;
+					&:focus-visible {
+						~ .svws-dropdown-icon {
+							@apply ring-violet-500/25 dark:ring-violet-500/25;
+						}
+					}
+				}
+			}
+		}
 
-    .text-input--headless {
-      @apply opacity-25;
-    }
+		&.svws-disabled {
+			@apply cursor-default pointer-events-none;
 
-    .svws-dropdown-icon,
-    .svws-remove {
-      @apply opacity-25;
-    }
-  }
-}
+			.text-input--headless {
+				@apply opacity-25;
+			}
+
+			.svws-dropdown-icon,
+			.svws-remove {
+				@apply opacity-25;
+			}
+		}
+	}
 
 </style>

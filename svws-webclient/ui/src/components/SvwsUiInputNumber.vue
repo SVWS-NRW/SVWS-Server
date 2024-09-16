@@ -420,7 +420,7 @@
 	}
 
 	.input-number--disabled {
-		@apply cursor-not-allowed;
+		@apply cursor-default;
 
 		.input-number--placeholder {
 			@apply text-black/25 dark:text-white/25;

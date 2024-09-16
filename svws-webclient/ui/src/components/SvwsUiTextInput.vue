@@ -481,7 +481,7 @@
 	}
 
 	.text-input--disabled {
-		@apply cursor-not-allowed;
+		@apply cursor-default;
 
 		.text-input--placeholder {
 			@apply text-black/25 dark:text-white/25;
