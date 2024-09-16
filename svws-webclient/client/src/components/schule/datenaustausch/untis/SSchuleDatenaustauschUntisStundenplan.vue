@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import type { SchuleDatenaustauschUntisStundenplanProps } from './SSchuleDatenaustauschUntisStundenplanProps';
 	import type { List, Schuljahresabschnitt} from "@core";
 	import { StundenplanListeEintragMinimal } from "@core";
@@ -45,8 +45,12 @@
 	const props = defineProps<SchuleDatenaustauschUntisStundenplanProps>();
 
 	const bezeichnung = ref<string>(`Import ${new Date().toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin', hour: 'numeric', minute: 'numeric'})}`);
-	const gueltigAb = ref<string>(getGueltigAb(props.schuljahresabschnittsauswahl().aktuell));
-	const abschnitt = ref<Schuljahresabschnitt>(props.schuljahresabschnittsauswahl().aktuell);
+	const gueltigAb = ref<string | null>(null);
+
+	onMounted(() => {
+		gueltigAb.value = getGueltigAb(props.schuljahresabschnittsauswahl().aktuell);
+	});
+
 	const file = ref<File | null>(null);
 	const ignoreMissing = ref<boolean>(true);
 
@@ -73,8 +77,8 @@
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
 		entry.bezeichnung = bezeichnung.value;
-		entry.idSchuljahresabschnitt = abschnitt.value.id;
-		entry.gueltigAb = gueltigAb.value;
+		entry.idSchuljahresabschnitt = props.schuljahresabschnittsauswahl().aktuell.id;
+		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(props.schuljahresabschnittsauswahl().aktuell);
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", file.value);
@@ -82,9 +86,8 @@
 		logs.value = result.log;
 		status.value = result.success;
 		loading.value = false;
-		gueltigAb.value = '';
+		gueltigAb.value = null;
 		bezeichnung.value = '';
-		abschnitt.value = props.schuljahresabschnittsauswahl().aktuell;
 		file.value = null;
 	}
 
