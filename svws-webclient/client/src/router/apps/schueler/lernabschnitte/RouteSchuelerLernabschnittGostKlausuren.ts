@@ -28,18 +28,27 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 		super.children = [
 		];
 		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array) || (params.abschnitt === undefined) || (params.abschnitt instanceof Array) || (params.wechselNr === undefined) || (params.wechselNr instanceof Array))
-				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+			return this.checkHidden(params);
+		}
+	}
+
+	protected checkHidden(to_params?: RouteParams) {
+		try {
+			const { id, abschnitt, wechselNr } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id", "abschnitt", "wechselNr"]) : {id: undefined, abschnitt: undefined, wechselNr: undefined};
+			if ((id === undefined) || (abschnitt === undefined) || (wechselNr === undefined))
+				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
 			if (routeSchueler.data.schuelerListeManager.hasDaten()) {
 				const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
 				if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
-					&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
-						|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
+					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
 					if (routeSchuelerLernabschnitte.data.hatGymOb)
 						return false;
 				}
 			}
-			return routeSchuelerLernabschnittAllgemein.getRoute(parseInt(params.id), parseInt(params.abschnitt), parseInt(params.wechselNr));
+			return routeSchuelerLernabschnittAllgemein.getRoute(id, abschnitt, wechselNr);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 

@@ -60,10 +60,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			await this.data.reload(idSchuljahresabschnitt, id, isEntering);
-
 			if (!this.data.schuelerListeManager.hasDaten()) {
 				if (id === undefined) {
 					const listFiltered = this.data.schuelerListeManager.filtered();
@@ -73,10 +71,8 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 				}
 				return this.getRoute();
 			}
-
 			if (to.name === this.name)
 				return this.getChildRoute(this.data.schuelerListeManager.daten().id, from);
-
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))

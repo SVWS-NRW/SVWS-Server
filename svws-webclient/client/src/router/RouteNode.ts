@@ -641,4 +641,26 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		return res;
 	}
 
+	/**
+	 * Versucht bei den angegebenen Parametern den Parameter mit dem
+	 * angegebenen Namen zu bestimmen und als String-Wert zu interpretieren.
+	 *
+	 * @param params   die Parameter der Route
+	 * @param names[]  der Namen der Parameter
+	 *
+	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
+	 */
+	protected static getStringParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], string | undefined> {
+		const res: Record<string, string | undefined> = {};
+		for (const name of names) {
+			const value = params[name];
+			if (value instanceof Array)
+				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
+			else if (!value || value.toString().trim().length === 0)
+				res[name] = undefined;
+			else res[name] = value.toString();
+		}
+		return res;
+	}
+
 }

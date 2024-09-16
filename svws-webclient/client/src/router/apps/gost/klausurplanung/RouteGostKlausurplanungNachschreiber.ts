@@ -27,18 +27,23 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? undefined : Number(params.abiturjahr);
-		return (abiturjahr === undefined) || (abiturjahr === -1);
+		try {
+			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
+			return ((abiturjahr === undefined) || (abiturjahr === -1))
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
-		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein"));
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein."));
+		try {
+			const { abiturjahr, halbjahr: halbjahrId } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr"]);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			if ((abiturjahr === undefined) || (halbjahr === null))
+				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+		} catch(e) {
+			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+		}
 	}
 
 	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {

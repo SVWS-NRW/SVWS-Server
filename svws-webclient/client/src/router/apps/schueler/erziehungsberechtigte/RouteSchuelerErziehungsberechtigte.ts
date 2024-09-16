@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import type { DeveloperNotificationException} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -22,12 +23,14 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		const id = to_params.id === undefined ? undefined : parseInt(to_params.id);
-		await this.data.setEintrag(id);
+		try {
+			if (isEntering)
+				await this.data.ladeListe();
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			await this.data.setEintrag(id);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

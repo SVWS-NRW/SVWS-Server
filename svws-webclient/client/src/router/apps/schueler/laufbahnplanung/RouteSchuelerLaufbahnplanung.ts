@@ -25,8 +25,16 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Laufbahnplanung";
 		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
+			return this.checkHidden(params);
+		}
+		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
+		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
+		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
+	}
+
+	protected checkHidden(params?: RouteParams) {
+		try {
+			const { id } = (params !== undefined) ? RouteNode.getIntParams(params, ["id"]) : {id: undefined};
 			if (!routeSchueler.data.schuelerListeManager.hasDaten())
 				return false;
 			const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
@@ -34,38 +42,39 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr))))
 				return false;
-			return routeSchueler.getRoute(parseInt(params.id));
+			return routeSchueler.getRoute(id);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		api.config.addElements([new ConfigElement("app.gost.belegpruefungsart", "user", "gesamt")]);
-		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.modus", "user", "normal")]);
-		api.config.addElements([new ConfigElement("app.schueler.laufbahnplanung.faecher.anzeigen", "user", "alle")]);
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering) {
+		try {
+			if (isEntering) {
 			// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
-			if (from?.checkSuccessorOf('gost')) {
-				for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
-					if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
-						routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
-						await routeSchueler.data.setFilter();
-						break;
-					}
+				if (from?.checkSuccessorOf('gost')) {
+					for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
+						if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
+							routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
+							await routeSchueler.data.setFilter();
+							break;
+						}
+				}
 			}
-		}
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (this.parent === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (to_params.id === undefined) {
-			await this.data.ladeDaten(null);
-		} else {
-			const id = parseInt(to_params.id);
-			try {
-				await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
-			} catch(error) {
-				return routeSchueler.getRoute(id);
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (this.parent === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			if (id === undefined) {
+				await this.data.ladeDaten(null);
+			} else {
+				try {
+					await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
+				} catch(error) {
+					return routeSchueler.getRoute(id);
+				}
 			}
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 

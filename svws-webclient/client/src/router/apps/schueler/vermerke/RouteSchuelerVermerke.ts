@@ -21,22 +21,32 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerke";
 		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute(parseInt(params.id));
+			return this.checkHidden(params);
 		};
 	}
 
+	protected checkHidden(to_params?: RouteParams) {
+		try {
+			const { id } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id"]) : {id: undefined};
+			if (id === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
+			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute(id);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
+	}
+
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (this.parent === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (to_params.id === undefined) {
-			await this.data.ladeDaten(null);
-		} else {
-			const id = parseInt(to_params.id);
-			await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
+		try {
+			if (this.parent === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (id === undefined)
+				await this.data.ladeDaten(null);
+			else
+				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 

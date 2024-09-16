@@ -22,6 +22,7 @@ import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -62,25 +63,27 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
-		if (to_params.abiturjahr instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		let cur: RouteNode<any, any> = to;
-		while (cur.parent !== this)
-			cur = cur.parent;
-		if (cur !== this.data.view)
-			this.data.setView(cur, this.children);
-		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined)
-			return this.getRoute();
-		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
-		await this.data.setAbiturjahrgang(eintrag, isEntering);
-		if (this.name !== to.name)
-			return;
-		const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
-			return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: String(abiturjahr) }};
+		try {
+			if (isEntering)
+				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
+			let cur: RouteNode<any, any> = to;
+			while (cur.parent !== this)
+				cur = cur.parent;
+			if (cur !== this.data.view)
+				this.data.setView(cur, this.children);
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (abiturjahr === undefined)
+				return this.getRoute();
+			const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
+			await this.data.setAbiturjahrgang(eintrag, isEntering);
+			if (this.name !== to.name)
+				return;
+			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+			if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
+				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -90,9 +93,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
+		if (redirect.hidden({ abiturjahr: (abiturjahr || -1).toString() }))
 			redirect = this.defaultChild!;
-		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr || -1 }};
+		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: (abiturjahr || -1) }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {

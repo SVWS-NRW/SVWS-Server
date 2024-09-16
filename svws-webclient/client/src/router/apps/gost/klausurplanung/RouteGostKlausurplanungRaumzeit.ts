@@ -8,6 +8,7 @@ import type { GostKlausurplanungRaumzeitProps } from "~/components/gost/klausurp
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
 
 const SGostKlausurplanungRaumzeit = () => import("~/components/gost/klausurplanung/SGostKlausurplanungRaumzeit.vue");
 
@@ -38,23 +39,23 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// Prüfe die Parameter zunächst allgemein
-		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
-		const idTermin = !to_params.idtermin ? null : parseInt(to_params.idtermin);
-		const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
-		if (idTermin === null && !terminList.isEmpty()) {
-			const termin = routeGostKlausurplanung.data.terminSelected.value !== undefined && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
-			return this.getRoute(abiturjahr, halbjahr.id, termin.id);
-		}
-		if (idTermin !== null) {
-			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idTermin);
-			// routeGostKlausurplanung.data.terminSelected.value = termin;
-			await routeGostKlausurplanung.data.setRaumTermin(termin);
+		try {
+			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			if ((abiturjahr === undefined) || (halbjahr === null))
+				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
+			const terminList = routeGostKlausurplanung.data.manager.terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(routeGostKlausurplanung.data.jahrgangsdaten.abiturjahr, routeGostKlausurplanung.data.halbjahr, routeGostKlausurplanung.data.quartalsauswahl.value);
+			if ((idtermin === undefined) && !terminList.isEmpty()) {
+				const termin = (routeGostKlausurplanung.data.terminSelected.value !== undefined) && terminList.contains(routeGostKlausurplanung.data.terminSelected.value) ? routeGostKlausurplanung.data.terminSelected.value : terminList.getFirst();
+				return this.getRoute(abiturjahr, halbjahr.id, termin.id);
+			}
+			if (idtermin !== undefined) {
+				const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idtermin);
+				// routeGostKlausurplanung.data.terminSelected.value = termin;
+				await routeGostKlausurplanung.data.setRaumTermin(termin);
+			}
+		} catch (e) {
+			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
 

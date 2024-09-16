@@ -11,6 +11,7 @@ import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherPro
 import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
 
 
 const SGostFaecher = () => import("~/components/gost/faecher/SGostFaecher.vue");
@@ -28,21 +29,25 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined)
-			return routeGost.getRoute();
-		return true;
+		try {
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (abiturjahr === undefined)
+				return routeGost.getRoute();
+			return true;
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.parent === undefined)
-			throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-		const id = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		await this.data.setEintrag(id);
+		try {
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (this.parent === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			await this.data.setEintrag(abiturjahr);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public getRoute(abiturjahr: number) : RouteLocationRaw {

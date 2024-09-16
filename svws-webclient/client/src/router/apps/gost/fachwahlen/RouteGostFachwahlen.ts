@@ -21,6 +21,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -65,16 +66,18 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined || abiturjahr === -1) {
-			const [ jahrgang ] = routeGost.data.mapAbiturjahrgaenge.values();
-			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr }};
+		try {
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (abiturjahr === undefined || abiturjahr === -1) {
+				const [ jahrgang ] = routeGost.data.mapAbiturjahrgaenge.values();
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr }};
+			}
+			await this.data.setEintrag(abiturjahr);
+			if (to.name === this.name)
+				return this.defaultChild!.getRoute(abiturjahr);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		await this.data.setEintrag(abiturjahr);
-		if (to.name === this.name)
-			return this.defaultChild!.getRoute(abiturjahr);
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {

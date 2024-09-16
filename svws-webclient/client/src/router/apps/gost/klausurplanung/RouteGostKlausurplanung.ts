@@ -67,10 +67,14 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public checkHidden(params?: RouteParams) {
-		const abiturjahr = params?.abiturjahr === undefined ? null : Number(params.abiturjahr);
-		if (abiturjahr === null)
-			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr }};
-		return false;
+		try {
+			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
+			if ((abiturjahr === null) || (abiturjahr === -1))
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
+			return false;
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
@@ -86,18 +90,13 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			// Prüfe die Parameter zunächst allgemein
-			if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array || to_params.idtermin instanceof Array || to_params.kw instanceof Array)
-				throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-			const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-			const halbjahr = !to_params.halbjahr ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-			const idtermin = !to_params.idtermin ? undefined : parseInt(to_params.idtermin);
-			const kw = !to_params.kw ? undefined : parseInt(to_params.kw);
+			const { abiturjahr, halbjahr: halbjahrId, idtermin, kw } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin", "kw"]);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
 			// Aktualisiere das Halbjahr
-			if (halbjahr === undefined) {
+			if (halbjahr === null) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
 				if (hj === null) // In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
@@ -117,7 +116,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw, idtermin);
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 			}
-		} catch(e: unknown) {
+		} catch(e) {
 			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
 		}
 	}
