@@ -40,8 +40,8 @@ public final class DataStundenplanKalenderwochenzuordnung
 	}
 
 	@Override
-	protected Long getID(final Map<String, Object> attributes) {
-		return (Long) attributes.get("id");
+	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), true);
 	}
 
 
