@@ -2,37 +2,37 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input v-autofocus placeholder="Nachname" :disabled="!hatKompetenzUpdate" :model-value="data.nachname"
+				<svws-ui-text-input v-autofocus placeholder="Nachname" :readonly="!hatKompetenzUpdate" :model-value="data.nachname"
 					@change="nachname => patch({ nachname })" type="text" />
-				<svws-ui-text-input placeholder="Rufname" :disabled="!hatKompetenzUpdate" :model-value="data.vorname"
+				<svws-ui-text-input placeholder="Rufname" :readonly="!hatKompetenzUpdate" :model-value="data.vorname"
 					@change="vorname => patch({ vorname })" type="text" />
-				<svws-ui-text-input placeholder="Alle Vornamen" :disabled="!hatKompetenzUpdate" :model-value="data.alleVornamen"
+				<svws-ui-text-input placeholder="Alle Vornamen" :readonly="!hatKompetenzUpdate" :model-value="data.alleVornamen"
 					@change="alleVornamen => patch({ alleVornamen })" type="text" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :disabled="!hatKompetenzUpdate" v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
-				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatKompetenzUpdate" :model-value="data.geburtsdatum"
+				<svws-ui-text-input placeholder="Geburtsdatum" :readonly="!hatKompetenzUpdate" :model-value="data.geburtsdatum"
 					@change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" :valid="istGeburtsdatumGueltig" required statistics />
-				<svws-ui-text-input placeholder="Geburtsort" :disabled="!hatKompetenzUpdate" :model-value="data.geburtsort"
+				<svws-ui-text-input placeholder="Geburtsort" :readonly="!hatKompetenzUpdate" :model-value="data.geburtsort"
 					@change="geburtsort => patch({ geburtsort })" type="text" />
-				<svws-ui-text-input placeholder="Geburtsname" :disabled="!hatKompetenzUpdate" :model-value="data.geburtsname"
+				<svws-ui-text-input placeholder="Geburtsname" :readonly="!hatKompetenzUpdate" :model-value="data.geburtsname"
 					@change="geburtsname => patch({ geburtsname })" type="text" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
 		<svws-ui-content-card title="Wohnort und Kontaktdaten" v-if="hatKompetenzAnsehen">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Straße" :disabled="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
+				<svws-ui-text-input placeholder="Straße" :readonly="!hatKompetenzUpdate" :model-value="strasse" @change="patchStrasse" type="text" span="full" />
 				<svws-ui-select title="Wohnort" :disabled="!hatKompetenzUpdate" v-model="wohnortID" :items="mapOrte" :item-filter="orte_filter"
 					:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete statistics />
 				<svws-ui-select title="Ortsteil" :disabled="!hatKompetenzUpdate" v-model="ortsteilID" :items="ortsteile"
 					:item-text="(i: OrtsteilKatalogEintrag) => i.ortsteil ?? ''" :item-sort="ortsteilSort" :item-filter="ortsteilFilter" removable />
 				<svws-ui-spacing />
-				<svws-ui-text-input placeholder="Telefon" :disabled="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
-				<svws-ui-text-input placeholder="Mobil oder Fax" :disabled="!hatKompetenzUpdate" :model-value="data.telefonMobil"
+				<svws-ui-text-input placeholder="Telefon" :readonly="!hatKompetenzUpdate" :model-value="data.telefon" @change="telefon => patch({ telefon })" type="tel" />
+				<svws-ui-text-input placeholder="Mobil oder Fax" :readonly="!hatKompetenzUpdate" :model-value="data.telefonMobil"
 					@change="telefonMobil => patch({ telefonMobil })" type="tel" />
-				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :disabled="!hatKompetenzUpdate" :model-value="data.emailPrivat"
+				<svws-ui-text-input placeholder="Private E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailPrivat"
 					@change="emailPrivat => patch({ emailPrivat })" type="email" verify-email />
-				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :disabled="!hatKompetenzUpdate" :model-value="data.emailSchule"
+				<svws-ui-text-input placeholder="Schulische E-Mail-Adresse" :readonly="!hatKompetenzUpdate" :model-value="data.emailSchule"
 					@change="emailSchule => patch({ emailSchule })" type="email" verify-email />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -48,9 +48,9 @@
 				<div class="flex items-center pl-2">
 					<svws-ui-checkbox v-model="druckeKonfessionAufZeugnisse" :disabled="!hatKompetenzUpdate">Konfession aufs Zeugnis</svws-ui-checkbox>
 				</div>
-				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :disabled="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
+				<svws-ui-text-input placeholder="Abmeldung vom Religionsunterricht" :readonly="!hatKompetenzUpdate" :model-value="data.religionabmeldung"
 					@change="religionabmeldung => patch({religionabmeldung})" type="date" />
-				<svws-ui-text-input placeholder="Wiederanmeldung" :disabled="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
+				<svws-ui-text-input placeholder="Wiederanmeldung" :readonly="!hatKompetenzUpdate" :model-value="data.religionanmeldung"
 					@change="religionanmeldung => patch({religionanmeldung})" type="date" />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
@@ -93,9 +93,9 @@
 					:item-text="i => i.text ?? ''" removable />
 				<svws-ui-select title="Haltestelle" :disabled="!hatKompetenzUpdate" v-model="inputHaltestelleID" :items="mapHaltestellen"
 					:item-text="i => i.text ?? ''" removable />
-				<svws-ui-text-input placeholder="Anmeldedatum" :disabled="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
+				<svws-ui-text-input placeholder="Anmeldedatum" :readonly="!hatKompetenzUpdate" :model-value="data.anmeldedatum"
 					@change="d => patch({ anmeldedatum : d ?? null })" type="date" removable />
-				<svws-ui-text-input placeholder="Aufnahmedatum" :disabled="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
+				<svws-ui-text-input placeholder="Aufnahmedatum" :readonly="!hatKompetenzUpdate" :model-value="data.aufnahmedatum"
 					@change="aufnahmedatum => patch({aufnahmedatum})" type="date" statistics />
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">

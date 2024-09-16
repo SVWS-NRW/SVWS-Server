@@ -12,6 +12,7 @@
 			<svws-ui-text-input ref="inputEl"
 				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
 				:readonly="!autocomplete"
+				is-select-input
 				:placeholder="label || title"
 				:statistics
 				:headless

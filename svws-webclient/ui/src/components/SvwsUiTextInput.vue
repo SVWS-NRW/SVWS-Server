@@ -5,6 +5,7 @@
 			'text-input--invalid': (isValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
+			'text-input--select': isSelectInput,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
 			'text-input--date': type === 'date',
@@ -14,14 +15,12 @@
 		}">
 		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
 		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
-		<input ref="input"
+		<div v-if="readonly && !isSelectInput" :class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }">
+			{{ data }}
+		</div>
+		<input v-else ref="input"
 			v-focus
-			:class="{
-				'text-input--control': !headless,
-				'text-input--headless': headless,
-				'text-input--rounded': rounded,
-				'text-input--prefix': url,
-			}"
+			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
 			:type="type"
 			:value="data"
@@ -84,6 +83,7 @@
 		required?: boolean;
 		readonly?: boolean;
 		headless?: boolean;
+		isSelectInput? : boolean;
 		focus?: boolean;
 		rounded?: boolean;
 		url?: boolean;
@@ -100,6 +100,7 @@
 		required: false,
 		readonly: false,
 		headless: false,
+		isSelectInput: false,
 		focus: false,
 		rounded: false,
 		url: false,
@@ -362,6 +363,14 @@
 		@apply border-violet-500;
 	}
 
+	.text-input--readonly:not(.text-input--select):hover .text-input--control {
+		@apply border-black/5 dark:border-white/5;
+	}
+
+	.text-input--readonly.text-input--filled:not(.text-input--select):hover .text-input--control {
+		@apply border-black/25 dark:border-white/25;
+	}
+
 	.text-input--control--multiselect-tags {
 		@apply border-b-0 rounded-b-none pt-1 pb-0;
 	}
@@ -433,7 +442,7 @@
 		}
 	}
 
-	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {
+	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):not(.text-input--readonly):hover .text-input--placeholder {
 		@apply opacity-100;
 	}
 

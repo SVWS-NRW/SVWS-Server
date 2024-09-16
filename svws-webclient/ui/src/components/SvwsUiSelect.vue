@@ -3,6 +3,7 @@
 		<svws-ui-text-input ref="inputEl"
 			:model-value="dynModelValue"
 			:readonly="!autocomplete"
+			is-select-input
 			:placeholder="label || title"
 			:statistics="statistics"
 			:headless="headless"
