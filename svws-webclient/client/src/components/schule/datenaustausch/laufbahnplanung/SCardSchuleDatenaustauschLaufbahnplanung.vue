@@ -2,7 +2,7 @@
 	<div class="content-card overflow-auto h-full w-full">
 		<div class="content-card--content">
 			<div class="flex flex-col items-start gap-3">
-				<div> <svws-ui-checkbox v-model="replaceSchueler">Laufbahndaten von Schüler ersetzen</svws-ui-checkbox> </div>
+				<div> <svws-ui-checkbox v-model="replaceSchueler">Laufbahndaten von Schülern ersetzen</svws-ui-checkbox> </div>
 				<div>
 					<svws-ui-checkbox v-model="replaceJahrgang" :disabled="!replaceSchueler">
 						<svws-ui-tooltip>
