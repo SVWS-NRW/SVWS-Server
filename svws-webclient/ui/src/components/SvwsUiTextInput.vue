@@ -32,16 +32,13 @@
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
-		<span v-if="placeholder && !headless && type !== 'search'"
-			:id="labelId"
-			class="text-input--placeholder"
-			:class="{
-				'text-input--placeholder--required': required,
-				'text-input--placeholder--prefix': url
-			}">
+		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
+			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
 			<span class="icon-xs i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">
+				{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}
+			</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
@@ -54,7 +51,7 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="removable && type === 'date'" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
+		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
@@ -247,7 +244,7 @@
 		}
 	}
 
-	.text-input-component {
+	.text-input-component:not(.text-input--readonly) {
 		&:hover,
 		&:focus-within {
 			.svws-icon.icon {
