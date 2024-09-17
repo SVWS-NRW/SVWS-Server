@@ -9,6 +9,10 @@ icon: 'carbon:bookmark'
 # Changelog
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
+## ab 0.9.3
+* Die Tabelle bekommt ein neues Prop `unselectable`. Hier wird als Set eine Liste aller Items übergeben, die sich nicht auswählen lassen, z.B. Vorgaben.
+* ebenfalls gibt es neu `allowArrowKeySelection`. Das erlaubt die Auswahl der Items per Tastatur.
+* Die Checkbox stellt nun per `defineExposed` auch den `content`und das `input` zur Verfügung, analog zum TextInput.
 ## ab 0.9.2
 * Das Text-Input unterstützt keinen Typ number mehr und verlangt als Input den Typ string | null. Für Zahleneingabefelder ist als Ersatz der Number-Input zu nehmen.
 ## ab 0.8.16

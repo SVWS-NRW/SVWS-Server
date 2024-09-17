@@ -112,9 +112,12 @@
 							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
-								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`" >
-									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
-								</div>
+								<template v-if="selectable">
+									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
+										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
+									</div>
+									<div v-else class="svws-ui-td svws-align-center" role="cell" />
+								</template>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
 										:class="[
@@ -174,43 +177,44 @@
 
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
+	import { computed, toRef, toRaw, ref, watch, nextTick } from "vue";
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
-	import { computed, useAttrs, toRef, toRaw, ref, watch, nextTick } from "vue";
 
 	type DataTableColumnSource = DataTableColumn | string
 
 	type DataTableColumnInternal = {
-		[key: string]: unknown
-		source: DataTableColumnSource
-		initialIndex: number
-		key: string
-		name: string
-		label: string
-		sortable: boolean
-		span: number
-		fixedWidth: string | number
-		minWidth: string | number
-		align: 'left' | 'center' | 'right'
-		tooltip: string
-		disabled: boolean
-		type: InputType
-		divider: boolean
-		toggle: boolean
-		toggleInvisible: boolean
+		[key: string]: unknown;
+		source: DataTableColumnSource;
+		initialIndex: number;
+		key: string;
+		name: string;
+		label: string;
+		sortable: boolean;
+		span: number;
+		fixedWidth: string | number;
+		minWidth: string | number;
+		align: 'left' | 'center' | 'right';
+		tooltip: string;
+		disabled: boolean;
+		type: InputType;
+		divider: boolean;
+		toggle: boolean;
+		toggleInvisible: boolean;
 	}
 
 	type DataTableCell = {
-		rowIndex: number
-		rowData: DataTableItem
-		column: DataTableColumnInternal
-		value: any
+		rowIndex: number;
+		rowData: DataTableItem;
+		column: DataTableColumnInternal;
+		value: any;
 	}
 
 	type DataTableRow = {
-		initialIndex: number
-		source: DataTableItem
-		cells: DataTableCell[]
-		isEditing?: boolean
+		selectable: boolean;
+		initialIndex: number;
+		source: DataTableItem;
+		cells: DataTableCell[];
+		isEditing?: boolean;
 	}
 
 	defineOptions({ inheritAttrs: false });
@@ -243,6 +247,7 @@
 			toggleColumns?: boolean;
 			scroll?: boolean;
 			allowArrowKeySelection?: boolean;
+			unselectable?: Set<DataTableItem>;
 		}>(),
 		{
 			columns: () => [],
@@ -271,6 +276,7 @@
 			toggleColumns: false,
 			scroll: false,
 			allowArrowKeySelection: false,
+			unselectable: () => new Set<DataTableItem>(),
 		}
 	);
 
@@ -282,7 +288,7 @@
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
 
-	const attrs = useAttrs();
+	// const attrs = useAttrs();
 	const itemRefs = ref(new Map());
 	const selectionRefs = ref(new Map());
 
@@ -316,19 +322,19 @@
 			source,
 			initialIndex,
 			key: input.key,
-			name: input.name || input.key,
-			label: input.label || capitalizeFirstLetter(input.key),
-			sortable: input.sortable || false,
-			span: input.span || 1,
-			fixedWidth: input.fixedWidth || 0,
-			minWidth: input.minWidth || 0,
-			align: input.align || 'left',
-			tooltip: input.tooltip || '',
-			disabled: input.disabled || false,
-			type: input.type || 'text',
-			divider: input.divider || false,
-			toggle: input.toggle || false,
-			toggleInvisible: input.toggleInvisible || false,
+			name: input.name ?? input.key,
+			label: input.label ?? capitalizeFirstLetter(input.key),
+			sortable: input.sortable ?? false,
+			span: input.span ?? 1,
+			fixedWidth: input.fixedWidth ?? 0,
+			minWidth: input.minWidth ?? 0,
+			align: input.align ?? 'left',
+			tooltip: input.tooltip ?? '',
+			disabled: input.disabled ?? false,
+			type: input.type ?? 'text',
+			divider: input.divider ?? false,
+			toggle: input.toggle ?? false,
+			toggleInvisible: input.toggleInvisible ?? false,
 		}
 	}
 
@@ -350,7 +356,7 @@
 	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(0, 1fr))');
 
 	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) => {
-		return { initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
+		return { selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
 			return { rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' };
 		})}
 	}));
@@ -402,7 +408,7 @@
 	}
 
 	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))
-	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.every(isRowSelected));
+	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.filter(row => !props.unselectable.has(row.source)).every(isRowSelected));
 	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
 
 	function isRowSelected(row: DataTableRow) {
@@ -410,7 +416,7 @@
 	}
 
 	function selectAllRows() {
-		emit('update:modelValue', [...sortedRows.value.map(row => row.source)]);
+		emit('update:modelValue', [...sortedRows.value.filter(row => !props.unselectable.has(row.source)).map(row => row.source)]);
 	}
 
 	function unselectAllRows() {

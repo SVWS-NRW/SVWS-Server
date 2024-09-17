@@ -8,21 +8,21 @@ export type Placement = "auto" | "auto-start" | "auto-end" | "top" | "top-start"
 export type AuswahlChildData = { name: string; text: string; image?: string; }
 
 export type DataTableColumn = {
-	[key: string]: unknown
-	key: string
-	name?: string
-	label?: string
-	sortable?: boolean
-	span?: number
-	fixedWidth?: string | number
-	minWidth?: string | number
-	align?: 'left' | 'center' | 'right'
-	tooltip?: string
-	disabled?: boolean
-	type?: InputType
-	divider?: boolean
-	toggle?: boolean
-	toggleInvisible?: boolean
+	[key: string]: unknown;
+	key: string;
+	name?: string;
+	label?: string;
+	sortable?: boolean;
+	span?: number;
+	fixedWidth?: string | number;
+	minWidth?: string | number;
+	align?: 'left' | 'center' | 'right';
+	tooltip?: string;
+	disabled?: boolean;
+	type?: InputType;
+	divider?: boolean;
+	toggle?: boolean;
+	toggleInvisible?: boolean;
 }
 
-export type SortByAndOrder = { key: string | null; order: boolean | null};
+export type SortByAndOrder = { key: string | null; order: boolean | null; };
