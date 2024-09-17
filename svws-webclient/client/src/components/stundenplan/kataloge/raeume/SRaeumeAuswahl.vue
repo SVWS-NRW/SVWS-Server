@@ -1,37 +1,20 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<nav class="secondary-menu--breadcrumbs">
-				<a @click="returnToStundenplan">Stundenplan</a>
-				<a @click="returnToKataloge">Kataloge</a>
-				<span title="Räume">Räume</span>
-			</nav>
+	<svws-ui-table :clicked clickable @update:clicked="gotoEintrag" :items="raumListeManager().filtered()" :columns selectable v-model="selected" class="max-w-128 min-w-96">
+		<template #actions>
+			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+			<svws-ui-button type="transparent" title="Räume exportieren" @click="export_raeume" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
+			<s-raum-import-modal v-slot="{ openModal }" :set-katalog-raeume-import-j-s-o-n>
+				<svws-ui-button type="icon" @click="openModal()">
+					<span class="icon-sm i-ri-download-2-line" />
+				</svws-ui-button>
+			</s-raum-import-modal>
+			<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
+				<svws-ui-button type="icon" @click="openModal()">
+					<span class="icon i-ri-add-line" />
+				</svws-ui-button>
+			</s-raum-neu-modal>
 		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #header />
-		<template #content>
-			<div class="container">
-				<svws-ui-table :clicked clickable @update:clicked="gotoEintrag" :items="raumListeManager().filtered()" :columns selectable v-model="selected">
-					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<svws-ui-button type="transparent" title="Räume exportieren" @click="export_raeume" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
-						<s-raum-import-modal v-slot="{ openModal }" :set-katalog-raeume-import-j-s-o-n>
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon-sm i-ri-download-2-line" />
-							</svws-ui-button>
-						</s-raum-import-modal>
-						<s-raum-neu-modal v-slot="{ openModal }" :add-raum="addEintrag">
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-						</s-raum-neu-modal>
-					</template>
-				</svws-ui-table>
-			</div>
-		</template>
-	</svws-ui-secondary-menu>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

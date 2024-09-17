@@ -17,10 +17,10 @@ import { routeStundenplanKalenderwochen } from "./RouteStundenplanKalenderwochen
 import { routeStundenplanPausen } from "~/router/apps/stundenplan/RouteStundenplanPausen";
 import { routeStundenplanZeitrasterPausenzeit } from "./RouteStundenplanZeitrasterPausenzeit";
 import { routeStundenplanKlasse } from "~/router/apps/stundenplan/RouteStundenplanKlasse";
-import { routeStundenplanKataloge } from "./kataloge/RouteStundenplanKataloge";
 import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeError } from "~/router/error/RouteError";
+import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -44,8 +44,6 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanKlasse,
 			routeStundenplanUnterrichte,
 		];
-		super.menu = [
-		]
 		super.defaultChild = routeStundenplanDaten;
 	}
 
@@ -55,6 +53,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if (id === -1)
+				return routeStundenplanKataloge.getRoute();
 			if (id !== undefined) {
 				const eintrag = this.data.mapKatalogeintraege.get(id);
 				if ((eintrag === undefined) && (this.data.auswahl !== undefined))
@@ -82,6 +82,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 	public getRoute(id?: number) : RouteLocationRaw {
 		if (id === undefined)
 			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
+		if (id === -1)
+			return { name: routeStundenplanKataloge.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
@@ -96,7 +98,6 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			auswahl: this.data.auswahl,
 			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			gotoVorgaben: routeStundenplanKataloge.returnToKataloge,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
 			addEintrag: this.data.addEintrag,
 			removeEintraege: this.data.removeEintraege,
@@ -134,8 +135,6 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
 		this.data.setView(node, routeStundenplan.children);
 	}
-
-	returnToStundenplan = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
 }
 

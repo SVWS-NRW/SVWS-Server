@@ -1,31 +1,14 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<nav class="secondary-menu--breadcrumbs">
-				<a @click="returnToStundenplan">Stundenplan</a>
-				<a @click="returnToKataloge">Kataloge</a>
-				<span title="Aufsichtsbereiche">Aufsichtsbereiche</span>
-			</nav>
+	<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" :columns="cols" selectable v-model="selected" class="max-w-128 min-w-96" >
+		<template #actions>
+			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+			<s-aufsichtsbereich-neu-modal v-slot="{ openModal }" :add-aufsichtsbereich="addEintrag">
+				<svws-ui-button type="icon" @click="openModal()">
+					<span class="icon i-ri-add-line" />
+				</svws-ui-button>
+			</s-aufsichtsbereich-neu-modal>
 		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
-		</template>
-		<template #header />
-		<template #content>
-			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" :columns="cols" selectable v-model="selected">
-					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<s-aufsichtsbereich-neu-modal v-slot="{ openModal }" :add-aufsichtsbereich="addEintrag">
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-						</s-aufsichtsbereich-neu-modal>
-					</template>
-				</svws-ui-table>
-			</div>
-		</template>
-	</svws-ui-secondary-menu>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

@@ -1,46 +1,29 @@
 <template>
-	<svws-ui-secondary-menu>
-		<template #headline>
-			<nav class="secondary-menu--breadcrumbs">
-				<a @click="returnToStundenplan">Stundenplan</a>
-				<a @click="returnToKataloge">Kataloge</a>
-				<span title="Pausenzeiten">Pausenzeiten</span>
-			</nav>
+	<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().pausenzeitGetMengeAsList()" :columns selectable v-model="selected" class="max-w-128 min-w-96">
+		<template #cell(wochentag)="{ value }">
+			{{ Wochentag.fromIDorException(value).beschreibung }}
 		</template>
-		<template #abschnitt>
-			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
+		<template #cell(beginn)="{ value }">
+			{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
 		</template>
-		<template #header />
-		<template #content>
-			<div class="container">
-				<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().pausenzeitGetMengeAsList()" :columns selectable v-model="selected">
-					<template #cell(wochentag)="{ value }">
-						{{ Wochentag.fromIDorException(value).beschreibung }}
-					</template>
-					<template #cell(beginn)="{ value }">
-						{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
-					</template>
-					<template #cell(ende)="{ value }">
-						{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
-					</template>
-					<template #actions>
-						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
-						<svws-ui-button type="transparent" title="Pausenzeiten exportieren" @click="export_pausenzeiten" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
-						<s-pausenzeit-import-modal v-slot="{ openModal }" :set-katalog-pausenzeiten-import-j-s-o-n>
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon-sm i-ri-download-2-line" />
-							</svws-ui-button>
-						</s-pausenzeit-import-modal>
-						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
-							<svws-ui-button type="icon" @click="openModal()">
-								<span class="icon i-ri-add-line" />
-							</svws-ui-button>
-						</s-pausenzeit-neu-modal>
-					</template>
-				</svws-ui-table>
-			</div>
+		<template #cell(ende)="{ value }">
+			{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
 		</template>
-	</svws-ui-secondary-menu>
+		<template #actions>
+			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+			<svws-ui-button type="transparent" title="Pausenzeiten exportieren" @click="export_pausenzeiten" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
+			<s-pausenzeit-import-modal v-slot="{ openModal }" :set-katalog-pausenzeiten-import-j-s-o-n>
+				<svws-ui-button type="icon" @click="openModal()">
+					<span class="icon-sm i-ri-download-2-line" />
+				</svws-ui-button>
+			</s-pausenzeit-import-modal>
+			<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
+				<svws-ui-button type="icon" @click="openModal()">
+					<span class="icon i-ri-add-line" />
+				</svws-ui-button>
+			</s-pausenzeit-neu-modal>
+		</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">

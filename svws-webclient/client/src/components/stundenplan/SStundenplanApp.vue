@@ -5,10 +5,7 @@
 				<div class="svws-headline-wrapper">
 					<h2 class="svws-headline">
 						{{ auswahl.bezeichnung }}
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							ID:
-							{{ auswahl.id }}
-						</svws-ui-badge>
+						<svws-ui-badge type="light" title="ID" class="font-mono" size="small"> ID: {{ auswahl.id }} </svws-ui-badge>
 					</h2>
 					<span class="svws-subline">{{ toYear(auswahl.gueltigAb, auswahl.gueltigBis) }} ({{ 'KW ' + toKW(auswahl.gueltigAb) + '–' + toKW(auswahl.gueltigBis) }})</span>
 				</div>
@@ -27,7 +24,7 @@
 <script setup lang="ts">
 
 	import type { StundenplanAppProps } from "./SStundenplanAppProps";
-	import {DateUtils} from "@core";
+	import { DateUtils } from "@core";
 
 	defineProps<StundenplanAppProps>();
 

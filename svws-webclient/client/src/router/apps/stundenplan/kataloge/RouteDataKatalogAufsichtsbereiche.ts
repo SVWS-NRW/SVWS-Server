@@ -5,7 +5,6 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import { routeKatalogAufsichtsbereichDaten } from "./RouteKatalogAufsichtsbereichDaten";
 import { routeKatalogAufsichtsbereiche } from "./RouteKatalogAufsichtsbereiche";
 
 interface RouteStateKatalogAufsichtsbereiche extends RouteStateInterface {
@@ -16,9 +15,7 @@ interface RouteStateKatalogAufsichtsbereiche extends RouteStateInterface {
 const defaultState = <RouteStateKatalogAufsichtsbereiche> {
 	auswahl: undefined,
 	stundenplanManager: undefined,
-	view: routeKatalogAufsichtsbereichDaten,
 };
-
 
 export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatalogAufsichtsbereiche> {
 
@@ -85,4 +82,5 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 		this.stundenplanManager.aufsichtsbereichPatchAttributes(auswahl);
 		this.commit();
 	}
+
 }

@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+
 	import { ref, computed } from "vue";
 	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
 	import { Wochentag, DateUtils, ArrayList } from "@core";

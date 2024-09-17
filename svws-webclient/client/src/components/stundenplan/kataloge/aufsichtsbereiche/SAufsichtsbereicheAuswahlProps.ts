@@ -7,7 +7,5 @@ export interface AufsichtsbereicheAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<Aufsichtsbereich>) => Promise<void>;
 	gotoEintrag: (eintrag: Aufsichtsbereich) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
-	returnToStundenplan: () => Promise<void>;
 	stundenplanManager: () => StundenplanManager;
 }

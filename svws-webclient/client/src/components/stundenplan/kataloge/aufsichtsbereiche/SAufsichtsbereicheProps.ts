@@ -1,6 +1,6 @@
 import type { Aufsichtsbereich } from "@core";
 
-export interface AufsichtsbereichDatenProps {
+export interface AufsichtsbereicheProps {
 	patch: (data : Partial<Aufsichtsbereich>) => Promise<void>;
 	auswahl: Aufsichtsbereich | undefined;
 }

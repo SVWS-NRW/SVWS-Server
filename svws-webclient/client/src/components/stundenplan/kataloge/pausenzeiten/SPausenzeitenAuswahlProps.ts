@@ -7,8 +7,6 @@ export interface PausenzeitenAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	gotoEintrag: (eintrag: StundenplanPausenzeit) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
-	returnToStundenplan: () => Promise<void>;
 	setKatalogPausenzeitenImportJSON: (formData: FormData) => Promise<void>;
 	stundenplanManager: () => StundenplanManager;
 }

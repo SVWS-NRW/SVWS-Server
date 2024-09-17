@@ -7,7 +7,5 @@ export interface RaeumeAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<Raum>) => Promise<void>;
 	gotoEintrag: (eintrag: Raum) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
-	returnToStundenplan: () => Promise<void>;
 	setKatalogRaeumeImportJSON: (formData: FormData) => Promise<void>;
 }

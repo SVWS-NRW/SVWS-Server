@@ -1,4 +1,5 @@
-import type { StundenplanListeEintrag, List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung} from "@core";
+import type { List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung} from "@core";
+import { StundenplanListeEintrag} from "@core";
 import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException, StundenplanUnterrichtListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -7,9 +8,9 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeStundenplanDaten } from "./RouteStundenplanDaten";
-import { routeKatalogPausenzeiten } from "./kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogAufsichtsbereiche } from "./kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
-import { routeKatalogRaeume } from "./kataloge/raum/RouteKatalogRaeume";
+import { routeKatalogPausenzeiten } from "./kataloge/RouteKatalogPausenzeiten";
+import { routeKatalogAufsichtsbereiche } from "./kataloge/RouteKatalogAufsichtsbereiche";
+import { routeKatalogRaeume } from "./kataloge/RouteKatalogRaeume";
 import { routeApp } from "../RouteApp";
 
 interface RouteStateStundenplan extends RouteStateInterface {
@@ -45,8 +46,13 @@ const defaultState = <RouteStateStundenplan> {
 
 export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 
+	private vorlageEintrag : StundenplanListeEintrag;
+
 	public constructor() {
 		super(defaultState);
+		this.vorlageEintrag = new StundenplanListeEintrag();
+		this.vorlageEintrag.bezeichnung = "Allgemein / Vorlage";
+		this.vorlageEintrag.schuljahr = -1;
 	}
 
 	get auswahl(): StundenplanListeEintrag | undefined {
@@ -101,8 +107,9 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<void> {
 		api.status.start();
-		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt)
+		const listKatalogeintraege = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapKatalogeintraege = new Map<number, StundenplanListeEintrag>();
+		mapKatalogeintraege.set(this.vorlageEintrag.id, this.vorlageEintrag);
 		const auswahl = (listKatalogeintraege.size() > 0) ? listKatalogeintraege.get(0) : undefined;
 		for (const l of listKatalogeintraege)
 			mapKatalogeintraege.set(l.id, l);
@@ -111,7 +118,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const listAufsichtsbereiche = await api.server.getAufsichtsbereiche(api.schema);
 		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
 		const listLehrer = await api.server.getLehrer(api.schema);
-		const { daten, stundenplanManager, stundenplanUnterrichtListeManager } = (auswahl !== undefined)
+		const { daten, stundenplanManager, stundenplanUnterrichtListeManager } = (auswahl !== undefined) && (auswahl.id > 0)
 			? await this.ladeEintrag(auswahl)
 			: { daten: undefined, stundenplanManager: undefined, stundenplanUnterrichtListeManager: undefined };
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, auswahl, mapKatalogeintraege, listRaeume, listPausenzeiten, listAufsichtsbereiche, listJahrgaenge, listLehrer,
@@ -613,6 +620,10 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
+		if (auswahl?.id === -1) {
+			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
+			return;
+		}
 		api.status.start();
 		if (auswahl === undefined && this.mapKatalogeintraege.size > 0)
 			auswahl = this.mapKatalogeintraege.values().next().value;

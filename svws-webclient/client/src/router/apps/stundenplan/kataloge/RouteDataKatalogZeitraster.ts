@@ -4,8 +4,6 @@ import { ArrayList, DeveloperNotificationException, Stundenplan, StundenplanMana
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 
-import { routeKatalogZeitrasterDaten } from "~/router/apps/stundenplan/kataloge/zeitraster/RouteKatalogZeitrasterDaten";
-
 interface RouteStateKatalogZeitraster extends RouteStateInterface {
 	listKatalogeintraege: List<StundenplanZeitraster>;
 	stundenplanManager: StundenplanManager | undefined;
@@ -16,7 +14,6 @@ const defaultState = <RouteStateKatalogZeitraster> {
 	listKatalogeintraege: new ArrayList(),
 	stundenplanManager: undefined,
 	selected: undefined,
-	view: routeKatalogZeitrasterDaten,
 };
 
 export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitraster> {

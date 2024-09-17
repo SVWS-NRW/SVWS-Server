@@ -1,6 +1,6 @@
 import type { StundenplanPausenzeit } from "@core";
 
-export interface PausenzeitDatenProps {
+export interface PausenzeitenProps {
 	patch: (data : Partial<StundenplanPausenzeit>) => Promise<void>;
 	auswahl: StundenplanPausenzeit | undefined;
 }

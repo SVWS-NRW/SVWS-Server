@@ -47,6 +47,10 @@
 	@apply flex flex-col min-h-full gap-y-5;
 }
 
+.page--content--flex-row {
+	@apply flex flex-row min-h-full gap-y-5;
+}
+
 .separate-items--custom > *:not(:last-child):after {
 	content: ', ';
 }

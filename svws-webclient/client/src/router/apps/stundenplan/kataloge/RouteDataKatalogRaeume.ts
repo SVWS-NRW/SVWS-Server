@@ -6,8 +6,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogRaeume } from "./RouteKatalogRaeume";
-import { routeKatalogRaumDaten } from "./RouteKatalogRaumDaten";
-import { routeApp } from "../../../RouteApp";
+import { routeApp } from "../../RouteApp";
 
 interface RouteStateKatalogRaeume extends RouteStateInterface {
 	raumListeManager: RaumListeManager;
@@ -15,7 +14,6 @@ interface RouteStateKatalogRaeume extends RouteStateInterface {
 
 const defaultState = <RouteStateKatalogRaeume> {
 	raumListeManager: new RaumListeManager(-1, -1, new ArrayList(), null, new ArrayList()),
-	view: routeKatalogRaumDaten,
 };
 
 export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
@@ -51,8 +49,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	gotoEintrag = async (eintrag: Raum) => {
-		const redirect_name: string = (routeKatalogRaeume.selectedChild === undefined) ? routeKatalogRaumDaten.name : routeKatalogRaeume.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
+		await RouteManager.doRoute({ name: routeKatalogRaeume.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {

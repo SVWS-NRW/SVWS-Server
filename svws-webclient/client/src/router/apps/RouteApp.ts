@@ -13,10 +13,10 @@ import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/
 import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
-import { routeStundenplanKataloge } from "./stundenplan/kataloge/RouteStundenplanKataloge";
-import { routeKatalogAufsichtsbereiche } from "~/router/apps/stundenplan/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
+import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
+import { routeKatalogAufsichtsbereiche } from "~/router/apps/stundenplan/kataloge/RouteKatalogAufsichtsbereiche";
 import { routeKatalogPausenzeiten } from "~/router/apps/stundenplan/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/stundenplan/kataloge/zeitraster/RouteKatalogZeitraster";
+import { routeKatalogZeitraster } from "~/router/apps/stundenplan/kataloge/RouteKatalogZeitraster";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -33,7 +33,7 @@ import { routeKatalogFoerderschwerpunkte } from "./schule/kataloge/foerderschwer
 import { routeKatalogReligionen } from "./schule/kataloge/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/kataloge/schulen/RouteKatalogSchulen";
 import { routeKatalogVermerkarten } from "./schule/kataloge/vermerke/RouteKatalogVermerkarten";
-import { routeKatalogRaeume } from "./stundenplan/kataloge/raum/RouteKatalogRaeume";
+import { routeKatalogRaeume } from "./stundenplan/kataloge/RouteKatalogRaeume";
 import SApp from "~/components/SApp.vue";
 
 
@@ -58,10 +58,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeKatalogVermerkarten,
 			routeSchuleBetriebe,
 			routeKatalogFoerderschwerpunkte,
-			routeKatalogRaeume,
-			routeKatalogAufsichtsbereiche,
-			routeKatalogPausenzeiten,
-			routeKatalogZeitraster,
 			routeKatalogSchulen,
 			routeSchueler,
 			routeLehrer,

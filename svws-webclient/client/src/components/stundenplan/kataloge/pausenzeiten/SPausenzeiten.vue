@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="auswahl" title="Allgemein">
+	<svws-ui-content-card v-if="auswahl" title="Allgemein" class="min-w-128">
 		<div class="input-wrapper">
 			<svws-ui-select :model-value="Wochentag.fromIDorException(auswahl.wochentag)" @update:model-value="wt => wt && patch({wochentag: wt.id})" :items="Wochentag.values()" :item-text="i=>i.beschreibung" />
 			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(auswahl.beginn ?? 0)" @change="patchBeginn" required placeholder="Stundenbeginn" />
@@ -10,13 +10,10 @@
 
 <script setup lang="ts">
 
-	import type { StundenplanPausenzeit } from "@core";
+	import type { PausenzeitenProps } from "./SPausenzeitenProps";
 	import { Wochentag, DateUtils } from "@core";
 
-	const props = defineProps<{
-		auswahl: StundenplanPausenzeit | undefined;
-		patch: (data : Partial<StundenplanPausenzeit>) => Promise<void>;
-	}>();
+	const props = defineProps<PausenzeitenProps>();
 
 	async function patchBeginn(start: string | null) {
 		if (start === null)
@@ -31,4 +28,5 @@
 		const ende = DateUtils.gibMinutenOfZeitAsString(stop);
 		await props.patch({ende});
 	}
+
 </script>
