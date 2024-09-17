@@ -37,6 +37,7 @@
 		patchBeratungsdaten: (data : Partial<GostLaufbahnplanungBeratungsdaten>) => Promise<void>;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		schueler: SchuelerListeEintrag;
+		updated?: boolean;
 		id?: number;
 	}>();
 
@@ -45,26 +46,31 @@
 	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
 	const show = ref<boolean>(false);
 
-	const beratungsdatum = computed<string>(()=> props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
+	const beratungsdatum = computed<string>(() => props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
 
-	watch(()=> props.schueler, () => {
+	watch(() => props.schueler, () => {
 		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined)
 			return;
 		refBeratungsdatum.value.input.value = beratungsdatum.value;
 		refKommentar.value.content = props.gostLaufbahnBeratungsdaten().kommentar;
 	})
 
-	const dirty = computed<boolean>(()=>{
-		const lehrerIDNeu = refLehrer.value?.content?.id || null;
-		const kommentarNeu = refKommentar.value?.content || null;
-		const lehrerIDalt = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
-		const kommentarAlt = props.gostLaufbahnBeratungsdaten().kommentar || null;
-		const datumNeu = refBeratungsdatum.value?.content || null;
-		const datumAlt = beratungsdatum.value;
-		return lehrerIDNeu !== lehrerIDalt || kommentarNeu !== kommentarAlt || datumAlt !== datumNeu;
+	watch(() => props.updated, (neu) => {
+		if (neu && (refBeratungsdatum.value?.input?.value !== undefined))
+			refBeratungsdatum.value.input.value = new Date().toISOString().slice(0, -14);
 	})
 
-	const getBeratungslehrer = computed<LehrerListeEintrag | undefined>(()=> {
+	const dirty = computed<boolean>(() => {
+		const lehrerIDNeu = refLehrer.value?.content?.id ?? null;
+		const kommentarNeu = refKommentar.value?.content ?? null;
+		const lehrerIDalt = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
+		const kommentarAlt = props.gostLaufbahnBeratungsdaten().kommentar;
+		const datumNeu = refBeratungsdatum.value?.content ?? null;
+		const datumAlt = beratungsdatum.value;
+		return (lehrerIDNeu !== lehrerIDalt) || (kommentarNeu !== kommentarAlt) || (datumAlt !== datumNeu) || (props.updated === true);
+	})
+
+	const getBeratungslehrer = computed<LehrerListeEintrag | undefined>(() => {
 		let id = props.gostLaufbahnBeratungsdaten().beratungslehrerID;
 		if (id === null)
 			id = (props.id === undefined) ? -1 : props.id;
@@ -76,6 +82,8 @@
 		result.beratungslehrerID = (refLehrer.value?.content instanceof LehrerListeEintrag)
 			? refLehrer.value.content.id : null;
 		result.beratungsdatum = (refBeratungsdatum.value?.content === undefined) ? null : refBeratungsdatum.value.content;
+		if (result.beratungsdatum !== refBeratungsdatum.value?.input?.value)
+			result.beratungsdatum = refBeratungsdatum.value?.input?.value ?? null;
 		result.kommentar = (refKommentar.value?.content === undefined) ? null : refKommentar.value.content;
 		await props.patchBeratungsdaten(result);
 	}

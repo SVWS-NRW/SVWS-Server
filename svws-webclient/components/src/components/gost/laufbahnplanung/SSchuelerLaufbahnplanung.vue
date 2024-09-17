@@ -11,7 +11,7 @@
 					<span class="icon-sm i-ri-loop-right-line" />
 					Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
-				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten="gostJahrgangsdaten" :reset-fachwahlen="resetFachwahlen" />
+				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
 				<svws-ui-button type="transparent" title="Fächer anzeigen" @click="switchFaecherAnzeigen()">
 					{{ "Fächer anzeigen: " + textFaecherAnzeigen() }}
 				</svws-ui-button>
@@ -24,14 +24,13 @@
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager="abiturdatenManager" :modus="modus"
-				:gost-jahrgangsdaten="gostJahrgangsdaten" :set-wahl="setWahl" :goto-kursblockung="gotoKursblockung" :faecher-anzeigen="faecherAnzeigen" />
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl="setWahl" :goto-kursblockung :faecher-anzeigen />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
-				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten="gostLaufbahnBeratungsdaten" :patch-beratungsdaten="patchBeratungsdaten" :map-lehrer="mapLehrer" :id="id" :schueler="schueler" />
-				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager="abiturdatenManager"
-					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art="gostBelegpruefungsArt" @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
+				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :map-lehrer :id :schueler :updated />
+				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager
+					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
 			</div>
 		</div>
 	</div>
@@ -39,8 +38,9 @@
 
 <script setup lang="ts">
 
+	import { computed, onMounted, ref, watch } from "vue";
 	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
-	import { computed, onMounted, ref } from "vue";
+	import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
 
@@ -48,6 +48,25 @@
 
 	const _showModalImport = ref<boolean>(false);
 	const showModalImport = () => _showModalImport;
+
+	const updated = ref<boolean>(false);
+	const curId = ref<number | undefined>()
+
+	watch(() => [props.schueler, props.gostBelegpruefungErgebnis()], ([neu, neu2], [alt, alt2]) => {
+		if (alt !== neu) {
+			updated.value = false;
+			curId.value = undefined;
+		}
+		if ((neu2 !== alt2) && (updated.value === false) && (curId.value === props.schueler.id))
+			updated.value = true;
+		else
+			curId.value = props.schueler.id;
+	})
+
+	async function doPatchBeratungsdaten(data: Partial<GostLaufbahnplanungBeratungsdaten>) {
+		await props.patchBeratungsdaten(data);
+		updated.value = false;
+	}
 
 	const hatFaecherNichtWaehlbar = computed<boolean>(() => {
 		for (const fach of props.abiturdatenManager().faecher().faecher())

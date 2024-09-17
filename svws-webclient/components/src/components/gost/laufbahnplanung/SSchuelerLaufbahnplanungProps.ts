@@ -33,5 +33,5 @@ export interface SchuelerLaufbahnplanungProps {
 	setModus: (modus: 'manuell' | 'normal' | 'hochschreiben') => Promise<void>;
 	faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 	setFaecherAnzeigen: (value: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt') => Promise<void>;
-	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
+	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>;
 }

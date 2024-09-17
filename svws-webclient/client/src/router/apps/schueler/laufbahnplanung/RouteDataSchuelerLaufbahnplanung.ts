@@ -1,23 +1,10 @@
 import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import {
-	AbiturdatenManager,
-	BenutzerTyp,
-	GostBelegpruefungErgebnis,
-	GostBelegpruefungsArt,
-	GostFaecherManager,
-	GostJahrgang,
-	GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten,
-	GostHalbjahr,
-	DeveloperNotificationException,
-	ArrayList,
-	ReportingReportvorlage, ReportingParameter
-} from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList, ReportingReportvorlage, ReportingParameter } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import {routeApp} from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 
 
 interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
@@ -55,11 +42,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	public async clear() {
 		this.setPatchedDefaultState({});
 	}
-
-	// public async ladeFachkombinationen() {
-	// 	if (this._state.value.gostJahrgang === undefined)
-	// 		return;
-	// }
 
 	get auswahl(): SchuelerListeEintrag {
 		if (this._state.value.auswahl === undefined)
