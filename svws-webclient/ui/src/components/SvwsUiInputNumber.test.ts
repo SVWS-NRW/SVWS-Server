@@ -263,7 +263,7 @@ describe("Funktionen in SvwsUiInputNumber", () => {
 		expect(input.element.value).toBe("11");
 	});
 
-	test("inInputNumber mit Argument up erhöht den Wert", async () => {
+	test("inInputNumber mit Argument down verringert den Wert", async () => {
 		const wrapper = mount(SvwsUiInputNumber, {
 			props: { modelValue: 10 },
 		});
@@ -291,6 +291,26 @@ describe("Funktionen in SvwsUiInputNumber", () => {
 		await input.trigger("blur");
 		expect(wrapper.emitted().blur).toBeTruthy();
 		expect(wrapper.emitted().blur[0]).toEqual([10]);
+	});
+
+	test("onBlur wird nicht ausgelöst, wenn der Fokus zwischen Button und Input switched", async () => {
+		const wrapper = mount(SvwsUiInputNumber, {
+			props: {
+				modelValue: 10,
+			},
+		});
+
+		const input = wrapper.find({ ref: 'input' });
+		const btnPlus = wrapper.find({ref: 'btnPlus'});
+		const btnMinus = wrapper.find({ref: 'btnMinus'});
+
+		await input.trigger("blur",{ relatedTarget: btnPlus.element });
+		await input.trigger("blur",{ relatedTarget: btnMinus.element });
+		await input.trigger("btnPlus",{ relatedTarget: input.element });
+		await input.trigger("btnPlus",{ relatedTarget: btnMinus.element });
+		await input.trigger("btnMinus",{ relatedTarget: input.element });
+		await input.trigger("btnMinus",{ relatedTarget: btnPlus.element });
+		expect(wrapper.emitted('blur')).toBe(undefined);
 	});
 
 	test.skip("onKeyEnter wird korrekt ausgelöst", async () => {

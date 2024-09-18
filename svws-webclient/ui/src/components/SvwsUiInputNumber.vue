@@ -49,11 +49,10 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="input && !hideStepper && !disabled" class="svws-input-stepper">
-			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === input?.value || (String($attrs?.min) === '0' && !input?.value)}"><span class="icon i-ri-subtract-line inline-block" /></button>
-			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === input?.value}"><span class="icon i-ri-add-line inline-block" /></button>
+		<span v-if="data && !hideStepper && !disabled" class="svws-input-stepper">
+			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data) || (String($attrs?.min) === '0' && !data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
+			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
-
 	</div>
 </template>
 
@@ -68,6 +67,8 @@
 	});
 
 	const input = ref<null | HTMLInputElement>(null);
+	const btnPlus = ref<null | HTMLButtonElement>(null);
+	const btnMinus = ref<null | HTMLButtonElement>(null);
 	const id = useId();
 
 	const props = withDefaults(defineProps<{
@@ -115,7 +116,7 @@
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
 
 	const isValid = computed(()=>{
-		if ((props.required === true) && ((data.value === null)))
+		if (props.required && ((data.value === null)))
 			return false;
 		return props.valid(data.value);
 	})
@@ -146,6 +147,10 @@
 	}
 
 	function onBlur(event: Event) {
+		// prevent firing change/blur event, if the user only switches between input and button elements inside the SVWSUiInputNumber component itself
+		if (event instanceof FocusEvent && ([input.value, btnPlus.value, btnMinus.value] as Array<HTMLElement>).includes(event.relatedTarget as HTMLElement))
+			return;
+
 		if (props.modelValue !== data.value)
 			emit("change", data.value);
 		emit("blur", data.value);

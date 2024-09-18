@@ -93,10 +93,22 @@ describe.concurrent("PropHandhabung läuft korrekt", () => {
 		expect(wrapper.find('.text-input--prefix').exists()).toBe(true);
 	});
 
+	test('Prop minLen wird angezeigt', async () => {
+		const wrapper = mount(SvwsUiTextInput, { props: { minLen: 3, placeholder: " " } });
+		await wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.$nextTick();
+		expect(wrapper.find('.text-input--placeholder').text()).toContain('mind. 3 Zeichen');
+	});
+
 	test('Prop maxLen wird angezeigt', async () => {
 		const wrapper = mount(SvwsUiTextInput, { props: { maxLen: 10, placeholder: " " } });
 		await wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.$nextTick();
-		expect(wrapper.find('.text-input--placeholder').text()).toContain('maximal 10 Zeichen');
+		expect(wrapper.find('.text-input--placeholder').text()).toContain('max. 10 Zeichen');
+	});
+
+	test('Prop minLen und maxLen wird angezeigt', async () => {
+		const wrapper = mount(SvwsUiTextInput, { props: { minLen: 3, maxLen: 10, placeholder: " " } });
+		await wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.$nextTick();
+		expect(wrapper.find('.text-input--placeholder').text()).toContain('zwischen 3 und 10 Zeichen');
 	});
 
 	type spanType = "full" | "2" | undefined;
@@ -221,7 +233,7 @@ describe.concurrent("Unit Tests für computed value maxLenValid", async () => {
 	test.each([
 		[ 10, "test", true, "Kürzeres Wort als MaxLen wird akzeptiert" ],
 		[ 1, "test", false, "Längeres Wort als MaxLen wird nicht akzeptiert" ],
-		[ undefined, "test", true, "Falls MaxLength undefined ist wird jede Länge akzeptiert" ],
+		[ undefined, "test", true, "Falls MaxLen undefined ist wird jede Länge akzeptiert" ],
 		[ 4, null, true, "Null als Wort ist nicht zu lang" ],
 		[ 10, "", true, "Leerstring wird akzeptiert" ],
 	])('maxLenValid {maxLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
@@ -234,13 +246,39 @@ describe.concurrent("Unit Tests für computed value maxLenValid", async () => {
 	})
 })
 
+describe.concurrent("Unit Tests für computed value minLenValid", async () => {
+	test.each([
+		[ 1, "test", true, "Längeres Wort als MinLen wird akzeptiert" ],
+		[ 10, "test", false, "Kürzeres Wort als MinLen wird nicht akzeptiert" ],
+		[ undefined, "test", true, "Falls MinLen undefined ist wird jede Länge akzeptiert" ],
+		[ 4, null, false, "Wert null wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist" ],
+		[ 4, "", false, "Leerstring wird nicht akzeptiert, wenn MinLen > 0 gesetzt ist" ],
+		[ 0, null, true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist" ],
+		[ 0, "", true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist" ],
+	])('minLenValid {minLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
+		const props = { minLen: x1, modelValue: x2 as InputDataType };
+		const wrapper = mount(SvwsUiTextInput, { props: props });
+		const minLenValid = wrapper.findComponent({
+			name: "SvwsUiTextInput",
+		}).vm.minLenValid;
+		expect(minLenValid).toEqual(y);
+	})
+})
+
 describe.concurrent("Unit Test für computed isValid", () => {
 	test("Erforderliches Feld mit null-Wert wird nicht akzeptiert", async () => {
 		const props = { required: true, modelValue: null };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
+		expect(isValid).toEqual(false);
+	});
+
+	test("Erforderliches Feld mit Leerstring wird nicht akzeptiert", async () => {
+		const props = { required: true, modelValue: '' };
+		const wrapper = mount(SvwsUiTextInput, { props: props });
+
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(false);
 	});
 
@@ -251,8 +289,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(false);
 	});
 
@@ -263,17 +300,23 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(true);
 	});
 
-	test("Maxlength-Validierung gibt false für zu langen String zurück", async () => {
+	test("MaxLen-Validierung gibt false für zu langen String zurück", async () => {
 		const props = { maxLen: 5, modelValue: "too long" };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
+		expect(isValid).toEqual(false);
+	});
+
+	test("MinLen-Validierung gibt false für zu kurzen String zurück", async () => {
+		const props = { minLen: 10, modelValue: "too short" };
+		const wrapper = mount(SvwsUiTextInput, { props: props });
+
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(false);
 	});
 
@@ -284,8 +327,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(false);
 	});
 
@@ -296,8 +338,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
-		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" })
-			.vm.isValid;
+		const isValid = wrapper.findComponent({ name: "SvwsUiTextInput" }).vm.isValid;
 		expect(isValid).toEqual(true);
 	});
 })

@@ -36,8 +36,10 @@
 			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
 			<span class="icon-xs i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">
-				{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}
+			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid || minLenValid}">
+				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen !== undefined) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
 			</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
@@ -85,6 +87,7 @@
 		rounded?: boolean;
 		url?: boolean;
 		maxLen?: number;
+		minLen?: number;
 		span?: 'full' | '2';
 		removable?: boolean;
 	}>(), {
@@ -102,6 +105,7 @@
 		rounded: false,
 		url: false,
 		maxLen: undefined,
+		minLen: undefined,
 		span: undefined,
 		removable: false,
 	});
@@ -133,16 +137,17 @@
 		);
 	}
 
-	const isValid = computed(() => {
+	const isValid = computed((): boolean => {
 		let tmpIsValid = true;
-		if ((props.required === true) && (data.value === null))
-			return false;
-		if ((props.type === "email") && (typeof data.value === 'string'))
-			tmpIsValid = validatorEmail(data.value);
-		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length > props.maxLen))
+		if (props.required && ((data.value === null) || (data.value === '')))
 			tmpIsValid = false;
-		if (tmpIsValid && ((data.value !== null) && (data.value !== '')))
+		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value))
+			tmpIsValid = false;
+		if (tmpIsValid && props.type === "email")
+			tmpIsValid = validatorEmail(data.value ?? '');
+		if (tmpIsValid)
 			tmpIsValid = props.valid(data.value);
+
 		return tmpIsValid;
 	})
 
@@ -153,10 +158,16 @@
 		}
 	}
 
-	const maxLenValid = computed(() => {
+	const minLenValid = computed((): boolean => {
+		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0)))
+			return true;
+		return (data.value !== null) && (data.value.toLocaleString().length >= props.minLen);
+	})
+
+	const maxLenValid = computed((): boolean => {
 		if ((props.maxLen === undefined) || (data.value === null))
 			return true;
-		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+		return data.value.toLocaleString().length <= props.maxLen;
 	})
 
 	function onInput(event: Event) {
