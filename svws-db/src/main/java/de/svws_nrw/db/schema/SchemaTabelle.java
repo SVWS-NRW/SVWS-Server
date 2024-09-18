@@ -702,6 +702,27 @@ public class SchemaTabelle {
 
 
 	/**
+	 * Erstellt den Code für eine parametrisierte JPQL-Query
+	 *
+	 * @param rev   die DB-Revision, für welche die Query erstellt wird
+	 *
+	 * @return die JPQL
+	 */
+	public String getJPQLParameterizedQuery(final long rev) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT e FROM ").append(getJavaKlasse(rev)).append(" e WHERE ");
+		final var iter = pkSpalten().iterator();
+		for (int i = 0; i < pkSpalten().size(); i++) {
+			final SchemaTabelleSpalte col = iter.next();
+			if (i > 0)
+				sb.append(" AND ");
+			sb.append("e.").append(col.javaAttributName()).append(" = ?").append(i + 1);
+		}
+		return sb.toString();
+	}
+
+
+	/**
 	 * Erstellt einen SQL-String für das Erstellen einen Primärschlüssel als SQL-CONSTRAINT
 	 *
 	 * @return der SQL-String für das Erstellen des Primärschlüssels

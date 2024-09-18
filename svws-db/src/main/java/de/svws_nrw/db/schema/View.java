@@ -131,6 +131,43 @@ public class View {
 
 
 	/**
+	 * Liefert den Namen der Java-Klasse, wie er in der angegebenn Revision genutzt werden soll.
+	 *
+	 * @param rev   die Revision
+	 *
+	 * @return der Name der Java-Klasse
+	 */
+	public String getJavaKlasse(final long rev) {
+		if (rev > 0)
+			return "Dev" + dtoName;
+		if (rev == 0)
+			throw new IllegalArgumentException("Java-DTOs für Views brauchen nicht für die Migration erstellt werden.");
+		return dtoName;
+	}
+
+
+	/**
+	 * Erstellt den Code für eine parametrisierte JPQL-Query
+	 *
+	 * @param rev   die DB-Revision, für welche die Query erstellt wird
+	 *
+	 * @return die JPQL
+	 */
+	public String getJPQLParameterizedQuery(final long rev) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT e FROM ").append(getJavaKlasse(rev)).append(" e WHERE ");
+		final var iter = pkSpalten.iterator();
+		for (int i = 0; i < pkSpalten.size(); i++) {
+			final ViewSpalte col = iter.next();
+			if (i > 0)
+				sb.append(" AND ");
+			sb.append("e.").append(col.name).append(" = ?").append(i + 1);
+		}
+		return sb.toString();
+	}
+
+
+	/**
 	 * Gibt zurück, ob der Java-DTO einen einfachen Primary-Key hat oder nicht
 	 *
 	 * @return true, falls der Java-DTO einen einfachen Primary-Key hat

@@ -187,13 +187,7 @@ public class DTOCreatorView {
 		// nur für Views mit Primärschlüssel...
 		if (!view.pkSpalten.isEmpty()) {
 			// Generiere Code für eine parametrisierte Query mit den Spalten des Primärschlüssels als Parameter
-			query = "SELECT e FROM " + className + " e WHERE ";
-			for (int i = 0; i < view.pkSpalten.size(); i++) {
-				final ViewSpalte col = view.pkSpalten.get(i);
-				if (i > 0)
-					query += " AND ";
-				query += "e." + col.name + " = ?" + (i + 1);
-			}
+			query = view.getJPQLParameterizedQuery(rev);
 			sb.append(getQueryAttribute("PK", query, "Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute"));
 			if (view.pkSpalten.size() == 1) {
 				final ViewSpalte col = view.pkSpalten.iterator().next();

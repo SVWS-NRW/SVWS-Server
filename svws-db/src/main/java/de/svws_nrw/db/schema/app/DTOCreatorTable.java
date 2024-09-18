@@ -279,14 +279,7 @@ public final class DTOCreatorTable {
 		// nur für Tabellen mit Primärschlüssel...
 		if (!tabelle.pkSpalten().isEmpty()) {
 			// Generiere Code für eine parametrisierte Query mit den Spalten des Primärschlüssels als Parameter
-			query = "SELECT e FROM " + tabelle.getJavaKlasse(rev) + " e WHERE ";
-			final var iter = tabelle.pkSpalten().iterator();
-			for (int i = 0; i < tabelle.pkSpalten().size(); i++) {
-				final SchemaTabelleSpalte col = iter.next();
-				if (i > 0)
-					query += " AND ";
-				query += "e." + col.javaAttributName() + " = ?" + (i + 1);
-			}
+			query = tabelle.getJPQLParameterizedQuery(rev);
 			sb.append(getQueryAttribute("PK", query, "Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute"));
 			// Generiere Code für eine parametrisierte Query mit einer Liste von Primärschlüsselwerten als Parameter, wenn es sich um ein DTO mit einem Primärschlüssel mit einem Attribute handelt
 			if (tabelle.pkSpalten().size() == 1) {
