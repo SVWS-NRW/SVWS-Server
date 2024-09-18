@@ -21,8 +21,8 @@
 
 	import { computed, ref } from "vue";
 	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
-	import type { StundenplanListeEintrag } from "@core";
 	import type { DataTableColumn } from "@ui";
+	import type { StundenplanListeEintrag } from "@core";
 
 	const props = defineProps<StundenplanAuswahlProps>();
 	const selected = ref<StundenplanListeEintrag[]>([]);

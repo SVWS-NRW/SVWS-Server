@@ -21,6 +21,7 @@ import { routeStundenplanUnterrichte } from "./RouteStundenplanUnterrichte";
 import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStundenplan";
 import { routeError } from "~/router/error/RouteError";
 import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
+import { routeStundenplanRaum } from "./RouteStundenplanRaum";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -43,6 +44,7 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanZeitrasterPausenzeit,
 			routeStundenplanKlasse,
 			routeStundenplanUnterrichte,
+			routeStundenplanRaum,
 		];
 		super.defaultChild = routeStundenplanDaten;
 	}

@@ -658,6 +658,14 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		await this.gotoEintrag(this.auswahl);
 	}
 
+	get ganzerStundenplanRaum(): boolean {
+		return api.config.getValue("stundenplan.raeume.ganzerStundenplan") === 'true';
+	}
+
+	setGanzerStundenplanRaum = async (value: boolean) => {
+		await api.config.setValue("stundenplan.raeume.ganzerStundenplan", value ? "true" : "false");
+	}
+
 	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag?.id));
 
 }
