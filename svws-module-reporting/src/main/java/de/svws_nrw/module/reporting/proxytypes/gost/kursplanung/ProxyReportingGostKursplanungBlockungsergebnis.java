@@ -175,6 +175,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 			// alle Schüler durchlaufen werden und deren Kursbelegung geprüft wird.
 			// Zudem fehlen in den Schienen der Schienenliste dieses Kurses die anderen Kurse der Schiene. Auch diese
 			// werden später nachgeladen, in dem das ProxySchienenobjekt alle Kurse durchläuft und deren Schienenzugehörigkeit auswertet.
+			final int schuljahr = (datenManager.daten().abijahrgang - 3) + (datenManager.daten().gostHalbjahr / 2);
 			final ReportingGostKursplanungKurs reportingGostKursplanungKurs = new ProxyReportingGostKursplanungKurs(
 					this,
 					ergebnisManager.getOfKursAnzahlSchuelerAbiturLK(kurs.id),
@@ -185,7 +186,8 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 					ergebnisManager.getOfKursAnzahlSchueler(kurs.id),
 					ergebnisManager.getOfKursAnzahlSchuelerSchriftlich(kurs.id),
 					datenManager.kursGetName(kurs.id),
-					reportingRepository.mapReportingFaecher().get(datenManager.kursGet(kurs.id).fach_id),
+					this.reportingRepository.schuljahresabschnitt(schuljahr, (datenManager.daten().gostHalbjahr % 2) + 1)
+							.fach(datenManager.kursGet(kurs.id).fach_id),
 					null,
 					GostHalbjahr.fromID(datenManager.daten().gostHalbjahr),
 					GostKursart.fromID(ergebnisManager.getKursE(kurs.id).kursart),

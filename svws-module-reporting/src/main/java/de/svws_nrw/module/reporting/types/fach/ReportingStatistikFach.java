@@ -22,9 +22,6 @@ public class ReportingStatistikFach {
 	/** Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht. */
 	protected boolean exportASD;
 
-	/** Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt. Andernfalls null. */
-	protected ReportingFach fach;
-
 	/** Die zugeordnete Fachgruppe */
 	protected Fachgruppe fachgruppe;
 
@@ -72,7 +69,6 @@ public class ReportingStatistikFach {
 	 * @param aufgabenfeld Das Aufgabenfeld, welchem das Fach ggf. zugeordnet ist (1, 2 oder 3)
 	 * @param bezeichnung Die textuelle Beschreibung des Faches
 	 * @param exportASD Gibt an, ob das Fach bei Export der amtlichen Schulstatistik berücksichtigt werden soll oder nicht.
-	 * @param fach Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt. Andernfalls null.
 	 * @param fachgruppe Die zugeordnete Fachgruppe
 	 * @param gueltigBis Gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt.
 	 * @param gueltigVon Gibt an, in welchem Schuljahr der Eintrag einführt wurde. Ist kein Schuljahr bekannt, so ist null gesetzt.
@@ -88,14 +84,13 @@ public class ReportingStatistikFach {
 	 * @param nurSII Gibt an, ob das Fach nur in der Sekundarstufe II unterrichtet wird.
 	 */
 	public ReportingStatistikFach(final String abJahrgang, final Integer aufgabenfeld, final String bezeichnung, final boolean exportASD,
-			final ReportingFach fach, final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB,
-			final long idFachkatalog, final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS,
-			final boolean istKonfKoop, final String kuerzel, final String kuerzelASD, final boolean nurSII) {
+			final Fachgruppe fachgruppe, final Integer gueltigBis, final Integer gueltigVon, final String htmlFarbeRGB, final long idFachkatalog,
+			final boolean istAusRegUFach, final boolean istErsatzPflichtFS, final boolean istFremdsprache, final boolean istHKFS, final boolean istKonfKoop,
+			final String kuerzel, final String kuerzelASD, final boolean nurSII) {
 		this.abJahrgang = abJahrgang;
 		this.aufgabenfeld = aufgabenfeld;
 		this.bezeichnung = bezeichnung;
 		this.exportASD = exportASD;
-		this.fach = fach;
 		this.fachgruppe = fachgruppe;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
@@ -144,14 +139,6 @@ public class ReportingStatistikFach {
 	 */
 	public boolean exportASD() {
 		return exportASD;
-	}
-
-	/**
-	 * Das Fach aus dem Fachkatalog der Schule, wenn dieses Fach dieses Statistikfach besitzt und das Fachkürzel mit dem Statistikfachkürzel übereinstimmt. Andernfalls null.
-	 * @return Inhalt des Feldes fach
-	 */
-	public ReportingFach fach() {
-		return fach;
 	}
 
 	/**

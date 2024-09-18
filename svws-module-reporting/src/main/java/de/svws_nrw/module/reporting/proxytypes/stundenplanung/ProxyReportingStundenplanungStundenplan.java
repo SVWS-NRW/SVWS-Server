@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.stundenplan.Stundenplan;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungRaum;
 import de.svws_nrw.module.reporting.types.stundenplanung.ReportingStundenplanungStundenplan;
@@ -58,10 +57,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 		if (!this.reportingRepository.mapStundenplaene().containsKey(stundenplan.id))
 			this.reportingRepository.mapStundenplaene().put(stundenplan.id, stundenplan);
 
-		if (this.reportingRepository.mapSchuljahresabschnitte().containsKey(stundenplan.idSchuljahresabschnitt)) {
-			super.schuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(
-					this.reportingRepository.mapSchuljahresabschnitte().get(stundenplan.idSchuljahresabschnitt));
-		}
+		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(stundenplan.idSchuljahresabschnitt);
 
 		// Räume und Zeitraster werden per Lasy-loading nachgeladen.
 	}

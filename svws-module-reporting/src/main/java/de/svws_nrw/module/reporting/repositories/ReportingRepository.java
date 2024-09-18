@@ -1,15 +1,13 @@
 package de.svws_nrw.module.reporting.repositories;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
-import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.Abiturdaten;
-import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
@@ -28,7 +26,6 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
-import de.svws_nrw.data.faecher.DataFachdaten;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.kataloge.DataOrte;
 import de.svws_nrw.data.kataloge.DataOrtsteile;
@@ -41,9 +38,10 @@ import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.data.stundenplan.DataStundenplan;
 import de.svws_nrw.data.stundenplan.DataStundenplanListe;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
-import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
@@ -74,12 +72,6 @@ public class ReportingRepository {
 	/** Die Stammdaten der Schule zur Datenbankanbindung. */
 	private final SchuleStammdaten schulstammdaten;
 
-	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
-	private final Schuljahresabschnitt aktuellerSchuljahresabschnitt;
-
-	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
-	private final Schuljahresabschnitt auswahlSchuljahresabschnitt;
-
 
 	/** Stellt den Katalog der Förderschwerpunkte über eine Map zur Förderschwerpunkt-ID zur Verfügung */
 	private Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
@@ -98,6 +90,9 @@ public class ReportingRepository {
 
 	/** Stellt die Daten von bereits abgerufenen ausgewählten Lernabschnitten zur Schüler-ID zur Verfügung. */
 	private final Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten = new HashMap<>();
+
+	/** Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar. */
+	private final Map<Long, DTOFach> mapFaecher = new HashMap<>();
 
 	/** Stellt die Daten der Abiturjahrgänge über eine Map zum Abiturjahr Verfügung. */
 	private final Map<Integer, GostJahrgangsdaten> mapGostAbiturjahrgangDaten = new HashMap<>();
@@ -123,18 +118,23 @@ public class ReportingRepository {
 	/** Stellt die Stammdaten von bereits abgerufenen Schülern über eine Map zur Schüler-ID zur Verfügung */
 	private final Map<Long, SchuelerStammdaten> mapSchuelerStammdaten = new HashMap<>();
 
-	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
-	private final Map<Long, Schuljahresabschnitt> mapSchuljahresabschnitte;
-
 	/** Stelle eine Liste aller Stundenplandefinitionen der Schule zur Verfügung, sortiert nach Schuljahresabschnitt und Gültigkeitsbeginn. */
 	private List<StundenplanListeEintrag> stundenplandefinitionen;
 
-	/** Stelle die bereits eingelesenen Stundepläne al Map zu ihrer ID zur Verfügung. */
+	/** Stelle die bereits eingelesenen Stundenpläne als Map zu ihrer ID zur Verfügung. */
 	private final Map<Long, Stundenplan> mapStundenplaene = new HashMap<>();
 
 
-	/** Stellt alle Fächer der Schule als Reporting-Objekte zur Fach-ID zur Verfügung */
-	private final Map<Long, ReportingFach> mapReportingFaecher = new HashMap<>();
+	// #########  Ab hier folgen Reporting-Objekte und keine Objekte aus dem Core. #########
+
+	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
+	private final Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte;
+
+	/** Der aktuelle Schuljahresabschnitt der Schule aus der Datenbankverbindung */
+	private final ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt;
+
+	/** Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde */
+	private final ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt;
 
 
 
@@ -195,19 +195,25 @@ public class ReportingRepository {
 		try {
 			this.schulstammdaten = DataSchuleStammdaten.getStammdaten(this.conn);
 
-			// Ermittle grundlegende Daten zur Schule
-			mapSchuljahresabschnitte = new DataSchuljahresabschnitte(this.conn).getAbschnitte().stream().collect(Collectors.toMap(a -> a.id, a -> a));
-			aktuellerSchuljahresabschnitt = this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.schulstammdaten.idSchuljahresabschnitt)
-					.toList().getFirst();
+			// Ermittle die Schuljahresabschnitte der Schule und erstelle damit eine Map der ReportingSchuljahresabschnitte
+			mapReportingSchuljahresabschnitte = (new DataSchuljahresabschnitte(this.conn).getAbschnitte())
+					.stream().collect(Collectors.toMap(a -> a.id, a -> new ProxyReportingSchuljahresabschnitt(this, a)));
 
-			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id)
+
+			aktuellerSchuljahresabschnitt =
+					this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.schulstammdaten.idSchuljahresabschnitt).toList()
+							.getFirst();
+
+			if ((this.reportingParameter.idSchuljahresabschnitt == this.aktuellerSchuljahresabschnitt.id())
 					|| (this.reportingParameter.idSchuljahresabschnitt < 0)
-					|| this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt).toList().isEmpty())
+					|| this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+							.isEmpty())
 				auswahlSchuljahresabschnitt = aktuellerSchuljahresabschnitt;
 			else
 				auswahlSchuljahresabschnitt =
-						this.mapSchuljahresabschnitte.values().stream().filter(a -> a.id == this.reportingParameter.idSchuljahresabschnitt)
-								.toList().getFirst();
+						this.mapReportingSchuljahresabschnitte.values().stream().filter(a -> a.id() == this.reportingParameter.idSchuljahresabschnitt).toList()
+								.getFirst();
+
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 8,
 					"FEHLER: Die Stamm- oder Abschnittsdaten der Schule konnten nicht ermittelt werden oder der übergebene Schuljahresabschnitt ist ungültig.");
@@ -218,14 +224,14 @@ public class ReportingRepository {
 		// Ermittle grundlegende Kataloge.
 		initKataloge();
 
+		// Ermittle Fächerdaten und schreibe sie in die zentrale Map.
+		initFachdaten();
+
 		// Ermittle die Stammdaten der Lehrer
 		initLehrerStammdaten();
 
 		// Ermittle die Klassen- und Jahrgangsdaten und Stammdaten
 		initJahrgaengeKlassen();
-
-		// Ermittle Fächerdaten und schreibe sie in die zentrale Map.
-		initFachdaten();
 
 		// Ermittle die Stundenpläne zum aktuellen und zum ausgewählten Schuljahresabschnitt.
 		initStundeplaene();
@@ -233,6 +239,48 @@ public class ReportingRepository {
 		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");
 	}
 
+
+	/**
+	 * Initialisiert die Daten der Kataloge.
+	 * @throws ApiOperationException	Im Fehlerfall
+	 */
+	private void initKataloge() throws ApiOperationException {
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
+
+			this.katalogFoerderschwerpunkte =
+					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Förderschwerpunkte geladen.");
+
+			this.katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Orte geladen.");
+
+			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Ortsteile geladen.");
+
+			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
+			this.logger.logLn(LogLevel.DEBUG, 8, "Katalog Religionen geladen.");
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e,
+					"FEHLER: Die Kataloge der Schule konnten nicht vollständig ermittelt werden.");
+		}
+	}
+
+	/**
+	 * Initialisiert die Daten der Fächer.
+	 * @throws ApiOperationException	Im Fehlerfall
+	 */
+	private void initFachdaten() throws ApiOperationException {
+		try {
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächer.");
+			mapFaecher.putAll(conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f)));
+		} catch (final Exception e) {
+			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Fächer konnten nicht ermittelt werden.");
+			throw new ApiOperationException(Status.NOT_FOUND, e,
+					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
+		}
+	}
 
 	/**
 	 * Initialisiert die Stammdaten der Lehrer.
@@ -266,53 +314,15 @@ public class ReportingRepository {
 		}
 		try {
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
-			this.mapKlassen = new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(aktuellerSchuljahresabschnitt.id, false).stream()
+			this.mapKlassen = new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(aktuellerSchuljahresabschnitt.id(), false).stream()
 					.collect(Collectors.toMap(k -> k.id, k -> k));
-			if (auswahlSchuljahresabschnitt.id != aktuellerSchuljahresabschnitt.id)
-				this.mapKlassen.putAll(new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(auswahlSchuljahresabschnitt.id, false).stream()
+			if (auswahlSchuljahresabschnitt.id() != aktuellerSchuljahresabschnitt.id())
+				this.mapKlassen.putAll(new DataKlassendaten(this.conn).getListBySchuljahresabschnittID(auswahlSchuljahresabschnitt.id(), false).stream()
 						.collect(Collectors.toMap(k -> k.id, k -> k)));
 		} catch (final Exception e) {
 			this.logger.logLn(LogLevel.ERROR, 4, "FEHLER: Die Klassendaten konnten nicht ermittelt werden.");
 			throw new ApiOperationException(Status.NOT_FOUND, e,
 					"FEHLER: Die Klassendaten. konnten nicht ermittelt werden.");
-		}
-	}
-
-	/**
-	 * Initialisiert die Daten der Kataloge.
-	 * @throws ApiOperationException	Im Fehlerfall
-	 */
-	private void initKataloge() throws ApiOperationException {
-		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Katalogdaten.");
-			this.katalogFoerderschwerpunkte =
-					new DataKatalogSchuelerFoerderschwerpunkte(this.conn).getAllFromDB().stream().collect(Collectors.toMap(f -> f.id, f -> f));
-			this.katalogOrte = new DataOrte(this.conn).getOrte().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.katalogOrtsteile = new DataOrtsteile(this.conn).getOrtsteile().stream().collect(Collectors.toMap(o -> o.id, o -> o));
-			this.katalogReligionen = new DataReligionen(this.conn).getListReligionen().stream().collect(Collectors.toMap(r -> r.id, r -> r));
-		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, e,
-					"FEHLER: Die Kataloge der Schule konnten nicht ermittelt werden.");
-		}
-	}
-
-	/**
-	 * Initialisiert die Daten der Fächer.
-	 * @throws ApiOperationException	Im Fehlerfall
-	 */
-	private void initFachdaten() throws ApiOperationException {
-		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle Fächerdaten.");
-			final Map<Long, FachDaten> mapFaecherDaten = new DataFachdaten(this.conn).getFaecherdaten();
-			final Map<Long, GostFach> mapFaecherGostDaten = new DataFachdaten(this.conn).getFaecherGostdaten(auswahlSchuljahresabschnitt().schuljahr);
-			for (final FachDaten fach : mapFaecherDaten.values()) {
-				mapReportingFaecher.put(fach.id, new ProxyReportingFach(this, fach, mapFaecherGostDaten.get(fach.id)));
-			}
-		} catch (final Exception e) {
-			this.logger.logLn(LogLevel.ERROR, 8, "FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
-			throw new ApiOperationException(Status.NOT_FOUND, e,
-					"FEHLER: Die Daten der Fächer konnten nicht ermittelt werden.");
 		}
 	}
 
@@ -327,8 +337,8 @@ public class ReportingRepository {
 			this.stundenplandefinitionen = DataStundenplanListe.getStundenplaene(this.conn, null);
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Stundenpläne für den aktuellen und ausgewählten Schuljahresabschnitt.");
 			final List<StundenplanListeEintrag> filterStundenplandefinitionen =
-					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == aktuellerSchuljahresabschnitt.id)
-							|| (d.idSchuljahresabschnitt == auswahlSchuljahresabschnitt.id))).toList();
+					stundenplandefinitionen.stream().filter(d -> ((d.idSchuljahresabschnitt == aktuellerSchuljahresabschnitt.id())
+							|| (d.idSchuljahresabschnitt == auswahlSchuljahresabschnitt.id()))).toList();
 			if (!filterStundenplandefinitionen.isEmpty()) {
 				for (final StundenplanListeEintrag stundenplandefinition : filterStundenplandefinitionen) {
 					final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinition.id);
@@ -387,10 +397,46 @@ public class ReportingRepository {
 
 
 	/**
+	 * Stellt alle Schuljahresabschnitte der Schule aus der Datenbankverbindung zur Verfügung
+	 * @return Alle Schuljahresabschnitte der Schule
+	 */
+	public List<ReportingSchuljahresabschnitt> schuljahresabschnitte() {
+		return mapReportingSchuljahresabschnitte.values().stream().sorted(
+				Comparator.comparing(ReportingSchuljahresabschnitt::schuljahr)
+						.thenComparing(ReportingSchuljahresabschnitt::abschnitt))
+				.toList();
+	}
+
+	/**
+	 * Stellt den angeforderten Schuljahresabschnitt der Schule aus der Datenbankverbindung zur Verfügung
+	 * @param id Die ID des angeforderten Schuljahresabschnitts
+	 * @return Schuljahresabschnitt der Schule zur ID
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnitt(final long id) {
+		return mapReportingSchuljahresabschnitte.get(id);
+	}
+
+	/**
+	 * Stellt den angeforderten Schuljahresabschnitt der Schule aus der Datenbankverbindung zur Verfügung
+	 * @param schuljahr Das Schuljahr des angeforderten Schuljahresabschnitts
+	 * @param abschnitt Der Abschnitt des angeforderten Schuljahresabschnitts
+	 * @return Schuljahresabschnitt der Schule zu den Parametern
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnitt(final int schuljahr, final int abschnitt) {
+		final List<ReportingSchuljahresabschnitt> reportingSchuljahresabschnitte =
+				mapReportingSchuljahresabschnitte.values().stream().filter(a -> (a.schuljahr() == schuljahr) && (a.abschnitt() == abschnitt)).toList();
+		if (!reportingSchuljahresabschnitte.isEmpty()) {
+			return reportingSchuljahresabschnitte.getFirst();
+		} else
+			return null;
+	}
+
+
+	/**
 	 * Stellt den aktuellen Schuljahresabschnitt der Schule aus der Datenbankverbindung zur Verfügung
 	 * @return Aktueller Schuljahresabschnitt der Schule
 	 */
-	public Schuljahresabschnitt aktuellerSchuljahresabschnitt() {
+	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
 		return aktuellerSchuljahresabschnitt;
 	}
 
@@ -398,18 +444,10 @@ public class ReportingRepository {
 	 * Der ausgewählte Schuljahresabschnitt, der für die Ausgabe der Reports ausgewählt wurde
 	 * @return Schuljahresabschnitt der Auswahl für den Druck
 	 */
-	public Schuljahresabschnitt auswahlSchuljahresabschnitt() {
+	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
 		return auswahlSchuljahresabschnitt;
 	}
 
-	/**
-	 * Das Schuljahr des ausgewählten Schuljahresabschnitts, der für die Ausgabe der Reports ausgewählt wurde
-	 *
-	 * @return Schuljahr der Auswahl für den Druck
-	 */
-	public int auswahlSchuljahr() {
-		return auswahlSchuljahresabschnitt.schuljahr;
-	}
 
 
 
@@ -460,6 +498,14 @@ public class ReportingRepository {
 	 */
 	public Map<Long, SchuelerLernabschnittsdaten> mapAuswahlLernabschnittsdaten() {
 		return mapAuswahlLernabschnittsdaten;
+	}
+
+	/**
+	 * Stellt alle Fächer der Schule als DTOs zur Fach-ID zur Verfügung. Die Reporting-Fächer -Objekte sind in den Schuljahresabschnitten abrufbar.
+	 * @return Map der Fächer-DTO
+	 */
+	public Map<Long, DTOFach> mapFaecher() {
+		return mapFaecher;
 	}
 
 	/**
@@ -527,14 +573,6 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stellt die Map der Schuljahresabschnitte der Schule aus der Datenbankverbindung zu deren IDs zur Verfügung
-	 * @return Map der Schuljahresabschnitte
-	 */
-	public Map<Long, Schuljahresabschnitt> mapSchuljahresabschnitte() {
-		return mapSchuljahresabschnitte;
-	}
-
-	/**
 	 * Stelle eine Liste aller Stundenplandefinitionen der Schule zur Verfügung, sortiert nach Schuljahresabschnitt und Gültigkeitsbeginn.
 	 * @return Inhalt des Feldes stundenplandefinitionen
 	 */
@@ -580,13 +618,5 @@ public class ReportingRepository {
 		return null;
 	}
 
-
-	/**
-	 * Stellt alle Fächer der Schule als Reporting-Objekte zur Fach-ID zur Verfügung
-	 * @return Map der Reporting-Fächer
-	 */
-	public Map<Long, ReportingFach> mapReportingFaecher() {
-		return mapReportingFaecher;
-	}
 
 }

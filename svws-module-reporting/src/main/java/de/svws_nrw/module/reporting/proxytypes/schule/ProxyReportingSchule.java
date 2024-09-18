@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchule;
-import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schule und erweitert die Klasse {@link ReportingSchule}.</p>
@@ -67,11 +66,12 @@ public class ProxyReportingSchule extends ReportingSchule {
 				reportingRepository.schulstammdaten().webAdresse);
 
 		this.reportingRepository = reportingRepository;
+
 		super.schullogo = new DataSchuleStammdaten(this.reportingRepository.conn()).getSchullogoBase64();
-		super.schuljahresabschnitte = this.reportingRepository.mapSchuljahresabschnitte().values().stream()
-				.map(a -> (ReportingSchuljahresabschnitt) new ProxyReportingSchuljahresabschnitt(a)).toList();
-		super.aktuellerSchuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(this.reportingRepository.aktuellerSchuljahresabschnitt());
-		super.auswahlSchuljahresabschnitt = new ProxyReportingSchuljahresabschnitt(this.reportingRepository.auswahlSchuljahresabschnitt());
+
+		super.schuljahresabschnitte = this.reportingRepository.schuljahresabschnitte();
+		super.aktuellerSchuljahresabschnitt = this.reportingRepository.aktuellerSchuljahresabschnitt();
+		super.auswahlSchuljahresabschnitt = this.reportingRepository.auswahlSchuljahresabschnitt();
 	}
 
 

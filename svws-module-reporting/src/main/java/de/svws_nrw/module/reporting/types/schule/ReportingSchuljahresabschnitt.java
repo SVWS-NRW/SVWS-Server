@@ -1,5 +1,10 @@
 package de.svws_nrw.module.reporting.types.schule;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt.</p>
  * <p>Sie enthälten Daten zu einem Schuljahresabschnitt, also zum Schuljahr und Halbjahr.</p>
@@ -17,18 +22,23 @@ public class ReportingSchuljahresabschnitt {
 	/** Das Schuljahr, in welchem der Schuljahresabschnitt liegt */
 	protected int schuljahr;
 
+	/** Die Fächer des Schuljahresabschnitts */
+	protected List<ReportingFach> faecher = new ArrayList<>();
+
 
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param abschnitt Die Nummer des Abschnitts im Schuljahr
-	 * @param id Die ID des Schuljahresabschnittes
+	 * @param id 		Die ID des Schuljahresabschnittes
 	 * @param schuljahr Das Schuljahr, in welchem der Schuljahresabschnitt liegt
+	 * @param faecher	Die Fächer des Schuljahresabschnitts
 	 */
-	public ReportingSchuljahresabschnitt(final int abschnitt, final long id, final int schuljahr) {
+	public ReportingSchuljahresabschnitt(final int abschnitt, final long id, final int schuljahr, final List<ReportingFach> faecher) {
 		this.abschnitt = abschnitt;
 		this.id = id;
 		this.schuljahr = schuljahr;
+		this.faecher = faecher;
 	}
 
 
@@ -48,6 +58,16 @@ public class ReportingSchuljahresabschnitt {
 	public String textSchuljahresabschnittLang() {
 		return "%s/%s %s. Halbjahr".formatted(schuljahr, (schuljahr % 100) + 1, abschnitt);
 	}
+
+	/**
+	 * Gibt das Fach zur ID aus der Liste der Fächer des Schuljahresabschnitts zurück
+	 * @param id	Die ID des Faches
+	 * @return 		Das Fach zur ID oder null, wenn das Fach nicht vorhanden ist.
+	 */
+	public ReportingFach fach(final long id) {
+		return faecher().stream().filter(f -> f.id() == id).findFirst().orElse(null);
+	}
+
 
 
 	// ##### Getter #####
@@ -76,4 +96,11 @@ public class ReportingSchuljahresabschnitt {
 		return schuljahr;
 	}
 
+	/**
+	 * Die Fächer des Schuljahresabschnitts
+	 * @return Inhalt des Feldes faecher
+	 */
+	public List<ReportingFach> faecher() {
+		return faecher;
+	}
 }

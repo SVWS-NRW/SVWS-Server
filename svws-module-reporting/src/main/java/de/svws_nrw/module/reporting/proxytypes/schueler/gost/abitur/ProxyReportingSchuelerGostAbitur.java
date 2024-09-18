@@ -77,7 +77,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 		super.besondereLernleistungNote = Note.fromKuerzel(abiturdaten.besondereLernleistungNotenKuerzel);
 
 		super.fachbelegungen()
-				.addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, f)).toList());
+				.addAll(abiturdaten.fachbelegungen.stream().map(f -> new ProxyReportingGostAbiturFachbelegung(this.reportingRepository, abiturdaten.schuljahrAbitur, f)).toList());
 
 		this.fachbelegungen().sort(ReportingGostAbiturFachbelegung::compareToGost);
 	}

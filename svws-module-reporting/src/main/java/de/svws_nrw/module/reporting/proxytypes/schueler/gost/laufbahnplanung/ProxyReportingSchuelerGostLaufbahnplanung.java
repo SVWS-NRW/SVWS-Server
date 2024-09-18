@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
@@ -74,7 +75,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
-
+	/** Das im Repository ausgewählte Schuljahr. Auf dessen Basis werden die Statistikdaten geladen. */
+	@JsonIgnore
+	private final int auswahlSchuljahr;
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis eines Stammdaten-Objektes.
@@ -85,7 +88,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) {
 		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0,
 				0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 		this.reportingRepository = reportingRepository;
+		this.auswahlSchuljahr = this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr();
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
 		// Initialisierung.
@@ -113,7 +118,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
 			tempGostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
 			tempGostFaecherManager =
-					DBUtilsFaecherGost.getFaecherManager(reportingRepository.auswahlSchuljahr(), this.reportingRepository.conn(), super.abiturjahr());
+					DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(),
+							super.abiturjahr());
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Manager).", e,
@@ -147,14 +153,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
 			super.aktuellesGOStHalbjahr = reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt;
+					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt();
 			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
 			eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
 		}
 
 		if (reportingSchueler.auswahlLernabschnitt() != null) {
 			super.auswahlGOStHalbjahr = reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt;
+					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
 			super.auswahlKlasse = reportingSchueler.auswahlLernabschnitt().klasse().kuerzel();
 			eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
 		}
@@ -366,8 +372,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			Sprachpruefung sprachpruefung = null;
 
 			if (checkIstFremdsprachenfach(fach, zfach)) {
-				sprachbelegung = sprachbelegungen.get(zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel);
-				sprachpruefung = sprachpruefungen.get(zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel);
+				sprachbelegung = sprachbelegungen.get(zfach.daten(auswahlSchuljahr).kuerzel);
+				sprachpruefung = sprachpruefungen.get(zfach.daten(auswahlSchuljahr).kuerzel);
 			}
 
 			if (sprachbelegung != null) {
@@ -378,7 +384,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					positionFremdsprachenfolge = (sprachbelegung.reihenfolge != null) ? sprachbelegung.reihenfolge.toString() : "";
 				}
 			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten,
-					zfach.daten(reportingRepository.auswahlSchuljahr()).kuerzel))) {
+					zfach.daten(auswahlSchuljahr).kuerzel))) {
 				istFortfuehrbareFremdspracheInGOSt = true;
 				if (sprachpruefung.istFeststellungspruefung) {
 					jahrgangFremdsprachenbeginn = "SFP";
@@ -394,7 +400,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
 					abiturfach,
 					belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22,
-					reportingRepository.mapReportingFaecher().get(fach.id),
+					reportingRepository.auswahlSchuljahresabschnitt().fach(fach.id),
 					fachBelegtInGost,
 					istFortfuehrbareFremdspracheInGOSt,
 					jahrgangFremdsprachenbeginn,
@@ -423,7 +429,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @return		true, wenn es eine reguläre Fremdsprache ist, sonst false.
 	 */
 	private static boolean checkIstFremdsprachenfach(final GostFach fach, final Fach zfach) {
-		return fach.istFremdsprache && (zfach != null) && !(Fach.PX == zfach || Fach.VX == zfach);
+		return fach.istFremdsprache && (zfach != null) && !((Fach.PX == zfach) || (Fach.VX == zfach));
 	}
 
 
@@ -434,13 +440,17 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @return					true, wenn eine Belegung möglich war, sonst false
 	 */
 	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
-		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-				&& ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang == null)
-						|| zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.isEmpty()
-						|| ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
-								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-						|| ((zfach.daten(reportingRepository.auswahlSchuljahr()).abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
-								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
+		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
+		if (abJahrgang == null)
+			return true;
+		else
+			abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
+
+		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) && ((abJahrgang == null) || abJahrgang.isEmpty()
+				|| ((abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
+						&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+				|| ((abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
+						&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
 	}
 
 

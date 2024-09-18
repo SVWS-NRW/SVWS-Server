@@ -2,6 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
@@ -92,9 +93,26 @@ public final class DataFachdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Map<Long, FachDaten> getFaecherdaten() throws ApiOperationException {
+		return getFaecherdatenFromList(conn.queryAll(DTOFach.class));
+	}
+
+	/**
+	 * Erstellt eine Map auf Basis einer Liste mit Fach-DTO, die alle Fächer als Fachdaten-Objekte zur Fach-ID enthält.
+	 *
+	 * @param listFaecher Liste der Fach-DTOs, aus denen die Map erstellt werden soll.
+	 *
+	 * @return Map der Fachdaten zur Fach-ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Map<Long, FachDaten> getFaecherdatenFromList(final List<DTOFach> listFaecher) throws ApiOperationException {
 		final Map<Long, FachDaten> mapFaecher = new HashMap<>();
-		for (final DTOFach f : conn.queryAll(DTOFach.class))
-			mapFaecher.put(f.ID, dtoMapperFach.apply(f));
+		if ((listFaecher != null) && !listFaecher.isEmpty()) {
+			for (final DTOFach f : listFaecher) {
+				if (f != null)
+					mapFaecher.put(f.ID, dtoMapperFach.apply(f));
+			}
+		}
 		return mapFaecher;
 	}
 

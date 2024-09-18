@@ -22,7 +22,6 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
@@ -88,9 +87,11 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 		this.reportingRepository = reportingRepository;
 
+		// Schuljahresabschnitt zum Kurs ermitteln
+		super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(kursDaten.idSchuljahresabschnitt);
+
 		// Fach setzen
-		if (this.reportingRepository.mapReportingFaecher().containsKey(kursDaten.idFach))
-			super.fach = this.reportingRepository.mapReportingFaecher().get(kursDaten.idFach);
+		super.fach = super.schuljahresabschnitt.fach(kursDaten.idFach);
 
 		// Jahrgänge setzen
 		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
@@ -138,10 +139,6 @@ public class ProxyReportingKurs extends ReportingKurs {
 		if ((kursDaten.schueler != null) && !kursDaten.schueler.isEmpty()) {
 			super.idsSchueler = kursDaten.schueler.stream().map(s -> s.id).toList();
 		}
-
-		// Schuljahresabschnitt zum Kurs ermitteln
-		super.schuljahresabschnitt =
-				new ProxyReportingSchuljahresabschnitt(this.reportingRepository.mapSchuljahresabschnitte().get(kursDaten.idSchuljahresabschnitt));
 	}
 
 	// Initialisiert alle Lehrer-Stammdaten des Kurses.

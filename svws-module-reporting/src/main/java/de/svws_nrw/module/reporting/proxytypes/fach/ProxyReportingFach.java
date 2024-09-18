@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.proxytypes.fach;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.asd.types.fach.Fach;
@@ -29,19 +28,13 @@ import de.svws_nrw.module.reporting.types.fach.ReportingFach;
  */
 public class ProxyReportingFach extends ReportingFach {
 
-	/** Repository für die Reporting */
-	@JsonIgnore
-	private final ReportingRepository reportingRepository;
-
-
-
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis der Daten eines Fach- und GostFach-Objektes.
-	 * @param reportingRepository Repository für die Reporting.
-	 * @param fachDaten Fach-Daten-Objekt
-	 * @param fachGostDaten GostFach-Daten-Objekt
+	 * @param fachDaten 	Die allgemeinen Daten des Faches
+	 * @param fachGostDaten Die GOSt-Daten des Faches
+	 * @param schuljahr		Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.
 	 */
-	public ProxyReportingFach(final ReportingRepository reportingRepository, final FachDaten fachDaten, final GostFach fachGostDaten) {
+	public ProxyReportingFach(final FachDaten fachDaten, final GostFach fachGostDaten, final int schuljahr) {
 		super(fachDaten.aufgabenfeld,
 				fachDaten.aufZeugnis,
 				fachDaten.bezeichnung,
@@ -64,10 +57,9 @@ public class ProxyReportingFach extends ReportingFach {
 				fachDaten.maxZeichenInFachbemerkungen,
 				fachDaten.sortierung,
 				null);
-		this.reportingRepository = reportingRepository;
 
 		if ((fachDaten.kuerzelStatistik != null) && !fachDaten.kuerzelStatistik.isEmpty()) {
-			super.statistikfach = new ProxyReportingStatistikFach(reportingRepository, Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik));
+			super.statistikfach = new ProxyReportingStatistikFach(Fach.getBySchluesselOrDefault(fachDaten.kuerzelStatistik), schuljahr, true);
 			super.fachgruppe = super.statistikfach().fachgruppe();
 		}
 
@@ -75,15 +67,5 @@ public class ProxyReportingFach extends ReportingFach {
 			this.istFremdsprache = fachGostDaten.istFremdsprache;
 			this.istFremdSpracheNeuEinsetzend = fachGostDaten.istFremdSpracheNeuEinsetzend;
 		}
-	}
-
-
-
-	/**
-	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
-	 * @return Repository für die Reporting
-	 */
-	public ReportingRepository reportingRepository() {
-		return reportingRepository;
 	}
 }

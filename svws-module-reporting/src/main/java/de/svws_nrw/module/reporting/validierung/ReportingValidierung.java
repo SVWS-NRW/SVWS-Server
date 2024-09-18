@@ -122,7 +122,7 @@ public final class ReportingValidierung {
 			reportingRepository.mapSchuelerStammdaten().putAll(mapSchueler);
 			reportingRepository.mapAktuelleLernabschnittsdaten()
 					.putAll(new DataSchuelerLernabschnittsdaten(conn)
-							.getListFromSchuelerIDsUndSchuljahresabschnittID(idsSchueler, reportingRepository.aktuellerSchuljahresabschnitt().id, false)
+							.getListFromSchuelerIDsUndSchuljahresabschnittID(idsSchueler, reportingRepository.aktuellerSchuljahresabschnitt().id(), false)
 							.stream().collect(Collectors.toMap(l -> l.schuelerID, l -> l)));
 			reportingRepository.logger().logLn(LogLevel.DEBUG, 4, "Ende der Speicherung der Daten aus der Validierung der Schülerdaten im Repository.");
 		}

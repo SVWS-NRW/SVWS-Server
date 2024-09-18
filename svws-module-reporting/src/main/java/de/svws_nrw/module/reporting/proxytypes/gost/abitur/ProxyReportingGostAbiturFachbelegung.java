@@ -7,6 +7,7 @@ import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -43,10 +44,12 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis der Daten aus der Datenbank.
-	 * @param reportingRepository Repository für die Reporting.
-	 * @param abiturFachbelegung Daten-Objekt der Fachbelegungen aus der Datenbank
+	 * @param reportingRepository 	Repository für die Reporting.
+	 * @param schuljahrAbitur		Das Schuljahr der Abiturprüfung
+	 * @param abiturFachbelegung 	Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
-	public ProxyReportingGostAbiturFachbelegung(final ReportingRepository reportingRepository, final AbiturFachbelegung abiturFachbelegung) {
+	public ProxyReportingGostAbiturFachbelegung(final ReportingRepository reportingRepository, final int schuljahrAbitur,
+			final AbiturFachbelegung abiturFachbelegung) {
 		super(abiturFachbelegung.abiturFach,
 				abiturFachbelegung.block1NotenpunkteDurchschnitt,
 				abiturFachbelegung.block1PunktSumme,
@@ -83,8 +86,6 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 							}));
 		}
 
-		super.fach = this.reportingRepository.mapReportingFaecher().get(abiturFachbelegung.fachID);
-
 		final ReportingGostAbiturFachbelegungHalbjahr[] belegungenHJ = new ReportingGostAbiturFachbelegungHalbjahr[6];
 		for (int i = 0; i < 6; i++) {
 			if (abiturFachbelegung.belegungen[i] != null) {
@@ -93,6 +94,12 @@ public class ProxyReportingGostAbiturFachbelegung extends ReportingGostAbiturFac
 				belegungenHJ[i] = null;
 		}
 		super.halbjahresbelegungen = belegungenHJ;
+
+		// Für die Daten des Faches wird mindestens der Abschnitt Q11 benötigt. Wenn dieser nicht existiert, dann kann die Belegung nicht existieren.
+		// Da in der Q-Phase konstante Fachbedingungen gelten müssen, kann hier die Q11 verwendet werden.
+		final ReportingSchuljahresabschnitt abschnittQ11 = this.reportingRepository.schuljahresabschnitt(schuljahrAbitur - 1, 1);
+		if (abschnittQ11 != null)
+			super.fach = abschnittQ11.fach(abiturFachbelegung.fachID);
 	}
 
 

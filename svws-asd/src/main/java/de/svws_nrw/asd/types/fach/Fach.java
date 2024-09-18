@@ -15,7 +15,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * Ein Core-Type für die für den Zeugnisdruck erforderlichen Fachgruppen
  */
-public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
+public enum 	Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Arbeits- und Betriebswirtschaftslehre */
 	AB,

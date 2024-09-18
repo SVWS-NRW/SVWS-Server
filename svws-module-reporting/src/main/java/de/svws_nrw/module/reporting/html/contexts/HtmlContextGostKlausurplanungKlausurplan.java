@@ -82,19 +82,20 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		} else {
 			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
 			// EF:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 3,
-					reportingRepository.auswahlSchuljahresabschnitt().abschnitt - 1));
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 3,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() - 1));
 			// Q1:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 2,
-					reportingRepository.auswahlSchuljahresabschnitt().abschnitt + 1));
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 2,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() + 1));
 			// Q2:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr + 1,
-					reportingRepository.auswahlSchuljahresabschnitt().abschnitt + 3));
+			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 1,
+					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() + 3));
 		}
 
 		try {
 			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
-			final GostKlausurplanManager gostKlausurManager = new GostKlausurplanManager(reportingRepository.auswahlSchuljahresabschnitt().schuljahr, allData);
+			final GostKlausurplanManager gostKlausurManager =
+					new GostKlausurplanManager(reportingRepository.auswahlSchuljahresabschnitt().schuljahr(), allData);
 
 			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager, idsFilterSchueler);
 

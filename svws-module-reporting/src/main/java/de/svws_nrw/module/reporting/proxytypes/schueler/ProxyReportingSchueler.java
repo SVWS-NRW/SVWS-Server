@@ -158,7 +158,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				if (!lernabschnitte().isEmpty()) {
 					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
 							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
 					if (!tmpListAbschnitte.isEmpty())
 						super.aktuellerLernabschnitt = tmpListAbschnitte.getFirst();
 				}
@@ -181,7 +181,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				if (!lernabschnitte().isEmpty()) {
 					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
 							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
 					if (!tmpListAbschnitte.isEmpty())
 						super.auswahlLernabschnitt = tmpListAbschnitte.getFirst();
 				}
@@ -269,10 +269,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			} else {
 				final List<SchuelerLernabschnittsdaten> tmpListAktuell =
 						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
 				final List<SchuelerLernabschnittsdaten> tmpListAuswahl =
 						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
 				if (!tmpListAktuell.isEmpty())
 					this.reportingRepository.mapAktuelleLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAktuell.getFirst());
 				if (!tmpListAuswahl.isEmpty())

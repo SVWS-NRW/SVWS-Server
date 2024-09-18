@@ -18,7 +18,6 @@ import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
-import de.svws_nrw.module.reporting.proxytypes.schule.ProxyReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
@@ -245,8 +244,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
 		if ((super.schuljahresabschnitt() == null) && (super.idSchuljahresabschnitt() >= 0)) {
-			super.schuljahresabschnitt =
-					new ProxyReportingSchuljahresabschnitt(reportingRepository().mapSchuljahresabschnitte().get(super.idSchuljahresabschnitt()));
+			super.schuljahresabschnitt = this.reportingRepository.schuljahresabschnitt(super.idSchuljahresabschnitt());
 		}
 		return super.schuljahresabschnitt();
 	}
