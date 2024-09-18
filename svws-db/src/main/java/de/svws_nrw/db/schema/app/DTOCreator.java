@@ -64,6 +64,140 @@ public class DTOCreator {
 
 
 	/**
+	 * Erstellt oder ersetzt die angegebene Datei mit den Daten aus dem übergebenen String
+	 *
+	 * @param file   die Datei
+	 * @param data   die Daten als String
+	 */
+	private static void createOrReplaceFile(final File file, final String data) {
+		try {
+			Files.writeString(file.toPath(), data, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			cmdLine.printOptionsAndExit(1, "Fehler beim Erstellen der Datei " + file.getName() + " (" + file.getPath() + ")");
+		}
+	}
+
+
+
+	/**
+	 * Generiert den JavaDTO-Klassencode für die übergebene Tabelle und legt ihn an dem
+	 * spezifiziertem Pfad ab.
+	 *
+	 * @param baseDir                     das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
+	 * @param rev                         die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
+	 * @param dto                         die Tabelle, für welche der Code erzeugt wird
+	 * @param codeDTOImports              der bisherige Code für die DTO-Importe (zum Anhängen)
+	 * @param codeMapDTOName2DTOClass     der bisherige Code für die Map DTO-Name zu DTO-Klasse (zum Anhängen)
+	 * @param codeMapTablename2DTOClass   der bisherige Code für die Map DTO-Tabellenname zu DTO-Klasse (zum Anhängen)
+	 *
+	 * @return true im Erfolgsfall und ansonsten false
+	 */
+	private static boolean createJavaCodeForTable(final String baseDir, final long rev, final DTOCreatorTable dto,
+			final StringBuilder codeDTOImports, final StringBuilder codeMapDTOName2DTOClass, final StringBuilder codeMapTablename2DTOClass) {
+		logger.log("Tabelle " + dto.tabelle.name() + ": ");
+		final String javaPackage = dto.getPackageName(rev);
+		if (!dto.tabelle.isDefined(rev)) {
+			logger.logLn("---");
+			return true;
+		}
+		if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!dto.tabelle.brauchtDeveloperDTO()))) {
+			logger.logLn("- nicht benötigt");
+			return true;
+		}
+		try {
+			// Erstelle das Verzeichnis für das Package
+			final String fullqualifiedClassname = javaPackage + "." + dto.tabelle.getJavaKlasse(rev);
+			logger.log("-> " + fullqualifiedClassname);
+			allClasses.add(fullqualifiedClassname);
+			final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
+			Files.createDirectories(dir.toPath());
+			// Generiere den Code für die Java DTO-Klasse
+			File file = new File(dir, dto.tabelle.getJavaKlasse(rev) + ".java");
+			String code = dto.getCode(rev);
+			createOrReplaceFile(file, code);
+			// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
+			codeDTOImports.append("import ").append(javaPackage).append(".").append(dto.tabelle.getJavaKlasse(rev)).append(";")
+					.append(System.lineSeparator());
+			codeMapDTOName2DTOClass.append("             mapDTOName2DTOClass.put(").append(dto.tabelle.getJavaKlasse(rev))
+					.append(".class.getSimpleName(), ").append(dto.tabelle.getJavaKlasse(rev)).append(".class);").append(System.lineSeparator());
+			codeMapTablename2DTOClass.append("             mapTablename2DTOClass.put(\"").append(dto.tabelle.name()).append("\", ")
+					.append(dto.tabelle.getJavaKlasse(rev)).append(".class);").append(System.lineSeparator());
+			// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
+			if ((dto.tabelle.pkSpalten() == null) || (dto.tabelle.pkSpalten().size() != 1)) {
+				logger.log(" (" + dto.tabelle.getJavaKlasse(rev) + "PK)");
+				file = new File(dir, dto.tabelle.getJavaKlasse(rev) + "PK.java");
+				code = dto.getCode4PrimaryKeyClass(rev);
+				createOrReplaceFile(file, code);
+			}
+			logger.logLn("");
+			return true;
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad"
+					+ " oder die CSV-Datei.");
+			return false;
+		}
+	}
+
+
+	/**
+	 * Generiert den JavaDTO-Klassencode für die übergebene View und legt ihn an dem
+	 * spezifiziertem Pfad ab.
+	 *
+	 * @param baseDir                     das Verzeichnis, in welchem das Package für die DTOs erzeugt werden soll
+	 * @param rev                         die Revision, für die die DTOs erzeugt werden sollen (-1 für die neueste Revision)
+	 * @param view                        die View, für welche der Code erzeugt wird
+	 * @param codeDTOImports              der bisherige Code für die DTO-Importe (zum Anhängen)
+	 * @param codeMapDTOName2DTOClass     der bisherige Code für die Map DTO-Name zu DTO-Klasse (zum Anhängen)
+	 * @param codeMapTablename2DTOClass   der bisherige Code für die Map DTO-Tabellenname zu DTO-Klasse (zum Anhängen)
+	 *
+	 * @return true im Erfolgsfall und ansonsten false
+	 */
+	private static boolean createJavaCodeForView(final String baseDir, final long rev, final View view,
+			final StringBuilder codeDTOImports, final StringBuilder codeMapDTOName2DTOClass, final StringBuilder codeMapTablename2DTOClass) {
+		final String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
+		logger.log("View " + view.name + ": ");
+		if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!view.brauchtDeveloperDTO()))) {
+			logger.logLn("- nicht benötigt");
+			return true;
+		}
+		final DTOCreatorView creator = new DTOCreatorView(view);
+		final String javaPackage = packagename + view.packageName;
+		final String className = (rev < 0) ? view.dtoName : ("Dev" + view.dtoName);
+		try {
+			// Erstelle das Verzeichnis für das Package
+			final String fullqualifiedClassname = javaPackage + "." + className;
+			logger.log("-> " + fullqualifiedClassname);
+			allClasses.add(fullqualifiedClassname);
+			final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
+			Files.createDirectories(dir.toPath());
+			// Generiere den Code für die Java DTO-Klasse
+			File file = new File(dir, className + ".java");
+			String code = creator.getCode(rev);
+			createOrReplaceFile(file, code);
+			// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
+			codeDTOImports.append("import ").append(javaPackage).append(".").append(className).append(";").append(System.lineSeparator());
+			codeMapDTOName2DTOClass.append("             mapDTOName2DTOClass.put(").append(className).append(".class.getSimpleName(), ")
+					.append(className).append(".class);").append(System.lineSeparator());
+			codeMapTablename2DTOClass.append("             mapTablename2DTOClass.put(\"").append(view.name).append("\", ").append(className)
+					.append(".class);").append(System.lineSeparator());
+			// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
+			if (!view.hasSimplePrimaryKey()) {
+				logger.log(" (" + className + "PK)");
+				file = new File(dir, className + "PK.java");
+				code = creator.getCode4PrimaryKeyClass(rev);
+				createOrReplaceFile(file, code);
+			}
+			logger.logLn("");
+			return true;
+		} catch (@SuppressWarnings("unused") final IOException e) {
+			cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad"
+					+ " oder die CSV-Datei.");
+			return false;
+		}
+	}
+
+
+	/**
 	 * Generiert den JavaDTO-Klassencode des Parameter Schemas und legt ihn an dem
 	 * spezifiziertem Pfad ab.
 	 *
@@ -84,195 +218,98 @@ public class DTOCreator {
 		else if (rev == 0)
 			dtosClassname = "MigrationDTOs";
 		final File dtosFile = new File(packageDir, dtosClassname + ".java");
-		String codeDTOImports = "";
-		String codeMapDTOName2DTOClass = "";
-		String codeMapTablename2DTOClass = "";
+		final StringBuilder codeDTOImports = new StringBuilder();
+		final StringBuilder codeMapDTOName2DTOClass = new StringBuilder();
+		final StringBuilder codeMapTablename2DTOClass = new StringBuilder();
 
 		// Erzeuge die DTOs für die einzelnen Tabellen
-		for (final DTOCreatorTable dto : DTOCreatorTable.all) {
-			logger.log("Tabelle " + dto.tabelle.name() + ": ");
-			final String javaPackage = dto.getPackageName(rev);
-			if (!dto.tabelle.isDefined(rev)) {
-				logger.logLn("---");
-				continue;
-			}
-			if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!dto.tabelle.brauchtDeveloperDTO()))) {
-				logger.logLn("- nicht benötigt");
-				continue;
-			}
-			try {
-				// Erstelle das Verzeichnis für das Package
-				final String fullqualifiedClassname = javaPackage + "." + dto.tabelle.getJavaKlasse(rev);
-				logger.log("-> " + fullqualifiedClassname);
-				allClasses.add(fullqualifiedClassname);
-				final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
-				Files.createDirectories(dir.toPath());
-				// Generiere den Code für die Java DTO-Klasse
-				File file = new File(dir, dto.tabelle.getJavaKlasse(rev) + ".java");
-				String code = dto.getCode(rev);
-				try {
-					Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-				} catch (@SuppressWarnings("unused") final IOException e) {
-					cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
-				}
-				// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
-				codeDTOImports += "import " + javaPackage + "." + dto.tabelle.getJavaKlasse(rev) + ";" + System.lineSeparator();
-				codeMapDTOName2DTOClass += "             mapDTOName2DTOClass.put(" + dto.tabelle.getJavaKlasse(rev) + ".class.getSimpleName(), "
-						+ dto.tabelle.getJavaKlasse(rev) + ".class);" + System.lineSeparator();
-				codeMapTablename2DTOClass += "             mapTablename2DTOClass.put(\"" + dto.tabelle.name() + "\", " + dto.tabelle.getJavaKlasse(rev)
-						+ ".class);" + System.lineSeparator();
-				// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
-				if ((dto.tabelle.pkSpalten() == null) || (dto.tabelle.pkSpalten().size() != 1)) {
-					logger.log(" (" + dto.tabelle.getJavaKlasse(rev) + "PK)");
-					file = new File(dir, dto.tabelle.getJavaKlasse(rev) + "PK.java");
-					code = dto.getCode4PrimaryKeyClass(rev);
-					try {
-						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (@SuppressWarnings("unused") final IOException e) {
-						cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
-					}
-				}
-				logger.logLn("");
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad"
-						+ " oder die CSV-Datei.");
+		for (final DTOCreatorTable dto : DTOCreatorTable.all)
+			if (!createJavaCodeForTable(baseDir, rev, dto, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass))
 				return packageDir;
-			}
-		}
 
 		// Erzeuge die DTOs für die einzelnen Views
 		if (rev != 0) {
 			final long revision = (rev < 0) ? SchemaRevisionen.maxRevision.revision : rev;
-			final String packagename = Schema.javaPackage + "." + Schema.javaDTOPackage + ((rev < 0) ? ".current" : ".dev") + ".";
-			for (final View view : DBSchemaViews.getInstance().getViewsActive(revision)) {
-				logger.log("View " + view.name + ": ");
-				if ((rev == SchemaRevisionen.maxRevision.revision) || ((rev > SchemaRevisionen.maxRevision.revision) && (!view.brauchtDeveloperDTO()))) {
-					logger.logLn("- nicht benötigt");
-					continue;
-				}
-				final DTOCreatorView creator = new DTOCreatorView(view);
-				final String javaPackage = packagename + view.packageName;
-				final String className = (rev < 0) ? view.dtoName : ("Dev" + view.dtoName);
-				try {
-					// Erstelle das Verzeichnis für das Package
-					final String fullqualifiedClassname = javaPackage + "." + className;
-					logger.log("-> " + fullqualifiedClassname);
-					allClasses.add(fullqualifiedClassname);
-					final File dir = new File(baseDir + ((baseDir.endsWith("/") ? "" : "/") + javaPackage.replace(".", "/")));
-					Files.createDirectories(dir.toPath());
-					// Generiere den Code für die Java DTO-Klasse
-					File file = new File(dir, className + ".java");
-					String code = creator.getCode(rev);
-					try {
-						Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-					} catch (@SuppressWarnings("unused") final IOException e) {
-						cmdLine.printOptionsAndExit(3, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
-					}
-					// Erzeuge den Code zum Registrieren der DTO-Klasse in dem Verzeichnis der DTO-Klassen
-					codeDTOImports += "import " + javaPackage + "." + className + ";" + System.lineSeparator();
-					codeMapDTOName2DTOClass +=
-							"             mapDTOName2DTOClass.put(" + className + ".class.getSimpleName(), " + className + ".class);" + System.lineSeparator();
-					codeMapTablename2DTOClass +=
-							"             mapTablename2DTOClass.put(\"" + view.name + "\", " + className + ".class);" + System.lineSeparator();
-					// Generierere ggf. zusätzliche Code für eine Primary Key - Klasse
-					if (!view.hasSimplePrimaryKey()) {
-						logger.log(" (" + className + "PK)");
-						file = new File(dir, className + "PK.java");
-						code = creator.getCode4PrimaryKeyClass(rev);
-						try {
-							Files.writeString(file.toPath(), code, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-						} catch (@SuppressWarnings("unused") final IOException e) {
-							cmdLine.printOptionsAndExit(4, "Fehler beim Schreiben des Java-Codes in die Datei " + file.getPath());
-						}
-					}
-					logger.logLn("");
-				} catch (@SuppressWarnings("unused") final IOException e) {
-					cmdLine.printOptionsAndExit(5, "Fehler beim Erstellen des Verzeichnisses für das Package. Korrigieren Sie entweder den Ausgabe-Pfad"
-							+ " oder die CSV-Datei.");
+			for (final View view : DBSchemaViews.getInstance().getViewsActive(revision))
+				if (!createJavaCodeForView(baseDir, rev, view, codeDTOImports, codeMapDTOName2DTOClass, codeMapTablename2DTOClass))
 					return packageDir;
-				}
-			}
 		}
 
-		try {
-			final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "import java.util.HashMap;" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ codeDTOImports
-					+ "" + System.lineSeparator()
-					+ "/**" + System.lineSeparator()
-					+ " * Diese Klasse dient als Verzeichnis aller Datenbank-DTO-Klassen." + System.lineSeparator()
-					+ " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
-					+ " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
-					+ " */" + System.lineSeparator()
-					+ "public final class " + dtosClassname + " {" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /** Enthält das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den entsprechenden Java-DTO-Klassen. */"
-					+ System.lineSeparator()
-					+ "    private static HashMap<String, Class<? extends Object>> mapDTOName2DTOClass = null;" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /** Enthält das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB. */" + System.lineSeparator()
-					+ "    private static HashMap<String, Class<? extends Object>> mapTablename2DTOClass = null;" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "     private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {" + System.lineSeparator()
-					+ "         if (mapDTOName2DTOClass == null) {" + System.lineSeparator()
-					+ "             mapDTOName2DTOClass = new HashMap<>();" + System.lineSeparator()
-					+ codeMapDTOName2DTOClass
-					+ "         }" + System.lineSeparator()
-					+ "         return mapDTOName2DTOClass;" + System.lineSeparator()
-					+ "     }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt die DTO-Klasse mit dem angegebenen DTO-Namen zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @param name   der DTO-Name" + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return die DTO-Klasse" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "    public static Class<? extends Object> getFromDTOName(final String name) {" + System.lineSeparator()
-					+ "        return getMapDTOName2DTOClass().get(name);" + System.lineSeparator()
-					+ "    }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den zugehörigen" + System.lineSeparator()
-					+ "     * Java-DTO-Klassen zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "     private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {" + System.lineSeparator()
-					+ "         if (mapTablename2DTOClass == null) {" + System.lineSeparator()
-					+ "             mapTablename2DTOClass = new HashMap<>();" + System.lineSeparator()
-					+ codeMapTablename2DTOClass
-					+ "         }" + System.lineSeparator()
-					+ "         return mapTablename2DTOClass;" + System.lineSeparator()
-					+ "     }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt die DTO-Klasse mit dem angegebenen Tabellennamen zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @param name   der Tabellenname" + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return die DTO-Klasse" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "    public static Class<? extends Object> getFromTableName(final String name) {" + System.lineSeparator()
-					+ "        return getMapTablename2DTOClass().get(name);" + System.lineSeparator()
-					+ "    }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "}" + System.lineSeparator();
-			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
-		}
+		final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "import java.util.HashMap;" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ codeDTOImports.toString()
+				+ "" + System.lineSeparator()
+				+ "/**" + System.lineSeparator()
+				+ " * Diese Klasse dient als Verzeichnis aller Datenbank-DTO-Klassen." + System.lineSeparator()
+				+ " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
+				+ " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
+				+ " */" + System.lineSeparator()
+				+ "public final class " + dtosClassname + " {" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /** Enthält das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den entsprechenden Java-DTO-Klassen. */"
+				+ System.lineSeparator()
+				+ "    private static HashMap<String, Class<? extends Object>> mapDTOName2DTOClass = null;" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /** Enthält das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB. */" + System.lineSeparator()
+				+ "    private static HashMap<String, Class<? extends Object>> mapTablename2DTOClass = null;" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt das Mapping der Datenbank-Tabellennamen zu den zugehörigen Java-DTO-Klassen für die SVWS-DB zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "     private static HashMap<String, Class<? extends Object>> getMapDTOName2DTOClass() {" + System.lineSeparator()
+				+ "         if (mapDTOName2DTOClass == null) {" + System.lineSeparator()
+				+ "             mapDTOName2DTOClass = new HashMap<>();" + System.lineSeparator()
+				+ codeMapDTOName2DTOClass.toString()
+				+ "         }" + System.lineSeparator()
+				+ "         return mapDTOName2DTOClass;" + System.lineSeparator()
+				+ "     }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt die DTO-Klasse mit dem angegebenen DTO-Namen zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @param name   der DTO-Name" + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return die DTO-Klasse" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    public static Class<? extends Object> getFromDTOName(final String name) {" + System.lineSeparator()
+				+ "        return getMapDTOName2DTOClass().get(name);" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt das Mapping der Namen aller Java-DTO-Klassen für die SVWS-DB zu den zugehörigen" + System.lineSeparator()
+				+ "     * Java-DTO-Klassen zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return eine Hashmap mit dem Mapping" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "     private static HashMap<String, Class<? extends Object>> getMapTablename2DTOClass() {" + System.lineSeparator()
+				+ "         if (mapTablename2DTOClass == null) {" + System.lineSeparator()
+				+ "             mapTablename2DTOClass = new HashMap<>();" + System.lineSeparator()
+				+ codeMapTablename2DTOClass.toString()
+				+ "         }" + System.lineSeparator()
+				+ "         return mapTablename2DTOClass;" + System.lineSeparator()
+				+ "     }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt die DTO-Klasse mit dem angegebenen Tabellennamen zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @param name   der Tabellenname" + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return die DTO-Klasse" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    public static Class<? extends Object> getFromTableName(final String name) {" + System.lineSeparator()
+				+ "        return getMapTablename2DTOClass().get(name);" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "}" + System.lineSeparator();
+		createOrReplaceFile(dtosFile, dtosCode);
 
 		return packageDir;
 	}
@@ -286,65 +323,61 @@ public class DTOCreator {
 	 */
 	private static void writeDTOHelper(final File packageDir) {
 		final File dtosFile = new File(packageDir, "DTOHelper.java");
-		try {
-			final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "import de.svws_nrw.db.schema.SchemaRevisionen;" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "/**" + System.lineSeparator()
-					+ " * Diese Klasse dient als Hilfsklasse zum Zugriff auf die Datenbank-DTO-Klassen unterschiedlicher Revisionen." + System.lineSeparator()
-					+ " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
-					+ " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
-					+ " */" + System.lineSeparator()
-					+ "public class DTOHelper {" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt die DTO-Klasse mit dem angegebenen DTO-Namen zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @param name   der DTO-Name" + System.lineSeparator()
-					+ "     * @param rev    die Datenbank-Revision für welche die DTO benötigt werden" + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return die DTO-Klasse" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "    public static Class<? extends Object> getFromDTOName(final String name, final long rev) {" + System.lineSeparator()
-					+ "        if (rev == 0) {" + System.lineSeparator()
-					+ "            return MigrationDTOs.getFromDTOName(name);" + System.lineSeparator()
-					+ "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
-					+ "            return DTOs.getFromDTOName(name);" + System.lineSeparator()
-					+ "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
-					+ "            return DevDTOs.getFromDTOName(name);" + System.lineSeparator()
-					+ "        } else {" + System.lineSeparator()
-					+ "            return null;" + System.lineSeparator()
-					+ "        }" + System.lineSeparator()
-					+ "    }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "    /**" + System.lineSeparator()
-					+ "     * Gibt die DTO-Klasse mit dem angegebenen Tabellennamen zurück." + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @param name   der Tabellenname" + System.lineSeparator()
-					+ "     * @param rev    die Datenbank-Revision für welche die DTO benötigt werden" + System.lineSeparator()
-					+ "     *" + System.lineSeparator()
-					+ "     * @return die DTO-Klasse" + System.lineSeparator()
-					+ "     */" + System.lineSeparator()
-					+ "    public static Class<? extends Object> getFromTableName(final String name, final long rev) {" + System.lineSeparator()
-					+ "        if (rev == 0) {" + System.lineSeparator()
-					+ "            return MigrationDTOs.getFromTableName(name);" + System.lineSeparator()
-					+ "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
-					+ "            return DTOs.getFromTableName(name);" + System.lineSeparator()
-					+ "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
-					+ "            return DevDTOs.getFromTableName(name);" + System.lineSeparator()
-					+ "        } else {" + System.lineSeparator()
-					+ "            return null;" + System.lineSeparator()
-					+ "        }" + System.lineSeparator()
-					+ "    }" + System.lineSeparator()
-					+ "" + System.lineSeparator()
-					+ "}" + System.lineSeparator();
-			Files.writeString(dtosFile.toPath(), dtosCode, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben des Java-Codes in die Datei " + dtosFile.getPath());
-		}
+		final String dtosCode = "package " + Schema.javaPackage + "." + Schema.javaDTOPackage + ";" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "import de.svws_nrw.db.schema.SchemaRevisionen;" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "/**" + System.lineSeparator()
+				+ " * Diese Klasse dient als Hilfsklasse zum Zugriff auf die Datenbank-DTO-Klassen unterschiedlicher Revisionen." + System.lineSeparator()
+				+ " * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden," + System.lineSeparator()
+				+ " * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird." + System.lineSeparator()
+				+ " */" + System.lineSeparator()
+				+ "public class DTOHelper {" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt die DTO-Klasse mit dem angegebenen DTO-Namen zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @param name   der DTO-Name" + System.lineSeparator()
+				+ "     * @param rev    die Datenbank-Revision für welche die DTO benötigt werden" + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return die DTO-Klasse" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    public static Class<? extends Object> getFromDTOName(final String name, final long rev) {" + System.lineSeparator()
+				+ "        if (rev == 0) {" + System.lineSeparator()
+				+ "            return MigrationDTOs.getFromDTOName(name);" + System.lineSeparator()
+				+ "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
+				+ "            return DTOs.getFromDTOName(name);" + System.lineSeparator()
+				+ "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
+				+ "            return DevDTOs.getFromDTOName(name);" + System.lineSeparator()
+				+ "        } else {" + System.lineSeparator()
+				+ "            return null;" + System.lineSeparator()
+				+ "        }" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "    /**" + System.lineSeparator()
+				+ "     * Gibt die DTO-Klasse mit dem angegebenen Tabellennamen zurück." + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @param name   der Tabellenname" + System.lineSeparator()
+				+ "     * @param rev    die Datenbank-Revision für welche die DTO benötigt werden" + System.lineSeparator()
+				+ "     *" + System.lineSeparator()
+				+ "     * @return die DTO-Klasse" + System.lineSeparator()
+				+ "     */" + System.lineSeparator()
+				+ "    public static Class<? extends Object> getFromTableName(final String name, final long rev) {" + System.lineSeparator()
+				+ "        if (rev == 0) {" + System.lineSeparator()
+				+ "            return MigrationDTOs.getFromTableName(name);" + System.lineSeparator()
+				+ "        } else if ((rev < 0) || (rev <= SchemaRevisionen.maxRevision.revision)) {" + System.lineSeparator()
+				+ "            return DTOs.getFromTableName(name);" + System.lineSeparator()
+				+ "        } else if (rev <= SchemaRevisionen.maxDeveloperRevision.revision) {" + System.lineSeparator()
+				+ "            return DevDTOs.getFromTableName(name);" + System.lineSeparator()
+				+ "        } else {" + System.lineSeparator()
+				+ "            return null;" + System.lineSeparator()
+				+ "        }" + System.lineSeparator()
+				+ "    }" + System.lineSeparator()
+				+ "" + System.lineSeparator()
+				+ "}" + System.lineSeparator();
+		createOrReplaceFile(dtosFile, dtosCode);
 	}
 
 
@@ -405,11 +438,7 @@ public class DTOCreator {
                        </persistence-unit>
                   </persistence>
                   """);
-		try {
-			Files.writeString(p, sb.toString(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			cmdLine.printOptionsAndExit(6, "Fehler beim Schreiben der persistence.xml in die Datei " + pathxml);
-		}
+		createOrReplaceFile(p.toFile(), sb.toString());
 	}
 
 

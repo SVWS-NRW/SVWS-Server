@@ -33,7 +33,7 @@ export abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	/**
 	 * Erstellt einen CoreTypeSimple mit Standardwerten
 	 */
-	public constructor() {
+	protected constructor() {
 		super();
 	}
 
