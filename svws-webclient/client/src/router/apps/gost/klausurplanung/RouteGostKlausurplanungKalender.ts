@@ -48,7 +48,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			routeGostKlausurplanung.data.terminSelected.value = termin ?? undefined;
 			if ((abiturjahr === undefined) || (halbjahr === null))
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen definiert sein.");
-			const kwEntry = (kw && kw.length < 6 ) ? undefined : kw;
+			const kwEntry = (kw !== undefined && kw.length < 6 ) ? undefined : kw;
 			const kwJahr = (kwEntry !== undefined) ? parseInt(kwEntry.substring(0, 4)) : -1;
 			const kwWeek = (kwEntry !== undefined) ? parseInt(kwEntry.substring(4)) : -1;
 			if ((kwEntry === undefined) && (kwFrom === undefined)) {
@@ -57,7 +57,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 					: routeGostKlausurplanung.data.kalenderwoche.value;
 				return this.getRoute(abiturjahr, halbjahr.id, parseInt(kwNeu.jahr.toString() + "" + kwNeu.kw.toString()), termin ? termin.id : termin);
 			} else if ((kwEntry === undefined) && (kwFrom !== undefined)) {
-				return this.getRoute(abiturjahr, halbjahr.id, kwFrom, termin ? termin.id : termin);
+				return this.getRoute(abiturjahr, halbjahr.id, parseInt(kwFrom), termin ? termin.id : termin);
 			} else if (kwEntry !== undefined) {
 				routeGostKlausurplanung.data.kalenderwoche.value = routeGostKlausurplanung.data.manager.getStundenplanManager().kalenderwochenzuordnungGetByJahrAndKWOrClosest(kwJahr, kwWeek);
 			}

@@ -75,7 +75,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			let view: RouteNode<any, any> = this.view;
 
 			if (abiturjahr === -1) {
-				if ((view !== routeGostKlausurplanungKalender) && (view !== routeGostKlausurplanungVorgaben))
+				if (view !== routeGostKlausurplanungVorgaben)
 					view = routeGostKlausurplanungVorgaben;
 			}
 

@@ -69,7 +69,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	public checkHidden(params?: RouteParams) {
 		try {
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: null };
-			if ((abiturjahr === null) || (abiturjahr === -1))
+			if ((abiturjahr === null))
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
@@ -110,7 +110,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 			if (changedHalbjahr || (to.name === this.name)) {
-				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idtermin)
+				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idtermin !== undefined)
 					return this.data.view.getRoute(abiturjahr, halbjahr.id, idtermin);
 				if (this.data.view.name === "gost.klausurplanung.kalender")
 					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw, idtermin);
