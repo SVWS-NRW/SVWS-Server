@@ -1,12 +1,7 @@
 package de.svws_nrw.asd.types.schule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -604,17 +599,6 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	Y8;
 
 
-	/** Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer. */
-	private static final @NotNull HashMap<Long, Set<Schulform>> _mapSchulformenByID = new HashMap<>();
-
-	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
-
-	private static final @NotNull Map<Integer, Map<Schulform, List<Schulgliederung>>> _mapSchulgliederungBySchuljahrAndSchulform = new HashMap<>();
-
-	private static final @NotNull Map<Integer, Map<Schulform, Map<String, Schulgliederung>>> _mapSchulgliederungBySchuljahrAndSchulformAndSchluessel =
-			new HashMap<>();
-
-
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -622,9 +606,6 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<SchulgliederungKatalogEintrag, Schulgliederung> manager) {
 		CoreTypeDataManager.putManager(Schulgliederung.class, manager);
-		for (final var ct : data().getWerte())
-			for (final var e : ct.historie())
-				_mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 
@@ -666,15 +647,7 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform sf) {
-		final SchulgliederungKatalogEintrag ke = this.daten(schuljahr);
-		if (ke != null) {
-			final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
-			if (result == null)
-				throw new CoreTypeException(
-						"Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
-			return result.contains(sf);
-		}
-		return false;
+		return data().hatSchulform(schuljahr, sf, this);
 	}
 
 
@@ -699,21 +672,9 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Schulgliederungen
 	 */
 	public static @NotNull List<Schulgliederung> getBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
-		final Map<Schulform, List<Schulgliederung>> mapSchulgliederungenBySchulformOfSchuljahr =
-				_mapSchulgliederungBySchuljahrAndSchulform.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, List<Schulgliederung>>());
-		if (mapSchulgliederungenBySchulformOfSchuljahr == null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
-		List<Schulgliederung> result = mapSchulgliederungenBySchulformOfSchuljahr.get(schulform);
-		if (result == null) {
-			result = new ArrayList<>();
-			final List<Schulgliederung> schulgliederungen = Schulgliederung.data().getWerteBySchuljahr(schuljahr);
-			for (final @NotNull Schulgliederung schulgliederung : schulgliederungen)
-				if (schulgliederung.hatSchulform(schuljahr, schulform))
-					result.add(schulgliederung);
-			mapSchulgliederungenBySchulformOfSchuljahr.put(schulform, result);
-		}
-		return result;
+		return data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
+
 
 	/**
 	 * Liefert die zulässige Schulgliederungen für die angegebene Schulform in dem angegebenen Schuljahr und dem angebenen Schlüssel oder
@@ -726,24 +687,7 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	 * @return die bei der Schulform in dem angegebenen Schuljahr dem Schlüssel zugehörige Schulgliederung oder null falls eine solche nicht existiert
 	 */
 	public static Schulgliederung getBySchuljahrAndSchulformAndSchluessel(final int schuljahr, final @NotNull Schulform schulform, final @NotNull String schluessel) {
-		final Map<Schulform, Map<String, Schulgliederung>> mapSchulgliederungenBySchulformAndSchluessel =
-				_mapSchulgliederungBySchuljahrAndSchulformAndSchluessel.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, Map<String, Schulgliederung>>());
-		if (mapSchulgliederungenBySchulformAndSchluessel == null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
-		Map<String, Schulgliederung> mapSchulgliederungenBySchluessel = mapSchulgliederungenBySchulformAndSchluessel.get(schulform);
-		if (mapSchulgliederungenBySchluessel == null) {
-			mapSchulgliederungenBySchluessel = new HashMap<>();
-			final List<Schulgliederung> schulgliederungen = Schulgliederung.data().getWerteBySchuljahr(schuljahr);
-			for (final @NotNull Schulgliederung schulgliederung : schulgliederungen) {
-				if (!schulgliederung.hatSchulform(schuljahr, schulform))
-					continue;
-				final SchulgliederungKatalogEintrag sgke = schulgliederung.daten(schuljahr);
-				if (sgke != null)
-					mapSchulgliederungenBySchluessel.put(sgke.schluessel, schulgliederung);
-			}
-			mapSchulgliederungenBySchulformAndSchluessel.put(schulform, mapSchulgliederungenBySchluessel);
-		}
-		return mapSchulgliederungenBySchluessel.get(schluessel);
+		return data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, schluessel);
 	}
 
 }

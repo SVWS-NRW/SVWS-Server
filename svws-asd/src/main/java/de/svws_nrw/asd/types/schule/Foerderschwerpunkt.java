@@ -1,10 +1,6 @@
 package de.svws_nrw.asd.types.schule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import de.svws_nrw.asd.data.schule.FoerderschwerpunktKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
@@ -65,16 +61,6 @@ public enum Foerderschwerpunkt implements @NotNull CoreType<FoerderschwerpunktKa
 	XX;
 
 
-	/** Eine Map, welche die Menge der erlaubten Schulformen den IDs der Förderschwerpunkt-Einträge zuordnet. */
-	private static final @NotNull HashMap<Long, Set<Schulform>> _mapSchulformenByID = new HashMap<>();
-
-
-	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
-
-	private static final @NotNull Map<Integer, Map<Schulform, List<Foerderschwerpunkt>>> _mapFoerderschwerpunkteBySchuljahrAndSchulform = new HashMap<>();
-
-
-
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -82,9 +68,6 @@ public enum Foerderschwerpunkt implements @NotNull CoreType<FoerderschwerpunktKa
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<FoerderschwerpunktKatalogEintrag, Foerderschwerpunkt> manager) {
 		CoreTypeDataManager.putManager(Foerderschwerpunkt.class, manager);
-		for (final var ct : data().getWerte())
-			for (final var e : ct.historie())
-				_mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 
@@ -106,12 +89,8 @@ public enum Foerderschwerpunkt implements @NotNull CoreType<FoerderschwerpunktKa
 	 *
 	 * @return true, wenn er zulässig ist uns ansonsten false
 	 */
-	public boolean hatSchulform(final int schuljahr, final Schulform schulform) {
-		final FoerderschwerpunktKatalogEintrag fske = this.daten(schuljahr);
-		if (fske == null)
-			return false;
-		final Set<Schulform> schulformen = _mapSchulformenByID.get(fske.id);
-		return (schulformen != null) && (schulformen.contains(schulform));
+	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform schulform) {
+		return data().hatSchulform(schuljahr, schulform, this);
 	}
 
 
@@ -124,21 +103,7 @@ public enum Foerderschwerpunkt implements @NotNull CoreType<FoerderschwerpunktKa
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Förderschwerpunkte
 	 */
 	public static @NotNull List<Foerderschwerpunkt> getBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
-		final Map<Schulform, List<Foerderschwerpunkt>> mapFoerderschwerpunkteBySchulformOfSchuljahr =
-				_mapFoerderschwerpunkteBySchuljahrAndSchulform.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, List<Foerderschwerpunkt>>());
-		if (mapFoerderschwerpunkteBySchulformOfSchuljahr == null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
-		List<Foerderschwerpunkt> result = mapFoerderschwerpunkteBySchulformOfSchuljahr.get(schulform);
-		if (result == null) {
-			result = new ArrayList<>();
-			final List<Foerderschwerpunkt> schwerpunkte = Foerderschwerpunkt.data().getWerteBySchuljahr(schuljahr);
-			for (final @NotNull Foerderschwerpunkt schwerpunkt : schwerpunkte)
-				if (schwerpunkt.hatSchulform(schuljahr, schulform))
-					result.add(schwerpunkt);
-			mapFoerderschwerpunkteBySchulformOfSchuljahr.put(schulform, result);
-		}
-		return result;
+		return data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
-
 
 }

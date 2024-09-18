@@ -1,12 +1,7 @@
 package de.svws_nrw.asd.types.jahrgang;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
@@ -109,14 +104,6 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	SEMESTER_06;
 
 
-	/** Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer. */
-	private static final @NotNull HashMap<Long, Set<Schulform>> _mapSchulformenByID = new HashMap<>();
-
-	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
-
-	private static final @NotNull Map<Integer, Map<Schulform, List<Jahrgaenge>>> _mapBySchuljahrAndSchulform = new HashMap<>();
-
-
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -124,9 +111,6 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<JahrgaengeKatalogEintrag, Jahrgaenge> manager) {
 		CoreTypeDataManager.putManager(Jahrgaenge.class, manager);
-		for (final var ct : data().getWerte())
-			for (final var e : ct.historie())
-				_mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 
@@ -149,14 +133,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform sf) {
-		final JahrgaengeKatalogEintrag ke = this.daten(schuljahr);
-		if (ke != null) {
-			final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
-			if (result == null)
-				throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
-			return result.contains(sf);
-		}
-		return false;
+		return data().hatSchulform(schuljahr, sf, this);
 	}
 
 
@@ -169,13 +146,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return der Katalog-Eintrag oder null, wenn keiner gefunden wird
 	 */
 	public JahrgaengeKatalogEintrag getBySchulform(final int schuljahr, final @NotNull Schulform sf) {
-		final JahrgaengeKatalogEintrag ke = this.daten(schuljahr);
-		if (ke == null)
-			return null;
-		final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
-		if (result == null)
-			throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
-		return result.contains(sf) ? ke : null;
+		return data().getBySchulform(schuljahr, sf, this);
 	}
 
 
@@ -445,20 +416,7 @@ public enum Jahrgaenge implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge>
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Jahrgänge
 	 */
 	public static @NotNull List<Jahrgaenge> getListBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
-		final Map<Schulform, List<Jahrgaenge>> mapBySchulform =
-				_mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, List<Jahrgaenge>>());
-		if (mapBySchulform == null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
-		List<Jahrgaenge> result = mapBySchulform.get(schulform);
-		if (result == null) {
-			result = new ArrayList<>();
-			final List<Jahrgaenge> jahrgaenge = Jahrgaenge.data().getWerteBySchuljahr(schuljahr);
-			for (final @NotNull Jahrgaenge jahrgang : jahrgaenge)
-				if (jahrgang.hatSchulform(schuljahr, schulform))
-					result.add(jahrgang);
-			mapBySchulform.put(schulform, result);
-		}
-		return result;
+		return data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
 
 }

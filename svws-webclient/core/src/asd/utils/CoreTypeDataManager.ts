@@ -1,12 +1,16 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
+import { CoreTypeDataNurSchulformen, cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformen } from '../../asd/data/CoreTypeDataNurSchulformen';
 import { HashMap } from '../../java/util/HashMap';
+import { Schulform } from '../../asd/types/schule/Schulform';
 import { ArrayList } from '../../java/util/ArrayList';
+import { JavaString } from '../../java/lang/JavaString';
 import { JavaInteger } from '../../java/lang/JavaInteger';
+import { NullPointerException } from '../../java/lang/NullPointerException';
 import { Class } from '../../java/lang/Class';
 import type { List } from '../../java/util/List';
 import type { CoreType } from '../../asd/types/CoreType';
-import { CoreTypeData } from '../../asd/data/CoreTypeData';
+import { CoreTypeData, cast_de_svws_nrw_asd_data_CoreTypeData } from '../../asd/data/CoreTypeData';
 import { Arrays } from '../../java/util/Arrays';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { CoreTypeException } from '../../asd/data/CoreTypeException';
@@ -80,6 +84,11 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	private readonly _mapKuerzelToEnum : JavaMap<string, U> = new HashMap<string, U>();
 
 	/**
+	 * Die Map mit der Zuordnung der zulässigen Schulformen zu der ID eines Historieneintrags. Liegt keine Einschränkung vor, so ist die Menge leer.
+	 */
+	private readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
+
+	/**
 	 * Eine Map mit der Zuordnung der Liste der Werte zu einem Schuljahr
 	 */
 	private readonly _mapSchuljahrToWerte : JavaMap<number, List<U>> = new HashMap<number, List<U>>();
@@ -88,6 +97,16 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Core-Type-Wert
 	 */
 	private readonly _mapWertAndSchuljahrToEintrag : HashMap<number, HashMap<U, T>> = new HashMap<number, HashMap<U, T>>();
+
+	/**
+	 * Eine geschachtelte Map mit der Zuordnung einer Liste von Core-Type-Werten zu einem Schuljahr und einer Schulform
+	 */
+	private readonly _mapBySchuljahrAndSchulform : JavaMap<number, JavaMap<Schulform, List<U>>> = new HashMap<number, JavaMap<Schulform, List<U>>>();
+
+	/**
+	 * Eine geschachtelte Map mit der Zuordnung einer von Core-Type-Werten zu einem Schuljahr, einer Schulform und dem Schlüssel
+	 */
+	private readonly _mapBySchuljahrAndSchulformAndSchluessel : JavaMap<number, JavaMap<Schulform, JavaMap<string, U>>> = new HashMap<number, JavaMap<Schulform, JavaMap<string, U>>>();
 
 
 	/**
@@ -140,6 +159,12 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				this._mapIDToEnum.put(eintrag.id, coreTypeEntry);
 				this._mapSchluesselToEnum.put(eintrag.schluessel, coreTypeEntry);
 				this._mapKuerzelToEnum.put(eintrag.kuerzel, coreTypeEntry);
+				const setSchulformen : JavaSet<Schulform> | null = new HashSet<Schulform>();
+				if (((eintrag instanceof JavaObject) && (eintrag.isTranspiledInstanceOf('de.svws_nrw.asd.data.CoreTypeDataNurSchulformen')))) {
+					const listSchulformen : List<string> = (cast_de_svws_nrw_asd_data_CoreTypeDataNurSchulformen(eintrag)).schulformen;
+					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(listSchulformen));
+				}
+				this._mapSchulformenByID.put(eintrag.id, setSchulformen);
 			}
 		}
 	}
@@ -260,7 +285,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/**
 	 * Gibt die Core-Type-Werte für die angegebenen Bezeichner als Set zurück.
 	 *
-	 * @param bezeichner   die Lister der Bezeichner
+	 * @param bezeichner   die Liste der Bezeichner
 	 *
 	 * @return das Set der Core-Type-Werte
 	 */
@@ -274,7 +299,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/**
 	 * Gibt die Core-Type-Werte für die angegebenen Bezeichner als nicht-leeres Set zurück.
 	 *
-	 * @param bezeichner   die Lister der Bezeichner
+	 * @param bezeichner   die Liste der Bezeichner
 	 *
 	 * @return das nicht-leeres Set der Core-Type-Werte
 	 */
@@ -461,6 +486,92 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 			this._mapSchuljahrToWerte.put(schuljahr, result);
 		}
 		return new ArrayList<U>(result);
+	}
+
+	/**
+	 * Prüft, ob die Schulform bei diesem Core-Type-Wert in dem angegeben Schuljahr zulässig ist oder nicht.
+	 *
+	 * @param schuljahr   das zu prüfende Schuljahr
+	 * @param sf          die Schulform, auf die geprüft wird
+	 * @param value       der Core-Type-Wert
+	 *
+	 * @return true, falls die Schulform zulässig ist, und ansonsten false
+	 */
+	public hatSchulform(schuljahr : number, sf : Schulform, value : U) : boolean {
+		return (this.getBySchulform(schuljahr, sf, value) !== null);
+	}
+
+	/**
+	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergenene Schulform in dem übergebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param sf          die Schulform
+	 * @param value       der Core-Type-Wert
+	 *
+	 * @return der Katalog-Eintrag oder null, wenn keiner gefunden wird
+	 */
+	public getBySchulform(schuljahr : number, sf : Schulform, value : U) : T | null {
+		const eintrag : T | null = this.getEintragBySchuljahrUndWert(schuljahr, value);
+		if (eintrag === null)
+			return null;
+		const result : JavaSet<Schulform> | null = this._mapSchulformenByID.get(eintrag.id);
+		if (result === null)
+			throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
+		return (result.isEmpty() || result.contains(sf)) ? eintrag : null;
+	}
+
+	/**
+	 * Liefert alle zulässigen Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param schulform   die Schulform
+	 *
+	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Core-Type-Werte
+	 */
+	public getListBySchuljahrAndSchulform(schuljahr : number, schulform : Schulform) : List<U> {
+		const mapBySchulform : JavaMap<Schulform, List<U>> | null = this._mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, List<U>>() });
+		if (mapBySchulform === null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+		let result : List<U> | null = mapBySchulform.get(schulform);
+		if (result === null) {
+			result = new ArrayList();
+			const werte : List<U> | null = this.getWerteBySchuljahr(schuljahr);
+			for (const wert of werte)
+				if (this.hatSchulform(schuljahr, schulform, wert))
+					result.add(wert);
+			mapBySchulform.put(schulform, result);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angebenen Schlüssel oder
+	 * null falls eine solcher Core-Type-Wert nicht existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param schulform   die Schulform
+	 * @param schluessel  der Schlüssel für den Core-Type-Wert
+	 *
+	 * @return der bei der Schulform in dem angegebenen Schuljahr dem Schlüssel zugehörige Core-Type-Wert oder null falls ein solcher nicht existiert
+	 */
+	public getBySchuljahrAndSchulformAndSchluessel(schuljahr : number, schulform : Schulform, schluessel : string) : U | null {
+		const mapBySchulformAndSchluessel : JavaMap<Schulform, JavaMap<string, U>> | null = this._mapBySchuljahrAndSchulformAndSchluessel.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, JavaMap<string, U>>() });
+		if (mapBySchulformAndSchluessel === null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+		let mapBySchluessel : JavaMap<string, U> | null = mapBySchulformAndSchluessel.get(schulform);
+		if (mapBySchluessel === null) {
+			mapBySchluessel = new HashMap();
+			const werte : List<U> | null = this.getWerteBySchuljahr(schuljahr);
+			for (const wert of werte) {
+				if (!this.hatSchulform(schuljahr, schulform, wert))
+					continue;
+				const sgke : T | null = this.getEintragBySchuljahrUndWert(schuljahr, wert);
+				if (sgke !== null)
+					mapBySchluessel.put(sgke.schluessel, wert);
+			}
+			mapBySchulformAndSchluessel.put(schulform, mapBySchluessel);
+		}
+		return mapBySchluessel.get(schluessel);
 	}
 
 	transpilerCanonicalName(): string {

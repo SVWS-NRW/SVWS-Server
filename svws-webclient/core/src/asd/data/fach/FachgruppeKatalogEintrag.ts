@@ -1,10 +1,8 @@
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { CoreTypeDataNurSchulformen } from '../../../asd/data/CoreTypeDataNurSchulformen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 import { RGBFarbe } from '../../../asd/data/RGBFarbe';
 
-export class FachgruppeKatalogEintrag extends CoreTypeData {
+export class FachgruppeKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 	/**
 	 * Die Nummer für den Fachbereich, sofern festgelegt, ansonsten null.
@@ -15,11 +13,6 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 	 * Die Farbe, welche der Fachgruppe zugeordnet wurde
 	 */
 	public farbe : RGBFarbe = new RGBFarbe();
-
-	/**
-	 * Die Kürzel der Schulformen, bei welchen die Fachgruppe vorkommt.
-	 */
-	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Ein Zahlwert, welche eine Sortier-Reihenfolge der Fachgruppen angibt (aus Schild 2.x).
@@ -41,7 +34,7 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
 	public static class = new Class<FachgruppeKatalogEintrag>('de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag');
@@ -49,6 +42,11 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): FachgruppeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<FachgruppeKatalogEintrag>;
 		const result = new FachgruppeKatalogEintrag();
+		if (obj.schulformen !== undefined) {
+			for (const elem of obj.schulformen) {
+				result.schulformen.add(elem);
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -67,11 +65,6 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 		if (obj.farbe === undefined)
 			throw new Error('invalid json format, missing attribute farbe');
 		result.farbe = RGBFarbe.transpilerFromJSON(JSON.stringify(obj.farbe));
-		if (obj.schulformen !== undefined) {
-			for (const elem of obj.schulformen) {
-				result.schulformen.add(elem);
-			}
-		}
 		if (obj.sortierung === undefined)
 			throw new Error('invalid json format, missing attribute sortierung');
 		result.sortierung = obj.sortierung;
@@ -83,14 +76,6 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : FachgruppeKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
-		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer.toString()) + ',';
-		result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
 		result += '"schulformen" : [ ';
 		for (let i = 0; i < obj.schulformen.size(); i++) {
 			const elem = obj.schulformen.get(i);
@@ -99,6 +84,14 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"nummer" : ' + ((!obj.nummer) ? 'null' : obj.nummer.toString()) + ',';
+		result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
 		result += '"sortierung" : ' + obj.sortierung! + ',';
 		result += '"fuerZeugnis" : ' + obj.fuerZeugnis.toString() + ',';
 		result = result.slice(0, -1);
@@ -108,6 +101,16 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<FachgruppeKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.schulformen !== undefined) {
+			result += '"schulformen" : [ ';
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.schulformen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -131,16 +134,6 @@ export class FachgruppeKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.farbe !== undefined) {
 			result += '"farbe" : ' + RGBFarbe.transpilerToJSON(obj.farbe) + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			result += '"schulformen" : [ ';
-			for (let i = 0; i < obj.schulformen.size(); i++) {
-				const elem = obj.schulformen.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.schulformen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung + ',';

@@ -1,16 +1,12 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { JavaString } from '../../../java/lang/JavaString';
-import { RGBFarbe } from '../../../asd/data/RGBFarbe';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import { FachgruppeKatalogEintrag } from '../../../asd/data/fach/FachgruppeKatalogEintrag';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
+import { RGBFarbe } from '../../../asd/data/RGBFarbe';
 
 export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<FachgruppeKatalogEintrag, Fachgruppe> {
 
@@ -165,11 +161,6 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<Fachgru
 	 */
 	public static readonly FG_IF : Fachgruppe = new Fachgruppe("FG_IF", 28, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		Fachgruppe.all_values_by_ordinal.push(this);
@@ -183,9 +174,6 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<Fachgru
 	 */
 	public static init(manager : CoreTypeDataManager<FachgruppeKatalogEintrag, Fachgruppe>) : void {
 		CoreTypeDataManager.putManager(Fachgruppe.class, manager);
-		for (const ct of Fachgruppe.data().getWerte())
-			for (const e of ct.historie())
-				Fachgruppe._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -206,14 +194,7 @@ export class Fachgruppe extends JavaEnum<Fachgruppe> implements CoreType<Fachgru
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const ke : FachgruppeKatalogEintrag | null = this.daten(schuljahr);
-		if (ke !== null) {
-			const result : JavaSet<Schulform> | null = Fachgruppe._mapSchulformenByID.get(ke.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return Fachgruppe.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**

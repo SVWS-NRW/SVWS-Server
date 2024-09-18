@@ -1,12 +1,9 @@
 package de.svws_nrw.asd.data.fach;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformen;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 
@@ -17,10 +14,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Bilingualen Sprachfächer.")
 @TranspilerDTO
-public class BilingualeSpracheKatalogEintrag extends CoreTypeData {
+public class BilingualeSpracheKatalogEintrag extends CoreTypeDataNurSchulformen {
 
-	/** Die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist. */
-	@Schema(description = "die Kürzel der Schulformen, wo die Sprache als bilinguale Fremdsprache zulässig ist.")
-	public @NotNull List<String> schulformen = new ArrayList<>();
+	// keine weiteren Attribute vorhanden
 
 }

@@ -1,14 +1,7 @@
-import { ArrayList } from '../../../java/util/ArrayList';
-import type { List } from '../../../java/util/List';
+import { CoreTypeDataNurSchulformen } from '../../../asd/data/CoreTypeDataNurSchulformen';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class JahrgaengeKatalogEintrag extends CoreTypeData {
-
-	/**
-	 * Die Kürzel der Schulformen, bei welchen der Jahrgang vorkommt.
-	 */
-	public schulformen : List<string> = new ArrayList<string>();
+export class JahrgaengeKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 
 	public constructor() {
@@ -20,7 +13,7 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData'].includes(name);
+		return ['de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
 	public static class = new Class<JahrgaengeKatalogEintrag>('de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag');
@@ -28,6 +21,11 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): JahrgaengeKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<JahrgaengeKatalogEintrag>;
 		const result = new JahrgaengeKatalogEintrag();
+		if (obj.schulformen !== undefined) {
+			for (const elem of obj.schulformen) {
+				result.schulformen.add(elem);
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -42,22 +40,11 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 		result.text = obj.text;
 		result.gueltigVon = (obj.gueltigVon === undefined) ? null : obj.gueltigVon === null ? null : obj.gueltigVon;
 		result.gueltigBis = (obj.gueltigBis === undefined) ? null : obj.gueltigBis === null ? null : obj.gueltigBis;
-		if (obj.schulformen !== undefined) {
-			for (const elem of obj.schulformen) {
-				result.schulformen.add(elem);
-			}
-		}
 		return result;
 	}
 
 	public static transpilerToJSON(obj : JahrgaengeKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"schulformen" : [ ';
 		for (let i = 0; i < obj.schulformen.size(); i++) {
 			const elem = obj.schulformen.get(i);
@@ -66,6 +53,12 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -73,6 +66,16 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<JahrgaengeKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.schulformen !== undefined) {
+			result += '"schulformen" : [ ';
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.schulformen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -90,16 +93,6 @@ export class JahrgaengeKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.gueltigBis !== undefined) {
 			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			result += '"schulformen" : [ ';
-			for (let i = 0; i < obj.schulformen.size(); i++) {
-				const elem = obj.schulformen.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.schulformen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

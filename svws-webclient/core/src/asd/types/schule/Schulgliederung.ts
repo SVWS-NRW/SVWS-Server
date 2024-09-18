@@ -1,18 +1,11 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { ArrayList } from '../../../java/util/ArrayList';
-import { JavaString } from '../../../java/lang/JavaString';
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import type { JavaMap } from '../../../java/util/JavaMap';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreType<SchulgliederungKatalogEintrag, Schulgliederung> {
 
@@ -608,15 +601,6 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 */
 	public static readonly Y8 : Schulgliederung = new Schulgliederung("Y8", 87, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
-	private static readonly _mapSchulgliederungBySchuljahrAndSchulform : JavaMap<number, JavaMap<Schulform, List<Schulgliederung>>> = new HashMap<number, JavaMap<Schulform, List<Schulgliederung>>>();
-
-	private static readonly _mapSchulgliederungBySchuljahrAndSchulformAndSchluessel : JavaMap<number, JavaMap<Schulform, JavaMap<string, Schulgliederung>>> = new HashMap<number, JavaMap<Schulform, JavaMap<string, Schulgliederung>>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		Schulgliederung.all_values_by_ordinal.push(this);
@@ -630,9 +614,6 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 */
 	public static init(manager : CoreTypeDataManager<SchulgliederungKatalogEintrag, Schulgliederung>) : void {
 		CoreTypeDataManager.putManager(Schulgliederung.class, manager);
-		for (const ct of Schulgliederung.data().getWerte())
-			for (const e of ct.historie())
-				Schulgliederung._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -668,14 +649,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const ke : SchulgliederungKatalogEintrag | null = this.daten(schuljahr);
-		if (ke !== null) {
-			const result : JavaSet<Schulform> | null = Schulgliederung._mapSchulformenByID.get(ke.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return Schulgliederung.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**
@@ -698,19 +672,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Schulgliederungen
 	 */
 	public static getBySchuljahrAndSchulform(schuljahr : number, schulform : Schulform) : List<Schulgliederung> {
-		const mapSchulgliederungenBySchulformOfSchuljahr : JavaMap<Schulform, List<Schulgliederung>> | null = Schulgliederung._mapSchulgliederungBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, List<Schulgliederung>>() });
-		if (mapSchulgliederungenBySchulformOfSchuljahr === null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
-		let result : List<Schulgliederung> | null = mapSchulgliederungenBySchulformOfSchuljahr.get(schulform);
-		if (result === null) {
-			result = new ArrayList();
-			const schulgliederungen : List<Schulgliederung> | null = Schulgliederung.data().getWerteBySchuljahr(schuljahr);
-			for (const schulgliederung of schulgliederungen)
-				if (schulgliederung.hatSchulform(schuljahr, schulform))
-					result.add(schulgliederung);
-			mapSchulgliederungenBySchulformOfSchuljahr.put(schulform, result);
-		}
-		return result;
+		return Schulgliederung.data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
 
 	/**
@@ -724,23 +686,7 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	 * @return die bei der Schulform in dem angegebenen Schuljahr dem Schlüssel zugehörige Schulgliederung oder null falls eine solche nicht existiert
 	 */
 	public static getBySchuljahrAndSchulformAndSchluessel(schuljahr : number, schulform : Schulform, schluessel : string) : Schulgliederung | null {
-		const mapSchulgliederungenBySchulformAndSchluessel : JavaMap<Schulform, JavaMap<string, Schulgliederung>> | null = Schulgliederung._mapSchulgliederungBySchuljahrAndSchulformAndSchluessel.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, JavaMap<string, Schulgliederung>>() });
-		if (mapSchulgliederungenBySchulformAndSchluessel === null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
-		let mapSchulgliederungenBySchluessel : JavaMap<string, Schulgliederung> | null = mapSchulgliederungenBySchulformAndSchluessel.get(schulform);
-		if (mapSchulgliederungenBySchluessel === null) {
-			mapSchulgliederungenBySchluessel = new HashMap();
-			const schulgliederungen : List<Schulgliederung> | null = Schulgliederung.data().getWerteBySchuljahr(schuljahr);
-			for (const schulgliederung of schulgliederungen) {
-				if (!schulgliederung.hatSchulform(schuljahr, schulform))
-					continue;
-				const sgke : SchulgliederungKatalogEintrag | null = schulgliederung.daten(schuljahr);
-				if (sgke !== null)
-					mapSchulgliederungenBySchluessel.put(sgke.schluessel, schulgliederung);
-			}
-			mapSchulgliederungenBySchulformAndSchluessel.put(schulform, mapSchulgliederungenBySchluessel);
-		}
-		return mapSchulgliederungenBySchluessel.get(schluessel);
+		return Schulgliederung.data().getBySchuljahrAndSchulformAndSchluessel(schuljahr, schulform, schluessel);
 	}
 
 	/**

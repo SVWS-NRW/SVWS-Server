@@ -1,6 +1,4 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { OrganisationsformKatalogEintrag } from '../../../asd/data/schule/OrganisationsformKatalogEintrag';
@@ -8,8 +6,6 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import { JavaString } from '../../../java/lang/JavaString';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class AllgemeinbildendOrganisationsformen extends JavaEnum<AllgemeinbildendOrganisationsformen> implements CoreType<OrganisationsformKatalogEintrag, AllgemeinbildendOrganisationsformen> {
 
@@ -44,11 +40,6 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	 */
 	public static readonly GANZTAG_OFFEN : AllgemeinbildendOrganisationsformen = new AllgemeinbildendOrganisationsformen("GANZTAG_OFFEN", 4, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		AllgemeinbildendOrganisationsformen.all_values_by_ordinal.push(this);
@@ -62,9 +53,6 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	 */
 	public static init(manager : CoreTypeDataManager<OrganisationsformKatalogEintrag, AllgemeinbildendOrganisationsformen>) : void {
 		CoreTypeDataManager.putManager(AllgemeinbildendOrganisationsformen.class, manager);
-		for (const ct of AllgemeinbildendOrganisationsformen.data().getWerte())
-			for (const e of ct.historie())
-				AllgemeinbildendOrganisationsformen._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -85,14 +73,7 @@ export class AllgemeinbildendOrganisationsformen extends JavaEnum<Allgemeinbilde
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const ke : OrganisationsformKatalogEintrag | null = this.daten(schuljahr);
-		if (ke !== null) {
-			const result : JavaSet<Schulform> | null = AllgemeinbildendOrganisationsformen._mapSchulformenByID.get(ke.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return AllgemeinbildendOrganisationsformen.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**

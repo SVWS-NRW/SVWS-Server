@@ -3,7 +3,7 @@ package de.svws_nrw.asd.data.schule;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformen;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -16,15 +16,11 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @Schema(description = "ein Eintrag in dem Katalog der Schulformen.")
 @TranspilerDTO
-public class SchulgliederungKatalogEintrag extends CoreTypeData {
+public class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 	/** Gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt. */
 	@Schema(description = "gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt", example = "true")
 	public boolean istBK = false;
-
-	/** Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt. */
-	@Schema(description = "die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt")
-	public @NotNull List<String> schulformen = new ArrayList<>();
 
 	/** Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt. */
 	@Schema(description = "gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt", example = "false")

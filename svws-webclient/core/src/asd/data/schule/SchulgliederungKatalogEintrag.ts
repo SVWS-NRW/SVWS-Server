@@ -1,20 +1,15 @@
+import { CoreTypeDataNurSchulformen } from '../../../asd/data/CoreTypeDataNurSchulformen';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { SchulgliederungGueltigerAbschluss } from '../../../asd/data/schule/SchulgliederungGueltigerAbschluss';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
-import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 
-export class SchulgliederungKatalogEintrag extends CoreTypeData {
+export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 	/**
 	 * Gibt an, ob es sich um einen Bildungsgang am Berufskolleg handelt.
 	 */
 	public istBK : boolean = false;
-
-	/**
-	 * Die Kürzel der Schulformen, bei welchen die Schulgliederung vorkommt.
-	 */
-	public schulformen : List<string> = new ArrayList<string>();
 
 	/**
 	 * Gibt an, ob es sich um eine auslaufende Schulgliederung oder einen auslaufenden Bildungsgang handelt.
@@ -61,7 +56,7 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag'].includes(name);
+		return ['de.svws_nrw.asd.data.CoreTypeData', 'de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag', 'de.svws_nrw.asd.data.CoreTypeDataNurSchulformen'].includes(name);
 	}
 
 	public static class = new Class<SchulgliederungKatalogEintrag>('de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag');
@@ -69,6 +64,11 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 	public static transpilerFromJSON(json : string): SchulgliederungKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<SchulgliederungKatalogEintrag>;
 		const result = new SchulgliederungKatalogEintrag();
+		if (obj.schulformen !== undefined) {
+			for (const elem of obj.schulformen) {
+				result.schulformen.add(elem);
+			}
+		}
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
@@ -86,11 +86,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 		if (obj.istBK === undefined)
 			throw new Error('invalid json format, missing attribute istBK');
 		result.istBK = obj.istBK;
-		if (obj.schulformen !== undefined) {
-			for (const elem of obj.schulformen) {
-				result.schulformen.add(elem);
-			}
-		}
 		if (obj.istAuslaufend === undefined)
 			throw new Error('invalid json format, missing attribute istAuslaufend');
 		result.istAuslaufend = obj.istAuslaufend;
@@ -113,13 +108,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSON(obj : SchulgliederungKatalogEintrag) : string {
 		let result = '{';
-		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
-		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
-		result += '"istBK" : ' + obj.istBK.toString() + ',';
 		result += '"schulformen" : [ ';
 		for (let i = 0; i < obj.schulformen.size(); i++) {
 			const elem = obj.schulformen.get(i);
@@ -128,6 +116,13 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"id" : ' + obj.id.toString() + ',';
+		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
+		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
+		result += '"text" : ' + JSON.stringify(obj.text) + ',';
+		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"istBK" : ' + obj.istBK.toString() + ',';
 		result += '"istAuslaufend" : ' + obj.istAuslaufend.toString() + ',';
 		result += '"istAusgelaufen" : ' + obj.istAusgelaufen.toString() + ',';
 		result += '"bkAnlage" : ' + ((!obj.bkAnlage) ? 'null' : JSON.stringify(obj.bkAnlage)) + ',';
@@ -149,6 +144,16 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 
 	public static transpilerToJSONPatch(obj : Partial<SchulgliederungKatalogEintrag>) : string {
 		let result = '{';
+		if (obj.schulformen !== undefined) {
+			result += '"schulformen" : [ ';
+			for (let i = 0; i < obj.schulformen.size(); i++) {
+				const elem = obj.schulformen.get(i);
+				result += '"' + elem + '"';
+				if (i < obj.schulformen.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
@@ -169,16 +174,6 @@ export class SchulgliederungKatalogEintrag extends CoreTypeData {
 		}
 		if (obj.istBK !== undefined) {
 			result += '"istBK" : ' + obj.istBK.toString() + ',';
-		}
-		if (obj.schulformen !== undefined) {
-			result += '"schulformen" : [ ';
-			for (let i = 0; i < obj.schulformen.size(); i++) {
-				const elem = obj.schulformen.get(i);
-				result += '"' + elem + '"';
-				if (i < obj.schulformen.size() - 1)
-					result += ',';
-			}
-			result += ' ]' + ',';
 		}
 		if (obj.istAuslaufend !== undefined) {
 			result += '"istAuslaufend" : ' + obj.istAuslaufend.toString() + ',';

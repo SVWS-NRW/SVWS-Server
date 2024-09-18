@@ -1,6 +1,4 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import { OrganisationsformKatalogEintrag } from '../../../asd/data/schule/OrganisationsformKatalogEintrag';
@@ -8,8 +6,6 @@ import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import { JavaString } from '../../../java/lang/JavaString';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrganisationsformen> implements CoreType<OrganisationsformKatalogEintrag, BerufskollegOrganisationsformen> {
 
@@ -104,11 +100,6 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	 */
 	public static readonly DUAL_GANZTAG_LANDESFACHKLASSE : BerufskollegOrganisationsformen = new BerufskollegOrganisationsformen("DUAL_GANZTAG_LANDESFACHKLASSE", 16, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		BerufskollegOrganisationsformen.all_values_by_ordinal.push(this);
@@ -122,9 +113,6 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	 */
 	public static init(manager : CoreTypeDataManager<OrganisationsformKatalogEintrag, BerufskollegOrganisationsformen>) : void {
 		CoreTypeDataManager.putManager(BerufskollegOrganisationsformen.class, manager);
-		for (const ct of BerufskollegOrganisationsformen.data().getWerte())
-			for (const e of ct.historie())
-				BerufskollegOrganisationsformen._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -145,14 +133,7 @@ export class BerufskollegOrganisationsformen extends JavaEnum<BerufskollegOrgani
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const ke : OrganisationsformKatalogEintrag | null = this.daten(schuljahr);
-		if (ke !== null) {
-			const result : JavaSet<Schulform> | null = BerufskollegOrganisationsformen._mapSchulformenByID.get(ke.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return BerufskollegOrganisationsformen.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**

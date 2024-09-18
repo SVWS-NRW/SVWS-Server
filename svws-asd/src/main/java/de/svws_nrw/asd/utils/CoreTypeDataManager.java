@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.asd.data.CoreTypeData;
+import de.svws_nrw.asd.data.CoreTypeDataNurSchulformen;
 import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.types.CoreType;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.transpiler.annotations.AllowNull;
 import jakarta.validation.constraints.NotNull;
 
@@ -95,6 +97,9 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Eine Map mit der Zuordnung des Core-Type-Wertes zu dessen Kürzel */
 	private final @NotNull Map<String, U> _mapKuerzelToEnum = new HashMap<>();
 
+	/** Die Map mit der Zuordnung der zulässigen Schulformen zu der ID eines Historieneintrags. Liegt keine Einschränkung vor, so ist die Menge leer. */
+	private final @NotNull HashMap<Long, Set<Schulform>> _mapSchulformenByID = new HashMap<>();
+
 
 	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
 
@@ -103,6 +108,12 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 
 	/** Eine geschachtelte Map mit der Zuordnung eines Historien-Eintrags zu einem Schuljahr und einem Core-Type-Wert */
 	private final @NotNull HashMap<Integer, HashMap<U, T>> _mapWertAndSchuljahrToEintrag = new HashMap<>();
+
+	/** Eine geschachtelte Map mit der Zuordnung einer Liste von Core-Type-Werten zu einem Schuljahr und einer Schulform */
+	private final @NotNull Map<Integer, Map<Schulform, List<U>>> _mapBySchuljahrAndSchulform = new HashMap<>();
+
+	/** Eine geschachtelte Map mit der Zuordnung einer von Core-Type-Werten zu einem Schuljahr, einer Schulform und dem Schlüssel */
+	private final @NotNull Map<Integer, Map<Schulform, Map<String, U>>> _mapBySchuljahrAndSchulformAndSchluessel = new HashMap<>();
 
 
 	/**
@@ -164,6 +175,13 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 				_mapIDToEnum.put(eintrag.id, coreTypeEntry);
 				_mapSchluesselToEnum.put(eintrag.schluessel, coreTypeEntry);
 				_mapKuerzelToEnum.put(eintrag.kuerzel, coreTypeEntry);
+				// Ergänze die Menge der zulässigen Schulformen, sofern eine Einschränkung vorliegt
+				final Set<Schulform> setSchulformen = new HashSet<>();
+				if (eintrag instanceof CoreTypeDataNurSchulformen) {
+					final @NotNull List<String> listSchulformen = ((CoreTypeDataNurSchulformen) eintrag).schulformen;
+					setSchulformen.addAll(Schulform.data().getWerteByBezeichnerAsSet(listSchulformen));
+				}
+				_mapSchulformenByID.put(eintrag.id, setSchulformen);
 			}
 		}
 	}
@@ -263,7 +281,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/**
 	 * Gibt die Core-Type-Werte für die angegebenen Bezeichner als Set zurück.
 	 *
-	 * @param bezeichner   die Lister der Bezeichner
+	 * @param bezeichner   die Liste der Bezeichner
 	 *
 	 * @return das Set der Core-Type-Werte
 	 */
@@ -278,7 +296,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/**
 	 * Gibt die Core-Type-Werte für die angegebenen Bezeichner als nicht-leeres Set zurück.
 	 *
-	 * @param bezeichner   die Lister der Bezeichner
+	 * @param bezeichner   die Liste der Bezeichner
 	 *
 	 * @return das nicht-leeres Set der Core-Type-Werte
 	 */
@@ -479,6 +497,98 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 			_mapSchuljahrToWerte.put(schuljahr, result);
 		}
 		return new ArrayList<>(result);
+	}
+
+
+	/**
+	 * Prüft, ob die Schulform bei diesem Core-Type-Wert in dem angegeben Schuljahr zulässig ist oder nicht.
+	 *
+	 * @param schuljahr   das zu prüfende Schuljahr
+	 * @param sf          die Schulform, auf die geprüft wird
+	 * @param value       der Core-Type-Wert
+	 *
+	 * @return true, falls die Schulform zulässig ist, und ansonsten false
+	 */
+	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform sf, final @NotNull U value) {
+		return (getBySchulform(schuljahr, sf, value) != null);
+	}
+
+
+	/**
+	 * Gibt den Katalog-Eintrag des Jahrgangs für die übergenene Schulform in dem übergebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param sf          die Schulform
+	 * @param value       der Core-Type-Wert
+	 *
+	 * @return der Katalog-Eintrag oder null, wenn keiner gefunden wird
+	 */
+	public T getBySchulform(final int schuljahr, final @NotNull Schulform sf, final @NotNull U value) {
+		final T eintrag = getEintragBySchuljahrUndWert(schuljahr, value);
+		if (eintrag == null)
+			return null;
+		final Set<Schulform> result = _mapSchulformenByID.get(eintrag.id);
+		if (result == null)
+			throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
+		return (result.isEmpty() || result.contains(sf)) ? eintrag : null;
+	}
+
+
+	/**
+	 * Liefert alle zulässigen Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param schulform   die Schulform
+	 *
+	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Core-Type-Werte
+	 */
+	public @NotNull List<U> getListBySchuljahrAndSchulform(final int schuljahr, final @NotNull Schulform schulform) {
+		final Map<Schulform, List<U>> mapBySchulform =
+				_mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, List<U>>());
+		if (mapBySchulform == null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
+		List<U> result = mapBySchulform.get(schulform);
+		if (result == null) {
+			result = new ArrayList<>();
+			final List<U> werte = getWerteBySchuljahr(schuljahr);
+			for (final @NotNull U wert : werte)
+				if (hatSchulform(schuljahr, schulform, wert))
+					result.add(wert);
+			mapBySchulform.put(schulform, result);
+		}
+		return result;
+	}
+
+
+	/**
+	 * Liefert die zulässige Core-Type-Werte für die angegebene Schulform in dem angegebenen Schuljahr und dem angebenen Schlüssel oder
+	 * null falls eine solcher Core-Type-Wert nicht existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param schulform   die Schulform
+	 * @param schluessel  der Schlüssel für den Core-Type-Wert
+	 *
+	 * @return der bei der Schulform in dem angegebenen Schuljahr dem Schlüssel zugehörige Core-Type-Wert oder null falls ein solcher nicht existiert
+	 */
+	public U getBySchuljahrAndSchulformAndSchluessel(final int schuljahr, final @NotNull Schulform schulform, final @NotNull String schluessel) {
+		final Map<Schulform, Map<String, U>> mapBySchulformAndSchluessel =
+				_mapBySchuljahrAndSchulformAndSchluessel.computeIfAbsent(schuljahr, k -> new HashMap<Schulform, Map<String, U>>());
+		if (mapBySchulformAndSchluessel == null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
+		Map<String, U> mapBySchluessel = mapBySchulformAndSchluessel.get(schulform);
+		if (mapBySchluessel == null) {
+			mapBySchluessel = new HashMap<>();
+			final List<U> werte = getWerteBySchuljahr(schuljahr);
+			for (final @NotNull U wert : werte) {
+				if (!hatSchulform(schuljahr, schulform, wert))
+					continue;
+				final T sgke = getEintragBySchuljahrUndWert(schuljahr, wert);
+				if (sgke != null)
+					mapBySchluessel.put(sgke.schluessel, wert);
+			}
+			mapBySchulformAndSchluessel.put(schulform, mapBySchluessel);
+		}
+		return mapBySchluessel.get(schluessel);
 	}
 
 }

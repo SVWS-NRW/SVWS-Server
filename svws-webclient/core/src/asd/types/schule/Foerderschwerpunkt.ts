@@ -1,16 +1,11 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { ArrayList } from '../../../java/util/ArrayList';
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import { FoerderschwerpunktKatalogEintrag } from '../../../asd/data/schule/FoerderschwerpunktKatalogEintrag';
-import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements CoreType<FoerderschwerpunktKatalogEintrag, Foerderschwerpunkt> {
 
@@ -100,13 +95,6 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	 */
 	public static readonly XX : Foerderschwerpunkt = new Foerderschwerpunkt("XX", 15, );
 
-	/**
-	 * Eine Map, welche die Menge der erlaubten Schulformen den IDs der Förderschwerpunkt-Einträge zuordnet.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
-	private static readonly _mapFoerderschwerpunkteBySchuljahrAndSchulform : JavaMap<number, JavaMap<Schulform, List<Foerderschwerpunkt>>> = new HashMap<number, JavaMap<Schulform, List<Foerderschwerpunkt>>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		Foerderschwerpunkt.all_values_by_ordinal.push(this);
@@ -120,9 +108,6 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	 */
 	public static init(manager : CoreTypeDataManager<FoerderschwerpunktKatalogEintrag, Foerderschwerpunkt>) : void {
 		CoreTypeDataManager.putManager(Foerderschwerpunkt.class, manager);
-		for (const ct of Foerderschwerpunkt.data().getWerte())
-			for (const e of ct.historie())
-				Foerderschwerpunkt._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -142,12 +127,8 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	 *
 	 * @return true, wenn er zulässig ist uns ansonsten false
 	 */
-	public hatSchulform(schuljahr : number, schulform : Schulform | null) : boolean {
-		const fske : FoerderschwerpunktKatalogEintrag | null = this.daten(schuljahr);
-		if (fske === null)
-			return false;
-		const schulformen : JavaSet<Schulform> | null = Foerderschwerpunkt._mapSchulformenByID.get(fske.id);
-		return (schulformen !== null) && (schulformen.contains(schulform));
+	public hatSchulform(schuljahr : number, schulform : Schulform) : boolean {
+		return Foerderschwerpunkt.data().hatSchulform(schuljahr, schulform, this);
 	}
 
 	/**
@@ -159,19 +140,7 @@ export class Foerderschwerpunkt extends JavaEnum<Foerderschwerpunkt> implements 
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Förderschwerpunkte
 	 */
 	public static getBySchuljahrAndSchulform(schuljahr : number, schulform : Schulform) : List<Foerderschwerpunkt> {
-		const mapFoerderschwerpunkteBySchulformOfSchuljahr : JavaMap<Schulform, List<Foerderschwerpunkt>> | null = Foerderschwerpunkt._mapFoerderschwerpunkteBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, List<Foerderschwerpunkt>>() });
-		if (mapFoerderschwerpunkteBySchulformOfSchuljahr === null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
-		let result : List<Foerderschwerpunkt> | null = mapFoerderschwerpunkteBySchulformOfSchuljahr.get(schulform);
-		if (result === null) {
-			result = new ArrayList();
-			const schwerpunkte : List<Foerderschwerpunkt> | null = Foerderschwerpunkt.data().getWerteBySchuljahr(schuljahr);
-			for (const schwerpunkt of schwerpunkte)
-				if (schwerpunkt.hatSchulform(schuljahr, schulform))
-					result.add(schwerpunkt);
-			mapFoerderschwerpunkteBySchulformOfSchuljahr.put(schulform, result);
-		}
-		return result;
+		return Foerderschwerpunkt.data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
 
 	/**

@@ -1,15 +1,11 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
-import type { JavaSet } from '../../../java/util/JavaSet';
 import { BilingualeSpracheKatalogEintrag } from '../../../asd/data/fach/BilingualeSpracheKatalogEintrag';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import { JavaString } from '../../../java/lang/JavaString';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements CoreType<BilingualeSpracheKatalogEintrag, BilingualeSprache> {
 
@@ -54,11 +50,6 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements Co
 	 */
 	public static readonly NEUGRIECHIESCH : BilingualeSprache = new BilingualeSprache("NEUGRIECHIESCH", 6, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		BilingualeSprache.all_values_by_ordinal.push(this);
@@ -72,9 +63,6 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements Co
 	 */
 	public static init(manager : CoreTypeDataManager<BilingualeSpracheKatalogEintrag, BilingualeSprache>) : void {
 		CoreTypeDataManager.putManager(BilingualeSprache.class, manager);
-		for (const ct of BilingualeSprache.data().getWerte())
-			for (const e of ct.historie())
-				BilingualeSprache._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -95,14 +83,7 @@ export class BilingualeSprache extends JavaEnum<BilingualeSprache> implements Co
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const bske : BilingualeSpracheKatalogEintrag | null = this.daten(schuljahr);
-		if (bske !== null) {
-			const result : JavaSet<Schulform> | null = BilingualeSprache._mapSchulformenByID.get(bske.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return BilingualeSprache.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**

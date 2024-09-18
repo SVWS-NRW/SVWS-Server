@@ -1,9 +1,5 @@
 package de.svws_nrw.asd.types.schule;
 
-import java.util.HashMap;
-import java.util.Set;
-
-import de.svws_nrw.asd.data.CoreTypeException;
 import de.svws_nrw.asd.data.schule.OrganisationsformKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
@@ -66,10 +62,6 @@ public enum BerufskollegOrganisationsformen implements CoreType<Organisationsfor
 	DUAL_GANZTAG_LANDESFACHKLASSE;
 
 
-	/** Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer. */
-	private static final @NotNull HashMap<Long, Set<Schulform>> _mapSchulformenByID = new HashMap<>();
-
-
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -77,9 +69,6 @@ public enum BerufskollegOrganisationsformen implements CoreType<Organisationsfor
 	 */
 	public static void init(final @NotNull CoreTypeDataManager<OrganisationsformKatalogEintrag, BerufskollegOrganisationsformen> manager) {
 		CoreTypeDataManager.putManager(BerufskollegOrganisationsformen.class, manager);
-		for (final var ct : data().getWerte())
-			for (final var e : ct.historie())
-				_mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 
@@ -102,14 +91,7 @@ public enum BerufskollegOrganisationsformen implements CoreType<Organisationsfor
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public boolean hatSchulform(final int schuljahr, final @NotNull Schulform sf) {
-		final OrganisationsformKatalogEintrag ke = this.daten(schuljahr);
-		if (ke != null) {
-			final Set<Schulform> result = _mapSchulformenByID.get(ke.id);
-			if (result == null)
-				throw new CoreTypeException("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.".formatted(this.getClass().getSimpleName()));
-			return result.contains(sf);
-		}
-		return false;
+		return data().hatSchulform(schuljahr, sf, this);
 	}
 
 }

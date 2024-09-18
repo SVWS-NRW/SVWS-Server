@@ -1,20 +1,13 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JahrgaengeKatalogEintrag } from '../../../asd/data/jahrgang/JahrgaengeKatalogEintrag';
-import type { JavaSet } from '../../../java/util/JavaSet';
-import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { Schulform } from '../../../asd/types/schule/Schulform';
-import { ArrayList } from '../../../java/util/ArrayList';
-import { JavaString } from '../../../java/lang/JavaString';
 import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
-import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
-import type { JavaMap } from '../../../java/util/JavaMap';
-import { CoreTypeException } from '../../../asd/data/CoreTypeException';
 
 export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<JahrgaengeKatalogEintrag, Jahrgaenge> {
 
@@ -159,13 +152,6 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 */
 	public static readonly SEMESTER_06 : Jahrgaenge = new Jahrgaenge("SEMESTER_06", 26, );
 
-	/**
-	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.
-	 */
-	private static readonly _mapSchulformenByID : HashMap<number, JavaSet<Schulform>> = new HashMap<number, JavaSet<Schulform>>();
-
-	private static readonly _mapBySchuljahrAndSchulform : JavaMap<number, JavaMap<Schulform, List<Jahrgaenge>>> = new HashMap<number, JavaMap<Schulform, List<Jahrgaenge>>>();
-
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		Jahrgaenge.all_values_by_ordinal.push(this);
@@ -179,9 +165,6 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 */
 	public static init(manager : CoreTypeDataManager<JahrgaengeKatalogEintrag, Jahrgaenge>) : void {
 		CoreTypeDataManager.putManager(Jahrgaenge.class, manager);
-		for (const ct of Jahrgaenge.data().getWerte())
-			for (const e of ct.historie())
-				Jahrgaenge._mapSchulformenByID.put(e.id, Schulform.data().getWerteByBezeichnerAsNonEmptySet(e.schulformen));
 	}
 
 	/**
@@ -202,14 +185,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return true, falls die Schulform zulässig ist, und ansonsten false
 	 */
 	public hatSchulform(schuljahr : number, sf : Schulform) : boolean {
-		const ke : JahrgaengeKatalogEintrag | null = this.daten(schuljahr);
-		if (ke !== null) {
-			const result : JavaSet<Schulform> | null = Jahrgaenge._mapSchulformenByID.get(ke.id);
-			if (result === null)
-				throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-			return result.contains(sf);
-		}
-		return false;
+		return Jahrgaenge.data().hatSchulform(schuljahr, sf, this);
 	}
 
 	/**
@@ -221,13 +197,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return der Katalog-Eintrag oder null, wenn keiner gefunden wird
 	 */
 	public getBySchulform(schuljahr : number, sf : Schulform) : JahrgaengeKatalogEintrag | null {
-		const ke : JahrgaengeKatalogEintrag | null = this.daten(schuljahr);
-		if (ke === null)
-			return null;
-		const result : JavaSet<Schulform> | null = Jahrgaenge._mapSchulformenByID.get(ke.id);
-		if (result === null)
-			throw new CoreTypeException(JavaString.format("Fehler beim prüfen der Schulform. Der Core-Type %s ist nicht korrekt initialisiert.", this.getClass().getSimpleName()))
-		return result.contains(sf) ? ke : null;
+		return Jahrgaenge.data().getBySchulform(schuljahr, sf, this);
 	}
 
 	/**
@@ -657,19 +627,7 @@ export class Jahrgaenge extends JavaEnum<Jahrgaenge> implements CoreType<Jahrgae
 	 * @return die bei der Schulform in dem angegebenen Schuljahr zulässigen Jahrgänge
 	 */
 	public static getListBySchuljahrAndSchulform(schuljahr : number, schulform : Schulform) : List<Jahrgaenge> {
-		const mapBySchulform : JavaMap<Schulform, List<Jahrgaenge>> | null = Jahrgaenge._mapBySchuljahrAndSchulform.computeIfAbsent(schuljahr, { apply : (k: number | null) => new HashMap<Schulform, List<Jahrgaenge>>() });
-		if (mapBySchulform === null)
-			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
-		let result : List<Jahrgaenge> | null = mapBySchulform.get(schulform);
-		if (result === null) {
-			result = new ArrayList();
-			const jahrgaenge : List<Jahrgaenge> | null = Jahrgaenge.data().getWerteBySchuljahr(schuljahr);
-			for (const jahrgang of jahrgaenge)
-				if (jahrgang.hatSchulform(schuljahr, schulform))
-					result.add(jahrgang);
-			mapBySchulform.put(schulform, result);
-		}
-		return result;
+		return Jahrgaenge.data().getListBySchuljahrAndSchulform(schuljahr, schulform);
 	}
 
 	/**
