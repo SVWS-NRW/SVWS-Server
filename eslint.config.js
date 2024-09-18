@@ -56,6 +56,7 @@ export default tseslint.config(
 			"require-await": "off",
 
 			"eqeqeq": "error",
+			"no-extra-boolean-cast": "error",
 
 			// TypeScript-spezifische Regeln
 			"@typescript-eslint/no-this-alias": "off",
@@ -70,6 +71,7 @@ export default tseslint.config(
 
 			"@typescript-eslint/no-misused-promises": "error",
 			"@typescript-eslint/no-floating-promises": "error",
+			"@typescript-eslint/strict-boolean-expressions": ["error", { allowString: false, allowNumber: false }],
 			// "@typescript-eslint/array-type": ["error", {"default": "array-simple", "readonly": "array-simple"}],
 			"@typescript-eslint/restrict-plus-operands": ["error", {'allowNumberAndString': true}],
 			"@typescript-eslint/restrict-template-expressions": ["error", {'allowNumber': true}],
