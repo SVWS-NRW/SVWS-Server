@@ -14,6 +14,7 @@ public class LehrerMinderleistungsarten extends CoreTypeSimple<LehrerMinderleist
 	 * Erstellt einen LehrerMinderleistungsart mit Standardwerten
 	 */
 	public LehrerMinderleistungsarten() {
+		// nichts zu tun
 	}
 
 	/**

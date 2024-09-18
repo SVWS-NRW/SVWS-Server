@@ -14,6 +14,7 @@ public class LehrerMehrleistungsarten extends CoreTypeSimple<@NotNull LehrerMehr
 	 * Erstellt einen LehrerMehrleistungsart mit Standardwerten
 	 */
 	public LehrerMehrleistungsarten() {
+		// nichts zu tun
 	}
 
 	/**

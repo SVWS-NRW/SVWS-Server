@@ -14,6 +14,7 @@ public class LehrerAnrechnungsgrund extends CoreTypeSimple<LehrerAnrechnungsgrun
 	 * Erstellt einen LehrerAnrechnungsgrund mit Standardwerten
 	 */
 	public LehrerAnrechnungsgrund() {
+		// nichts zu tun
 	}
 
 	/**

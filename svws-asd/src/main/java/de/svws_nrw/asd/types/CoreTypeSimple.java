@@ -31,7 +31,7 @@ public abstract class CoreTypeSimple<T extends CoreTypeData, U extends CoreTypeS
 	/**
 	 * Erstellt einen CoreTypeSimple mit Standardwerten
 	 */
-	public CoreTypeSimple() {
+	protected CoreTypeSimple() {
 	}
 
 	/**

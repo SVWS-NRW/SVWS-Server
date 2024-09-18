@@ -48,6 +48,7 @@ public class ValidatorFehlerartKontext {
 	 * Erstellt einen ValidatorFehlerartKontext mit Standardwerten
 	 */
 	public ValidatorFehlerartKontext() {
+		// nichts zu tun
 	}
 
 }
