@@ -69,7 +69,7 @@
 	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten>, search: string) => {
 		const list = [];
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}
@@ -113,7 +113,7 @@
 	const rowsFiltered = computed<KlassenDaten[]>(() => {
 		const arr = [];
 		for (const e of props.klassenListeManager().filtered())
-			if (e.kuerzel?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			if ((e.kuerzel !== null) && e.kuerzel.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				arr.push(e);
 		arr.sort((a, b) => a.sortierung - b.sortierung);
 		return arr;
@@ -158,7 +158,7 @@
 			for (const id of list) {
 				const lehrer = props.klassenListeManager().lehrer.get(id);
 				if (lehrer !== null) {
-					if (s.length)
+					if (s.length > 0)
 						s += `, ${lehrer.kuerzel}`;
 					else s = lehrer.kuerzel;
 				}

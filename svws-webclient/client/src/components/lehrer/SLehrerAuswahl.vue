@@ -71,12 +71,12 @@
 		}
 	});
 
-
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
 		for (const pair of props.lehrerListeManager().orderGet())
 			if (pair.b !== null)
 				map.set(pair.a, pair.b);
+		console.log(map)
 		return map;
 	})
 

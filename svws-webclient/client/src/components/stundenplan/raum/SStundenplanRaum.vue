@@ -31,26 +31,28 @@
 
 	const props = defineProps<StundenplanRaumProps>();
 
-	const _raum = shallowRef<StundenplanRaum | undefined>(undefined);
+	const _raum = shallowRef<StundenplanRaum | undefined>();
 	const wochentypAnzeige = shallowRef<number>(0);
 
 	const raum = computed<StundenplanRaum | undefined>({
-		get: () : StundenplanRaum | undefined => {
+		get: () => {
 			if (_raum.value !== undefined)
 				try {
 					return props.stundenplanManager().raumGetByIdOrException(_raum.value.id);
-				} catch (e) { /* empty */ }
+				} catch (e) {
+					return undefined;
+				}
 			if (props.stundenplanManager().raumGetMengeVerwendetAsList().size() > 0)
 				return props.stundenplanManager().raumGetMengeVerwendetAsList().get(0);
 			else
 				return undefined;
 		},
-		set: (value : StundenplanRaum | undefined) => _raum.value = value
+		set: (value) => _raum.value = value
 	});
 
 	const ignoreEmpty = computed<boolean>({
-		get: () : boolean => props.ganzerStundenplanRaeume(),
-		set: (value : boolean) => void props.setGanzerStundenplanRaeume(value),
+		get: () => props.ganzerStundenplanRaeume(),
+		set: (value) => void props.setGanzerStundenplanRaeume(value),
 	})
 
 	function wochentypen(): List<number> {
@@ -64,13 +66,3 @@
 	}
 
 </script>
-
-<style lang="postcss" scoped>
-	.page--content {
-		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-8;
-		grid-auto-rows: 100%;
-		grid-template-columns: minmax(20rem, 0.5fr) 2fr;
-		grid-auto-columns: max-content;
-	}
-
-</style>
