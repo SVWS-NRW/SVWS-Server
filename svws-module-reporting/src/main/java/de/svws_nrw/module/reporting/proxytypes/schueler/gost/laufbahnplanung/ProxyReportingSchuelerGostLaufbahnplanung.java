@@ -443,8 +443,12 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
 		if (abJahrgang == null)
 			return true;
-		else
-			abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
+		else {
+			if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) != null)
+				abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
+			else
+				return false;
+		}
 
 		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) && ((abJahrgang == null) || abJahrgang.isEmpty()
 				|| ((abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend

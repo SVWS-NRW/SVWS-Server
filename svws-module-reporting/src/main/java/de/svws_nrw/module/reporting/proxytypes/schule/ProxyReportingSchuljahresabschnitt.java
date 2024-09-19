@@ -52,12 +52,12 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 
 		this.reportingRepository = reportingRepository;
 
-		// Die weiteren Daten werden später durch Lasy-Loading ergänzt
+		// Die weiteren Daten werden später durch lazy-loading ergänzt
 	}
 
 
 	/**
-	 * Gibt die Liste der faecher dieses Schuljahresabschnitts zurück. Ist diese Liste leer, so wird sie aus den Fächern des Reporistories erzeugt.
+	 * Gibt die Liste der faecher dieses Schuljahresabschnitts zurück. Ist diese Liste leer, so wird sie aus den Fächern des Repositories erzeugt.
 	 * @return Liste der Fächer, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
@@ -81,9 +81,8 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 					this.reportingRepository.mapFaecher().values().stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 			final Map<Long, GostFach> mapFaecherdatenGost = mapfaecherFuerFaecherdatenGost.values().stream()
 					.collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(this.schuljahr, f, mapfaecherFuerFaecherdatenGost)));
-			for (final FachDaten fach : faecherdaten) {
+			for (final FachDaten fach : faecherdaten)
 				super.faecher.add(new ProxyReportingFach(fach, mapFaecherdatenGost.get(fach.id), this.schuljahr));
-			}
 		}
 		return super.faecher;
 	}
