@@ -19,7 +19,7 @@
 			</svws-ui-input-wrapper>
 			<div v-else>Es liegen keine Abiturjahrgänge vor</div>
 			<svws-ui-button v-if="ergebnisse.size()" type="primary" @click="untisExport" :disabled="!ergebnis" class="mt-2">
-				<svws-ui-spinner :spinning="loading" /> Exportieren
+				<svws-ui-spinner :spinning /> Exportieren
 			</svws-ui-button>
 		</svws-ui-content-card>
 	</div>
@@ -30,34 +30,34 @@
 	import { computed, ref, watch } from 'vue';
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { SchuleDatenaustauschUntisBlockungenProps } from './SSchuleDatenaustauschUntisBlockungenProps';
-	import type { GostBlockungsergebnis} from '@core';
+	import type { GostBlockungsergebnis } from '@core';
 	import { GostHalbjahr } from '@core';
 	import { SvwsUiSelect } from '@ui';
 
 	const props = defineProps<SchuleDatenaustauschUntisBlockungenProps>();
-	const selectErgebnis = ref<ComponentExposed<typeof SvwsUiSelect<GostBlockungsergebnis>> | null>(null);
-	const selectHalbjahr = ref<ComponentExposed<typeof SvwsUiSelect<GostHalbjahr>> | null>(null);
+	const selectErgebnis = ref<ComponentExposed<typeof SvwsUiSelect<GostBlockungsergebnis>>>();
+	const selectHalbjahr = ref<ComponentExposed<typeof SvwsUiSelect<GostHalbjahr>>>();
 
 	const jahrgaenge = computed(() => [...props.mapAbiturjahrgaenge().values()].filter(j => j.abiturjahr > 1));
 	const blockungen = computed(() => props.listBlockungen());
 
 	const ergebnisse = computed(() => props.listErgebnisse());
-	watch(()=> props.abiturjahrgang(), () => selectHalbjahr.value?.reset());
+	watch(() => props.abiturjahrgang(), () => selectHalbjahr.value?.reset());
 
 	const unterrichtID = ref<number>(1);
-	const loading = ref<boolean>(false);
+	const spinning = ref<boolean>(false);
 
 
 	async function untisExport() {
 		const id = selectErgebnis.value?.content?.id;
-		if (!id)
+		if (id === undefined)
 			return;
-		loading.value = true;
+		spinning.value = true;
 		const formData = new FormData();
 		formData.append("ergebnisID", id.toString());
 		formData.append("unterrichtID", unterrichtID.value.toString());
 		const { data, name } = await props.exportUntisBlockungenZIP(formData);
-		loading.value = false;
+		spinning.value = false;
 		const link = document.createElement("a");
 		link.href = URL.createObjectURL(data);
 		link.download = name;

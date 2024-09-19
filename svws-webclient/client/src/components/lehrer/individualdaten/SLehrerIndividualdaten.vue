@@ -80,11 +80,11 @@
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname || "", data.value.hausnummer || "", data.value.hausnummerZusatz || ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
 
 	const patchStrasse = (value: string | null) => {
 		const vals = AdressenUtils.splitStrasse(value);
-		void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
+		void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 	}
 
 	const wohnortID = computed<OrtKatalogEintrag | null>({

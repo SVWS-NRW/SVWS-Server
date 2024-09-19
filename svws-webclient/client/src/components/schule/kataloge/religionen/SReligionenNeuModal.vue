@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 
-	import { Religion, ReligionEintrag } from '@core';
 	import { ref } from 'vue';
+	import { Religion, ReligionEintrag } from '@core';
 
 	const props = defineProps<{
 		addEintrag: (religion: ReligionEintrag) => Promise<void>;

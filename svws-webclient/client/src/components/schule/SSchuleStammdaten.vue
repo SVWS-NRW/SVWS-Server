@@ -46,12 +46,12 @@
 	const showSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN));
 	const editSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname || "", props.schule().hausnummer || "", props.schule().hausnummerZusatz || ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname ?? "", props.schule().hausnummer ?? "", props.schule().hausnummerZusatz ?? ""))
 
 	const patchStrasse = (value: string | null ) => {
-		if (value) {
+		if (value !== null) {
 			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1], hausnummerZusatz: vals[2] });
+			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
 

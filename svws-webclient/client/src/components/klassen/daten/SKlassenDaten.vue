@@ -44,7 +44,7 @@
 						:items="BerufskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idWeiterbildungOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="WeiterbildungskollegOrganisationsformen.data().getWertByID(data.idWeiterbildungOrganisationsform)"
 						@update:model-value="value => patch({ idWeiterbildungOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
-						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f =>  (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
+						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="1">
@@ -58,12 +58,12 @@
 					<template #header(linkToLehrer)>
 						<span class="icon i-ri-group-line" />
 					</template>
-					<template #cell(linkToLehrer)="{rowData, rowIndex}">
+					<template #cell(linkToLehrer)="{rowData}">
 						<svws-ui-button type="icon" @click="gotoLehrer(rowData)">
 							<span class="icon i-ri-link" />
 						</svws-ui-button>
 					</template>
-					<template v-if="hatKompetenzUpdate" #cell(aktionen)="{ rowData, rowIndex }">
+					<template v-if="hatKompetenzUpdate" #cell(aktionen)="{ rowData }">
 						<div style="vertical-align: center; display: flex;">
 							<div class="w-6">
 								<svws-ui-button  type="icon" @click.stop="removeKlassenleitungHandler(rowData)">
@@ -76,7 +76,7 @@
 						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
 							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
 								<div v-if="clickedKlassenleitung !== null" class="w-6" style="margin-right: 2pt">
-									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()" >
+									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()">
 										<span class="icon i-ri-arrow-up-line" />
 									</svws-ui-button>
 								</div>
@@ -122,7 +122,7 @@
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
-	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz} from "@core";
+	import { SchuelerStatus, Schulform, Schulgliederung, Klassenart, AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, WeiterbildungskollegOrganisationsformen, ArrayList, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<KlassenDatenProps>();
 

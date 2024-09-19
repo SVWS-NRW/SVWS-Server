@@ -24,7 +24,7 @@
 		removePausenzeiten: (pausenzeiten: Iterable<StundenplanPausenzeit>) => Promise<void>;
 	}>();
 
-	const neueStunde = computed<number>(()=> {
+	const neueStunde = computed<number>(() => {
 		const stunden = props.stundenplanManager().getListZeitrasterZuWochentag(props.selected);
 		const size = stunden.size();
 		if (size === 0)
@@ -32,7 +32,7 @@
 		return stunden.get(size - 1).unterrichtstunde + 1;
 	})
 
-	const fehlendeZeitraster = computed<number[]>(()=> {
+	const fehlendeZeitraster = computed<number[]>(() => {
 		const arr = [];
 		for (const s of props.stundenplanManager().zeitrasterGetStundenRange())
 			if (props.stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(props.selected.id, s) === null)

@@ -32,5 +32,5 @@
 
 	const props = defineProps<LehrerAppProps>();
 
-	const daten = computed(()=>props.lehrerListeManager().hasDaten() && props.lehrerListeManager().daten())
+	const daten = computed(() => props.lehrerListeManager().hasDaten() && props.lehrerListeManager().daten())
 </script>

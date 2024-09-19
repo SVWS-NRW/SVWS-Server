@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" :columns="cols" selectable v-model="selected" class="max-w-128 min-w-96" >
+	<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="stundenplanManager().aufsichtsbereichGetMengeAsList()" :columns="cols" selectable v-model="selected" class="max-w-128 min-w-96">
 		<template #actions>
 			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 			<s-aufsichtsbereich-neu-modal v-slot="{ openModal }" :add-aufsichtsbereich="addEintrag">

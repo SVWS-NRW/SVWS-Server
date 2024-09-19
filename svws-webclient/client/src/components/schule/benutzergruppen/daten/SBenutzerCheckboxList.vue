@@ -28,9 +28,8 @@
 
 <script setup lang="ts">
 
-	import type { BenutzerListeEintrag, List } from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
+	import type { List, BenutzerListeEintrag } from "@core";
 
 	const props = defineProps<{
 		listBenutzer: () => List<BenutzerListeEintrag>;
@@ -42,7 +41,7 @@
 		listBenutzerInGruppe: () => List<BenutzerListeEintrag>;
 	}>();
 
-	const aktiv: WritableComputedRef<boolean> = computed({
+	const aktiv = computed({
 		get: () => true,
 		set: (value) => {
 			// TODO

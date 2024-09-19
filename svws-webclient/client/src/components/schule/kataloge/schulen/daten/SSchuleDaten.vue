@@ -28,11 +28,11 @@
 	import { AdressenUtils, Schulform } from "@core"
 
 	const props = defineProps<SchuleDatenProps>();
-	const strasse = computed(() => AdressenUtils.combineStrasse(props.auswahl?.strassenname || "", props.auswahl?.hausnummer || "", props.auswahl?.hausnummerZusatz || ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.auswahl?.strassenname ?? "", props.auswahl?.hausnummer ?? "", props.auswahl?.hausnummerZusatz ?? ""))
 
 	const patchStrasse = (value: string | null ) => {
 		const vals = AdressenUtils.splitStrasse(value);
-		void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
+		void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 	}
 
 </script>

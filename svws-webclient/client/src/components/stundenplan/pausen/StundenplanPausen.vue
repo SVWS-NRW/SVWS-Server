@@ -194,7 +194,7 @@
 			bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
 			bereichNeu.wochentyp = typ;
 			const aufsicht = lehrerAufsichten.value.get(pauseID);
-			bereichNeu.idPausenaufsicht = aufsicht?.id || -1;
+			bereichNeu.idPausenaufsicht = aufsicht?.id ?? -1;
 			update.listHinzuzufuegen.add(bereichNeu);
 		}
 		await props.updateAufsichtBereich(update, dragOverPausenzeit.value?.pauseID, dragLehrer.value?.id);

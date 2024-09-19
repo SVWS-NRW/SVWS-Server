@@ -10,16 +10,15 @@
 <script setup lang="ts">
 
 	import type {BenutzergruppenManager} from "@core";
-	import type { WritableComputedRef } from "vue";
 	import { computed } from "vue";
 
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;
-		setBezeichnung : (anzeigename: string) => Promise<void>;
+		setBezeichnung : (anzeigename: string | null) => Promise<void>;
 		setIstAdmin : (istAdmin:boolean) => Promise<void>;
 	}>();
 
-	const inputIstAdmin: WritableComputedRef<boolean> = computed({
+	const inputIstAdmin = computed<boolean>({
 		get: () => props.getBenutzergruppenManager().istAdmin(),
 		set: (value) => {
 			if (value === props.getBenutzergruppenManager().istAdmin())

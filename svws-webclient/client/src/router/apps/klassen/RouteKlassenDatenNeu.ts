@@ -27,7 +27,6 @@ export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
 		return {
 			klassenListeManager: () => routeKlassen.data.klassenListeManager,
 			schulform: api.schulform,
-			schulgliederungen: api.schulgliederungen,
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			addKlasse: routeKlassen.data.addKlasse,

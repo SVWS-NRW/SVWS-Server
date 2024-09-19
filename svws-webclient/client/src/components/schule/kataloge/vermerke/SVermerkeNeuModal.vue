@@ -20,12 +20,11 @@
 
 <script setup lang="ts">
 
+	import { ref } from 'vue';
 	import type { VermerkartenManager } from '@core';
 	import { VermerkartEintrag } from '@core';
 	import type { Ref } from "vue";
 	import type { InputDataType } from '@ui';
-
-	import { ref } from 'vue';
 
 	const props = defineProps<{
 		addEintrag: (vermerkart: Partial<VermerkartEintrag>) => Promise<void>;

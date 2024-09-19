@@ -26,7 +26,7 @@
 	}>();
 
 	const inputWohnortID = computed<OrtKatalogEintrag | null>({
-		get: () => props.daten.ort_id ? props.mapOrte.get(props.daten.ort_id) ?? null : null,
+		get: () => props.daten.ort_id !== null ? props.mapOrte.get(props.daten.ort_id) ?? null : null,
 		set: (val) =>	void props.patch({ ort_id : val?.id })
 	});
 </script>

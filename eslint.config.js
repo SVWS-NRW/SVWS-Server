@@ -16,6 +16,7 @@ export default tseslint.config(
 		// verwende die Basisregeln, die mitgeliefert werden
 		extends: [
 			eslint.configs.recommended,
+			...eslintPluginVue.configs['flat/recommended'],
 			...tseslint.configs.strictTypeChecked,
 			...tseslint.configs.stylisticTypeChecked,
 		],
@@ -47,6 +48,9 @@ export default tseslint.config(
 			"@stylistic/max-len": "off",
 			"@stylistic/no-mixed-spaces-and-tabs": "off",
 
+			"@stylistic/arrow-spacing": "warn",
+			//"@stylistic/comma-dangle": ["warn", "always-multiline"],
+			"@stylistic/no-mixed-operators": "error",
 			"@stylistic/no-multi-spaces": "error",
 			"@stylistic/no-trailing-spaces": "error",
 			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }],
@@ -101,6 +105,7 @@ export default tseslint.config(
 			"@stylistic/indent": "off",
 			"vue/no-mutating-props": "off",
 			"vue/singleline-html-element-content-newline": "off",
+			"vue/attributes-order": "off",
 			// prüfen
 			"@typescript-eslint/prefer-function-type": "off",
 
@@ -111,6 +116,7 @@ export default tseslint.config(
 			"vue/return-in-computed-property": ["error", { "treatUndefinedAsUnspecified": false } ],
 			"vue/first-attribute-linebreak": ["error", { "singleline": "ignore", "multiline": "beside" }],
 			"vue/html-closing-bracket-newline": ["error", { "singleline": "never", "multiline": "never" }],
+			"vue/html-closing-bracket-spacing": ["warn"],
 			"vue/html-indent": ["error", "tab", { "baseIndent": 1, "alignAttributesVertically": false, "attribute": 1 }],
 		}
 	},

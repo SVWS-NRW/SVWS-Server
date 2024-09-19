@@ -51,7 +51,7 @@
 		const selectedKlassen = props.klassenListeManager().liste.auswahlSorted();
 		let selectedKlassenStr = '';
 		for (const klasse of selectedKlassen)
-			selectedKlassenStr += (selectedKlassenStr.length) ? `, ${klasse.kuerzel}` : klasse.kuerzel;
+			selectedKlassenStr += (selectedKlassenStr.length > 0) ? `, ${klasse.kuerzel}` : klasse.kuerzel;
 		return selectedKlassenStr;
 	});
 

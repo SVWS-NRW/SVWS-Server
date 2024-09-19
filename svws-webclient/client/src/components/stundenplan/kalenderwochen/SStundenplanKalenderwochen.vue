@@ -39,7 +39,7 @@
 		await props.patchKalenderwochenzuordnungen(kalenderwochenZuordnung);
 	}
 
-	async function toggleWochentyp(value: { zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }) {
+	async function toggleWochentyp(value: { zuordnung: StundenplanKalenderwochenzuordnung }) {
 		await nextWochentyp(value.zuordnung);
 	}
 

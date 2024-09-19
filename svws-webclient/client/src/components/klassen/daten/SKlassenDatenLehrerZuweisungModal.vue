@@ -25,7 +25,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerListeEintrag} from "@core";
+	import type { List, LehrerListeEintrag } from "@core";
 	import type { SKlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/SKlassenDatenLehrerZuweisungModalProps";
 
 	const props = defineProps<SKlassenDatenLehrerZuweisungModalProps>();

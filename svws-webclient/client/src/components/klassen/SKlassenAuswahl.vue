@@ -7,7 +7,7 @@
 		<template #content>
 			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoEintrag(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
-				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allowArrowKeySelection>
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -24,7 +24,8 @@
 					<div class="flex gap-5">
 						<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
 							<svws-ui-tooltip position="bottom">
-								<svws-ui-button type="secondary" @click="openModal">Standardsortierung anwenden ...
+								<svws-ui-button type="secondary" @click="openModal">
+									Standardsortierung anwenden ...
 								</svws-ui-button>
 								<template #content>
 									Standardsortierung wiederherstellen
@@ -33,7 +34,7 @@
 						</s-klassen-auswahl-sortierung-modal>
 						<svws-ui-tooltip position="bottom">
 							<svws-ui-button type="icon" @click="startCreationMode">
-								<span class="icon i-ri-add-line"/>
+								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>
 								Neue Klasse anlegen

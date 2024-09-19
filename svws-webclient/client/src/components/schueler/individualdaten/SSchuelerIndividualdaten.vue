@@ -3,11 +3,11 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input v-autofocus placeholder="Nachname" :readonly="!hatKompetenzUpdate" :model-value="data.nachname"
-					@change="nachname => patch({ nachname })" type="text" />
+					@change="nachname => patch({ nachname: nachname ?? undefined })" type="text" />
 				<svws-ui-text-input placeholder="Rufname" :readonly="!hatKompetenzUpdate" :model-value="data.vorname"
-					@change="vorname => patch({ vorname })" type="text" />
+					@change="vorname => patch({ vorname: vorname ?? undefined })" type="text" />
 				<svws-ui-text-input placeholder="Alle Vornamen" :readonly="!hatKompetenzUpdate" :model-value="data.alleVornamen"
-					@change="alleVornamen => patch({ alleVornamen })" type="text" />
+					@change="alleVornamen => patch({ alleVornamen: alleVornamen ?? undefined })" type="text" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :readonly="!hatKompetenzUpdate" v-model="geschlecht" :items="Geschlecht.values()"
 					statistics :item-text="(i: Geschlecht)=>i.text" />
@@ -100,9 +100,13 @@
 				<svws-ui-spacing />
 				<svws-ui-input-wrapper :grid="2" class="input-wrapper--checkboxes">
 					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istVolljaehrig === true"
-						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })"> Volljährig </svws-ui-checkbox>
+						@update:model-value="istVolljaehrig => patch({ istVolljaehrig })">
+						Volljährig
+					</svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.keineAuskunftAnDritte"
-						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })"> Keine Auskunft an Dritte </svws-ui-checkbox>
+						@update:model-value="keineAuskunftAnDritte => patch({ keineAuskunftAnDritte })">
+						Keine Auskunft an Dritte
+					</svws-ui-checkbox>
 					<svws-ui-checkbox :disabled="!hatKompetenzUpdate" :model-value="data.istSchulpflichtErfuellt === true" readonly>
 						Schulpflicht erfüllt
 					</svws-ui-checkbox>
@@ -161,12 +165,12 @@
 		set: (value) => void props.patch({ geschlecht: value.id })
 	});
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname || "", data.value.hausnummer || "", data.value.hausnummerZusatz || ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
 
-	const patchStrasse = (value: string ) => {
-		if (value) {
+	const patchStrasse = (value: string | null) => {
+		if (value !== null) {
 			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals[0] || value, hausnummer: vals[1] || "", hausnummerZusatz: vals[2] || "" });
+			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
 

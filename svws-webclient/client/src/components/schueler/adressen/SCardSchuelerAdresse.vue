@@ -47,8 +47,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import { computed } from "vue";
+	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{

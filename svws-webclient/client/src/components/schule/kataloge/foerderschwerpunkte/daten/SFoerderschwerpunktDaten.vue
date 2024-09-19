@@ -13,9 +13,9 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { FoerderschwerpunktDatenProps } from "./SFoerderschwerpunktDatenProps";
 	import { Foerderschwerpunkt } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<FoerderschwerpunktDatenProps>();
 

@@ -6,7 +6,7 @@ export interface BenutzergruppeProps{
 	listBenutzergruppenBenutzer: () => List<BenutzerListeEintrag> ;
 	aktualisiereListeBenutzerGruppenBenutzer : (benutzer: BenutzerListeEintrag) => Promise<void>;
 	getBenutzergruppenManager: () => BenutzergruppenManager;
-	setBezeichnung : (anzeigename: string) => Promise<void>;
+	setBezeichnung : (anzeigename: string | null) => Promise<void>;
 	setIstAdmin : (istAdmin: boolean) => Promise<void>;
 	addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 	removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;

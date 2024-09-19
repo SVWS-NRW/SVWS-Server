@@ -41,10 +41,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { VermerkeAuswahlProps } from "./SVermerkeAuswahlProps";
 	import type { VermerkartEintrag } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { computed } from "vue";
 
 	const props = defineProps<VermerkeAuswahlProps>();
 
@@ -59,7 +59,7 @@
 			props.vermerkartenManager().liste.auswahlAdd(item);
 		}
 
-		if (props.vermerkartenManager().auswahlID())
+		if (props.vermerkartenManager().auswahlID() !== null)
 			await props.commit();
 	}
 

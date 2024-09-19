@@ -1,9 +1,8 @@
-import type { Schulform, KlassenDaten, KlassenListeManager, List, Schulgliederung } from "@core";
+import type { Schulform, KlassenDaten, KlassenListeManager } from "@core";
 
 export interface KlassenDatenNeuProps {
 	klassenListeManager: () => KlassenListeManager;
 	schulform: Schulform;
-	schulgliederungen: List<Schulgliederung>;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
 	addKlasse: (patchObject: Partial<KlassenDaten>) => Promise<void>;

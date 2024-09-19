@@ -10,7 +10,7 @@
 			<svws-ui-table clickable :clicked="schuelerListeManager().hasDaten() ? schuelerListeManager().auswahl() : null" @update:clicked="gotoSchueler"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allowArrowKeySelection>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
@@ -227,13 +227,13 @@
 				jahrgaenge += ', ';
 			index++;
 		}
-		return `${kurs.kuerzel} (${jahrgaenge || 'JU'})`;
+		return `${kurs.kuerzel} (${jahrgaenge})`;
 	}
 
 	function find(items: Iterable<JahrgangsDaten | KlassenDaten>, search: string) {
 		const list = [];
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}

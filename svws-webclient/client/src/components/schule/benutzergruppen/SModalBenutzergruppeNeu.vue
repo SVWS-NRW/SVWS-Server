@@ -17,7 +17,7 @@
 		</template>
 	</svws-ui-modal>
 
-	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppe_n" />
+	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppen" />
 
 	<svws-ui-button type="icon" @click="showModal().value = true">
 		<span class="icon i-ri-add-line" />
@@ -31,7 +31,7 @@
 	const props = defineProps<{
 		showDeleteIcon: boolean;
 		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
-		deleteBenutzergruppe_n : () => Promise<void>;
+		deleteBenutzergruppen : () => Promise<void>;
 	}>();
 
 	const _showModal = ref<boolean>(false);

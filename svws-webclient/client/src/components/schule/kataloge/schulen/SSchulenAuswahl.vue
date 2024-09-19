@@ -48,11 +48,11 @@
 		liste.value = [];
 	}
 
-	const schulen = computed(()=>{
+	const schulen = computed(() => {
 		const kuerzel = [];
 		const keinkeurzel = [];
 		for (const schule of props.mapKatalogeintraege().values())
-			if (schule.kuerzel)
+			if (schule.kuerzel !== null)
 				kuerzel.push(schule);
 			else
 				keinkeurzel.push(schule);

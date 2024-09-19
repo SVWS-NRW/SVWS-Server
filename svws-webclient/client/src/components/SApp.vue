@@ -132,7 +132,7 @@
 
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
-		return name ? name : "Fehlende Bezeichnung für die Schule";
+		return (name.length > 0) ? name : "Fehlende Bezeichnung für die Schule";
 	});
 
 	const pendingSetApp = ref('');

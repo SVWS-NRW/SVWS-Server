@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { ref } from "vue";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;

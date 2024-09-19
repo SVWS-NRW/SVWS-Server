@@ -1,5 +1,5 @@
 <template>
-	<slot :open-modal="openModal"/>
+	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="() => ref(showModal)" :close-in-title="false">
 		<template #modalTitle>Seite verlassen</template>
 		<template #modalContent>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 
-	import {ref} from "vue";
+	import { ref } from "vue";
 
 	const emit = defineEmits(['callback']);
 

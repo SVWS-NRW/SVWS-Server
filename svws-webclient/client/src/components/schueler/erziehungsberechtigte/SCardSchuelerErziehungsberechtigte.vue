@@ -31,10 +31,10 @@
 
 <script setup lang="ts">
 
+	import { computed } from "vue";
 	import type { Erzieherart, ErzieherStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { erzieherArtSort, staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilFilter, ortsteilSort } from "~/utils/helfer";
 	import { Nationalitaeten } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<{
 		erzieher: ErzieherStammdaten;

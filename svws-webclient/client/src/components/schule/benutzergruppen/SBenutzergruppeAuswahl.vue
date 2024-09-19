@@ -17,7 +17,7 @@
 				</template>
 				<template #actions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
-						:delete-benutzergruppe_n="deleteMultipleGroup" />
+						:delete-benutzergruppen="deleteMultipleGroup" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -27,8 +27,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import { type BenutzergruppeListeEintrag } from "@core";
 	import { type DataTableColumn } from "@ui";
+	import { type BenutzergruppeListeEintrag } from "@core";
 	import { type BenutzergruppeAuswahlProps } from "./SBenutzergruppeAuswahlProps";
 
 	const props = defineProps<BenutzergruppeAuswahlProps>();
@@ -42,20 +42,18 @@
 	const search = ref<string>("");
 
 	const rowsFiltered = computed<Map<number, BenutzergruppeListeEintrag>>(() => {
-		if (!search.value)
+		if (search.value === "")
 			return props.mapBenutzergruppe;
 		const result = new Map<number, BenutzergruppeListeEintrag>();
-		for (const l of props.mapBenutzergruppe.values()) {
+		for (const l of props.mapBenutzergruppe.values())
 			if (l.bezeichnung.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				result.set(l.id, l);
-		}
 		return result;
 	});
 
 	async function deleteMultipleGroup() {
-		const items = selectedItems.value;
+		await props.deleteBenutzergruppen(selectedItems.value);
 		selectedItems.value = [];
-		await props.deleteBenutzergruppen(items);
 	}
 
 </script>

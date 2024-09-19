@@ -20,7 +20,7 @@
 <script setup lang="ts">
 
 	import { ref, computed } from "vue";
-	import type { StundenplanManager, StundenplanPausenzeit} from "@core";
+	import type { StundenplanManager, StundenplanPausenzeit } from "@core";
 	import { Wochentag, DateUtils, ArrayList } from "@core";
 
 	const props = defineProps<{
@@ -30,7 +30,7 @@
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
-	const wochentage = ref<Wochentag[]>(props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
+	const wochentage = computed<Wochentag[]>(() => props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
 	const klassen = ref<number[]>([]);
 
 	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });

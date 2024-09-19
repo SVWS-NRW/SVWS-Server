@@ -20,12 +20,11 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef} from "vue";
-	import { computed} from "vue";
+	import { computed } from "vue";
 	import type { BenutzergruppeProps } from "./SBenutzergruppeProps";
 
 	const props = defineProps<BenutzergruppeProps>();
 
-	const visible: ComputedRef<boolean> = computed(() => props.auswahl() !== undefined);
+	const visible = computed(() => props.auswahl() !== undefined);
 
 </script>

@@ -10,7 +10,7 @@
 			<svws-ui-table clickable :clicked="lehrerListeManager().hasDaten() ? lehrerListeManager().auswahl() : null" @update:clicked="gotoLehrer"
 				:items="rowsFiltered.values()" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allowArrowKeySelection>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>

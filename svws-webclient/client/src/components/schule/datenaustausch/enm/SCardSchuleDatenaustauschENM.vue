@@ -33,7 +33,7 @@
 
 	async function import_file(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (!target.files?.length)
+		if ((target.files === null) || (target.files.length === 0))
 			return;
 		const file = target.files.item(0);
 		if (!file)

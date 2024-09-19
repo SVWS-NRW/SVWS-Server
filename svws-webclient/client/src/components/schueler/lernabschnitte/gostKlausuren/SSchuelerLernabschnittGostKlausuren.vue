@@ -5,7 +5,7 @@
 				Grund für Fehlen angeben
 			</template>
 			<template #modalContent>
-				<svws-ui-text-input focus placeholder="z.B. Krankheit" @update:modelValue="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
+				<svws-ui-text-input focus placeholder="z.B. Krankheit" @update:model-value="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
 			</template>
 			<template #modalActions>
 				<svws-ui-button type="secondary" @click="createTermin(false)"> Abbrechen </svws-ui-button>
@@ -59,7 +59,8 @@
 				class="mt-2 flex">
 				<svws-ui-button type="transparent" size="small" @click="gotoPlanung">
 					<span class="icon i-ri-link" /> Planung öffnen
-				</svws-ui-button></div>
+				</svws-ui-button>
+			</div>
 		</svws-ui-content-card>
 		<div v-else>
 			Es ist kein Lernabschnitt der gymnasialen Oberstufe ausgewält.

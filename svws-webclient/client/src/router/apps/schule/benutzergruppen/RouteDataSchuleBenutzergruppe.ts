@@ -173,7 +173,9 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 	 *
 	 * @returns {Promise<void>}
 	 */
-	setBezeichnung = async (bezeichnung: string) => {
+	setBezeichnung = async (bezeichnung: string | null) => {
+		if (bezeichnung === null)
+			return;
 		await api.server.setBenutzergruppeBezeichnung(bezeichnung, api.schema, this.benutzergruppenManager.getID());
 		this.benutzergruppenManager.setBezeichnung(bezeichnung);
 		const neueAuswahl = this.mapBenutzergruppe.get(this.daten.id);

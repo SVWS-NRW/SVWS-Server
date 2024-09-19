@@ -164,56 +164,56 @@
 </template>
 
 <script setup lang="ts">
-	import type { ComputedRef } from "vue";
+
+	import {computed, h, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
 	import type { DataTableColumn } from "@ui";
-	import {computed, h, ref} from "vue";
 
 	const props = defineProps<StatistikAppProps>();
 
-	const schulname: ComputedRef<string> = computed(() => {
+	const schulname = computed(() => {
 		const name = props.schule.bezeichnung1;
-		return name ? name : "Schule";
+		return (name.length > 0) ? name : "Schule";
 	});
 
-	const schulNr: ComputedRef<string> = computed(() => {
+	const schulNr = computed(() => {
 		const nr = props.schule.schulNr;
-		return nr ? nr.toString() : "#";
+		return nr.toString();
 	});
 
-	const schulform: ComputedRef<string> = computed(() => {
+	const schulform = computed(() => {
 		const form = props.schule.schulform;
-		return form ? form : "";
+		return form;
 	});
 
-	const adresse: ComputedRef<string> = computed(() => {
+	const adresse = computed(() => {
 		const strassenname = props.schule.strassenname;
 		const hausnummer = props.schule.hausnummer;
 		const hausnummerZusatz = props.schule.hausnummerZusatz;
 		const plz = props.schule.plz;
 		const ort = props.schule.ort;
 
-		return `${strassenname} ${hausnummer}${hausnummerZusatz ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
+		return `${strassenname} ${hausnummer}${hausnummerZusatz !== null ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
 	});
 
-	const telefon: ComputedRef<string> = computed(() => {
+	const telefon = computed(() => {
 		const telefon = props.schule.telefon;
-		return telefon ? telefon : "";
+		return telefon;
 	});
 
-	const fax: ComputedRef<string> = computed(() => {
+	const fax = computed(() => {
 		const fax = props.schule.fax;
-		return fax ? fax : "";
+		return fax;
 	});
 
-	const email: ComputedRef<string> = computed(() => {
+	const email = computed(() => {
 		const email = props.schule.email;
-		return email ? email : "";
+		return email;
 	});
 
-	const webAdresse: ComputedRef<string> = computed(() => {
+	const webAdresse = computed(() => {
 		const webAdresse = props.schule.webAdresse;
-		return webAdresse ? webAdresse : "";
+		return webAdresse;
 	});
 
 	const data = true;

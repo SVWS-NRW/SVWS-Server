@@ -45,13 +45,13 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import { DateUtils, type SchuelerVermerke } from "@core";
 	import { ref } from "vue";
+	import { DateUtils, type SchuelerVermerke } from "@core";
 
 	const activeVermerk = ref<SchuelerVermerke>();
 
 	function getDate(vermerk: SchuelerVermerke) {
-		return DateUtils.gibDatumGermanFormat(vermerk.datum || new Date().toISOString());
+		return DateUtils.gibDatumGermanFormat(vermerk.datum ?? new Date().toISOString());
 	}
 
 	async function addWrapper() {
@@ -60,11 +60,11 @@
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {
-		return `${props.mapVermerkArten.get(vermerk.idVermerkart || -1)?.bezeichnung || "Neuer Vermerk"}: ${vermerk.bemerkung || ''}`;
+		return `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung}`;
 	}
 
 	function getDescription(vermerk: SchuelerVermerke) : string {
-		return (vermerk.geaendertVon || vermerk.angelegtVon) + ' - ' + getDate(vermerk);
+		return `${vermerk.geaendertVon ?? vermerk.angelegtVon} - ${getDate(vermerk)}`;
 	}
 
 </script>

@@ -3,34 +3,34 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input focus placeholder="Kürzel" v-model="data.kuerzel" :valid="validateKuerzel" type="text"/>
-					<svws-ui-text-input placeholder="Beschreibung" v-model="data.beschreibung" type="text"/>
-					<svws-ui-spacing/>
+					<svws-ui-text-input focus placeholder="Kürzel" v-model="data.kuerzel" :valid="validateKuerzel" type="text" />
+					<svws-ui-text-input placeholder="Beschreibung" v-model="data.beschreibung" type="text" />
+					<svws-ui-spacing />
 
 					<svws-ui-select title="Klassen-Jahrgang" v-model="jahrgang" :items="jahrgaenge" :item-text="getSelectTextJahrgang"
-						:empty-text="() => 'JU - Jahrgangsübergreifend'" removable/>
+						:empty-text="() => 'JU - Jahrgangsübergreifend'" removable />
 					<svws-ui-select title="Parallelität" v-model="parallelitaet" :item-text="p => p"
-						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']"/>
-					<svws-ui-spacing/>
+						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" />
+					<svws-ui-spacing />
 
 					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" v-model="vorgaengerklasse"
-						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable/>
-					<svws-ui-text-input v-else placeholder="Vorgängerklasse" v-model="kuerzelVorgaengerklasse" type="text" disabled/>
+						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable />
+					<svws-ui-text-input v-else placeholder="Vorgängerklasse" v-model="kuerzelVorgaengerklasse" type="text" disabled />
 					<svws-ui-select v-if="!listeFolgeklassen.isEmpty()" title="Folgeklasse" v-model="folgeklasse" :items="listeFolgeklassen"
-						:item-text="f => f.kuerzel ?? '---'" removable/>
-					<svws-ui-text-input v-else placeholder="Folgeklasse" v-model="kuerzelFolgeklasse" type="text" disabled/>
-					<svws-ui-spacing/>
+						:item-text="f => f.kuerzel ?? '---'" removable />
+					<svws-ui-text-input v-else placeholder="Folgeklasse" v-model="kuerzelFolgeklasse" type="text" disabled />
+					<svws-ui-spacing />
 
-					<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="schulgliederungen" :item-text="getSelectText"/>
-					<svws-ui-text-input placeholder="Prüfungsordnung" v-model="data.pruefungsordnung" type="text" disabled/>
-					<svws-ui-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="getSelectText"/>
-					<svws-ui-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="getSelectText"/>
+					<svws-ui-select title="Schulgliederung" v-model="schulgliederung" :items="schulgliederungen" :item-text="getSelectText" />
+					<svws-ui-text-input placeholder="Prüfungsordnung" v-model="data.pruefungsordnung" type="text" disabled />
+					<svws-ui-select title="Klassenart" v-model="klassenart" :items="klassenarten" :item-text="getSelectText" />
+					<svws-ui-select title="Organisationsform" v-model="organisationsform" :items="organisationsformen" :item-text="getSelectText" />
 				</svws-ui-input-wrapper>
 
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
 					<svws-ui-button @click="add()" :disabled="!isValid || isLoading">
-						Speichern <svws-ui-spinner :spinning="isLoading"/>
+						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
 			</svws-ui-content-card>
@@ -40,10 +40,10 @@
 
 <script setup lang="ts">
 
-	import type {KlassenDaten, JahrgangsDaten, List} from '@core';
-	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList } from "@core";
-	import {ref, computed, onMounted} from "vue";
+	import { ref, computed, onMounted } from "vue";
 	import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
+	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
+	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList } from "@core";
 
 	const props = defineProps<KlassenDatenNeuProps>();
 
@@ -76,6 +76,7 @@
 		get: () => (data.value.idSchulgliederung === undefined) ? null : Schulgliederung.data().getWertByID(data.value.idSchulgliederung),
 		set: (value) => data.value.idSchulgliederung = value?.daten(schuljahr.value)?.id
 	});
+
 	const schulgliederungen = computed(() => Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform.value));
 
 	const klassenart = computed<Klassenart | null>({

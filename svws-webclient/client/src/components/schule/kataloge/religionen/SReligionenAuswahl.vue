@@ -32,9 +32,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { ReligionEintrag } from "@core";
 	import type { ReligionenAuswahlProps } from "./SReligionenAuswahlPops";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<ReligionenAuswahlProps>();
 

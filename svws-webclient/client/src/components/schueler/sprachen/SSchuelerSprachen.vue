@@ -44,12 +44,12 @@
 					<div v-else> {{ (rowData.belegungBisJahrgang === null) ? null : Jahrgaenge.data().getWertByKuerzel(rowData.belegungBisJahrgang)?.daten(schuljahr)?.kuerzel ?? '—' }} </div>
 				</template>
 				<template #cell(referenzniveau)="{ rowData }">
-					<template v-if="rowData.sprache === 'G'" >
+					<template v-if="rowData.sprache === 'G'">
 						<svws-ui-checkbox v-if="hatUpdateKompetenz" v-model="hatGraecum" headless title="Graecum">Graecum</svws-ui-checkbox>
 						<div v-else-if="hatGraecum">Graecum</div>
 						<div v-else>-</div>
 					</template>
-					<template v-else-if="rowData.sprache === 'H'" >
+					<template v-else-if="rowData.sprache === 'H'">
 						<svws-ui-checkbox v-if="hatUpdateKompetenz" v-model="hatHebraicum" headless title="Hebraicum">Hebraicum</svws-ui-checkbox>
 						<div v-else-if="hatHebraicum">Hebraicum</div>
 						<div v-else>-</div>
@@ -309,7 +309,7 @@
 	});
 
 	const latein = [{text: 'Kleines Latinum'}, {text: 'Latinum'}];
-	const latinum = computed(()=> {
+	const latinum = computed(() => {
 		if (hatKleinesLatinum.value)
 			return latein[0];
 		if (hatLatinum.value)
@@ -374,7 +374,7 @@
 	}
 
 	async function hinzufuegen(sprache: undefined | null | string) {
-		if (verfuegbareSprachen.value.length === 0 || selectSprachen.value === undefined || !sprache) {
+		if ((verfuegbareSprachen.value.length === 0) || (selectSprachen.value === undefined) || (sprache === null) || (sprache === undefined)) {
 			selectSprachen.value?.reset();
 			return;
 		}
@@ -390,8 +390,8 @@
 		selectSprachen.value.reset();
 	}
 
-	async function hinzufuegenPruefung(sprache: undefined | null | string, hsu: boolean) {
-		if (verfuegbareSprachenPruefungen.value.length === 0 || selectSprachenPruefung.value === undefined || !sprache) {
+	async function hinzufuegenPruefung(sprache: string | undefined | null, hsu: boolean) {
+		if ((verfuegbareSprachenPruefungen.value.length === 0) || (selectSprachenPruefung.value === undefined) || (sprache === null) || (sprache === undefined)) {
 			selectSprachenPruefung.value?.reset();
 			return;
 		}

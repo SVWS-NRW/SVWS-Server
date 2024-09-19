@@ -75,8 +75,8 @@
 	const beschaeftigungsart = ref<KatalogEintrag>();
 
 	const inputWohnortID = computed<OrtKatalogEintrag | null>({
-		get: () => betrieb.value.ort_id ? props.mapOrte.get(betrieb.value.ort_id) ?? null : null,
-		set: (val) =>	betrieb.value.ort_id = val?.id.valueOf() ? val.id : null
+		get: () => (betrieb.value.ort_id !== null) ? props.mapOrte.get(betrieb.value.ort_id) ?? null : null,
+		set: (val) =>	betrieb.value.ort_id = (val !== null) ? val.id : null
 	});
 
 	const openModal = () => {

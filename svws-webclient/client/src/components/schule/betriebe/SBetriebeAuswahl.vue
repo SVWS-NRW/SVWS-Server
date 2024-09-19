@@ -52,7 +52,7 @@
 	const rowsFiltered = computed<BetriebListeEintrag[]>(() => {
 		const res = [];
 		for(const k of props.mapKatalogeintraege.values())
-			if(k.name1?.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+			if((k.name1 !== null) && k.name1.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 				res.push(k);
 		return res;
 	})

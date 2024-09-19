@@ -21,7 +21,7 @@
 		</svws-ui-content-card>
 
 		<div v-else>
-			<svws-ui-content-card :title="'Die Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '` wurde nie verwendet'"/>
+			<svws-ui-content-card :title="'Die Vermerkart `' + vermerkartenManager().auswahl().bezeichnung + '` wurde nie verwendet'" />
 		</div>
 	</div>
 </template>

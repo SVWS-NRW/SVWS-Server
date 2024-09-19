@@ -31,8 +31,8 @@
 	const auswahl = computed(() => props.religionListeManager().auswahl());
 
 	const inputStatistikKuerzel = computed<Religion | null>({
-		get: () => auswahl.value.kuerzel ? Religion.data().getWertByKuerzel(auswahl.value.kuerzel) : null,
-		set: (value) => void props.patch({ kuerzel: value?.daten(schuljahr.value)?.kuerzel || null })
+		get: () => auswahl.value.kuerzel !== null ? Religion.data().getWertByKuerzel(auswahl.value.kuerzel) : null,
+		set: (value) => void props.patch({ kuerzel: value?.daten(schuljahr.value)?.kuerzel ?? null })
 	});
 
 	function getStatistikText(r: Religion): string {

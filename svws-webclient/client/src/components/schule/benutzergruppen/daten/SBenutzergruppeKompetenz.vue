@@ -8,9 +8,8 @@
 
 <script setup lang="ts">
 
-	import type {BenutzergruppenManager, BenutzerKompetenz } from "@core";
-	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
+	import type {BenutzergruppenManager, BenutzerKompetenz } from "@core";
 
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;
@@ -20,9 +19,9 @@
 		removeKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;
 	}>();
 
-	const aktiviert : ComputedRef<boolean> = computed(() => props.istAdmin);
+	const aktiviert = computed(() => props.istAdmin);
 
-	const selected: WritableComputedRef<boolean> = computed({
+	const selected = computed<boolean>({
 		get: () => props.getBenutzergruppenManager().hatKompetenz(props.kompetenz),
 		set: (value) => {
 			const alt = props.getBenutzergruppenManager().hatKompetenz(props.kompetenz);

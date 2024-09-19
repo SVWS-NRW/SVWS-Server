@@ -32,7 +32,6 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
 
 	const props = defineProps<SchuelerAppProps>();

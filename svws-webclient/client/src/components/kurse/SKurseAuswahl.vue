@@ -8,7 +8,7 @@
 			<svws-ui-table clickable :clicked="kursListeManager().hasDaten() ? kursListeManager().auswahl() : null" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allowArrowKeySelection>
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
@@ -79,7 +79,7 @@
 	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) => {
 		const list = [];
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}

@@ -101,7 +101,7 @@
 		await props.addZeitraster(list);
 	}
 
-	const fehlendeZeitraster = computed<Wochentag[]>(()=> {
+	const fehlendeZeitraster = computed<Wochentag[]>(() => {
 		const arr = [];
 		for (const w of props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange())
 			if (props.stundenplanManager().zeitrasterGetByWochentagAndStundeOrNull(w.id, props.selected) === null)

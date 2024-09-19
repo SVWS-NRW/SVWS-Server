@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 
+	import { computed, ref } from "vue";
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag} from "@core";
 	import { DeveloperNotificationException, SchuelerBetriebsdaten } from "@core";
-	import { computed, ref } from "vue";
 
 	const props = defineProps<{
 		createSchuelerBetriebsdaten: (data: SchuelerBetriebsdaten) => Promise<void>;
