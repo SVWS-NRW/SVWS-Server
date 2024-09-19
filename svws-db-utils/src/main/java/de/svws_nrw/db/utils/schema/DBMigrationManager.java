@@ -134,6 +134,9 @@ public final class DBMigrationManager {
 	// Eine Liste zum Zwischenspeichern der Schüler-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> schuelerIDs = new HashSet<>();
 
+	// Eine Menge der vorhanden GUIDs bei Schülern, um Duplikate vermeiden zu können. Bei Duplikaten werden dann neue GUIDs generiert
+	private final HashSet<String> schuelerGUIDs = new HashSet<>();
+
 	// Eine Liste zum Zwischenspeichern der User-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> userIDs = new HashSet<>();
 
@@ -1919,6 +1922,14 @@ public final class DBMigrationManager {
 			// Füge GU_IDs zu der Tabelle Schueler hinzu falls diese NULL sind.
 			if ((daten.GU_ID == null) || ("".equals(daten.GU_ID)))
 				daten.GU_ID = "{" + UUID.randomUUID().toString() + "}";
+			if (schuelerGUIDs.contains(daten.GU_ID)) {
+				final String guid = "{" + UUID.randomUUID().toString() + "}";
+				logger.logLn(LogLevel.ERROR,
+						"Korrigiere Datensatz (ID %d): Der Schüler hat die GUID %s. Diese wird auch bei einem anderen Schüler verwendet und ist nicht eindeutig. Daher wird diese auf %s gesetzt."
+								.formatted(daten.ID, daten.GU_ID, guid));
+				daten.GU_ID = guid;
+			}
+			schuelerGUIDs.add(daten.GU_ID);
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
 				logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz (ID %d): Der Schüler hat eine ungültige Fachklassen-ID %d. Diese wird auf null gesetzt."
 						.formatted(daten.ID, daten.Fachklasse_ID));
