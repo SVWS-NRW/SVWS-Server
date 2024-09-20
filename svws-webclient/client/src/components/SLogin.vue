@@ -140,7 +140,12 @@
 	async function initCoreTypes() {
 		console.log("Initialisierung der Core-Types...");
 		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
-		await reader.readAll();
+
+		// lade die JSON Datan der Core Types aus dem Backend
+		await reader.loadAll();
+
+		// initiiere die Core Types
+		reader.readAll();
 	}
 
 	async function connect() {
