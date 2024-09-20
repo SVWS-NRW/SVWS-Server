@@ -12,6 +12,7 @@ import java.util.Set;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 
+import de.svws_nrw.config.SVWSKonfiguration;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -42,8 +43,10 @@ public class ConnectionFactory {
 	 * @param config   die Datenbank-Konfiguration für die Factory
 	 */
 	ConnectionFactory(final DBConfig config) {
+		ConnectionManager.instance.unlock();
 		this.config = config;
 		this.emf = createEntityManagerFactory();
+		ConnectionManager.instance.unlock();
 	}
 
 
@@ -79,8 +82,10 @@ public class ConnectionFactory {
 	 * @throws DBException   bei Fehlern im Verbindungsaufbau
 	 */
 	DBEntityManager connect(final Benutzer user) throws DBException {
+		ConnectionManager.instance.lock();
 		final DBEntityManager conn = new DBEntityManager(user, this);
 		connections.add(conn);
+		ConnectionManager.instance.unlock();
 		return conn;
 	}
 
@@ -91,7 +96,14 @@ public class ConnectionFactory {
 	 * @param conn   die zu schließende Datenbankverbindung
 	 */
 	void close(final DBEntityManager conn) {
+		ConnectionManager.instance.lock();
 		connections.remove(conn);
+		// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
+		if (connections.isEmpty() && !config.equals(SVWSKonfiguration.get().getDBConfig(config.getDBSchema()))) {
+			// TODO schedule for removal but do not remove instantly
+			// ConnectionManager.instance.closeSingle(config);
+		}
+		ConnectionManager.instance.unlock();
 	}
 
 
@@ -167,7 +179,10 @@ public class ConnectionFactory {
 
 
 	/**
-	 * Schließt den Verbindungs-Manager
+	 * <p> Schließt den Verbindungs-Manager. </p>
+	 *
+	 * <b>Hinweis:</b> Diese Methode sollte nur von dem ConnectionManager aufgerufen werden.
+	 * Dort ist die Methode closeSingle aufzurufen.
 	 */
 	void close() {
 		emf.close();

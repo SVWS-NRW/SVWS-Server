@@ -7,6 +7,7 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.server.ConnectionPool;
@@ -39,6 +40,10 @@ public final class ConnectionManager {
 	/** Die Instanz des Connectiion-Managers */
 	public static final ConnectionManager instance;
 
+	/** Ein Mutex, dass immer nur ein Thread den Zustand dieses Managers verändern kann. */
+	private final ReentrantLock mutex = new ReentrantLock();
+
+
 
 	/**
 	 * Erzeugt einen neuen Connection-Manager.
@@ -59,8 +64,11 @@ public final class ConnectionManager {
 	 * @throws DBException   bei Fehlern im Verbindungsaufbau
 	 */
 	DBEntityManager getConnection(final Benutzer user) throws DBException {
+		this.lock();
 		final @NotNull ConnectionFactory factory = this.get(user.getConfig());
-		return factory.connect(user);
+		final @NotNull DBEntityManager conn = factory.connect(user);
+		this.unlock();
+		return conn;
 	}
 
 
@@ -74,7 +82,7 @@ public final class ConnectionManager {
 	 *
 	 * @throws DBException   bei einem fehlerhaften Verbindungsaufbau, z.B. einer fehlschlagenen Authentifizierung
 	 */
-	public @NotNull ConnectionFactory get(final DBConfig config) throws DBException {
+	private @NotNull ConnectionFactory get(final DBConfig config) throws DBException {
 		ConnectionFactory factory = mapFactories.get(config);
 		if ((factory != null) && (!factory.checkCredentials(config.getUsername(), config.getPassword()))) {
 			mapFactories.remove(config);
@@ -150,17 +158,19 @@ public final class ConnectionManager {
 	 *
 	 * @param config   die Konfiguration der zu schließenden Factory
 	 */
-	private void closeSingle(final DBConfig config) {
+	void closeSingle(final DBConfig config) {
+		this.lock();
 		final ConnectionFactory factory = mapFactories.get(config);
 		if (factory == null) {
-			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Verbindungen zu %s (Schema: %s), Datenbank-Benutzer: %s"
+			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
 					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
 			return;
 		}
 		factory.close();
 		mapFactories.remove(config);
-		Logger.global().logLn(LogLevel.INFO, "Verbindungen des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+		Logger.global().logLn(LogLevel.INFO, "Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
 				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
+		this.unlock();
 	}
 
 
@@ -168,9 +178,32 @@ public final class ConnectionManager {
 	 * Schließt alle noch offenenen Factories.
 	 */
 	private void closeAll() {
+		this.lock();
 		final List<DBConfig> configs = mapFactories.keySet().stream().toList();
 		for (final DBConfig config : configs)
 			closeSingle(config);
+		this.unlock();
+	}
+
+
+	/**
+	 * Nimmt den Lock für Connection-Manager für den aktuellen Thread in Besitz und
+	 * kehrt zurück, sofern dieser nicht im Besitz eines anderen Threads ist
+	 * (siehe {@link ReentrantLock#lock()}).
+	 */
+	public void lock() {
+		mutex.lock();
+	}
+
+
+	/**
+	 * Gibt den Lock für Connection-Manager wieder frei, sofern dieser Thread im Besitz
+	 * des Locks ist (siehe {@link ReentrantLock#isLocked()} und
+	 * {@link ReentrantLock#unlock()})
+	 */
+	public void unlock() {
+		if (mutex.isLocked() && mutex.isHeldByCurrentThread())
+			mutex.unlock();
 	}
 
 }
