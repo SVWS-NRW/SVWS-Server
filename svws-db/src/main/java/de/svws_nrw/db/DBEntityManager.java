@@ -79,8 +79,10 @@ public final class DBEntityManager implements AutoCloseable {
 	 *
 	 * @param user     der Benutzer, der dieser Verbindung zugeordnet ist.
 	 * @param config   die Datenbank-Konfiguration
+	 *
+	 * @throws DBException   wenn keine Verbindung aufgebaut werden kann
 	 */
-	DBEntityManager(final Benutzer user, final DBConfig config) {
+	DBEntityManager(final Benutzer user, final DBConfig config) throws DBException {
 		this.user = user;
 		this.config = config;
 		if (this.config.getConnectionRetries() <= 0) {
@@ -118,9 +120,9 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Erneuert die Verbindung zur Datenbank. Dabei geht der Zustand
 	 * in Bezug auf die verwalteten Entitäten verloren.
 	 *
-	 * @throws DBConnectionException   die Verbindung konnte nicht neu aufgebaut werden
+	 * @throws DBException   die Verbindung konnte nicht neu aufgebaut werden
 	 */
-	public void reconnect() throws DBConnectionException {
+	public void reconnect() throws DBException {
 		if (em != null) {
 			em.clear();
 			em.close();
@@ -128,7 +130,7 @@ public final class DBEntityManager implements AutoCloseable {
 		try {
 			em = user.connectionManager.getNewJPAEntityManager();
 		} catch (final IllegalStateException e) {
-			throw new DBConnectionException(e);
+			throw new DBException(e);
 		}
 	}
 

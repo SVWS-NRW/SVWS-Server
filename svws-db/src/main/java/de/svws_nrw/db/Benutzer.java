@@ -369,13 +369,14 @@ public final class Benutzer {
 	 * eine neue Verbindung.
 	 *
 	 * @return die Instanz des {@link DBEntityManager}
+	 *
+	 * @throws DBException
 	 */
-	public DBEntityManager getEntityManager() {
+	public DBEntityManager getEntityManager() throws DBException {
 		try {
 			return new DBEntityManager(this, _config);
-		} catch (@SuppressWarnings("unused") final IllegalStateException e) {
-			// TODO error handling
-			return null;
+		} catch (final IllegalStateException e) {
+			throw new DBException("Fehler beim Aufbau der Verbindung: " + e.getLocalizedMessage(), e);
 		}
 	}
 

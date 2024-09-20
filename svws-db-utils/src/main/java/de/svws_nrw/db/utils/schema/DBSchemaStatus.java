@@ -10,6 +10,7 @@ import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
 import de.svws_nrw.db.schema.Schema;
@@ -47,8 +48,10 @@ public final class DBSchemaStatus {
 	 *
 	 * @param user         der Datenbank-Benutzer für den Zugriff auf die Tabellen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private DBSchemaStatus(final Benutzer user, final String schemaName) {
+	private DBSchemaStatus(final Benutzer user, final String schemaName) throws DBException {
 		this.user = user;
 		this.schemaName = schemaName;
 		update();
@@ -62,8 +65,10 @@ public final class DBSchemaStatus {
 	 * @param user   der Datenbank-Benutzer für den Zugriff auf die Schema-Informationen
 	 *
 	 * @return der Schema-Status
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaStatus read(final Benutzer user) {
+	public static DBSchemaStatus read(final Benutzer user) throws DBException {
 		return new DBSchemaStatus(user, user.connectionManager.getConfig().getDBSchema());
 	}
 
@@ -76,8 +81,10 @@ public final class DBSchemaStatus {
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
 	 *
 	 * @return der Schema-Status
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaStatus read(final Benutzer user, final String schemaName) {
+	public static DBSchemaStatus read(final Benutzer user, final String schemaName) throws DBException {
 		return new DBSchemaStatus(user, schemaName);
 	}
 
@@ -114,8 +121,10 @@ public final class DBSchemaStatus {
 
 	/**
 	 * Aktualisiert den Schema-Status
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public void update() {
+	public void update() throws DBException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			this.update(conn);
 		}
@@ -273,8 +282,10 @@ public final class DBSchemaStatus {
 	 * @param colname    der zu prüfende Spaltenname
 	 *
 	 * @return true, falls die Spalte bei der Tabelle vorhanden ist und ansonsten false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean hasColumn(final String tabname, final String colname) {
+	public boolean hasColumn(final String tabname, final String colname) throws DBException {
 		if (!hasTable(tabname))
 			return false;
 		try (DBEntityManager conn = user.getEntityManager()) {
@@ -294,8 +305,10 @@ public final class DBSchemaStatus {
 	 * @param cols      eine Liste mit Spaltennamen, die gefiltert werden soll
 	 *
 	 * @return die gefilterte Liste von Spaltennamen
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public List<String> filterColumns(final String tabname, final List<String> cols) {
+	public List<String> filterColumns(final String tabname, final List<String> cols) throws DBException {
 		if (!hasTable(tabname))
 			return new ArrayList<>();
 		try (DBEntityManager conn = user.getEntityManager()) {

@@ -59,6 +59,10 @@ public final class ConnectionManager {
 	 */
 	private final @NotNull EntityManagerFactory emf;
 
+	/** Gibt an, on der Connection-Manager gültig ist und eine Verbindung beinhaltet oder ob diese bereits geschlossen wurde */
+	private boolean valid = true;
+
+
 	/**
 	 * Erstellt einen neuen Connection-Manager
 	 *
@@ -75,8 +79,12 @@ public final class ConnectionManager {
 	 * Verbindung verwendet.
 	 *
 	 * @return der neue JPA {@link EntityManager}
+	 *
+	 * @throws DBException   falls keine Verbindung erstellt werden kann
 	 */
-	EntityManager getNewJPAEntityManager() {
+	EntityManager getNewJPAEntityManager() throws DBException {
+		if (!valid)
+			throw new DBException("Für eine geschlossene Verbindung kann kein neuer Entity-Manager erzeugt werden.");
 		return emf.createEntityManager();
 	}
 
@@ -92,16 +100,18 @@ public final class ConnectionManager {
 	 * @param retryTimeout   die Zeit in Millisekunden
 	 *
 	 * @return der neue JPA {@link EntityManager}
+	 *
+	 * @throws DBException   falls keine Verbindung erstellt werden kann
 	 */
-	EntityManager getNewJPAEntityManager(final int connectionRetries, final long retryTimeout) {
-		PersistenceException resultingException = null;
+	EntityManager getNewJPAEntityManager(final int connectionRetries, final long retryTimeout) throws DBException {
+		DBException resultingException = null;
 		int triesLeft = connectionRetries + 1;
 		do {
 			triesLeft--;
 			try {
 				return getNewJPAEntityManager();
 			} catch (final PersistenceException e) {
-				resultingException = e;
+				resultingException = new DBException("Fehler beim Aufbau einer Verbindung: " + e.getLocalizedMessage(), e);
 				if (triesLeft <= 0) {
 					throw resultingException;
 				}
@@ -182,10 +192,19 @@ public final class ConnectionManager {
 
 
 	/**
+	 * Trennt die Verbindung des ConnectionManagers zur Datenbank.
+	 */
+	public void closeConnection() {
+		closeSingle(config);
+	}
+
+
+	/**
 	 * Schließt den Verbindungs-Manager
 	 */
 	private void close() {
 		emf.close();
+		valid = false;
 	}
 
 	/**

@@ -139,8 +139,10 @@ public class DBCoreTypeUpdater {
 	 * Version in der Datenbank übereinstimmt.
 	 *
 	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUptodate() {
+	public boolean isUptodate() throws DBException {
 		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
 			_status.update(conn);
 			for (final CoreTypeTable entry : tables)
@@ -219,8 +221,10 @@ public class DBCoreTypeUpdater {
 	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
 	 *
 	 * @return true im Erfolgsfall, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean update(final Benutzer user, final boolean lockSchema, final long rev) {
+	public boolean update(final Benutzer user, final boolean lockSchema, final long rev) throws DBException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			try {
 				conn.transactionBegin();

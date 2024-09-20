@@ -13,6 +13,7 @@ import de.svws_nrw.data.ThrowingFunction;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerKompetenz;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -39,8 +40,10 @@ public final class DBBenutzerUtils {
 	 * die Klasse Benutzer integriert werden kann.
 	 *
 	 * @param user   der Benutzer dessen Kompetenzen eingelesen werden sollen
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static void leseKompetenzen(final Benutzer user) {
+	public static void leseKompetenzen(final Benutzer user) throws DBException {
 		user.getKompetenzen().clear();
 		try (DBEntityManager conn = user.getEntityManager()) {
 			// Bestimme den Benutzer in der Datenbank
@@ -75,8 +78,10 @@ public final class DBBenutzerUtils {
 	 * @param password    das zu prüfende Kennwort
 	 *
 	 * @return true, falls das Kennwort gültig ist, und ansonsten false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static boolean pruefePasswort(final Benutzer user, final String password) {
+	public static boolean pruefePasswort(final Benutzer user, final String password) throws DBException {
 		if (user.getUsername() == null)
 			return false;
 		try (DBEntityManager conn = user.getEntityManager()) {
@@ -201,7 +206,11 @@ public final class DBBenutzerUtils {
 	 */
 	public static DBEntityManager getDBConnection(final HttpServletRequest request, final ServerMode mode, final BenutzerKompetenz... kompetenzen)
 			throws ApiOperationException {
-		return getSVWSUser(request, mode, kompetenzen).getEntityManager();
+		try {
+			return getSVWSUser(request, mode, kompetenzen).getEntityManager();
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
+		}
 	}
 
 
@@ -223,7 +232,11 @@ public final class DBBenutzerUtils {
 	 */
 	public static DBEntityManager getDBConnectionAllowSelf(final HttpServletRequest request, final ServerMode mode, final long user_id,
 			final BenutzerKompetenz... kompetenzen) throws ApiOperationException {
-		return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
+		try {
+			return getSVWSUserAllowSelf(request, mode, user_id, kompetenzen).getEntityManager();
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
+		}
 	}
 
 

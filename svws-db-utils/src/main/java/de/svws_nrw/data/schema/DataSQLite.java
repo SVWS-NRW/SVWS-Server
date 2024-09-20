@@ -103,6 +103,8 @@ public final class DataSQLite {
 				logger.logLn(2, "[FEHLER]");
 			logger.logLn("Datei eingelesen.");
 			return response;
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler bei der Datenbank-Verbindung.");
 		}
 	}
 

@@ -96,6 +96,7 @@ import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Methoden zur Verfügung, um ein Schild2-Datenbankschema in
@@ -327,9 +328,15 @@ public final class DBMigrationManager {
 			logger.logLn(2, e.getMessage());
 			return false;
 		}
-		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
-		if (!tgtManager.dropSVWSSchema())
+		try {
+			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
+			if (!tgtManager.dropSVWSSchema())
+				return false;
+		} catch (final DBException e) {
+			logger.logLn("[Fehler]");
+			logger.logLn(2, e.getMessage());
 			return false;
+		}
 		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
 		final boolean success = migrationManager.doMigrate();
 		logger.modifyIndent(-2);
@@ -560,6 +567,8 @@ public final class DBMigrationManager {
 				conn.persist(schule);
 			}
 			return true;
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 	}
 
@@ -583,8 +592,10 @@ public final class DBMigrationManager {
 	 * @param tab   die einzulesende Tabelle
 	 *
 	 * @return eine Liste mit allen Entitäten der Tabelle
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private List<?> readAllData(final SchemaTabelle tab) {
+	private List<?> readAllData(final SchemaTabelle tab) throws DBException {
 		final Class<?> dtoClass = MigrationDTOs.getFromTableName(tab.name());
 		lastError = null;
 
@@ -688,8 +699,10 @@ public final class DBMigrationManager {
 	 * so lange versucht, bis einzelnen Entitäten nicht geschrieben werde können.
 	 *
 	 * @param entities   die zu schreibenden Entitäten
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private void write(final List<?> entities) {
+	private void write(final List<?> entities) throws DBException {
 		try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
 			logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
 			logger.modifyIndent(2);
@@ -746,8 +759,10 @@ public final class DBMigrationManager {
 	 * Liest die Schulnummer aus der Quelldatenbank ein.
 	 *
 	 * @return true, falls die Schulnummer erfolgreich bestimmt wurde
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean readSchulnummer() {
+	private boolean readSchulnummer() throws DBException {
 		logger.logLn("Bestimme die Schulnummer aus EigeneSchule:");
 		logger.modifyIndent(2);
 		final List<?> tmpSchulen = readAllData(Schema.tab_EigeneSchule);
@@ -2357,8 +2372,10 @@ public final class DBMigrationManager {
 	 * Dies wird innerhalb dieser Klasse auch so angelegt.
 	 *
 	 * @return true, falls die Daten erfolgreich kopiert wurden und sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean copy() {
+	private boolean copy() throws DBException {
 		// Lese die Schulnummer aus
 		if (!readSchulnummer())
 			return false;
@@ -2410,8 +2427,10 @@ public final class DBMigrationManager {
 
 	/**
 	 * Konvertiert am Ende der Migration die Bilder in der Zieldatenbank in die Base64-Kodierung.
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private void convertImages() {
+	private void convertImages() throws DBException {
 		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
 			final String strLogBilderAnzahl = "%d Bilder";
 			logger.log("* Tabelle EigeneSchule...");

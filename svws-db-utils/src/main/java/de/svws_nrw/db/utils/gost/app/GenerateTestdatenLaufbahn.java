@@ -208,6 +208,8 @@ public class GenerateTestdatenLaufbahn {
 			cmdLine.printOptionsAndExit(1, e.getMessage());
 		} catch (final IOException e) {
 			cmdLine.printOptionsAndExit(2, e.getMessage());
+		} catch (final DBException e) {
+			cmdLine.printOptionsAndExit(3, e.getMessage());
 		}
 	}
 

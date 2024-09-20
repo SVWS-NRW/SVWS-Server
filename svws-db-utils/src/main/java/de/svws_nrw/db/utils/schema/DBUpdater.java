@@ -154,8 +154,10 @@ public class DBUpdater {
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 *
 	 * @return true, falls das schema aktuell ist, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUptodate(final long maxUpdateRevision, final boolean devMode) {
+	public boolean isUptodate(final long maxUpdateRevision, final boolean devMode) throws DBException {
 		status.update();
 		final DBSchemaVersion currentVersion = status.getVersion();
 		if (currentVersion == null) {
@@ -196,8 +198,10 @@ public class DBUpdater {
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 *
 	 * @return true, falls eine Aktualisierung möglich ist, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUpdatable(final long maxUpdateRevision, final boolean devMode) {
+	public boolean isUpdatable(final long maxUpdateRevision, final boolean devMode) throws DBException {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
 		final DBSchemaVersion currentVersion = status.getVersion();
@@ -273,6 +277,9 @@ public class DBUpdater {
 				// Perform a rollback if necessary
 				conn.transactionRollback();
 			}
+		} catch (final DBException e) {
+			e.printStackTrace();
+			success = false;
 		}
 
 		// Entsperre ggf. das Datenbankschema

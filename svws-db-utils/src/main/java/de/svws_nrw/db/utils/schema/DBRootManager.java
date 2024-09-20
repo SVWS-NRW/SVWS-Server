@@ -136,8 +136,11 @@ public final class DBRootManager {
 	 * @param nameSchema   das Schema, auf dem der neue Benutzer seine Rechte bekommen soll
 	 *
 	 * @return true, wenn der Benutzer erstellt wurde, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema) {
+	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema)
+			throws DBException {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
@@ -260,9 +263,11 @@ public final class DBRootManager {
 	 *
 	 * @return true, wenn das Schema und der Benutzer erstellt wurden, sonst false
 	 *
-	 * @throws SVWSKonfigurationException falls ein Fehler beim Erstellen oder Anpassen der SVWS-Konfiguration auftritt
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Erstellen oder Anpassen der SVWS-Konfiguration auftritt
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema) throws SVWSKonfigurationException {
+	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema)
+			throws SVWSKonfigurationException, DBException {
 		// Erstelle zunächst das DB-Schema
 		if (!createDBSchema(nameSchema))
 			return false;

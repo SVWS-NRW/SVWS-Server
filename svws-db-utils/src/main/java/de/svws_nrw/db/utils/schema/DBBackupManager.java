@@ -101,6 +101,9 @@ public class DBBackupManager {
 
 			logger.modifyIndent(-2);
 			return success;
+		} catch (final DBException e) {
+			logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
+			return false;
 		}
 	}
 
@@ -159,6 +162,9 @@ public class DBBackupManager {
 
 			logger.modifyIndent(-2);
 			return success;
+		} catch (final DBException e) {
+			logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
+			return false;
 		}
 	}
 
@@ -344,6 +350,9 @@ public class DBBackupManager {
 			}
 			logger.modifyIndent(-2);
 			return success;
+		} catch (final DBException e) {
+			logger.logLn("-> Export fehlgeschlagen! (" + e.getMessage() + ")");
+			return false;
 		}
 	}
 
@@ -355,9 +364,11 @@ public class DBBackupManager {
 	 * @param entities     die zu schreibenden Datensätze
 	 * @param tab          die Tabelle
 	 * @param rev          die Revision der Tabelle
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	@SuppressWarnings("resource")
-	private void writeEntities(final DBSchemaManager tgtManager, final List<Object[]> entities, final SchemaTabelle tab, final long rev) {
+	private void writeEntities(final DBSchemaManager tgtManager, final List<Object[]> entities, final SchemaTabelle tab, final long rev) throws DBException {
 		// Schreibe die Datensätze in die Zieltabelle
 		logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
 		logger.modifyIndent(2);
@@ -418,9 +429,11 @@ public class DBBackupManager {
 	 *
 	 * @param tgtManager   der Schema-Manager der Ziel-Datenbank
 	 * @param rev          die gemeinsame Revision der beiden Schemata
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	@SuppressWarnings("resource")
-	private void expimpCopyFrom(final DBSchemaManager tgtManager, final long rev) {
+	private void expimpCopyFrom(final DBSchemaManager tgtManager, final long rev) throws DBException {
 		// Durchwandere alle Tabellen in der geeigneten Reihenfolge, so dass Foreign-Key-Constraints erfüllt werden
 		for (final SchemaTabelle tab : Schema.getTabellen(rev)) {
 			// Prüfe, ob die Tabelle bei dem Import/Export beachtet werden soll, wenn nicht dann übespringe sie

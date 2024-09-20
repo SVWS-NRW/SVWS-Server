@@ -21,6 +21,7 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 import de.svws_nrw.db.schema.View;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Hilfs-Funktionen zur Verfügung, um auf ein SVWS-Datenbank-Schema zuzugreifen und dieses zu bearbeiten.
@@ -59,8 +60,10 @@ public final class DBSchemaManager {
 	 * @param user             der Datenbak-Benutzer
 	 * @param returnOnError    gibt an, ob Operatioen bei Einzelfehlern abgebrochen werden sollen
 	 * @param logger           ein Logger, um die Abläufe in dem Schema-Manager zu loggen
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private DBSchemaManager(final Benutzer user, final boolean returnOnError, final Logger logger) {
+	private DBSchemaManager(final Benutzer user, final boolean returnOnError, final Logger logger) throws DBException {
 		this.user = user;
 		this.status = DBSchemaStatus.read(user);
 		this.returnOnError = returnOnError;
@@ -79,8 +82,10 @@ public final class DBSchemaManager {
 	 * @param logger           ein Logger, um die Abläufe in dem Schema-Manager zu loggen
 	 *
 	 * @return der DB-Schema-Manager bei Erfolg
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaManager create(final Benutzer user, final boolean returnOnError, final Logger logger) {
+	public static DBSchemaManager create(final Benutzer user, final boolean returnOnError, final Logger logger) throws DBException {
 		return new DBSchemaManager(user, returnOnError, (logger == null) ? new Logger() : logger);
 	}
 
@@ -471,8 +476,10 @@ public final class DBSchemaManager {
 	 * @param driver  die Informationen zum verwendeten Datenbank-Treiber (s.o.)
 	 *
 	 * @return true, falls die Operationen erfolgreich waren und ansonsten false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean dropSVWSSchemaMultipleStatements(final DBEntityManager conn, final DBDriver driver) {
+	private boolean dropSVWSSchemaMultipleStatements(final DBEntityManager conn, final DBDriver driver) throws DBException {
 		// no support to drop multiple tables in one drop statement - drop table order is important due to foreign key constraints
 		boolean success = true;
 		// Bestimme die aktuelle Revision der Datenbank
@@ -518,8 +525,10 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, wenn das Schema erfolgreich verworfen wurde,
 	 *         false wenn dabei Fehler aufgetreten sind.
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean dropSVWSSchema() {
+	public boolean dropSVWSSchema() throws DBException {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			boolean success = true;
 			logger.logLn("- Verwerfe Tabellen...");
@@ -578,18 +587,25 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	private static boolean createAndUpdateSchemaInto(final DBConfig tgtConfig, final long rev, final Logger logger, final boolean clearSchema) {
+	private static boolean createAndUpdateSchemaInto(final DBConfig tgtConfig, final long rev, final @NotNull Logger logger, final boolean clearSchema) {
 		final Benutzer schemaUser;
+		final DBSchemaManager manager;
 		try {
 			schemaUser = Benutzer.create(tgtConfig);
+			manager = DBSchemaManager.create(schemaUser, true, logger);
 		} catch (@SuppressWarnings("unused") final DBException db) {
 			logger.logLn("Fehler beim Erstellen der Datenbankverbindung zum Ziel-Schema. Sind die Anmeldedaten korrekt?");
 			return false;
 		}
-		final DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
 
 		// Schema leeren...
-		if ((clearSchema) && (!manager.dropSVWSSchema())) {
+		try {
+			if ((clearSchema) && (!manager.dropSVWSSchema())) {
+				logger.logLn("Fehler beim Leeren des Schemas in der Ziel-Datenbank.");
+				return false;
+			}
+		} catch (final DBException e) {
+			logger.logLn(e.getMessage());
 			logger.logLn("Fehler beim Leeren des Schemas in der Ziel-Datenbank.");
 			return false;
 		}
@@ -613,6 +629,9 @@ public final class DBSchemaManager {
 				logger.modifyIndent(-2);
 				conn.transactionRollback();
 			}
+		} catch (final DBException e) {
+			logger.logLn(e.getMessage());
+			return false;
 		}
 
 		logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");

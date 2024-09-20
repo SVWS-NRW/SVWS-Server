@@ -35,6 +35,7 @@ import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachkombinationen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFaecher;
@@ -55,6 +56,7 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.Response.Status;
 
 
 /**
@@ -270,6 +272,8 @@ public class LupoMDB {
 			schuelerSprachenfolge = ABPSchuelerSprachenfolge.getDefault();
 			logger.logLn("Fertig!");
 			logger.modifyIndent(-2);
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 	}
 
@@ -685,6 +689,8 @@ public class LupoMDB {
 				logger.modifyIndent(-2);
 				conn.transactionRollback();
 			}
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 	}
 

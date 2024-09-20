@@ -111,23 +111,34 @@ public final class DBUtilsSchema {
 				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + user.getEntityManager().getDBSchema() + ".log", true, true));
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
-		final DBSchemaManager manager = DBSchemaManager.create(user, true, logger);
-		if (manager == null)
-			throw new ApiOperationException(Status.FORBIDDEN);
+		DBSchemaManager manager;
+		try {
+			manager = DBSchemaManager.create(user, true, logger);
+			if (manager == null)
+				throw new ApiOperationException(Status.FORBIDDEN, "Fehler beim Aufbau der Datenbank-Verbindung.");
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
+		}
 
 		// Prüfe, ob das Schema aktuell ist
-		if (!manager.updater.isUptodate(rev, false)) {
-			// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
-			if (!manager.updater.isUpdatable(rev, false))
-				throw new ApiOperationException(Status.BAD_REQUEST);
+		try {
+			if (!manager.updater.isUptodate(rev, false)) {
+				// Prüfe, ob die angegebene Revision überhaupt ein Update erlaubt -> wenn nicht, dann liegt ein BAD_REQUEST (400) vor
+				if (!manager.updater.isUpdatable(rev, false))
+					throw new ApiOperationException(Status.BAD_REQUEST);
 
-			// Führe die Aktualisierung durch
-			final boolean success = manager.updater.update(user, rev, false, true);
-			if (!success)
-				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+				// Führe die Aktualisierung durch
+				final boolean success = manager.updater.update(user, rev, false, true);
+				if (!success)
+					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
+			}
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler bei der Datenbank-Verbindung.");
 		}
 
 		// return log from logger
@@ -142,15 +153,22 @@ public final class DBUtilsSchema {
 	 * @param nurSVWSSchemas    gibt an, ob nur SVWS-Schema zurückgegeben werden sollen oder alle
 	 *
 	 * @return die Liste der SVWS-Schema-Einträge
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
 	 */
-	public static List<SchemaListeEintrag> getSVWSSchemaListe(final DBEntityManager conn, final boolean nurSVWSSchemas) {
+	public static List<SchemaListeEintrag> getSVWSSchemaListe(final DBEntityManager conn, final boolean nurSVWSSchemas) throws ApiOperationException {
 		// Lese zunächst alle Schemata in der DB ein. Dies können auch Schemata sein, die keine SVWS-Server-Schemata sind!
 		final List<String> all = DTOInformationSchema.queryNames(conn);
 		final ArrayList<SchemaListeEintrag> result = new ArrayList<>();
 		final SVWSKonfiguration config = SVWSKonfiguration.get();
 		// Filtere alle Schemata heraus, die gültige SVWS-Schemata sind.
 		for (final String schemaname : all) {
-			final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
+			DBSchemaStatus status;
+			try {
+				status = DBSchemaStatus.read(conn.getUser(), schemaname);
+			} catch (final DBException e) {
+				throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
+			}
 			final DBSchemaVersion version = status.getVersion();
 			if ((version != null) && (version.getRevisionOrDefault(Integer.MIN_VALUE) != Integer.MIN_VALUE)) {
 				final String schemanameConfig = config.getSchemanameCaseConfig(schemaname);
@@ -199,11 +217,15 @@ public final class DBUtilsSchema {
 		final Set<String> setSchemata = schemata.stream().map(String::toLowerCase).collect(Collectors.toSet());
 		if (!setSchemata.contains(schemaname.toLowerCase()))
 			throw new ApiOperationException(Status.FORBIDDEN, "Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
-		final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
-		final DBSchemaVersion version = status.getVersion();
-		if (version == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
-		return status;
+		try {
+			final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
+			final DBSchemaVersion version = status.getVersion();
+			if (version == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));
+			return status;
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler bei der Datenbank-Verbindung.");
+		}
 	}
 
 
@@ -291,6 +313,8 @@ public final class DBUtilsSchema {
 				result.add(b);
 			}
 			return result;
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 	}
 
