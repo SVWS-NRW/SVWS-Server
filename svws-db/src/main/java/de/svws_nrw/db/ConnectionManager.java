@@ -34,7 +34,7 @@ public final class ConnectionManager {
 	}
 
 	/** Eine HashMap für den schnellen Zugriff auf eine Connection-Factory anhand der Datenbank-Konfiguration */
-	private final HashMap<DBConfig, ConnectionFactory> mapManager = new HashMap<>();
+	private final HashMap<DBConfig, ConnectionFactory> mapFactories = new HashMap<>();
 
 	/** Die Instanz des Connectiion-Managers */
 	public static final ConnectionManager instance;
@@ -49,6 +49,22 @@ public final class ConnectionManager {
 
 
 	/**
+	 * Bestimmt für den angegebenen Benutzer die zugehörige Connection-Factory
+	 * und mit dieser dann eine neue Verbindung.
+	 *
+	 * @param user   der Benutzer
+	 *
+	 * @return die Datenbank-Verbindung
+	 *
+	 * @throws DBException   bei Fehlern im Verbindungsaufbau
+	 */
+	DBEntityManager getConnection(final Benutzer user) throws DBException {
+		final @NotNull ConnectionFactory factory = this.get(user.getConfig());
+		return factory.connect(user);
+	}
+
+
+	/**
 	 * Gibt die Connection-Factory passen für die übergebene Konfiguration zurück.
 	 * Sollt keine Factory existieren, so wird versucht eine neue zu erstellen.
 	 *
@@ -59,29 +75,29 @@ public final class ConnectionManager {
 	 * @throws DBException   bei einem fehlerhaften Verbindungsaufbau, z.B. einer fehlschlagenen Authentifizierung
 	 */
 	public @NotNull ConnectionFactory get(final DBConfig config) throws DBException {
-		ConnectionFactory man = mapManager.get(config);
-		if ((man != null) && (!man.checkCredentials(config.getUsername(), config.getPassword()))) {
-			mapManager.remove(config);
-			man.close();
-			man = null;
+		ConnectionFactory factory = mapFactories.get(config);
+		if ((factory != null) && (!factory.checkCredentials(config.getUsername(), config.getPassword()))) {
+			mapFactories.remove(config);
+			factory.close();
+			factory = null;
 		}
-		if (man == null) {
-			man = new ConnectionFactory(config);
+		if (factory == null) {
+			factory = new ConnectionFactory(config);
 			try {
-				try (EntityManager em = man.getNewJPAEntityManager()) {
-					mapManager.put(config, man);
+				try (EntityManager em = factory.getNewJPAEntityManager()) {
+					mapFactories.put(config, factory);
 				}
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie Benutzername und Kennwort.", ae);
 				}
 				if (pe.getCause() instanceof DatabaseException) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie die Verbindungsparameter.");
 				}
 				if (pe.getMessage().startsWith("java.lang.IllegalStateException: Could not determine FileFormat")) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehlerhaftes oder zu altes MDB-Datei-Format.");
 				}
 				throw pe;
@@ -90,7 +106,7 @@ public final class ConnectionManager {
 			// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der
 			// Server-seitigen Beendung einer Verbindung zu erkennen
 			try {
-				try (EntityManager em = man.getNewJPAEntityManager()) {
+				try (EntityManager em = factory.getNewJPAEntityManager()) {
 					try {
 						em.getTransaction().begin();
 						@SuppressWarnings("resource") final Connection conn = em.unwrap(Connection.class);
@@ -118,40 +134,41 @@ public final class ConnectionManager {
 				}
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
-					mapManager.remove(config);
-					man.close();
+					mapFactories.remove(config);
+					factory.close();
 					throw new DBException(ae);
 				}
 				throw pe;
 			}
 		}
-		return man;
+		return factory;
 	}
 
+
 	/**
-	 * Schließt den Connection-Manager für die übergebene Config und entfernt
-	 * ihn aus der Liste der Manager
+	 * Schließt die Factory für die übergebene Config und entfernt sie aus der Map der Factories
 	 *
-	 * @param config die Konfiguration des zu schließenden Managers
+	 * @param config   die Konfiguration der zu schließenden Factory
 	 */
 	private void closeSingle(final DBConfig config) {
-		final ConnectionFactory manager = mapManager.get(config);
-		if (manager == null) {
-			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen des Verbindungs-Managers zu %s (Schema: %s), Datenbank-Benutzer: %s"
+		final ConnectionFactory factory = mapFactories.get(config);
+		if (factory == null) {
+			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Verbindungen zu %s (Schema: %s), Datenbank-Benutzer: %s"
 					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
 			return;
 		}
-		manager.close();
-		mapManager.remove(config);
-		Logger.global().logLn(LogLevel.INFO, "Verbindungs-Manager des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+		factory.close();
+		mapFactories.remove(config);
+		Logger.global().logLn(LogLevel.INFO, "Verbindungen des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
 				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 	}
 
+
 	/**
-	 * Schließt alle noch offenenen Datenbank-Verbindungen.
+	 * Schließt alle noch offenenen Factories.
 	 */
 	private void closeAll() {
-		final List<DBConfig> configs = mapManager.keySet().stream().toList();
+		final List<DBConfig> configs = mapFactories.keySet().stream().toList();
 		for (final DBConfig config : configs)
 			closeSingle(config);
 	}

@@ -3,9 +3,11 @@ package de.svws_nrw.db;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
@@ -30,6 +32,9 @@ public class ConnectionFactory {
 	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz des {@link EntityManagerFactory} */
 	private final @NotNull EntityManagerFactory emf;
 
+	/** Die Menge der offenen Verbindungen bei dieser Factory */
+	private final @NotNull Set<DBEntityManager> connections = new HashSet<>();
+
 
 	/**
 	 * Erstellt eine neue Factory für Datenbank-Verbindungen
@@ -48,10 +53,8 @@ public class ConnectionFactory {
 	 * Verbindung verwendet.
 	 *
 	 * @return der neue JPA {@link EntityManager}
-	 *
-	 * @throws DBException   falls keine Verbindung erstellt werden kann
 	 */
-	EntityManager getNewJPAEntityManager() throws DBException {
+	EntityManager getNewJPAEntityManager() {
 		return emf.createEntityManager();
 	}
 
@@ -63,6 +66,32 @@ public class ConnectionFactory {
 	 */
 	DBConfig getConfig() {
 		return this.config;
+	}
+
+
+	/**
+	 * Erstellt für den angegebenen Benutzer eine neue Verbindung aus dieser Factory.
+	 *
+	 * @param user   der Benutzer
+	 *
+	 * @return die Datenbank-Verbindung
+	 *
+	 * @throws DBException   bei Fehlern im Verbindungsaufbau
+	 */
+	DBEntityManager connect(final Benutzer user) throws DBException {
+		final DBEntityManager conn = new DBEntityManager(user, this);
+		connections.add(conn);
+		return conn;
+	}
+
+
+	/**
+	 * Schließt die übergebene Datenbankverbindung
+	 *
+	 * @param conn   die zu schließende Datenbankverbindung
+	 */
+	void close(final DBEntityManager conn) {
+		connections.remove(conn);
 	}
 
 
