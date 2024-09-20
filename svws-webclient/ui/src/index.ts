@@ -43,4 +43,4 @@ export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRo
 
 
 // Type exorts
-export type { DataTableColumn, InputDataType, SortByAndOrder } from "./types";
+export type { DataTableColumn, SortByAndOrder } from "./types";

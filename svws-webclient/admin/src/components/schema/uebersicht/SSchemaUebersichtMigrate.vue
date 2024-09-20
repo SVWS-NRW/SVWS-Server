@@ -72,7 +72,7 @@
 			formData.append("database", file.value);
 			formData.append('databasePassword', props.migrationQuellinformationen().password);
 		}
-		formData.append('schema', props.targetSchema || zielSchema.value);
+		formData.append('schema', props.targetSchema ?? zielSchema.value);
 		formData.append('db', props.migrationQuellinformationen().dbms);
 		formData.append('srcUsername', props.migrationQuellinformationen().user);
 		formData.append('srcPassword', props.migrationQuellinformationen().password);

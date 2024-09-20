@@ -12,7 +12,8 @@
 					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
 					<template #content>{{ schienenbezeichnung(unterricht.schienen) }}</template>
 				</svws-ui-tooltip>
-				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>			</div>
+				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
+			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
 		</template>

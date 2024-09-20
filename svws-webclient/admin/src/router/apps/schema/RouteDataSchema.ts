@@ -323,21 +323,21 @@ export class RouteDataSchema {
 		const currSchema = this.auswahl?.name;
 		const migrateBody = new MigrateBody();
 		const datenbankVerbindungsdaten = new DatenbankVerbindungsdaten();
-		const db = formData.get('db')?.toString() || null;
-		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
-		let schema = formData.get('schema')?.toString() || null;
+		const db = formData.get('db')?.toString() ?? null;
+		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '0');
+		let schema = formData.get('schema')?.toString() ?? null;
 		if (schema === currSchema) {
-			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() || null;
-			datenbankVerbindungsdaten.schema = formData.get('srcSchema')?.toString() || null;
-			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() || null;
-			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() || null;
+			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() ?? null;
+			datenbankVerbindungsdaten.schema = formData.get('srcSchema')?.toString() ?? null;
+			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() ?? null;
+			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() ?? null;
 		} else {
-			migrateBody.srcLocation = formData.get('srcLocation')?.toString() || null;
-			migrateBody.srcSchema = formData.get('srcSchema')?.toString() || null;
-			migrateBody.srcUsername = formData.get('srcUsername')?.toString() || null;
-			migrateBody.srcPassword = formData.get('srcPassword')?.toString() || null;
-			migrateBody.schemaUsername = formData.get('schemaUsername')?.toString() || api.username;
-			migrateBody.schemaUserPassword = formData.get('schemaUserPassword')?.toString() || null;
+			migrateBody.srcLocation = formData.get('srcLocation')?.toString() ?? null;
+			migrateBody.srcSchema = formData.get('srcSchema')?.toString() ?? null;
+			migrateBody.srcUsername = formData.get('srcUsername')?.toString() ?? null;
+			migrateBody.srcPassword = formData.get('srcPassword')?.toString() ?? null;
+			migrateBody.schemaUsername = formData.get('schemaUsername')?.toString() ?? api.username;
+			migrateBody.schemaUserPassword = formData.get('schemaUserPassword')?.toString() ?? null;
 		}
 		if (schema === null || db === null)
 			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
@@ -346,7 +346,7 @@ export class RouteDataSchema {
 		try {
 			switch (db) {
 				case 'mariadb':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMariaDBSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
@@ -358,7 +358,7 @@ export class RouteDataSchema {
 							result = await api.privileged.migrateMariaDB2Schema(migrateBody, schema);
 					break;
 				case 'mysql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMySqlSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
@@ -370,7 +370,7 @@ export class RouteDataSchema {
 							result = await api.privileged.migrateMySQL2Schema(migrateBody, schema);
 					break;
 				case 'mssql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMsSqlServerSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else

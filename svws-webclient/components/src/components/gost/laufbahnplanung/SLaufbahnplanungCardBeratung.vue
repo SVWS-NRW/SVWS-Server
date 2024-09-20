@@ -46,7 +46,7 @@
 	const refKommentar = ref<ComponentExposed<typeof SvwsUiTextareaInput>>();
 	const show = ref<boolean>(false);
 
-	const beratungsdatum = computed<string>(() => props.gostLaufbahnBeratungsdaten().beratungsdatum || new Date().toISOString().slice(0, -14))
+	const beratungsdatum = computed<string>(() => props.gostLaufbahnBeratungsdaten().beratungsdatum ?? new Date().toISOString().slice(0, -14))
 
 	watch(() => props.schueler, () => {
 		if ((refBeratungsdatum.value?.input?.value === undefined) || refKommentar.value?.content === undefined)

@@ -67,7 +67,7 @@
 
 	const selectedItems = computed<Array<SchemaListeEintrag>>({
 		get: () => props.auswahlGruppe,
-		set: (items) => props.setAuswahlGruppe(items)
+		set: (items) => void props.setAuswahlGruppe(items)
 	});
 
 </script>

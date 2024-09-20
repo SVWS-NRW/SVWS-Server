@@ -115,7 +115,7 @@
 
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
 
-	const isValid = computed(()=>{
+	const isValid = computed(() => {
 		if (props.required && ((data.value === null)))
 			return false;
 		return props.valid(data.value);

@@ -18,14 +18,13 @@
 
 	import { ref, type ShallowRef } from "vue";
 	import type { List, SimpleOperationResponse } from "@core";
-	import type { InputDataType } from "@ui";
 
 	const props = defineProps<{
 		importSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
-		validatorUsername: (username: InputDataType) => boolean;
+		validatorUsername: (username: string | null) => boolean;
 		isActive: boolean;
 	}>();
 

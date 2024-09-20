@@ -325,7 +325,7 @@
 		return (dragOverPos.value.wochentag === wochentag.id) && (dragOverPos.value.stunde === stunde);
 	}
 
-	const getWochentyp = computed(()=> props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
+	const getWochentyp = computed(() => props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
 
 	const hatWochentypen = computed<boolean>(() => (props.manager().getWochenTypModell() > 0));
 

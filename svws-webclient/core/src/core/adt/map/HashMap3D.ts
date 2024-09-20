@@ -51,18 +51,19 @@ export class HashMap3D<K1, K2, K3, V> extends JavaObject {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2, key3).
 	 *
-	 * @throws NullPointerException falls es den Pfad (key1, key2, key3) nicht gibt.
+	 * @throws DeveloperNotificationException falls es den Pfad (key1, key2, key3) nicht gibt.
 	 */
-	public getOrException(key1 : K1, key2 : K2, key3 : K3) : V | null {
+	public getOrException(key1 : K1, key2 : K2, key3 : K3) : V {
 		const map2 : JavaMap<K2, JavaMap<K3, V>> | null = this._map1.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
 		const map3 : JavaMap<K3, V> | null = map2.get(key2);
 		if (map3 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!")
-		if (!map3.containsKey(key3))
+		const value : V | null = map3.get(key3);
+		if (value === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!")
-		return map3.get(key3);
+		return value;
 	}
 
 	/**

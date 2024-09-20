@@ -41,7 +41,6 @@
 
 	import { ref, shallowRef } from "vue";
 	import type { List } from "@core";
-	import type { InputDataType } from "@ui";
 	import type { SchemaNeuProps } from "./SSchemaNeuProps";
 
 	const props = defineProps<SchemaNeuProps>();
@@ -81,8 +80,8 @@
 		clearLog();
 	}
 
-	const validatorUsername = (username: InputDataType) => {
-		if (!username || (username === 'root') || (username === props.apiUsername))
+	const validatorUsername = (username: string | null) => {
+		if ((username === null) || (username === 'root') || (username === props.apiUsername))
 			return false;
 		return true;
 	}

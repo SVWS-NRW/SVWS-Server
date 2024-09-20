@@ -18,7 +18,6 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
-	import type { InputDataType } from "@ui";
 	import { SchulEintrag } from "@core";
 
 	const props = defineProps<{
@@ -40,7 +39,7 @@
 		showModal().value = false;
 	}
 
-	function valid(schulnummer: InputDataType) {
+	function valid(schulnummer: string | null) {
 		return typeof schulnummer === 'string' && schulnummer.length === 6;
 	}
 </script>

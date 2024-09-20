@@ -1,10 +1,9 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect } from "vitest";
 import { mount } from "@vue/test-utils";
 
 import SvwsUiTextInput from "./SvwsUiTextInput.vue";
 
 export type InputType = "text" | "date" | "email" | "search" | "tel" | "password";
-export type InputDataType = string | null;
 
 describe("Komponente kann gemounted werden", () => {
 	test("HTML wird erzeugt", () => {
@@ -152,16 +151,14 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	test("Aktualisierung der Daten Prop wird emit updateData ausgelöst", async () => {
 		const props = { modelValue: "Lorem123" };
 
-		const wrapper = mount(SvwsUiTextInput, {
-			props: props,
-		});
+		const wrapper = mount(SvwsUiTextInput, { props: props, });
 
 		await wrapper.setProps({ modelValue: "Lorem321" });
 
 		const emittedEvents = wrapper.emitted("update:modelValue");
 
 		expect(emittedEvents).toBeTruthy(); // Überprüft, ob Events emittiert wurden
-		if (emittedEvents && emittedEvents[0]) {
+		if ((emittedEvents !== undefined) && (emittedEvents[0].length > 0)) {
 			expect(emittedEvents[0][0]).toEqual("Lorem321");
 		} else {
 			throw new Error("Keine Ereignisse ausgesendet");
@@ -171,9 +168,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	test("Die Aktualisierung des Eingabewerts für das v-model führt zu einem emit von updateData mit dem neuen Wert", async () => {
 		const props = { modelValue: "Lorem123" };
 
-		const wrapper = mount(SvwsUiTextInput, {
-			props: props,
-		});
+		const wrapper = mount(SvwsUiTextInput, { props: props, });
 
 		const input = wrapper.find("input");
 		input.element.value = "Lorem321";
@@ -182,7 +177,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 		const emittedEvents = wrapper.emitted("update:modelValue");
 
 		expect(emittedEvents).toBeTruthy(); // Überprüft, ob Events emittiert wurden
-		if (emittedEvents && emittedEvents[0]) {
+		if ((emittedEvents !== undefined) && (emittedEvents[0].length > 0)) {
 			expect(emittedEvents[0][0]).toEqual("Lorem321");
 		} else {
 			throw new Error("No events emitted");
@@ -192,9 +187,7 @@ describe.concurrent("Modelvalue (prop), two-way-binding und Aktualisierungs- und
 	test("Die Aktualisierung eines Eingabewerts mit demselben Wert führt nicht zur Ausgabe von updateData", async () => {
 		const props = { modelValue: "Lorem123" };
 
-		const wrapper = mount(SvwsUiTextInput, {
-			props: props,
-		});
+		const wrapper = mount(SvwsUiTextInput, { props: props, });
 
 		const input = wrapper.find("input");
 		input.element.value = "Lorem123";
@@ -237,7 +230,7 @@ describe.concurrent("Unit Tests für computed value maxLenValid", async () => {
 		[ 4, null, true, "Null als Wort ist nicht zu lang" ],
 		[ 10, "", true, "Leerstring wird akzeptiert" ],
 	])('maxLenValid {maxLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
-		const props = { maxLen: x1, modelValue: x2 as InputDataType };
+		const props = { maxLen: x1, modelValue: x2 };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 		const maxLenValid = wrapper.findComponent({
 			name: "SvwsUiTextInput",
@@ -256,7 +249,7 @@ describe.concurrent("Unit Tests für computed value minLenValid", async () => {
 		[ 0, null, true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist" ],
 		[ 0, "", true, "Leerstring wird akzeptiert, wenn MinLen == 0 gesetzt ist" ],
 	])('minLenValid {minLen: %s, modelValue: %s} => %s | %s ', (x1, x2, y, _) => {
-		const props = { minLen: x1, modelValue: x2 as InputDataType };
+		const props = { minLen: x1, modelValue: x2 };
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 		const minLenValid = wrapper.findComponent({
 			name: "SvwsUiTextInput",
@@ -285,7 +278,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 	test("E-Mail-Validierung gibt false für ungültige E-Mail zurück", async () => {
 		const props = {
 			type: "email" as InputType,
-			modelValue: "invalid-email@" as InputDataType,
+			modelValue: "invalid-email@",
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
 
@@ -322,7 +315,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 
 	test("Benutzerdefinierte Validierung wird nicht akzeptiert", async () => {
 		const props = {
-			valid: (value: InputDataType) => value === "valid",
+			valid: (value: string | null) => value === "valid",
 			modelValue: "invalid",
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });
@@ -333,7 +326,7 @@ describe.concurrent("Unit Test für computed isValid", () => {
 
 	test("Benutzerdefinierte Validierung gibt true zurück", async () => {
 		const props = {
-			valid: (value: InputDataType) => value === "valid",
+			valid: (value: string | null) => value === "valid",
 			modelValue: "valid",
 		};
 		const wrapper = mount(SvwsUiTextInput, { props: props });

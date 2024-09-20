@@ -130,8 +130,7 @@
 
 <script setup lang="ts">
 
-	import { computed, type WritableComputedRef } from "vue";
-	import type { InputDataType } from "@ui";
+	import { computed } from "vue";
 	import type { SchuelerIndividualdatenProps } from "./SSchuelerIndividualdatenProps";
 	import type { SchuelerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag, ReligionEintrag, KatalogEintrag, SchulEintrag} from "@core";
 	import { SchuelerStatus, Schulform, Nationalitaeten, Geschlecht, AdressenUtils, Verkehrssprache, BenutzerKompetenz, DateUtils } from "@core";
@@ -147,7 +146,7 @@
 
 	const data = computed<SchuelerStammdaten>(() => props.schuelerListeManager().daten());
 
-	const istGeburtsdatumGueltig = (strDate: InputDataType) => {
+	function istGeburtsdatumGueltig(strDate: string | null) {
 		if (strDate === null || typeof strDate === 'number')
 			return true;
 		try {
@@ -158,16 +157,16 @@
 		} catch (e) {
 			return false;
 		}
-	};
+	}
 
-	const geschlecht: WritableComputedRef<Geschlecht> = computed({
+	const geschlecht = computed<Geschlecht>({
 		get: () => Geschlecht.fromValue(data.value.geschlecht) ?? Geschlecht.X,
 		set: (value) => void props.patch({ geschlecht: value.id })
 	});
 
 	const strasse = computed(() => AdressenUtils.combineStrasse(data.value.strassenname ?? "", data.value.hausnummer ?? "", data.value.hausnummerZusatz ?? ""))
 
-	const patchStrasse = (value: string | null) => {
+	function patchStrasse(value: string | null) {
 		if (value !== null) {
 			const vals = AdressenUtils.splitStrasse(value);
 			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
@@ -199,7 +198,7 @@
 	});
 
 
-	const staatsangehoerigkeit: WritableComputedRef<Nationalitaeten> = computed({
+	const staatsangehoerigkeit = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.staatsangehoerigkeitID) || Nationalitaeten.DEU,
 		set: (value) => void props.patch({ staatsangehoerigkeitID: value.daten.iso3 })
 	});
@@ -209,7 +208,7 @@
 		set: (value) => void props.patch({ staatsangehoerigkeit2ID: value?.daten.iso3 ?? null })
 	});
 
-	const religion: WritableComputedRef<ReligionEintrag | undefined> = computed({
+	const religion = computed<ReligionEintrag | undefined>({
 		get: () => {
 			const id = data.value.religionID;
 			return id === null ? undefined : props.mapReligionen.get(id)
@@ -217,7 +216,7 @@
 		set: (value) => void props.patch({ religionID: value === undefined ? null : value.id })
 	});
 
-	const druckeKonfessionAufZeugnisse: WritableComputedRef<boolean> = computed({
+	const druckeKonfessionAufZeugnisse = computed<boolean>({
 		get: () => data.value.druckeKonfessionAufZeugnisse,
 		set: (value) => void props.patch({ druckeKonfessionAufZeugnisse: value })
 	});
@@ -227,33 +226,33 @@
 	const max = new Date().getFullYear() + 1;
 	const min = max - 100;
 
-	const geburtsland: WritableComputedRef<Nationalitaeten> = computed({
+	const geburtsland = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtsland) || Nationalitaeten.DEU,
 		set: (value) => void props.patch({ geburtsland: value.daten.iso3 })
 	});
 
-	const geburtslandMutter: WritableComputedRef<Nationalitaeten> = computed({
+	const geburtslandMutter = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtslandMutter) || Nationalitaeten.DEU,
 		set: (value) => void props.patch({ geburtslandMutter: value.daten.iso3 })
 	});
 
-	const geburtslandVater: WritableComputedRef<Nationalitaeten> = computed({
+	const geburtslandVater = computed<Nationalitaeten>({
 		get: () => Nationalitaeten.getByISO3(data.value.geburtslandVater) || Nationalitaeten.DEU,
 		set: (value) => void props.patch({ geburtslandVater: value.daten.iso3 })
 	});
 
-	const verkehrsprache: WritableComputedRef<Verkehrssprache> = computed({
+	const verkehrsprache = computed<Verkehrssprache>({
 		get: () => Verkehrssprache.getByKuerzelAuto(data.value.verkehrspracheFamilie) || Verkehrssprache.DEU,
 		set: (value) => void props.patch({ verkehrspracheFamilie: value.daten.kuerzel })
 	});
 
 
-	const inputStammschule: WritableComputedRef<SchulEintrag | undefined> = computed({
+	const inputStammschule = computed<SchulEintrag | undefined>({
 		get: () => (data.value.externeSchulNr === null) ? undefined : (props.mapSchulen.get(data.value.externeSchulNr) || undefined),
 		set: (value) => void props.patch({ externeSchulNr: value === undefined ? null : value.schulnummer })
 	});
 
-	const inputFahrschuelerArtID: WritableComputedRef<KatalogEintrag | undefined> = computed({
+	const inputFahrschuelerArtID = computed<KatalogEintrag | undefined>({
 		get: () => {
 			const id = data.value.fahrschuelerArtID;
 			return id === null ? undefined : props.mapFahrschuelerarten.get(id)
@@ -261,7 +260,7 @@
 		set: (value) => void props.patch({ fahrschuelerArtID: value === undefined ? null : value.id })
 	});
 
-	const inputHaltestelleID: WritableComputedRef<KatalogEintrag | undefined> = computed({
+	const inputHaltestelleID = computed<KatalogEintrag | undefined>({
 		get: () => {
 			const id = data.value.haltestelleID;
 			return id === null ? undefined : props.mapHaltestellen.get(id)

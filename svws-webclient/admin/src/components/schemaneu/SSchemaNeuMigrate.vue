@@ -32,7 +32,6 @@
 
 	import { type ShallowRef, shallowRef } from "vue";
 	import type { List, SimpleOperationResponse } from "@core";
-	import type { InputDataType } from "@ui";
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
 
 	const props = defineProps<{
@@ -41,7 +40,7 @@
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
-		validatorUsername: (username: InputDataType) => boolean;
+		validatorUsername: (username: string | null) => boolean;
 		isActive: boolean;
 	}>();
 

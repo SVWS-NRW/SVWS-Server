@@ -23,8 +23,6 @@
 	import { ref } from 'vue';
 	import type { VermerkartenManager } from '@core';
 	import { VermerkartEintrag } from '@core';
-	import type { Ref } from "vue";
-	import type { InputDataType } from '@ui';
 
 	const props = defineProps<{
 		addEintrag: (vermerkart: Partial<VermerkartEintrag>) => Promise<void>;
@@ -35,11 +33,11 @@
 
 	const vermerkart = ref(new VermerkartEintrag());
 
-	function showModal() : Ref<boolean> {
+	function showModal() {
 		return _showModal;
 	}
 
-	function validatorVermerkBezeichnung(value: InputDataType) : boolean {
+	function validatorVermerkBezeichnung(value: string |null) : boolean {
 		if (value === null)
 			return true;
 		for (const eintrag of props.vermerkartenManager().liste.list())

@@ -177,7 +177,7 @@
 
 	async function addWochentag() {
 		const letzerWochentag = props.manager().zeitrasterGetWochentagMaxEnum();
-		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() ? 1 : 0), 1, 1);
+		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() > 0 ? 1 : 0), 1, 1);
 		await props.addZeitraster(list);
 	}
 
@@ -185,7 +185,7 @@
 		const letzteStunde = props.manager().zeitrasterGetStundeMax();
 		const wochentagMin = props.manager().zeitrasterGetWochentagMin();
 		const wochentagMax = props.manager().zeitrasterGetWochentagMax();
-		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() ? 1 : 0));
+		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() > 0 ? 1 : 0));
 		await props.addZeitraster(list);
 	}
 

@@ -72,7 +72,7 @@
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const activeItemIndex = ref(-1);
 
-	const listEmpty = computed(()=> {
+	const listEmpty = computed(() => {
 		for (const _ of props.filteredList)
 			return false;
 		return true;

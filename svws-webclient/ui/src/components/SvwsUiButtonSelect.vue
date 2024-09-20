@@ -69,7 +69,7 @@
 		}
 	}
 
-	const listEmpty = computed(()=> {
+	const listEmpty = computed(() => {
 		for (const _ of props.dropdownActions)
 			return false;
 		return true;
@@ -93,7 +93,7 @@
 	const floatingTop = computed(() => `${y.value}px`);
 	const floatingLeft = computed(() => `${x.value}px`);
 
-	onClickOutside(button, ()=> dropdownOpen.value = false);
+	onClickOutside(button, () => dropdownOpen.value = false);
 
 </script>
 

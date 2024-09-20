@@ -191,8 +191,8 @@
 		label: string;
 		sortable: boolean;
 		span: number;
-		fixedWidth: string | number;
-		minWidth: string | number;
+		fixedWidth: number;
+		minWidth: number;
 		align: 'left' | 'center' | 'right';
 		tooltip: string;
 		disabled: boolean;
@@ -302,7 +302,7 @@
 		return Object.keys(accumulatedObject);
 	}
 
-	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement>, index: number, backwards: boolean) {
+	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement | null>, index: number, backwards: boolean) {
 		if (!props.allowArrowKeySelection)
 			return;
 		let targetIndex;
@@ -313,7 +313,8 @@
 		else
 			targetIndex = backwards ? index-1 : index+1;
 		const ele = list.get(targetIndex);
-		ele?.focus();
+		if ((ele !== null) && (ele !== undefined))
+			ele.focus();
 	}
 
 	const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
@@ -326,8 +327,8 @@
 			label: input.label ?? capitalizeFirstLetter(input.key),
 			sortable: input.sortable ?? false,
 			span: input.span ?? 1,
-			fixedWidth: input.fixedWidth ?? 0,
-			minWidth: input.minWidth ?? 0,
+			fixedWidth: (input.fixedWidth === undefined) ? 0 : Number(input.fixedWidth),
+			minWidth: (input.minWidth === undefined) ? 0 : Number(input.minWidth),
 			align: input.align ?? 'left',
 			tooltip: input.tooltip ?? '',
 			disabled: input.disabled ?? false,
@@ -341,25 +342,19 @@
 	const columnsComputed = computed(() =>
 		(props.columns.length === 0)
 			? getKeys(props.items).map((item, index) => buildTableColumn(item, index))
-			: props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !props.hiddenColumns.has(column.key)))
+			: props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !props.hiddenColumns.has(column.key)));
 
-	const gridTemplateColumns = computed(() => {
-		return columnsComputed.value.map(column =>
-			`minmax(${
-				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : (column.minWidth ? (column.minWidth + (typeof column.minWidth === "number" ? 'rem' : '')) : '4rem')
-			}, ${
-				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
-			})`
-		).join(' ');
-	})
+	const gridTemplateColumns = computed<string>(() =>
+		columnsComputed.value.map(column =>
+			`minmax(${ column.fixedWidth > 0 ? (column.fixedWidth + 'rem') : (column.minWidth > 0 ? (column.minWidth + 'rem') : '4rem') }, ${ column.fixedWidth > 0 ? (column.fixedWidth + 'rem') : column.span + 'fr' })`
+		).join(' '));
 
-	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(0, 1fr))');
+	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value.length > 0 ? gridTemplateColumns.value : 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) => {
-		return { selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
-			return { rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' };
-		})}
-	}));
+	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) =>
+		({ selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells:
+			columnsComputed.value.map(column => ({ rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' }))
+		})));
 
 	const sortedRows = computed(() => {
 		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
@@ -377,7 +372,7 @@
 		})
 	})
 
-	const cycleSorting = (value: boolean | null | undefined) => {
+	function cycleSorting(value: boolean | null | undefined) {
 		if (value === null || value === undefined)
 			return true;
 		if (value === true)
@@ -402,7 +397,7 @@
 	const filterOpenProp = toRef(props, 'filterOpen');
 	const isFilterOpen = ref(filterOpenProp.value);
 
-	const toggleFilterOpen = () => {
+	function toggleFilterOpen() {
 		isFilterOpen.value = !isFilterOpen.value;
 		emit('update:filterOpen', isFilterOpen.value);
 	}
@@ -489,12 +484,12 @@
 	}
 
 	function scrollToClickedElement() {
-		if (!props.scrollIntoView || clickedItemIndex.value === undefined)
+		if ((props.scrollIntoView === undefined) || (props.scrollIntoView === false) || (clickedItemIndex.value === undefined))
 			return;
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
-		const clickedElementHtml = itemRefs.value.get(clickedItemIndex.value);
+		const clickedElementHtml: any = itemRefs.value.get(clickedItemIndex.value);
 		const scrollOptions: ScrollIntoViewOptions = { behavior: "auto", block: "center" };
-		if (clickedElementHtml) {
+		if ((clickedElementHtml !== undefined) && (clickedElementHtml !== null)) {
 			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function")
 				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
 			else if(!isInView(clickedElementHtml))
@@ -514,7 +509,7 @@
 		data.value = value;
 	}
 
-	function updateHiddenColumns(columnKey: string, ok: any) {
+	function updateHiddenColumns(columnKey: string, ok: boolean) {
 		if (ok) {
 			data.value.delete(columnKey);
 		} else {
