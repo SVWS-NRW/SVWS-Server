@@ -342,7 +342,7 @@ public class APIPrivilegedSchema {
 			logger.modifyIndent(-2);
 
 			final DBConfig dbconfig =
-					new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
+					new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
 			final boolean success = DBSchemaManager.createNewSchema(dbconfig, conn.getUser().getUsername(), conn.getUser().getPassword(), revision, logger);
 			return simpleResponse(Status.OK, success, log);
 		},
@@ -502,7 +502,7 @@ public class APIPrivilegedSchema {
 
 				final DBConfig srcConfig = mdb.getConfig();
 				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername,
-						multipart.schemaUserPassword, true, true, 0, 0);
+						multipart.schemaUserPassword, true, true);
 				if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
 					logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
 							+ "', user='" + tgtConfig.getUsername() + "')");
@@ -564,7 +564,7 @@ public class APIPrivilegedSchema {
 				final long maxUpdateRevision = -1;
 				final DBConfig srcConfig = sqlite.getConfig();
 				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername,
-						multipart.schemaUserPassword, true, true, 0, 0);
+						multipart.schemaUserPassword, true, true);
 
 				try {
 					logger.log(2, "-> Verbinde zur Quell-Datenbank...");
@@ -818,9 +818,9 @@ public class APIPrivilegedSchema {
 			logger.logLn(2, "- erstelle den Benutzer \"" + dbMigrationInfos.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
 			final DBConfig srcConfig = new DBConfig(srcDbDriver, dbMigrationInfos.srcLocation, dbMigrationInfos.srcSchema, false, dbMigrationInfos.srcUsername,
-					dbMigrationInfos.srcPassword, true, false, 0, 0);
+					dbMigrationInfos.srcPassword, true, false);
 			final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, dbMigrationInfos.schemaUsername,
-					dbMigrationInfos.schemaUserPassword, true, true, 0, 0);
+					dbMigrationInfos.schemaUserPassword, true, true);
 			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, schulnummer, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
 						+ "', user='" + tgtConfig.getUsername() + "')");
@@ -1186,7 +1186,7 @@ public class APIPrivilegedSchema {
 				return simpleResponse(Status.BAD_REQUEST, false, log);
 
 			final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), conn.getDBSchema(), conn.useDBLogin(),
-					conn.getUser().getUsername(), conn.getUser().getPassword(), true, true, 0, 0);
+					conn.getUser().getUsername(), conn.getUser().getPassword(), true, true);
 			final boolean success = DBSchemaManager.recycleSchema(dbconfig, revision, logger);
 			return simpleResponse(Status.OK, success, log);
 		}, request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
@@ -1369,7 +1369,7 @@ public class APIPrivilegedSchema {
 				}
 				// Erstelle eine Datenbank-Konfiguration mit dem übergebenen Benutzernamen und dem übergebenen Kennwort. Ist dies möglich, so kann das Schema zu der Datenbank hinzugefügt werden.
 				final DBConfig dbconfig =
-						new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true, 0, 0);
+						new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
 				final Benutzer user2 = Benutzer.create(dbconfig);
 				try (DBEntityManager conn2 = user2.getEntityManager()) {
 					try {

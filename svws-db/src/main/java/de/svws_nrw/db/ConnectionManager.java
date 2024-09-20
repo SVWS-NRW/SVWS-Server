@@ -44,19 +44,13 @@ public final class ConnectionManager {
 	/** Ein Zufallszahlen-Generator */
 	private static final Random random = new Random();
 
-	/**
-	 * Eine HashMap für den Zugriff auf einen Connection-Manager, der einer
-	 * Datenbank-Konfiguration zugeordnet ist
-	 */
+	/** Eine HashMap für den Zugriff auf einen Connection-Manager, der einer Datenbank-Konfiguration zugeordnet ist */
 	private static final HashMap<DBConfig, ConnectionManager> mapManager = new HashMap<>();
 
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final @NotNull DBConfig config;
 
-	/**
-	 * Die zum Erzeugen der {@link EntityManager} verwendete Instanz der
-	 * {@link EntityManagerFactory}
-	 */
+	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz der {@link EntityManagerFactory} */
 	private final @NotNull EntityManagerFactory emf;
 
 	/** Gibt an, on der Connection-Manager gültig ist und eine Verbindung beinhaltet oder ob diese bereits geschlossen wurde */
@@ -86,43 +80,6 @@ public final class ConnectionManager {
 		if (!valid)
 			throw new DBException("Für eine geschlossene Verbindung kann kein neuer Entity-Manager erzeugt werden.");
 		return emf.createEntityManager();
-	}
-
-	/**
-	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird
-	 * innerhalb dieses Packages vom DBEntityManager bei der Erneuerung der
-	 * Verbindung verwendet.
-	 * Bei dieser Variante werden mehrere Versuche für einen Verbindungsaufbau
-	 * durchgeführt. Zwischen den Versuchen wird eine angebene Zeit in Millisekunden
-	 * abgewartet.
-	 *
-	 * @param connectionRetries   die Anzahl der Verbindungsversuche, bevor eine Exception weitergereicht wird
-	 * @param retryTimeout   die Zeit in Millisekunden
-	 *
-	 * @return der neue JPA {@link EntityManager}
-	 *
-	 * @throws DBException   falls keine Verbindung erstellt werden kann
-	 */
-	EntityManager getNewJPAEntityManager(final int connectionRetries, final long retryTimeout) throws DBException {
-		DBException resultingException = null;
-		int triesLeft = connectionRetries + 1;
-		do {
-			triesLeft--;
-			try {
-				return getNewJPAEntityManager();
-			} catch (final PersistenceException e) {
-				resultingException = new DBException("Fehler beim Aufbau einer Verbindung: " + e.getLocalizedMessage(), e);
-				if (triesLeft <= 0) {
-					throw resultingException;
-				}
-				try {
-					Thread.sleep(retryTimeout);
-				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
-					Thread.currentThread().interrupt();
-				}
-			}
-		} while (triesLeft > 0);
-		throw resultingException;
 	}
 
 	/**
@@ -188,14 +145,6 @@ public final class ConnectionManager {
 		}
 		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
 		// TODO avoid Persistence Unit "SVWSDB" as xml file
-	}
-
-
-	/**
-	 * Trennt die Verbindung des ConnectionManagers zur Datenbank.
-	 */
-	public void closeConnection() {
-		closeSingle(config);
 	}
 
 

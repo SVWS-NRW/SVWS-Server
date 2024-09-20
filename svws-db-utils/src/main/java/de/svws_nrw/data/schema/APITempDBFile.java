@@ -112,7 +112,7 @@ public class APITempDBFile implements AutoCloseable {
 	 */
 	public DBConfig getConfig() {
 		final String username = (_dbms == DBDriver.MDB) ? "admin" : null;
-		return new DBConfig(_dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, null, true, false, 0, 0);
+		return new DBConfig(_dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, null, true, false);
 	}
 
 

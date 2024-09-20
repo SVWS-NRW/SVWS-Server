@@ -550,8 +550,7 @@ public final class SVWSKonfiguration {
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
 		final SVWSKonfigurationSchemaDTO schema = dto.dbKonfiguration.schemata.get(i);
-		return new DBConfig(driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password, true, false,
-				dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
+		return new DBConfig(driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password, true, false);
 	}
 
 	/**
@@ -579,8 +578,7 @@ public final class SVWSKonfiguration {
 		if (dto == null)
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
-		return new DBConfig(driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false,
-				dto.dbKonfiguration.connectionRetries, dto.dbKonfiguration.retryTimeout);
+		return new DBConfig(driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false);
 	}
 
 

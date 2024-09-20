@@ -120,7 +120,7 @@ public class ExportLuPOMDB {
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUser = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false, 0, 0);
+			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false);
 			final Benutzer user;
 			try {
 				user = Benutzer.create(srcConfig);

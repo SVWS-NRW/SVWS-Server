@@ -85,11 +85,7 @@ public final class DBEntityManager implements AutoCloseable {
 	DBEntityManager(final Benutzer user, final DBConfig config) throws DBException {
 		this.user = user;
 		this.config = config;
-		if (this.config.getConnectionRetries() <= 0) {
-			this.em = user.connectionManager.getNewJPAEntityManager();
-		} else {
-			this.em = user.connectionManager.getNewJPAEntityManager(this.config.getConnectionRetries(), this.config.getRetryTimeout());
-		}
+		this.em = user.connectionManager.getNewJPAEntityManager();
 	}
 
 
@@ -113,25 +109,6 @@ public final class DBEntityManager implements AutoCloseable {
 	 */
 	public boolean isPrivilegedDatabaseUser() {
 		return SVWSKonfiguration.get().getPrivilegedDatabaseUser().equals(this.user.getUsername());
-	}
-
-
-	/**
-	 * Erneuert die Verbindung zur Datenbank. Dabei geht der Zustand
-	 * in Bezug auf die verwalteten Entitäten verloren.
-	 *
-	 * @throws DBException   die Verbindung konnte nicht neu aufgebaut werden
-	 */
-	public void reconnect() throws DBException {
-		if (em != null) {
-			em.clear();
-			em.close();
-		}
-		try {
-			em = user.connectionManager.getNewJPAEntityManager();
-		} catch (final IllegalStateException e) {
-			throw new DBException(e);
-		}
 	}
 
 

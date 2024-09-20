@@ -142,7 +142,7 @@ public final class DataMigration {
 		}
 
 		final DBConfig srcConfig = new DBConfig(srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false, verbindungsdaten.username,
-				verbindungsdaten.password, true, false, 0, 0);
+				verbindungsdaten.password, true, false);
 		return migrateInto(conn, srcConfig, schulnummer);
 	}
 

@@ -273,7 +273,7 @@ public class DBBackupManager {
 	 */
 	public boolean exportDB(final String filename, final Logger logger) {
 		try (DBEntityManager conn = schemaManager.getUser().getEntityManager()) {
-			final DBConfig tgtConfig = new DBConfig(DBDriver.SQLITE, filename, null, false, null, null, true, true, 0, 0);
+			final DBConfig tgtConfig = new DBConfig(DBDriver.SQLITE, filename, null, false, null, null, true, true);
 
 			boolean success = true;
 			final long timeStart = System.currentTimeMillis();
