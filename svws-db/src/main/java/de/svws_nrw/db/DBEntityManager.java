@@ -85,7 +85,7 @@ public final class DBEntityManager implements AutoCloseable {
 	DBEntityManager(final Benutzer user, final DBConfig config) throws DBException {
 		this.user = user;
 		this.config = config;
-		this.em = user.connectionManager.getNewJPAEntityManager();
+		this.em = user.connFactory.getNewJPAEntityManager();
 	}
 
 

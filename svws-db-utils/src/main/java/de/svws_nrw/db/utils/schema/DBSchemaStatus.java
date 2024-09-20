@@ -69,7 +69,7 @@ public final class DBSchemaStatus {
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	public static DBSchemaStatus read(final Benutzer user) throws DBException {
-		return new DBSchemaStatus(user, user.connectionManager.getConfig().getDBSchema());
+		return new DBSchemaStatus(user, user.getConfig().getDBSchema());
 	}
 
 

@@ -47,8 +47,8 @@ public final class Benutzer {
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final DBConfig _config;
 
-	/** Der Manager für die Datenbank-Verbindungen */
-	public final ConnectionManager connectionManager;
+	/** Die Factory für die Datenbank-Verbindungen */
+	public final ConnectionFactory connFactory;
 
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
 	private Long _idLehrer = null;
@@ -111,7 +111,7 @@ public final class Benutzer {
 		this._password = "keines";
 		this._aes = null;
 		this._config = config;
-		this.connectionManager = ConnectionManager.get(config);
+		this.connFactory = ConnectionManager.instance.get(config);
 	}
 
 
@@ -127,6 +127,16 @@ public final class Benutzer {
 	 */
 	public static Benutzer create(final DBConfig config) throws DBException {
 		return new Benutzer(config);
+	}
+
+
+	/**
+	 * Gibt die Datenbank-Konfiguration dieses Benutzers zurück.
+	 *
+	 * @return die Datenbank-Konfiguration dieses Benutzer
+	 */
+	public DBConfig getConfig() {
+		return this._config;
 	}
 
 

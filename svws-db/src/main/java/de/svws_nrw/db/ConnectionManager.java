@@ -1,7 +1,5 @@
 package de.svws_nrw.db;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,23 +7,17 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.server.ConnectionPool;
 import org.eclipse.persistence.sessions.server.ServerSession;
 
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
-
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.constraints.NotNull;
+
 
 /**
  * Ein Manager für die Datenbank-Verbindungen der Anwendung.
@@ -33,154 +25,48 @@ import jakarta.validation.constraints.NotNull;
 public final class ConnectionManager {
 
 	/*
-	 * Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten
-	 * Datenbank-Verbindungen, d.h. die zugehörigen {@link EntityManagerFactory}
-	 * zu schließen.
+	 * Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten Datenbank-Verbindungen
+	 * über die zugehörigen Factories zu schließen. (siehe auch {@link ConnectionFactory})
 	 */
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager::closeAll));
+		instance = new ConnectionManager();
+		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager.instance::closeAll));
 	}
 
-	/** Ein Zufallszahlen-Generator */
-	private static final Random random = new Random();
+	/** Eine HashMap für den schnellen Zugriff auf eine Connection-Factory anhand der Datenbank-Konfiguration */
+	private final HashMap<DBConfig, ConnectionFactory> mapManager = new HashMap<>();
 
-	/** Eine HashMap für den Zugriff auf einen Connection-Manager, der einer Datenbank-Konfiguration zugeordnet ist */
-	private static final HashMap<DBConfig, ConnectionManager> mapManager = new HashMap<>();
-
-	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
-	private final @NotNull DBConfig config;
-
-	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz der {@link EntityManagerFactory} */
-	private final @NotNull EntityManagerFactory emf;
-
-	/** Gibt an, on der Connection-Manager gültig ist und eine Verbindung beinhaltet oder ob diese bereits geschlossen wurde */
-	private boolean valid = true;
+	/** Die Instanz des Connectiion-Managers */
+	public static final ConnectionManager instance;
 
 
 	/**
-	 * Erstellt einen neuen Connection-Manager
-	 *
-	 * @param config die Konfiguration für den Connection-Manager
+	 * Erzeugt einen neuen Connection-Manager.
 	 */
-	private ConnectionManager(final @NotNull DBConfig config) {
-		this.config = config;
-		this.emf = createEntityManagerFactory();
-	}
-
-	/**
-	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird
-	 * innerhalb dieses Packages vom DBEntityManager bei der Erneuerung der
-	 * Verbindung verwendet.
-	 *
-	 * @return der neue JPA {@link EntityManager}
-	 *
-	 * @throws DBException   falls keine Verbindung erstellt werden kann
-	 */
-	EntityManager getNewJPAEntityManager() throws DBException {
-		if (!valid)
-			throw new DBException("Für eine geschlossene Verbindung kann kein neuer Entity-Manager erzeugt werden.");
-		return emf.createEntityManager();
-	}
-
-	/**
-	 * Gibt die Datenbank-Konfiguration dieses Verbindungs-Managers zurück.
-	 *
-	 * @return die Datenbank-Konfiguration dieses Verbindungs-Managers
-	 */
-	public DBConfig getConfig() {
-		return this.config;
-	}
-
-	/**
-	 * Intern genutzte Methode, um eine {@link EntityManagerFactory} für diesen
-	 * {@link ConnectionManager} zu erstellen. Hierbei werden auch die
-	 * Standardeinstellungen für die Datenbankverbindung in Form der
-	 * Property-Map hinzugefügt (siehe
-	 * {@link Persistence#createEntityManagerFactory(String, java.util.Map)})
-	 *
-	 * @return die {@link EntityManagerFactory}
-	 */
-	private @NotNull EntityManagerFactory createEntityManagerFactory() {
-		final HashMap<String, Object> propertyMap = new HashMap<>();
-		propertyMap.put("jakarta.persistence.jdbc.driver", config.getDBDriver().getJDBCDriver());
-		final String username = config.getUsername();
-		String password = config.getPassword();
-		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
-		if (config.getDBDriver() == DBDriver.MDB) {
-			try (Database db = DatabaseBuilder.open(new File(config.getDBLocation()))) {
-				password = db.getDatabasePassword();
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				password = "";
-			}
-			if (config.createDBFile())
-				url += ";newdatabaseversion=V2000";
-		}
-		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
-				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
-				.limit(40)
-				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-				.toString();
-		propertyMap.put("jakarta.persistence.jdbc.url", url);
-		propertyMap.put("jakarta.persistence.jdbc.user", username);
-		propertyMap.put("jakarta.persistence.jdbc.password", password);
-		propertyMap.put("eclipselink.session-name", sessionName);
-		propertyMap.put("eclipselink.flush", "true");
-		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
-		propertyMap.put("eclipselink.allow-zero-id", "true");
-		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "WARNING" : "OFF");
-		// propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "INFO" : "OFF");
-		// propertyMap.put("eclipselink.logging.level", "ALL");
-		// propertyMap.put("eclipselink.logging.level.sql", "FINE");
-		// propertyMap.put("eclipselink.logging.parameters", "true");
-		// propertyMap.put("eclipselink.profiler","PerformanceProfiler");
-		propertyMap.put("eclipselink.cache.shared.default", "false");
-		// propertyMap.put("eclipselink.exception-handler",
-		// "de.svws_nrw.db.DBExceptionHandler");
-		if (config.getDBDriver() == DBDriver.SQLITE) {
-			propertyMap.put("eclipselink.target-database", "Database");
-			// Einstellungen des SQ-Lite-Treibers
-			// READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. READWRITE (2) + OPEN_URI (64) = 66
-			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");
-			propertyMap.put("foreign_keys", "true");
-		}
-		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
-		// TODO avoid Persistence Unit "SVWSDB" as xml file
+	private ConnectionManager() {
+		// Empty Constructor
 	}
 
 
 	/**
-	 * Schließt den Verbindungs-Manager
+	 * Gibt die Connection-Factory passen für die übergebene Konfiguration zurück.
+	 * Sollt keine Factory existieren, so wird versucht eine neue zu erstellen.
+	 *
+	 * @param config   die Konfiguration der Datenbank-Verbindung
+	 *
+	 * @return die Factory
+	 *
+	 * @throws DBException   bei einem fehlerhaften Verbindungsaufbau, z.B. einer fehlschlagenen Authentifizierung
 	 */
-	private void close() {
-		emf.close();
-		valid = false;
-	}
-
-	/**
-	 * Gibt den Manager für die Datenbank-Verbindung für die übergebene
-	 * Konfiguration zurück. Sollt keine Verbindung bestehen, so wird eine neue
-	 * Verbindung erzeugt.
-	 *
-	 * @param config die Konfiguration der Datenbank-Verbindung
-	 *
-	 * @return der Manager
-	 *
-	 * @throws DBException bei einer fehlschlagenden Authentifizierung
-	 */
-	public static @NotNull ConnectionManager get(final DBConfig config) throws DBException {
-		ConnectionManager man = mapManager.get(config);
-		if (man != null) {
-			final Map<String, Object> curProps = man.emf.getProperties();
-			final String curUser = (String) curProps.get("jakarta.persistence.jdbc.user");
-			final String curPassword = (String) curProps.get("jakarta.persistence.jdbc.password");
-			if (!config.getUsername().equals(curUser) || !config.getPassword().equals(curPassword)) {
-				mapManager.remove(config);
-				man.close();
-				man = null;
-			}
+	public @NotNull ConnectionFactory get(final DBConfig config) throws DBException {
+		ConnectionFactory man = mapManager.get(config);
+		if ((man != null) && (!man.checkCredentials(config.getUsername(), config.getPassword()))) {
+			mapManager.remove(config);
+			man.close();
+			man = null;
 		}
 		if (man == null) {
-			man = new ConnectionManager(config);
+			man = new ConnectionFactory(config);
 			try {
 				try (EntityManager em = man.getNewJPAEntityManager()) {
 					mapManager.put(config, man);
@@ -248,8 +134,8 @@ public final class ConnectionManager {
 	 *
 	 * @param config die Konfiguration des zu schließenden Managers
 	 */
-	private static void closeSingle(final DBConfig config) {
-		final ConnectionManager manager = mapManager.get(config);
+	private void closeSingle(final DBConfig config) {
+		final ConnectionFactory manager = mapManager.get(config);
 		if (manager == null) {
 			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen des Verbindungs-Managers zu %s (Schema: %s), Datenbank-Benutzer: %s"
 					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
@@ -264,7 +150,7 @@ public final class ConnectionManager {
 	/**
 	 * Schließt alle noch offenenen Datenbank-Verbindungen.
 	 */
-	private static void closeAll() {
+	private void closeAll() {
 		final List<DBConfig> configs = mapManager.keySet().stream().toList();
 		for (final DBConfig config : configs)
 			closeSingle(config);

@@ -125,7 +125,7 @@ public final class DBBenutzerUtils {
 			final Benutzer user = openAPIPrincipal.getUser();
 			if (user == null)
 				return null;
-			final DBConfig config = user.connectionManager.getConfig();
+			final DBConfig config = user.getConfig();
 			if ((config == null) || (config.getDBSchema() == null))
 				return user;
 			final String path = request.getRequestURI();

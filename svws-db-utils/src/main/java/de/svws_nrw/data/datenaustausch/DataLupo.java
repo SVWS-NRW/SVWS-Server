@@ -56,7 +56,7 @@ public final class DataLupo {
 
 		// Erstelle temporär eine LuPO-MDB-Datei aus dem übergebenen Byte-Array
 		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-		final String tmpFilename = user.connectionManager.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
+		final String tmpFilename = user.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
 				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
 				.limit(40)
 				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -125,7 +125,7 @@ public final class DataLupo {
 
 		// Bestimme den Dateinamen für eine temporäre LuPO-Datei
 		final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-		final String tmpFilename = user.connectionManager.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
+		final String tmpFilename = user.getConfig().getDBSchema() + "_" + random.ints(48, 123)  // from 0 to z
 				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
 				.limit(40)
 				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
@@ -157,7 +157,7 @@ public final class DataLupo {
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
-		}).header("Content-Disposition", "attachment; filename=\"" + user.connectionManager.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
+		}).header("Content-Disposition", "attachment; filename=\"" + user.getConfig().getDBSchema() + jahrgang + ".lup\"").build();
 		if (!response.hasEntity())
 			logger.logLn(2, "[FEHLER]");
 		logger.logLn("LuPO-Datei für die Antwort eingelesen.");

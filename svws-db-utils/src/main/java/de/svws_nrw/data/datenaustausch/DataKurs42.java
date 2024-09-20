@@ -149,7 +149,7 @@ public final class DataKurs42 {
 		try {
 			// Erstelle temporär eine Zip-Datei aus dem übergebenen Byte-Array
 			final String tmpDirectory = SVWSKonfiguration.get().getTempPath();
-			final String tmpFilename = conn.getUser().connectionManager.getConfig().getDBSchema() + "_" + _random.ints(48, 123)  // from 0 to z
+			final String tmpFilename = conn.getUser().getConfig().getDBSchema() + "_" + _random.ints(48, 123)  // from 0 to z
 					.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
 					.limit(40)
 					.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
