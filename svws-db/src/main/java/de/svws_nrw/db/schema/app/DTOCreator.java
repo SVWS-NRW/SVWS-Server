@@ -430,12 +430,23 @@ public class DTOCreator {
                           <class>de.svws_nrw.db.converter.current.gost.GostLaufbahnplanungFachkombinationTypConverter</class>
                           <class>de.svws_nrw.db.converter.current.kursblockung.GostKursblockungRegelTypConverter</class>
                           <class>de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchema</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTableColumn</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTables</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationUser</class>
                   """);
 		for (final String cl : allClasses)
 			sb.append("        <class>" + cl + "</class>" + System.lineSeparator());
 		sb.append("""
-                           <exclude-unlisted-classes>false</exclude-unlisted-classes>
-                       </persistence-unit>
+                          <exclude-unlisted-classes>false</exclude-unlisted-classes>
+                      </persistence-unit>
+                      <persistence-unit name="SVWSDBSCHEMA" transaction-type="RESOURCE_LOCAL">
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchema</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTableColumn</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTables</class>
+                          <class>de.svws_nrw.db.schema.dto.DTOInformationUser</class>
+                          <exclude-unlisted-classes>true</exclude-unlisted-classes>
+                      </persistence-unit>
                   </persistence>
                   """);
 		createOrReplaceFile(p.toFile(), sb.toString());
