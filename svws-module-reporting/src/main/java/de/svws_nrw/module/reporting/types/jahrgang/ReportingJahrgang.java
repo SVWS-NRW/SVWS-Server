@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.</p>
@@ -50,6 +51,9 @@ public class ReportingJahrgang {
 	/** Liste der Schüler des Jahrgangs. */
 	protected List<ReportingSchueler> schueler = new ArrayList<>();
 
+	/** Der Schuljahresabschnitt zu diesem Jahrgang. */
+	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
+
 	/** Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge. */
 	protected int sortierung;
 
@@ -67,11 +71,13 @@ public class ReportingJahrgang {
 	 * @param kuerzelStatistik Das dem Jahrgang zugeordnete Statistik-Kürzel.
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param schueler Liste der Schüler des Jahrgangs.
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
 	public ReportingJahrgang(final String bezeichnung, final Long gueltigBis, final Long gueltigVon, final ReportingJahrgang folgejahrgang, final long id,
 			final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel, final String kuerzelSchulgliederung,
-			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler, final int sortierung) {
+			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler,
+			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
@@ -84,6 +90,7 @@ public class ReportingJahrgang {
 		this.kuerzelStatistik = kuerzelStatistik;
 		this.istSichtbar = istSichtbar;
 		this.schueler = schueler;
+		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sortierung = sortierung;
 	}
 
@@ -185,6 +192,14 @@ public class ReportingJahrgang {
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;
+	}
+
+	/**
+	 * Der Schuljahresabschnitt zu diesem Jahrgang.
+	 * @return Inhalt des Feldes schuljahresabschnitt
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
+		return schuljahresabschnitt;
 	}
 
 	/**

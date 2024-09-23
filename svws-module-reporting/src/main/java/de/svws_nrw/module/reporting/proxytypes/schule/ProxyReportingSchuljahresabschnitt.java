@@ -9,14 +9,20 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
+import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
+import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.faecher.DataFachdaten;
+import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.fach.ProxyReportingFach;
+import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
+import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
+import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
+import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 
@@ -48,16 +54,23 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 	 * @param schuljahresabschnitt	Stammdaten-Objekt aus der DB.
 	 */
 	public ProxyReportingSchuljahresabschnitt(final ReportingRepository reportingRepository, final Schuljahresabschnitt schuljahresabschnitt) {
-		super(schuljahresabschnitt.abschnitt, schuljahresabschnitt.id, schuljahresabschnitt.schuljahr, new ArrayList<>());
+		super(schuljahresabschnitt.id, schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt, schuljahresabschnitt.idFolgeAbschnitt,
+				schuljahresabschnitt.idVorigerAbschnitt, null, null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
 		this.reportingRepository = reportingRepository;
+
+		super.folgenderAbschnitt =
+				(schuljahresabschnitt.idFolgeAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idFolgeAbschnitt) : null;
+		super.vorherigerAbschnitt =
+				(schuljahresabschnitt.idVorigerAbschnitt != null) ? this.reportingRepository.schuljahresabschnitt(schuljahresabschnitt.idVorigerAbschnitt)
+						: null;
 
 		// Die weiteren Daten werden später durch lazy-loading ergänzt
 	}
 
 
 	/**
-	 * Gibt die Liste der faecher dieses Schuljahresabschnitts zurück. Ist diese Liste leer, so wird sie aus den Fächern des Repositories erzeugt.
+	 * Gibt die Liste der Fächer dieses Schuljahresabschnitts zurück.
 	 * @return Liste der Fächer, die in diesem Schuljahresabschnitt gültig sind.
 	 */
 	@Override
@@ -69,9 +82,9 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 			try {
 				faecherdaten.addAll(new DataFachdaten(this.reportingRepository.conn())
 						.getFaecherdatenFromList(this.reportingRepository.mapFaecher().values().stream().toList()).values().stream().toList());
-			} catch (final ApiOperationException e) {
+			} catch (final Exception e) {
 				ReportingExceptionUtils.putStacktraceInLog(
-						"FEHLER: Fehler bei der Erstellung der Fächerliste für den Schuljahresabschnitt %d.%d.".formatted(this.schuljahr, this.abschnitt), e,
+						"FEHLER: Fehler bei der Erstellung der Fächerliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
 						reportingRepository.logger(), LogLevel.ERROR, 0);
 			}
 			if (faecherdaten.isEmpty())
@@ -85,5 +98,51 @@ public class ProxyReportingSchuljahresabschnitt extends ReportingSchuljahresabsc
 				super.faecher.add(new ProxyReportingFach(fach, mapFaecherdatenGost.get(fach.id), this.schuljahr));
 		}
 		return super.faecher;
+	}
+
+	/**
+	 * Gibt die Liste der Jahrgänge dieses Schuljahresabschnitts zurück.
+	 * @return Liste der Jahrgänge, die in diesem Schuljahresabschnitt gültig sind.
+	 */
+	@Override
+	public List<ReportingJahrgang> jahrgaenge() {
+		if ((super.jahrgaenge == null) || super.jahrgaenge.isEmpty()) {
+			super.jahrgaenge = new ArrayList<>();
+			// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte alle
+			//  Jahrgänge übernommen.
+			for (final JahrgangsDaten jahrgang : this.reportingRepository.mapJahrgaenge().values().stream().toList())
+				super.jahrgaenge.add(new ProxyReportingJahrgang(this.reportingRepository, jahrgang, this));
+		}
+		return super.jahrgaenge;
+	}
+
+	/**
+	 * Gibt die Liste der Klassen dieses Schuljahresabschnitts zurück.
+	 * @return Liste der Klassen, die in diesem Schuljahresabschnitt gültig sind.
+	 */
+	@Override
+	public List<ReportingKlasse> klassen() {
+		if ((super.klassen == null) || super.klassen.isEmpty()) {
+			super.klassen = new ArrayList<>();
+			List<KlassenDaten> klassendaten = new ArrayList<>();
+			try {
+				this.reportingRepository.logger().logLn(LogLevel.DEBUG, 8, "Ermittle die Klassendaten.");
+				klassendaten = new DataKlassendaten(this.reportingRepository.conn()).getListBySchuljahresabschnittID(this.id(), false);
+			} catch (final Exception e) {
+				ReportingExceptionUtils.putStacktraceInLog(
+						"FEHLER: Fehler bei der Erstellung der Klassenliste für den Schuljahresabschnitt %s.".formatted(this.textSchuljahresabschnittKurz()), e,
+						reportingRepository.logger(), LogLevel.ERROR, 0);
+			}
+			if (klassendaten.isEmpty())
+				return super.klassen;
+
+			for (final KlassenDaten klasse : klassendaten) {
+				final ReportingKlasse reportingKlasse = new ProxyReportingKlasse(this.reportingRepository, klasse);
+				super.klassen.add(reportingKlasse);
+				this.reportingRepository.mapKlassen().putIfAbsent(reportingKlasse.id(), reportingKlasse);
+			}
+
+		}
+		return super.klassen;
 	}
 }

@@ -10,20 +10,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
-import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.kurs.ReportingKurs;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
@@ -96,21 +92,8 @@ public class ProxyReportingKurs extends ReportingKurs {
 		// Jahrgänge setzen
 		if ((kursDaten.idJahrgaenge != null) && !kursDaten.idJahrgaenge.isEmpty()) {
 			for (final Long idJahrgang : kursDaten.idJahrgaenge) {
-				if (this.reportingRepository.mapJahrgaenge().containsKey(idJahrgang)) {
-					super.jahrgaenge.add(
-							new ProxyReportingJahrgang(this.reportingRepository, this.reportingRepository.mapJahrgaenge().get(idJahrgang)));
-				} else {
-					try {
-						final JahrgangsDaten jahrgangsDaten = new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(idJahrgang);
-						final ReportingJahrgang jahrgang = new ProxyReportingJahrgang(
-								this.reportingRepository, this.reportingRepository.mapJahrgaenge().computeIfAbsent(idJahrgang, j -> jahrgangsDaten));
-						super.jahrgaenge.add(jahrgang);
-					} catch (final ApiOperationException e) {
-						ReportingExceptionUtils.putStacktraceInLog(
-								"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
-								reportingRepository.logger(), LogLevel.INFO, 0);
-					}
-				}
+				if (this.reportingRepository.mapJahrgaenge().containsKey(idJahrgang))
+					super.jahrgaenge.add(super.schuljahresabschnitt.jahrgang(idJahrgang));
 			}
 		}
 

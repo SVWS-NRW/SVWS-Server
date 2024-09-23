@@ -18,7 +18,7 @@
 			<table  class="fixed-layout-100 no-space-pad">
 				<tr>
 					<td style="width: 50%; text-align: left; font-size: 7pt; vertical-align: top;"></td>
-					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${schueler.gostLaufbahnplanung().auswahlKlasse()}">Klasse: Q1</td>
+					<td style="width: 50%; text-align: right; font-size: 7pt; color: grey; vertical-align: top;" th:text="'Klasse: ' + ${schueler.gostLaufbahnplanung().aktuelleKlasse()}">Klasse: Q1</td>
 				</tr>
 				<tr>
 					<td style="width: 25%; border-bottom: 1px grey solid; text-align: left; vertical-align: middle;"><h3>Wahlbogen <span th:if="${Parameter.detailLevel == 0}" class="very-tiny">(nur belegte Fächer)</span></h3></td>

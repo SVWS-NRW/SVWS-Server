@@ -2,11 +2,7 @@ package de.svws_nrw.module.reporting.proxytypes.jahrgang;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
-import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.data.jahrgaenge.DataJahrgangsdaten;
-import de.svws_nrw.db.utils.ApiOperationException;
-import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
-import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
@@ -47,8 +43,10 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	 * Erstellt ein neues Reporting-Objekt auf Basis eines Stammdaten-Objektes.
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param jahrgangsDaten Stammdaten-Objekt aus der DB.
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 */
-	public ProxyReportingJahrgang(final ReportingRepository reportingRepository, final JahrgangsDaten jahrgangsDaten) {
+	public ProxyReportingJahrgang(final ReportingRepository reportingRepository, final JahrgangsDaten jahrgangsDaten,
+			final ReportingSchuljahresabschnitt schuljahresabschnitt) {
 		super(jahrgangsDaten.bezeichnung,
 				jahrgangsDaten.gueltigBis,
 				jahrgangsDaten.gueltigVon,
@@ -61,6 +59,7 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				jahrgangsDaten.kuerzelStatistik,
 				jahrgangsDaten.istSichtbar,
 				null,
+				schuljahresabschnitt,
 				jahrgangsDaten.sortierung);
 		this.reportingRepository = reportingRepository;
 	}
@@ -82,37 +81,29 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 	@Override
 	public ReportingJahrgang folgejahrgang() {
 		if ((super.folgejahrgang() == null) && (super.idFolgejahrgang() != null) && (super.idFolgejahrgang() >= 0)) {
-			super.folgejahrgang =
-					new ProxyReportingJahrgang(
-							this.reportingRepository,
-							this.reportingRepository.mapJahrgaenge()
-									.computeIfAbsent(super.idFolgejahrgang(), j -> {
-										try {
-											return new DataJahrgangsdaten(this.reportingRepository.conn()).getFromID(super.idFolgejahrgang());
-										} catch (final ApiOperationException e) {
-											ReportingExceptionUtils.putStacktraceInLog(
-													"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten eines Jahrgangs.", e,
-													reportingRepository.logger(), LogLevel.INFO, 0);
-											return new JahrgangsDaten();
-										}
-									}));
+			if (!this.reportingRepository.mapJahrgaenge().containsKey(super.idFolgejahrgang())) {
+				// TODO: Wenn die Jahrgänge eine Gültigkeit erhalten, dann ist diese hier auch zu implementieren. Aktuell werden in alle Schuljahresabschnitte alle
+				//  Jahrgänge übernommen und der Folgejahrgang innerhalb des gleichen Lernabschnitts ermittelt, da keine Regelung zum Folgejahrgang und einem
+				//  Folgeabschnitt im System implementiert ist. Daher wird eine direkt Rückgabe erzeugt, die aber nie auftreten dürfte.
+				return super.folgejahrgang();
+			} else {
+				// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
+				super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
+			}
 		}
 		return super.folgejahrgang();
 	}
 
 	/**
-	 * Stellt eine Liste mit Klassen des Jahrgangs zur Verfügung.
+	 * Stellt eine Liste mit Klassen des Jahrgangs im übergebenen Schuljahresabschnitt zur Verfügung.
 	 * @return	Liste mit Klassen
 	 */
 	@Override
 	public List<ReportingKlasse> klassen() {
 		if (super.klassen().isEmpty()) {
-			// Im ReportingRepository ist die mapKlassen mit den Klassen des aktuellen Schuljahresabschnittes gefüllt worden.
 			super.klassen =
-					this.reportingRepository.mapKlassen().values().stream()
-							.filter(kd -> kd.idJahrgang == super.id())
-							.map(kd -> (ReportingKlasse) new ProxyReportingKlasse(
-									this.reportingRepository, kd))
+					super.schuljahresabschnitt.klassen().stream()
+							.filter(k -> k.idJahrgang() == super.id())
 							.sorted(Comparator
 									.comparing(ReportingKlasse::kuerzel)
 									.thenComparing(ReportingKlasse::parallelitaet))
@@ -134,7 +125,9 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 							.sorted(Comparator
 									.comparing(ReportingSchueler::nachname)
 									.thenComparing(ReportingSchueler::vorname)
-									.thenComparing(ReportingSchueler::geburtsdatum))
+									.thenComparing(ReportingSchueler::vornamen)
+									.thenComparing(ReportingSchueler::geburtsdatum)
+									.thenComparing(ReportingSchueler::id))
 							.toList();
 		}
 		return super.schueler();

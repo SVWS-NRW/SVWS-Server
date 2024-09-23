@@ -13,7 +13,7 @@
 
 					<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 					<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr()}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
+					<div class="pageTopRight">Kurse-Schienen-Zuordnung<br/>Abitur <span th:text="${GostBlockungsergebnis.abiturjahr()}">2023</span> - <span th:text="${GostBlockungsergebnis.gostHalbjahr().kuerzel}">Q1.2</span><br/>Gesamt: <span th:text="${GostBlockungsergebnis.anzahlSchueler()}">123</span> SuS<span th:if="${zeigeExtDummy}">, davon <span th:text="${GostBlockungsergebnis.anzahlExterne()}">35</span>/<span th:text="${GostBlockungsergebnis.anzahlDummy()}">40</span> Externe/Platzhalter</span></div>
 					<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 					<div class="pageBottomCenter" th:text="${GostBlockungsergebnis.bezeichnung() + ' (Erg-ID ' + GostBlockungsergebnis.id() + ') - Angaben zu SuS in den Kursen: Gesamt (Schriftlich,Abiturfach) (Externe,Platzhalter)'}">A23 - Q1.2 (Erg-ID 4) - Angaben zu SuS in den Kursen: Gesamt (Schriftlich, Abiturfach)</div>
 					<div class="pageBottomRight"><span class="counter-print">Seite </span></div>
@@ -21,7 +21,7 @@
 
 					<table class="fixed-layout-100 no-space-pad">
 						<tr>
-							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr()}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></td>
+							<td style="width: 100%; border-bottom: 1px grey solid; vertical-align: middle"><h3 class="no-mt" th:text="${'Kurse-Schienen-Zuordnung - Abitur ' + GostBlockungsergebnis.abiturjahr() + ' - ' + GostBlockungsergebnis.gostHalbjahr().kuerzel}">Kurse-Schienen-Zuordnung - Abitur 2023 - Q1.2</h3></td>
 						</tr>
 						<tr style="height: 3px;">
 							<td></td>

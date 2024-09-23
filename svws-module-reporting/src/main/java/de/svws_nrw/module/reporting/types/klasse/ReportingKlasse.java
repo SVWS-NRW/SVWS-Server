@@ -6,6 +6,7 @@ import java.util.List;
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
  * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.</p>
@@ -54,9 +55,6 @@ public class ReportingKlasse {
 	/** Die ID für die Schulgliederung der Klasse */
 	protected long idSchulgliederung;
 
-	/** Die ID des Schuljahresabschnittes der Klasse. */
-	protected long idSchuljahresabschnitt;
-
 	/** Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null */
 	protected Long idVorgaengerklasse;
 
@@ -90,6 +88,9 @@ public class ReportingKlasse {
 	/** Die Liste der Schüler der Klasse. */
 	protected List<ReportingSchueler> schueler = new ArrayList<>();
 
+	/** Der Schuljahresabschnitt der Klasse. */
+	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
+
 	/** Die Sortierreihenfolge des Jahrgangslisten-Eintrags. */
 	protected int sortierung;
 
@@ -118,7 +119,6 @@ public class ReportingKlasse {
 	 * @param idsKlassenleitungen Die Liste der IDs der Klassenleitungen der Klasse.
 	 * @param idsSchueler Die Liste der IDs der Schüler der Klasse.
 	 * @param idSchulgliederung Die ID für die Schulgliederung der Klasse
-	 * @param idSchuljahresabschnitt Die ID des Schuljahresabschnittes der Klasse.
 	 * @param idVorgaengerklasse Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
 	 * @param idWeiterbildungOrganisationsform Die ID für die Organisationsform der Klasse im Weiterbildungsbereich
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
@@ -130,6 +130,7 @@ public class ReportingKlasse {
 	 * @param parallelitaet Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z).
 	 * @param pruefungsordnung Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird.
 	 * @param schueler Die Liste der Schüler der Klasse.
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt der Klasse.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
 	 * @param teilstandort Adressmerkmal des Teilstandorts für die Klasse
 	 * @param verwendungAnkreuzkompetenzen Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
@@ -138,10 +139,11 @@ public class ReportingKlasse {
 	public ReportingKlasse(final boolean beginnSommersemester, final String beschreibung, final ReportingKlasse folgeklasse, final long id,
 			final Long idAllgemeinbildendOrganisationsform, final Long idBerufsbildendOrganisationsform, final Long idFachklasse, final Long idFolgeklasse,
 			final Long idJahrgang, final long idKlassenart, final List<Long> idsKlassenleitungen, final List<Long> idsSchueler, final long idSchulgliederung,
-			final long idSchuljahresabschnitt, final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final boolean istSichtbar,
-			final ReportingJahrgang jahrgang, final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse,
-			final String kuerzelVorgaengerklasse, final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler,
-			final int sortierung, final String teilstandort, final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
+			final Long idVorgaengerklasse, final Long idWeiterbildungOrganisationsform, final boolean istSichtbar, final ReportingJahrgang jahrgang,
+			final List<ReportingLehrer> klassenleitungen, final String kuerzel, final String kuerzelFolgeklasse, final String kuerzelVorgaengerklasse,
+			final String parallelitaet, final String pruefungsordnung, final List<ReportingSchueler> schueler,
+			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung, final String teilstandort,
+			final boolean verwendungAnkreuzkompetenzen, final ReportingKlasse vorgaengerklasse) {
 		this.beginnSommersemester = beginnSommersemester;
 		this.beschreibung = beschreibung;
 		this.folgeklasse = folgeklasse;
@@ -155,7 +157,6 @@ public class ReportingKlasse {
 		this.idsKlassenleitungen = idsKlassenleitungen;
 		this.idsSchueler = idsSchueler;
 		this.idSchulgliederung = idSchulgliederung;
-		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 		this.idVorgaengerklasse = idVorgaengerklasse;
 		this.idWeiterbildungOrganisationsform = idWeiterbildungOrganisationsform;
 		this.istSichtbar = istSichtbar;
@@ -167,6 +168,7 @@ public class ReportingKlasse {
 		this.parallelitaet = parallelitaet;
 		this.pruefungsordnung = pruefungsordnung;
 		this.schueler = schueler;
+		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sortierung = sortierung;
 		this.teilstandort = teilstandort;
 		this.verwendungAnkreuzkompetenzen = verwendungAnkreuzkompetenzen;
@@ -282,14 +284,6 @@ public class ReportingKlasse {
 	}
 
 	/**
-	 * Die ID des Schuljahresabschnittes der Klasse.
-	 * @return Inhalt des Feldes idSchuljahresabschnitt
-	 */
-	public long idSchuljahresabschnitt() {
-		return idSchuljahresabschnitt;
-	}
-
-	/**
 	 * Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
 	 * @return Inhalt des Feldes idVorgaengerklasse
 	 */
@@ -375,6 +369,14 @@ public class ReportingKlasse {
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;
+	}
+
+	/**
+	 * Der Schuljahresabschnitt der Klasse.
+	 * @return Inhalt des Feldes schuljahresabschnitt
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
+		return schuljahresabschnitt;
 	}
 
 	/**

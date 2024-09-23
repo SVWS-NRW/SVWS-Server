@@ -15,7 +15,6 @@ import de.svws_nrw.data.schueler.DataSchuelerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import de.svws_nrw.module.reporting.proxytypes.jahrgang.ProxyReportingJahrgang;
-import de.svws_nrw.module.reporting.proxytypes.klasse.ProxyReportingKlasse;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
 import de.svws_nrw.module.reporting.proxytypes.schueler.ProxyReportingSchueler;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
@@ -144,19 +143,23 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse folgeklasse() {
 		if ((super.folgeklasse() == null) && (super.idFolgeklasse() != null) && (super.idFolgeklasse() >= 0)) {
-			super.folgeklasse =
-					new ProxyReportingKlasse(
-							reportingRepository,
-							reportingRepository.mapKlassen().computeIfAbsent(super.idFolgeklasse(), k -> {
-								try {
-									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new KlassenDaten();
-								}
-							}));
+			if (!this.reportingRepository.mapKlassen().containsKey(super.idFolgeklasse())) {
+				// ID der Folgeklasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
+				final KlassenDaten klassenDaten;
+				try {
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idFolgeklasse());
+				} catch (final ApiOperationException e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"FEHLER: Fehler bei der Ermittlung der Daten für die Folgeklasse des Schülers %s in %s."
+									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
+							e, reportingRepository.logger(), LogLevel.ERROR, 0);
+					return super.folgeklasse();
+				}
+				super.folgeklasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idFolgeklasse());
+			} else {
+				// ID der Folgeklasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
+				super.folgeklasse = this.reportingRepository.mapKlassen().get(super.idFolgeklasse()).schuljahresabschnitt().klasse(super.idFolgeklasse());
+			}
 		}
 		return super.folgeklasse();
 	}
@@ -180,7 +183,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 											reportingRepository.logger(), LogLevel.INFO, 0);
 									return new JahrgangsDaten();
 								}
-							}));
+							}), this.schuljahresabschnitt());
 		}
 		return super.jahrgang();
 	}
@@ -192,19 +195,23 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 	@Override
 	public ReportingKlasse klasse() {
 		if ((super.klasse() == null) && (super.idKlasse() != null) && (super.idKlasse() >= 0)) {
-			super.klasse =
-					new ProxyReportingKlasse(
-							reportingRepository,
-							reportingRepository.mapKlassen().computeIfAbsent(super.idKlasse(), k -> {
-								try {
-									return new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idKlasse());
-								} catch (final ApiOperationException e) {
-									ReportingExceptionUtils.putStacktraceInLog(
-											"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der Daten einer Klasse.", e,
-											reportingRepository.logger(), LogLevel.INFO, 0);
-									return new KlassenDaten();
-								}
-							}));
+			if (!this.reportingRepository.mapKlassen().containsKey(super.idKlasse())) {
+				// ID der Klasse ist bekannt, aber sie wurde noch nicht aus der DB geladen. Lade deren Daten und lade dann alle Klassen des Lernabschnitts.
+				final KlassenDaten klassenDaten;
+				try {
+					klassenDaten = new DataKlassendaten(reportingRepository.conn()).getByIdOhneSchueler(super.idKlasse());
+				} catch (final ApiOperationException e) {
+					ReportingExceptionUtils.putStacktraceInLog(
+							"FEHLER: Fehler bei der Ermittlung der Daten für die Klasse des Schülers %s in %s."
+									.formatted(super.schueler().id(), super.schuljahresabschnitt.textSchuljahresabschnittKurz()),
+							e, reportingRepository.logger(), LogLevel.ERROR, 0);
+					return super.klasse();
+				}
+				super.klasse = this.reportingRepository.schuljahresabschnitt(klassenDaten.idSchuljahresabschnitt).klasse(super.idKlasse());
+			} else {
+				// ID der Klasse ist bekannt und die Klasse wurde in einem Lernabschnitt bereits erzeugt, hole sie aus Lernabschnitt.
+				super.klasse = this.reportingRepository.mapKlassen().get(super.idKlasse()).schuljahresabschnitt().klasse(super.idKlasse());
+			}
 		}
 		return super.klasse();
 	}
