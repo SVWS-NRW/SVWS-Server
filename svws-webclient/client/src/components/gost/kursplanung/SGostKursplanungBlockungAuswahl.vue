@@ -24,7 +24,7 @@
 						<span>{{ blockung.name }}&nbsp;</span>
 					</div>
 					<div class="-my-1 ml-auto inline-flex gap-1">
-						<template v-if="hatUpdateKompetenz && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && blockung === auswahlBlockung">
+						<template v-if="hatUpdateKompetenz && ((auswahlBlockung !== undefined) && !isPending(auswahlBlockung.id)) && (blockung === auswahlBlockung)">
 							<template v-if="allow_berechne_blockung">
 								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
 									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
@@ -47,26 +47,6 @@
 								</svws-ui-button>
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
-						<div v-else class="mr-2 ml-auto inline-flex">
-							<svws-ui-tooltip v-if="blockung.anzahlErgebnisse > 1">
-								<span class="icon-sm i-ri-lock-fill -mx-1" />
-								<template #content>
-									<span>
-										{{ blockung.anzahlErgebnisse }} Ergebnisse vorhanden.
-										<br>Es können nur bei den Blockungsergebnissen, d.h.
-										den Kurs-Schienen- und der Kurs-Schülerzuordnungen, Änderungen vorgenommen werden.
-										<br>Für weitere Anpassungen an der Blockung müssen entweder alle Ergebnisse bis auf eines gelöscht werden
-										oder die Blockung muss zu einer neuen Blockung abgeleitet werden.
-									</span>
-								</template>
-							</svws-ui-tooltip>
-							<svws-ui-tooltip v-else autosize>
-								<span class="icon-sm i-ri-lock-unlock-line -mx-1" />
-								<template #content>
-									<span>In dieser Blockung können Regeln erstellt werden.</span>
-								</template>
-							</svws-ui-tooltip>
-						</div>
 						<template v-if="hatUpdateKompetenz">
 							<svws-ui-tooltip v-if="blockung.istAktiv">
 								<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
@@ -91,7 +71,7 @@
 			</svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3 flex gap-1 items-center mb-5 px-7 3xl:px-8" :class="{'animate-pulse': !apiStatus.hasError}">
+	<div v-if="(auswahlBlockung !== undefined) && isPending(auswahlBlockung.id)" class="my-3 flex gap-1 items-center mb-5 px-7 3xl:px-8" :class="{'animate-pulse': !apiStatus.hasError}">
 		<template v-if="apiStatus.pending">
 			<svws-ui-spinner spinning />
 			<span class="text-button text-black/50 dark:text-white/50">Ergebnisse werden berechnet…</span>
@@ -139,11 +119,7 @@
 
 	const edit_blockungsname = ref<boolean>(false);
 
-	const allow_berechne_blockung = computed(() =>
-		props.getDatenmanager().fachwahlGetAnzahl() > 0
-		&& props.getDatenmanager().getFaecherAnzahl() > 0
-		&& props.getDatenmanager().kursGetAnzahl() > 0
-	)
+	const allow_berechne_blockung = computed(() => (props.getDatenmanager().fachwahlGetAnzahl() > 0) && (props.getDatenmanager().getFaecherAnzahl() > 0) && (props.getDatenmanager().kursGetAnzahl() > 0));
 
 	const listBlockungen = computed(() => {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();

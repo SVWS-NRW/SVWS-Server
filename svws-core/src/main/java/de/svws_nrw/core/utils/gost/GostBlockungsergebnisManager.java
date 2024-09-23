@@ -1393,7 +1393,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 1. Bewertungskriteriums.
 	 */
 	public int getOfBewertung1Wert() {
-		return getOfBewertung1WertStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung1WertStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1406,7 +1406,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	private static double getOfBewertung1FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
-		return getOfBewertungFarbcodeStatic(getOfBewertung1WertStatic(bewertung));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung1WertStatic(bewertung));
 	}
 
 	/**
@@ -1417,7 +1417,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 1. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung1Farbcode() {
-		return getOfBewertung1FarbcodeStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung1FarbcodeStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1444,7 +1444,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 2. Bewertungskriteriums.
 	 */
 	public int getOfBewertung2Wert() {
-		return getOfBewertung2WertStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung2WertStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1457,7 +1457,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	private static double getOfBewertung2FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
-		return getOfBewertungFarbcodeStatic(getOfBewertung2WertStatic(bewertung));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung2WertStatic(bewertung));
 	}
 
 	/**
@@ -1468,7 +1468,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 2. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung2Farbcode() {
-		return getOfBewertung2FarbcodeStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung2FarbcodeStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1487,7 +1487,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public double getOfBewertung3Farbcode() {
 		final int wert = _ergebnis.bewertung.kursdifferenzMax;
-		return getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1506,7 +1506,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public double getOfBewertung3Farbcode_nur_LK() {
 		final int wert = _bewertung3_KD_nur_LK;
-		return getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1525,7 +1525,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public double getOfBewertung3Farbcode_nur_GK() {
 		final int wert = _bewertung3_KD_nur_GK;
-		return getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1544,7 +1544,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public double getOfBewertung3Farbcode_nur_REST() {
 		final int wert = _bewertung3_KD_nur_REST;
-		return getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic((wert == 0) ? 0 : (wert - 1));
 	}
 
 	/**
@@ -1574,7 +1574,7 @@ public class GostBlockungsergebnisManager {
 	 * @return den Wert des 3. Bewertungskriteriums als Histogramm (Array der Länge 10).
 	 */
 	private @NotNull int[] getOfBewertung3Histogramm() {
-		return getOfBewertung3HistogrammStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung3HistogrammStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1602,7 +1602,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Den Wert des 4. Bewertungskriteriums.
 	 */
 	public int getOfBewertung4Wert() {
-		return getOfBewertung4WertStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung4WertStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -1617,7 +1617,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	private static double getOfBewertung4FarbcodeStatic(final @NotNull GostBlockungsergebnisBewertung bewertung) {
-		return getOfBewertungFarbcodeStatic(getOfBewertung4WertStatic(bewertung));
+		return GostBlockungsergebnisManager.getOfBewertungFarbcodeStatic(GostBlockungsergebnisManager.getOfBewertung4WertStatic(bewertung));
 	}
 
 	/**
@@ -1630,7 +1630,7 @@ public class GostBlockungsergebnisManager {
 	 * @return Eine Güte des 4. Bewertungskriteriums im Bereich [0;1], mit 0=optimal.
 	 */
 	public double getOfBewertung4Farbcode() {
-		return getOfBewertung4FarbcodeStatic(_ergebnis.bewertung);
+		return GostBlockungsergebnisManager.getOfBewertung4FarbcodeStatic(_ergebnis.bewertung);
 	}
 
 	/**
@@ -2995,7 +2995,7 @@ public class GostBlockungsergebnisManager {
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
 
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (int nr = min; nr <= max; nr++)
 				regeln.add(_parent.regelGetRegelOrDummyKursGesperrtInSchiene(kursG.id, nr));
 
@@ -3024,7 +3024,7 @@ public class GostBlockungsergebnisManager {
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
 
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schienenSet, kursG.id)) {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) // Kurs im Auswahl-Rechteck?
@@ -3056,7 +3056,7 @@ public class GostBlockungsergebnisManager {
 		final int max = Math.max(schieneA.nummer, schieneB.nummer);
 		final @NotNull List<GostBlockungRegel> regeln = new ArrayList<>();
 
-		for (final @NotNull GostBlockungKurs kursG : regelGetListeToggleFilteredBetween(list, kursA, kursB))
+		for (final @NotNull GostBlockungKurs kursG : GostBlockungsergebnisManager.regelGetListeToggleFilteredBetween(list, kursA, kursB))
 			for (final @NotNull GostBlockungsergebnisSchiene schieneE : DeveloperNotificationException.ifMapGetIsNull(_kursID_to_schienenSet, kursG.id)) {
 				final @NotNull GostBlockungSchiene schieneG = getSchieneG(schieneE.id);
 				if ((schieneG.nummer >= min) && (schieneG.nummer <= max)) {
@@ -3983,7 +3983,7 @@ public class GostBlockungsergebnisManager {
 
 		// (1) (2)
 		for (final long idKurs : setKursID)
-			regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
+			GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(getOfKursSchuelerIDmenge(idKurs), SetUtils.create1(idKurs)));
 
 		return u;
 	}
@@ -4361,22 +4361,22 @@ public class GostBlockungsergebnisManager {
 
 		// (1)
 		for (final @NotNull GostBlockungRegel r11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r11);
 
 		// (2)
 		for (final @NotNull GostBlockungRegel r12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r12);
 
 		// (3)
 		for (final @NotNull GostBlockungRegel r13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r13);
 
 		// (4)
 		for (final @NotNull GostBlockungRegel r14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r14);
 
 		// (5)
@@ -4406,22 +4406,22 @@ public class GostBlockungsergebnisManager {
 
 		// (1)
 		for (final @NotNull GostBlockungRegel r11 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r11);
 
 		// (2)
 		for (final @NotNull GostBlockungRegel r12 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r12);
 
 		// (3)
 		for (final @NotNull GostBlockungRegel r13 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r13);
 
 		// (4)
 		for (final @NotNull GostBlockungRegel r14 : _parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r14);
 
 		// (5)
@@ -4595,7 +4595,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart, von, bis));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart, von, bis));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4631,7 +4631,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_02e_helper(idKurs, schienenNr, false));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_02e_helper(idKurs, schienenNr, false));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4666,7 +4666,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(idKurs), SetUtils.create1(schienenNr)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4701,7 +4701,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler, idKurs));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_04x_SCHUELER_FIXIEREN_IN_KURS(idSchueler, idKurs));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4737,7 +4737,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_05_SCHUELER_VERBIETEN_IN_KURS(SetUtils.create1(idSchueler), SetUtils.create1(idKurs)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4776,7 +4776,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart, von, bis));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4813,7 +4813,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_07_KURS_VERBIETEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4850,7 +4850,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_08_KURS_ZUSAMMEN_MIT_KURS(SetUtils.create2(idKursMin, idKursMax)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4885,7 +4885,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs, anzahl));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_09_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4927,7 +4927,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_11_SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -4967,7 +4967,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_12_SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH(idSchuelerMin, idSchuelerMax, idFach));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5006,7 +5006,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_13_SCHUELER_ZUSAMMEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5045,7 +5045,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_14_SCHUELER_VERBIETEN_MIT_SCHUELER(idSchuelerMin, idSchuelerMax));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5080,7 +5080,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs, anzahl));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_15_KURS_MAXIMALE_SCHUELERANZAHL(idKurs, anzahl));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5114,7 +5114,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (3)
-		regelupdateAppend(u, regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(idSchueler)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_16_SCHUELER_IGNORIEREN(SetUtils.create1(idSchueler)));
 		// Falls die Regel bereits durch Kaskaden gelöscht wurde, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5157,7 +5157,7 @@ public class GostBlockungsergebnisManager {
 			return u;
 
 		// (4)
-		regelupdateAppend(u, regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(idKursNeu)));
+		GostBlockungsergebnisManager.regelupdateAppend(u, regelupdateCreate_17_KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN(SetUtils.create1(idKursNeu)));
 		// Falls die Regel bereits durch Kaskaden gelöscht werden soll, dann entferne sie nicht doppelt.
 		if (!u.listEntfernen.contains(rAlt))
 			u.listEntfernen.add(rAlt);
@@ -5493,7 +5493,6 @@ public class GostBlockungsergebnisManager {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public void regelupdateExecute(final @NotNull GostBlockungRegelUpdate update) {
-		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !_parent.getIstBlockungsVorlage());
 		_parent.regelRemoveListe(update.listEntfernen);
 		_parent.regelAddListe(update.listHinzuzufuegen);
 		stateRevalidateEverything();
@@ -5769,8 +5768,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void kursSchuelerUpdateExecute(final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate update) {
 		// Regeln entfernen.
-		if (_parent.getIstBlockungsVorlage())
-			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 
 		// SuS entfernen.
 		for (final @NotNull GostBlockungsergebnisKursSchuelerZuordnung z : update.listEntfernen)
@@ -5784,8 +5782,7 @@ public class GostBlockungsergebnisManager {
 			stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
 
 		// Regeln hinzufügen.
-		if (_parent.getIstBlockungsVorlage())
-			_parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		_parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 
 		stateRevalidateEverything();
 	}
@@ -5876,8 +5873,7 @@ public class GostBlockungsergebnisManager {
 	 */
 	public void kursSchienenUpdateExecute(final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate update) {
 		// Regeln entfernen.
-		if (_parent.getIstBlockungsVorlage())
-			_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		_parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 
 		// Kurse aus Schienen entfernen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listEntfernen)
@@ -5890,8 +5886,7 @@ public class GostBlockungsergebnisManager {
 			stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 
 		// Regeln hinzufügen.
-		if (_parent.getIstBlockungsVorlage())
-			_parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		_parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 
 		stateRevalidateEverything();
 	}
@@ -6063,7 +6058,7 @@ public class GostBlockungsergebnisManager {
 
 			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
 				if (kurs2.id != kurs1.id) {
-					final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					final int anzahl = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
 					if (anzahl > 0) {
 						summe += anzahl;
 						sbZeile.append((sbZeile.isEmpty() ? "" : ", ") + getOfKursName(kurs2.id) + "(" + anzahl + ")");
@@ -6097,7 +6092,7 @@ public class GostBlockungsergebnisManager {
 
 			for (final GostBlockungsergebnisKurs kurs2 : getSchieneE(idSchiene).kurse) {
 				if (kurs2.id != kurs1.id) {
-					final int anzahl = getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
+					final int anzahl = GostBlockungsergebnisManager.getOfKursOfKursAnzahlGemeinsamerSchueler(kurs1, kurs2);
 					if (anzahl > 0) {
 						listOfPairs.add(new Pair<GostBlockungsergebnisKurs, Integer>(kurs2, anzahl));
 						summe += anzahl;

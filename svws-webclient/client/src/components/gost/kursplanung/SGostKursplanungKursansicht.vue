@@ -5,7 +5,7 @@
 			<svws-ui-table :items="GostKursart.values()" :columns disable-footer scroll has-background :style="!blockungstabelleVisible ? 'margin-left: 0; margin-right: 0; opacity: 0;' : ''" class="pr-4">
 				<template #header>
 					<div role="row" class="svws-ui-tr select-none">
-						<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
+						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							<div class="flex items-center justify-between w-full -my-2">
 								<div class="flex flex-row gap-2">
 									<span>Schiene</span>
@@ -15,7 +15,7 @@
 										<span v-if="zeigeSchienenbezeichnungen()" class="icon i-ri-text" />
 										<span v-else class="icon i-ri-expand-height-line" />
 									</svws-ui-button>
-									<template v-if="allowRegeln">
+									<template v-if="istVorlage && hatUpdateKompetenz">
 										<svws-ui-button type="icon" size="small" @click="add_schiene" title="Schiene hinzufügen">
 											<span class="icon i-ri-add-line" />
 										</svws-ui-button>
@@ -35,23 +35,23 @@
 								</svws-ui-tooltip>
 								<template v-else-if="zeigeSchienenbezeichnungen()">
 									<div>
-										<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': allowRegeln }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center"
-											:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">
+										<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': istVorlage && hatUpdateKompetenz }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center"
+											:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="istVorlage && hatUpdateKompetenz && (edit_schienenname = s.id)">
 											{{ s.bezeichnung }}
 										</span>
 										<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 									</div>
 								</template>
 								<template v-else>
-									<span :class="{ 'border-b border-dotted hover:border-transparent': allowRegeln }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
-										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="allowRegeln && (edit_schienenname = s.id)">{{ s.nummer }}</span>
+									<span :class="{ 'border-b border-dotted hover:border-transparent': istVorlage && hatUpdateKompetenz }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
+										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="istVorlage && hatUpdateKompetenz && (edit_schienenname = s.id)">{{ s.nummer }}</span>
 									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 								</template>
 							</div>
 						</div>
 					</div>
 					<div role="row" class="svws-ui-tr select-none">
-						<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
+						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							Schülerzahl
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'svws-divider': index + 1 < schienen.size()}">
@@ -62,7 +62,7 @@
 						</div>
 					</div>
 					<div role="row" class="svws-ui-tr select-none">
-						<div role="columnheader" class="svws-ui-td svws-divider" :class="allowRegeln ? 'col-span-7' : 'col-span-6'">
+						<div role="columnheader" class="svws-ui-td svws-divider" :class="zeigeAufklappzeile ? 'col-span-7' : 'col-span-6'">
 							Kollisionen
 						</div>
 						<div role="columnheader" class="svws-ui-td svws-align-center !px-0" v-for="(s, index) in schienen" :key="s.id" :class="{'text-error': getAnzahlKollisionenSchiene(s.id) > 0, 'svws-divider': index + 1 < schienen.size()}">
@@ -87,7 +87,7 @@
 							<svws-ui-checkbox :model-value="getDatenmanager().kursGetAnzahl() === getKursauswahl().size()" :indeterminate="(getKursauswahl().size() > 0) && (getKursauswahl().size() < getDatenmanager().kursGetAnzahl())"
 								@update:model-value="updateKursauswahlAlle" headless />
 						</div>
-						<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="{'col-span-2': allowRegeln, 'col-span-1': !allowRegeln}">
+						<div role="columnheader" class="svws-ui-td svws-sortable-column" @click="kurssortierung.value = (kurssortierung.value === 'kursart') ? 'fach' : 'kursart'" :class="zeigeAufklappzeile ? 'col-span-2' : 'col-span-1'">
 							<span>Kurs</span>
 							<span class="svws-sorting-icon">
 								<span class="icon-sm i-ri-arrow-up-down-line" :class="{'opacity-75': kurssortierung.value === 'kursart'}" />
@@ -105,7 +105,7 @@
 						</div>
 						<div class="svws-ui-td svws-align-center svws-divider" title="Differenz">Diff</div>
 						<!--Schienen-->
-						<template v-if="allowRegeln">
+						<template v-if="hatUpdateKompetenz">
 							<template v-for="(schiene, index) in schienen" :key="schiene.id">
 								<div @dragover="if (istDropZoneSchiene(schiene)) $event.preventDefault();" @drop="openModalRegelKursartSchiene(schiene)" class="svws-ui-td svws-align-center text-black/25 dark:text-white/25 !p-0 hover:text-black dark:hover:text-white relative group" role="columnheader"
 									:class="{ 'bg-primary/5 text-primary hover:text-primary dark:text-primary dark:hover:text-primary': istDropZoneSchiene(schiene), 'svws-divider': index + 1 < schienen.size() }">
@@ -129,7 +129,7 @@
 				<template #body>
 					<template v-for="fachwahl in fachwahlListe" :key="fachwahl">
 						<template v-if="istFachwahlVorhanden(fachwahl.fachwahlen, fachwahl.kursart)">
-							<template v-if="listeDerKurse(fachwahl).isEmpty() && getAnzahlFachwahlen(fachwahl) !== 0 && allowRegeln">
+							<template v-if="listeDerKurse(fachwahl).isEmpty() && (getAnzahlFachwahlen(fachwahl) !== 0) && istVorlage && hatUpdateKompetenz">
 								<div role="row" class="svws-ui-tr svws-disabled-soft select-none" :style="{ '--background-color': bgColor(fachwahl) }" :key="fachwahl.kursart.id">
 									<div role="cell" class="svws-ui-td" />
 									<div role="cell" class="svws-ui-td" />
@@ -157,7 +157,7 @@
 										<div role="cell" class="svws-ui-td svws-align-center cursor-pointer">
 											<svws-ui-checkbox :model-value="getKursauswahl().contains(kurs.id)" @update:model-value="updateKursauswahl(kurs)" headless />
 										</div>
-										<template v-if="allowRegeln">
+										<template v-if="zeigeAufklappzeile">
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer p-0 items-center hover:text-black" @click="setKursdetailAnzeigen(kurs.id)"
 												:class="{'text-black/50' : kursdetailAnzeigen !== kurs.id}"
 												title="Kursdetails anzeigen">
@@ -179,7 +179,7 @@
 											</div>
 										</div>
 										<div role="cell" class="svws-ui-td">
-											<template v-if="allowRegeln">
+											<template v-if="istVorlage && hatUpdateKompetenz">
 												<svws-ui-select v-model="kurslehrer(kurs).value" autocomplete :item-filter="lehrer_filter" removable headless
 													:items="kurslehrer_liste(kurs).value" :item-text="l=> l.kuerzel" title="Lehrkraft" />
 											</template>
@@ -188,7 +188,7 @@
 											</template>
 										</div>
 										<div role="cell" class="svws-ui-td svws-align-center svws-no-padding">
-											<svws-ui-checkbox :disabled="!allowRegeln" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
+											<svws-ui-checkbox :disabled="!(istVorlage && hatUpdateKompetenz)" headless bw :model-value="kurs.istKoopKurs" @update:model-value="setKoop(kurs, $event)" class="my-auto" />
 										</div>
 										<template v-if="setze_kursdifferenz(kurs).value && kurs_blockungsergebnis(kurs).value">
 											<div role="cell" class="svws-ui-td svws-align-center cursor-pointer group relative" @click="toggle_active_fachwahl(kurs)">
@@ -212,11 +212,11 @@
 											<!-- Ggf. wird das Element in der Zelle für Drag & Drop dargestellt ... -->
 											<div role="cell" class="svws-ui-td svws-align-center !p-[2px]"
 												:class="{
-													'bg-green-400/50': allowRegeln && (highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value),
-													'bg-yellow-400/50': allowRegeln && highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
+													'bg-green-400/50': hatUpdateKompetenz && (highlightKursAufAnderenKurs(kurs, schiene).value || highlightRechteckDrop(kurs, schiene).value),
+													'bg-yellow-400/50': hatUpdateKompetenz && highlightRechteck(kurs, schiene).value && !highlightKursAufAnderenKurs(kurs, schiene).value,
 													'bg-white/50 text-black/25 font-bold': highlightKursVerschieben(kurs).value,
 													'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value,
-													'svws-divider': index + 1 < getErgebnismanager().getMengeAllerSchienen().size(),
+													'svws-divider': (index + 1) < getErgebnismanager().getMengeAllerSchienen().size(),
 													'cursor-grabbing': isDragging,
 													'cursor-pointer': !isDragging,
 												}"
@@ -238,9 +238,9 @@
 														<template #content>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }} und {{ getErgebnismanager().getOfKursAnzahlSchuelerExterne(kurs.id) + getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id) }} zusätzliche Kursteilnehmer</template>
 													</svws-ui-tooltip>
 													<span v-else>{{ getErgebnismanager().getOfKursAnzahlSchueler(kurs.id) }}</span>
-													<div v-if="allowRegeln || istKursFixiertInSchiene(kurs, schiene).value" class="group" @click.stop="hatUpdateKompetenz && toggleRegelFixiereKursInSchiene(kurs, schiene)">
+													<div v-if="hatUpdateKompetenz || istKursFixiertInSchiene(kurs, schiene).value" class="group" @click.stop="hatUpdateKompetenz && toggleRegelFixiereKursInSchiene(kurs, schiene)">
 														<span v-if="istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-fill inline-block opacity-75 group-hover:opacity-100 -my-0.5" />
-														<span v-if="allowRegeln && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
+														<span v-if="hatUpdateKompetenz && !istKursFixiertInSchiene(kurs, schiene).value" class="icon-sm i-ri-pushpin-line inline-block opacity-25 group-hover:opacity-100 -my-0.5" />
 													</div>
 												</div>
 												<!-- ... ansonsten ist er nicht draggable -->
@@ -250,12 +250,12 @@
 													:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 													<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
 													<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-100" />
-													<span v-if="allowRegeln && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
+													<span v-if="hatUpdateKompetenz && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
 												</div>
 												<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
 													<svws-ui-tooltip :show-arrow="false" init-open @close="resetDrop">
 														<template #content>
-															<span class="text-sm-bold">Aktion wählen für Auswahl:</span>
+															<span class="text-sm-bold">Regeln anwenden auf Auswahl:</span>
 															<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse immer zusammen')">{{ zusammenKursbezeichnung }} immer auf einer Schiene</svws-ui-button>
 															<svws-ui-button v-if="zusammenKursbezeichnung" size="small" type="transparent" @click="rechteckActions('kurse nie zusammen')">{{ zusammenKursbezeichnung }} nie auf einer Schiene</svws-ui-button>
 															<svws-ui-button size="small" type="transparent" @click="rechteckActions('schienen sperren')">Alle Kurse sperren</svws-ui-button>
@@ -280,18 +280,16 @@
 										</template>
 									</div>
 									<!-- Wenn Kurs-Details angewählt sind, erscheint die zusätzliche Zeile -->
-									<s-gost-kursplanung-kursansicht-kurs-details v-if="kursdetailAnzeigen === kurs.id && allowRegeln" :bg-color="bgColor(fachwahl)" :anzahl-spalten="6 + getDatenmanager().schieneGetAnzahl()"
-										:kurs :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager :api-status
-										:get-ergebnismanager :map-lehrer :regeln-update :add-lehrer-regel
-										:add-kurs :remove-kurse :add-kurs-lehrer :remove-kurs-lehrer
-										:add-schiene-kurs :remove-schiene-kurs :split-kurs :combine-kurs />
+									<s-gost-kursplanung-kursansicht-kurs-details v-if="(kursdetailAnzeigen === kurs.id) && zeigeAufklappzeile" :bg-color="bgColor(fachwahl)" :anzahl-spalten="6 + getDatenmanager().schieneGetAnzahl()"
+										:kurs :fachart="GostKursart.getFachartID(kurs.fach_id, kurs.kursart)" :get-datenmanager :api-status :get-ergebnismanager :map-lehrer :regeln-update :add-lehrer-regel :add-kurs :remove-kurse
+										:add-kurs-lehrer :remove-kurs-lehrer :add-schiene-kurs :remove-schiene-kurs :split-kurs :combine-kurs />
 								</template>
 							</template>
 						</template>
 					</template>
 				</template>
 			</svws-ui-table>
-			<s-gost-kursplanung-kursansicht-modal-regel-schienen :getErgebnismanager :regeln-update ref="modalRegelKursartSchienen" />
+			<s-gost-kursplanung-kursansicht-modal-regel-schienen :get-ergebnismanager :regeln-update ref="modalRegelKursartSchienen" />
 			<s-gost-kursplanung-kursansicht-modal-combine-kurse :get-datenmanager :combine-kurs ref="modal_combine_kurse" />
 		</div>
 		<svws-ui-modal :show="() => toRef((fehlermeldungen.size() > 0) && !fehlerIgnore)" type="danger" size="medium">
@@ -316,11 +314,8 @@
 	import type { ApiStatus } from "~/components/ApiStatus";
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
-	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager,
-		GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate,
-		GostBlockungSchiene, GostBlockungRegel} from "@core";
-	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, Fach, GostBlockungKurs, GostBlockungsergebnisSchiene,
-		SetUtils, ArrayList, GostKursblockungRegelTyp, DeveloperNotificationException } from "@core";
+	import type { GostBlockungKursLehrer, GostBlockungsdatenManager, GostBlockungsergebnisKurs, GostBlockungsergebnisManager, GostFach, GostFaecherManager, GostHalbjahr, GostStatistikFachwahl, JavaSet, LehrerListeEintrag, List, GostBlockungRegelUpdate, GostBlockungSchiene, GostBlockungRegel} from "@core";
+	import { HashMap2D, GostKursart, GostStatistikFachwahlHalbjahr, HashSet, Fach, GostBlockungKurs, GostBlockungsergebnisSchiene, SetUtils, ArrayList, GostKursblockungRegelTyp, DeveloperNotificationException } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 
 	const props = defineProps<{
@@ -372,13 +367,14 @@
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
-	// BenutzerKompetenz: Wenn man die Regeln bearbeiten darf, dann ist es in der Regel eine Eingabe, die BenutzerKompetenz wird mit angehängt
-	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1) && props.hatUpdateKompetenz);
+	const istVorlage = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
+
+	const zeigeAufklappzeile = computed<boolean>(() => props.hatUpdateKompetenz && istVorlage.value);
 
 	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [];
 		cols.push({ key: "auswahl", label: "Kursauswahl", fixedWidth: 1.5, align: 'center' });
-		if (allowRegeln.value)
+		if (zeigeAufklappzeile.value)
 			cols.push({ key: "actions", label: "Actions", fixedWidth: 1.5, align: 'center' });
 		cols.push({ key: "kurs", label: "Kurs", span: 1.75, minWidth: 8 },
 			{ key: "lehrer", label: "Lehrer", span: 1.5, minWidth: 6 },
@@ -391,7 +387,10 @@
 	});
 
 	const kursdetailAnzeigen = ref<number | undefined>(undefined);
-	const setKursdetailAnzeigen = (value: number|undefined) => kursdetailAnzeigen.value = kursdetailAnzeigen.value === value ? undefined : value;
+
+	function setKursdetailAnzeigen(value: number | undefined) {
+		kursdetailAnzeigen.value = kursdetailAnzeigen.value === value ? undefined : value;
+	}
 
 	function getAnzahlSchuelerSchiene(idSchiene: number): number {
 		return props.hatErgebnis ? props.getErgebnismanager().getOfSchieneAnzahlSchueler(idSchiene) : 0;
@@ -399,22 +398,18 @@
 
 	const fachwahlListe = computed<List<{ kursart : GostKursart, fachwahlen : GostStatistikFachwahl }>>(() => {
 		const result = new ArrayList<{ kursart : GostKursart, fachwahlen : GostStatistikFachwahl }>();
-		if (props.kurssortierung.value === 'fach') {
+		if (props.kurssortierung.value === 'fach')
 			for (const fachwahlen of props.mapFachwahlStatistik().values())
 				for (const kursart of GostKursart.values())
 					result.add({ kursart, fachwahlen });
-		} else {
-			for (const kursart of GostKursart.values()) {
-				for (const fachwahlen of props.mapFachwahlStatistik().values()) {
+		else
+			for (const kursart of GostKursart.values())
+				for (const fachwahlen of props.mapFachwahlStatistik().values())
 					if (kursart === GostKursart.GK) {
 						result.add({ kursart, fachwahlen });
 						result.add({ kursart : GostKursart.ZK, fachwahlen });
-					} else if (kursart !== GostKursart.ZK) {
+					} else if (kursart !== GostKursart.ZK)
 						result.add({ kursart, fachwahlen });
-					}
-				}
-			}
-		}
 		return result;
 	});
 
@@ -423,7 +418,7 @@
 		for (const fachwahlen of props.mapFachwahlStatistik().values()) {
 			for (const kursart of GostKursart.values()) {
 				let anzahl = 0;
-				const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] || new GostStatistikFachwahlHalbjahr();
+				const fach_halbjahr : GostStatistikFachwahlHalbjahr = fachwahlen.fachwahlen[props.halbjahr.id] ?? new GostStatistikFachwahlHalbjahr();
 				const gostfach : GostFach | null = props.faecherManager.get(fachwahlen.id);
 				if (gostfach !== null) {
 					const zulFach = Fach.getBySchluesselOrDefault(gostfach.kuerzel);
@@ -448,7 +443,7 @@
 
 	function istFachwahlVorhanden(fachwahlen: GostStatistikFachwahl, kursart: GostKursart) : boolean {
 		const anzahl = props.getDatenmanager().kursGetListeByFachUndKursart(fachwahlen.id, kursart.id).size();
-		return (anzahl > 0) || (allowRegeln.value && getAnzahlFachwahlen({ fachwahlen, kursart }) > 0);
+		return (anzahl > 0) || (istVorlage.value && props.hatUpdateKompetenz && (getAnzahlFachwahlen({ fachwahlen, kursart }) > 0));
 	}
 
 	function allow_del_schiene(schiene: GostBlockungSchiene): boolean {
@@ -640,7 +635,7 @@
 		return `${props.getDatenmanager().kursGetName(id1)} und ${props.getDatenmanager().kursGetName(id2)}`;
 	})
 
-	const isDragging = computed<boolean>(() => (dragSchiene.value !== null && dropSchiene.value === null) && (allowRegeln.value || isKursDragging.value));
+	const isDragging = computed<boolean>(() => ((dragSchiene.value !== null) && (dropSchiene.value === null)) && (props.hatUpdateKompetenz || isKursDragging.value));
 
 	function setDrag(p1: GostBlockungKurs | GostBlockungsergebnisSchiene, p2?: GostBlockungsergebnisSchiene) {
 		dragOverKurs.value = null;
@@ -673,14 +668,14 @@
 			throw new DeveloperNotificationException("Es können keine zwei Schienen übergeben werden");
 		if (highlightKursVerschieben(p1).value)
 			await setKursVerschieben();
-		else if (highlightRechteck(p1, p2).value && allowRegeln.value)
+		else if (highlightRechteck(p1, p2).value)
 			setRechteck();
 	}
 
 	async function setKursVerschieben() {
 		if (dropKurs.value === null || dropSchiene.value === null || dragKurs.value === null || dragSchiene.value === null)
 			return;
-		if (allowRegeln.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
+		if (istVorlage.value && props.getDatenmanager().kursGetHatFixierungInSchiene(dragKurs.value.id, dragSchiene.value.id))
 			await props.regelnUpdate(props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(dragKurs.value.id, dragSchiene.value.id));
 		await props.updateKursSchienenZuordnung(dragKurs.value.id, dragSchiene.value.id, dropSchiene.value.id);
 	}
@@ -825,7 +820,7 @@
 		for (const l of props.getDatenmanager().kursGetLehrkraefteSortiert(kurs.id))
 			vergeben.add(l.id);
 		const id = kurslehrer(kurs).value?.id;
-		if (id)
+		if (id !== undefined)
 			vergeben.delete(id);
 		const result = [];
 		for (const l of props.mapLehrer.values())
@@ -846,7 +841,7 @@
 			await props.removeKursLehrer(kurs.id, lehrer.id);
 	}
 
-	const lehrer_regel = computed<GostBlockungRegel | undefined>(()=> {
+	const lehrer_regel = computed<GostBlockungRegel | undefined>(() => {
 		const regel_typ = GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN;
 		const regeln = props.getDatenmanager().regelGetListeOfTyp(regel_typ);
 		if (regeln.isEmpty())
@@ -892,7 +887,7 @@
 		if (filtered_by_kursart(kurs).value.isEmpty())
 			return [-1,-1, -1];
 		const fachart_id = GostKursart.getFachartID(kurs.fach_id, kurs.kursart);
-		const wahlen = props.getDatenmanager().fachwahlGetListeOfFachart(fachart_id).size() || 0;
+		const wahlen = props.getDatenmanager().fachwahlGetListeOfFachart(fachart_id).size();
 		const kdiff = props.getErgebnismanager().getOfFachartKursdifferenz(fachart_id);
 		return [filtered_by_kursart(kurs).value.size(), kdiff, wahlen];
 	});
@@ -924,8 +919,6 @@
 	})
 
 	async function toggleRegelSperreKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		if (!allowRegeln.value)
-			return;
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
 		const update = (props.getDatenmanager().kursGetHatSperrungInSchiene(kurs.id, schiene.id))
 			? props.getErgebnismanager().regelupdateRemove_03_KURS_SPERRE_IN_SCHIENE(SetUtils.create1(kurs.id), SetUtils.create1(s.nummer))
@@ -938,8 +931,6 @@
 	})
 
 	async function toggleRegelFixiereKursInSchiene(kurs: GostBlockungKurs, schiene: GostBlockungsergebnisSchiene) {
-		if (!allowRegeln.value)
-			return;
 		const s = props.getErgebnismanager().getSchieneG(schiene.id);
 		const update = (props.getDatenmanager().kursGetHatFixierungInSchiene(kurs.id, schiene.id))
 			? props.getErgebnismanager().regelupdateRemove_02e_KURS_FIXIERE_IN_EINER_SCHIENE(kurs.id, s.nummer)

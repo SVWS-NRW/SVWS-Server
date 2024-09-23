@@ -1,4 +1,4 @@
-import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, SchuelerListeEintrag, GostKursart, Schueler } from "@core";
+import type { GostBlockungKurs, GostBlockungsdatenManager, GostBlockungsergebnisManager, GostFach, List, GostKursart, Schueler } from "@core";
 import type { Ref } from "vue";
 import { ArrayList, Geschlecht, GostSchriftlichkeit } from "@core";
 import { computed, ref } from "vue";
@@ -69,7 +69,7 @@ export class GostKursplanungSchuelerFilter {
 		const gefiltert: Schueler[] = [];
 		// ... wenn sie definiert sind, dann findet die Filterung statt
 		const pKonfliktTyp = 0 + (this.kollisionen.value ? 1 : 0) + (this.nichtwahlen.value ? 2 : 0)
-		const res = this.ergebnismanager().getOfSchuelerMengeGefiltert(this.kurs?.id || -1, this.fach || -1, this.kursart?.id || -1, pKonfliktTyp, this._name.value);
+		const res = this.ergebnismanager().getOfSchuelerMengeGefiltert(this.kurs?.id ?? -1, this.fach ?? -1, this.kursart?.id ?? -1, pKonfliktTyp, this._name.value);
 		for (const s of res) {
 			const ss = this.datenmanager.schuelerGet(s.id);
 			gefiltert.push(ss);
@@ -79,10 +79,10 @@ export class GostKursplanungSchuelerFilter {
 
 	public statistics = computed(() => {
 		// ... ansonsten bestimme die Statistik aus dem Ergebnis-Manager
-		const kurs = this.kurs?.id || -1;
-		const fach = this.fach || -1;
-		const kursart = this.kursart?.id || -1;
-		const konfliktTyp = 0 + (this.kollisionen.value ? 1:0) + (this.nichtwahlen.value ? 2:0)
+		const kurs = this.kurs?.id ?? -1;
+		const fach = this.fach ?? -1;
+		const kursart = this.kursart?.id ?? -1;
+		const konfliktTyp = 0 + (this.kollisionen.value ? 1 : 0) + (this.nichtwahlen.value ? 2 : 0)
 		return {
 			m: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.M, null),
 			w: this.ergebnismanager().getOfSchuelerAnzahlGefiltert(kurs, fach, kursart, konfliktTyp, '', Geschlecht.W, null),

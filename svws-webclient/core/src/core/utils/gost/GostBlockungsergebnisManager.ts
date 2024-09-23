@@ -4769,7 +4769,6 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungRegelUpdate}-Objekt.
 	 */
 	public regelupdateExecute(update : GostBlockungRegelUpdate) : void {
-		DeveloperNotificationException.ifTrue("Ein RegelUpdate ist nur bei einer Blockungsvorlage erlaubt!", !this._parent.getIstBlockungsVorlage());
 		this._parent.regelRemoveListe(update.listEntfernen);
 		this._parent.regelAddListe(update.listHinzuzufuegen);
 		this.stateRevalidateEverything();
@@ -4984,14 +4983,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungsergebnisKursSchuelerZuordnungUpdate}-Objekt.
 	 */
 	public kursSchuelerUpdateExecute(update : GostBlockungsergebnisKursSchuelerZuordnungUpdate) : void {
-		if (this._parent.getIstBlockungsVorlage())
-			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
 			this.stateSchuelerKursEntfernenOhneRevalidierung(z.idSchueler, z.idKurs);
 		for (const z of update.listHinzuzufuegen)
 			this.stateSchuelerKursHinzufuegenOhneRevalidierung(z.idSchueler, z.idKurs);
-		if (this._parent.getIstBlockungsVorlage())
-			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();
 	}
 
@@ -5062,14 +5059,12 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @param update  Das {@link GostBlockungsergebnisKursSchienenZuordnungUpdate}-Objekt.
 	 */
 	public kursSchienenUpdateExecute(update : GostBlockungsergebnisKursSchienenZuordnungUpdate) : void {
-		if (this._parent.getIstBlockungsVorlage())
-			this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
+		this._parent.regelRemoveListe(update.regelUpdates.listEntfernen);
 		for (const z of update.listEntfernen)
 			this.stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 		for (const z of update.listHinzuzufuegen)
 			this.stateKursSchieneHinzufuegenOhneRegelvalidierung(z.idKurs, z.idSchiene);
-		if (this._parent.getIstBlockungsVorlage())
-			this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
+		this._parent.regelAddListe(update.regelUpdates.listHinzuzufuegen);
 		this.stateRevalidateEverything();
 	}
 

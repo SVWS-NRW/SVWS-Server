@@ -21,14 +21,10 @@
 		<div class="flex gap-4">
 			<div class="text-sm font-bold">Zusatzkräfte:</div>
 			<div class="inline-flex gap-1" :class="{'-mt-1': anzahl_zusatzkraefte}">
-				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer?.kuerzel).join(", ") }}</div>
+				<div v-if="anzahl_zusatzkraefte">{{ [...getDatenmanager().kursGetLehrkraefteSortiert(kurs.id)].map(lehrer => lehrer.kuerzel).join(", ") }}</div>
 				<svws-ui-button :type="anzahl_zusatzkraefte ? 'transparent' : 'secondary'" @click="toggle_zusatzkraefte_modal">
-					<template v-if="anzahl_zusatzkraefte">
-						<span class="icon-sm i-ri-edit-2-line" />
-					</template>
-					<template v-else>
-						Anlegen
-					</template>
+					<template v-if="anzahl_zusatzkraefte"> <span class="icon-sm i-ri-edit-2-line" /> </template>
+					<template v-else> Anlegen </template>
 				</svws-ui-button>
 			</div>
 		</div>
@@ -39,8 +35,8 @@
 
 	import { computed, ref } from 'vue';
 	import type { ComponentExposed } from "vue-component-type-helpers";
-	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer , LehrerListeEintrag } from "@core";
-	import { ArrayList } from "@core";
+	import type { List, GostBlockungKurs, GostBlockungsdatenManager, GostBlockungKursLehrer } from "@core";
+	import { LehrerListeEintrag, ArrayList } from "@core";
 	import { lehrer_filter } from "~/utils/helfer";
 	import { SvwsUiSelect } from "@ui";
 
@@ -58,12 +54,10 @@
 	const selected = ref<GostBlockungKursLehrer[]>([]);
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<LehrerListeEintrag>>>();
 
-	const neueLehrkraft = computed({
-		get(): LehrerListeEintrag | undefined | null {
-			return undefined;
-		},
-		set(lehrer: LehrerListeEintrag | undefined | null) {
-			if (lehrer && !props.getDatenmanager().kursGetLehrkraftMitIDExists(props.kurs.id, lehrer.id) && select.value) {
+	const neueLehrkraft = computed<LehrerListeEintrag | undefined | null>({
+		get: () => undefined,
+		set: (lehrer) => {
+			if ((lehrer instanceof LehrerListeEintrag) && !props.getDatenmanager().kursGetLehrkraftMitIDExists(props.kurs.id, lehrer.id) && (select.value !== undefined)) {
 				void props.addKursLehrer(props.kurs.id, lehrer.id);
 				void props.addLehrerRegel();
 				select.value.reset();
@@ -75,6 +69,7 @@
 		{ key: "kuerzel", label: "Lehrkraft", span: 1 },
 		{ key: "nachname", label: "", span: 3 },
 	];
+
 	const kursbezeichnung = computed<string>(() => props.getDatenmanager().kursGetName(props.kurs.id));
 
 	function toggle_zusatzkraefte_modal() {
@@ -87,17 +82,12 @@
 		selected.value = [];
 	}
 
-	const anzahl_zusatzkraefte = computed(() => {
-		const nr = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id).size();
-		return nr ? `${nr}` : ""
-	});
+	const anzahl_zusatzkraefte = computed(() => props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id).size());
 
 	const kurslehrer = computed<List<LehrerListeEintrag>>(() => {
 		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
 		const tmp = new ArrayList<GostBlockungKursLehrer>(liste);
-		tmp.sort({ compare(a : GostBlockungKursLehrer, b : GostBlockungKursLehrer) {
-			return a.reihenfolge - b.reihenfolge;
-		}});
+		tmp.sort({ compare: (a, b) => a.reihenfolge - b.reihenfolge });
 		const result = new ArrayList<LehrerListeEintrag>();
 		for (const l of tmp) {
 			const lehrer = props.mapLehrer.get(l.id);

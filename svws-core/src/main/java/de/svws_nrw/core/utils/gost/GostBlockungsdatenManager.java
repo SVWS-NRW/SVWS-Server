@@ -905,7 +905,7 @@ public class GostBlockungsdatenManager {
 		DeveloperNotificationException.ifListAddsDuplicate("_kurse_sortiert_kursart_fach_kursnummer", _list_kurse_sortiert_kursart_fach_kursnummer, kurs);
 		final List<GostBlockungKurs> liste = Map2DUtils.getOrCreateArrayList(_map2d_idFach_idKursart_kurse, kurs.fach_id, kurs.kursart);
 		liste.add(kurs);
-		liste.sort(_compKursnummer);
+		liste.sort(GostBlockungsdatenManager._compKursnummer);
 		_daten.kurse.add(kurs);
 	}
 
@@ -968,7 +968,7 @@ public class GostBlockungsdatenManager {
 	public @NotNull String kursGetName(final long idKurs) throws DeveloperNotificationException {
 		final @NotNull GostBlockungKurs kurs = kursGet(idKurs);
 		final @NotNull GostFach gFach = _faecherManager.getOrException(kurs.fach_id);
-		final @NotNull String sSuffix = kurs.suffix.equals("") ? "" : ("-" + kurs.suffix);
+		final @NotNull String sSuffix = "".equals(kurs.suffix) ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix;
 	}
 
@@ -1062,7 +1062,7 @@ public class GostBlockungsdatenManager {
 		final List<GostBlockungKurs> liste = _map2d_idFach_idKursart_kurse.getOrNull(idFach, idKursart);
 		if (liste == null)
 			return new ArrayList<>();
-		liste.sort(_compKursnummer);
+		liste.sort(GostBlockungsdatenManager._compKursnummer);
 		return liste;
 	}
 
@@ -1348,9 +1348,9 @@ public class GostBlockungsdatenManager {
 			} else {
 				// Die Ziel-Regel gibt es nicht, deswegen ...
 				// Die Quell-Regel mit der ID überschrieben.
-				_map_multikey_regeln.remove(regelToMultikey(regelKursDelete));
+				_map_multikey_regeln.remove(GostBlockungsdatenManager.regelToMultikey(regelKursDelete));
 				regelKursDelete.parameter.set(0, idKursID1keep);
-				_map_multikey_regeln.put(regelToMultikey(regelKursDelete), regelKursDelete);
+				_map_multikey_regeln.put(GostBlockungsdatenManager.regelToMultikey(regelKursDelete), regelKursDelete);
 			}
 		}
 
@@ -1396,7 +1396,7 @@ public class GostBlockungsdatenManager {
 		}
 		// Hinzufügen
 		listOfLehrer.add(neueLehrkraft);
-		listOfLehrer.sort(_compLehrkraefte);
+		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
 	}
 
 	/**
@@ -1500,7 +1500,7 @@ public class GostBlockungsdatenManager {
 			schieneAddOhneSortierung(schiene);
 
 		// Sortieren der Schienenmenge.
-		_daten.schienen.sort(_compSchiene);
+		_daten.schienen.sort(GostBlockungsdatenManager._compSchiene);
 	}
 
 	/**
@@ -1659,7 +1659,7 @@ public class GostBlockungsdatenManager {
 				typ == GostKursblockungRegelTyp.UNDEFINIERT);
 
 		// Existiert bereits exakt die selbe Regel?
-		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
+		final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(regel);
 		if (_map_multikey_regeln.containsKey(multikey)) {
 			final @NotNull StringBuilder sb = new StringBuilder();
 			sb.append(toStringRegel(regel.id) + " existiert bereits mit den Parametern: ");
@@ -1669,7 +1669,7 @@ public class GostBlockungsdatenManager {
 	}
 
 	private void regelAddOhneSortierung(final @NotNull GostBlockungRegel regel) throws DeveloperNotificationException {
-		final @NotNull LongArrayKey multikey = regelToMultikey(regel);
+		final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(regel);
 		final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		DeveloperNotificationException.ifMapPutOverwrites(_map_idRegel_regel, regel.id, regel);
 		MapUtils.getOrCreateArrayList(_map_regeltyp_regeln, typ).add(regel);
@@ -1874,7 +1874,7 @@ public class GostBlockungsdatenManager {
 
 	/**
 	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
-	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 * Kriterium: Die Regel muss existieren.
 	 *
 	 * @param  idRegel Die Datenbank-ID der Regel.
 	 *
@@ -1882,7 +1882,7 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 */
 	public boolean regelGetIsRemoveAllowed(final long idRegel) throws DeveloperNotificationException {
-		return _map_idRegel_regel.containsKey(idRegel) && getIstBlockungsVorlage();
+		return _map_idRegel_regel.containsKey(idRegel);
 	}
 
 	private GostBlockungRegel regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(final long idKurs) {
@@ -1895,14 +1895,12 @@ public class GostBlockungsdatenManager {
 
 	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
-	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
 	 *
 	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
 	 *
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
-	public void regelRemoveByID(final long idRegel) throws DeveloperNotificationException, UserNotificationException {
+	public void regelRemoveByID(final long idRegel) throws DeveloperNotificationException {
 		regelRemoveListeByIDs(SetUtils.create1(idRegel));
 	}
 
@@ -1931,8 +1929,6 @@ public class GostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
 	 */
 	public void regelRemoveListeByIDs(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
-		UserNotificationException.ifTrue("Ein Löschen von Regeln ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
-
 		// Überprüfen
 		for (final long idRegel : regelmenge) {
 			final @NotNull GostBlockungRegel regel = this.regelGet(idRegel);
@@ -1944,7 +1940,7 @@ public class GostBlockungsdatenManager {
 		for (final long idRegel : regelmenge) {
 			final @NotNull GostBlockungRegel regel = this.regelGet(idRegel);
 			final @NotNull GostKursblockungRegelTyp typ = GostKursblockungRegelTyp.fromTyp(regel.typ);
-			final @NotNull LongArrayKey multikey = regelToMultikey(regel);
+			final @NotNull LongArrayKey multikey = GostBlockungsdatenManager.regelToMultikey(regel);
 
 			// Löschen aus den Datenstrukturen
 			_map_idRegel_regel.remove(idRegel);

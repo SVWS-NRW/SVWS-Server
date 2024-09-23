@@ -273,7 +273,7 @@
 
 	const schueler = computed<List<Schueler>>(() => props.getDatenmanager().schuelerGetListe());
 
-	const disabled = computed<boolean>(() => !props.hatUpdateKompetenz || (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1));
+	const disabled = computed<boolean>(() => !props.hatUpdateKompetenz);
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
@@ -574,7 +574,7 @@
 		const fach = props.getDatenmanager().faecherManager().getOrException(kurs.fach_id);
 		const kuerzel = fach.kuerzelAnzeige ?? "??";
 		const kursart = (kurs.kursart > 0) ? GostKursart.fromID(kurs.kursart).kuerzel : 'kursart-fehlt';
-		const suffix = kurs.suffix ? "-" + kurs.suffix : "";
+		const suffix = (kurs.suffix.length > 0) ? "-" + kurs.suffix : "";
 		return `${kuerzel}-${kursart}${kurs.nummer.toString()}${suffix}`
 	}
 

@@ -116,7 +116,7 @@
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
 						<template v-if="fixierRegeln.get(s.id) === undefined">
-							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined)) && allowRegeln" />
+							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" />
 						</template>
 						<template v-else>
 							<template v-if="fach !== undefined">
@@ -196,8 +196,6 @@
 
 	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
-	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
-
 	const fach = computed<GostFach|undefined>({
 		get: () => {
 			for (const fach of props.faecherManager.faecher())
@@ -239,17 +237,16 @@
 		if ((fach.value === undefined) && (kurs === undefined))
 			return undefined;
 		let idFach : number;
-		if (fach.value !== undefined) {
+		if (fach.value !== undefined)
 			idFach = fach.value.id;
-		} else if (kurs !== undefined) {
+		else if (kurs !== undefined)
 			idFach = kurs.fach_id;
-		} else
+		else
 			return undefined;
 		if (!props.getErgebnismanager().getParent().schuelerGetHatFach(id, idFach))
 			return undefined;
 		return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, idFach).istSchriftlich ? 's':'m';
 	}
-
 
 	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [
@@ -264,7 +261,7 @@
 		return cols;
 	})
 
-	const fixierRegeln = computed(()=>{
+	const fixierRegeln = computed(() => {
 		const regeln = props.getDatenmanager().regelGetListe();
 		const map = new Map<number, Set<number>>();
 		for (const r of regeln)
@@ -312,7 +309,7 @@
 	}
 
 	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number, event: Event) {
-		if (fachID === undefined || !allowRegeln.value)
+		if (fachID === undefined)
 			return;
 		event.stopPropagation();
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID);

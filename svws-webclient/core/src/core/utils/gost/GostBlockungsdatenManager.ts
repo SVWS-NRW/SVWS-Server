@@ -956,7 +956,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kursGetName(idKurs : number) : string {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		const sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
+		const sSuffix : string = JavaObject.equalsTranspiler("", (kurs.suffix)) ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
 	}
 
@@ -1772,7 +1772,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
-	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 * Kriterium: Die Regel muss existieren.
 	 *
 	 * @param  idRegel Die Datenbank-ID der Regel.
 	 *
@@ -1780,7 +1780,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 */
 	public regelGetIsRemoveAllowed(idRegel : number) : boolean {
-		return this._map_idRegel_regel.containsKey(idRegel) && this.getIstBlockungsVorlage();
+		return this._map_idRegel_regel.containsKey(idRegel);
 	}
 
 	private regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number) : GostBlockungRegel | null {
@@ -1792,12 +1792,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
-	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
 	 *
 	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
 	 *
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public regelRemoveByID(idRegel : number) : void {
 		this.regelRemoveListeByIDs(SetUtils.create1(idRegel));
@@ -1825,7 +1823,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
 	 */
 	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
-		UserNotificationException.ifTrue("Ein Löschen von Regeln ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		for (const idRegel of regelmenge) {
 			const regel : GostBlockungRegel = this.regelGet(idRegel);
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);

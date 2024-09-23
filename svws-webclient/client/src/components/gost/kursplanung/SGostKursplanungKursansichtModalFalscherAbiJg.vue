@@ -1,7 +1,7 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="small" class="hidden">
-		<template #modalTitle>Ungültige Abiturjahrgänge für das Abitujahr {{ getErgebnismanager().getParent().daten().abijahrgang }}</template>
+		<template #modalTitle>Ungültige Abiturjahrgänge für das Abiturjahr {{ getErgebnismanager().getParent().daten().abijahrgang }}</template>
 		<template #modalDescription>
 			Sollen folgende Schüler mit einem falschen Abiturjahrgang aus ihren Kursen entfernt werden?
 			<svws-ui-table selectable v-model="selected" :items="getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang()" disable-footer :columns="[{key: 'id', label: 'Schüler',}, {key: 'abschlussjahrgang', label: 'Abiturjahr'}]">

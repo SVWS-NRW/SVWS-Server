@@ -104,7 +104,7 @@
 											class="opacity-75 text-sm">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
-										<template v-if="(allow_regeln && fach_gewaehlt(kurs))">
+										<template v-if="fach_gewaehlt(kurs)">
 											<span class="cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
 												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
 												<span class="icon i-ri-prohibited-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
@@ -163,8 +163,6 @@
 	});
 
 	const dragAndDropData = ref<DndData | undefined>(undefined);
-
-	const allow_regeln = computed<boolean>(() => hatUpdateKompetenz.value && (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
 
 	const leereZellen = (id: number) => computed<number>(() => {
 		const diff = props.getErgebnismanager().getOfSchieneMaxKursanzahl() - props.getErgebnismanager().getOfSchieneKursmengeSortiert(id).size();

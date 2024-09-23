@@ -84,7 +84,7 @@
 		const list: List<GostBlockungRegel> = new ArrayList();
 		if (props.nurRegelverletzungen) {
 			for (const r of props.getDatenmanager().regelGetListeOfTyp(props.regelTyp))
-				if (verletzungen.value.get(r.id))
+				if (verletzungen.value.get(r.id) !== null)
 					list.add(r);
 			return list;
 		}

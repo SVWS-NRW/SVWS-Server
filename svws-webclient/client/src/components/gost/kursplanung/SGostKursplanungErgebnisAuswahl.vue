@@ -61,7 +61,7 @@
 					<div class="ml-auto inline-flex">
 						<template v-if="hatUpdateKompetenz">
 							<template v-if="auswahlErgebnis === ergebnis">
-								<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || getErgebnisse().size() <= 1" class="text-black dark:text-white">
+								<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || (getErgebnisse().size() <= 1)" class="text-black dark:text-white">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</template>
@@ -81,9 +81,9 @@
 				</div>
 			</template>
 			<template #actions v-if="selected_ergebnisse.length && hatUpdateKompetenz">
-				<svws-ui-button @click="remove_ergebnisse" type="transparent" :disabled="getErgebnisse().size() === 0 || selected_ergebnisse.length >= getErgebnisse().size() || selected_ergebnisse.length === 0" class="text-error">
+				<svws-ui-button @click="remove_ergebnisse" type="transparent" :disabled="(getErgebnisse().size() === 0) || (selected_ergebnisse.length >= getErgebnisse().size()) || (selected_ergebnisse.length === 0)" class="text-error">
 					<span class="icon-sm icon-error i-ri-delete-bin-line" />
-					<span>{{ selected_ergebnisse.length }} {{ selected_ergebnisse.length > 1 ? 'Ergebnisse' : 'Ergebnis' }} löschen</span>
+					<span>{{ selected_ergebnisse.length }} {{ (selected_ergebnisse.length > 1) ? 'Ergebnisse' : 'Ergebnis' }} löschen</span>
 				</svws-ui-button>
 			</template>
 		</svws-ui-table>
@@ -133,7 +133,7 @@
 	}
 
 	function bgColor(code: number): string {
-		return `hsl(${Math.round((1 - (code || 0)) * 120)},100%,75%)`
+		return `hsl(${Math.round((1 - code) * 120)},100%,75%)`
 	}
 
 </script>

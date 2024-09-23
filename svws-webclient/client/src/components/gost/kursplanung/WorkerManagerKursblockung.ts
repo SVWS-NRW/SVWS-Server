@@ -238,7 +238,7 @@ export class WorkerManagerKursblockung {
 		this.running.value = false;
 		this.initialized.value = false;
 		for (let i = 0; i < this.worker.length; i++) {
-			if (this.worker[i]) {
+			if (this.worker[i] instanceof Worker) {
 				this.worker[i].onmessage = null;
 				this.worker[i].terminate();
 			}

@@ -1,6 +1,6 @@
 <template>
 	<slot :open-modal="openModal" />
-	<svws-ui-modal :show="showModal" size="small" class="hidden" :type="`${hatUngueltigeKurszuordnungen ? 'danger' : 'default'}`">
+	<svws-ui-modal :show="showModal" size="small" class="hidden" :type="hatUngueltigeKurszuordnungen ? 'danger' : 'default'">
 		<template #modalTitle>Blockungsergebnis {{ hatUngueltigeKurszuordnungen ? 'trotzdem':'' }} übertragen</template>
 		<template #modalDescription>
 			Soll {{ blockungsname }} übertragen werden{{ hatUngueltigeKurszuordnungen ? ', obwohl ungültige Kurszuordnungen vorliegen':'' }}?

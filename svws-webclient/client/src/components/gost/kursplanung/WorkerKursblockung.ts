@@ -35,7 +35,7 @@ class WorkerKursblockung {
 	 * @param blockungsdaten   die Blockungsdaten
 	 */
 	public init(faecher: List<GostFach>, blockungsdaten: GostBlockungsdaten) {
-		const faecherManager = new GostFaecherManager(faecher);
+		const faecherManager = new GostFaecherManager(blockungsdaten.abijahrgang - 1);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, faecherManager)
 		this.algo = new KursblockungAlgorithmusPermanent(datenmanager);
 	}

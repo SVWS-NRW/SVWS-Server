@@ -55,7 +55,7 @@
 							</svws-ui-button>
 						</s-gost-kursplanung-kursansicht-modal-falscher-abi-jg>
 						<s-gost-kursplanung-schueler-auswahl-umkursen-modal v-slot="{ openModal }"
-							:get-datenmanager :get-ergebnismanager :update-kurs-schueler-zuordnungen :regeln-update :allow-regeln
+							:get-datenmanager :get-ergebnismanager :update-kurs-schueler-zuordnungen :regeln-update
 							:schueler-filter :api-status :fixierte-verschieben :set-fixierte-verschieben :in-zielkurs-fixieren :set-in-zielkurs-fixieren>
 							<svws-ui-button size="small" type="transparent" @click="openModal">
 								<span class="icon-sm i-ri-group-line" /> Schülerzuordnung
@@ -64,10 +64,10 @@
 						<svws-ui-button-select type="transparent" :dropdown-actions="actionsKursSchuelerzuordnung" :default-action="{ text: 'Kurse leeren ...', action: async () => {}, default: true }">
 							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-delete-bin-line" v-else /> </template>
 						</svws-ui-button-select>
-						<template v-if="allowRegeln">
-							<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln">
-								<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-pushpin-line" v-else /> </template>
-							</svws-ui-button-select>
+						<svws-ui-button-select type="transparent" :dropdown-actions="actionsRegeln">
+							<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon-sm i-ri-pushpin-line" v-else /> </template>
+						</svws-ui-button-select>
+						<template v-if="istVorlage">
 							<svws-ui-button @click="removeKurse(getKursauswahl())" :disabled="getKursauswahl().size() < 1" :class="getKursauswahl().size() < 1 ? 'opacity-50' : 'text-error'" size="small" type="transparent" title="Kurse aus Auswahl löschen">
 								<span class="icon-sm i-ri-delete-bin-line" /> Entfernen
 							</svws-ui-button>
@@ -86,7 +86,7 @@
 							</div>
 						</template>
 					</div>
-					<div v-if="(regelzahl) || (allowRegeln)" class="flex gap-0.5 items-center leading-none">
+					<div class="flex gap-0.5 items-center leading-none">
 						<div class="border-l border-black/10 dark:border-white/10 ml-6 h-5 w-7" />
 						<div class="text-button font-normal mr-1 -mt-px">Regeln:</div>
 						<svws-ui-button @click="onToggle" size="small" type="transparent" title="Alle Regeln anzeigen" :class="{'mr-2': regelzahl}">
@@ -104,7 +104,7 @@
 			<router-view name="gost_kursplanung_schueler_auswahl" />
 			<router-view />
 			<Teleport to="body">
-				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed && !(regelzahl < 1 && getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() > 1)">
+				<aside class="app-layout--aside max-w-2xl h-auto" v-if="!collapsed">
 					<div class="app-layout--aside-container relative h-auto max-h-full">
 						<h2 class="text-headline-md flex justify-between">
 							<span>Regeln zur Blockung</span>
@@ -156,7 +156,7 @@
 	const collapsed = ref<boolean>(true);
 	const regelzahl = computed<number>(() => props.hatBlockung ? props.getDatenmanager().regelGetAnzahl() : 0);
 	const blockungsname = computed<string>(() => props.getDatenmanager().daten().name);
-	const allowRegeln = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
+	const istVorlage = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
 	const vergangenheit = computed<boolean>(() => {
 		const jgdaten = props.jahrgangsdaten();
 		if (jgdaten.istAbgeschlossen)

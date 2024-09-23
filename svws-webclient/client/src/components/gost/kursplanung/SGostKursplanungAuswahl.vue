@@ -1,16 +1,16 @@
 <template>
 	<template v-if="visible">
 		<svws-ui-table clickable :clicked="halbjahr" @update:clicked="select_hj" :columns="[{ key: 'kuerzel', label: 'Halbjahr' }]" :items="GostHalbjahr.values()">
-			<template #cell(kuerzel)="{ rowData: halbjahr }">
+			<template #cell(kuerzel)="{ rowData: gostHalbjahr }">
 				<div class="flex justify-between w-full pr-1">
-					<span>{{ halbjahr.kuerzel }}</span>
+					<span>{{ gostHalbjahr.kuerzel }}</span>
 					<div v-if="hatUpdateKompetenz" class="flex w-fit gap-1">
-						<s-gost-kursplanung-modal-blockung-revert v-if="istRueckgaengigMoeglich[halbjahr.id]" v-slot="{ openModal }" :revert-blockung>
+						<s-gost-kursplanung-modal-blockung-revert v-if="istRueckgaengigMoeglich[gostHalbjahr.id]" v-slot="{ openModal }" :revert-blockung>
 							<svws-ui-button :disabled="apiStatus.pending" type="transparent" @click="openModal" class="-my-1" title="Die Persistierung der Blockung für dieses Halbjahr rückgängig machen">
 								<span class="icon-sm i-ri-eraser-line -mb-0.5" /> Rückgängig
 							</svws-ui-button>
 						</s-gost-kursplanung-modal-blockung-revert>
-						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(halbjahr)" v-slot="{ openModal }" :restore-blockung>
+						<s-gost-kursplanung-modal-blockung-recover v-if="istBlockungPersistiert(gostHalbjahr)" v-slot="{ openModal }" :restore-blockung>
 							<svws-ui-button :disabled="apiStatus.pending" type="transparent" @click="openModal" class="-my-1" title="Erstelle eine Blockung aus der Persistierung in den Leistungsdaten">
 								<span class="icon-sm i-ri-arrow-turn-back-line -mb-0.5" /> Wiederherstellen
 							</svws-ui-button>
@@ -41,9 +41,8 @@
 				&& props.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)));
 	});
 
-	const istBlockungPersistiert = (row: GostHalbjahr): boolean => {
-		const festgelegt = props.jahrgangsdaten()?.istBlockungFestgelegt[row.id];
-		return festgelegt === true;
+	function istBlockungPersistiert(row: GostHalbjahr): boolean {
+		return props.jahrgangsdaten()?.istBlockungFestgelegt[row.id] === true;
 	}
 
 	const istRueckgaengigMoeglich = computed<boolean[]>(() => {
@@ -61,10 +60,7 @@
 			await props.setHalbjahr(halbjahr);
 	}
 
-	const visible = computed<boolean>(() => {
-		const res = props.jahrgangsdaten()?.abiturjahr;
-		return (res && res > 0) ? true : false;
-	})
+	const visible = computed<boolean>(() => (props.jahrgangsdaten()?.abiturjahr ?? -1) > 0);
 
 </script>
 

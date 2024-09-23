@@ -54,14 +54,14 @@
 				<template #cell(wert3)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip autosize>
-							<template class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
+							<div class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
 								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
 								</template>
 								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
-							</template>
+							</div>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>
@@ -172,12 +172,12 @@
 	}
 
 	async function berechne() {
-		if (workerManager.value !== undefined) {
-			if (!workerManager.value.isInitialized())
-				workerManager.value.init();
-			workerManager.value.interval = 100;
-			workerManager.value.start();
-		}
+		if (workerManager.value === undefined)
+			return;
+		if (!workerManager.value.isInitialized())
+			workerManager.value.init();
+		workerManager.value.interval = 100;
+		workerManager.value.start();
 	}
 
 	async function pause() {
@@ -197,7 +197,7 @@
 	}
 
 	function getBewertungColor(farbcode: number) : string {
-		const h = Math.round((1 - (farbcode || 0)) * 120);
+		const h = Math.round((1 - farbcode) * 120);
 		return `hsl(${h},100%,75%)`;
 	}
 
