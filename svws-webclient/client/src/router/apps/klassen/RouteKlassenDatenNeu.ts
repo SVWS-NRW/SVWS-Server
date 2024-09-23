@@ -29,7 +29,7 @@ export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
 			schulform: api.schulform,
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
-			addKlasse: routeKlassen.data.addKlasse,
+			add: routeKlassen.data.add,
 			gotoEintrag: routeKlassen.data.gotoEintrag,
 		};
 	}

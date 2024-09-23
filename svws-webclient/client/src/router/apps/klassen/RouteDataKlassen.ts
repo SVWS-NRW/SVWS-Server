@@ -265,7 +265,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await this.setEintrag(this.klassenListeManager.liste.get(auswahl_id));
 	}
 
-	addKlasse = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
+	add = async (partialKlasse: Partial<KlassenDaten>): Promise<void> => {
 		const neueKlasse = await api.server.addKlasse({ ...partialKlasse, idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }, api.schema);
 		await this.ladeSchuljahresabschnitt(this.idSchuljahresabschnitt);
 		await this.gotoEintrag(neueKlasse.id);
@@ -273,6 +273,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	gotoEintrag = async (eintragId?: number | null) => {
 		this.klassenListeManager.liste.auswahlClear();
+		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this._state.value.gruppenprozesseEnabled = false;
 		this._state.value.creationModeEnabled = false;
 
@@ -309,7 +310,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			return;
 		}
 
-		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this._state.value.creationModeEnabled = true;
 		this._state.value.gruppenprozesseEnabled = false;
 		this._state.value.oldView = this._state.value.view;
@@ -318,6 +318,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 			await RouteManager.doRoute(routeKlassenDatenNeu.getRoute());
 
 		this._state.value.view = routeKlassenDatenNeu;
+		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this.klassenListeManager.setDaten(null);
 	}
 

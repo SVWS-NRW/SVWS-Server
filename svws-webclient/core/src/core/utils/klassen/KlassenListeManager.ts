@@ -348,6 +348,47 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		return true;
 	}
 
+	/**
+	 * Wenn das Kürzel nicht leer, für den Schuljahresabschnitt einzigartig und zwischen 1 und 15 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel das Kürzel der Klasse
+	 *
+	 * @return <code>true</code> wenn Kürzel der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateKuerzel(kuerzel : string | null) : boolean {
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 15))
+			return false;
+		for (const klasse of this.liste.list())
+			if ((this.auswahlID() !== klasse.id) && JavaObject.equalsTranspiler(klasse.kuerzel, (kuerzel.trim())))
+				return false;
+		return true;
+	}
+
+	/**
+	 * Die Beschreibung ist optional und darf maximal 150 Zeichen lang sein.
+	 *
+	 * @param beschreibung die Beschreibung der Klasse
+	 *
+	 * @return <code>true</code> wenn Beschreibung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateBeschreibung(beschreibung : string | null) : boolean {
+		if (beschreibung === null)
+			return true;
+		return beschreibung.trim().length <= 150;
+	}
+
+	/**
+	 * Der Sortierungsindex darf nicht <code>null</code> sein und muss größer gleich 0 sein.
+	 *
+	 * @param sortierung der Sortierungsindex der Klasse
+	 *
+	 * @return <code>true</code> wenn Sortierung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateSortierung(sortierung : number | null) : boolean {
+		return (sortierung !== null) && (sortierung >= 0);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
 	}

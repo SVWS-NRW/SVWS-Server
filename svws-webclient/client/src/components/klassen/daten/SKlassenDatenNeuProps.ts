@@ -5,6 +5,6 @@ export interface KlassenDatenNeuProps {
 	schulform: Schulform;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
-	addKlasse: (patchObject: Partial<KlassenDaten>) => Promise<void>;
+	add: (patchObject: Partial<KlassenDaten>) => Promise<void>;
 	gotoEintrag: (eintragId?: number | null) => Promise<void>;
 }

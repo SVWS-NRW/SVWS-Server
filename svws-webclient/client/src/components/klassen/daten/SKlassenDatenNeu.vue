@@ -3,8 +3,8 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input focus placeholder="Kürzel" v-model="data.kuerzel" :valid="validateKuerzel" type="text" />
-					<svws-ui-text-input placeholder="Beschreibung" v-model="data.beschreibung" type="text" />
+					<svws-ui-text-input placeholder="Kürzel" :required="true" :max-len="15" :valid="validateKuerzel" v-model="data.kuerzel" type="text" />
+					<svws-ui-text-input placeholder="Beschreibung" :max-len="150" :valid="validateBeschreibung" v-model="data.beschreibung" type="text" />
 					<svws-ui-spacing />
 
 					<svws-ui-select title="Klassen-Jahrgang" v-model="jahrgang" :items="jahrgaenge" :item-text="getSelectTextJahrgang"
@@ -29,7 +29,7 @@
 
 				<div class="mt-7 flex flex-row gap-4 justify-end">
 					<svws-ui-button type="secondary" @click="cancel" :disabled="isLoading">Abbrechen</svws-ui-button>
-					<svws-ui-button @click="add()" :disabled="!isValid || isLoading">
+					<svws-ui-button @click="addKlasse()" :disabled="!isValid || isLoading">
 						Speichern <svws-ui-spinner :spinning="isLoading" />
 					</svws-ui-button>
 				</div>
@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, onMounted } from "vue";
+	import { ref, computed, onMounted, watch } from "vue";
 	import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
 	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList } from "@core";
@@ -66,6 +66,8 @@
 			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.klassenListeManager().getSchuljahr())?.id ?? null
 		};
 	})
+
+	watch(() => data.value, () => validateAll(), { immediate: false, deep: true });
 
 	const parallelitaet = computed<string | null>({
 		get: () => data.value.parallelitaet ?? '---',
@@ -141,28 +143,18 @@
 		await props.gotoEintrag(null);
 	}
 
-	async function add() {
+	async function addKlasse() {
 		if (isLoading.value === true)
 			return;
 		isLoading.value = true;
-		await props.addKlasse(data.value)
+		await props.add(data.value)
 		isLoading.value = false;
 	}
 
-	/**
-	 * Wenn das Kürzel nicht leer, für den Schuljahresabschnitt einzigartig und zwischen 1 und 15 Zeichen lang ist,
-	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
-	 *
-	 * @param value das Kürzel der Klasse
-	 */
-	function validateKuerzel(value: string | null): boolean {
-		isValid.value = (value !== null) && ("" !== value.trim()) && (value.trim().length <= 15);
-		for (const eintrag of props.klassenListeManager().liste.list()) {
-			if ((value === null) || (eintrag.kuerzel === value.trim()))
-				isValid.value = false;
-		}
-		return isValid.value;
-	}
+	const validateKuerzel = (kuerzel: string | null): boolean => props.klassenListeManager().validateKuerzel(kuerzel);
+	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
+
+	const validateAll = () => isValid.value = validateKuerzel(data.value.kuerzel) && validateBeschreibung(data.value.beschreibung);
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen) {
 		return value.daten(schuljahr.value)?.kuerzel + ' - ' + value.daten(schuljahr.value)?.text;

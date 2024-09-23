@@ -20,6 +20,7 @@
 			:class="{ 'input-number--control': !headless, 'input-number--headless': headless, 'input-number--rounded': rounded, }"
 			v-bind="{ ...$attrs }"
 			type="number"
+			inputmode="numeric"
 			:value="data"
 			:disabled="disabled"
 			:required="required"
@@ -36,12 +37,12 @@
 				'input-number--placeholder--required': required,
 			}">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
+			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="!isValid" />
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill" v-if="data === null || data === undefined" />
+						<span class="icon i-ri-alert-fill" v-if="data === null || data === undefined || !isValid" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -49,8 +50,8 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="data && !hideStepper && !disabled" class="svws-input-stepper">
-			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data) || (String($attrs?.min) === '0' && !data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
+		<span v-if="data != null && !hideStepper && !disabled" class="svws-input-stepper">
+			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
 			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
 	</div>
@@ -59,13 +60,14 @@
 
 <script setup lang="ts">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, useId } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, useId, useAttrs } from "vue";
 	import { genId } from "../utils";
 
 	defineOptions({
 		inheritAttrs: false,
 	});
 
+	const attrs = useAttrs();
 	const input = ref<null | HTMLInputElement>(null);
 	const btnPlus = ref<null | HTMLButtonElement>(null);
 	const btnMinus = ref<null | HTMLButtonElement>(null);
@@ -116,8 +118,14 @@
 	watch(() => props.modelValue, (value: number | null) => updateData(value), { immediate: false });
 
 	const isValid = computed(() => {
-		if (props.required && ((data.value === null)))
+		if (props.required && (data.value === null))
 			return false;
+
+		if ((data.value !== null)
+			&& (((attrs.min !== undefined) && (attrs.min !== null) && (data.value < Number(attrs.min)))
+				|| ((attrs.max !== undefined) && (attrs.max !== null) && (data.value > Number(attrs.max)))))
+			return false;
+
 		return props.valid(data.value);
 	})
 

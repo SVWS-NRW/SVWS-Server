@@ -3,58 +3,61 @@
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card title="Allgemein">
 				<template #actions>
-					<svws-ui-checkbox :model-value="data.istSichtbar" :disabled="!hatKompetenzUpdate" @update:model-value="istSichtbar => patch({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
+					<svws-ui-checkbox :model-value="data.istSichtbar" :disabled="!hatKompetenzUpdate" @update:model-value="istSichtbar => patchPartial({ istSichtbar })"> Ist sichtbar </svws-ui-checkbox>
 				</template>
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :model-value="data.kuerzel" @change="kuerzel => patch({ kuerzel })" type="text" />
-					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :model-value="data.beschreibung" @change="beschreibung => patch({ beschreibung: beschreibung ?? '' })" type="text" />
+					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data.kuerzel"
+						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" />
+					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" :valid="validateBeschreibung" :model-value="data.beschreibung"
+						@change="beschreibung => patchPartial({ beschreibung }, validateBeschreibung(beschreibung))" type="text" />
 					<svws-ui-spacing />
 					<svws-ui-select title="Klassen-Jahrgang" :disabled="!hatKompetenzUpdate" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang" :empty-text="() => 'JU - Jahrgangsübergreifend'" removable />
 					<svws-ui-select title="Parallelität" :disabled="!hatKompetenzUpdate" :model-value="data.parallelitaet ?? '---'"
-						@update:model-value="value => patch({ parallelitaet: value === '---' ? null : value })"
+						@update:model-value="value => patchPartial({ parallelitaet: value === '---' ? null : value })"
 						:items="['---','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']" :item-text="p => p" />
 					<!-- TODO Select mit der Liste der Teilstandorte für diese Schule (:disabled="!hatKompetenzUpdate" ) -->
 					<svws-ui-text-input placeholder="Teilstandort" disabled :model-value="data.teilstandort" type="text" />
 					<div class="flex flex-row">
-						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :model-value="data.sortierung" @change="sortierung => (sortierung !== null) && patch({ sortierung })" />
+						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0" :model-value="data.sortierung"
+							@change="sortierung => patchPartial({ sortierung }, validateSortierung(sortierung))" />
 					</div>
 					<svws-ui-spacing />
 					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"
-						@update:model-value="value => patch({ idVorgaengerklasse: value?.id ?? null })"
+						@update:model-value="value => patchPartial({ idVorgaengerklasse: value?.id ?? null })"
 						:items="listeVorgaengerklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Vorgängerklasse" :model-value="data.kuerzelVorgaengerklasse === null ? '&nbsp;' : data.kuerzelVorgaengerklasse" type="text" disabled />
 					<svws-ui-select v-if="!listeFolgeklassen.isEmpty()" title="Folgeklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idFolgeklasse === null ? null : mapKlassenFolgenderAbschnitt().get(data.idFolgeklasse)"
-						@update:model-value="value => patch({ idFolgeklasse: value?.id ?? null })"
+						@update:model-value="value => patchPartial({ idFolgeklasse: value?.id ?? null })"
 						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
 					<svws-ui-spacing />
 					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="Schulgliederung.data().getWertByID(data.idSchulgliederung)"
-						@update:model-value="value => patch({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="schulgliederungen" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<!-- TODO Auswahl der Prüfungsordnungen und :disabled="!hatKompetenzUpdate" -->
 					<svws-ui-text-input placeholder="Prüfungsordnung" disabled :model-value="data.pruefungsordnung" type="text" />
 					<svws-ui-select title="Klassenart" :disabled="!hatKompetenzUpdate" :model-value="Klassenart.data().getWertByID(data.idKlassenart)"
-						@update:model-value="value => patch({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idKlassenart: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="Klassenart.data().getWerteBySchuljahr(schuljahr)" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idAllgemeinbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="AllgemeinbildendOrganisationsformen.data().getWertByID(data.idAllgemeinbildendOrganisationsform)"
-						@update:model-value="value => patch({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idAllgemeinbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="AllgemeinbildendOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idBerufsbildendOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="BerufskollegOrganisationsformen.data().getWertByID(data.idBerufsbildendOrganisationsform)"
-						@update:model-value="value => patch({ idBerufsbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idBerufsbildendOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="BerufskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<svws-ui-select v-if="data.idWeiterbildungOrganisationsform !== null" title="Organisationsform" :disabled="!hatKompetenzUpdate" :model-value="WeiterbildungskollegOrganisationsformen.data().getWertByID(data.idWeiterbildungOrganisationsform)"
-						@update:model-value="value => patch({ idWeiterbildungOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
+						@update:model-value="value => patchPartial({ idWeiterbildungOrganisationsform: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="WeiterbildungskollegOrganisationsformen.values()" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="1">
-					<svws-ui-checkbox :model-value="data.noteneingabeGesperrt" :disabled="!hatKompetenzUpdate" @update:model-value="noteneingabeGesperrt => patch({ noteneingabeGesperrt })"> Noteneingabe gesperrt </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.G" :disabled="!hatKompetenzUpdate" :model-value="data.verwendungAnkreuzkompetenzen" @update:model-value="verwendungAnkreuzkompetenzen => patch({ verwendungAnkreuzkompetenzen })"> In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
-					<svws-ui-checkbox v-if="schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" :model-value="data.beginnSommersemester" @update:model-value="beginnSommersemester => patch({ beginnSommersemester })"> Beginn im Sommersemester </svws-ui-checkbox>
+					<svws-ui-checkbox :model-value="data.noteneingabeGesperrt" :disabled="!hatKompetenzUpdate" @update:model-value="noteneingabeGesperrt => patchPartial({ noteneingabeGesperrt })"> Noteneingabe gesperrt </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schulform === Schulform.G" :disabled="!hatKompetenzUpdate" :model-value="data.verwendungAnkreuzkompetenzen" @update:model-value="verwendungAnkreuzkompetenzen => patchPartial({ verwendungAnkreuzkompetenzen })"> In dieser Klasse werden Ankreuzkompetenzen verwendet </svws-ui-checkbox>
+					<svws-ui-checkbox v-if="schulform === Schulform.WB" :disabled="!hatKompetenzUpdate" :model-value="data.beginnSommersemester" @update:model-value="beginnSommersemester => patchPartial({ beginnSommersemester })"> Beginn im Sommersemester </svws-ui-checkbox>
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
-				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" v-model:clicked="clickedKlassenleitung">
+				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" :clicked="klassenleitungAuswahl" v-model:clicked="klassenleitungClicked">
 					<template #header(linkToLehrer)>
 						<span class="icon i-ri-group-line" />
 					</template>
@@ -75,13 +78,11 @@
 					<template #footer v-if="hatKompetenzUpdate">
 						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
 							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-								<div v-if="clickedKlassenleitung !== null" class="w-6" style="margin-right: 2pt">
+								<div v-if="klassenleitungAuswahl !== null" class="w-6 me-1">
 									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()">
 										<span class="icon i-ri-arrow-up-line" />
 									</svws-ui-button>
-								</div>
-								<div v-if="clickedKlassenleitung !== null" class="w-6" style="margin-right: 2pt">
-									<svws-ui-button v-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge()">
+									<svws-ui-button v-else-if="showPfeilRunter" type="icon" @click="reduziereReihenfolge()">
 										<span class="icon i-ri-arrow-down-line" />
 									</svws-ui-button>
 								</div>
@@ -133,20 +134,15 @@
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const localAuswahlKlassenLeitung = ref(props.klassenListeManager().getAuswahlKlassenLeitung());
-
-	const clickedKlassenleitung = computed<LehrerListeEintrag | null | undefined>({
+	const klassenleitungAuswahl = ref<LehrerListeEintrag | null>(null);
+	const klassenleitungClicked = computed<LehrerListeEintrag | null>({
 		get: () => {
-			localAuswahlKlassenLeitung.value = props.klassenListeManager().getAuswahlKlassenLeitung()
-			return localAuswahlKlassenLeitung.value;
+			klassenleitungAuswahl.value = props.klassenListeManager().getAuswahlKlassenLeitung();
+			return klassenleitungAuswahl.value;
 		},
 		set: (value) => {
-			if (value === undefined){
-				localAuswahlKlassenLeitung.value = null;
-			} else {
-				localAuswahlKlassenLeitung.value = value
-			}
-			props.klassenListeManager().setAuswahlKlassenLeitung(localAuswahlKlassenLeitung.value);
+			klassenleitungAuswahl.value = value;
+			props.klassenListeManager().setAuswahlKlassenLeitung(value);
 		}
 	});
 
@@ -171,41 +167,39 @@
 	);
 
 	const showPfeilHoch = computed<boolean>(() => {
-		if (clickedKlassenleitung.value) {
-			return (listeKlassenlehrer.value.length > 0)
-				&& (clickedKlassenleitung.value.id !== ersteKlassenleitungId.value)
-				&& data.value.klassenLeitungen.contains(clickedKlassenleitung.value.id);
-		} else {
+		if (!klassenleitungClicked.value)
 			return false;
-		}
+
+		return (listeKlassenlehrer.value.length > 0)
+			&& (klassenleitungClicked.value.id !== ersteKlassenleitungId.value)
+			&& data.value.klassenLeitungen.contains(klassenleitungClicked.value.id);
 	});
 
 	const showPfeilRunter = computed<boolean>(() => {
-		if(clickedKlassenleitung.value){
-			return (listeKlassenlehrer.value.length > 0)
-				&& (clickedKlassenleitung.value.id !== letzteKlassenleitungId.value)
-				&& data.value.klassenLeitungen.contains(clickedKlassenleitung.value.id);
-		} else {
-			return false
-		}
+		if (!klassenleitungClicked.value)
+			return false;
+
+		return (listeKlassenlehrer.value.length > 0)
+			&& (klassenleitungClicked.value.id !== letzteKlassenleitungId.value)
+			&& data.value.klassenLeitungen.contains(klassenleitungClicked.value.id);
 	});
 
 	async function removeKlassenleitungHandler(rowData : LehrerListeEintrag) : Promise<void> {
 		await props.removeKlassenleitung(rowData);
-		if ((clickedKlassenleitung.value !== null) && (clickedKlassenleitung.value!.id === rowData.id))
-			clickedKlassenleitung.value = null;
+		if ((klassenleitungClicked.value !== null) && (klassenleitungClicked.value.id === rowData.id))
+			klassenleitungClicked.value = null;
 	}
 
 	async function erhoeheReihenfolge(): Promise<void> {
-		if (!clickedKlassenleitung.value)
+		if (!klassenleitungClicked.value)
 			return;
-		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, true);
+		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, true);
 	}
 
 	async function reduziereReihenfolge() : Promise<void> {
-		if (!clickedKlassenleitung.value)
+		if (!klassenleitungClicked.value)
 			return;
-		await props.updateReihenfolgeKlassenleitung(clickedKlassenleitung.value.id, false);
+		await props.updateReihenfolgeKlassenleitung(klassenleitungClicked.value.id, false);
 	}
 
 	const jahrgang = computed<JahrgangsDaten | null>({
@@ -305,5 +299,14 @@
 		{ key: "vorname", label: "Vorname", span: 1, sortable: true },
 		{ key: "status", label: "Status", sortable: true, span: 0.5 }
 	];
+
+	const validateKuerzel = (kuerzel: string | null): boolean => props.klassenListeManager().validateKuerzel(kuerzel);
+	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
+	const validateSortierung = (sortierung: number | null): boolean => props.klassenListeManager().validateSortierung(sortierung);
+
+	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean): void {
+		if (isValid === undefined || isValid)
+			await props.patch(data);
+	}
 
 </script>

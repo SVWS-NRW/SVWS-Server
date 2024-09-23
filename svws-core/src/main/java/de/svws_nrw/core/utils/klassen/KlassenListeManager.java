@@ -11,6 +11,9 @@ import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
@@ -18,9 +21,6 @@ import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
@@ -354,6 +354,49 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		klassenleitungen.set(posLehrer, lehrerIdNachfolger);
 		klassenleitungen.set(posLehrer + 1, lehrerId);
 		return true;
+	}
+
+	/**
+	 * Wenn das Kürzel nicht leer, für den Schuljahresabschnitt einzigartig und zwischen 1 und 15 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel das Kürzel der Klasse
+	 *
+	 * @return <code>true</code> wenn Kürzel der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateKuerzel(final String kuerzel) {
+		if ((kuerzel == null) || kuerzel.isBlank() || (kuerzel.trim().length() > 15))
+			return false;
+
+		for (final KlassenDaten klasse : this.liste.list())
+			if ((this.auswahlID() != klasse.id) && klasse.kuerzel.equals(kuerzel.trim()))
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Die Beschreibung ist optional und darf maximal 150 Zeichen lang sein.
+	 *
+	 * @param beschreibung die Beschreibung der Klasse
+	 *
+	 * @return <code>true</code> wenn Beschreibung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateBeschreibung(final String beschreibung) {
+		if (beschreibung == null)
+			return true;
+		return beschreibung.trim().length() <= 150;
+	}
+
+	/**
+	 * Der Sortierungsindex darf nicht <code>null</code> sein und muss größer gleich 0 sein.
+	 *
+	 * @param sortierung der Sortierungsindex der Klasse
+	 *
+	 * @return <code>true</code> wenn Sortierung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateSortierung(final Integer sortierung) {
+		return (sortierung != null) && (sortierung >= 0);
 	}
 
 }
