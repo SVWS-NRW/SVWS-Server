@@ -576,7 +576,7 @@ public class APIPrivilegedSchema {
 						}
 						logger.logLn(0, " [OK]");
 
-						final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+						final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 						logger.modifyIndent(2);
 						if (!srcManager.backup.importDB(tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), maxUpdateRevision, false,
 								logger))
@@ -1245,8 +1245,13 @@ public class APIPrivilegedSchema {
 		try {
 			// Bestimme den angemeldeten priviligierten Benutzer ...
 			final Benutzer user = DBBenutzerUtils.getSVWSUser(request, ServerMode.STABLE, BenutzerKompetenz.KEINE);
-			// ... führe das Update aus ...
-			final LogConsumerList log = DBUtilsSchema.updateSchema(user, revision);
+			final LogConsumerList log;
+			try (DBEntityManager conn = user.getEntityManager()) {
+				// ... führe das Update aus ...
+				log = DBUtilsSchema.updateSchema(conn, revision);
+			} catch (final DBException e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler bei der Datenbank-Verbindung: " + e.getMessage());
+			}
 			// ... und gebe den Log zurück
 			return simpleResponse(Status.OK, true, log);
 		} catch (final ApiOperationException aoe) {
@@ -1347,8 +1352,8 @@ public class APIPrivilegedSchema {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			try {
-				// Prüfe zunächst den Status des Schemas mit dem angemeldeten Benutzer
-				final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schema);
+				// Prüfe zunächst den Status des Schemas
+				final DBSchemaStatus status = DBSchemaStatus.read(conn, schema);
 				if (status == null)
 					throw new ApiOperationException(Status.NOT_FOUND,
 							"Ein Schema mit dem Namen %s konnte in den Datenbank nicht gefunden werden.".formatted(schema));
@@ -1367,7 +1372,7 @@ public class APIPrivilegedSchema {
 					// Vergebe die Admin-Rechte an den Benutzer, dies kann notwendig sein, wenn dieser noch keine Rechte auf dem Schema hat
 					DBRootManager.grantAdminRights(conn, kennwort.user, schema);
 				}
-				// Erstelle eine Datenbank-Konfiguration mit dem übergebenen Benutzernamen und dem übergebenen Kennwort. Ist dies möglich, so kann das Schema zu der Datenbank hinzugefügt werden.
+				// Erstelle eine Datenbank-Konfiguration mit dem übergebenen Benutzernamen und dem übergebenen Kennwort. Ist dies möglich, so kann das Schema zu der Konfiguration hinzugefügt werden.
 				final DBConfig dbconfig =
 						new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
 				final Benutzer user2 = Benutzer.create(dbconfig);

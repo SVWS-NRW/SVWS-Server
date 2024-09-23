@@ -80,17 +80,16 @@ public final class DBUtilsSchema {
 
 
 	/**
-	 * Aktualisiert das Schema, mit dem der angebenene Benutzer angemeldet ist auf die angegebene Revision.
+	 * Aktualisiert das Schema bei welchem der angebenene Benutzer angemeldet ist auf die angegebene Revision.
 	 *
-	 * @param user       der angemeldete Benutzer mit der zugehörigen Datenbank-Verbindung
+	 * @param conn       die Datenbank-Verbindung des angemeldeten Benutzers
 	 * @param revision   die Datenbank-Revision, auf die aktualisiert werden soll
 	 *
 	 * @return der Log der Update-Operation
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	@SuppressWarnings("resource")
-	public static LogConsumerList updateSchema(final Benutzer user, final long revision) throws ApiOperationException {
+	public static LogConsumerList updateSchema(final DBEntityManager conn, final long revision) throws ApiOperationException {
 		// Ermittle die Revision, auf die aktualisiert werden soll. Hier wird ggf. eine negative Revision als neueste Revision interpretiert
 		final long max_revision = (SVWSKonfiguration.get().getServerMode() == ServerMode.STABLE)
 				? SchemaRevisionen.maxRevision.revision
@@ -108,17 +107,15 @@ public final class DBUtilsSchema {
 		logger.addConsumer(log);
 		try {
 			if (SVWSKonfiguration.get().isLoggingEnabled())
-				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + user.getEntityManager().getDBSchema() + ".log", true, true));
+				logger.addConsumer(new LogConsumerLogfile("svws_schema_" + conn.getDBSchema() + ".log", true, true));
 		} catch (final IOException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e, "Fehler beim Erstellen einer Log-Datei für das Schema");
-		} catch (final DBException e) {
-			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		}
 
 		// Erzeuge einen Schema-Manager, der die Aktualisierung des DB-Schema durchführt
 		DBSchemaManager manager;
 		try {
-			manager = DBSchemaManager.create(user, true, logger);
+			manager = DBSchemaManager.create(conn, true, logger);
 			if (manager == null)
 				throw new ApiOperationException(Status.FORBIDDEN, "Fehler beim Aufbau der Datenbank-Verbindung.");
 		} catch (final DBException e) {
@@ -133,7 +130,7 @@ public final class DBUtilsSchema {
 					throw new ApiOperationException(Status.BAD_REQUEST);
 
 				// Führe die Aktualisierung durch
-				final boolean success = manager.updater.update(user, rev, false, true);
+				final boolean success = manager.updater.update(conn, rev, false, true);
 				if (!success)
 					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 			}
@@ -165,7 +162,7 @@ public final class DBUtilsSchema {
 		for (final String schemaname : all) {
 			DBSchemaStatus status;
 			try {
-				status = DBSchemaStatus.read(conn.getUser(), schemaname);
+				status = DBSchemaStatus.read(conn, schemaname);
 			} catch (final DBException e) {
 				throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler beim Aufbau der Datenbank-Verbindung.");
 			}
@@ -218,7 +215,7 @@ public final class DBUtilsSchema {
 		if (!setSchemata.contains(schemaname.toLowerCase()))
 			throw new ApiOperationException(Status.FORBIDDEN, "Der Datenbankbenutzer hat keine Zugriffsrechte auf das Schema %s.".formatted(schemaname));
 		try {
-			final DBSchemaStatus status = DBSchemaStatus.read(conn.getUser(), schemaname);
+			final DBSchemaStatus status = DBSchemaStatus.read(conn, schemaname);
 			final DBSchemaVersion version = status.getVersion();
 			if (version == null)
 				throw new ApiOperationException(Status.BAD_REQUEST, "Das Schema %s ist kein gültiges SVWS-Schema".formatted(schemaname));

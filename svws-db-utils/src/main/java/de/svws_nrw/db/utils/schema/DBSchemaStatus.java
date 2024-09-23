@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.schule.SchuleInfo;
 import de.svws_nrw.asd.types.schule.Schulform;
-import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -26,8 +25,8 @@ public final class DBSchemaStatus {
 	/** Der Name des Schemas */
 	final String schemaName;
 
-	/** Der Datenbank-Benutzer, der für das Auslesen des Schema-Status verwendet wird. */
-	final Benutzer user;
+	/** Die Datenbank-Verbindung, die für das Auslesen des Schema-Status verwendet wird. */
+	final DBEntityManager conn;
 
 	/** Die Version des SVWS-Datenbank-Schemas */
 	DBSchemaVersion version;
@@ -46,13 +45,13 @@ public final class DBSchemaStatus {
 	 * Erzeugt ein neues Schema-Status-Objekt, indem mithilfe des übergebenen
 	 * DB-Benutzers z.B. das Information-Schema der Datenbank abgefragt wird.
 	 *
-	 * @param user         der Datenbank-Benutzer für den Zugriff auf die Tabellen
+	 * @param conn         die Datenbank-Verbindung für den Zugriff auf die Tabellen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
 	 *
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private DBSchemaStatus(final Benutzer user, final String schemaName) throws DBException {
-		this.user = user;
+	private DBSchemaStatus(final DBEntityManager conn, final String schemaName) throws DBException {
+		this.conn = conn;
 		this.schemaName = schemaName;
 		update();
 	}
@@ -62,30 +61,30 @@ public final class DBSchemaStatus {
 	 * Liest den Schema-Status mithilfe des übergebenen DB-Benutzers aus. Dabei wird das
 	 * Schema abgefragt, welches dem Benutzer zugeordnet ist
 	 *
-	 * @param user   der Datenbank-Benutzer für den Zugriff auf die Schema-Informationen
+	 * @param conn   die Datenbank-Verbindung mit dem Benutzer für den Zugriff auf die Schema-Informationen
 	 *
 	 * @return der Schema-Status
 	 *
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaStatus read(final Benutzer user) throws DBException {
-		return new DBSchemaStatus(user, user.getConfig().getDBSchema());
+	public static DBSchemaStatus read(final DBEntityManager conn) throws DBException {
+		return new DBSchemaStatus(conn, conn.getUser().getConfig().getDBSchema());
 	}
 
 
 	/**
-	 * Liest den Schema-Status mithilfe des übergebenen DB-Benutzers aus. Dabei wird das
+	 * Liest den Schema-Status mithilfe der übergebenen Datenbank-Verbindung aus. Dabei wird das
 	 * Schema mit dem übergebenen Namen abgefragt.
 	 *
-	 * @param user         der Datenbank-Benutzer für den Zugriff auf die Schema-Informationen
+	 * @param conn         die Datenbank-Verbindung für den Zugriff auf die Schema-Informationen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
 	 *
 	 * @return der Schema-Status
 	 *
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaStatus read(final Benutzer user, final String schemaName) throws DBException {
-		return new DBSchemaStatus(user, schemaName);
+	public static DBSchemaStatus read(final DBEntityManager conn, final String schemaName) throws DBException {
+		return new DBSchemaStatus(conn, schemaName);
 	}
 
 
@@ -125,9 +124,7 @@ public final class DBSchemaStatus {
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	public void update() throws DBException {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			this.update(conn);
-		}
+		this.update(conn);
 	}
 
 
@@ -288,12 +285,10 @@ public final class DBSchemaStatus {
 	public boolean hasColumn(final String tabname, final String colname) throws DBException {
 		if (!hasTable(tabname))
 			return false;
-		try (DBEntityManager conn = user.getEntityManager()) {
-			final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
-			if (spalten == null)
-				return false;
-			return spalten.containsKey(colname.toLowerCase());
-		}
+		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+		if (spalten == null)
+			return false;
+		return spalten.containsKey(colname.toLowerCase());
 	}
 
 
@@ -311,13 +306,10 @@ public final class DBSchemaStatus {
 	public List<String> filterColumns(final String tabname, final List<String> cols) throws DBException {
 		if (!hasTable(tabname))
 			return new ArrayList<>();
-		try (DBEntityManager conn = user.getEntityManager()) {
-			final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
-			if (spalten == null)
-				return new ArrayList<>();
-			return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
-		}
+		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+		if (spalten == null)
+			return new ArrayList<>();
+		return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
 	}
-
 
 }

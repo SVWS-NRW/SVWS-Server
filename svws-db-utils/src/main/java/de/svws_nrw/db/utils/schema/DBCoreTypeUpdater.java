@@ -143,13 +143,12 @@ public class DBCoreTypeUpdater {
 	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
 	public boolean isUptodate() throws DBException {
-		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
-			_status.update(conn);
-			for (final CoreTypeTable entry : tables)
-				if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
-					return false;
-			return true;
-		}
+		final DBEntityManager conn = _schemaManager.getConnection();
+		_status.update(conn);
+		for (final CoreTypeTable entry : tables)
+			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
+				return false;
+		return true;
 	}
 
 

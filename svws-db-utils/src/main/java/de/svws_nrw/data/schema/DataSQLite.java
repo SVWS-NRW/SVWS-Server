@@ -76,7 +76,7 @@ public final class DataSQLite {
 		// Bestimme den Dateinamen für eine temporäre SQLite-Datei
 		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
-			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
+			final DBSchemaManager srcManager = DBSchemaManager.create(conn, true, logger);
 			if (srcManager == null)
 				throw new ApiOperationException(Status.FORBIDDEN);
 
@@ -159,7 +159,7 @@ public final class DataSQLite {
 					}
 					logger.logLn(0, " [OK]");
 
-					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+					final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 					logger.modifyIndent(2);
 					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));

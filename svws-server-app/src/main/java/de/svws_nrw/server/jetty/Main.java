@@ -50,7 +50,7 @@ public class Main {
 		}
 		logger.logLn("Revision veraltet - führe Update aus...");
 		logger.modifyIndent(2);
-		final boolean success = dbManager.updater.update(dbManager.getUser(), -1, devMode, true);
+		final boolean success = dbManager.updater.update(dbManager.getConnection(), -1, devMode, true);
 		logger.modifyIndent(-2);
 		if (logfile != null)
 			logger.removeConsumer(logfile);
@@ -81,13 +81,7 @@ public class Main {
 		logger.logLn("Core-Types veraltet - führe Update aus...");
 		logger.modifyIndent(2);
 
-		boolean success;
-		try {
-			success = dbManager.updater.coreTypes.update(dbManager.getUser(), true, -1);
-		} catch (final DBException e) {
-			success = false;
-			logger.logLn(e.getMessage());
-		}
+		final boolean success = dbManager.updater.coreTypes.update(dbManager.getConnection(), true, -1);
 		logger.modifyIndent(-2);
 		if (logfile != null)
 			logger.removeConsumer(logfile);
@@ -123,7 +117,7 @@ public class Main {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
 					return;
 				}
-				final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
+				final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
 				if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
 					schemaOK = false;
 				if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
