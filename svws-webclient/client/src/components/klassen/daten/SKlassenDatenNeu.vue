@@ -154,7 +154,7 @@
 	const validateKuerzel = (kuerzel: string | null): boolean => props.klassenListeManager().validateKuerzel(kuerzel);
 	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
 
-	const validateAll = () => isValid.value = validateKuerzel(data.value.kuerzel) && validateBeschreibung(data.value.beschreibung);
+	const validateAll = () => isValid.value = (data.value.kuerzel !== undefined) && validateKuerzel(data.value.kuerzel) && (data.value.beschreibung !== undefined) && validateBeschreibung(data.value.beschreibung);
 
 	function getSelectText(value: Klassenart | Schulgliederung | AllgemeinbildendOrganisationsformen) {
 		return value.daten(schuljahr.value)?.kuerzel + ' - ' + value.daten(schuljahr.value)?.text;

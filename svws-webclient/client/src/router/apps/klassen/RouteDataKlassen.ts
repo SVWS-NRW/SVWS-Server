@@ -153,7 +153,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const logMessages = new ArrayList<string | null>();
 		let status = true;
 		for (const response of operationResponses) {
-			if (response.success && response.id) {
+			if (response.success && response.id !== null) {
 				const klasse = this.klassenListeManager.liste.get(response.id);
 				logMessages.add(`Klasse ${klasse?.kuerzel ?? '???'} (ID: ${response.id.toString()}) wurde erfolgreich gelöscht.`);
 				klassenToRemove.add(klasse);

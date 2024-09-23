@@ -9,7 +9,7 @@
 					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data.kuerzel"
 						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" />
 					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" :valid="validateBeschreibung" :model-value="data.beschreibung"
-						@change="beschreibung => patchPartial({ beschreibung }, validateBeschreibung(beschreibung))" type="text" />
+						@change="beschreibung => patchPartial({ beschreibung: beschreibung ?? undefined }, validateBeschreibung(beschreibung))" type="text" />
 					<svws-ui-spacing />
 					<svws-ui-select title="Klassen-Jahrgang" :disabled="!hatKompetenzUpdate" v-model="jahrgang" :items="jahrgaenge" :item-text="textJahrgang" :empty-text="() => 'JU - Jahrgangsübergreifend'" removable />
 					<svws-ui-select title="Parallelität" :disabled="!hatKompetenzUpdate" :model-value="data.parallelitaet ?? '---'"
@@ -19,7 +19,7 @@
 					<svws-ui-text-input placeholder="Teilstandort" disabled :model-value="data.teilstandort" type="text" />
 					<div class="flex flex-row">
 						<svws-ui-input-number placeholder="Sortierung" :disabled="!hatKompetenzUpdate" :required="true" :min="0" :model-value="data.sortierung"
-							@change="sortierung => patchPartial({ sortierung }, validateSortierung(sortierung))" />
+							@change="sortierung => patchPartial({ sortierung: sortierung ?? undefined }, validateSortierung(sortierung))" />
 					</div>
 					<svws-ui-spacing />
 					<svws-ui-select v-if="!listeVorgaengerklassen.isEmpty()" title="Vorgängerklasse" :disabled="!hatKompetenzUpdate" :model-value="data.idVorgaengerklasse === null ? null : mapKlassenVorigerAbschnitt().get(data.idVorgaengerklasse)"
@@ -57,7 +57,7 @@
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
 			<svws-ui-content-card title="Klassenleitung">
-				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" :clicked="klassenleitungAuswahl" v-model:clicked="klassenleitungClicked">
+				<svws-ui-table :columns="columnsKlassenleitungen" :items="listeKlassenlehrer" :clickable="hatKompetenzUpdate" v-model:clicked="klassenleitungClicked">
 					<template #header(linkToLehrer)>
 						<span class="icon i-ri-group-line" />
 					</template>
@@ -69,16 +69,16 @@
 					<template v-if="hatKompetenzUpdate" #cell(aktionen)="{ rowData }">
 						<div style="vertical-align: center; display: flex;">
 							<div class="w-6">
-								<svws-ui-button  type="icon" @click.stop="removeKlassenleitungHandler(rowData)">
+								<svws-ui-button type="icon" @click.stop="removeKlassenleitungHandler(rowData)">
 									<span class="icon i-ri-delete-bin-line" />
 								</svws-ui-button>
 							</div>
 						</div>
 					</template>
 					<template #footer v-if="hatKompetenzUpdate">
-						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager="klassenListeManager" :add-klassenleitung="addKlassenleitung">
+						<s-klassen-daten-lehrer-zuweisung-modal v-slot="{openModal}" :klassen-liste-manager :add-klassenleitung>
 							<div style="vertical-align: center; display: flex; float: right; margin-right: 5.7pt">
-								<div v-if="klassenleitungAuswahl !== null" class="w-6 me-1">
+								<div v-if="klassenListeManager().getAuswahlKlassenLeitung() !== null" class="w-6 me-1">
 									<svws-ui-button v-if="showPfeilHoch" type="icon" @click="erhoeheReihenfolge()">
 										<span class="icon i-ri-arrow-up-line" />
 									</svws-ui-button>
@@ -119,7 +119,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed } from "vue";
 	import type { DataTableColumn } from "@ui";
 	import type { KlassenDatenProps } from "./SKlassenDatenProps";
 	import type { LehrerListeEintrag, KlassenDaten, JahrgangsDaten, List } from "@core";
@@ -134,16 +134,9 @@
 	// TODO auch UNTERRICHTSVERTEILUNG_FUNKTIONSBEZOGEN_AENDERN berücksichtigen in Bezug auf Abteilungsleitungen / Koordinationen (API muss dafür noch erweitert werden)
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN));
 
-	const klassenleitungAuswahl = ref<LehrerListeEintrag | null>(null);
 	const klassenleitungClicked = computed<LehrerListeEintrag | null>({
-		get: () => {
-			klassenleitungAuswahl.value = props.klassenListeManager().getAuswahlKlassenLeitung();
-			return klassenleitungAuswahl.value;
-		},
-		set: (value) => {
-			klassenleitungAuswahl.value = value;
-			props.klassenListeManager().setAuswahlKlassenLeitung(value);
-		}
+		get: () => props.klassenListeManager().getAuswahlKlassenLeitung(),
+		set: (value) => props.klassenListeManager().setAuswahlKlassenLeitung(value)
 	});
 
 	const data = computed<KlassenDaten>(() => props.klassenListeManager().daten());
@@ -209,10 +202,9 @@
 
 	const jahrgaenge = computed<List<JahrgangsDaten>>(() => {
 		const result = new ArrayList<JahrgangsDaten>();
-		for (const jg of props.klassenListeManager().jahrgaenge.list()) {
+		for (const jg of props.klassenListeManager().jahrgaenge.list())
 			if (jg.kuerzel !== "E3") // Das dritte Jahr der Schuleingangsphase sollte nicht für einen Jahrgang einer Klasse verwendet werden, da es Schüler-spezifisch ist
 				result.add(jg);
-		}
 		return result;
 	});
 
@@ -304,7 +296,7 @@
 	const validateBeschreibung = (beschreibung: string | null): boolean => props.klassenListeManager().validateBeschreibung(beschreibung);
 	const validateSortierung = (sortierung: number | null): boolean => props.klassenListeManager().validateSortierung(sortierung);
 
-	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean): void {
+	async function patchPartial(data: Partial<KlassenDaten>, isValid?: boolean) {
 		if (isValid === undefined || isValid)
 			await props.patch(data);
 	}
