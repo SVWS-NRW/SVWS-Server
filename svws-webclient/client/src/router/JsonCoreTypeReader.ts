@@ -105,6 +105,10 @@ import {
 	ValidatorManager,
 	CoreTypeSimple,
 } from "@core";
+import assert from "assert";
+
+import * as fs from 'fs';
+import path from "path";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -123,15 +127,105 @@ interface JsonCoreTypeDataResult<T> {
 	mapHistorienIDs: HashMap<string, number>;
 }
 
+
 export class JsonCoreTypeReader {
 
 	private readonly api: BaseApi;
 
+	private readonly pathPrefix : string = "./../../../../svws-asd/src/main/resources/de/svws_nrw/asd";
+
 	public constructor(url: string) {
 		this.api = new BaseApi(url, "", "");
+		this.fillPathMap();
 	}
 
 	mapCoreTypNameJsonData = new HashMap<string, string>();
+	mapCoreTypNameJsonPath = new HashMap<string, string>();
+
+	private buildPath(suffixPathToJason : string) : string {
+		const pathToJson = path.resolve(__dirname, this.pathPrefix + suffixPathToJason);
+
+		// teste ob der Pfad legal ist
+		if (!fs.existsSync(pathToJson)){
+			throw new DeveloperNotificationException(`Illegaler Pfad für Core Type: "${pathToJson}"`);
+		};
+		return pathToJson
+	}
+
+	private fillPathMap() {
+		this.mapCoreTypNameJsonPath.put("Schulform", this.buildPath("/types/schule/Schulform.json"));
+		this.mapCoreTypNameJsonPath.put("BerufskollegAnlage", this.buildPath("/types/schule/BerufskollegAnlage.json"));
+		this.mapCoreTypNameJsonPath.put("AllgemeinbildendOrganisationsformen", this.buildPath("/types/schule/AllgemeinbildendOrganisationsformen.json"));
+		this.mapCoreTypNameJsonPath.put("BerufskollegOrganisationsformen", this.buildPath("/types/schule/BerufskollegOrganisationsformen.json"));
+		this.mapCoreTypNameJsonPath.put("WeiterbildungskollegOrganisationsformen", this.buildPath("/types/schule/WeiterbildungskollegOrganisationsformen.json"));
+		this.mapCoreTypNameJsonPath.put("SchulabschlussAllgemeinbildend", this.buildPath("/types/schule/SchulabschlussAllgemeinbildend.json"));
+		this.mapCoreTypNameJsonPath.put("SchulabschlussBerufsbildend", this.buildPath("/types/schule/SchulabschlussBerufsbildend.json"));
+		this.mapCoreTypNameJsonPath.put("HerkunftBildungsgang", this.buildPath("/types/schueler/HerkunftBildungsgang.json"));
+		this.mapCoreTypNameJsonPath.put("HerkunftBildungsgangTyp", this.buildPath("/types/schueler/HerkunftBildungsgangTyp.json"));
+		this.mapCoreTypNameJsonPath.put("Jahrgaenge", this.buildPath("/types/jahrgang/Jahrgaenge.json"));
+		this.mapCoreTypNameJsonPath.put("PrimarstufeSchuleingangsphaseBesuchsjahre", this.buildPath("/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json"));
+		this.mapCoreTypNameJsonPath.put("Religion", this.buildPath("/types/schule/Religion.json"));
+		this.mapCoreTypNameJsonPath.put("Kindergartenbesuch", this.buildPath("/types/schule/Kindergartenbesuch.json"));
+		this.mapCoreTypNameJsonPath.put("SchuelerStatus", this.buildPath("/types/schueler/SchuelerStatus.json"));
+		this.mapCoreTypNameJsonPath.put("Note", this.buildPath("/types/Note.json"));
+		this.mapCoreTypNameJsonPath.put("Sprachreferenzniveau", this.buildPath("/types/fach/Sprachreferenzniveau.json"));
+		this.mapCoreTypNameJsonPath.put("BerufskollegBildungsgangTyp", this.buildPath("/types/schule/BerufskollegBildungsgangTyp.json"));
+		this.mapCoreTypNameJsonPath.put("WeiterbildungskollegBildungsgangTyp", this.buildPath("/types/schule/WeiterbildungskollegBildungsgangTyp.json"));
+		this.mapCoreTypNameJsonPath.put("Schulgliederung", this.buildPath("/types/schule/Schulgliederung.json"));
+		this.mapCoreTypNameJsonPath.put("Fachgruppe", this.buildPath("/types/fach/Fachgruppe.json"));
+		this.mapCoreTypNameJsonPath.put("Fach", this.buildPath("/types/fach/Fach.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerAbgangsgrund", this.buildPath("/types/Lehrer/LehrerAbgangsgrund.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerBeschaeftigungsart", this.buildPath("/types/Lehrer/LehrerBeschaeftigungsart.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerEinsatzstatus", this.buildPath("/types/Lehrer/LehrerEinsatzstatus.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerFachrichtung", this.buildPath("/types/Lehrer/LehrerFachrichtung.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerLehrbefaehigung", this.buildPath("/types/Lehrer/LehrerLehrbefaehigung.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerFachrichtungAnerkennung", this.buildPath("/types/Lehrer/LehrerFachrichtungAnerkennung.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerLehramt", this.buildPath("/types/Lehrer/LehrerLehramt.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerLehramtAnerkennung", this.buildPath("/types/Lehrer/LehrerLehramtAnerkennung.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerLehrbefaehigungAnerkennung", this.buildPath("/types/Lehrer/LehrerLehrbefaehigungAnerkennung.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerLeitungsfunktion", this.buildPath("/types/Lehrer/LehrerLeitungsfunktion.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerRechtsverhaeltnis", this.buildPath("/types/Lehrer/LehrerRechtsverhaeltnis.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerZugangsgrund", this.buildPath("/types/Lehrer/LehrerZugangsgrund.json"));
+		this.mapCoreTypNameJsonPath.put("BilingualeSprache", this.buildPath("/types/fach/BilingualeSprache.json"));
+		this.mapCoreTypNameJsonPath.put("KAOABerufsfeld", this.buildPath("/types/kaoa/KAOABerufsfeld.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAMerkmaleOptionsarten", this.buildPath("/types/kaoa/KAOAMerkmaleOptionsarten.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAZusatzmerkmaleOptionsarten", this.buildPath("/types/kaoa/KAOAZusatzmerkmaleOptionsarten.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAEbene4", this.buildPath("/types/kaoa/KAOAEbene4.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAZusatzmerkmal", this.buildPath("/types/kaoa/KAOAZusatzmerkmal.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAAnschlussoptionen", this.buildPath("/types/kaoa/KAOAAnschlussoptionen.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAKategorie", this.buildPath("/types/kaoa/KAOAKategorie.json"));
+		this.mapCoreTypNameJsonPath.put("KAOAMerkmal", this.buildPath("/types/kaoa/KAOAMerkmal.json"));
+		this.mapCoreTypNameJsonPath.put("Klassenart", this.buildPath("/types/klassen/Klassenart.json"));
+		this.mapCoreTypNameJsonPath.put("Uebergangsempfehlung", this.buildPath("/types/schueler/Uebergangsempfehlung.json"));
+		this.mapCoreTypNameJsonPath.put("ZulaessigeKursart", this.buildPath("/types/kurse/ZulaessigeKursart.json"));
+		this.mapCoreTypNameJsonPath.put("Foerderschwerpunkt", this.buildPath("/types/schule/Foerderschwerpunkt.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerAnrechnungsgrund", this.buildPath("/types/Lehrer/LehrerAnrechnungsgrund.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerMehrleistungsarten", this.buildPath("/types/Lehrer/LehrerMehrleistungsarten.json"));
+		this.mapCoreTypNameJsonPath.put("LehrerMinderleistungsarten", this.buildPath("/types/Lehrer/LehrerMinderleistungsarten.json"));
+		this.mapCoreTypNameJsonPath.put("ValidatorenFehlerartKontext", this.buildPath("/validate/ValidatorenFehlerartKontext.json"));
+	}
+
+	private async loadJsonFromFileSystem(coreTypeName : string) {
+
+		if (coreTypeName === "") {
+			throw new DeveloperNotificationException(
+				"Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden"
+			);
+		}
+
+		const jsonFilePath : string | null = this.mapCoreTypNameJsonPath.get(coreTypeName);
+
+		if (jsonFilePath === null) {
+			throw new DeveloperNotificationException(
+				"Kein Pfad für den angegebenen Core-Type gefunden: " + coreTypeName
+			);
+		}
+
+
+		const jsonData = await fs.promises.readFile(jsonFilePath, 'utf-8');
+
+		this.mapCoreTypNameJsonData.put(coreTypeName, jsonData);
+	}
 
 	private async loadJsonFromAPI(coreTypeName: string) {
 		if (coreTypeName === "")
@@ -388,7 +482,6 @@ export class JsonCoreTypeReader {
 		BilingualeSprache.init(manager);
 	}
 
-
 	public readKAOABerufsfeld() {
 		const data = this.read('KAOABerufsfeld', (json) => KAOABerufsfeldKatalogEintrag.transpilerFromJSON(json));
 		const manager = new CoreTypeDataManager<KAOABerufsfeldKatalogEintrag, KAOABerufsfeld>(data.version, KAOABerufsfeld.class, KAOABerufsfeld.values(), data.mapData, data.mapHistorienIDs);
@@ -489,7 +582,67 @@ export class JsonCoreTypeReader {
 		// ValidatorManager.init(data.version, data.mapData);
 	}
 
-	public async loadAll() : Promise<HashMap<string, string>> {
+
+	public async loadAllFromFileSystem() : Promise<HashMap<string, string>> {
+		console.log("Lade die Json Files");
+		await Promise.all([
+			this.loadJsonFromFileSystem("Schulform"),
+			this.loadJsonFromFileSystem("BerufskollegAnlage"),
+			this.loadJsonFromFileSystem("AllgemeinbildendOrganisationsformen"),
+			this.loadJsonFromFileSystem("BerufskollegOrganisationsformen"),
+			this.loadJsonFromFileSystem("WeiterbildungskollegOrganisationsformen"),
+			this.loadJsonFromFileSystem("SchulabschlussAllgemeinbildend"),
+			this.loadJsonFromFileSystem("SchulabschlussBerufsbildend"),
+			this.loadJsonFromFileSystem("HerkunftBildungsgang"),
+			this.loadJsonFromFileSystem("HerkunftBildungsgangTyp"),
+			this.loadJsonFromFileSystem("Jahrgaenge"),
+			this.loadJsonFromFileSystem("PrimarstufeSchuleingangsphaseBesuchsjahre"),
+			this.loadJsonFromFileSystem("Religion"),
+			this.loadJsonFromFileSystem("Kindergartenbesuch"),
+			this.loadJsonFromFileSystem("SchuelerStatus"),
+			this.loadJsonFromFileSystem("Note"),
+			this.loadJsonFromFileSystem("Sprachreferenzniveau"),
+			this.loadJsonFromFileSystem("BerufskollegBildungsgangTyp"),
+			this.loadJsonFromFileSystem("WeiterbildungskollegBildungsgangTyp"),
+			this.loadJsonFromFileSystem("Schulgliederung"),
+			this.loadJsonFromFileSystem("Fachgruppe"),
+			this.loadJsonFromFileSystem("Fach"),
+			this.loadJsonFromFileSystem("LehrerAbgangsgrund"),
+			this.loadJsonFromFileSystem("LehrerBeschaeftigungsart"),
+			this.loadJsonFromFileSystem("LehrerEinsatzstatus"),
+			this.loadJsonFromFileSystem("LehrerFachrichtung"),
+			this.loadJsonFromFileSystem("LehrerLehrbefaehigung"),
+			this.loadJsonFromFileSystem("LehrerFachrichtungAnerkennung"),
+			this.loadJsonFromFileSystem("LehrerLehramt"),
+			this.loadJsonFromFileSystem("LehrerLehramtAnerkennung"),
+			this.loadJsonFromFileSystem("LehrerLehrbefaehigungAnerkennung"),
+			this.loadJsonFromFileSystem("LehrerLeitungsfunktion"),
+			this.loadJsonFromFileSystem("LehrerRechtsverhaeltnis"),
+			this.loadJsonFromFileSystem("LehrerZugangsgrund"),
+			this.loadJsonFromFileSystem("BilingualeSprache"),
+			this.loadJsonFromFileSystem("KAOABerufsfeld"),
+			this.loadJsonFromFileSystem("KAOAMerkmaleOptionsarten"),
+			this.loadJsonFromFileSystem("KAOAZusatzmerkmaleOptionsarten"),
+			this.loadJsonFromFileSystem("KAOAEbene4"),
+			this.loadJsonFromFileSystem("KAOAZusatzmerkmal"),
+			this.loadJsonFromFileSystem("KAOAAnschlussoptionen"),
+			this.loadJsonFromFileSystem("KAOAKategorie"),
+			this.loadJsonFromFileSystem("KAOAMerkmal"),
+			this.loadJsonFromFileSystem("Klassenart"),
+			this.loadJsonFromFileSystem("Uebergangsempfehlung"),
+			this.loadJsonFromFileSystem("ZulaessigeKursart"),
+			this.loadJsonFromFileSystem("Foerderschwerpunkt"),
+			this.loadJsonFromFileSystem("LehrerAnrechnungsgrund"),
+			this.loadJsonFromFileSystem("LehrerMehrleistungsarten"),
+			this.loadJsonFromFileSystem("LehrerMinderleistungsarten"),
+			this.loadJsonFromFileSystem("ValidatorenFehlerartKontext"),
+		]);
+
+		return this.mapCoreTypNameJsonData;
+	}
+
+
+	public async loadAllFromAPI() : Promise<HashMap<string, string>> {
 		console.log("Lade die Json Files");
 		await Promise.all([
 			this.loadJsonFromAPI("Schulform"),
