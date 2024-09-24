@@ -95,6 +95,8 @@ public final class ConnectionManager {
 				try (EntityManager em = factory.getNewJPAEntityManager()) {
 					mapFactories.put(config, factory);
 				}
+				Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) erzeugt."
+						.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
 					factory.close();
@@ -162,13 +164,13 @@ public final class ConnectionManager {
 		this.lock();
 		final ConnectionFactory factory = mapFactories.get(config);
 		if (factory == null) {
-			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
+			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Factory für Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
 					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
 			return;
 		}
 		factory.close();
 		mapFactories.remove(config);
-		Logger.global().logLn(LogLevel.INFO, "Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+		Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
 				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 		this.unlock();
 	}

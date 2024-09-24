@@ -24,6 +24,9 @@ import jakarta.validation.constraints.NotNull;
  */
 public class ConnectionFactory {
 
+	/** Das Intervall, nachdem Factories nach einem close aufgeräumt werden, sofern sie nicht zwischenzeitlich neue Verbindungen aufgebaut haben. */
+	private static final long CONNECTION_CLEANUP_INTERVAL = 300000;  // 5 min
+
 	/** Ein Zufallszahlen-Generator */
 	private static final Random random = new Random();
 
@@ -32,6 +35,9 @@ public class ConnectionFactory {
 
 	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz des {@link EntityManagerFactory} */
 	private final @NotNull EntityManagerFactory emf;
+
+	/** Der Zeitpunkt, wann die letzte Verbindung aufgebaut oder geschlossen wurde. */
+	private long tsLastConnection = -1;
 
 	/** Die Menge der offenen Verbindungen bei dieser Factory */
 	private final @NotNull Set<DBEntityManager> connections = new HashSet<>();
@@ -85,6 +91,7 @@ public class ConnectionFactory {
 		ConnectionManager.instance.lock();
 		final DBEntityManager conn = new DBEntityManager(user, this);
 		connections.add(conn);
+		tsLastConnection = System.currentTimeMillis();
 		ConnectionManager.instance.unlock();
 		return conn;
 	}
@@ -97,11 +104,25 @@ public class ConnectionFactory {
 	 */
 	void close(final DBEntityManager conn) {
 		ConnectionManager.instance.lock();
+		tsLastConnection = System.currentTimeMillis();
 		connections.remove(conn);
 		// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
 		if (connections.isEmpty() && !config.equals(SVWSKonfiguration.get().getDBConfig(config.getDBSchema()))) {
-			// TODO schedule for removal but do not remove instantly
-			// ConnectionManager.instance.closeSingle(config);
+			Thread.ofVirtual().start(() -> {
+				try {
+					Thread.sleep(CONNECTION_CLEANUP_INTERVAL);
+				} catch (@SuppressWarnings("unused") final InterruptedException e) {
+					Thread.currentThread().interrupt();
+					return;
+				}
+				// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
+				// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
+				final long now = System.currentTimeMillis();
+				if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
+					return;
+				// Ansonsten muss die Verbindung unterbrochen werdeb...
+				ConnectionManager.instance.closeSingle(config);
+			});
 		}
 		ConnectionManager.instance.unlock();
 	}
