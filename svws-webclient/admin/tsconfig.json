@@ -16,7 +16,7 @@
 		"components.d.ts",
 		"../ui/src/",
 		"../components/src/",
-		"../core/src/**/*.ts",
+		"../core/src/",
 	],
 	"exclude": [
 		"**/*.story.vue",

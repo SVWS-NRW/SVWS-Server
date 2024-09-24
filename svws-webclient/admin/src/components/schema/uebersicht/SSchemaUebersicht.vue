@@ -44,9 +44,9 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
-	import type { DataTableColumn } from "@ui";
 	import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
 	import type { List } from "../../../../../core/src/java/util/List";
+	import type { DataTableColumn } from "../../../../../ui/src/types";
 
 	const props = defineProps<SchemaUebersichtProps>();
 
