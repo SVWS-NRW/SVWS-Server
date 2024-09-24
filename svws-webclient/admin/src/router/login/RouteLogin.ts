@@ -1,14 +1,13 @@
 import { ref } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
-import { ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { api } from "~/router/Api";
 
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
+import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 
 export class RouteLogin extends RouteNode<unknown, any> {
 

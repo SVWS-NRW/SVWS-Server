@@ -1,9 +1,10 @@
-import type { ApiServer, ServerMode, ApiPrivileged } from "@core";
-
 import { ApiConnection } from "~/router/ApiConnection";
 import { ApiStatus } from "~/components/ApiStatus";
 import { version } from '../../version';
 import { githash } from "../../githash";
+import type { ServerMode } from "../../../core/src/core/types/ServerMode";
+import type { ApiServer } from "../../../core/src/api/ApiServer";
+import type { ApiPrivileged } from "../../../core/src/api/ApiPrivileged";
 
 /**
  * Diese Klasse regelt den Zugriff auf die API eines SVWS-Servers bezüglich

@@ -1,12 +1,11 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
 
-import { ServerMode} from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
 import { routerManager } from "~/router/RouteManager";
+import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 
 
 export class RouteError extends RouteNode<unknown, any> {

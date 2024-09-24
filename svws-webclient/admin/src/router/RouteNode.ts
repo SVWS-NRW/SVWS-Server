@@ -3,10 +3,9 @@ import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
 import { useRoute } from "vue-router";
 
-import { ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
+import { ServerMode } from "../../../core/src/core/types/ServerMode";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für

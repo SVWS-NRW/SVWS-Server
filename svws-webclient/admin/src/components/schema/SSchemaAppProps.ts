@@ -1,4 +1,5 @@
-import type { SchemaListeEintrag, SchuleInfo } from "@core";
+import type { SchemaListeEintrag } from "../../../../core/src/core/data/db/SchemaListeEintrag";
+import type { SchuleInfo } from "../../../../core/src/core/data/schule/SchuleInfo";
 import type { AuswahlChildData } from "../AuswahlChildData";
 
 export interface SchemaAppProps {

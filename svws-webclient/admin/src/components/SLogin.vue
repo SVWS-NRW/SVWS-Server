@@ -156,7 +156,7 @@
 
 	.login-container {
 		@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-		background-image: url('/images/placeholder-background.jpg');
+		background-image: url('/images/start-hintergrund.jpg');
 	}
 
 	.modal {

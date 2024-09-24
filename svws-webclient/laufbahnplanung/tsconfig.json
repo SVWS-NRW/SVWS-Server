@@ -3,9 +3,7 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {
-			"~/*": ["./src/*"],
-		}
+		"paths": { "~/*": ["./src/*"] },
 	},
 	"include": [
 		"*.ts",
@@ -13,7 +11,8 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../ui/src/",
-		"../components/src/"
+		"../components/src/",
+		"../core/src/**/*.ts",
 	],
 	"exclude": [
 		"tailwind.config.js",

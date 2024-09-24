@@ -1,8 +1,5 @@
 import { type Ref, ref, shallowRef } from "vue";
 
-import type { BenutzerKennwort , BenutzerListeEintrag, Comparator, List, SchuleInfo, SchulenKatalogEintrag } from "@core";
-import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
@@ -11,6 +8,20 @@ import { routeApp } from "../RouteApp";
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
 import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
+import { SchemaListeEintrag } from "../../../../../core/src/core/data/db/SchemaListeEintrag";
+import type { SchuleInfo } from "../../../../../core/src/core/data/schule/SchuleInfo";
+import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
+import type { List } from "../../../../../core/src/java/util/List";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { BenutzerListeEintrag } from "../../../../../core/src/core/data/benutzer/BenutzerListeEintrag";
+import type { Comparator } from "../../../../../core/src/java/util/Comparator";
+import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import type { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
+import { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
+import { OpenApiError } from "../../../../../core/src/api/OpenApiError";
+import { MigrateBody } from "../../../../../core/src/core/data/db/MigrateBody";
+import { DatenbankVerbindungsdaten } from "../../../../../core/src/core/data/schema/DatenbankVerbindungsdaten";
+import { JavaString } from "../../../../../core/src/java/lang/JavaString";
 
 
 interface RouteStateSchema {

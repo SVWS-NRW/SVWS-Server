@@ -2,8 +2,6 @@ import type { RouteLocationRaw, RouteParams } from "vue-router";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { AppProps } from "~/components/SAppProps";
 
-import { ServerMode } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,6 +15,7 @@ import SApp from "~/components/SApp.vue";
 import { routeSchemagruppe } from "./schemagruppe/RouteSchemagruppe";
 import { routeSchemaNeu } from "./schemaneu/RouteSchemaNeu";
 import { routeConfig } from "./config/RouteConfig";
+import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {

@@ -9,8 +9,9 @@
 
 <script setup lang="ts">
 
-	import type { List, SimpleOperationResponse } from "@core";
 	import { type ShallowRef, ref } from "vue";
+	import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
+	import type { List } from "../../../../../core/src/java/util/List";
 
 	const props = defineProps<{
 		restoreSchema: (formData: FormData) => Promise<SimpleOperationResponse>;

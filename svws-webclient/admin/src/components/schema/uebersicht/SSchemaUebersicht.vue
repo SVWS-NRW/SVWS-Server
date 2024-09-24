@@ -45,7 +45,8 @@
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchemaUebersichtProps } from "./SSchemaUebersichtProps";
 	import type { DataTableColumn } from "@ui";
-	import type { List, SchulenKatalogEintrag } from "@core";
+	import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
+	import type { List } from "../../../../../core/src/java/util/List";
 
 	const props = defineProps<SchemaUebersichtProps>();
 
@@ -74,7 +75,7 @@
 		status.value = undefined;
 	}
 
-	const revisionNotUpToDate = computed<boolean>(()=> {
+	const revisionNotUpToDate = computed<boolean>(() => {
 		const revServer = props.revision;
 		if (eintrag.value === undefined || revServer === null || eintrag.value.revision < 0)
 			return false;
@@ -146,10 +147,10 @@
 		const nr = nrmatch ? nrmatch[0] : undefined;
 		//Teilmatch Name
 		const ort = search.replace(/\d+\s*/, "").trim();
-		if (!nr && !ort) {
+		if ((nr === undefined) && (ort.length === 0)) {
 			return items;
 		}
-		if (!nr) {
+		if (nr === undefined) {
 			return items.filter((item: SchulenKatalogEintrag) => {
 				if (item.Ort !== null) {
 					return item.Ort
@@ -158,16 +159,16 @@
 				}
 				return false;
 			});
-		} else if (!ort) {
+		} else if (ort.length === 0) {
 			return items.filter(item => {
-				if (item.SchulNr) {
+				if (item.SchulNr.length > 0) {
 					return item.SchulNr.includes(nr);
 				}
 				return false;
 			});
 		} else {
 			return items.filter(item => {
-				if (item.SchulNr && item.Ort) {
+				if ((item.SchulNr.length > 0) && (item.Ort !== null)) {
 					return (
 						item.SchulNr.includes(nr) &&
 						item.Ort

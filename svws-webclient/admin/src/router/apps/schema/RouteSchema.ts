@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { routeError } from "~/router/error/RouteError";
@@ -14,6 +12,7 @@ import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
+import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue")

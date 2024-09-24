@@ -40,8 +40,8 @@
 <script setup lang="ts">
 
 	import { ref, shallowRef } from "vue";
-	import type { List } from "@core";
 	import type { SchemaNeuProps } from "./SSchemaNeuProps";
+	import type { List } from "../../../../core/src/java/util/List";
 
 	const props = defineProps<SchemaNeuProps>();
 
