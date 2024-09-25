@@ -37,6 +37,8 @@
 							:klausur-css-classes="calculatCssClassesKlausur"
 							:compact-with-date="terminSelected.value === undefined || terminSelected.value.id !== termin.id"
 							:show-kursklausuren-nachschreiber="true"
+							:goto-kalenderwoche
+							:goto-raumzeit-termin="gotoTermin"
 							:hide-button-raeume-planen="true">
 							<template #main v-if="terminSelected.value === undefined || terminSelected.value.id !== termin.id"><template /></template>
 						</s-gost-klausurplanung-termin>
@@ -62,7 +64,8 @@
 					:zeige-alle-jahrgaenge
 					:setze-raum-zu-schuelerklausuren
 					:get-config-value
-					:set-config-value />
+					:set-config-value
+					:goto-termin />
 			</template>
 		</div>
 	</template>
@@ -70,7 +73,7 @@
 
 <script setup lang="ts">
 	import type { List} from '@core';
-	import { ArrayList, BenutzerKompetenz, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
+	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
 	import { ref, onMounted, computed } from 'vue';
@@ -83,7 +86,7 @@
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
 		await props.setRaumTermin(termin);
-		await props.gotoTermin(termin.id);
+		await props.gotoTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id);
 	}
 
 	const termine = () => props.kMan().terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);

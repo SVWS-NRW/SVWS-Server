@@ -26,4 +26,6 @@ export interface GostKlausurplanungSchienenProps {
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	gotoVorgaben: () => Promise<void>;
+	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

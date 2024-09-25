@@ -97,7 +97,7 @@
 						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
 						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
 						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-						<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(pair.a, pair.b.id ))" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+						<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 					</li>
 				</ul>
 			</svws-ui-content-card>
@@ -126,7 +126,9 @@
 						:klausur-css-classes
 						:patch-klausur
 						:update-klausurblockung
-						:show-schuelerklausuren="true" />
+						:show-schuelerklausuren="true"
+						:goto-kalenderwoche
+						:goto-raumzeit-termin/>
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />
@@ -145,8 +147,6 @@
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungNachschreiber } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber';
 	import type { DataTableColumn } from "@ui";
 
 	const _showModalTerminGrund = ref<boolean>(false);

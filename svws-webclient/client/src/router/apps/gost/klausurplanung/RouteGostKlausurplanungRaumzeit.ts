@@ -64,7 +64,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
-			gotoTermin: routeGostKlausurplanung.data.gotoTermin,
+			gotoTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			kMan: () => routeGostKlausurplanung.data.manager,
 			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
 			loescheKlausurraum: routeGostKlausurplanung.data.loescheKlausurraum,
@@ -78,6 +78,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
 			getConfigValue: routeGostKlausurplanung.data.getConfigValue,
+			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
 		}
 	}
 

@@ -34,13 +34,13 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, undefined, termin.id ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
+									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderwoche( termin )" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<template v-else>
 								<span class="opacity-50 inline-flex items-center gap-1">
 									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
-									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="gotoRaumzeitTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id)" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 								</span>
 							</template>
 						</slot>
@@ -150,10 +150,6 @@
 	import type {DataTableColumn} from "@ui";
 	import {computed} from "vue";
 	import {DateUtils } from "@core";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-	import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
-
 
 	const props = withDefaults(defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -177,6 +173,8 @@
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		inTooltip?: boolean;
+		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		klausurCssClasses: undefined,
 		onDrag: undefined,
@@ -210,7 +208,7 @@
 			return props.termin.bezeichnung;
 		if (!props.termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (kursklausuren().size())
+		if (kursklausuren().size() > 0)
 			return [...props.kMan().kursklausurGetMengeByTermin(props.termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}

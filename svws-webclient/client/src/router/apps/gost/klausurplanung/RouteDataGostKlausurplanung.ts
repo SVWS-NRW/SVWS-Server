@@ -17,6 +17,8 @@ import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanu
 import { routeApp } from "../../RouteApp";
 import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumzeit";
 import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/DownloadPDFTypen";
+import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
+import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -228,16 +230,33 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		}
 	});
 
-	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung) => {
-		await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+	gotoVorgaben = async () => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}
 
-	gotoTermin = async (idtermin: number | undefined) => {
-		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(this.abiturjahr, this.halbjahr.id, idtermin ));
+	gotoSchienen = async () => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+	}
+
+	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung | number | GostKlausurtermin) => {
+		if (kw instanceof GostKlausurtermin)
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(kw.abijahr, kw.halbjahr, undefined, kw.id ))
+		else if (kw instanceof StundenplanKalenderwochenzuordnung)
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+		else
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw, undefined ));
+	}
+
+	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {
+		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(abiturjahr, halbjahr.id, idtermin ));
 	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
 		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
+	}
+
+	gotoNachschreiber = async (abiturjahr: number, halbjahr: GostHalbjahr) => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungNachschreiber.name, params: { abiturjahr, halbjahr: halbjahr.id } });
 	}
 
 	get zeigeAlleJahrgaenge(): boolean {
@@ -474,10 +493,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		this.manager.schuelerklausurterminAdd(skNeu);
 		this.commit();
 		api.status.stop();
-	}
-
-	gotoVorgaben = async () => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}
 
 	getPDF = api.call(async (title: DownloadPDFTypen): Promise<ApiFile> => {

@@ -101,7 +101,9 @@
 						:patch-klausurtermin
 						:klausur-css-classes
 						:create-schuelerklausur-termin
-						:patch-klausur />
+						:patch-klausur
+						:goto-kalenderwoche
+						:goto-raumzeit-termin />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />

@@ -38,6 +38,8 @@
 									:compact="terminSelected.value?.id !== termin.id"
 									:quartalsauswahl
 									:show-last-klausurtermin="true"
+									:goto-kalenderwoche
+									:goto-raumzeit-termin
 									drag-icon>
 									<template #datum><span /></template>
 								</s-gost-klausurplanung-termin>
@@ -48,9 +50,24 @@
 			</svws-ui-content-card>
 			<svws-ui-content-card class="svws-card-stundenplan">
 				<template v-if="kalenderwoche.value">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
-						:manager="() => kMan().getStundenplanManager()" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
-						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge :kursklausur-mouse-over="() => kursklausurMouseOver">
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
+						:id="33"
+						:kalenderwoche
+						:jahrgangsdaten
+						:halbjahr
+						:manager="() => kMan().getStundenplanManager()"
+						:k-man
+						:wochentyp="() => 0"
+						:kurse-gefiltert
+						:sum-schreiber
+						:on-drop
+						:on-drag
+						:drag-data="() => terminSelected.value"
+						:check-drop-zone-zeitraster
+						:zeige-alle-jahrgaenge
+						:goto-kalenderwoche
+						:goto-raumzeit-termin
+						:kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
 								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kalenderwoche.value || !kMan().getStundenplanManager().kalenderwochenzuordnungGetPrevOrNull(kalenderwoche.value)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>

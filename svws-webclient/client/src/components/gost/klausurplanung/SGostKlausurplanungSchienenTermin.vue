@@ -16,6 +16,8 @@
 			:klausur-css-classes
 			:show-schuelerklausuren
 			:patch-klausur
+			:goto-kalenderwoche
+			:goto-raumzeit-termin
 			:create-schuelerklausur-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
@@ -45,7 +47,7 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurenCollectionSkrsKrsData} from "@core";
+	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData} from "@core";
 	import { BenutzerKompetenz} from "@core";
 	import { type GostKlausurplanManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
@@ -65,6 +67,8 @@
 		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
+		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,

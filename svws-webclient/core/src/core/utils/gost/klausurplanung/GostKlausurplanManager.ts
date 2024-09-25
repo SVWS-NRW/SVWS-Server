@@ -3325,9 +3325,9 @@ export class GostKlausurplanManager extends JavaObject {
 	public schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(termin : GostKlausurtermin, kursklausur : GostKursklausur, multijahrgang : boolean) : List<GostSchuelerklausurTermin> {
 		const ergebnis : List<GostSchuelerklausurTermin> | null = new ArrayList<GostSchuelerklausurTermin>();
 		ergebnis.addAll(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(termin.id, kursklausur.id));
-		for (const terminMulti of this.terminSelbesDatumGetMengeByTermin(termin, false)) {
-			ergebnis.addAll(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(terminMulti.id, kursklausur.id));
-		}
+		if (termin.datum !== null)
+			for (const terminMulti of this.terminSelbesDatumGetMengeByTermin(termin, false))
+				ergebnis.addAll(this._schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur.getOrNull(terminMulti.id, kursklausur.id));
 		return ergebnis;
 	}
 

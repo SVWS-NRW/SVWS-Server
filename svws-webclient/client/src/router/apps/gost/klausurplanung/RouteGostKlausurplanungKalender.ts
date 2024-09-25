@@ -79,6 +79,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			kalenderwoche: routeGostKlausurplanung.data.kalenderwoche,
 			terminSelected: routeGostKlausurplanung.data.terminSelected,
 			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
+			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 		}
 	}
 

@@ -27,7 +27,7 @@
 					<!--<span v-if="multijahrgang()" class="text-button">{{ GostHalbjahr.fromIDorException(kMan().terminGetByIdOrException(raum.idTermin).halbjahr).jahrgang }}</span>-->
 					<template v-if="multijahrgang()">
 						<span class="border rounded-md p-1 text-button" v-if="raum.idTermin === terminSelected.id">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</span>
-						<svws-ui-button v-else type="secondary" class="p-1" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(termin().abijahr, termin().halbjahr, termin().id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</svws-ui-button>
+						<svws-ui-button v-else type="secondary" class="p-1" @click="gotoTermin(termin().abijahr, GostHalbjahr.fromIDorException(termin().halbjahr), termin().id)" :title="`Zur Raumplanung des Jahrgangs`" size="small">{{ GostHalbjahr.fromIDorException(termin().halbjahr).jahrgang }}</svws-ui-button>
 					</template>
 				</span>
 			</div>
@@ -88,9 +88,6 @@
 	import { GostKursklausur, GostHalbjahr } from '@core';
 	import { computed } from 'vue';
 	import { DateUtils} from "@core";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungRaumzeit } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit';
-
 
 	const props = defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -104,12 +101,13 @@
 		onDrop: (zone: GostKlausurplanungDropZone) => void;
 		multijahrgang: () => boolean;
 		terminSelected: GostKlausurtermin;
+		gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 		// terminStartzeit?: string;
 	}>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
-	const raumHatFehler = () => props.raum.idStundenplanRaum && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse || props.raum.idStundenplanRaum === null;
+	const raumHatFehler = () => (props.raum.idStundenplanRaum !== null && anzahlSuS() > props.kMan().stundenplanraumGetByKlausurraum(props.raum).groesse) || props.raum.idStundenplanRaum === null;
 
 	const klausurenImRaum = () => props.kMan().kursklausurGetMengeByRaum(props.raum);
 
@@ -129,7 +127,7 @@
 	});
 
 	function isDropZone() : boolean {
-		if ((props.dragData() === undefined) || (props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur))
+		if ((props.dragData() === undefined) || ((props.dragData() instanceof GostKursklausur) && props.kMan().containsKlausurraumKursklausur(props.raum, props.dragData() as GostKursklausur)))
 			return false;
 		return true;
 	}

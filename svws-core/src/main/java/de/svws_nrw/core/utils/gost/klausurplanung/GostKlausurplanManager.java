@@ -3617,10 +3617,10 @@ public class GostKlausurplanManager {
 		final List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
 		ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
 				.getOrNull(termin.id, kursklausur.id));
-		for (final GostKlausurtermin terminMulti : terminSelbesDatumGetMengeByTermin(termin, false)) {
-			ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
+		if (termin.datum != null)
+			for (final GostKlausurtermin terminMulti : terminSelbesDatumGetMengeByTermin(termin, false))
+				ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
 					.getOrNull(terminMulti.id, kursklausur.id));
-		}
 		return ergebnis;
 	}
 

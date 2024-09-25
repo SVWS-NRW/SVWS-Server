@@ -104,6 +104,8 @@
 										<s-gost-klausurplanung-termin :termin
 											:benutzer-kompetenzen
 											in-tooltip
+											:goto-kalenderwoche
+											:goto-raumzeit-termin
 											:k-man>
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
@@ -145,7 +147,7 @@
 			return termin.bezeichnung;
 		if (!termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (props.kMan().kursklausurGetMengeByTermin(termin).size())
+		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0)
 			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}

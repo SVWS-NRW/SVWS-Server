@@ -9,7 +9,9 @@
 			:show-kursschiene="true"
 			:klausur-css-classes
 			:patch-klausur
-			:show-schuelerklausuren>
+			:show-schuelerklausuren
+			:goto-kalenderwoche
+			:goto-raumzeit-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
 					<svws-ui-text-input :disabled="termin().istHaupttermin" :placeholder="(termin().bezeichnung === null ? (props.kMan().kursklausurGetMengeByTermin(termin()).size() ? terminTitel() : 'Neuer Nachschreibtermin') : 'Klausurtermin')" :model-value="termin().bezeichnung" @change="bezeichnung => patchKlausurtermin(termin().id, {bezeichnung})" headless />
@@ -38,7 +40,7 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
+	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData, GostKlausurenUpdate} from "@core";
 	import { BenutzerKompetenz} from "@core";
 	import { GostKursklausur} from "@core";
 	import { type GostKlausurplanManager, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
@@ -59,6 +61,9 @@
 		showSchuelerklausuren?: boolean;
 		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
+		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,

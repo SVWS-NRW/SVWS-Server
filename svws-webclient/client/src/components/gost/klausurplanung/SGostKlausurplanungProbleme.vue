@@ -6,14 +6,13 @@
 		<s-gost-klausurplanung-quartal-auswahl :quartalsauswahl="quartalsauswahl" :halbjahr="halbjahr" />
 	</Teleport>
 	<div class="page--content">
-
 		<svws-ui-action-button title="Fehlende Klausurvorgaben"
 			:description="vorgaben().size() + ' fehlende Klausurvorgaben gefunden.'"
 			v-if="!vorgaben().isEmpty()"
 			:is-active="currentAction === 'vorgaben_fehlend'"
 			@click="toggleAction('vorgaben_fehlend')"
 			action-label="Zur Vorgabenansicht"
-			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			:action-function="gotoVorgaben"
 			class="border-error"
 			icon="i-ri-draft-line">
 			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
@@ -22,9 +21,6 @@
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}
-				</template>
-				<template #actions>
-					<svws-ui-button class="-mr-3" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))" title="Zur Vorgabenansicht"><span class="icon i-ri-upload-2-line" />Zur Vorgabenansicht</svws-ui-button>
 				</template>
 			</svws-ui-table>
 		</svws-ui-action-button>
@@ -84,7 +80,7 @@
 			:is-active="currentAction === 'kursklausuren_nicht_verteilt'"
 			@click="toggleAction('kursklausuren_nicht_verteilt')"
 			action-label="Zur Schienenansicht"
-			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			:action-function="gotoSchienen"
 			class="border-error"
 			icon="i-ri-book-2-line">
 			<svws-ui-table :items="kursklausurenNichtVerteilt()"
@@ -112,7 +108,7 @@
 			<svws-ui-table :items="termineOhneDatum()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( rowData.abijahr, rowData.halbjahr, undefined, rowData.id ))" title="Datum setzen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> datieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderwoche(rowData)" title="Datum setzen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> datieren</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -129,7 +125,7 @@
 			:is-active="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
 			@click="toggleAction('klausurtermine_mit_schuelerkonflikten')"
 			action-label="Zur Schienenansicht"
-			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			:action-function="gotoSchienen"
 			class="border-error"
 			icon="i-ri-alert-line">
 			<svws-ui-table :items="termineMitKonflikten()"
@@ -154,7 +150,7 @@
 			<svws-ui-table :items="termineUnvollstaendigeRaumzuweisung()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Planung</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoRaumzeitTermin(rowData.abijahr, GostHalbjahr.fromIDorException(rowData.halbjahr), rowData.id)" title="Räume planen" size="small"><span class="icon i-ri-link" /> Planung</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -176,7 +172,7 @@
 			<svws-ui-table :items="raumkapazitaetUeberschritten()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( rowData.abijahr, rowData.halbjahr, rowData.id ))" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoRaumzeitTermin(rowData.abijahr, GostHalbjahr.fromIDorException(rowData.halbjahr), rowData.id)" title="Räume planen" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -193,7 +189,7 @@
 			:is-active="currentAction === 'nachschreibklausuren_nicht_zugewiesen'"
 			@click="toggleAction('nachschreibklausuren_nicht_zugewiesen')"
 			action-label="Zur Nachschreiberansicht"
-			:action-function="() => RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id))"
+			:action-function="() => gotoNachschreiber(jahrgangsdaten!.abiturjahr, halbjahr)"
 			class="border-yellow-300"
 			icon="i-ri-spam-3-line">
 			<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()"
@@ -222,7 +218,7 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderwoche(parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
 					{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}
@@ -248,10 +244,10 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( jahrgangsdaten!.abiturjahr, halbjahr.id, parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()), undefined ))" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderwoche(parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()))" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
-					<span >{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}</span>
+					<span>{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}</span>
 				</template>
 				<template #cell(klausuren)="{rowData}">
 					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
@@ -261,7 +257,6 @@
 				</template>
 			</svws-ui-table>
 		</svws-ui-action-button>
-
 	</div>
 
 	<s-gost-klausurplanung-modal :show="returnModalVorgaben()" :text="modalError" :jump-to="gotoVorgaben" jump-to_text="Zu den Klausurvorgaben" abbrechen_text="OK" />
@@ -273,15 +268,9 @@
 	import { ref, onMounted, computed } from 'vue';
 	import type { DataTableColumn } from "@ui";
 	import type {GostKlausurtermin } from "@core";
-	import { DateUtils, ListUtils, OpenApiError} from "@core";
+	import { DateUtils, GostHalbjahr, ListUtils, OpenApiError, Schuljahresabschnitt} from "@core";
 	import { Fach } from "@core";
 	import type { GostKlausurplanungProblemeProps } from "./SGostKlausurplanungProblemeProps";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungVorgaben } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungVorgaben";
-	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-	import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
-	import { routeGostKlausurplanungSchienen } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungSchienen";
-	import { routeGostKlausurplanungNachschreiber } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber";
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
 
@@ -355,7 +344,7 @@
 			return termin.bezeichnung;
 		if (!termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (props.kMan().kursklausurGetMengeByTermin(termin).size())
+		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0)
 			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Leerer Klausurtermin";
 	}

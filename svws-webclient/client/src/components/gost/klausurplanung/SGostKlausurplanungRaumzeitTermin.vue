@@ -66,7 +66,7 @@
 					<span>{{ kMan().anzahlBenoetigtePlaetzeAlleKlausurenByTermin(terminFremd, false) }} Klausuren im Jahrgang {{ GostHalbjahr.fromIDorException(terminFremd.halbjahr).jahrgang }},&nbsp;</span>
 					<span v-if="kMan().isTerminAlleSchuelerklausurenVerplant(terminFremd)" class="text-green-500">alle zugewiesen.</span>
 					<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-					<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(terminFremd.abijahr, terminFremd.halbjahr, terminFremd.id ))" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+					<svws-ui-button type="icon" @click="gotoTermin(terminFremd.abijahr, GostHalbjahr.fromIDorException(terminFremd.halbjahr), terminFremd.id)" :title="`Zur Raumplanung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
 				</li>
 			</ul>
 		</svws-ui-content-card>
@@ -88,6 +88,7 @@
 				:on-drag
 				:multijahrgang
 				:on-drop
+				:goto-termin
 				:termin-selected="termin" />
 			<!-- </template>
 			<template v-else>
@@ -120,6 +121,7 @@
 		setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		getConfigValue: (value: string) => string;
 		setConfigValue: (key: string, value: string) => Promise<void>;
+		gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>();
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));

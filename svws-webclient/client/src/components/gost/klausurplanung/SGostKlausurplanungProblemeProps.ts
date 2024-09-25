@@ -3,6 +3,7 @@ import type {
 	GostHalbjahr,
 	GostJahrgangsdaten,
 	GostKlausurplanManager,
+	GostKlausurtermin,
 	GostSchuelerklausur,
 	List,
 } from "@core";
@@ -17,4 +18,8 @@ export interface GostKlausurplanungProblemeProps {
 	loescheSchuelerklausuren: (termine: List<GostSchuelerklausur>) => Promise<void>;
 	erzeugeKursklausurenAusVorgaben: (quartal: number) => Promise<void>;
 	gotoVorgaben: () => Promise<void>;
+	gotoSchienen: () => Promise<void>;
+	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+	gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
 }

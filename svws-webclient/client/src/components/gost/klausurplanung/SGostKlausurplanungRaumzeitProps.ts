@@ -17,7 +17,8 @@ export interface GostKlausurplanungRaumzeitProps {
 	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	gotoTermin: (value: number) => Promise<void>;
+	gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
 	kMan: () => GostKlausurplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 	loescheKlausurraum: (id: number) => Promise<boolean>;
