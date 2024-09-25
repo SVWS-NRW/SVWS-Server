@@ -139,7 +139,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			case "nachschreiberZugelassen" -> {
 				final boolean newValue = JSONMapper.convertToBoolean(value, false);
 				if ((dto.NachschreiberZugelassen != null) && dto.NachschreiberZugelassen.booleanValue() && !newValue
-						&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausurterminids(ListUtils.create1(dto.ID)).isEmpty())
+						&& !new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(ListUtils.create1(dto.ID)).stream().filter(skt -> skt.folgeNr > 0).toList().isEmpty())
 					throw new ApiOperationException(Status.FORBIDDEN, "Klausurtermin enthält Nachschreibklausuren");
 				dto.NachschreiberZugelassen = newValue;
 			}

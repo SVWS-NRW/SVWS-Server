@@ -21,9 +21,9 @@
 				<template #body>
 					<div v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 						:key="termin.id"
-						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
+						class="svws-ui-tr" role="row">
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-checkbox :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+							<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''" :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
@@ -93,12 +93,14 @@
 						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
 						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
 					</li>
-					<li class="flex" v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
-						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
-						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
-						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-						<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
-					</li>
+					<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
+						<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
+							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
+							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
+							<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+							<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+						</li>
+					</template>
 				</ul>
 			</svws-ui-content-card>
 			<div class="flex justify-between items-start mt-5 mb-5">
