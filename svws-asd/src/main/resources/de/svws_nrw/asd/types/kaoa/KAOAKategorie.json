@@ -8,7 +8,7 @@
 			"kuerzel": "SBO 2",
 			"text": "Formen der Orientierung und Beratung",
 			"schluessel": "SBO 2",
-			"jahrgaenge": ["JG_08", "JG_09", "JG_10", "JG_EF", "JG_Q1", "JG_Q2"],
+			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09", "JAHRGANG_10", "EF", "Q1", "Q2"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -20,7 +20,7 @@
 			"kuerzel": "SBO 3",
 			"text": "Strukturen an Schulen",
 			"schluessel": "SBO 3",
-			"jahrgaenge": ["JG_00"],
+			"jahrgaenge": ["JAHRGANG_00"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -32,7 +32,7 @@
 			"kuerzel": "SBO 4",
 			"text": "Potenziale entdecken und den eigenen Standort bestimmen",
 			"schluessel": "SBO 4",
-			"jahrgaenge": ["JG_08", "JG_09"],
+			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -44,7 +44,7 @@
 			"kuerzel": "SBO 5",
 			"text": "Berufsfelder erkunden und Informationen sammeln",
 			"schluessel": "SBO 5",
-			"jahrgaenge": ["JG_08", "JG_09"],
+			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -56,7 +56,7 @@
 			"kuerzel": "SBO 6",
 			"text": "Praxis der Arbeitswelt kennenlernen und erproben",
 			"schluessel": "SBO 6",
-			"jahrgaenge": ["JG_08", "JG_09", "JG_10"],
+			"jahrgaenge": ["JAHRGANG_08", "JAHRGANG_09", "JAHRGANG_10"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -68,7 +68,7 @@
 			"kuerzel": "SBO 7",
 			"text": "Nachholung der Erstberufsorientierung",
 			"schluessel": "SBO 7",
-			"jahrgaenge": ["JG_10"],
+			"jahrgaenge": ["JAHRGANG_10"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -80,7 +80,7 @@
 			"kuerzel": "SBO 8",
 			"text": "Sekundarstufe II - Individuelle Voraussetzungen für eine Ausbildung oder ein Studium überprüfen",
 			"schluessel": "SBO 8",
-			"jahrgaenge": ["JG_EF", "JG_Q1", "JG_Q2"],
+			"jahrgaenge": ["EF", "Q1", "Q2"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -92,7 +92,7 @@
 			"kuerzel": "SBO 9",
 			"text": "Sekundarstufe II - Praxis vertiefen - Ausbildungs- und Studienwahl konkretisieren",
 			"schluessel": "SBO 9",
-			"jahrgaenge": ["JG_EF", "JG_Q1", "JG_Q2"],
+			"jahrgaenge": ["EF", "Q1", "Q2"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -104,7 +104,7 @@
 			"kuerzel": "SBO 10",
 			"text": "Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II",
 			"schluessel": "SBO 10",
-			"jahrgaenge": ["JG_09", "JG_10", "JG_EF", "JG_Q1", "JG_Q2"],
+			"jahrgaenge": ["JAHRGANG_09", "JAHRGANG_10", "EF", "Q1", "Q2"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

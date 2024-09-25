@@ -257,6 +257,7 @@ class DataManagerRevisedTest {
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(input);
 			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt())).thenCallRealMethod();
+			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt(), any())).thenCallRealMethod();
 
 			final Response result = cut.patchAsResponse(1L, mock(InputStream.class));
 
@@ -277,6 +278,8 @@ class DataManagerRevisedTest {
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(Map.of("kuerzel", "55a"));
 			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt())).thenCallRealMethod();
+			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt(), any())).thenCallRealMethod();
+
 
 			final Throwable result = catchThrowable(() -> cut.patchAsResponse(1L, mock(InputStream.class)));
 
@@ -378,7 +381,9 @@ class DataManagerRevisedTest {
 		try (MockedStatic<JSONMapper> mapperMock = Mockito.mockStatic(JSONMapper.class)) {
 			mapperMock.when(() -> JSONMapper.toMap(any(InputStream.class))).thenReturn(input);
 			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt())).thenCallRealMethod();
+			mapperMock.when(() -> JSONMapper.convertToString(any(Object.class), anyBoolean(), anyBoolean(), anyInt(), any())).thenCallRealMethod();
 			mapperMock.when(() -> JSONMapper.convertToLong(any(Object.class), anyBoolean())).thenCallRealMethod();
+			mapperMock.when(() -> JSONMapper.convertToLong(any(Object.class), anyBoolean(), any())).thenCallRealMethod();
 			mapperMock.when(() -> JSONMapper.convertToInteger(any(Object.class), anyBoolean())).thenCallRealMethod();
 
 			final Response result = cut.addAsResponse(mock(InputStream.class));

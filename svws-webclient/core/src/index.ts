@@ -705,7 +705,6 @@ export { RaumUtils } from './core/utils/raum/RaumUtils';
 export { ReligionListeManager } from './core/utils/religion/ReligionListeManager';
 export { ReligionUtils } from './core/utils/religion/ReligionUtils';
 export { SchuelerKAoAManager } from './core/utils/schueler/SchuelerKAoAManager';
-export { SchuelerKAoAUtils } from './core/utils/schueler/SchuelerKAoAUtils';
 export { SchuelerLernabschnittManager } from './core/utils/schueler/SchuelerLernabschnittManager';
 export { SchuelerListeManager } from './core/utils/schueler/SchuelerListeManager';
 export { SchuelerUtils } from './core/utils/schueler/SchuelerUtils';

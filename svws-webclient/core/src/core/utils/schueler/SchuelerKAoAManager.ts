@@ -22,7 +22,6 @@ import { KAOAAnschlussoptionen } from '../../../asd/types/kaoa/KAOAAnschlussopti
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { KAOABerufsfeld } from '../../../asd/types/kaoa/KAOABerufsfeld';
-import { SchuelerKAoAUtils } from '../../../core/utils/schueler/SchuelerKAoAUtils';
 import { SchuelerLernabschnittsdaten } from '../../../core/data/schueler/SchuelerLernabschnittsdaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
@@ -34,6 +33,19 @@ import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKat
 import { KAOAZusatzmerkmal } from '../../../asd/types/kaoa/KAOAZusatzmerkmal';
 
 export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADaten, SchuelerKAoADaten> {
+
+	/**
+	 * Ein Default-Comparator für den Vergleich von KAoA in KAoA-Listen.
+	 */
+	public static readonly comparator : Comparator<SchuelerKAoADaten> = { compare : (a: SchuelerKAoADaten, b: SchuelerKAoADaten) => {
+		let cmp : number = JavaLong.compare(a.idLernabschnitt, b.idLernabschnitt);
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaLong.compare(a.idKategorie, b.idKategorie);
+		if (cmp !== 0)
+			return cmp;
+		return JavaLong.compare(a.id, b.id);
+	} };
 
 	/**
 	 *  Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
@@ -145,7 +157,7 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 * @param schuelerLernabschnitt      the schueler lernabschnitt
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, schuelerKAoA : List<SchuelerKAoADaten>, schuelerLernabschnitt : List<SchuelerLernabschnittsdaten>) {
-		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA, SchuelerKAoAUtils.comparator, SchuelerKAoAManager._kaoaToId, SchuelerKAoAManager._kaoaToId, Arrays.asList(new Pair("schuljahr", true), new Pair("kategorie", true)));
+		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA, SchuelerKAoAManager.comparator, SchuelerKAoAManager._kaoaToId, SchuelerKAoAManager._kaoaToId, Arrays.asList(new Pair("schuljahr", true), new Pair("kategorie", true)));
 		this._lernabschnittsdaten = schuelerLernabschnitt;
 		this._kategorien = new AttributMitAuswahl(Arrays.asList(...KAOAKategorie.values()), this._kategorieToId, SchuelerKAoAManager._comparatorKategorie, this._eventHandlerFilterChanged);
 		this._merkmale = new AttributMitAuswahl(Arrays.asList(...KAOAMerkmal.values()), this._merkmalToId, SchuelerKAoAManager._comparatorMerkmal, this._eventHandlerFilterChanged);
@@ -211,7 +223,7 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 		for (const lernabschnitt of this._lernabschnittsdaten) {
 			const schuelerKAoA : List<SchuelerKAoADaten> = new ArrayList<SchuelerKAoADaten>();
 			for (const kaoa of this.liste.list())
-				if (lernabschnitt.id === kaoa.abschnitt)
+				if (lernabschnitt.id === kaoa.idLernabschnitt)
 					schuelerKAoA.add(kaoa);
 			this._mapKAoABySchueler.put(lernabschnitt.schuelerID, schuelerKAoA);
 		}
@@ -225,15 +237,15 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 * @return true, wenn der Eintrag den Filter passiert, und ansonsten false
 	 */
 	protected checkFilter(eintrag : SchuelerKAoADaten) : boolean {
-		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.kategorie))
+		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.idKategorie))
 			return false;
-		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.merkmal))
+		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.idMerkmal))
 			return false;
-		if ((eintrag.zusatzmerkmal !== null) && this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.zusatzmerkmal))
+		if (this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.idZusatzmerkmal))
 			return false;
-		if ((eintrag.anschlussoption !== null) && this._anschlussoptionen.auswahlExists() && !this._anschlussoptionen.auswahlHasKey(eintrag.anschlussoption))
+		if ((eintrag.idAnschlussoption !== null) && this._anschlussoptionen.auswahlExists() && !this._anschlussoptionen.auswahlHasKey(eintrag.idAnschlussoption))
 			return false;
-		return ((eintrag.ebene4 !== null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.ebene4));
+		return ((eintrag.idEbene4 !== null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.idEbene4));
 	}
 
 	/**
@@ -248,11 +260,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 		for (const criteria of this._order) {
 			const field : string | null = criteria.a;
 			const asc : boolean = (criteria.b === null) || criteria.b;
-			let cmp : number;
-			if (JavaObject.equalsTranspiler("schuljahr", (field)) || JavaObject.equalsTranspiler("kategorie", (field)))
-				cmp = SchuelerKAoAUtils.comparator.compare(a, b);
-			else
+			if (!(JavaObject.equalsTranspiler("schuljahr", (field)) || JavaObject.equalsTranspiler("kategorie", (field))))
 				throw new DeveloperNotificationException("Fehler bei der Sortierung. Das Sortierkriterium wird vom SchuelerKAoAManager nicht unterstützt.")
+			const cmp : number = SchuelerKAoAManager.comparator.compare(a, b);
 			if (cmp === 0)
 				continue;
 			return asc ? cmp : -cmp;

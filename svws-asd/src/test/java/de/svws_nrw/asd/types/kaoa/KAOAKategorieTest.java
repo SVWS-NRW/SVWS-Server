@@ -42,7 +42,7 @@ class KAOAKategorieTest {
 	@Test
 	@DisplayName("Prüfe ob jahrgaenge richtig ist")
 	void testKAOAKategorieJahrgaenge() {
-		assertEquals("JG_08", KAOAKategorie.data().getHistorieByWert(KAOAKategorie.SBO_2).getFirst().jahrgaenge.getFirst());
+		assertEquals("JAHRGANG_08", KAOAKategorie.data().getHistorieByWert(KAOAKategorie.SBO_2).getFirst().jahrgaenge.getFirst());
 	}
 
 

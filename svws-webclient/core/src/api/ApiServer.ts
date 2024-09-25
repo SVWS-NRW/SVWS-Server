@@ -8666,7 +8666,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
+	 * Implementierung der GET-Methode getKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
 	 *
 	 * Liest die KAOADaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
 	 *
@@ -8682,7 +8682,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die KAOADaten des Schülers
 	 */
-	public async getKAOAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
+	public async getKAoAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -8695,62 +8695,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
-	 *
-	 * Erstellt einen neuen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die KAOADaten des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerKAoADaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
-	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {SchuelerKAoADaten} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die KAOADaten des Schülers
-	 */
-	public async createKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number) : Promise<SchuelerKAoADaten> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerKAoADaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PUT-Methode putKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
+	 * Implementierung der PATCH-Methode patchKAoADaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
 	 *
 	 * Ändert einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die KAOADaten des Schülers
+	 *   Code 204: Die KAOADaten des Schülers wurden erfolgreich gepatcht
 	 *   Code 400: Fehler bei der Datenvalidierung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {SchuelerKAoADaten} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<SchuelerKAoADaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async putKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number, skid : number) : Promise<void> {
+	public async patchKAoADaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
-		return super.putJSON(path, body);
+		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
+	 * Implementierung der DELETE-Methode deleteKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
 	 *
 	 * Löscht einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
@@ -8763,13 +8736,42 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async deleteKAOAdaten(schema : string, id : number, skid : number) : Promise<void> {
+	public async deleteKAoAdaten(schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
 		await super.deleteJSON(path, null);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/create
+	 *
+	 * Erstellt einen neuen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die KAOADaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerKAoADaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
+	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {Partial<SchuelerKAoADaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die KAOADaten des Schülers
+	 */
+	public async addKAoAdaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number) : Promise<SchuelerKAoADaten> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerKAoADaten.transpilerFromJSON(text);
 	}
 
 

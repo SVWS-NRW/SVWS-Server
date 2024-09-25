@@ -36,6 +36,18 @@ import jakarta.validation.constraints.NotNull;
  */
 public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten, SchuelerKAoADaten> {
 
+	/** Ein Default-Comparator für den Vergleich von KAoA in KAoA-Listen. */
+	public static final @NotNull Comparator<SchuelerKAoADaten> comparator =
+			(final @NotNull SchuelerKAoADaten a, final @NotNull SchuelerKAoADaten b) -> {
+				int cmp = Long.compare(a.idLernabschnitt, b.idLernabschnitt);
+				if (cmp != 0)
+					return cmp;
+				cmp = Long.compare(a.idKategorie, b.idKategorie);
+				if (cmp != 0)
+					return cmp;
+				return Long.compare(a.id, b.id);
+			};
+
 	/**
 	 * Funktionen zum Mappen von Auswahl- bzw. Daten-Objekten auf deren ID-Typ
 	 */
@@ -129,7 +141,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 			final @NotNull List<SchuelerKAoADaten> schuelerKAoA,
 			final @NotNull List<SchuelerLernabschnittsdaten> schuelerLernabschnitt) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA,
-				SchuelerKAoAUtils.comparator, _kaoaToId, _kaoaToId,
+				comparator, _kaoaToId, _kaoaToId,
 				Arrays.asList(new Pair<>("schuljahr", true), new Pair<>("kategorie", true)));
 		this._lernabschnittsdaten = schuelerLernabschnitt;
 		this._kategorien = new AttributMitAuswahl<>(Arrays.asList(KAOAKategorie.values()), _kategorieToId, _comparatorKategorie,
@@ -201,7 +213,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 		for (final @NotNull SchuelerLernabschnittsdaten lernabschnitt : this._lernabschnittsdaten) {
 			final @NotNull List<SchuelerKAoADaten> schuelerKAoA = new ArrayList<>();
 			for (final @NotNull SchuelerKAoADaten kaoa : this.liste.list())
-				if (lernabschnitt.id == kaoa.abschnitt)
+				if (lernabschnitt.id == kaoa.idLernabschnitt)
 					schuelerKAoA.add(kaoa);
 			this._mapKAoABySchueler.put(lernabschnitt.schuelerID, schuelerKAoA);
 		}
@@ -216,17 +228,16 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 */
 	@Override
 	protected boolean checkFilter(final @NotNull SchuelerKAoADaten eintrag) {
-		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.kategorie))
+		if (this._kategorien.auswahlExists() && !this._kategorien.auswahlHasKey(eintrag.idKategorie))
 			return false;
-		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.merkmal))
+		if (this._merkmale.auswahlExists() && !this._merkmale.auswahlHasKey(eintrag.idMerkmal))
 			return false;
-		if ((eintrag.zusatzmerkmal != null) && this._zusatzmerkmale.auswahlExists()
-				&& !this._zusatzmerkmale.auswahlHasKey(eintrag.zusatzmerkmal))
+		if (this._zusatzmerkmale.auswahlExists() && !this._zusatzmerkmale.auswahlHasKey(eintrag.idZusatzmerkmal))
 			return false;
-		if ((eintrag.anschlussoption != null) && this._anschlussoptionen.auswahlExists()
-				&& !this._anschlussoptionen.auswahlHasKey(eintrag.anschlussoption))
+		if ((eintrag.idAnschlussoption != null) && this._anschlussoptionen.auswahlExists()
+				&& !this._anschlussoptionen.auswahlHasKey(eintrag.idAnschlussoption))
 			return false;
-		return ((eintrag.ebene4 != null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.ebene4));
+		return ((eintrag.idEbene4 != null) && this._ebene4.auswahlExists() && !this._ebene4.auswahlHasKey(eintrag.idEbene4));
 	}
 
 	/**
@@ -242,13 +253,11 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 		for (final Pair<String, Boolean> criteria : _order) {
 			final String field = criteria.a;
 			final boolean asc = (criteria.b == null) || criteria.b;
-			int cmp;
-			if ("schuljahr".equals(field) || "kategorie".equals(field))
-				cmp = SchuelerKAoAUtils.comparator.compare(a, b);
-			else
+			if (!("schuljahr".equals(field) || "kategorie".equals(field)))
 				throw new DeveloperNotificationException(
 						"Fehler bei der Sortierung. Das Sortierkriterium wird vom SchuelerKAoAManager nicht "
 								+ "unterstützt" + ".");
+			final int cmp = comparator.compare(a, b);
 			if (cmp == 0)
 				continue;
 			return asc ? cmp : -cmp;

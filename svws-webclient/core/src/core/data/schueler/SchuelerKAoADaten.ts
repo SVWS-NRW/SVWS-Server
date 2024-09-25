@@ -11,42 +11,42 @@ export class SchuelerKAoADaten extends JavaObject {
 	/**
 	 * Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public abschnitt : number = -1;
+	public idLernabschnitt : number = -1;
 
 	/**
-	 * Der Jahrgaeng des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID des Jahrgangs des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public jahrgang : string = "";
+	public idJahrgang : number = -1;
 
 	/**
 	 * Der Kategorie des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public kategorie : number = -1;
+	public idKategorie : number = -1;
 
 	/**
 	 * Das Merkmal des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public merkmal : number = -1;
+	public idMerkmal : number = -1;
 
 	/**
 	 * Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public zusatzmerkmal : number | null = null;
+	public idZusatzmerkmal : number = -1;
 
 	/**
 	 * Die Anschlussoption des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public anschlussoption : number | null = null;
+	public idAnschlussoption : number | null = null;
 
 	/**
 	 * Das Berufsfeld des Schülers, zu dem diese KAOA Daten gehören.
 	 */
-	public berufsfeld : number | null = null;
+	public idBerufsfeld : number | null = null;
 
 	/**
 	 * Ebene4 dieser KAOA Daten
 	 */
-	public ebene4 : number | null = null;
+	public idEbene4 : number | null = null;
 
 	/**
 	 * Die Bemerkung zu diesen KAOA Daten.
@@ -74,22 +74,24 @@ export class SchuelerKAoADaten extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.abschnitt === undefined)
-			throw new Error('invalid json format, missing attribute abschnitt');
-		result.abschnitt = obj.abschnitt;
-		if (obj.jahrgang === undefined)
-			throw new Error('invalid json format, missing attribute jahrgang');
-		result.jahrgang = obj.jahrgang;
-		if (obj.kategorie === undefined)
-			throw new Error('invalid json format, missing attribute kategorie');
-		result.kategorie = obj.kategorie;
-		if (obj.merkmal === undefined)
-			throw new Error('invalid json format, missing attribute merkmal');
-		result.merkmal = obj.merkmal;
-		result.zusatzmerkmal = (obj.zusatzmerkmal === undefined) ? null : obj.zusatzmerkmal === null ? null : obj.zusatzmerkmal;
-		result.anschlussoption = (obj.anschlussoption === undefined) ? null : obj.anschlussoption === null ? null : obj.anschlussoption;
-		result.berufsfeld = (obj.berufsfeld === undefined) ? null : obj.berufsfeld === null ? null : obj.berufsfeld;
-		result.ebene4 = (obj.ebene4 === undefined) ? null : obj.ebene4 === null ? null : obj.ebene4;
+		if (obj.idLernabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idLernabschnitt');
+		result.idLernabschnitt = obj.idLernabschnitt;
+		if (obj.idJahrgang === undefined)
+			throw new Error('invalid json format, missing attribute idJahrgang');
+		result.idJahrgang = obj.idJahrgang;
+		if (obj.idKategorie === undefined)
+			throw new Error('invalid json format, missing attribute idKategorie');
+		result.idKategorie = obj.idKategorie;
+		if (obj.idMerkmal === undefined)
+			throw new Error('invalid json format, missing attribute idMerkmal');
+		result.idMerkmal = obj.idMerkmal;
+		if (obj.idZusatzmerkmal === undefined)
+			throw new Error('invalid json format, missing attribute idZusatzmerkmal');
+		result.idZusatzmerkmal = obj.idZusatzmerkmal;
+		result.idAnschlussoption = (obj.idAnschlussoption === undefined) ? null : obj.idAnschlussoption === null ? null : obj.idAnschlussoption;
+		result.idBerufsfeld = (obj.idBerufsfeld === undefined) ? null : obj.idBerufsfeld === null ? null : obj.idBerufsfeld;
+		result.idEbene4 = (obj.idEbene4 === undefined) ? null : obj.idEbene4 === null ? null : obj.idEbene4;
 		result.bemerkung = (obj.bemerkung === undefined) ? null : obj.bemerkung === null ? null : obj.bemerkung;
 		return result;
 	}
@@ -97,14 +99,14 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerKAoADaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
-		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
-		result += '"kategorie" : ' + obj.kategorie.toString() + ',';
-		result += '"merkmal" : ' + obj.merkmal.toString() + ',';
-		result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal.toString()) + ',';
-		result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption.toString()) + ',';
-		result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld.toString()) + ',';
-		result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4.toString()) + ',';
+		result += '"idLernabschnitt" : ' + obj.idLernabschnitt.toString() + ',';
+		result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
+		result += '"idKategorie" : ' + obj.idKategorie.toString() + ',';
+		result += '"idMerkmal" : ' + obj.idMerkmal.toString() + ',';
+		result += '"idZusatzmerkmal" : ' + obj.idZusatzmerkmal.toString() + ',';
+		result += '"idAnschlussoption" : ' + ((!obj.idAnschlussoption) ? 'null' : obj.idAnschlussoption.toString()) + ',';
+		result += '"idBerufsfeld" : ' + ((!obj.idBerufsfeld) ? 'null' : obj.idBerufsfeld.toString()) + ',';
+		result += '"idEbene4" : ' + ((!obj.idEbene4) ? 'null' : obj.idEbene4.toString()) + ',';
 		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -116,29 +118,29 @@ export class SchuelerKAoADaten extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.abschnitt !== undefined) {
-			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
+		if (obj.idLernabschnitt !== undefined) {
+			result += '"idLernabschnitt" : ' + obj.idLernabschnitt.toString() + ',';
 		}
-		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
+		if (obj.idJahrgang !== undefined) {
+			result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		}
-		if (obj.kategorie !== undefined) {
-			result += '"kategorie" : ' + obj.kategorie.toString() + ',';
+		if (obj.idKategorie !== undefined) {
+			result += '"idKategorie" : ' + obj.idKategorie.toString() + ',';
 		}
-		if (obj.merkmal !== undefined) {
-			result += '"merkmal" : ' + obj.merkmal.toString() + ',';
+		if (obj.idMerkmal !== undefined) {
+			result += '"idMerkmal" : ' + obj.idMerkmal.toString() + ',';
 		}
-		if (obj.zusatzmerkmal !== undefined) {
-			result += '"zusatzmerkmal" : ' + ((!obj.zusatzmerkmal) ? 'null' : obj.zusatzmerkmal.toString()) + ',';
+		if (obj.idZusatzmerkmal !== undefined) {
+			result += '"idZusatzmerkmal" : ' + obj.idZusatzmerkmal.toString() + ',';
 		}
-		if (obj.anschlussoption !== undefined) {
-			result += '"anschlussoption" : ' + ((!obj.anschlussoption) ? 'null' : obj.anschlussoption.toString()) + ',';
+		if (obj.idAnschlussoption !== undefined) {
+			result += '"idAnschlussoption" : ' + ((!obj.idAnschlussoption) ? 'null' : obj.idAnschlussoption.toString()) + ',';
 		}
-		if (obj.berufsfeld !== undefined) {
-			result += '"berufsfeld" : ' + ((!obj.berufsfeld) ? 'null' : obj.berufsfeld.toString()) + ',';
+		if (obj.idBerufsfeld !== undefined) {
+			result += '"idBerufsfeld" : ' + ((!obj.idBerufsfeld) ? 'null' : obj.idBerufsfeld.toString()) + ',';
 		}
-		if (obj.ebene4 !== undefined) {
-			result += '"ebene4" : ' + ((!obj.ebene4) ? 'null' : obj.ebene4.toString()) + ',';
+		if (obj.idEbene4 !== undefined) {
+			result += '"idEbene4" : ' + ((!obj.idEbene4) ? 'null' : obj.idEbene4.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';

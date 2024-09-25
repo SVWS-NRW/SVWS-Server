@@ -1,7 +1,13 @@
 package de.svws_nrw.asd.types.kaoa;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.asd.utils.CoreTypeDataManager;
 import jakarta.validation.constraints.NotNull;
 
@@ -37,6 +43,12 @@ public enum KAOAKategorie implements CoreType<KAOAKategorieKatalogEintrag, KAOAK
 	/** KAoA-Kategorie: Gestaltung und Koordination der Übergänge in der Sek. I und Sek. II */
 	SBO_10;
 
+
+	/* ----- Die nachfolgenden Attribute werden nicht initialisiert und werden als Cache verwendet, um z.B. den Schuljahres-bezogenen Zugriff zu cachen ----- */
+
+	private static final @NotNull Map<Integer, Map<KAOAKategorie, List<Jahrgaenge>>> _mapBySchuljahrAndKategorie = new HashMap<>();
+
+
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
 	 *
@@ -54,6 +66,45 @@ public enum KAOAKategorie implements CoreType<KAOAKategorieKatalogEintrag, KAOAK
 	 */
 	public static @NotNull CoreTypeDataManager<KAOAKategorieKatalogEintrag, KAOAKategorie> data() {
 		return CoreTypeDataManager.getManager(KAOAKategorie.class);
+	}
+
+
+	/**
+	 * Prüft, ob der angegebene Jahrgang in dem angegebenen Schuljahr für diese Kategorie zulässig ist.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param jahrgang    der Jahrgang
+	 *
+	 * @return true, falls der Jahrgang in dem Schuljahr zulässig ist - ansonsten false.
+	 */
+	public boolean hatJahrgang(final int schuljahr, final Jahrgaenge jahrgang) {
+		return getListBySchuljahrAndKategorie(schuljahr, this).contains(jahrgang);
+	}
+
+
+	/**
+	 * Liefert alle zulässigen Jahrgänge für die angegebene Kategorie in dem angegebenen Schuljahr.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param kategorie   die Kategorie
+	 *
+	 * @return die bei der Kategorie in dem angegebenen Schuljahr zulässigen Jahrgänge
+	 */
+	public static @NotNull List<Jahrgaenge> getListBySchuljahrAndKategorie(final int schuljahr, final @NotNull KAOAKategorie kategorie) {
+		final Map<KAOAKategorie, List<Jahrgaenge>> mapByKategorie =
+				_mapBySchuljahrAndKategorie.computeIfAbsent(schuljahr, k -> new HashMap<KAOAKategorie, List<Jahrgaenge>>());
+		if (mapByKategorie == null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
+		List<Jahrgaenge> result = mapByKategorie.get(kategorie);
+		if (result == null) {
+			result = new ArrayList<>();
+			final KAOAKategorieKatalogEintrag eintrag = kategorie.daten(schuljahr);
+			if (eintrag != null)
+				for (final String jgBezeichner : eintrag.jahrgaenge)
+					result.add(Jahrgaenge.data().getWertByBezeichner(jgBezeichner));
+			mapByKategorie.put(kategorie, result);
+		}
+		return result;
 	}
 
 }

@@ -2042,19 +2042,19 @@ public final class DBMigrationManager {
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank."
-								.formatted(daten.ID, daten.Schueler_ID));
+								.formatted(daten.id, daten.Schueler_ID));
 				entities.remove(i);
 				continue;
 			}
-			if ((daten.Abschnitt_ID == null) || (!schuelerLeistungsdatenIDs.contains(daten.Abschnitt_ID))) {
+			if ((daten.idLernabschnitt == null) || (!schuelerLeistungsdatenIDs.contains(daten.idLernabschnitt))) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Lernabschnitt mit der ID %d in der Datenbank."
-								.formatted(daten.ID, daten.Abschnitt_ID));
+								.formatted(daten.id, daten.idLernabschnitt));
 				entities.remove(i);
 				continue;
 			}
-			if (daten.KategorieID == null) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Kategorie muss zugeordnet sein.".formatted(daten.ID));
+			if (daten.idKategorie == null) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Kategorie muss zugeordnet sein.".formatted(daten.id));
 				entities.remove(i);
 			}
 		}
