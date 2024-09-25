@@ -5,16 +5,19 @@ import { Class } from '../../../../java/lang/Class';
 export class GostSchuelerklausurterminraumstunde extends JavaObject {
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Die ID des zugehörigen {@link GostSchuelerklausurTermin}s.
 	 */
 	public idSchuelerklausurtermin : number = -1;
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Die ID der zugehörigen {@link GostKlausurraumstunde}.
 	 */
 	public idRaumstunde : number = -1;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

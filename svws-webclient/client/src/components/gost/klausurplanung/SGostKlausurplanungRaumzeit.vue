@@ -119,8 +119,8 @@
 		const data = dragData.value;
 		if (zone instanceof GostKlausurraum) {
 			const rRaum = new GostKlausurraumRich(zone, null);
-			if (data instanceof GostKursklausur && data.idTermin !== null)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.kMan().terminGetByIdOrException(data.idTermin), data));
+			if (data instanceof GostKursklausur && props.terminSelected.value)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(props.terminSelected.value, data, true));
 			else if (data instanceof GostKlausurtermin && props.terminSelected.value)
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value));
 			else if (data instanceof GostSchuelerklausurTermin)

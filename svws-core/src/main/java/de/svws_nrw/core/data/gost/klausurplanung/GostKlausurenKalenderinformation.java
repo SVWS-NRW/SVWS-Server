@@ -46,4 +46,11 @@ public class GostKlausurenKalenderinformation {
 	@Schema(description = "die Information, ob es sich um einen Sperrtermin handelt", example = "true")
 	public boolean istSperrtermin = false;
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurenKalenderinformation() {
+		super();
+	}
+
 }

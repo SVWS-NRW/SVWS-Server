@@ -15,49 +15,52 @@ import { HashSet } from '../../../../java/util/HashSet';
 export class GostKlausurenCollectionAllData extends JavaObject {
 
 	/**
-	 * Die Liste der Klausurvorgaben.
+	 * Ein Array mit den Klausurvorgaben.
 	 */
 	public vorgaben : List<GostKlausurvorgabe> = new ArrayList<GostKlausurvorgabe>();
 
 	/**
-	 * Die Liste der Kursklausuren.
+	 * Ein Array mit den Kursklausuren.
 	 */
 	public kursklausuren : List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Schülerklausuren.
 	 */
 	public schuelerklausuren : List<GostSchuelerklausur> = new ArrayList<GostSchuelerklausur>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Schülerklausurterminen.
 	 */
 	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Klausurterminen.
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Die zu den Klausurdaten gehörenden Meta-Informationen wie Fachdaten, Kursdaten, Lehrerdaten, Schülerdaten.
 	 */
 	public metadata : GostKlausurenCollectionMetaData = new GostKlausurenCollectionMetaData();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Die zu den Klausurdaten gehörenden Raumdaten.
 	 */
 	public raumdata : GostKlausurenCollectionRaumData = new GostKlausurenCollectionRaumData();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
 
 	/**
-	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
 	 *
-	 * @param addData dd
+	 * @param addData die Daten, die hinzugefügt werden sollen
 	 */
 	public addAll(addData : GostKlausurenCollectionAllData) : void {
 		this.vorgaben.addAll(addData.vorgaben);

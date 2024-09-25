@@ -5,22 +5,22 @@ import { Class } from '../../../../java/lang/Class';
 export class GostSchuelerklausurTermin extends JavaObject {
 
 	/**
-	 * Die ID des Stundenplans.
+	 * Die ID des Schülerklausurtermins.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die ID der zugehörigen Schülerklausur.
 	 */
 	public idSchuelerklausur : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die Folgenummer der Schülerklausur, 0 falls es sich um den Haupttermin handelt, 1 der erste Nachschreibtermin ...
 	 */
 	public folgeNr : number = -1;
 
 	/**
-	 * Das Zeitraster des Stundenplans.
+	 * Die ID des Klausurtermins, falls schon gesetzt.
 	 */
 	public idTermin : number | null = null;
 
@@ -35,6 +35,9 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

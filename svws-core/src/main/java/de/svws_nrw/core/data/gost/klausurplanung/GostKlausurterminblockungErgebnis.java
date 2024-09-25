@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -16,7 +17,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostKlausurterminblockungErgebnis {
 
-	/** Eine Liste der Termine-Ergebnisse */
+	/** Ein Array mit den GostKlausurterminblockungErgebnisTerminen. */
+	@ArraySchema(schema = @Schema(implementation = GostKlausurterminblockungErgebnisTermin.class, description = "Ein Array mit den GostKlausurterminblockungErgebnisTerminen."))
 	public @NotNull List<GostKlausurterminblockungErgebnisTermin> termine = new ArrayList<>();
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurterminblockungErgebnis() {
+		super();
+	}
 
 }

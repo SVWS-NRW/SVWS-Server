@@ -33,4 +33,11 @@ public class GostKlausurterminblockungKonfiguration {
 	/** True, falls die Regel "bevorzuge gleiche Kursschienen bei Terminen" aktiviert ist. */
 	public boolean regelBevorzugeBeiTerminenGleicheKursschienen = false;
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurterminblockungKonfiguration() {
+		super();
+	}
+
 }

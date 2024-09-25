@@ -49,6 +49,9 @@ export class GostKlausurraumblockungKonfiguration extends JavaObject {
 	public _regel_forciere_selben_klausurstart_pro_raum : boolean = true;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

@@ -50,4 +50,11 @@ public class GostKlausurraum {
 		return Long.hashCode(id);
 	}
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurraum() {
+		super();
+	}
+
 }

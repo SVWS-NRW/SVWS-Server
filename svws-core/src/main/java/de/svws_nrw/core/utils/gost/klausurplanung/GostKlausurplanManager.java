@@ -3598,9 +3598,30 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(
 			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur kursklausur) {
-		final List<GostSchuelerklausurTermin> list = _schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
-				.getOrNull(termin.id, kursklausur.id);
-		return (list != null) ? list : new ArrayList<>();
+		return schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(termin, kursklausur, false);
+	}
+
+	/**
+	 * Gibt die Liste der aktuellen (ohne abwesend gemeldete) {@link GostSchuelerklausurTermin}en zu einem {@link GostKlausurtermin} und einer
+	 * {@link GostKursklausur} zurück. Ggf. werden auch die jahrgangsübergreifenden datumsgleichen {@link GostKlausurtermin}e berücksichtigt.
+	 *
+	 * @param termin      der {@link GostKlausurtermin}
+	 * @param kursklausur die {@link GostKursklausur}
+	 * @param multijahrgang wenn <code>true</code>, werden auch jahrgangsübergreifende datumsgleiche {@link GostKlausurtermin}e berücksichtigt.
+	 *
+	 * @return die Liste der aktuellen (ohne abwesend gemeldete) {@link GostSchuelerklausurTermin}en zu einem {@link GostKlausurtermin} und einer
+	 * {@link GostKursklausur} zurück.
+	 */
+	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(
+			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur kursklausur, final boolean multijahrgang) {
+		final List<GostSchuelerklausurTermin> ergebnis = new ArrayList<>();
+		ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
+				.getOrNull(termin.id, kursklausur.id));
+		for (final GostKlausurtermin terminMulti : terminSelbesDatumGetMengeByTermin(termin, false)) {
+			ergebnis.addAll(_schuelerklausurterminaktuellmenge_by_idTermin_and_idKursklausur
+					.getOrNull(terminMulti.id, kursklausur.id));
+		}
+		return ergebnis;
 	}
 
 	/**

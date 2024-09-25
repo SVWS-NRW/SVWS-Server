@@ -37,6 +37,9 @@ export class GostKlausurterminblockungKonfiguration extends JavaObject {
 	public regelBevorzugeBeiTerminenGleicheKursschienen : boolean = false;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

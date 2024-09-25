@@ -137,7 +137,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 			}
 			Object.assign(result, {abschnitt});
 			if (!this.manager.isKlausurenInitialized()) {
-				const klausurdatenGzip = await api.server.getGostKlausurenMetaCollectionOberstufeGZip(api.schema, this.abiturjahr, halbjahr.id);
+				const klausurdatenGzip = await api.server.getGostKlausurenCollectionAlldataGZip(api.schema, this.abiturjahr, halbjahr.id);
 				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 				const klausurdaten = GostKlausurenCollectionAllData.transpilerFromJSON(await klausurdatenBlob.text());
 				const manager = new GostKlausurplanManager(this._state.value.abiturjahr - 1, klausurdaten);
@@ -201,7 +201,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	reloadFehlendData = async () => {
-		const fehlendDataGzip = await api.server.getGostKlausurenMetaCollectionOberstufeFehlendGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
+		const fehlendDataGzip = await api.server.getGostKlausurenCollectionAllIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
 		const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 		const fehlendData = GostKlausurenCollectionAllData.transpilerFromJSON(await fehlendDataBlob.text());
 		this.manager.setKlausurDataFehlend(this.abiturjahr, this._state.value.halbjahr, fehlendData);

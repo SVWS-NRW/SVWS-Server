@@ -52,6 +52,8 @@ export class KlausurblockungNachschreiberAlgorithmus extends JavaObject {
 	}
 
 	/**
+	 * Berechnet die Blockung von Klausuren
+	 *
 	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
 	 *

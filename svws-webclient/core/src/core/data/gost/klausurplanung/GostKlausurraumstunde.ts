@@ -20,6 +20,9 @@ export class GostKlausurraumstunde extends JavaObject {
 	public idZeitraster : number = -1;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

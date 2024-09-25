@@ -25,6 +25,9 @@ export class GostKlausurraum extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

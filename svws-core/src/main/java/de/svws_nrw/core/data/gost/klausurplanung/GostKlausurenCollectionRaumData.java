@@ -4,45 +4,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert eine Sammlung von Gost-Klausurvorgaben, Kursklausuren und Schülerklausuren.
+ * Sie liefert eine Sammlung von Raumdaten zu einer Klausurplanung.
  */
 @XmlRootElement
-@Schema(description = "die Sammlung von Gost-Klausurvorgaben, Kursklausuren und Schülerklausuren")
+@Schema(description = "die Sammlung von Raumdaten zu einer Klausurplanung.")
 @TranspilerDTO
 public class GostKlausurenCollectionRaumData {
 
-	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
+	/** Ein Array mit den Klausurräumen. */
+	@ArraySchema(schema = @Schema(implementation = GostKlausurraum.class, description = "Ein Array mit den Klausurräumen."))
 	public @NotNull List<GostKlausurraum> raeume = new ArrayList<>();
 
-	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
+	/** Ein Array mit den Klausurraumstunden. */
+	@ArraySchema(schema = @Schema(implementation = GostKlausurraumstunde.class, description = "Ein Array mit den Klausurraumstunden."))
 	public @NotNull List<GostKlausurraumstunde> raumstunden = new ArrayList<>();
 
-	/** Die ID der Klausurraumstunde. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	/** Ein Array mit den Schülerklausurtermin-Raumstunden. */
+	@ArraySchema(schema = @Schema(implementation = GostSchuelerklausurterminraumstunde.class, description = "Ein Array mit den Schülerklausurtermin-Raumstunden."))
 	public @NotNull List<GostSchuelerklausurterminraumstunde> sktRaumstunden = new ArrayList<>();
 
-	/** Die ID der Klausurraumstunde. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
+	/** Ein Array mit den IDs der Klausurtermine, zu denen Raumdaten enthalten sind. */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der Klausurtermine, zu denen Raumdaten enthalten sind."))
 	public @NotNull List<Long> idsKlausurtermine = new ArrayList<>();
 
 	/**
-	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
 	 *
-	 * @param addData dd
+	 * @param addData die Daten, die hinzugefügt werden sollen
 	 */
 	public void addAll(final @NotNull GostKlausurenCollectionRaumData addData) {
 		raeume.addAll(addData.raeume);
 		raumstunden.addAll(addData.raumstunden);
 		sktRaumstunden.addAll(addData.sktRaumstunden);
 		idsKlausurtermine.addAll(addData.idsKlausurtermine);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurenCollectionRaumData() {
+		super();
 	}
 
 }

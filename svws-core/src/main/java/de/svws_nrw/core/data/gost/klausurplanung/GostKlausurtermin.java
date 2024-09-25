@@ -46,11 +46,11 @@ public class GostKlausurtermin {
 	public String bemerkung = null;
 
 	/** Die Information, ob es sich um einen Haupttermin handelt oder nicht. */
-	@Schema(description = "die Information, ob es sich um einen Haupttermin handelt oder nicht", example = "true")
+	@Schema(defaultValue = "false", description = "die Information, ob es sich um einen Haupttermin handelt oder nicht", example = "true")
 	public boolean istHaupttermin = false;
 
 	/** Die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht. */
-	@Schema(description = "die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob es bei einen Haupttermin Nachschreibklausuren zugelassen sind oder nicht", example = "false")
 	public boolean nachschreiberZugelassen = false;
 
 	/**
@@ -72,6 +72,13 @@ public class GostKlausurtermin {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(id);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurtermin() {
+		super();
 	}
 
 }

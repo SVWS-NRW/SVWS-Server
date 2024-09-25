@@ -13,12 +13,12 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class GostSchuelerklausurterminraumstunde {
 
-	/** Die ID der Schülerklausur. */
-	@Schema(description = "die ID des Schülerklausurtermin", example = "815")
+	/** Die ID des zugehörigen {@link GostSchuelerklausurTermin}s. */
+	@Schema(description = "die ID des zugehörigen Schülerklausurtermins", example = "815")
 	public long idSchuelerklausurtermin = -1;
 
-	/** Die ID der Klausurraumstunde. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "2242")
+	/** Die ID der zugehörigen {@link GostKlausurraumstunde}. */
+	@Schema(description = "die ID der zugehörigen Klausurraumstunde", example = "2242")
 	public long idRaumstunde = -1;
 
 	/**
@@ -42,6 +42,13 @@ public class GostSchuelerklausurterminraumstunde {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(idSchuelerklausurtermin);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostSchuelerklausurterminraumstunde() {
+		super();
 	}
 
 }

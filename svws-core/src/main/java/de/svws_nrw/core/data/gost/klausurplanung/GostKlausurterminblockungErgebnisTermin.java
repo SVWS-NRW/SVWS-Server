@@ -19,4 +19,11 @@ public class GostKlausurterminblockungErgebnisTermin {
 	/** Eine Liste der, dem Termin zugeordneten, Kurs-Klausur-IDs */
 	public @NotNull List<Long> kursklausuren = new ArrayList<>();
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurterminblockungErgebnisTermin() {
+		super();
+	}
+
 }

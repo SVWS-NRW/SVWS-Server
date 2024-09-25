@@ -44,6 +44,9 @@ export class GostKlausurenKalenderinformation extends JavaObject {
 	public istSperrtermin : boolean = false;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

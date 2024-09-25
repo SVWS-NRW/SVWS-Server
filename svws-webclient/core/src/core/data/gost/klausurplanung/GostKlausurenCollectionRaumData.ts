@@ -9,34 +9,37 @@ import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung
 export class GostKlausurenCollectionRaumData extends JavaObject {
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Ein Array mit den Klausurräumen.
 	 */
 	public raeume : List<GostKlausurraum> = new ArrayList<GostKlausurraum>();
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Ein Array mit den Klausurraumstunden.
 	 */
 	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Ein Array mit den Schülerklausurtermin-Raumstunden.
 	 */
 	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Ein Array mit den IDs der Klausurtermine, zu denen Raumdaten enthalten sind.
 	 */
 	public idsKlausurtermine : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
 
 	/**
-	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
 	 *
-	 * @param addData dd
+	 * @param addData die Daten, die hinzugefügt werden sollen
 	 */
 	public addAll(addData : GostKlausurenCollectionRaumData) : void {
 		this.raeume.addAll(addData.raeume);

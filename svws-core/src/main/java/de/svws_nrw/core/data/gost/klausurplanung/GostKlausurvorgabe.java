@@ -47,15 +47,15 @@ public class GostKlausurvorgabe {
 	public int auswahlzeit = 0;
 
 	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
-	@Schema(description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
 	public boolean istMdlPruefung = false;
 
 	/** Die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen. */
-	@Schema(description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
 	public boolean istAudioNotwendig = false;
 
 	/** Die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse. */
-	@Schema(description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
 	public boolean istVideoNotwendig = false;
 
 	/** Die textuelle Bemerkung zur Klausurvorgabe, sofern vorhanden. */
@@ -81,6 +81,13 @@ public class GostKlausurvorgabe {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(idVorgabe);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurvorgabe() {
+		super();
 	}
 
 }

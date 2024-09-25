@@ -72,7 +72,7 @@ export class GostKursklausurRich extends JavaObject {
 	public startzeit : number | null = null;
 
 	/**
-	 * Die Liste der IDs der zugehörigen Schüler.
+	 * Ein Array mit den IDs der zugehörigen Schüler.
 	 */
 	public schuelerIds : List<number> = new ArrayList<number>();
 
@@ -82,6 +82,9 @@ export class GostKursklausurRich extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

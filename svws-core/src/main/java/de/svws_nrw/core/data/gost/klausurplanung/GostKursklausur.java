@@ -58,4 +58,11 @@ public class GostKursklausur {
 		return Long.hashCode(id);
 	}
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKursklausur() {
+		super();
+	}
+
 }

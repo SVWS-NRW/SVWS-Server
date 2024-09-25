@@ -9,31 +9,29 @@ import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung
 export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Die enthaltenen Raumdaten werden durch die Veränderung neu erzeugt.
 	 */
 	public raumdata : GostKlausurenCollectionRaumData = new GostKlausurenCollectionRaumData();
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Ein Array mit den Klausurraumstunden, die durch die Veränderung gelöscht wurden.
 	 */
 	public raumstundenGeloescht : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
-	 */
-	public idKlausurraum : number = -1;
-
-	/**
-	 * Die ID der Klausurraumstunde.
+	 * Ein Array mit den IDs der Schülerklausurtermine, bei denen Daten geändert wurden.
 	 */
 	public idsSchuelerklausurtermine : List<number> = new ArrayList<number>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Die gepatchte Kursklausur.
 	 */
 	public kursKlausurPatched : GostKursklausur | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -59,9 +57,6 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 				result.raumstundenGeloescht.add(GostKlausurraumstunde.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
-		if (obj.idKlausurraum === undefined)
-			throw new Error('invalid json format, missing attribute idKlausurraum');
-		result.idKlausurraum = obj.idKlausurraum;
 		if (obj.idsSchuelerklausurtermine !== undefined) {
 			for (const elem of obj.idsSchuelerklausurtermine) {
 				result.idsSchuelerklausurtermine.add(elem);
@@ -82,7 +77,6 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"idKlausurraum" : ' + obj.idKlausurraum.toString() + ',';
 		result += '"idsSchuelerklausurtermine" : [ ';
 		for (let i = 0; i < obj.idsSchuelerklausurtermine.size(); i++) {
 			const elem = obj.idsSchuelerklausurtermine.get(i);
@@ -111,9 +105,6 @@ export class GostKlausurenCollectionSkrsKrsData extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
-		}
-		if (obj.idKlausurraum !== undefined) {
-			result += '"idKlausurraum" : ' + obj.idKlausurraum.toString() + ',';
 		}
 		if (obj.idsSchuelerklausurtermine !== undefined) {
 			result += '"idsSchuelerklausurtermine" : [ ';

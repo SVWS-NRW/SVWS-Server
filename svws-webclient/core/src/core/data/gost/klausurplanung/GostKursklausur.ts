@@ -35,6 +35,9 @@ export class GostKursklausur extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

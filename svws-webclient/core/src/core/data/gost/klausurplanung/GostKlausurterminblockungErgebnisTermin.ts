@@ -11,6 +11,9 @@ export class GostKlausurterminblockungErgebnisTermin extends JavaObject {
 	public kursklausuren : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

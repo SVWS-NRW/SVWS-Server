@@ -7,11 +7,14 @@ import { Class } from '../../../../java/lang/Class';
 export class GostKlausurterminblockungErgebnis extends JavaObject {
 
 	/**
-	 * Eine Liste der Termine-Ergebnisse
+	 * Ein Array mit den GostKlausurterminblockungErgebnisTerminen.
 	 */
 	public termine : List<GostKlausurterminblockungErgebnisTermin> = new ArrayList<GostKlausurterminblockungErgebnisTermin>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

@@ -102,7 +102,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param termine die Liste der GostSchuelerklausurterminen
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausurterminraumstunde-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuSchuelerklausurterminen(final List<GostSchuelerklausurTermin> termine) throws ApiOperationException {
 		return getSchuelerklausurterminraumstundenZuSchuelerklausurterminids(termine.stream().map(skt -> skt.id).toList());
@@ -114,7 +114,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param idsSchuelerklausurtermine die Liste der GostSchuelerklausurtermin-IDs
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausurterminraumstunde-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuSchuelerklausurterminids(final List<Long> idsSchuelerklausurtermine) throws ApiOperationException {
 		return mapList(getSchuelerklausurterminraumstundenDTOsZuSchuelerklausurterminids(idsSchuelerklausurtermine));
@@ -140,7 +140,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param listKlausurraumstunden die Liste der Klausurraumstunden
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausurterminraumstunde-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuKlausurraumstunden(final List<GostKlausurraumstunde> listKlausurraumstunden) throws ApiOperationException {
 		if (listKlausurraumstunden.isEmpty())
@@ -159,7 +159,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param idRaum Raumid
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausurterminraumstunde-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostSchuelerklausurterminraumstunde> getSchuelerklausurterminraumstundenZuRaumid(final long idRaum) throws ApiOperationException {
 		final List<GostKlausurraumstunde> listKlausurraumstunden = new DataGostKlausurenRaumstunde(conn).getKlausurraumstundenZuRaumid(idRaum);
@@ -189,7 +189,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param raumSchuelerZuteilung die IDs der zuzuweisenden Schülerklausuren
 	 *
 	 * @return die Antwort
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response loescheRaumZuSchuelerklausuren(final List<GostKlausurraumRich> raumSchuelerZuteilung) throws ApiOperationException {
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(loescheRaumZuSchuelerklausurenTransaction(raumSchuelerZuteilung))
@@ -202,7 +202,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 * @param raumSchuelerZuteilung die IDs der zuzuweisenden Schülerklausuren
 	 *
 	 * @return die Antwort
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public GostKlausurenCollectionSkrsKrsData loescheRaumZuSchuelerklausurenTransaction(final List<GostKlausurraumRich> raumSchuelerZuteilung) throws ApiOperationException {
 		final GostKlausurenCollectionSkrsKrsData result = new GostKlausurenCollectionSkrsKrsData();
@@ -229,7 +229,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 	 *
 	 * @return die Antwort
 	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response setzeRaumZuSchuelerklausuren(final List<GostKlausurraumRich> raumSchuelerZuteilung,
 			final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {

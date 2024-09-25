@@ -187,7 +187,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 * @param listSkIds die Liste der GostSchuelerklausurtermin-IDs
 	 *
 	 * @return die Liste der zugehörigen GostSchuelerklausurtermin-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostSchuelerklausurTermin> getSchuelerklausurtermineZuSchuelerklausurterminids(final List<Long> listSkIds)
 			throws ApiOperationException {

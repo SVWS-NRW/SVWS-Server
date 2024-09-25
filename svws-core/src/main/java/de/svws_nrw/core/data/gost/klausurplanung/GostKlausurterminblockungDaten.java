@@ -22,7 +22,14 @@ public class GostKlausurterminblockungDaten {
 	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
 	public @NotNull List<GostKursklausur> klausuren = new ArrayList<>();
 
-	/** Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
+	/** Die um Informationen für den Blockungsalgorithmus angereicherten Kurs-Klausuren, für welche die Blockung durchgeführt werden soll. */
 	public @NotNull List<GostKursklausurRich> richKlausuren = new ArrayList<>();
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurterminblockungDaten() {
+		super();
+	}
 
 }

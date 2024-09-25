@@ -65,6 +65,9 @@ export class GostKlausurvorgabe extends JavaObject {
 	public bemerkungVorgabe : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

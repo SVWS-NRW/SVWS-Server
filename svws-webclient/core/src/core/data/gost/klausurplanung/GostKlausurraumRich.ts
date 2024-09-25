@@ -19,7 +19,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public groesse : number = -1;
 
 	/**
-	 * Die Liste der angereicherten Schülerklausurtermine.
+	 * Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen.
 	 */
 	public schuelerklausurterminIDs : List<number> = new ArrayList<number>();
 
@@ -33,7 +33,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public constructor(klausurraum : GostKlausurraum, stundenplanraum : StundenplanRaum | null);
 
 	/**
-	 * Konstruktor für Transpiler.
+	 * Default-Konstruktor
 	 */
 	public constructor();
 

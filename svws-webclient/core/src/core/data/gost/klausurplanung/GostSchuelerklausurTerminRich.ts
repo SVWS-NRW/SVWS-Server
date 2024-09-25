@@ -9,7 +9,7 @@ import { GostKlausurplanManager, cast_de_svws_nrw_core_utils_gost_klausurplanung
 export class GostSchuelerklausurTerminRich extends JavaObject {
 
 	/**
-	 * Die ID des Stundenplans.
+	 * Die ID des Schülerklausurtermins.
 	 */
 	public id : number = -1;
 
@@ -19,7 +19,7 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	public startzeit : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die ID der zugehörigen Kursklausur.
 	 */
 	public idKursklausur : number = -1;
 
@@ -62,13 +62,13 @@ export class GostSchuelerklausurTerminRich extends JavaObject {
 	/**
 	 * Konstruktor zur Erstellung des Rich-Objekts.
 	 *
-	 * @param termin     das zu vergleichende Objekt
-	 * @param manager
+	 * @param termin     das {@link GostSchuelerklausurTermin}-Objekt
+	 * @param manager    der {@link GostKlausurplanManager} für die Klausurplanung
 	 */
 	public constructor(termin : GostSchuelerklausurTermin | null, manager : GostKlausurplanManager | null);
 
 	/**
-	 * Konstruktor für Transpiler.
+	 * Default-Konstruktor
 	 */
 	public constructor();
 

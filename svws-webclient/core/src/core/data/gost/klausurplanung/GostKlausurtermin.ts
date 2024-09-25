@@ -55,6 +55,9 @@ export class GostKlausurtermin extends JavaObject {
 	public nachschreiberZugelassen : boolean = false;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

@@ -16,6 +16,9 @@ export class GostKlausurenUpdate extends JavaObject {
 	public listKlausurtermineNachschreiberZugelassenFalse : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

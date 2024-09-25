@@ -45,6 +45,8 @@ public class KlausurblockungNachschreiberAlgorithmus {
 	}
 
 	/**
+	 * Berechnet die Blockung von Klausuren
+	 *
 	 * @param config   		  Die Konfiguration
 	 * @param klausurManager  Der Kursklausur-Manager.
 	 *

@@ -103,7 +103,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @param listRaeume die Liste der Klausurräume
 	 *
 	 * @return die Liste der Klausurraumstunden
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuRaeumen(final List<GostKlausurraum> listRaeume) throws ApiOperationException {
 		if (listRaeume.isEmpty())
@@ -119,7 +119,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @param idRaum	 die ID des Raums
 	 *
 	 * @return die Liste der Klausurraumstunden
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuRaumid(final long idRaum) throws ApiOperationException {
 		final List<DTOGostKlausurenRaumstunden> listKlausurraumstunden = conn.queryList(DTOGostKlausurenRaumstunden.QUERY_BY_KLAUSURRAUM_ID,
@@ -133,7 +133,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * @param listSktrs die Liste der GostSchuelerklausurterminraumstunden
 	 *
 	 * @return die Liste der zugehörigen Klausurraumstunden-Objekte
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public List<GostKlausurraumstunde> getKlausurraumstundenZuSchuelerklausurterminraumstunden(final List<GostSchuelerklausurterminraumstunde> listSktrs) throws ApiOperationException {
 		if (listSktrs.isEmpty())
@@ -148,7 +148,7 @@ public final class DataGostKlausurenRaumstunde extends DataManagerRevised<Long, 
 	 * Tabelle Gost_Klausuren_Raeume_Stunden)
 	 *
 	 * @return Liste der gelöschten Raumstunden
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	List<GostKlausurraumstunde> removeRaumStundenInDb() throws ApiOperationException {
 		final List<DTOGostKlausurenRaumstunden> stundenAlt = conn.queryList(

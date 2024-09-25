@@ -19,11 +19,14 @@ export class GostKlausurterminblockungDaten extends JavaObject {
 	public klausuren : List<GostKursklausur> = new ArrayList<GostKursklausur>();
 
 	/**
-	 * Die Kurs-Klausuren, für welche die Blockung durchgeführt werden soll.
+	 * Die um Informationen für den Blockungsalgorithmus angereicherten Kurs-Klausuren, für welche die Blockung durchgeführt werden soll.
 	 */
 	public richKlausuren : List<GostKursklausurRich> = new ArrayList<GostKursklausurRich>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

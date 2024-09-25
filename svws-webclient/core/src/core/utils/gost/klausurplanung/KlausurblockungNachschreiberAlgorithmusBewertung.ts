@@ -14,6 +14,9 @@ export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject
 	anzahl_zusatztermine : number = 0;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

@@ -12,34 +12,37 @@ import { HashSet } from '../../../../java/util/HashSet';
 export class GostKlausurenCollectionMetaData extends JavaObject {
 
 	/**
-	 * Die Liste der Klausurvorgaben.
+	 * Ein Array mit den Daten der Fächer.
 	 */
 	public faecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
-	 * Die Liste der Kursklausuren.
+	 * Ein Array mit den Daten der Schüler.
 	 */
 	public schueler : List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Daten der Lehrer.
 	 */
 	public lehrer : List<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Daten der Kurse.
 	 */
 	public kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
 
 	/**
-	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
+	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
 	 *
-	 * @param addData dd
+	 * @param addData die Daten, die hinzugefügt werden sollen
 	 */
 	public addAll(addData : GostKlausurenCollectionMetaData) : void {
 		this.faecher.addAll(addData.faecher);

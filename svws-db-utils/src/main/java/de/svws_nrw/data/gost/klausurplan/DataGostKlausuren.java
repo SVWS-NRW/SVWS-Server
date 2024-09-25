@@ -62,23 +62,6 @@ public final class DataGostKlausuren {
 	}
 
 	/**
-	 * Gibt die Blockungsdaten für die Blockung mit der angegebenen ID als GZip-Json
-	 * zurück.
-	 *
-	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param selection das Jahr, in welchem der Jahrgang Abitur machen wird
-	//	 * @param halbjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 *
-	 * @return die DataCollection
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public static Response getAllDataGZip(final DBEntityManager conn, final List<Pair<Integer, Integer>> selection) throws ApiOperationException {
-		final GostKlausurenCollectionAllData coll = getAllData(conn, selection);
-		return JSONMapper.gzipFileResponseFromObject(coll, "klausurdaten.json.gz");
-	}
-
-	/**
 	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff

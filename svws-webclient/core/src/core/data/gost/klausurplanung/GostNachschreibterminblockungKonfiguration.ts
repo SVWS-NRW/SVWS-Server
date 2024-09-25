@@ -13,12 +13,12 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	public maxTimeMillis : number = 1000;
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den zu blockenden Schülerklausurterminen.
 	 */
 	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den GostKlausurterminen, in die geblockt werden soll.
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
@@ -33,6 +33,9 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	public _regel_gleiche_fachart_auf_selbe_termine_verteilen : boolean = false;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}

@@ -53,6 +53,8 @@ export class KlausurblockungSchienenAlgorithmus extends JavaObject {
 	}
 
 	/**
+	 * Berechnet die Blockung von Klausuren
+	 *
 	 * @param pInput          Die Eingabe beinhaltet alle Klausuren, welche die SuS beinhalten.
 	 * @param pMaxTimeMillis  Logger für Benutzerhinweise, Warnungen und Fehler.
 	 * @return Eine Liste von Listen: 1. Ebene = Schienen, 2. Ebene = KlausurIDs

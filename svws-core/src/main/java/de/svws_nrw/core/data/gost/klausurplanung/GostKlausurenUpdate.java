@@ -23,4 +23,11 @@ public class GostKlausurenUpdate {
 	/** Die hinzuzufügenden Regeln */
 	public @NotNull List<Long> listKlausurtermineNachschreiberZugelassenFalse = new ArrayList<>();
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurenUpdate() {
+		super();
+	}
+
 }

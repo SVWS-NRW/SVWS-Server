@@ -208,7 +208,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 * @param abiturjahr 	das Abiturjahr
 	 * @param halbjahr das Gost-Halbjahr
 	 * @param ganzesSchuljahr true, um Termine für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
-	 * @param plusTerminIds
+	 * @param plusTerminIds diese IDs werden zusätzlich berücksichtigt
 	 *
 	 * @return die Liste der Kursklausuren
 	 *

@@ -6,27 +6,27 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu dem Stundenplan eines Schülers.
+ * Sie liefert die Informationen zu einem Gost-Schülerklausurtermin.
  */
 @XmlRootElement
-@Schema(description = "der Stundenplan eines Schülers.")
+@Schema(description = "die Informationen zu einem Gost-Schülerklausurtermin.")
 @TranspilerDTO
 public class GostSchuelerklausurTermin {
 
-	/** Die ID des Stundenplans. */
-	@Schema(description = "die ID des Stundenplans", example = "815")
+	/** Die ID des Schülerklausurtermins. */
+	@Schema(description = "die ID des Schülerklausurtermins.", example = "815")
 	public long id = -1;
 
-	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
+	/** Die ID der zugehörigen Schülerklausur. */
+	@Schema(description = "die ID der zugehörigen Schülerklausur.", example = "517")
 	public long idSchuelerklausur = -1;
 
-	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
+	/** Die Folgenummer der Schülerklausur, 0 falls es sich um den Haupttermin handelt, 1 der erste Nachschreibtermin ... */
+	@Schema(description = "die Folgenummer der Schülerklausur, 0 falls es sich um den Haupttermin handelt, 1 der erste Nachschreibtermin ...", example = "0")
 	public int folgeNr = -1;
 
-	/** Das Zeitraster des Stundenplans. */
-	@Schema(description = "das Zeitraster des Stundenplans")
+	/** Die ID des Klausurtermins, falls schon gesetzt. */
+	@Schema(description = "die ID des Klausurtermins, falls schon gesetzt.", example = "4711")
 	public Long idTermin = null;
 
 	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins. */
@@ -57,6 +57,13 @@ public class GostSchuelerklausurTermin {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(id);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostSchuelerklausurTermin() {
+		super();
 	}
 
 }
