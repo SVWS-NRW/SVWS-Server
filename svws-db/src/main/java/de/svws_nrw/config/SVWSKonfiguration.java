@@ -42,6 +42,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
+import de.svws_nrw.db.PersistenceUnits;
 
 /**
  * Diese Klasse repräsentiert die Konfiguration der SVWS-Server-Umgebung.
@@ -550,7 +551,8 @@ public final class SVWSKonfiguration {
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
 		final SVWSKonfigurationSchemaDTO schema = dto.dbKonfiguration.schemata.get(i);
-		return new DBConfig(driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password, true, false);
+		return new DBConfig(PersistenceUnits.SVWS_DB, driver, dto.dbKonfiguration.location, schema.name, schema.svwslogin, schema.username, schema.password,
+				true, false);
 	}
 
 	/**
@@ -578,7 +580,7 @@ public final class SVWSKonfiguration {
 		if (dto == null)
 			return null;
 		final DBDriver driver = DBDriver.valueOf(dto.dbKonfiguration.dbms);
-		return new DBConfig(driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false);
+		return new DBConfig(PersistenceUnits.SVWS_ROOT, driver, dto.dbKonfiguration.location, driver.getRootSchema(), true, username, password, true, false);
 	}
 
 

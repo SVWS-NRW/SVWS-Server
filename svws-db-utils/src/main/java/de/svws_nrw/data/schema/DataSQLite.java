@@ -13,6 +13,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import jakarta.ws.rs.core.MediaType;
@@ -148,7 +149,7 @@ public final class DataSQLite {
 			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
-						.switchSchema(conn.getDBSchema());
+						.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
 
 			try {
 				final Benutzer srcUser = Benutzer.create(srcConfig);

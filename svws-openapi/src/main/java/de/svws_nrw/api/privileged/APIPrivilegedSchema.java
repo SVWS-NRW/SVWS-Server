@@ -34,6 +34,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.schema.dto.DTOInformationUser;
@@ -341,8 +342,8 @@ public class APIPrivilegedSchema {
 			logger.logLn("ist noch nicht vorhanden");
 			logger.modifyIndent(-2);
 
-			final DBConfig dbconfig =
-					new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
+			final DBConfig dbconfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, conn.useDBLogin(),
+					kennwort.user, kennwort.password, true, true);
 			final boolean success = DBSchemaManager.createNewSchema(dbconfig, conn.getUser().getUsername(), conn.getUser().getPassword(), revision, logger);
 			return simpleResponse(Status.OK, success, log);
 		},
@@ -434,7 +435,8 @@ public class APIPrivilegedSchema {
 	@ApiResponse(responseCode = "204", description = "Das Flags des Schemas wurde erfolgreich angepasst.")
 	@ApiResponse(responseCode = "400", description = "Der Schema-Name darf nicht null oder leer sein.")
 	@ApiResponse(responseCode = "403", description = "Das Flag des Schemas darf nicht angepasst werden.")
-	public Response deactivateSchema(@PathParam("schema") final String schemaname, @PathParam("state") final int state, @Context final HttpServletRequest request) {
+	public Response deactivateSchema(@PathParam("schema") final String schemaname, @PathParam("state") final int state,
+			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			// Prüfe, ob der Datenbank-Benutzer priviligiert ist
 			if (!conn.isPrivilegedDatabaseUser())
@@ -501,8 +503,8 @@ public class APIPrivilegedSchema {
 				logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
 				final DBConfig srcConfig = mdb.getConfig();
-				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername,
-						multipart.schemaUserPassword, true, true);
+				final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+						multipart.schemaUsername, multipart.schemaUserPassword, true, true);
 				if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
 					logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
 							+ "', user='" + tgtConfig.getUsername() + "')");
@@ -563,8 +565,8 @@ public class APIPrivilegedSchema {
 
 				final long maxUpdateRevision = -1;
 				final DBConfig srcConfig = sqlite.getConfig();
-				final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, multipart.schemaUsername,
-						multipart.schemaUserPassword, true, true);
+				final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+						multipart.schemaUsername, multipart.schemaUserPassword, true, true);
 
 				try {
 					logger.log(2, "-> Verbinde zur Quell-Datenbank...");
@@ -817,10 +819,10 @@ public class APIPrivilegedSchema {
 			logger.logLn(2, "- erstelle das DB-Schema: " + schemaname);
 			logger.logLn(2, "- erstelle den Benutzer \"" + dbMigrationInfos.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
-			final DBConfig srcConfig = new DBConfig(srcDbDriver, dbMigrationInfos.srcLocation, dbMigrationInfos.srcSchema, false, dbMigrationInfos.srcUsername,
-					dbMigrationInfos.srcPassword, true, false);
-			final DBConfig tgtConfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schemaname, false, dbMigrationInfos.schemaUsername,
-					dbMigrationInfos.schemaUserPassword, true, true);
+			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_DB, srcDbDriver, dbMigrationInfos.srcLocation, dbMigrationInfos.srcSchema, false,
+					dbMigrationInfos.srcUsername, dbMigrationInfos.srcPassword, true, false);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+					dbMigrationInfos.schemaUsername, dbMigrationInfos.schemaUserPassword, true, true);
 			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, schulnummer, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
 						+ "', user='" + tgtConfig.getUsername() + "')");
@@ -1185,7 +1187,7 @@ public class APIPrivilegedSchema {
 			if (rev > max_revision)
 				return simpleResponse(Status.BAD_REQUEST, false, log);
 
-			final DBConfig dbconfig = new DBConfig(conn.getDBDriver(), conn.getDBLocation(), conn.getDBSchema(), conn.useDBLogin(),
+			final DBConfig dbconfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), conn.getDBSchema(), conn.useDBLogin(),
 					conn.getUser().getUsername(), conn.getUser().getPassword(), true, true);
 			final boolean success = DBSchemaManager.recycleSchema(dbconfig, revision, logger);
 			return simpleResponse(Status.OK, success, log);
@@ -1373,8 +1375,8 @@ public class APIPrivilegedSchema {
 					DBRootManager.grantAdminRights(conn, kennwort.user, schema);
 				}
 				// Erstelle eine Datenbank-Konfiguration mit dem übergebenen Benutzernamen und dem übergebenen Kennwort. Ist dies möglich, so kann das Schema zu der Konfiguration hinzugefügt werden.
-				final DBConfig dbconfig =
-						new DBConfig(conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(), kennwort.user, kennwort.password, true, true);
+				final DBConfig dbconfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schema, conn.useDBLogin(),
+						kennwort.user, kennwort.password, true, true);
 				final Benutzer user2 = Benutzer.create(dbconfig);
 				try (DBEntityManager conn2 = user2.getEntityManager()) {
 					try {

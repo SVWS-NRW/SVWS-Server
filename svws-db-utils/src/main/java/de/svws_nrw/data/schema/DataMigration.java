@@ -13,6 +13,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBMigrationManager;
 import jakarta.ws.rs.core.MediaType;
@@ -81,10 +82,10 @@ public final class DataMigration {
 			// Bestimme die Zielkonfiguration aus der SWVS-Konfiguration
 			DBConfig tgtConfig = SVWSKonfiguration.get().getDBConfig(conn.getDBSchema());
 			final boolean hatSchemaConfig = (tgtConfig != null);
-			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
+			// Falls das Schema in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
-						.switchSchema(conn.getDBSchema());
+						.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
 
 			// Führe die Migration durch
 			if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, null, logger)) {
@@ -141,8 +142,8 @@ public final class DataMigration {
 			return Response.status(Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(daten).build();
 		}
 
-		final DBConfig srcConfig = new DBConfig(srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false, verbindungsdaten.username,
-				verbindungsdaten.password, true, false);
+		final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_DB, srcDBDriver, verbindungsdaten.location, verbindungsdaten.schema, false,
+				verbindungsdaten.username, verbindungsdaten.password, true, false);
 		return migrateInto(conn, srcConfig, schulnummer);
 	}
 
@@ -181,7 +182,8 @@ public final class DataMigration {
 		final boolean hatSchemaConfig = (tgtConfig != null);
 		// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationsn aus der aktuellen Datenbank-Verbindung.
 		if (tgtConfig == null)
-			tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword()).switchSchema(conn.getDBSchema());
+			tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
+					.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
 
 		// Führe die Migration durch
 		if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, schulnummer, logger)) {

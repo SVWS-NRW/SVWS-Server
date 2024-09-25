@@ -12,6 +12,7 @@ import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.Response.Status;
 
@@ -112,7 +113,7 @@ public class APITempDBFile implements AutoCloseable {
 	 */
 	public DBConfig getConfig() {
 		final String username = (_dbms == DBDriver.MDB) ? "admin" : null;
-		return new DBConfig(_dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, null, true, false);
+		return new DBConfig(PersistenceUnits.SVWS_DB, _dbms, _tmpDir + "/" + _tmpFilename, "PUBLIC", false, username, null, true, false);
 	}
 
 

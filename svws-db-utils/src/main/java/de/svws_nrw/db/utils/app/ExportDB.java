@@ -15,6 +15,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 
 
@@ -112,7 +113,7 @@ public class ExportDB {
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUsername = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false);
+			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false);
 
 			// Lese den Namen für die SQLite-Datenbank ein
 			final String filename = cmdLine.getValue("f", "svws_export.sqlite");

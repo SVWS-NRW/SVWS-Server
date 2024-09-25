@@ -108,21 +108,27 @@ public class ConnectionFactory {
 		connections.remove(conn);
 		// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
 		if (connections.isEmpty() && !config.equals(SVWSKonfiguration.get().getDBConfig(config.getDBSchema()))) {
-			Thread.ofVirtual().start(() -> {
-				try {
-					Thread.sleep(CONNECTION_CLEANUP_INTERVAL);
-				} catch (@SuppressWarnings("unused") final InterruptedException e) {
-					Thread.currentThread().interrupt();
-					return;
-				}
-				// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
-				// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
-				final long now = System.currentTimeMillis();
-				if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
-					return;
-				// Ansonsten muss die Verbindung unterbrochen werdeb...
+			if (config.getDBDriver().isFileBased()) {
+				// Datei-basierte Verbindungen werden sofort geschlossen.
 				ConnectionManager.instance.closeSingle(config);
-			});
+			} else {
+				// Andere werden Zeit-verzögert geschlossen
+				Thread.ofVirtual().start(() -> {
+					try {
+						Thread.sleep(CONNECTION_CLEANUP_INTERVAL);
+					} catch (@SuppressWarnings("unused") final InterruptedException e) {
+						Thread.currentThread().interrupt();
+						return;
+					}
+					// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
+					// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
+					final long now = System.currentTimeMillis();
+					if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
+						return;
+					// Ansonsten muss die Verbindung unterbrochen werdeb...
+					ConnectionManager.instance.closeSingle(config);
+				});
+			}
 		}
 		ConnectionManager.instance.unlock();
 	}
@@ -194,7 +200,7 @@ public class ConnectionFactory {
 			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");
 			propertyMap.put("foreign_keys", "true");
 		}
-		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
+		return Persistence.createEntityManagerFactory(config.getPersistenceUnit().name(), propertyMap);
 		// TODO avoid Persistence Unit "SVWSDB" as xml file
 	}
 

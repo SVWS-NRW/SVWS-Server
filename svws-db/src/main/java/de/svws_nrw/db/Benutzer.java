@@ -148,7 +148,7 @@ public final class Benutzer {
 	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
 	public Benutzer connectTo(final String schema) throws DBException {
-		return create(_config.switchSchema(schema));
+		return create(_config.switchSchema(_config.getPersistenceUnit(), schema));
 	}
 
 

@@ -15,6 +15,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.schema.dto.DTOInformationUser;
 
@@ -418,10 +419,12 @@ public final class DBRootManager {
 	 */
 	private static DBConfig getDBRootConfig(final DBDriver driver, final String db_location, final String user_root, final String pw_root) {
 		return switch (driver) {
-			case MARIA_DB, MYSQL -> new DBConfig(driver, db_location, "mysql", false, (user_root == null) ? "root" : user_root, pw_root, true, false);
-			case MDB -> new DBConfig(driver, db_location, null, false, null, "", true, true);
-			case MSSQL -> new DBConfig(driver, db_location, "master", false, (user_root == null) ? "sa" : user_root, pw_root, true, false);
-			case SQLITE -> new DBConfig(driver, db_location, null, false, null, null, true, true);
+			case MARIA_DB, MYSQL ->
+				new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, "mysql", false, (user_root == null) ? "root" : user_root, pw_root, true, false);
+			case MDB -> new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, null, false, null, "", true, true);
+			case MSSQL ->
+				new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, "master", false, (user_root == null) ? "sa" : user_root, pw_root, true, false);
+			case SQLITE -> new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, null, false, null, null, true, true);
 			default -> null;
 		};
 	}
@@ -442,7 +445,7 @@ public final class DBRootManager {
 			final List<String> benutzer = DTOInformationUser.queryNames(conn);
 			if (!benutzer.contains(config.getUsername()))
 				return true;
-			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema("information_schema"));
+			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema(PersistenceUnits.SVWS_ROOT, "information_schema"));
 			try (DBEntityManager tmpConn = userInformationSchema.getEntityManager()) {
 				/* Kein Zugriff über tmpConn nötig... Nur ein Verbindungstest */
 			}

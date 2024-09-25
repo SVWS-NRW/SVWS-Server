@@ -22,6 +22,7 @@ import de.svws_nrw.db.converter.current.PersonalTypConverter;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
 import de.svws_nrw.db.converter.current.StringToIntegerConverter;
 import de.svws_nrw.db.converter.current.UhrzeitConverter;
+import de.svws_nrw.db.converter.current.UhrzeitConverterString;
 import de.svws_nrw.db.converter.current.VerkehrssprachenConverter;
 import de.svws_nrw.db.converter.current.gost.AbiturBelegungsartConverter;
 import de.svws_nrw.db.converter.current.gost.AbiturKursMarkierungConverter;
@@ -116,6 +117,7 @@ public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X
 		add(new GostLaufbahnplanungFachkombinationTypConverter());
 		add(new SprachpruefungniveauConverter());
 		add(new UhrzeitConverter());
+		add(new UhrzeitConverterString());
 		add(new VerkehrssprachenConverter());
 
 		// Zukünftige Revisionen: Konverter für zukünftige Revision liegen im Sub-Package revNNN und beginnen mit dem Präfix RevNNN

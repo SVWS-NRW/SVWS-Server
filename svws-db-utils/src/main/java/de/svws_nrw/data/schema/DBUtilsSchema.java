@@ -19,6 +19,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
@@ -52,16 +53,16 @@ public final class DBUtilsSchema {
 		DBConfig dbconfig = SVWSKonfiguration.get().getRootDBConfig(credentials.user, credentials.password);
 		switch (dbconfig.getDBDriver()) {
 			case MYSQL, MARIA_DB:
-				dbconfig = dbconfig.switchSchema("information_schema");
+				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "information_schema");
 				break;
 			case MDB:
-				dbconfig = dbconfig.switchSchema("PUBLIC");
+				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "PUBLIC");
 				break;
 			case MSSQL:
-				dbconfig = dbconfig.switchSchema("master");
+				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "master");
 				break;
 			case SQLITE:
-				dbconfig = dbconfig.switchSchema("");
+				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "");
 				break;
 		}
 		final Benutzer user;

@@ -389,7 +389,7 @@ public class DTOCreator {
                   <persistence version="2.1"
                       xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                       xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-                      <persistence-unit name="SVWSDB" transaction-type="RESOURCE_LOCAL">
+                      <persistence-unit name="SVWS_DB" transaction-type="RESOURCE_LOCAL">
                           <class>de.svws_nrw.db.converter.migration.MigrationBoolean01Converter</class>
                           <class>de.svws_nrw.db.converter.migration.MigrationBoolean01StringConverter</class>
                           <class>de.svws_nrw.db.converter.migration.MigrationBooleanJNConverter</class>
@@ -438,13 +438,18 @@ public class DTOCreator {
 		for (final String cl : allClasses)
 			sb.append("        <class>" + cl + "</class>" + System.lineSeparator());
 		sb.append("""
-                          <exclude-unlisted-classes>false</exclude-unlisted-classes>
+                          <exclude-unlisted-classes>true</exclude-unlisted-classes>
                       </persistence-unit>
-                      <persistence-unit name="SVWSDBSCHEMA" transaction-type="RESOURCE_LOCAL">
+                      <persistence-unit name="SVWS_ROOT" transaction-type="RESOURCE_LOCAL">
+                          <class>de.svws_nrw.db.converter.current.BenutzerTypConverter</class>
+                          <class>de.svws_nrw.db.converter.current.Boolean01Converter</class>
                           <class>de.svws_nrw.db.schema.dto.DTOInformationSchema</class>
                           <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTableColumn</class>
                           <class>de.svws_nrw.db.schema.dto.DTOInformationSchemaTables</class>
                           <class>de.svws_nrw.db.schema.dto.DTOInformationUser</class>
+                          <class>de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion</class>
+                          <class>de.svws_nrw.db.dto.current.schema.DTOSchemaStatus</class>
+                          <class>de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails</class>
                           <exclude-unlisted-classes>true</exclude-unlisted-classes>
                       </persistence-unit>
                   </persistence>

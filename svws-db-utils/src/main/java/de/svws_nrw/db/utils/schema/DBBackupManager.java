@@ -13,6 +13,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaStatus;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -264,7 +265,7 @@ public class DBBackupManager {
 	 */
 	public boolean exportDB(final String filename, final Logger logger) {
 		final DBEntityManager conn = schemaManager.getConnection();
-		final DBConfig tgtConfig = new DBConfig(DBDriver.SQLITE, filename, null, false, null, null, true, true);
+		final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, DBDriver.SQLITE, filename, null, false, null, null, true, true);
 
 		boolean success = true;
 		final long timeStart = System.currentTimeMillis();

@@ -10,6 +10,7 @@ import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 
 
@@ -99,7 +100,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 		if ((username == null) || (username.isBlank()))
 			return null;
 		if (!schema.isBlank())
-			rootConfig = rootConfig.switchSchema(schema);
+			rootConfig = rootConfig.switchSchema(PersistenceUnits.SVWS_ROOT, schema);
 		try {
 			final Benutzer benutzer = Benutzer.create(rootConfig);
 			benutzer.setUsername(username);
@@ -190,7 +191,7 @@ public final class BenutzerApiPrincipal implements Principal, Serializable {
 
 		if (config.useDBLogin()) {
 			// Setze den übergebene Benutzername und das Kennwort auch für die Datenbankverbindung, falls die DB-Konfiguration eine Anmeldung per SVWS-Benutzer vorsieht
-			config = config.switchUser(username, password);
+			config = config.switchUser(PersistenceUnits.SVWS_DB, username, password);
 		}
 		try {
 			final Benutzer user = Benutzer.create(config);
