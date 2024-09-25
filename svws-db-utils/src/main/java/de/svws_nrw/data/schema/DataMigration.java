@@ -85,7 +85,7 @@ public final class DataMigration {
 			// Falls das Schema in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
-						.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
+						.switchSchema(PersistenceUnits.SVWS_DB, conn.getDBSchema());
 
 			// Führe die Migration durch
 			if (!DBMigrationManager.migrateInto(srcConfig, tgtConfig, -1, false, null, logger)) {
