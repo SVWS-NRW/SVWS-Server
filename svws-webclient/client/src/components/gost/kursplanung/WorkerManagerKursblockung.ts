@@ -60,6 +60,9 @@ export class WorkerManagerKursblockung {
 	/** Ein Array mit den Resolvern für die ergebnisWaiting-Liste */
 	protected ergebnisResolvers: ((value: unknown) => void)[] = [];
 
+	/** Eine Map mit den CoreTypeDaten */
+	protected mapCoreTypeNameJsonData: Map<string, string> = new Map();
+
 
 	/**
 	 * Erzeugt einen neuen nicht initialisierten Worker-Manager zur Berechnung von Kursblockungsergebnissen.
@@ -67,13 +70,14 @@ export class WorkerManagerKursblockung {
 	 * @param faecherListe   die Liste der Fächer des Abiturjahrgangs
 	 * @param blockung       die Daten der Kursblockung
 	 */
-	public constructor(datenManager: GostBlockungsdatenManager) {
+	public constructor(datenManager: GostBlockungsdatenManager, mapCoreTypeNameJsonData: Map<string, string>) {
 		this.faecherListe = datenManager.faecherManager().faecher();
 		this.blockung = datenManager.daten();
 		this.datenManager = datenManager;
 		// Teste, ob der Algorithmus überhaupt mit den aktuellen Regeln möglich ist
 		new KursblockungAlgorithmusPermanent(this.datenManager);
 		this.usedWorkerThreads.value = 1;
+		this.mapCoreTypeNameJsonData = mapCoreTypeNameJsonData;
 	}
 
 	/**
@@ -172,7 +176,7 @@ export class WorkerManagerKursblockung {
 	protected initWorker(index : number) {
 		this.worker[index] = new Worker(new URL('./WorkerKursblockung.ts', import.meta.url), { type: 'module' });
 		this.worker[index].onmessage = (ev) => this.messageHandler(index, ev);
-		this.requestInit(index, this.faecherListe, this.blockung);
+		this.requestInit(index, this.faecherListe, this.blockung, this.mapCoreTypeNameJsonData);
 	}
 
 	/**
@@ -266,12 +270,12 @@ export class WorkerManagerKursblockung {
 	 * @param faecherListe   die Liste der Fächer für den Abiturjahrgang der Blockung
 	 * @param blockung       die Daten der Blockung
 	 */
-	protected requestInit(index : number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten) {
+	protected requestInit(index : number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten, mapCoreTypeNameJsonData: Map<string, string>) {
 		const faecher = new Array<string>();
 		for (const f of faecherListe)
 			faecher.push(GostFach.transpilerToJSON(f));
 		const blockungsdaten = GostBlockungsdaten.transpilerToJSON(blockung);
-		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten });
+		this.worker[index].postMessage(<WorkerKursblockungRequestInit>{ cmd: "init", faecher, blockungsdaten, mapCoreTypeNameJsonData });
 	}
 
 	/**

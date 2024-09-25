@@ -140,6 +140,7 @@
 
 		// initiiere die Core Types
 		reader.readAll();
+		props.setMapCoreTypeNameJsonData(reader.mapCoreTypeNameJsonData);
 	}
 
 	async function connect() {

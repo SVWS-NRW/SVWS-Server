@@ -33,4 +33,5 @@ export interface GostKursplanungAuswahlProps {
 	mode: ServerMode;
 	ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 	setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => Promise<void>;
+	mapCoreTypeNameJsonData: () => Map<string, string>;
 }

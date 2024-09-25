@@ -70,6 +70,16 @@ class Api {
 		return githash;
 	}
 
+	/** Gibt die Map der CoreTypeDaten zurück */
+	get mapCoreTypeNameJsonData(): Map<string, string> {
+		return this.conn.mapCoreTypeNameJsonData
+	}
+
+	/** Setzt die Map der CoreTypeDaten zurück */
+	setMapCoreTypeNameJsonData = (map: Map<string, string>) => {
+		this.conn.mapCoreTypeNameJsonData = map;
+	}
+
 	/**
 	 * Setzt den Hostnamen des SVWS-Server für den Verbindungsaufbau.
 	 *
@@ -332,7 +342,7 @@ class Api {
 	 * @returns der Schuljahresabschnitt
 	 */
 	public getAbschnittBySchuljahrUndHalbjahr(schuljahr: number, halbjahr: number, quartal: number = 1): Schuljahresabschnitt | undefined {
-		const abschnitt = this.hatQuartalsModus() ? (halbjahr - 1) * 2 + quartal : halbjahr;
+		const abschnitt = this.hatQuartalsModus() ? ((halbjahr - 1) * 2) + quartal : halbjahr;
 		return this.getAbschnittBySchuljahrUndAbschnitt(schuljahr, abschnitt);
 	}
 

@@ -16,6 +16,7 @@ export interface WorkerKursblockungRequestInit extends WorkerKursblockungMessage
 	cmd: 'init';
 	faecher: string[];
 	blockungsdaten: string;
+	mapCoreTypeNameJsonData: Map<string, string>;
 }
 
 /**

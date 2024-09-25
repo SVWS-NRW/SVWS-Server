@@ -8,4 +8,5 @@ export interface LoginProps {
 	login: (schema: string, username: string, password: string) => Promise<void>;
 	connectTo: (url: string) => Promise<List<DBSchemaListeEintrag>>;
 	schemaPrevious: string | null;
+	setMapCoreTypeNameJsonData: (map: Map<string, string>) => void;
 }

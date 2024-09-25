@@ -60,6 +60,9 @@ export class ApiConnection {
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
 
+	// Die Map mit den CoreTypeDaten
+	protected _mapCoreTypeNameJsonData = ref<Map<string, string> | undefined>(undefined);
+
 
 	public constructor() {
 		this._config.value = new Config(this.setConfigGlobal, this.setConfigUser);
@@ -149,6 +152,18 @@ export class ApiConnection {
 		return aes;
 	}
 
+	// gibt die Map mit den CoreType-Daten zurück
+	get mapCoreTypeNameJsonData(): Map<string, string> {
+		if (this._mapCoreTypeNameJsonData.value === undefined)
+			throw new DeveloperNotificationException("Eine KMap mi den CoreTypeDaten ist nicht vorhanden.");
+		return this._mapCoreTypeNameJsonData.value;
+	}
+
+	//** Setzt die Map mit den CoreTypeDaten */
+	set mapCoreTypeNameJsonData(map: Map<string, string>) {
+		this._mapCoreTypeNameJsonData.value = map;
+	}
+
 	/**
 	 * Setzt den Benutzer-spezifischen Konfigurationseintrag
 	 *
@@ -214,7 +229,7 @@ export class ApiConnection {
 		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {
 			const list = await this.connect(host);
-			if (url.port)
+			if (url.port.length > 0)
 				localStorage.setItem("SVWS-Client Port", url.port);
 			return list;
 		} catch (error) {
@@ -400,7 +415,7 @@ export class ApiConnection {
 	 */
 	init = async (): Promise<boolean> => {
 		try {
-			if (this._api && this._schema)
+			if (this._api && (this._schema !== undefined))
 				this._stammdaten.value.stammdaten = await this._api.getSchuleStammdaten(this._schema);
 			return true;
 		} catch(error) {

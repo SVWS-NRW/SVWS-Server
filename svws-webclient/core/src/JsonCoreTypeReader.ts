@@ -147,10 +147,10 @@ export class JsonCoreTypeReader {
 
 	private read<T>(name: string, mapper: (json: string) => T): JsonCoreTypeDataResult<T> {
 		if (name === "")
-			throw new DeveloperNotificationException("Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden");
+			throw new DeveloperNotificationException("Für das Einlesen eines CoreTypes muss ein gültiger Name angegeben werden");
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
 		if (json === undefined)
-			throw new DeveloperNotificationException(`Für den den CoreType "${name}" liegen keine JSON Daten vor. Stelle sicher dass loadJsonFromAPI (loadAll) ausgeführt wurde.`);
+			throw new DeveloperNotificationException(`Für den den CoreType "${name}" liegen keine JSON Daten vor. Wurde die Map mit den CoreType-Daten gefüllt?`);
 		const data: JsonCoreTypeData<T> = JSON.parse(json);
 		const idsHistorien = new HashSet<number>();
 		const result = <JsonCoreTypeDataResult<T>>{
@@ -163,7 +163,7 @@ export class JsonCoreTypeReader {
 			const idHistorie = eintrag.idHistorie;
 			const historie = eintrag.historie;
 			if (idsHistorien.contains(idHistorie))
-				throw new DeveloperNotificationException("Fehler beim Einlesen der Core-Type-Daten für den Core-Type " + name);
+				throw new DeveloperNotificationException("Fehler beim Einlesen der CoreType-Daten für den Core-Type " + name);
 			idsHistorien.add(idHistorie);
 			result.mapHistorienIDs.put(bezeichner, idHistorie);
 			const list = new ArrayList<T>();
@@ -482,7 +482,7 @@ export class JsonCoreTypeReader {
 	}
 
 	public async loadAll() : Promise<Map<string, string>> {
-		console.log("Lade die Json Files");
+		console.log("Laden der Json-Dateien");
 		const arr = [];
 		for (const key of this.keys)
 			arr.push(await this.loadJson(key));
@@ -491,7 +491,7 @@ export class JsonCoreTypeReader {
 	}
 
 	public readAll() {
-		console.log("Initialisiere die Core Types");
+		console.log("Initialisiere die CoreTypes");
 		try {
 			this.readSchulform();
 			this.readBerufskollegAnlage();

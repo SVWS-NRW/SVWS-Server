@@ -26,7 +26,7 @@
 					<div class="-my-1 ml-auto inline-flex gap-1">
 						<template v-if="hatUpdateKompetenz && ((auswahlBlockung !== undefined) && !isPending(auswahlBlockung.id)) && (blockung === auswahlBlockung)">
 							<template v-if="allow_berechne_blockung">
-								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
+								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :map-core-type-name-json-data :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
 									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
 										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
 									</svws-ui-button>
@@ -115,6 +115,7 @@
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
 		hatUpdateKompetenz: boolean;
+		mapCoreTypeNameJsonData: () => Map<string, string>;
 	}>();
 
 	const edit_blockungsname = ref<boolean>(false);

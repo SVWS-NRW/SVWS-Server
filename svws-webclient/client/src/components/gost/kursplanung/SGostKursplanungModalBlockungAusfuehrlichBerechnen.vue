@@ -28,7 +28,7 @@
 			<div class="text-left pb-4 flex flex-row">
 				<svws-ui-checkbox :model-value="ausfuehrlicheDarstellungKursdifferenz()" @update:model-value="setAusfuehrlicheDarstellungKursdifferenz">Ausführliche Darstellung für Kursdifferenz verwenden</svws-ui-checkbox>
 			</div>
-			<svws-ui-table clickable v-model="selected" :selectable="items.size() > 0 && !running" class="z-20 relative" :columns :items :count="!items.isEmpty()">
+			<svws-ui-table v-if="!items.isEmpty()" clickable v-model="selected" :selectable="!running" class="z-20 relative" :columns :items count>
 				<template #cell(wert1)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung1Wert() > 0" autosize>
@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, watch } from 'vue';
+	import { computed, ref, shallowRef, toRaw, watch } from 'vue';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungsergebnis, List } from "@core";
 	import { ArrayList } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
@@ -114,6 +114,7 @@
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
+		mapCoreTypeNameJsonData: () => Map<string, string>;
 	}>();
 
 	const columns = [
@@ -135,7 +136,7 @@
 			selected.value = [];
 		}
 		if (neu === true)
-			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager());
+			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager(), toRaw(props.mapCoreTypeNameJsonData()));
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
