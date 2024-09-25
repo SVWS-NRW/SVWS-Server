@@ -1856,7 +1856,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerLernplattform daten = entities.get(i);
 			if ((daten.SchuelerID == null) || (!schuelerIDs.contains(daten.SchuelerID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR,
+						"Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der ID %d in der Datenbank.".formatted(daten.SchuelerID));
 				entities.remove(i);
 				continue;
 			}
@@ -1881,7 +1882,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOErzieherLernplattform daten = entities.get(i);
 			if ((daten.ErzieherID == null) || (!erzieherIDs.contains(daten.ErzieherID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Erzieher mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR,
+						"Entferne ungültigen Datensatz: Es gibt keinen Erzieher mit der ID %d in der Datenbank.".formatted(daten.ErzieherID));
 				entities.remove(i);
 				continue;
 			}
