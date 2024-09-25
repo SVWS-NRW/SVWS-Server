@@ -1,12 +1,12 @@
 import { beforeAll } from "vitest";
-import { JsonCoreTypeReaderNode } from "./JsonCoreTypeReaderNode";
+import { JsonCoreTypeReaderStatic } from "../core/src/JsonCoreTypeReaderStatic";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-const reader = new JsonCoreTypeReaderNode();
+const reader = new JsonCoreTypeReaderStatic();
 
 beforeAll(async () => {
 	// Lade die JSON Daten für die Core Types vom Filesystem
-	await reader.loadAllFromFileSystem();
+	await reader.loadAll();
 	// initiiere alle Core Types
 	reader.readAll();
 });

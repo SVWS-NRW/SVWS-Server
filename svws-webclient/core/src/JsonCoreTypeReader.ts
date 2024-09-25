@@ -1,110 +1,106 @@
-import type { List } from "@core";
-import {
-	HashMap,
-	BaseApi,
-	DeveloperNotificationException,
-	HashSet,
-	ArrayList,
-	SchulformKatalogEintrag,
-	CoreTypeDataManager,
-	Schulform,
-	BerufskollegAnlageKatalogEintrag,
-	BerufskollegAnlage,
-	OrganisationsformKatalogEintrag,
-	AllgemeinbildendOrganisationsformen,
-	BerufskollegOrganisationsformen,
-	WeiterbildungskollegOrganisationsformen,
-	SchulabschlussAllgemeinbildendKatalogEintrag,
-	SchulabschlussAllgemeinbildend,
-	SchulabschlussBerufsbildendKatalogEintrag,
-	SchulabschlussBerufsbildend,
-	HerkunftBildungsgangKatalogEintrag,
-	HerkunftBildungsgang,
-	HerkunftBildungsgangTypKatalogEintrag,
-	HerkunftBildungsgangTyp,
-	JahrgaengeKatalogEintrag,
-	Jahrgaenge,
-	PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag,
-	PrimarstufeSchuleingangsphaseBesuchsjahre,
-	ReligionKatalogEintrag,
-	Religion,
-	KindergartenbesuchKatalogEintrag,
-	Kindergartenbesuch,
-	SchuelerStatusKatalogEintrag,
-	SchuelerStatus,
-	NoteKatalogEintrag,
-	Note,
-	SprachreferenzniveauKatalogEintrag,
-	Sprachreferenzniveau,
-	BildungsgangTypKatalogEintrag,
-	BerufskollegBildungsgangTyp,
-	WeiterbildungskollegBildungsgangTyp,
-	SchulgliederungKatalogEintrag,
-	Schulgliederung,
-	FachgruppeKatalogEintrag,
-	Fachgruppe,
-	FachKatalogEintrag,
-	Fach,
-	LehrerAbgangsgrundKatalogEintrag,
-	LehrerAbgangsgrund,
-	LehrerBeschaeftigungsartKatalogEintrag,
-	LehrerBeschaeftigungsart,
-	LehrerEinsatzstatusKatalogEintrag,
-	LehrerEinsatzstatus,
-	LehrerFachrichtungKatalogEintrag,
-	LehrerFachrichtung,
-	LehrerLehrbefaehigungKatalogEintrag,
-	LehrerLehrbefaehigung,
-	LehrerFachrichtungAnerkennungKatalogEintrag,
-	LehrerFachrichtungAnerkennung,
-	LehrerLehramtKatalogEintrag,
-	LehrerLehramt,
-	LehrerLehramtAnerkennungKatalogEintrag,
-	LehrerLehramtAnerkennung,
-	LehrerLehrbefaehigungAnerkennungKatalogEintrag,
-	LehrerLehrbefaehigungAnerkennung,
-	LehrerLeitungsfunktionKatalogEintrag,
-	LehrerLeitungsfunktion,
-	LehrerRechtsverhaeltnisKatalogEintrag,
-	LehrerRechtsverhaeltnis,
-	LehrerZugangsgrundKatalogEintrag,
-	LehrerZugangsgrund,
-	BilingualeSpracheKatalogEintrag,
-	BilingualeSprache,
-	KAOABerufsfeldKatalogEintrag,
-	KAOABerufsfeld,
-	KAOAMerkmaleOptionsartenKatalogEintrag,
-	KAOAMerkmaleOptionsarten,
-	KAOAZusatzmerkmaleOptionsartenKatalogEintrag,
-	KAOAZusatzmerkmaleOptionsarten,
-	KAOAEbene4KatalogEintrag,
-	KAOAEbene4,
-	KAOAZusatzmerkmalKatalogEintrag,
-	KAOAZusatzmerkmal,
-	KAOAAnschlussoptionenKatalogEintrag,
-	KAOAAnschlussoptionen,
-	KAOAKategorieKatalogEintrag,
-	KAOAKategorie,
-	KAOAMerkmalKatalogEintrag,
-	KAOAMerkmal,
-	KlassenartKatalogEintrag,
-	Klassenart,
-	UebergangsempfehlungKatalogEintrag,
-	Uebergangsempfehlung,
-	ZulaessigeKursartKatalogEintrag,
-	ZulaessigeKursart,
-	FoerderschwerpunktKatalogEintrag,
-	Foerderschwerpunkt,
-	LehrerAnrechnungsgrundKatalogEintrag,
-	LehrerAnrechnungsgrund,
-	LehrerMehrleistungsartKatalogEintrag,
-	LehrerMehrleistungsarten,
-	LehrerMinderleistungsartKatalogEintrag,
-	LehrerMinderleistungsarten,
-	// ValidatorFehlerartKontext,
-	// ValidatorManager,
-	CoreTypeSimple,
-} from "@core";
+import { BilingualeSpracheKatalogEintrag } from "./asd/data/fach/BilingualeSpracheKatalogEintrag";
+import { FachgruppeKatalogEintrag } from "./asd/data/fach/FachgruppeKatalogEintrag";
+import { FachKatalogEintrag } from "./asd/data/fach/FachKatalogEintrag";
+import { SprachreferenzniveauKatalogEintrag } from "./asd/data/fach/SprachreferenzniveauKatalogEintrag";
+import { JahrgaengeKatalogEintrag } from "./asd/data/jahrgang/JahrgaengeKatalogEintrag";
+import { PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag } from "./asd/data/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag";
+import { KAOAAnschlussoptionenKatalogEintrag } from "./asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag";
+import { KAOABerufsfeldKatalogEintrag } from "./asd/data/kaoa/KAOABerufsfeldKatalogEintrag";
+import { KAOAEbene4KatalogEintrag } from "./asd/data/kaoa/KAOAEbene4KatalogEintrag";
+import { KAOAKategorieKatalogEintrag } from "./asd/data/kaoa/KAOAKategorieKatalogEintrag";
+import { KAOAMerkmaleOptionsartenKatalogEintrag } from "./asd/data/kaoa/KAOAMerkmaleOptionsartenKatalogEintrag";
+import { KAOAMerkmalKatalogEintrag } from "./asd/data/kaoa/KAOAMerkmalKatalogEintrag";
+import { KAOAZusatzmerkmaleOptionsartenKatalogEintrag } from "./asd/data/kaoa/KAOAZusatzmerkmaleOptionsartenKatalogEintrag";
+import { KAOAZusatzmerkmalKatalogEintrag } from "./asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag";
+import { KlassenartKatalogEintrag } from "./asd/data/klassen/KlassenartKatalogEintrag";
+import { ZulaessigeKursartKatalogEintrag } from "./asd/data/kurse/ZulaessigeKursartKatalogEintrag";
+import { LehrerAbgangsgrundKatalogEintrag } from "./asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag";
+import { LehrerAnrechnungsgrundKatalogEintrag } from "./asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag";
+import { LehrerBeschaeftigungsartKatalogEintrag } from "./asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag";
+import { LehrerEinsatzstatusKatalogEintrag } from "./asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag";
+import { LehrerFachrichtungAnerkennungKatalogEintrag } from "./asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag";
+import { LehrerFachrichtungKatalogEintrag } from "./asd/data/lehrer/LehrerFachrichtungKatalogEintrag";
+import { LehrerLehramtAnerkennungKatalogEintrag } from "./asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag";
+import { LehrerLehramtKatalogEintrag } from "./asd/data/lehrer/LehrerLehramtKatalogEintrag";
+import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from "./asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag";
+import { LehrerLehrbefaehigungKatalogEintrag } from "./asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag";
+import { LehrerLeitungsfunktionKatalogEintrag } from "./asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag";
+import { LehrerMehrleistungsartKatalogEintrag } from "./asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag";
+import { LehrerMinderleistungsartKatalogEintrag } from "./asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag";
+import { LehrerRechtsverhaeltnisKatalogEintrag } from "./asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag";
+import { LehrerZugangsgrundKatalogEintrag } from "./asd/data/lehrer/LehrerZugangsgrundKatalogEintrag";
+import { NoteKatalogEintrag } from "./asd/data/NoteKatalogEintrag";
+import { HerkunftBildungsgangKatalogEintrag } from "./asd/data/schueler/HerkunftBildungsgangKatalogEintrag";
+import { HerkunftBildungsgangTypKatalogEintrag } from "./asd/data/schueler/HerkunftBildungsgangTypKatalogEintrag";
+import { SchuelerStatusKatalogEintrag } from "./asd/data/schueler/SchuelerStatusKatalogEintrag";
+import { UebergangsempfehlungKatalogEintrag } from "./asd/data/schueler/UebergangsempfehlungKatalogEintrag";
+import { BerufskollegAnlageKatalogEintrag } from "./asd/data/schule/BerufskollegAnlageKatalogEintrag";
+import { BildungsgangTypKatalogEintrag } from "./asd/data/schule/BildungsgangTypKatalogEintrag";
+import { FoerderschwerpunktKatalogEintrag } from "./asd/data/schule/FoerderschwerpunktKatalogEintrag";
+import { KindergartenbesuchKatalogEintrag } from "./asd/data/schule/KindergartenbesuchKatalogEintrag";
+import { OrganisationsformKatalogEintrag } from "./asd/data/schule/OrganisationsformKatalogEintrag";
+import { ReligionKatalogEintrag } from "./asd/data/schule/ReligionKatalogEintrag";
+import { SchulabschlussAllgemeinbildendKatalogEintrag } from "./asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag";
+import { SchulabschlussBerufsbildendKatalogEintrag } from "./asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag";
+import { SchulformKatalogEintrag } from "./asd/data/schule/SchulformKatalogEintrag";
+import { SchulgliederungKatalogEintrag } from "./asd/data/schule/SchulgliederungKatalogEintrag";
+import { CoreTypeSimple } from "./asd/types/CoreTypeSimple";
+import { BilingualeSprache } from "./asd/types/fach/BilingualeSprache";
+import { Fach } from "./asd/types/fach/Fach";
+import { Fachgruppe } from "./asd/types/fach/Fachgruppe";
+import { Sprachreferenzniveau } from "./asd/types/fach/Sprachreferenzniveau";
+import { Jahrgaenge } from "./asd/types/jahrgang/Jahrgaenge";
+import { PrimarstufeSchuleingangsphaseBesuchsjahre } from "./asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre";
+import { KAOAAnschlussoptionen } from "./asd/types/kaoa/KAOAAnschlussoptionen";
+import { KAOABerufsfeld } from "./asd/types/kaoa/KAOABerufsfeld";
+import { KAOAEbene4 } from "./asd/types/kaoa/KAOAEbene4";
+import { KAOAKategorie } from "./asd/types/kaoa/KAOAKategorie";
+import { KAOAMerkmal } from "./asd/types/kaoa/KAOAMerkmal";
+import { KAOAMerkmaleOptionsarten } from "./asd/types/kaoa/KAOAMerkmaleOptionsarten";
+import { KAOAZusatzmerkmal } from "./asd/types/kaoa/KAOAZusatzmerkmal";
+import { KAOAZusatzmerkmaleOptionsarten } from "./asd/types/kaoa/KAOAZusatzmerkmaleOptionsarten";
+import { Klassenart } from "./asd/types/klassen/Klassenart";
+import { ZulaessigeKursart } from "./asd/types/kurse/ZulaessigeKursart";
+import { LehrerAbgangsgrund } from "./asd/types/lehrer/LehrerAbgangsgrund";
+import { LehrerAnrechnungsgrund } from "./asd/types/lehrer/LehrerAnrechnungsgrund";
+import { LehrerBeschaeftigungsart } from "./asd/types/lehrer/LehrerBeschaeftigungsart";
+import { LehrerEinsatzstatus } from "./asd/types/lehrer/LehrerEinsatzstatus";
+import { LehrerFachrichtung } from "./asd/types/lehrer/LehrerFachrichtung";
+import { LehrerFachrichtungAnerkennung } from "./asd/types/lehrer/LehrerFachrichtungAnerkennung";
+import { LehrerLehramt } from "./asd/types/lehrer/LehrerLehramt";
+import { LehrerLehramtAnerkennung } from "./asd/types/lehrer/LehrerLehramtAnerkennung";
+import { LehrerLehrbefaehigung } from "./asd/types/lehrer/LehrerLehrbefaehigung";
+import { LehrerLehrbefaehigungAnerkennung } from "./asd/types/lehrer/LehrerLehrbefaehigungAnerkennung";
+import { LehrerLeitungsfunktion } from "./asd/types/lehrer/LehrerLeitungsfunktion";
+import { LehrerMehrleistungsarten } from "./asd/types/lehrer/LehrerMehrleistungsarten";
+import { LehrerMinderleistungsarten } from "./asd/types/lehrer/LehrerMinderleistungsarten";
+import { LehrerRechtsverhaeltnis } from "./asd/types/lehrer/LehrerRechtsverhaeltnis";
+import { LehrerZugangsgrund } from "./asd/types/lehrer/LehrerZugangsgrund";
+import { Note } from "./asd/types/Note";
+import { HerkunftBildungsgang } from "./asd/types/schueler/HerkunftBildungsgang";
+import { HerkunftBildungsgangTyp } from "./asd/types/schueler/HerkunftBildungsgangTyp";
+import { SchuelerStatus } from "./asd/types/schueler/SchuelerStatus";
+import { Uebergangsempfehlung } from "./asd/types/schueler/Uebergangsempfehlung";
+import { AllgemeinbildendOrganisationsformen } from "./asd/types/schule/AllgemeinbildendOrganisationsformen";
+import { BerufskollegAnlage } from "./asd/types/schule/BerufskollegAnlage";
+import { BerufskollegBildungsgangTyp } from "./asd/types/schule/BerufskollegBildungsgangTyp";
+import { BerufskollegOrganisationsformen } from "./asd/types/schule/BerufskollegOrganisationsformen";
+import { Foerderschwerpunkt } from "./asd/types/schule/Foerderschwerpunkt";
+import { Kindergartenbesuch } from "./asd/types/schule/Kindergartenbesuch";
+import { Religion } from "./asd/types/schule/Religion";
+import { SchulabschlussAllgemeinbildend } from "./asd/types/schule/SchulabschlussAllgemeinbildend";
+import { SchulabschlussBerufsbildend } from "./asd/types/schule/SchulabschlussBerufsbildend";
+import { Schulform } from "./asd/types/schule/Schulform";
+import { Schulgliederung } from "./asd/types/schule/Schulgliederung";
+import { WeiterbildungskollegBildungsgangTyp } from "./asd/types/schule/WeiterbildungskollegBildungsgangTyp";
+import { WeiterbildungskollegOrganisationsformen } from "./asd/types/schule/WeiterbildungskollegOrganisationsformen";
+import { CoreTypeDataManager } from "./asd/utils/CoreTypeDataManager";
+import { DeveloperNotificationException } from "./core/exceptions/DeveloperNotificationException";
+import { ArrayList } from "./java/util/ArrayList";
+import { HashMap } from "./java/util/HashMap";
+import { HashSet } from "./java/util/HashSet";
+import type { List } from "./java/util/List";
+import { BaseApi } from "./api/BaseApi";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -128,24 +124,32 @@ export class JsonCoreTypeReader {
 
 	private readonly api: BaseApi;
 
-	public constructor(url: string) {
-		this.api = new BaseApi(url, "", "");
+	private keys = [
+		"Schulform", "BerufskollegAnlage", "AllgemeinbildendOrganisationsformen", "BerufskollegOrganisationsformen", "WeiterbildungskollegOrganisationsformen",
+		"SchulabschlussAllgemeinbildend", "SchulabschlussBerufsbildend", "HerkunftBildungsgang", "HerkunftBildungsgangTyp", "Jahrgaenge", "PrimarstufeSchuleingangsphaseBesuchsjahre", "Religion",
+		"Kindergartenbesuch", "SchuelerStatus", "Note", "Sprachreferenzniveau", "BerufskollegBildungsgangTyp", "WeiterbildungskollegBildungsgangTyp", "Schulgliederung", "Fachgruppe", "Fach",
+		"LehrerAbgangsgrund", "LehrerBeschaeftigungsart", "LehrerEinsatzstatus", "LehrerFachrichtung", "LehrerLehrbefaehigung", "LehrerFachrichtungAnerkennung", "LehrerLehramt",
+		"LehrerLehramtAnerkennung", "LehrerLehrbefaehigungAnerkennung", "LehrerLeitungsfunktion", "LehrerRechtsverhaeltnis", "LehrerZugangsgrund", "BilingualeSprache", "KAOABerufsfeld",
+		"KAOAMerkmaleOptionsarten", "KAOAZusatzmerkmaleOptionsarten", "KAOAEbene4", "KAOAZusatzmerkmal", "KAOAAnschlussoptionen", "KAOAKategorie", "KAOAMerkmal", "Klassenart", "Uebergangsempfehlung",
+		"ZulaessigeKursart", "Foerderschwerpunkt", "LehrerAnrechnungsgrund", "LehrerMehrleistungsarten", "LehrerMinderleistungsarten", "ValidatorenFehlerartKontext",
+	] as const;
+
+	public constructor(url?: string) {
+		this.api = new BaseApi(url ?? "", "", "");
 	}
 
-	mapCoreTypeNameJsonData = new HashMap<string, string>();
+	mapCoreTypeNameJsonData = new Map<string, string>();
 
-	private async loadJsonFromAPI(coreTypeName: string) {
-		if (coreTypeName === "")
-			throw new DeveloperNotificationException("Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden");
-		const jsonData: string = await this.api.getJSON("/types/" + coreTypeName + ".json");
-		this.mapCoreTypeNameJsonData.put(coreTypeName, jsonData);
+	protected async loadJson(coreTypeName: string) {
+		const jsonData = await this.api.getJSON(`/types/${coreTypeName}.json`);
+		this.mapCoreTypeNameJsonData.set(coreTypeName, jsonData);
 	}
 
 	private read<T>(name: string, mapper: (json: string) => T): JsonCoreTypeDataResult<T> {
 		if (name === "")
 			throw new DeveloperNotificationException("Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden");
-		const json: string | null = this.mapCoreTypeNameJsonData.get(name);
-		if (json === null)
+		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
+		if (json === undefined)
 			throw new DeveloperNotificationException(`Für den den CoreType "${name}" liegen keine JSON Daten vor. Stelle sicher dass loadJsonFromAPI (loadAll) ausgeführt wurde.`);
 		const data: JsonCoreTypeData<T> = JSON.parse(json);
 		const idsHistorien = new HashSet<number>();
@@ -477,60 +481,12 @@ export class JsonCoreTypeReader {
 		// ValidatorManager.init(data.version, data.mapData);
 	}
 
-	public async loadAllFromAPI() : Promise<HashMap<string, string>> {
+	public async loadAll() : Promise<Map<string, string>> {
 		console.log("Lade die Json Files");
-		await Promise.all([
-			this.loadJsonFromAPI("Schulform"),
-			this.loadJsonFromAPI("BerufskollegAnlage"),
-			this.loadJsonFromAPI("AllgemeinbildendOrganisationsformen"),
-			this.loadJsonFromAPI("BerufskollegOrganisationsformen"),
-			this.loadJsonFromAPI("WeiterbildungskollegOrganisationsformen"),
-			this.loadJsonFromAPI("SchulabschlussAllgemeinbildend"),
-			this.loadJsonFromAPI("SchulabschlussBerufsbildend"),
-			this.loadJsonFromAPI("HerkunftBildungsgang"),
-			this.loadJsonFromAPI("HerkunftBildungsgangTyp"),
-			this.loadJsonFromAPI("Jahrgaenge"),
-			this.loadJsonFromAPI("PrimarstufeSchuleingangsphaseBesuchsjahre"),
-			this.loadJsonFromAPI("Religion"),
-			this.loadJsonFromAPI("Kindergartenbesuch"),
-			this.loadJsonFromAPI("SchuelerStatus"),
-			this.loadJsonFromAPI("Note"),
-			this.loadJsonFromAPI("Sprachreferenzniveau"),
-			this.loadJsonFromAPI("BerufskollegBildungsgangTyp"),
-			this.loadJsonFromAPI("WeiterbildungskollegBildungsgangTyp"),
-			this.loadJsonFromAPI("Schulgliederung"),
-			this.loadJsonFromAPI("Fachgruppe"),
-			this.loadJsonFromAPI("Fach"),
-			this.loadJsonFromAPI("LehrerAbgangsgrund"),
-			this.loadJsonFromAPI("LehrerBeschaeftigungsart"),
-			this.loadJsonFromAPI("LehrerEinsatzstatus"),
-			this.loadJsonFromAPI("LehrerFachrichtung"),
-			this.loadJsonFromAPI("LehrerLehrbefaehigung"),
-			this.loadJsonFromAPI("LehrerFachrichtungAnerkennung"),
-			this.loadJsonFromAPI("LehrerLehramt"),
-			this.loadJsonFromAPI("LehrerLehramtAnerkennung"),
-			this.loadJsonFromAPI("LehrerLehrbefaehigungAnerkennung"),
-			this.loadJsonFromAPI("LehrerLeitungsfunktion"),
-			this.loadJsonFromAPI("LehrerRechtsverhaeltnis"),
-			this.loadJsonFromAPI("LehrerZugangsgrund"),
-			this.loadJsonFromAPI("BilingualeSprache"),
-			this.loadJsonFromAPI("KAOABerufsfeld"),
-			this.loadJsonFromAPI("KAOAMerkmaleOptionsarten"),
-			this.loadJsonFromAPI("KAOAZusatzmerkmaleOptionsarten"),
-			this.loadJsonFromAPI("KAOAEbene4"),
-			this.loadJsonFromAPI("KAOAZusatzmerkmal"),
-			this.loadJsonFromAPI("KAOAAnschlussoptionen"),
-			this.loadJsonFromAPI("KAOAKategorie"),
-			this.loadJsonFromAPI("KAOAMerkmal"),
-			this.loadJsonFromAPI("Klassenart"),
-			this.loadJsonFromAPI("Uebergangsempfehlung"),
-			this.loadJsonFromAPI("ZulaessigeKursart"),
-			this.loadJsonFromAPI("Foerderschwerpunkt"),
-			this.loadJsonFromAPI("LehrerAnrechnungsgrund"),
-			this.loadJsonFromAPI("LehrerMehrleistungsarten"),
-			this.loadJsonFromAPI("LehrerMinderleistungsarten"),
-			this.loadJsonFromAPI("ValidatorenFehlerartKontext"),
-		]);
+		const arr = [];
+		for (const key of this.keys)
+			arr.push(await this.loadJson(key));
+		await Promise.all(arr);
 		return this.mapCoreTypeNameJsonData;
 	}
 

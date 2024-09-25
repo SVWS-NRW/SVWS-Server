@@ -12,6 +12,7 @@
 	],
 	"scripts": {
 		"dev": "vite",
+		"serve": "vite preview",
 		"build": "npm run build-app && npm run build-dts",
 		"build-app": "vite build",
 		"build-dts": "vue-tsc --declaration --emitDeclarationOnly -p tsconfig.build.json",

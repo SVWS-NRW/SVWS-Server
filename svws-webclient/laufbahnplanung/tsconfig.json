@@ -3,7 +3,10 @@
 	"compilerOptions": {
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": { "~/*": ["./src/*"] },
+		"paths": {
+			"~/*": ["./src/*"],
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
 	},
 	"include": [
 		"*.ts",

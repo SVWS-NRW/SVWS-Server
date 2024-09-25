@@ -1,3 +1,4 @@
+export { JsonCoreTypeReader } from './JsonCoreTypeReader';
 export { BaseApi, type ApiFile } from './api/BaseApi';
 export { OpenApiError } from './api/OpenApiError';
 export { IOException } from './java/io/IOException';

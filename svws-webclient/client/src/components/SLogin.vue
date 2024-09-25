@@ -89,11 +89,10 @@
 	import { computed, nextTick, ref, shallowRef } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException } from "@core";
+	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
-	import { JsonCoreTypeReader } from '~/router/JsonCoreTypeReader';
 	import type { LoginProps } from "./SLoginProps";
 
 	const props = defineProps<LoginProps>();
@@ -137,7 +136,7 @@
 		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
 
 		// lade die JSON Datan der Core Types aus dem Backend
-		await reader.loadAllFromAPI();
+		await reader.loadAll();
 
 		// initiiere die Core Types
 		reader.readAll();

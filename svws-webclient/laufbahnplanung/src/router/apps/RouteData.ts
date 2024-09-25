@@ -29,6 +29,7 @@ import { GostKursart } from "../../../../core/src/core/types/gost/GostKursart";
 import { GostFaecherManager } from "../../../../core/src/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../core/src/java/util/List";
+import { JsonCoreTypeReaderStatic } from "../../../../core/src/JsonCoreTypeReaderStatic";
 
 
 interface RouteState {
@@ -68,6 +69,7 @@ export class RouteData {
 	}
 
 	private _state = shallowRef<RouteState>(RouteData._defaultState);
+	private reader = new JsonCoreTypeReaderStatic();
 
 	private setPatchedDefaultState(patch: Partial<RouteState>) {
 		this._state.value = Object.assign({ ... RouteData._defaultState }, patch);
@@ -374,12 +376,19 @@ export class RouteData {
 		return { data, name };
 	}
 
+	async initCoreTypes() {
+		await this.reader.loadAll();
+		this.reader.readAll();
+	}
+
 	importLaufbahnplanung = async (formData: FormData) => {
 		const gzData = formData.get("data");
 		if (!(gzData instanceof File))
 			return;
 		const ds = new DecompressionStream("gzip");
 		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
+		if (this.reader.mapCoreTypeNameJsonData.size === 0)
+			await this.initCoreTypes();
 		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
 		await this.ladeDaten(laufbahnplanungsdaten);
 		await RouteManager.doRoute(routeLaufbahnplanung.name);

@@ -19,6 +19,7 @@ export default defineConfig({
 		alias: {
 			"~": resolve(__dirname, "src"),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
+			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},
 });

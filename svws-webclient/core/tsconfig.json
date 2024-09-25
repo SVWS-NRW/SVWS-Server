@@ -1,15 +1,17 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"resolveJsonModule": true,
 		"isolatedModules": false,
 		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"paths": {
-			"~/*": ["./src/*"]
+			"~/*": ["./src/*"],
+			"@json/*": ["./../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
 		}
 	},
 	"include": [
-		"src/**/*"
+		"src/**/*",
 	]
 }
