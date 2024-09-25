@@ -72,7 +72,7 @@ describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 		expect(coll.capacity()).toBe(7);
 		expect(empty.capacity()).toBe(1);
 	});
-	test.skip("add: adds Elements to Heap", () => {
+	test("add: adds Elements to Heap", () => {
 		expect(empty.add(data[0])).toBe(true);
 		// expect(empty.add(null)).toBe(false);
 		expect(empty.capacity()).toBe(1);
@@ -83,7 +83,7 @@ describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 		expect(empty.poll()).toEqual(data[1]);
 		expect(empty.poll()).toEqual(data[5]);
 	});
-	test.skip("element: returns an element if avaialble", () => {
+	test("element: returns an element if avaialble", () => {
 		expect(coll.element()).toEqual(data[6]);
 	});
 	test("element: throws if no element is available", () => {
@@ -93,7 +93,7 @@ describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 		expect(empty.offer(data[0])).toBeTruthy();
 		expect(empty.capacity()).toBe(1);
 	});
-	test.skip("poll: pops the first Element from the Heap", () => {
+	test("poll: pops the first Element from the Heap", () => {
 		expect(coll.poll()).toEqual(data[6]);
 		expect(coll.poll()).toEqual(data[4]);
 		expect(coll.poll()).toEqual(data[3]);
@@ -102,7 +102,7 @@ describe.each([s, n, l])("MinHeap mit $name", ({ data }) => {
 		expect(coll.poll()).toEqual(data[0]);
 		expect(coll.poll()).toEqual(data[5]);
 	});
-	test.skip("peek: returns root of Heap", () => {
+	test("peek: returns root of Heap", () => {
 		expect(coll.peek()).toEqual(data[6]);
 	});
 	test("peek: returns null if no element is available", () => {

@@ -5,7 +5,7 @@ export class TestMinComparator
 implements Comparator<string | number | LehrerListeEintrag>
 {
 	public compare(a: unknown, b: unknown): 1 | -1 | 0 {
-		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
+		if ((typeof a === "string" && typeof b === "string") || (typeof a === "number" && typeof b === "number")) {
 			return (a.valueOf() < b.valueOf()) ? -1 : ((a.valueOf() === b.valueOf()) ? 0 : 1);
 		} else if (a instanceof LehrerListeEintrag && b instanceof LehrerListeEintrag) {
 			// nachname ist leer...
@@ -19,7 +19,7 @@ export class TestMaxComparator
 implements Comparator<string | number | LehrerListeEintrag>
 {
 	public compare(a: unknown, b: unknown): 1 | -1 | 0 {
-		if ((a instanceof String && b instanceof String) || (a instanceof Number && b instanceof Number)) {
+		if ((typeof a === "string" && typeof b === "string") || (typeof a === "number" && typeof b === "number")) {
 			return (a.valueOf() > b.valueOf()) ? -1 : ((a.valueOf() === b.valueOf()) ? 0 : 1);
 		} else if (a instanceof LehrerListeEintrag && b instanceof LehrerListeEintrag) {
 			// nachname ist leer...
