@@ -50,29 +50,26 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering) {
+			if (isEntering)
 			// Wenn man in die Laufbahnplanung wechselt und von einer Gost-Route per Schülerlink kommt, dann im Filter direkt den Jahrgang wählen
-				if (from?.checkSuccessorOf('gost')) {
+				if ((from !== undefined) && from.checkSuccessorOf('gost') !== false)
 					for (const e of routeSchueler.data.schuelerListeManager.jahrgaenge.list())
 						if (e.id === routeSchueler.data.schuelerListeManager.auswahl().idJahrgang) {
 							routeSchueler.data.schuelerListeManager.jahrgaenge.auswahlAdd(e);
 							await routeSchueler.data.setFilter();
 							break;
 						}
-				}
-			}
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			if (this.parent === undefined)
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
-			if (id === undefined) {
+			if (id === undefined)
 				await this.data.ladeDaten(null);
-			} else {
+			else
 				try {
 					await this.data.ladeDaten(this.parent.data.schuelerListeManager.liste.get(id));
 				} catch(error) {
 					return routeSchueler.getRoute(id);
 				}
-			}
 		} catch (e) {
 			return routeError.getRoute(e as DeveloperNotificationException);
 		}
@@ -88,6 +85,10 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 
 	public getProps(to: RouteLocationNormalized): SchuelerLaufbahnplanungProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
+			benutzerKompetenzenAbiturjahrgaenge: api.benutzerKompetenzenAbiturjahrgaenge,
 			setWahl: this.data.setWahl,
 			setGostBelegpruefungsArt: this.data.setGostBelegpruefungsArt,
 			getPdfWahlbogen: this.data.getPdfWahlbogen,

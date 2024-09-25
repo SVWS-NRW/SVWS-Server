@@ -375,18 +375,14 @@ export class RouteData {
 	}
 
 	importLaufbahnplanung = async (formData: FormData) => {
-		try {
-			const gzData = formData.get("data");
-			if (!(gzData instanceof File))
-				return;
-			const ds = new DecompressionStream("gzip");
-			const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
-			const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
-			await this.ladeDaten(laufbahnplanungsdaten);
-			await RouteManager.doRoute(routeLaufbahnplanung.name);
-		} catch (e) {
-			throw new UserNotificationException(e instanceof Error ? e.message : "Unbekannter Fehler aufgetreten.");
-		}
+		const gzData = formData.get("data");
+		if (!(gzData instanceof File))
+			return;
+		const ds = new DecompressionStream("gzip");
+		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
+		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
+		await this.ladeDaten(laufbahnplanungsdaten);
+		await RouteManager.doRoute(routeLaufbahnplanung.name);
 	}
 
 	get zwischenspeicher(): Abiturdaten | undefined {

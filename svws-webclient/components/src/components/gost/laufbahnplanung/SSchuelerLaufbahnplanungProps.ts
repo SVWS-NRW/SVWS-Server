@@ -1,4 +1,5 @@
 import type { ApiFile } from "../../../../../core/src/api/BaseApi";
+import type { Schulform } from "../../../../../core/src/asd/types/schule/Schulform";
 import type { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 import type { GostBelegpruefungErgebnis } from "../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnis";
 import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
@@ -8,9 +9,15 @@ import type { GostLaufbahnplanungDaten } from "../../../../../core/src/core/data
 import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 import type { LehrerListeEintrag } from "../../../../../core/src/core/data/lehrer/LehrerListeEintrag";
 import type { SchuelerListeEintrag } from "../../../../../core/src/core/data/schueler/SchuelerListeEintrag";
+import type { ServerMode } from "../../../../../core/src/core/types/ServerMode";
+import type { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 import type { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 
 export interface SchuelerLaufbahnplanungProps {
+	schulform?: Schulform;
+	serverMode?: ServerMode;
+	benutzerKompetenzen?: Set<BenutzerKompetenz>,
+	benutzerKompetenzenAbiturjahrgaenge?: Set<number>;
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
 	getPdfWahlbogen: (title: string) => Promise<ApiFile>;

@@ -1,36 +1,32 @@
 <template>
 	<div class="page--content page--content--full page--content--laufbahnplanung">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport v-if="hatUpdateKompetenz" defer to=".svws-sub-nav-target">
 			<svws-ui-sub-nav>
-				<svws-ui-button type="transparent" title="Planung exportieren" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
-				<svws-ui-button type="transparent" title="Planung importieren" @click="showModalImport().value = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
+				<svws-ui-button type="transparent" @click="export_laufbahnplanung"><span class="icon-sm i-ri-upload-2-line" />Exportieren</svws-ui-button>
+				<svws-ui-button type="transparent" @click="showModalImport().value = true"><span class="icon-sm i-ri-download-2-line" /> Importieren…</svws-ui-button>
 				<s-laufbahnplanung-import-modal :show="showModalImport" :import-laufbahnplanung="importLaufbahnplanung" />
-				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" title="Planung merken" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
-				<svws-ui-button type="danger" title="Planung merken" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
+				<svws-ui-button :type="zwischenspeicher === undefined ? 'transparent' : 'error'" @click="saveLaufbahnplanung">Planung merken</svws-ui-button>
+				<svws-ui-button type="danger" @click="restoreLaufbahnplanung" v-if="zwischenspeicher !== undefined">Planung wiederherstellen</svws-ui-button>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
-					<span class="icon-sm i-ri-loop-right-line" />
-					Modus: <span>{{ modus }}</span>
+					<span class="icon-sm i-ri-loop-right-line" /> Modus: <span>{{ modus }}</span>
 				</svws-ui-button>
 				<s-modal-laufbahnplanung-kurswahlen-loeschen schueler-ansicht :gost-jahrgangsdaten :reset-fachwahlen />
-				<svws-ui-button type="transparent" title="Fächer anzeigen" @click="switchFaecherAnzeigen()">
-					{{ "Fächer anzeigen: " + textFaecherAnzeigen() }}
-				</svws-ui-button>
+				<svws-ui-button type="transparent" @click="switchFaecherAnzeigen()"> {{ "Fächer anzeigen: " + textFaecherAnzeigen() }} </svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
+		<Teleport defer to=".svws-ui-header--actions">
 			<svws-ui-button-select type="secondary" :dropdown-actions="dropdownList">
 				<template #icon> <span class="icon i-ri-printer-line" /> </template>
 			</svws-ui-button-select>
 			<svws-ui-modal-hilfe> <hilfe-laufbahnplanung /> </svws-ui-modal-hilfe>
 		</Teleport>
 		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
-			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl="setWahl" :goto-kursblockung :faecher-anzeigen />
+			<s-laufbahnplanung-card-planung v-if="visible" :abiturdaten-manager :modus :gost-jahrgangsdaten :set-wahl :goto-kursblockung :faecher-anzeigen />
 		</div>
 		<div class="w-2/5 3xl:w-1/2 min-w-[36rem] overflow-y-auto overflow-x-hidden">
 			<div class="flex flex-col gap-y-16 lg:gap-y-20">
-				<s-laufbahnplanung-card-beratung v-if="visible" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :map-lehrer :id :schueler :updated />
-				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager
-					:fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
+				<s-laufbahnplanung-card-beratung v-if="visible && hatUpdateKompetenz" :gost-laufbahn-beratungsdaten :patch-beratungsdaten="doPatchBeratungsdaten" :map-lehrer :id :schueler :updated />
+				<s-laufbahnplanung-card-status v-if="visible" :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
 			</div>
 		</div>
 	</div>
@@ -38,11 +34,19 @@
 
 <script setup lang="ts">
 
-	import { computed, onMounted, ref, watch } from "vue";
+	import { computed, ref, watch } from "vue";
 	import type { SchuelerLaufbahnplanungProps } from "./SSchuelerLaufbahnplanungProps";
 	import type { GostLaufbahnplanungBeratungsdaten } from "../../../../../core/src/core/data/gost/GostLaufbahnplanungBeratungsdaten";
+	import { BenutzerKompetenz } from "../../../../../core/src/core/types/benutzer/BenutzerKompetenz";
 
 	const props = defineProps<SchuelerLaufbahnplanungProps>();
+
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		if ((props.benutzerKompetenzen === undefined) || (props.benutzerKompetenzenAbiturjahrgaenge === undefined) || (props.schueler.abiturjahrgang === null))
+			return false;
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && props.benutzerKompetenzenAbiturjahrgaenge.has(props.schueler.abiturjahrgang));
+	});
 
 	const visible = computed<boolean>(() => props.schueler.abiturjahrgang !== null);
 
@@ -155,12 +159,6 @@
 		link.click();
 		URL.revokeObjectURL(link.href);
 	}
-
-	// Check if component is mounted
-	const isMounted = ref(false);
-	onMounted(() => {
-		isMounted.value = true;
-	});
 
 </script>
 

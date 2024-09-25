@@ -29,7 +29,7 @@
 		</div>
 		<template v-for="halbjahr in GostHalbjahr.values()" :key="halbjahr.id">
 			<div role="cell" class="svws-ui-td svws-align-center svws-divider select-none font-medium"
-				:class="bearbeitenErlaubt ? {
+				:class="hatUpdateKompetenz ? {
 					'cursor-pointer': istMoeglich[halbjahr.id] && !istBewertet(halbjahr),
 					'cursor-not-allowed': (!istMoeglich[halbjahr.id] || istBewertet(halbjahr) || istFachkombiVerboten[halbjahr.id]),
 					'svws-disabled': !istMoeglich[halbjahr.id],
@@ -56,7 +56,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && bearbeitenErlaubt">
+						<template v-else-if="!istMoeglich[halbjahr.id] && (wahlen[halbjahr.id] !== '') && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="istBewertet(halbjahr) ? 'light' : 'danger'">
 								<svws-ui-button type="icon" size="small" :disabled="istBewertet(halbjahr)">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -71,7 +71,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (((noten[halbjahr.id] === null) || (noten[halbjahr.id] === Note.KEINE)) && !belegungHatImmerNoten) && bearbeitenErlaubt">
+						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (((noten[halbjahr.id] === null) || (noten[halbjahr.id] === Note.KEINE)) && !belegungHatImmerNoten) && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -97,7 +97,7 @@
 			</div>
 		</template>
 		<div role="cell" class="svws-ui-td svws-align-center select-none font-medium"
-			:class="bearbeitenErlaubt ? {
+			:class="hatUpdateKompetenz ? {
 				'cursor-pointer': istMoeglichAbi && !istBewertet(GostHalbjahr.Q22), '': istMoeglichAbi,
 				'cursor-not-allowed': !istMoeglichAbi,
 				'svws-disabled': !istMoeglichAbi,
@@ -105,7 +105,7 @@
 			} : {}"
 			@click.stop="stepperAbi()">
 			<template v-if="abi_wahl"> {{ abi_wahl }} </template>
-			<span v-if="abi_wahl && !istMoeglichAbi && bearbeitenErlaubt" class="absolute -right-0">
+			<span v-if="abi_wahl && !istMoeglichAbi && hatUpdateKompetenz" class="absolute -right-0">
 				<svws-ui-tooltip :color="'danger'">
 					<svws-ui-button type="icon" size="small">
 						<span class="icon i-ri-close-line" @click="deleteFachwahlAbitur()" />
@@ -146,18 +146,14 @@
 		fach: GostFach;
 		modus?: 'normal' | 'manuell' | 'hochschreiben';
 		ignoriereSprachenfolge? : boolean;
-		bearbeitenErlaubt?: boolean;
 		belegungHatImmerNoten?: boolean;
+		hatUpdateKompetenz: boolean;
+		setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	}>(), {
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
-		bearbeitenErlaubt: true,
 		belegungHatImmerNoten: false,
 	});
-
-	const emit = defineEmits<{
-		(e: 'update:wahl', fachID: number, wahl: GostSchuelerFachwahl): void,
-	}>();
 
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
 
@@ -201,13 +197,7 @@
 		return props.abiturdatenManager().istBewertet(halbjahr);
 	}
 
-	function onUpdateWahl(wahl: GostSchuelerFachwahl, fachID?: number) {
-		emit('update:wahl', fachID ?? props.fach.id, wahl);
-	}
-
-
 	const istMoeglichAbi = computed<boolean>(() => props.abiturdatenManager().getMoeglicheKursartAlsAbiturfach(props.fach.id) !== null);
-
 
 	/**
 	 * Prüft, ob ein Fach bereits belegt ist durch ein gleichnamiges Fach, z.B. bei Bili-Fächern
@@ -289,8 +279,8 @@
 		if (fachbelegung.value === null)
 			return [null, null, null, null, null, null];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
-			b = b !== null ? b : new AbiturFachbelegungHalbjahr();
-			return b.notenkuerzel === null ? null : Note.fromKuerzel(b.notenkuerzel); // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
+			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
+			return (b.notenkuerzel === null) ? null : Note.fromKuerzel(b.notenkuerzel); // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
 		});
 	});
 
@@ -383,25 +373,25 @@
 		return null;
 	})
 
-	function stepperAbi() {
-		if (!props.bearbeitenErlaubt)
+	async function stepperAbi() {
+		if (!props.hatUpdateKompetenz)
 			return;
 		if (props.modus === 'manuell') {
-			stepper_manuellAbi();
+			await stepper_manuellAbi();
 			return;
 		}
 		if (!istMoeglichAbi.value)
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		setAbiturWahl(wahl);
-		onUpdateWahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
-	function stepper(halbjahr: GostHalbjahr) {
-		if (!props.bearbeitenErlaubt)
+	async function stepper(halbjahr: GostHalbjahr) {
+		if (!props.hatUpdateKompetenz)
 			return;
 		if (props.modus === 'manuell') {
-			stepper_manuell(halbjahr);
+			await stepper_manuell(halbjahr);
 			return;
 		}
 		if ((!istMoeglich.value[halbjahr.id]) || istBewertet(halbjahr))
@@ -425,26 +415,26 @@
 			setQ21Wahl(wahl);
 		else if (halbjahr === GostHalbjahr.Q22)
 			setQ22Wahl(wahl);
-		onUpdateWahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
-	function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
+	async function deleteFachwahl(halbjahr: GostHalbjahr | undefined) {
 		if (halbjahr === undefined)
 			return;
 		if (istMoeglich.value[halbjahr.id] && (!istBewertet(halbjahr) || noten.value[halbjahr.id] !== null))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.halbjahre[halbjahr.id] = null;
-		onUpdateWahl(wahl, props.fach.id);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
-	function deleteFachwahlAbitur() {
+	async function deleteFachwahlAbitur() {
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
 		wahl.abiturFach = null;
-		onUpdateWahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
-	function stepper_manuellAbi() : void {
+	async function stepper_manuellAbi() {
 		if (istBewertet(GostHalbjahr.Q22))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
@@ -452,16 +442,16 @@
 			return
 		switch (wahl.abiturFach) {
 			case null:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" ? 1 : 3;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 1 : 3;
 				break;
 			case 1:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" ? 2 : 3;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? 2 : 3;
 				break;
 			case 2:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" ? null : 3;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? null : 3;
 				break;
 			case 3:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "LK" ? null : 4;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "LK") ? null : 4;
 				break;
 			case 4:
 				wahl.abiturFach = null;
@@ -470,11 +460,11 @@
 				wahl.abiturFach = null;
 				break;
 		}
-		onUpdateWahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
 
-	function stepper_manuell(halbjahr: GostHalbjahr) : void {
+	async function stepper_manuell(halbjahr: GostHalbjahr) {
 		if (istBewertet(halbjahr))
 			return;
 		const wahl = props.abiturdatenManager().getSchuelerFachwahl(props.fach.id);
@@ -517,7 +507,7 @@
 				wahl.halbjahre[hj] = null;
 				break;
 		}
-		onUpdateWahl(wahl);
+		await props.setWahl(props.fach.id, wahl);
 	}
 
 
@@ -870,7 +860,7 @@
 				break;
 			}
 		}
-		if (wahl.halbjahre[GostHalbjahr.Q11.id] === null || wahl.halbjahre[GostHalbjahr.Q11.id] === "M")
+		if ((wahl.halbjahre[GostHalbjahr.Q11.id] === null) || (wahl.halbjahre[GostHalbjahr.Q11.id] === "M"))
 			wahl.abiturFach = null;
 	}
 
@@ -879,7 +869,7 @@
 		switch (wahl.halbjahre[GostHalbjahr.Q12.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q12.id] = "M";
-				if (ist_PJK.value && wahl.halbjahre[GostHalbjahr.Q11.id] === null && props.fach.istMoeglichQ21) {
+				if (ist_PJK.value && (wahl.halbjahre[GostHalbjahr.Q11.id] === null) && props.fach.istMoeglichQ21) {
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "M";
 					wahl.halbjahre[GostHalbjahr.Q22.id] = null;
 				}
@@ -936,7 +926,7 @@
 					wahl.halbjahre[GostHalbjahr.Q12.id] = "S";
 				break;
 			case "S":
-				wahl.halbjahre[GostHalbjahr.Q12.id] = wahl.halbjahre[GostHalbjahr.Q11.id] === "LK" ? "LK" : null;
+				wahl.halbjahre[GostHalbjahr.Q12.id] = (wahl.halbjahre[GostHalbjahr.Q11.id] === "LK") ? "LK" : null;
 				break;
 			case "ZK": {
 				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach))
@@ -973,7 +963,7 @@
 		switch (wahl.halbjahre[GostHalbjahr.Q21.id]) {
 			case null:
 				wahl.halbjahre[GostHalbjahr.Q21.id] = "M";
-				if (ist_PJK.value && wahl.halbjahre[GostHalbjahr.Q12.id] === null && props.fach.istMoeglichQ22) {
+				if (ist_PJK.value && (wahl.halbjahre[GostHalbjahr.Q12.id] === null) && props.fach.istMoeglichQ22) {
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "M";
 				}
 				if (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach) && (props.gostJahrgangsdaten.hatZusatzkursSW)) {
@@ -1022,7 +1012,7 @@
 					wahl.halbjahre[GostHalbjahr.Q21.id] = "S";
 				break;
 			case "S":
-				wahl.halbjahre[GostHalbjahr.Q21.id] = wahl.halbjahre[GostHalbjahr.Q12.id] === "LK" ? "LK" : null;
+				wahl.halbjahre[GostHalbjahr.Q21.id] = (wahl.halbjahre[GostHalbjahr.Q12.id] === "LK") ? "LK" : null;
 				break;
 			case "ZK": {
 				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach))
@@ -1091,7 +1081,7 @@
 					wahl.halbjahre[GostHalbjahr.Q22.id] = "S";
 				break;
 			case "S":
-				wahl.halbjahre[GostHalbjahr.Q22.id] = wahl.halbjahre[GostHalbjahr.Q21.id] === "LK" ? "LK" : null;
+				wahl.halbjahre[GostHalbjahr.Q22.id] = (wahl.halbjahre[GostHalbjahr.Q21.id] === "LK") ? "LK" : null;
 				break;
 			case "ZK": {
 				const beginn : GostHalbjahr | null = (GostFachbereich.SOZIALWISSENSCHAFTEN.hat(props.fach))
@@ -1135,7 +1125,7 @@
 			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursSW ?? "");
 		if (ge)
 			beginn = GostHalbjahr.fromKuerzel(props.gostJahrgangsdaten.beginnZusatzkursGE ?? "");
-		if (!beginn || beginn === halbjahr || beginn.next() === halbjahr)
+		if (!beginn || (beginn === halbjahr) || (beginn.next() === halbjahr))
 			return true;
 		return false;
 	}
@@ -1168,13 +1158,13 @@
 		// GK...
 		switch (wahl.abiturFach) {
 			case null:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : 3;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : 3;
 				break;
 			case 4:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "S" ? 3 : null;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "S") ? 3 : null;
 				break;
 			case 3:
-				wahl.abiturFach = wahl.halbjahre[GostHalbjahr.Q22.id] === "M" ? 4 : null;
+				wahl.abiturFach = (wahl.halbjahre[GostHalbjahr.Q22.id] === "M") ? 4 : null;
 				break;
 			default:
 				wahl.abiturFach = null;

@@ -13,7 +13,7 @@
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :bearbeiten-erlaubt="hatUpdateKompetenz"
+		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :hat-update-kompetenz
 			:abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl ignoriere-sprachenfolge />
 		<div class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
@@ -36,7 +36,7 @@
 						@change="textMailversand => patchJahrgangsdaten({ textMailversand }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
 				</svws-ui-input-wrapper>
 			</svws-ui-content-card>
-			<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art @update:gost-belegpruefungs-art="setGostBelegpruefungsArt" />
+			<s-laufbahnplanung-card-status :abiturdaten-manager :fehlerliste="() => gostBelegpruefungErgebnis().fehlercodes" :gost-belegpruefungs-art :set-gost-belegpruefungs-art />
 		</div>
 	</div>
 </template>

@@ -63,7 +63,7 @@
 		<template #body>
 			<template v-for="fach in abiturdatenManager().faecher().faecher()" :key="fach.id">
 				<template v-if="fachanzeigen(fach)">
-					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus @update:wahl="onUpdateWahl" :ignoriere-sprachenfolge :bearbeiten-erlaubt :belegung-hat-immer-noten />
+					<s-laufbahnplanung-fach :abiturdaten-manager :gost-jahrgangsdaten :fach :modus :set-wahl :ignoriere-sprachenfolge :belegung-hat-immer-noten :hat-update-kompetenz />
 				</template>
 			</template>
 		</template>
@@ -215,14 +215,14 @@
 		ignoriereSprachenfolge? : boolean;
 		faecherAnzeigen: 'alle' | 'nur_waehlbare' | 'nur_gewaehlt';
 		title?: string | undefined;
-		bearbeitenErlaubt?: boolean;
 		belegungHatImmerNoten?: boolean;
+		hatUpdateKompetenz?: boolean;
 	}>(), {
 		title: undefined,
 		modus: 'normal',
 		ignoriereSprachenfolge: false,
-		bearbeitenErlaubt: true,
 		belegungHatImmerNoten: false,
+		hatUpdateKompetenz: true,
 	});
 
 	function fachanzeigen(fach : GostFach) : boolean {
@@ -243,10 +243,6 @@
 				return false;
 			}
 		}
-	}
-
-	async function onUpdateWahl(fachID: number, wahl: GostSchuelerFachwahl) {
-		await props.setWahl(fachID, wahl);
 	}
 
 	const kurszahlen: ComputedRef<number[]> = computed(() => props.abiturdatenManager().getAnrechenbareKurse());

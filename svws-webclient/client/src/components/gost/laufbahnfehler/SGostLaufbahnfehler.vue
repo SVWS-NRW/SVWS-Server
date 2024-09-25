@@ -19,7 +19,10 @@
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
 					<svws-ui-checkbox type="toggle" :model-value="filterExterne()" @update:model-value="setFilterExterne">Externe ausblenden</svws-ui-checkbox>
 				</div>
-				<s-laufbahnplanung-belegpruefungsart v-model="art" no-auto />
+				<svws-ui-radio-group class="radio--row">
+					<svws-ui-radio-option v-model="art" value="ef1" name="ef1" label="EF.1" />
+					<svws-ui-radio-option v-model="art" value="gesamt" name="gesamt" label="Gesamt" />
+				</svws-ui-radio-group>
 			</div>
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
 				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns selectable v-model="auswahl">
@@ -105,7 +108,7 @@
 
 	const hasFilter = computed<boolean>(() => props.filterFehler() || props.filterExterne());
 
-	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(()=>{
+	const filtered = computed<List<GostBelegpruefungsErgebnisse>>(() => {
 		if (!hasFilter.value)
 			return props.listBelegpruefungsErgebnisse();
 		const a: List<GostBelegpruefungsErgebnisse> = new ArrayList();
@@ -119,9 +122,9 @@
 		return a;
 	})
 
-	const schueler_state = ref();
+	const schueler_state = ref<GostBelegpruefungsErgebnisse>();
 	const schueler = computed<GostBelegpruefungsErgebnisse>({
-		get: () => schueler_state.value && filtered.value.contains(toRaw(schueler_state.value))
+		get: () => (schueler_state.value !== undefined) && filtered.value.contains(toRaw(schueler_state.value))
 			? schueler_state.value
 			: filtered.value.isEmpty() ? new GostBelegpruefungsErgebnisse() : filtered.value.get(0),
 		set: (value) => schueler_state.value = value
