@@ -503,7 +503,7 @@ public class APIPrivilegedSchema {
 				logger.logLn(2, "- erstelle den Benutzer \"" + multipart.schemaUsername + "\" für den administrativen Zugriff auf das DB-Schema.");
 
 				final DBConfig srcConfig = mdb.getConfig();
-				final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+				final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
 						multipart.schemaUsername, multipart.schemaUserPassword, true, true);
 				if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, null, logger)) {
 					logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
@@ -821,7 +821,7 @@ public class APIPrivilegedSchema {
 
 			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_DB, srcDbDriver, dbMigrationInfos.srcLocation, dbMigrationInfos.srcSchema, false,
 					dbMigrationInfos.srcUsername, dbMigrationInfos.srcPassword, true, false);
-			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, conn.getDBDriver(), conn.getDBLocation(), schemaname, false,
 					dbMigrationInfos.schemaUsername, dbMigrationInfos.schemaUserPassword, true, true);
 			if (!DBMigrationManager.migrate(srcConfig, tgtConfig, conn.getUser().getUsername(), conn.getUser().getPassword(), -1, false, schulnummer, logger)) {
 				logger.logLn(LogLevel.ERROR, 2, "Fehler bei der Migration (driver='" + tgtConfig.getDBDriver() + "', location='" + tgtConfig.getDBLocation()
