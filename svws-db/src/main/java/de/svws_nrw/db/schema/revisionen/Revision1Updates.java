@@ -2499,7 +2499,6 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				    Users
 				WHERE
 				    Email IS NOT NULL
-				    AND EmailName IS NOT NULL
 				""",
 				Schema.tab_BenutzerEmail, Schema.tab_Users
 		);
