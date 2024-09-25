@@ -147,7 +147,7 @@ public class MigrateDB {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
 
 			// Führe die Migration mithilfe des Schema-Managers durch.
 			DBMigrationManager.migrate(srcConfig, tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, schulNr, logger);
