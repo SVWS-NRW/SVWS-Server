@@ -1,65 +1,112 @@
 import { JsonCoreTypeReader } from "./JsonCoreTypeReader";
+import Schulform from "@json/schule/Schulform.json";
+import BerufskollegAnlage from "@json/schule/BerufskollegAnlage.json";
+import AllgemeinbildendOrganisationsformen from "@json/schule/AllgemeinbildendOrganisationsformen.json";
+import BerufskollegOrganisationsformen from "@json/schule/BerufskollegOrganisationsformen.json";
+import WeiterbildungskollegOrganisationsformen from "@json/schule/WeiterbildungskollegOrganisationsformen.json";
+import SchulabschlussAllgemeinbildend from "@json/schule/SchulabschlussAllgemeinbildend.json";
+import SchulabschlussBerufsbildend from "@json/schule/SchulabschlussBerufsbildend.json";
+import HerkunftBildungsgang from "@json/schueler/HerkunftBildungsgang.json";
+import HerkunftBildungsgangTyp from "@json/schueler/HerkunftBildungsgangTyp.json";
+import Jahrgaenge from "@json/jahrgang/Jahrgaenge.json";
+import PrimarstufeSchuleingangsphaseBesuchsjahre from "@json/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json";
+import Religion from "@json/schule/Religion.json";
+import Kindergartenbesuch from "@json/schule/Kindergartenbesuch.json";
+import SchuelerStatus from "@json/schueler/SchuelerStatus.json";
+import Note from "@json/Note.json";
+import Sprachreferenzniveau from "@json/fach/Sprachreferenzniveau.json";
+import BerufskollegBildungsgangTyp from "@json/schule/BerufskollegBildungsgangTyp.json";
+import WeiterbildungskollegBildungsgangTyp from "@json/schule/WeiterbildungskollegBildungsgangTyp.json";
+import Schulgliederung from "@json/schule/Schulgliederung.json";
+import Fachgruppe from "@json/fach/Fachgruppe.json";
+import Fach from "@json/fach/Fach.json";
+import LehrerAbgangsgrund from "@json/lehrer/LehrerAbgangsgrund.json";
+import LehrerBeschaeftigungsart from "@json/lehrer/LehrerBeschaeftigungsart.json";
+import LehrerEinsatzstatus from "@json/lehrer/LehrerEinsatzstatus.json";
+import LehrerFachrichtung from "@json/lehrer/LehrerFachrichtung.json";
+import LehrerLehrbefaehigung from "@json/lehrer/LehrerLehrbefaehigung.json";
+import LehrerFachrichtungAnerkennung from "@json/lehrer/LehrerFachrichtungAnerkennung.json";
+import LehrerLehramt from "@json/lehrer/LehrerLehramt.json";
+import LehrerLehramtAnerkennung from "@json/lehrer/LehrerLehramtAnerkennung.json";
+import LehrerLehrbefaehigungAnerkennung from "@json/lehrer/LehrerLehrbefaehigungAnerkennung.json";
+import LehrerLeitungsfunktion from "@json/lehrer/LehrerLeitungsfunktion.json";
+import LehrerRechtsverhaeltnis from "@json/lehrer/LehrerRechtsverhaeltnis.json";
+import LehrerZugangsgrund from "@json/lehrer/LehrerZugangsgrund.json";
+import BilingualeSprache from "@json/fach/BilingualeSprache.json";
+import KAOABerufsfeld from "@json/kaoa/KAOABerufsfeld.json";
+import KAOAMerkmaleOptionsarten from "@json/kaoa/KAOAMerkmaleOptionsarten.json";
+import KAOAZusatzmerkmaleOptionsarten from "@json/kaoa/KAOAZusatzmerkmaleOptionsarten.json";
+import KAOAEbene4 from "@json/kaoa/KAOAEbene4.json";
+import KAOAZusatzmerkmal from "@json/kaoa/KAOAZusatzmerkmal.json";
+import KAOAAnschlussoptionen from "@json/kaoa/KAOAAnschlussoptionen.json";
+import KAOAKategorie from "@json/kaoa/KAOAKategorie.json";
+import KAOAMerkmal from "@json/kaoa/KAOAMerkmal.json";
+import Klassenart from "@json/klassen/Klassenart.json";
+import Uebergangsempfehlung from "@json/schueler/Uebergangsempfehlung.json";
+import ZulaessigeKursart from "@json/kurse/ZulaessigeKursart.json";
+import Foerderschwerpunkt from "@json/schule/Foerderschwerpunkt.json";
+import LehrerAnrechnungsgrund from "@json/lehrer/LehrerAnrechnungsgrund.json";
+import LehrerMehrleistungsarten from "@json/lehrer/LehrerMehrleistungsarten.json";
+import LehrerMinderleistungsarten from "@json/lehrer/LehrerMinderleistungsarten.json";
+import ValidatorenFehlerartKontext from "@json/../validate/ValidatorenFehlerartKontext.json";
 
 export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 
 	mapCoreTypeNameJsonDataImport = new Map<string, object>();
 
-	public async loadAll() {
-		this.mapCoreTypeNameJsonDataImport = new Map([
-			["Schulform", await import("@json/schule/Schulform.json")],
-			["BerufskollegAnlage", await import("@json/schule/BerufskollegAnlage.json")],
-			["AllgemeinbildendOrganisationsformen", await import("@json/schule/AllgemeinbildendOrganisationsformen.json")],
-			["BerufskollegOrganisationsformen", await import("@json/schule/BerufskollegOrganisationsformen.json")],
-			["WeiterbildungskollegOrganisationsformen", await import("@json/schule/WeiterbildungskollegOrganisationsformen.json")],
-			["SchulabschlussAllgemeinbildend", await import("@json/schule/SchulabschlussAllgemeinbildend.json")],
-			["SchulabschlussBerufsbildend", await import("@json/schule/SchulabschlussBerufsbildend.json")],
-			["HerkunftBildungsgang", await import("@json/schueler/HerkunftBildungsgang.json")],
-			["HerkunftBildungsgangTyp", await import("@json/schueler/HerkunftBildungsgangTyp.json")],
-			["Jahrgaenge", await import("@json/jahrgang/Jahrgaenge.json")],
-			["PrimarstufeSchuleingangsphaseBesuchsjahre", await import("@json/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json")],
-			["Religion", await import("@json/schule/Religion.json")],
-			["Kindergartenbesuch", await import("@json/schule/Kindergartenbesuch.json")],
-			["SchuelerStatus", await import("@json/schueler/SchuelerStatus.json")],
-			["Note", await import("@json/Note.json")],
-			["Sprachreferenzniveau", await import("@json/fach/Sprachreferenzniveau.json")],
-			["BerufskollegBildungsgangTyp", await import("@json/schule/BerufskollegBildungsgangTyp.json")],
-			["WeiterbildungskollegBildungsgangTyp", await import("@json/schule/WeiterbildungskollegBildungsgangTyp.json")],
-			["Schulgliederung", await import("@json/schule/Schulgliederung.json")],
-			["Fachgruppe", await import("@json/fach/Fachgruppe.json")],
-			["Fach", await import("@json/fach/Fach.json")],
-			["LehrerAbgangsgrund", await import("@json/lehrer/LehrerAbgangsgrund.json")],
-			["LehrerBeschaeftigungsart", await import("@json/lehrer/LehrerBeschaeftigungsart.json")],
-			["LehrerEinsatzstatus", await import("@json/lehrer/LehrerEinsatzstatus.json")],
-			["LehrerFachrichtung", await import("@json/lehrer/LehrerFachrichtung.json")],
-			["LehrerLehrbefaehigung", await import("@json/lehrer/LehrerLehrbefaehigung.json")],
-			["LehrerFachrichtungAnerkennung", await import("@json/lehrer/LehrerFachrichtungAnerkennung.json")],
-			["LehrerLehramt", await import("@json/lehrer/LehrerLehramt.json")],
-			["LehrerLehramtAnerkennung", await import("@json/lehrer/LehrerLehramtAnerkennung.json")],
-			["LehrerLehrbefaehigungAnerkennung", await import("@json/lehrer/LehrerLehrbefaehigungAnerkennung.json")],
-			["LehrerLeitungsfunktion", await import("@json/lehrer/LehrerLeitungsfunktion.json")],
-			["LehrerRechtsverhaeltnis", await import("@json/lehrer/LehrerRechtsverhaeltnis.json")],
-			["LehrerZugangsgrund", await import("@json/lehrer/LehrerZugangsgrund.json")],
-			["BilingualeSprache", await import("@json/fach/BilingualeSprache.json")],
-			["KAOABerufsfeld", await import("@json/kaoa/KAOABerufsfeld.json")],
-			["KAOAMerkmaleOptionsarten", await import("@json/kaoa/KAOAMerkmaleOptionsarten.json")],
-			["KAOAZusatzmerkmaleOptionsarten", await import("@json/kaoa/KAOAZusatzmerkmaleOptionsarten.json")],
-			["KAOAEbene4", await import("@json/kaoa/KAOAEbene4.json")],
-			["KAOAZusatzmerkmal", await import("@json/kaoa/KAOAZusatzmerkmal.json")],
-			["KAOAAnschlussoptionen", await import("@json/kaoa/KAOAAnschlussoptionen.json")],
-			["KAOAKategorie", await import("@json/kaoa/KAOAKategorie.json")],
-			["KAOAMerkmal", await import("@json/kaoa/KAOAMerkmal.json")],
-			["Klassenart", await import("@json/klassen/Klassenart.json")],
-			["Uebergangsempfehlung", await import("@json/schueler/Uebergangsempfehlung.json")],
-			["ZulaessigeKursart", await import("@json/kurse/ZulaessigeKursart.json")],
-			["Foerderschwerpunkt", await import("@json/schule/Foerderschwerpunkt.json")],
-			["LehrerAnrechnungsgrund", await import("@json/lehrer/LehrerAnrechnungsgrund.json")],
-			["LehrerMehrleistungsarten", await import("@json/lehrer/LehrerMehrleistungsarten.json")],
-			["LehrerMinderleistungsarten", await import("@json/lehrer/LehrerMinderleistungsarten.json")],
-			["ValidatorenFehlerartKontext", await import("@json/../validate/ValidatorenFehlerartKontext.json")],
-		])
-		await Promise.all([...this.mapCoreTypeNameJsonDataImport.values()]);
+	constructor() {
+		super()
+		this.mapCoreTypeNameJsonDataImport.set("Schulform", Schulform);
+		this.mapCoreTypeNameJsonDataImport.set("BerufskollegAnlage", BerufskollegAnlage);
+		this.mapCoreTypeNameJsonDataImport.set("AllgemeinbildendOrganisationsformen", AllgemeinbildendOrganisationsformen);
+		this.mapCoreTypeNameJsonDataImport.set("BerufskollegOrganisationsformen", BerufskollegOrganisationsformen);
+		this.mapCoreTypeNameJsonDataImport.set("WeiterbildungskollegOrganisationsformen", WeiterbildungskollegOrganisationsformen);
+		this.mapCoreTypeNameJsonDataImport.set("SchulabschlussAllgemeinbildend", SchulabschlussAllgemeinbildend);
+		this.mapCoreTypeNameJsonDataImport.set("SchulabschlussBerufsbildend", SchulabschlussBerufsbildend);
+		this.mapCoreTypeNameJsonDataImport.set("HerkunftBildungsgang", HerkunftBildungsgang);
+		this.mapCoreTypeNameJsonDataImport.set("HerkunftBildungsgangTyp", HerkunftBildungsgangTyp);
+		this.mapCoreTypeNameJsonDataImport.set("Jahrgaenge", Jahrgaenge);
+		this.mapCoreTypeNameJsonDataImport.set("PrimarstufeSchuleingangsphaseBesuchsjahre", PrimarstufeSchuleingangsphaseBesuchsjahre);
+		this.mapCoreTypeNameJsonDataImport.set("Religion", Religion);
+		this.mapCoreTypeNameJsonDataImport.set("Kindergartenbesuch", Kindergartenbesuch);
+		this.mapCoreTypeNameJsonDataImport.set("SchuelerStatus", SchuelerStatus);
+		this.mapCoreTypeNameJsonDataImport.set("Note", Note);
+		this.mapCoreTypeNameJsonDataImport.set("Sprachreferenzniveau", Sprachreferenzniveau);
+		this.mapCoreTypeNameJsonDataImport.set("BerufskollegBildungsgangTyp", BerufskollegBildungsgangTyp);
+		this.mapCoreTypeNameJsonDataImport.set("WeiterbildungskollegBildungsgangTyp", WeiterbildungskollegBildungsgangTyp);
+		this.mapCoreTypeNameJsonDataImport.set("Schulgliederung", Schulgliederung);
+		this.mapCoreTypeNameJsonDataImport.set("Fachgruppe", Fachgruppe);
+		this.mapCoreTypeNameJsonDataImport.set("Fach", Fach);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerAbgangsgrund", LehrerAbgangsgrund);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerBeschaeftigungsart", LehrerBeschaeftigungsart);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerEinsatzstatus", LehrerEinsatzstatus);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerFachrichtung", LehrerFachrichtung);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerLehrbefaehigung", LehrerLehrbefaehigung);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerFachrichtungAnerkennung", LehrerFachrichtungAnerkennung);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerLehramt", LehrerLehramt);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerLehramtAnerkennung", LehrerLehramtAnerkennung);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerLehrbefaehigungAnerkennung", LehrerLehrbefaehigungAnerkennung);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerLeitungsfunktion", LehrerLeitungsfunktion);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerRechtsverhaeltnis", LehrerRechtsverhaeltnis);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerZugangsgrund", LehrerZugangsgrund);
+		this.mapCoreTypeNameJsonDataImport.set("BilingualeSprache", BilingualeSprache);
+		this.mapCoreTypeNameJsonDataImport.set("KAOABerufsfeld", KAOABerufsfeld);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAMerkmaleOptionsarten", KAOAMerkmaleOptionsarten);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAZusatzmerkmaleOptionsarten", KAOAZusatzmerkmaleOptionsarten);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAEbene4", KAOAEbene4);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAZusatzmerkmal", KAOAZusatzmerkmal);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAAnschlussoptionen", KAOAAnschlussoptionen);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAKategorie", KAOAKategorie);
+		this.mapCoreTypeNameJsonDataImport.set("KAOAMerkmal", KAOAMerkmal);
+		this.mapCoreTypeNameJsonDataImport.set("Klassenart", Klassenart);
+		this.mapCoreTypeNameJsonDataImport.set("Uebergangsempfehlung", Uebergangsempfehlung);
+		this.mapCoreTypeNameJsonDataImport.set("ZulaessigeKursart", ZulaessigeKursart);
+		this.mapCoreTypeNameJsonDataImport.set("Foerderschwerpunkt", Foerderschwerpunkt);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerAnrechnungsgrund", LehrerAnrechnungsgrund);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerMehrleistungsarten", LehrerMehrleistungsarten);
+		this.mapCoreTypeNameJsonDataImport.set("LehrerMinderleistungsarten", LehrerMinderleistungsarten);
+		this.mapCoreTypeNameJsonDataImport.set("ValidatorenFehlerartKontext", ValidatorenFehlerartKontext);
 		for (const [k,v] of this.mapCoreTypeNameJsonDataImport.entries())
 			this.mapCoreTypeNameJsonData.set(k, JSON.stringify(v));
-		return this.mapCoreTypeNameJsonData;
 	}
 }

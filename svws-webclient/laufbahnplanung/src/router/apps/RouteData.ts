@@ -376,19 +376,13 @@ export class RouteData {
 		return { data, name };
 	}
 
-	async initCoreTypes() {
-		await this.reader.loadAll();
-		this.reader.readAll();
-	}
-
 	importLaufbahnplanung = async (formData: FormData) => {
+		this.reader.readAll();
 		const gzData = formData.get("data");
 		if (!(gzData instanceof File))
 			return;
 		const ds = new DecompressionStream("gzip");
 		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
-		if (this.reader.mapCoreTypeNameJsonData.size === 0)
-			await this.initCoreTypes();
 		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
 		await this.ladeDaten(laufbahnplanungsdaten);
 		await RouteManager.doRoute(routeLaufbahnplanung.name);
