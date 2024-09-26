@@ -80,7 +80,7 @@
 			:is-active="currentAction === 'kursklausuren_nicht_verteilt'"
 			@click="toggleAction('kursklausuren_nicht_verteilt')"
 			action-label="Zur Schienenansicht"
-			:action-function="gotoSchienen"
+			:action-function="() => gotoSchienen(undefined)"
 			class="border-error"
 			icon="i-ri-book-2-line">
 			<svws-ui-table :items="kursklausurenNichtVerteilt()"
@@ -124,12 +124,14 @@
 			v-if="!termineMitKonflikten().isEmpty()"
 			:is-active="currentAction === 'klausurtermine_mit_schuelerkonflikten'"
 			@click="toggleAction('klausurtermine_mit_schuelerkonflikten')"
-			action-label="Zur Schienenansicht"
-			:action-function="gotoSchienen"
+			action-disabled
 			class="border-error"
 			icon="i-ri-alert-line">
 			<svws-ui-table :items="termineMitKonflikten()"
-				:columns="colsTermine">
+				:columns="addStatusColumn(colsTermine)">
+				<template #cell(status)="{rowData}">
+					<svws-ui-button type="transparent" @click="gotoSchienen(rowData)" title="Schiene anzeigen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> anzeigen</svws-ui-button>
+				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
 				</template>

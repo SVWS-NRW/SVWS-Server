@@ -234,8 +234,8 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
 	}
 
-	gotoSchienen = async () => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+	gotoSchienen = async (termin: GostKlausurtermin | undefined) => {
+		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined } });
 	}
 
 	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung | number | GostKlausurtermin) => {

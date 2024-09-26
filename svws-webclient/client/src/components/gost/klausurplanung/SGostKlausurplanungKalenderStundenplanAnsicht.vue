@@ -48,8 +48,11 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<template v-if="manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde)">
-						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 bg-opacity-0' : ''" :style="posZeitraster(wochentag, stunde)"
-							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
+						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 bg-opacity-0' : ''"
+							:style="posZeitraster(wochentag, stunde)"
+							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
+							@dragleave="checkDropZoneZeitraster($event, undefined)"
+							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
 							<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
 									<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>

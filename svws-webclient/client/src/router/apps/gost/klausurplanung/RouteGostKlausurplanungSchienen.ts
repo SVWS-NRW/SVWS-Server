@@ -20,15 +20,17 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
 			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
-		], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
+		], "gost.klausurplanung.schienen", "schienen/:idtermin(\\d+)?", SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { abiturjahr, halbjahr: halbjahrId } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
+			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
+			routeGostKlausurplanung.data.terminSelected.value = termin ?? undefined;
 			if ((abiturjahr === undefined) || (halbjahr === null))
 				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
 		} catch (e) {
@@ -36,8 +38,8 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 		}
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	public getRoute(abiturjahr: number, halbjahr: number, idtermin: number | undefined ) : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idtermin }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
@@ -54,9 +56,11 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
 			blockenKursklausuren: routeGostKlausurplanung.data.blockenKursklausuren,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			terminSelected: routeGostKlausurplanung.data.terminSelected,
 			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
 			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
+			gotoSchienen: routeGostKlausurplanung.data.gotoSchienen,
 		}
 	}
 

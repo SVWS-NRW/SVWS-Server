@@ -21,7 +21,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	dragData: () => GostKlausurplanungDragData;
 	onDrag: (data: GostKlausurplanungDragData) => void;
 	onDrop: (zone: GostKlausurplanungDropZone) => void;
-	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster) => void;
+	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster | undefined) => void;
 	zeigeAlleJahrgaenge: () => boolean;
 	kursklausurMouseOver: () => GostKursklausur | undefined;
 	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;

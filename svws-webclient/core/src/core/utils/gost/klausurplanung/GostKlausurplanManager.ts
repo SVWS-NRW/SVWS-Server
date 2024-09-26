@@ -2727,7 +2727,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public konflikteMapKursklausurSchueleridsByTermin(termin : GostKlausurtermin) : JavaMap<GostKursklausur, JavaSet<number>> {
 		const klausuren : List<GostKursklausur> | null = this.kursklausurGetMengeByTermin(termin);
-		return this.berechneKonflikte(klausuren, klausuren);
+		return this.berechneKonflikte(klausuren, klausuren, this.getSchuelerIDsFromSchuelerklausurterminen(this.schuelerklausurterminAktuellNtGetMengeByTermin(termin)));
 	}
 
 	/**
@@ -2752,7 +2752,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * die die übergebe {@link GostKursklausur} bei Hinzufügen im übergebenen {@link GostKlausurtermin} verursacht.
 	 */
 	public konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(termin : GostKlausurtermin, kursklausur : GostKursklausur) : JavaMap<GostKursklausur, JavaSet<number>> {
-		return this.berechneKonflikte(this.kursklausurGetMengeByTermin(termin), ListUtils.create1(kursklausur));
+		return this.berechneKonflikte(this.kursklausurGetMengeByTermin(termin), ListUtils.create1(kursklausur), this.getSchuelerIDsFromSchuelerklausurterminen(this.schuelerklausurterminAktuellNtGetMengeByTermin(termin)));
 	}
 
 	/**
@@ -2779,7 +2779,7 @@ export class GostKlausurplanManager extends JavaObject {
 	public konflikteZuEigenemTerminMapGetByKursklausur(klausur : GostKursklausur) : JavaMap<GostKursklausur, JavaSet<number>> {
 		const klausuren1 : List<GostKursklausur> = new ArrayList<GostKursklausur>(DeveloperNotificationException.ifMapGetIsNull(this._kursklausurmenge_by_idTermin, klausur.idTermin));
 		klausuren1.remove(klausur);
-		return this.berechneKonflikte(klausuren1, ListUtils.create1(klausur));
+		return this.berechneKonflikte(klausuren1, ListUtils.create1(klausur), this.getSchuelerIDsFromSchuelerklausurterminen(this.schuelerklausurterminAktuellNtGetMengeByTermin(this.terminOrExceptionByKursklausur(klausur))));
 	}
 
 	/**
@@ -2793,7 +2793,7 @@ export class GostKlausurplanManager extends JavaObject {
 		return GostKlausurplanManager.countKonflikte(this.konflikteZuEigenemTerminMapGetByKursklausur(klausur));
 	}
 
-	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>) : JavaMap<GostKursklausur, JavaSet<number>> {
+	private berechneKonflikte(klausuren1 : List<GostKursklausur>, klausuren2 : List<GostKursklausur>, skts : List<number> | null) : JavaMap<GostKursklausur, JavaSet<number>> {
 		if (klausuren1.isEmpty() || klausuren2.isEmpty())
 			return new HashMap();
 		const result : JavaMap<GostKursklausur, JavaSet<number>> | null = new HashMap<GostKursklausur, JavaSet<number>>();
@@ -2806,14 +2806,23 @@ export class GostKlausurplanManager extends JavaObject {
 					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
 					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
 				}
+				if (skts !== null) {
+					const konflikte2 : JavaSet<number> | null = GostKlausurplanManager.berechneIdKonflikte(this.getSchuelerIDsFromKursklausur(kk1), skts);
+					if (!konflikte2.isEmpty())
+						MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte2);
+				}
 			}
 		}
 		return result;
 	}
 
 	private berechneKlausurKonflikte(kk1 : GostKursklausur, kk2 : GostKursklausur) : JavaSet<number> {
-		const konflikte : HashSet<number> = new HashSet<number>(this.getSchuelerIDsFromKursklausur(kk1));
-		konflikte.retainAll(this.getSchuelerIDsFromKursklausur(kk2));
+		return GostKlausurplanManager.berechneIdKonflikte(this.getSchuelerIDsFromKursklausur(kk1), this.getSchuelerIDsFromKursklausur(kk2));
+	}
+
+	private static berechneIdKonflikte(kk1 : List<number>, kk2 : List<number>) : JavaSet<number> {
+		const konflikte : HashSet<number> = new HashSet<number>(kk1);
+		konflikte.retainAll(kk2);
 		return konflikte;
 	}
 
@@ -2949,6 +2958,22 @@ export class GostKlausurplanManager extends JavaObject {
 			}
 		}
 		return ergebnis;
+	}
+
+	/**
+	 * Liefert für eine Liste von {@link GostSchuelerklausur}en die zugehörigen
+	 * Schüler-IDs als Liste.
+	 *
+	 * @param sks die Liste von {@link GostSchuelerklausur}en
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public getSchuelerIDsFromSchuelerklausurterminen(sks : List<GostSchuelerklausurTermin>) : List<number> {
+		const ids : List<number> = new ArrayList<number>();
+		for (const sk of sks) {
+			ids.add(this.schuelerklausurBySchuelerklausurtermin(sk).idSchueler);
+		}
+		return ids;
 	}
 
 	/**

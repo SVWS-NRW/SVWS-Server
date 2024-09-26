@@ -22,6 +22,7 @@
 						</div>
 						<ul class="flex flex-col gap-0.5 -mx-3">
 							<li v-for="termin in kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
+								:id="'termin' + termin.id"
 								:key="termin.id"
 								:data="termin"
 								:draggable="isDraggable(termin)"
@@ -233,22 +234,9 @@
 			event.preventDefault();
 	}
 
-	function isDropZoneZeitraster(zeitraster: StundenplanZeitraster) : boolean {
-		return true;
-		// const data = props.dragData();
-		// if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
-		// 	return false;
-		// if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
-		// 	return true;
-		// const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-		// return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
-	}
-
-	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster) : void {
-		if (isDropZoneZeitraster(zeitraster)) {
-			zeitrasterSelected.value = zeitraster;
-			event.preventDefault();
-		}
+	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster | undefined) : void {
+		zeitrasterSelected.value = zeitraster;
+		event.preventDefault();
 	}
 
 	function kurseGefiltert(day: Wochentag, stunde: number) {
@@ -304,6 +292,11 @@
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth' });
+		}
 	});
 
 </script>

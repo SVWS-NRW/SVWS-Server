@@ -16,6 +16,7 @@
 				</div>
 				<ul class="flex flex-col gap-0.5 -mx-3">
 					<li v-for="termin in termine()"
+						:id="'termin' + termin.id"
 						:key="termin.id"
 						@click="chooseTermin(termin)"
 						:draggable="isDraggable(undefined, termin)"
@@ -45,7 +46,7 @@
 					</li>
 				</ul>
 			</svws-ui-content-card>
-			<svws-ui-content-card v-if="terminSelected.value === undefined">
+			<svws-ui-content-card v-if="terminSelected.value === undefined || terminSelected.value.datum === null">
 				<div class="h-full rounded-lg shadow-inner flex items-center justify-center py-8 px-3 text-center">
 					<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
 				</div>
@@ -76,7 +77,7 @@
 	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
-	import { ref, onMounted, computed } from 'vue';
+	import { ref, onMounted, computed, useTemplateRef } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
@@ -163,6 +164,11 @@
 
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth' });
+		}
 	});
 
 </script>

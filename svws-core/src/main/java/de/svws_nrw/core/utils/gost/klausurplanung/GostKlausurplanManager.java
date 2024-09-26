@@ -2965,7 +2965,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull Map<GostKursklausur, Set<Long>> konflikteMapKursklausurSchueleridsByTermin(final @NotNull GostKlausurtermin termin) {
 		final List<GostKursklausur> klausuren = kursklausurGetMengeByTermin(termin);
-		return berechneKonflikte(klausuren, klausuren);
+		return berechneKonflikte(klausuren, klausuren, getSchuelerIDsFromSchuelerklausurterminen(schuelerklausurterminAktuellNtGetMengeByTermin(termin)));
 	}
 
 	/**
@@ -2991,7 +2991,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull Map<GostKursklausur, Set<Long>> konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(
 			final @NotNull GostKlausurtermin termin, final @NotNull GostKursklausur kursklausur) {
-		return berechneKonflikte(kursklausurGetMengeByTermin(termin), ListUtils.create1(kursklausur));
+		return berechneKonflikte(kursklausurGetMengeByTermin(termin), ListUtils.create1(kursklausur), getSchuelerIDsFromSchuelerklausurterminen(schuelerklausurterminAktuellNtGetMengeByTermin(termin)));
 	}
 
 	/**
@@ -3021,7 +3021,7 @@ public class GostKlausurplanManager {
 		final @NotNull List<GostKursklausur> klausuren1 = new ArrayList<>(
 				DeveloperNotificationException.ifMapGetIsNull(_kursklausurmenge_by_idTermin, klausur.idTermin));
 		klausuren1.remove(klausur);
-		return berechneKonflikte(klausuren1, ListUtils.create1(klausur));
+		return berechneKonflikte(klausuren1, ListUtils.create1(klausur), getSchuelerIDsFromSchuelerklausurterminen(schuelerklausurterminAktuellNtGetMengeByTermin(terminOrExceptionByKursklausur(klausur))));
 	}
 
 	/**
@@ -3036,7 +3036,7 @@ public class GostKlausurplanManager {
 	}
 
 	private @NotNull Map<GostKursklausur, Set<Long>> berechneKonflikte(final @NotNull List<GostKursklausur> klausuren1,
-			final @NotNull List<GostKursklausur> klausuren2) {
+			final @NotNull List<GostKursklausur> klausuren2, final List<Long> skts) {
 		if (klausuren1.isEmpty() || klausuren2.isEmpty())
 			return new HashMap<>();
 		final Map<GostKursklausur, Set<Long>> result = new HashMap<>();
@@ -3049,6 +3049,11 @@ public class GostKlausurplanManager {
 					MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte);
 					MapUtils.getOrCreateHashSet(result, kk2).addAll(konflikte);
 				}
+				if (skts != null) {
+					final Set<Long> konflikte2 = berechneIdKonflikte(getSchuelerIDsFromKursklausur(kk1), skts);
+					if (!konflikte2.isEmpty())
+						MapUtils.getOrCreateHashSet(result, kk1).addAll(konflikte2);
+				}
 			}
 		}
 		return result;
@@ -3056,8 +3061,13 @@ public class GostKlausurplanManager {
 
 	private @NotNull Set<Long> berechneKlausurKonflikte(final @NotNull GostKursklausur kk1,
 			final @NotNull GostKursklausur kk2) {
-		final @NotNull HashSet<Long> konflikte = new HashSet<>(getSchuelerIDsFromKursklausur(kk1));
-		konflikte.retainAll(getSchuelerIDsFromKursklausur(kk2));
+		return berechneIdKonflikte(getSchuelerIDsFromKursklausur(kk1), getSchuelerIDsFromKursklausur(kk2));
+	}
+
+	private static @NotNull Set<Long> berechneIdKonflikte(final @NotNull List<Long> kk1,
+			final @NotNull List<Long> kk2) {
+		final @NotNull HashSet<Long> konflikte = new HashSet<>(kk1);
+		konflikte.retainAll(kk2);
 		return konflikte;
 	}
 
@@ -3222,6 +3232,22 @@ public class GostKlausurplanManager {
 	// #####################################################################
 	// #################### Thresholdberechnung Ende ################################
 	// #####################################################################
+
+	/**
+	 * Liefert für eine Liste von {@link GostSchuelerklausur}en die zugehörigen
+	 * Schüler-IDs als Liste.
+	 *
+	 * @param sks die Liste von {@link GostSchuelerklausur}en
+	 *
+	 * @return die Liste der Schüler-IDs
+	 */
+	public @NotNull List<Long> getSchuelerIDsFromSchuelerklausurterminen(final @NotNull List<GostSchuelerklausurTermin> sks) {
+		final @NotNull List<Long> ids = new ArrayList<>();
+		for (final @NotNull GostSchuelerklausurTermin sk : sks) {
+			ids.add(schuelerklausurBySchuelerklausurtermin(sk).idSchueler);
+		}
+		return ids;
+	}
 
 	/**
 	 * Liefert für eine Liste von {@link GostSchuelerklausur}en die zugehörigen

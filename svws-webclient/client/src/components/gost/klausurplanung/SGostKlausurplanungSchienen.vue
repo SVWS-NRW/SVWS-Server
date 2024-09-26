@@ -80,23 +80,25 @@
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
 					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
 					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
+					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+						:id="'termin' + termin.id"
 						:benutzer-kompetenzen
 						:termin="() => termin"
 						:class="dropOverCssClasses(termin)"
 						:k-man
 						:drag-data="() => dragData"
-						@dragover="terminSelected=termin"
+						@dragover="terminSelected.value=termin"
+						@dragleave="terminSelected.value=undefined"
 						:on-drag
 						:on-drop
 						:draggable
-						:termin-selected="terminSelected?.id===termin.id"
-						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
+						:termin-selected="props.terminSelected.value?.id===termin.id"
+						@click="gotoSchienen(props.terminSelected.value?.id===termin.id?undefined:termin);$event.stopPropagation()"
 						:loesche-klausurtermine
 						:patch-klausurtermin
 						:klausur-css-classes
@@ -189,10 +191,9 @@
 	const loading = ref<boolean>(false);
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
-	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
-		terminSelected.value = undefined;
+		props.terminSelected.value = undefined;
 		dragData.value = data;
 	};
 
@@ -200,8 +201,8 @@
 		const termin = props.kMan().terminOrNullByKursklausur(klausur);
 		if (termin !== null && termin.datum !== null)
 			return DateUtils.gibDatumGermanFormat(termin.datum);
-		if (terminSelected.value !== undefined && terminSelected.value.datum !== null)
-			return DateUtils.gibDatumGermanFormat(terminSelected.value.datum);
+		if (props.terminSelected.value !== undefined && props.terminSelected.value.datum !== null)
+			return DateUtils.gibDatumGermanFormat(props.terminSelected.value.datum);
 		return "N.N."
 	}
 
@@ -232,20 +233,20 @@
 	}
 
 	const klausurKonflikte = () => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(terminSelected.value, dragData.value).entrySet();
-		} else if (terminSelected.value !== undefined)
-			return props.kMan().konflikteMapKursklausurSchueleridsByTermin(terminSelected.value).entrySet();
+		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+				return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(props.terminSelected.value, dragData.value).entrySet();
+		} else if (props.terminSelected.value !== undefined)
+			return props.kMan().konflikteMapKursklausurSchueleridsByTermin(props.terminSelected.value).entrySet();
 		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
 	}
 
 	const anzahlProKwKonflikte = (threshold: number) => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold).entrySet();
-		} else if (terminSelected.value !== undefined)
-			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold).entrySet();
+		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(props.terminSelected.value, dragData.value, threshold).entrySet();
+		} else if (props.terminSelected.value !== undefined)
+			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(props.terminSelected.value, threshold).entrySet();
 		return new HashSet<JavaMapEntry<number, List<GostSchuelerklausurTermin>>>();
 	}
 
@@ -271,7 +272,7 @@
 				const termin = klausurMoveDropZone;
 				if (termin.id !== klausurMoveDragData.idTermin) {
 					await props.patchKlausur(klausurMoveDragData, {idTermin: termin.id});
-					terminSelected.value = klausurMoveDropZone;
+					props.terminSelected.value = klausurMoveDropZone;
 				}
 			}
 		}
@@ -327,6 +328,11 @@
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth' });
+		}
 	});
 
 	function calculateColumns() {

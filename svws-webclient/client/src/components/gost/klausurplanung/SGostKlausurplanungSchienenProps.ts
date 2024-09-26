@@ -17,6 +17,7 @@ export interface GostKlausurplanungSchienenProps {
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;
+	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
 	patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	createSchuelerklausurTermin: (id: number) => Promise<void>;
 	erzeugeKlausurtermin: (quartal: number, istHaupttermin: boolean) => Promise<GostKlausurtermin>;
@@ -25,6 +26,7 @@ export interface GostKlausurplanungSchienenProps {
 	patchKlausurtermin: (id: number, termin: Partial<GostKlausurtermin>) => Promise<void>;
 	blockenKursklausuren: (blockungDaten: GostKlausurterminblockungDaten) => Promise<void>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
+	gotoSchienen: (termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoVorgaben: () => Promise<void>;
 	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
