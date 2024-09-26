@@ -485,7 +485,7 @@ export class JsonCoreTypeReader {
 		console.log("Laden der Json-Dateien");
 		const arr = [];
 		for (const key of this.keys)
-			arr.push(await this.loadJson(key));
+			arr.push(this.loadJson(key));
 		await Promise.all(arr);
 		return this.mapCoreTypeNameJsonData;
 	}
