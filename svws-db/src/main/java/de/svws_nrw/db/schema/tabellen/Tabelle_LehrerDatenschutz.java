@@ -39,6 +39,12 @@ public class Tabelle_LehrerDatenschutz extends SchemaTabelle {
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment("Status der Abfrage Datenschutz-Eintrags (true/false)");
 
+	/** Die Definition der Tabellenspalte SchulnrEigner */
+	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
+
 
 	/** Die Definition des Fremdschlüssels LehrerDatenschutz_Lehrer_FK */
 	public SchemaTabelleFremdschluessel fk_LehrerDatenschutz_Lehrer_FK = addForeignKey(

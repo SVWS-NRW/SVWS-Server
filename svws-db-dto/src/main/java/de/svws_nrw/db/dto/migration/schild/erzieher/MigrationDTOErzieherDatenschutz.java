@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOErzieherDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "ErzieherDatenschutz")
-@JsonPropertyOrder({"ErzieherID", "DatenschutzID", "Status"})
+@JsonPropertyOrder({"ErzieherID", "DatenschutzID", "Status", "SchulnrEigner"})
 public final class MigrationDTOErzieherDatenschutz {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -58,6 +58,12 @@ public final class MigrationDTOErzieherDatenschutz {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Status */
 	public static final String QUERY_LIST_BY_STATUS = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.Status IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOErzieherDatenschutz e WHERE e.SchulnrEigner IN ?1";
+
 	/** ErzieherID des Datenschutzeintrags */
 	@Id
 	@Column(name = "ErzieherID")
@@ -77,6 +83,11 @@ public final class MigrationDTOErzieherDatenschutz {
 	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean Status;
+
+	/** DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
+	@Column(name = "SchulnrEigner")
+	@JsonProperty
+	public Integer SchulnrEigner;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOErzieherDatenschutz ohne eine Initialisierung der Attribute.
@@ -147,7 +158,7 @@ public final class MigrationDTOErzieherDatenschutz {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOErzieherDatenschutz(ErzieherID=" + this.ErzieherID + ", DatenschutzID=" + this.DatenschutzID + ", Status=" + this.Status + ")";
+		return "MigrationDTOErzieherDatenschutz(ErzieherID=" + this.ErzieherID + ", DatenschutzID=" + this.DatenschutzID + ", Status=" + this.Status + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

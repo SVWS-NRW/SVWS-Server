@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOLehrerDatenschutzPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerDatenschutz")
-@JsonPropertyOrder({"LehrerID", "DatenschutzID", "Status", "Abgefragt"})
+@JsonPropertyOrder({"LehrerID", "DatenschutzID", "Status", "Abgefragt", "SchulnrEigner"})
 public final class MigrationDTOLehrerDatenschutz {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -64,6 +64,12 @@ public final class MigrationDTOLehrerDatenschutz {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes Abgefragt */
 	public static final String QUERY_LIST_BY_ABGEFRAGT = "SELECT e FROM MigrationDTOLehrerDatenschutz e WHERE e.Abgefragt IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerDatenschutz e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerDatenschutz e WHERE e.SchulnrEigner IN ?1";
+
 	/** LehrerID des Datenschutzeintrags */
 	@Id
 	@Column(name = "LehrerID")
@@ -91,6 +97,11 @@ public final class MigrationDTOLehrerDatenschutz {
 	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean Abgefragt;
+
+	/** DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
+	@Column(name = "SchulnrEigner")
+	@JsonProperty
+	public Integer SchulnrEigner;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerDatenschutz ohne eine Initialisierung der Attribute.
@@ -166,7 +177,7 @@ public final class MigrationDTOLehrerDatenschutz {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerDatenschutz(LehrerID=" + this.LehrerID + ", DatenschutzID=" + this.DatenschutzID + ", Status=" + this.Status + ", Abgefragt=" + this.Abgefragt + ")";
+		return "MigrationDTOLehrerDatenschutz(LehrerID=" + this.LehrerID + ", DatenschutzID=" + this.DatenschutzID + ", Status=" + this.Status + ", Abgefragt=" + this.Abgefragt + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }
