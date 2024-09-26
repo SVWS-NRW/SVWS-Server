@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOLehrerLernplattformPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLernplattform")
-@JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz"})
+@JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz", "SchulnrEigner"})
 public final class MigrationDTOLehrerLernplattform {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -82,6 +82,12 @@ public final class MigrationDTOLehrerLernplattform {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungVideokonferenz */
 	public static final String QUERY_LIST_BY_EINWILLIGUNGVIDEOKONFERENZ = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.SchulnrEigner IN ?1";
+
 	/** LehrerID für den Lernplattform-Datensatz */
 	@Id
 	@Column(name = "LehrerID")
@@ -130,6 +136,11 @@ public final class MigrationDTOLehrerLernplattform {
 	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungVideokonferenz;
+
+	/** DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
+	@Column(name = "SchulnrEigner")
+	@JsonProperty
+	public Integer SchulnrEigner;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerLernplattform ohne eine Initialisierung der Attribute.
@@ -215,7 +226,7 @@ public final class MigrationDTOLehrerLernplattform {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerLernplattform(LehrerID=" + this.LehrerID + ", LernplattformID=" + this.LernplattformID + ", CredentialID=" + this.CredentialID + ", EinwilligungAbgefragt=" + this.EinwilligungAbgefragt + ", EinwilligungNutzung=" + this.EinwilligungNutzung + ", EinwilligungAudiokonferenz=" + this.EinwilligungAudiokonferenz + ", EinwilligungVideokonferenz=" + this.EinwilligungVideokonferenz + ")";
+		return "MigrationDTOLehrerLernplattform(LehrerID=" + this.LehrerID + ", LernplattformID=" + this.LernplattformID + ", CredentialID=" + this.CredentialID + ", EinwilligungAbgefragt=" + this.EinwilligungAbgefragt + ", EinwilligungNutzung=" + this.EinwilligungNutzung + ", EinwilligungAudiokonferenz=" + this.EinwilligungAudiokonferenz + ", EinwilligungVideokonferenz=" + this.EinwilligungVideokonferenz + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }
