@@ -51,7 +51,7 @@ export class RouteSchuleBenutzergruppeDaten extends RouteNode<any, RouteSchuleBe
 		};
 	}
 
-	public gotToBenutzer = async (b_id: number) => await RouteManager.doRoute({ name: "benutzer_daten", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: b_id } });
+	public gotToBenutzer = async (b_id: number) => await RouteManager.doRoute({ name: "schule.benutzer.daten", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: b_id } });
 
 }
 
