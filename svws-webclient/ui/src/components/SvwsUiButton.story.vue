@@ -22,12 +22,19 @@
 			:key="title"
 			:id="title"
 			:title="title">
-			<svws-ui-button v-bind="props" @click="onClick">
-				<template v-if="props.type !== 'icon'">
-					Button
-				</template>
-				<span class="icon i-ri-settings-3-line" v-else />
-			</svws-ui-button>
+			<div class="flex gap-2 p-1">
+				<svws-ui-button v-bind="props" @click="onClick">
+					<template v-if="props.type !== 'icon'">
+						Button
+					</template>
+					<span class="icon i-ri-settings-3-line" v-else />
+				</svws-ui-button>
+				<div v-if="title === 'Primary' || title === 'Secondary'" class="page--statistik">
+					<svws-ui-button v-bind="props" @click="onClick">
+						Button
+					</svws-ui-button>
+				</div>
+			</div>
 		</Variant>
 	</Story>
 </template>

@@ -289,29 +289,19 @@
 <style lang="postcss" scoped>
 .ui-docs-bg {
 	@apply px-1 py-0.5;
+}
+
+html:not(.htw-dark) .ui-docs-bg {
 	background-color: theme(colors.palette.neutral.100);
 	color: theme(colors.palette.neutral.900);
 }
 
-.ui-docs-bg.dark {
+html:not(.htw-dark) .ui-docs-bg.dark {
 	background-color: theme(colors.palette.neutral.800);
 	color: theme(colors.palette.neutral.100);
 }
 
 .htw-dark .ui-docs-bg.dark {
 	display: none;
-}
-
-.contrast-value {
-	@apply ml-auto;
-}
-
-.darkOnDisabled {
-	@apply relative;
-}
-.darkOnDisabled:before {
-	content: '';
-	@apply absolute inset-0 -z-10;
-	background-color: theme(colors.palette.neutral.800);
 }
 </style>
