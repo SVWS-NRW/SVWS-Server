@@ -53,4 +53,12 @@ public class ReportingParameter {
 	@Schema(description = "Parameter, der in Templates verwendet werden kann, um den Detailgrad der Darstellung zu steuern.", example = "0")
 	public int detailLevel = 0;
 
+
+	/**
+	 * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
+	 * Sie enthält die Daten und Einstellungen, welche im Rahmen der serverseitigen Report-Generierung genutzt werden sollen.
+	 */
+	public ReportingParameter() {
+		super();
+	}
 }

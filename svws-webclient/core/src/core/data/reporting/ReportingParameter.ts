@@ -47,6 +47,10 @@ export class ReportingParameter extends JavaObject {
 	public detailLevel : number = 0;
 
 
+	/**
+	 * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
+	 * Sie enthält die Daten und Einstellungen, welche im Rahmen der serverseitigen Report-Generierung genutzt werden sollen.
+	 */
 	public constructor() {
 		super();
 	}

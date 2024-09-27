@@ -10,14 +10,12 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
  * <p>Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers.
  * Sie definiert die im CoreType {@link ReportingReportvorlage} angelegten Report-Vorlagen
  * hinsichtlich der verwendeten Template-Dateien und Benutzerrechte genauer.</p>
- * <p></p>>
  * <p>Hinweis:</p>
  * <p>Die Bezeichnungen der ENUM-Werte dienen auch dazu, die Daten-Contexts korrekt zu füllen.
  * Die Benennung der Vorlagen erfolgt nach dem Schema Hauptdaten_v_Detaildaten. Bei der Report-Generierung erfolgt in
  * Teilen ein entsprechendes Füllen der Datenkontexte anhand der Benennung.</p>
- * <p></p>
  * <p>Anmerkung:</p>
- * <p>Es gibt zwei Einträge für die erzeugung des Dateinamens. Einen "statischen" Dateinamen und eine Dateinamensvorlage.
+ * <p>Es gibt zwei Einträge für die Erzeugung des Dateinamens. Einen "statischen" Dateinamen und eine Dateinamensvorlage.
  * Die Vorlage stellt den BODY eines html-Thymeleaf-Templates dar, welches eine einzige Zeile mit einem Absatz-Tag
  * ergeben muss. Diese Zeile wird dann für die Erzeugung des Dateinamens aus den Daten genutzt.</p>
  */
