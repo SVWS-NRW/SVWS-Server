@@ -49,6 +49,7 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 	public getProps(to: RouteLocationNormalized): EinstellungenProps {
 		return <EinstellungenProps>{
 			schule: () => api.schuleStammdaten,
+			benutzerdaten: () => api.benutzerdaten,
 		};
 	}
 

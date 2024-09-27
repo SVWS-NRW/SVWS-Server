@@ -6,11 +6,12 @@
 					<h2 class="svws-headline">
 						<span>Einstellungen</span>
 					</h2>
-					<span class="svws-subline">...</span>
+					<span class="svws-subline">für Benutzer {{ benutzerdaten().name }} </span>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
+		<s-einstellungen-ansicht />
 	</div>
 </template>
 

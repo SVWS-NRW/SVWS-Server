@@ -10,14 +10,14 @@
 		</div>
 		<div class="sidebar--menu--footer">
 			<slot name="footer" />
-			<div class="app--appearance-settings">
+			<div class="app--appearance-settings" v-if="showEinstellungenDefaultApp == true">
 				<svws-ui-menu-item subline="" @click="showModalEinstellungen().value = true">
 					<template #label>Ansicht</template>
 					<template #icon><span class="icon-lg i-ri-palette-line inline-block" /></template>
 				</svws-ui-menu-item>
 			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center opacity-25 dark:opacity-50">
-				<div class="text-sm mb-2 text-center">Powered by<br>SVWS NRW</div>
+				<div class="text-sm mt-2 mb-2 text-center">Powered by<br>SVWS NRW</div>
 				<button role="link" @click="showModalInfo().value = true"
 					class="mb-1 hover:opacity-100 underline hover:no-underline text-sm">
 					Client Info
@@ -104,6 +104,12 @@
 
 	const _showModalInfo = ref<boolean>(false);
 	const showModalInfo = () => _showModalInfo;
+
+	const props = withDefaults(defineProps<{
+		showEinstellungenDefaultApp? : boolean;
+	}>(), {
+		showEinstellungenDefaultApp: true,
+	});
 
 
 	const updateFontSize = (size: string | null) => {
