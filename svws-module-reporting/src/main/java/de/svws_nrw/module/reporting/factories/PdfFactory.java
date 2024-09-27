@@ -22,41 +22,40 @@ import java.util.zip.ZipOutputStream;
 
 
 /**
- * Diese Klasse beinhaltet den Code zur Erstellung einer pdf-Datei auf Basis der übergebenen Html-Inhalte.
+ * <p>Diese Klasse erstellt PDF-Dateien auf Basis von html.</p>
+ * <p>Dabei werden bei der Initialisierung html-Builder übergebenen, die die html-Inhalte erzeugen. Diese Inhalte werden genutzt, um daraus pdf-Builder zu
+ * erzeugen.</p>
  */
 public class PdfFactory {
 
-	/** Die Daten für die Report-Ausgabe. */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	private final ReportingRepository reportingRepository;
+
+	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
 
 	/** Die Template-Definition für die Erstellung der Html-Datei */
 	private final HtmlTemplateDefinition htmlTemplateDefinition;
 
-	/** Repository für die Reporting */
-	private final ReportingRepository reportingRepository;
-
 	/** Map mit den Dateinamen und Html-Dateiinhalten, die in PDF-Dateien gewandelt werden sollen. */
-	private List<HtmlBuilder> htmlBuilders = new ArrayList<>();
+	private final List<HtmlBuilder> htmlBuilders;
 
 
 	/**
 	 * Erzeugt eine neue PdfFactory, um eine Pdf-Datei aus den übergebenen Html-Inhalten zu erzeugen.
-	 *
-	 * @param htmlBuilders 			Eine Map mit den Dateinamen und Html-Dateiinhalten.
-	 * @param reportingRepository	Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
-	 * @param reportingParameter 	Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param htmlBuilders 				Eine Map mit den Dateinamen und Html-Dateiinhalten.
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingRepository reportingRepository, final ReportingParameter reportingParameter)
+	protected PdfFactory(final List<HtmlBuilder> htmlBuilders, final ReportingRepository reportingRepository)
 			throws ApiOperationException {
 
-		this.reportingParameter = reportingParameter;
 		this.reportingRepository = reportingRepository;
+		this.reportingParameter = this.reportingRepository.reportingParameter();
 
 		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Initialisierung der PDF-Factory und der Validierung der übergebenen Daten.");
 
-		// Validiere die htmlBuilders
+		// Validiere die html-Builders
 		if ((htmlBuilders == null) || htmlBuilders.isEmpty()) {
 			this.reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
 			throw new ApiOperationException(Status.NOT_FOUND, "FEHLER: Die Html-Dateiinhalte für die PDF-Erzeugung sind nicht vorhanden.");
@@ -64,7 +63,7 @@ public class PdfFactory {
 		this.htmlBuilders = htmlBuilders;
 
 		// Validiere die Angaben zur html-Vorlage.
-		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage));
+		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage));
 		if (this.htmlTemplateDefinition == null) {
 			this.reportingRepository.logger()
 					.logLn(LogLevel.ERROR, 4, "FEHLER: Die Template-Definitionen für die PDF-Factory sind inkonsistent.");
@@ -77,8 +76,8 @@ public class PdfFactory {
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen PDF-Datei oder ZIP-Datei mit den mehreren generierten PDF-Dateien.
-	 *
-	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei. Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 * @return Im Falle eines Success enthält die HTTP-Response das PDF-Dokument oder die ZIP-Datei.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected Response createPdfResponse() throws ApiOperationException {
 
@@ -109,7 +108,7 @@ public class PdfFactory {
 
 
 	/**
-	 * Erzeugt auf Basis der hinterlegten html-Vorlage und der übergebenen Daten die PdfBuilder zur Erzeugung der PDF-Dateien.
+	 * Erzeugt auf Basis der übergebenen html-Builder die PDF-Builder zur Erzeugung der PDF-Dateien.
 	 * @return Ein oder mehrere PDF-Builder zur Erzeugung der PDF-Dateien.
 	 */
 	private List<PdfBuilder> getPdfBuilders() {
@@ -117,7 +116,7 @@ public class PdfFactory {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der PDF-Builder.");
 		final List<PdfBuilder> pdfBuilders = new ArrayList<>();
 
-		for (final HtmlBuilder htmlBuilder : htmlBuilders) {
+		for (final HtmlBuilder htmlBuilder : this.htmlBuilders) {
 			pdfBuilders.add(new PdfBuilder(htmlBuilder.getHtml(), htmlTemplateDefinition.getPfadCss(), htmlBuilder.getDateiname()));
 		}
 
@@ -128,12 +127,9 @@ public class PdfFactory {
 
 	/**
 	 * Erstellt eine ZIP-Datei, die alle PDF-Dateien der übergebenen PDF-Builder enthält.
-	 *
-	 * @param pdfBuilders Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
-	 *
+	 * @param pdfBuilders 				Liste mit PdfBuilder, die die einzelnen PDF-Dateien erzeugen.
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private byte[] createZIP(final List<PdfBuilder> pdfBuilders) throws ApiOperationException {
 		final byte[] zipData;

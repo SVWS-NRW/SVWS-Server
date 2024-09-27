@@ -10,7 +10,7 @@
 		<div class="start-new-page" th:each="schueler,iterStatSchueler : ${Schueler}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
 			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + ' - ' + ${schueler.gostLaufbahnplanung().auswahlGOStHalbjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Q1.2 Wahl ab Q2.1<br/>APO-GOSt</div>
+			<div class="pageTopRight" th:utext="'Abitur ' + ${schueler.gostLaufbahnplanung().abiturjahr()} + '<br/> Wahl ab ' +  ${schueler.gostLaufbahnplanung().folgeAuswahlGOStHalbjahr()} + '<br/>' + ${schueler.gostLaufbahnplanung().pruefungsordnung()}">Abitur 2023<br/>Wahl ab Q2.1<br/>APO-GOSt</div>
 			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
 			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Wahlbogen ' + ${iterStatSchueler.count} + '/' + ${#lists.size(Schueler)}">Gesamtdruck Wahlbogen 13/57</span></div>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->

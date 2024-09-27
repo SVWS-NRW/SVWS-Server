@@ -45,33 +45,33 @@ import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * <p>Dieses Repository enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer
- * Objekte wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert werden. So sollen Datenbankzugriffe minimiert werden.</p>
- *
- * <p>Werden in anderen Klasse Daten nachgeladen, so werden diese in der Regel auch in der entsprechenden Map des Repository ergänzt.</p>
- *
+ * <p>Dieses Repository enthält neben den Stammdaten der Schule Maps, in denen Objekte wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert
+ * werden. So sollen Datenbankzugriffe minimiert werden.</p>
  * <p>Des Weiteren kann diese Klasse genutzt werden, um die Maps bereits vor der Erstellung er eigentlichen Reporting-Objekte zu füllen,
  * beispielsweise mit Daten aus im Vorfeld durchgeführten Prüfungen bei API-Abfragen. So müssen diese Daten nicht erneut aus der Datenbank
  * geladen werden.</p>
+ * <p>Werden in anderen Klasse Daten nachgeladen, so werden diese in der Regel auch in der entsprechenden Map des Repository ergänzt.</p>
+ * <p>Ebenso werden einige bereits erzeugte Reporting-Objekt hier zwischengespeichert.</p>
  */
 public class ReportingRepository {
 
-	/** Die Verbindung zu Datenbank, um Daten abrufen zu können. */
+	/** Die Verbindung zu Datenbank. */
 	private final DBEntityManager conn;
 
-	/** Die Reporting-Parameter, mit IDs und weiteren Informationen, die für den Druck verwendet werden sollen. */
+	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
+
+	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. */
+	private final Logger logger;
 
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log;
 
-	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt */
-	private final Logger logger;
 
+	// #########  Ab hier folgen Objekte aus dem Core. #########
 
 	/** Die Stammdaten der Schule zur Datenbankanbindung. */
 	private final SchuleStammdaten schulstammdaten;
-
 
 	/** Stellt den Katalog der Förderschwerpunkte über eine Map zur Förderschwerpunkt-ID zur Verfügung */
 	private Map<Long, FoerderschwerpunktEintrag> katalogFoerderschwerpunkte;
@@ -122,7 +122,7 @@ public class ReportingRepository {
 	private final Map<Long, Stundenplan> mapStundenplaene = new HashMap<>();
 
 
-	// #########  Ab hier folgen Reporting-Objekte und keine Objekte aus dem Core. #########
+	// #########  Ab hier folgen Reporting-Objekte. #########
 
 	/** Stellt die Liste aller Schuljahresabschnitte über eine Map zur Schulabschnitts-ID zur Verfügung */
 	private final Map<Long, ReportingSchuljahresabschnitt> mapReportingSchuljahresabschnitte = new HashMap<>();
@@ -138,23 +138,13 @@ public class ReportingRepository {
 
 
 	/**
-	 * <p>Erstellt das Repository für häufig genutzte Daten aus der Schuldatenbank, um die Zugriffe darauf zu minimieren.
-	 * Im Konstruktor werden folgende Elemente direkt mit Daten initialisiert:</p>
-	 *
-	 * <ul>
-	 *     <li>Stammdaten der Schule</li>
-	 *     <li>Schuljahresabschnitte und aktueller sowie zu druckender Schuljahresabschnitt</li>
-	 *     <li>Kataloge: Förderschwerpunkte, Orte, Ortsteile</li>
-	 *     <li>Maps: Jahrgänge, Klassen des aktuellen und zu druckenden Schuljahresabschnitts</li>
-	 *     <li>Map: Lernabschnittsdaten der Schüler</li>
-	 * </ul>
-	 *
-	 * @param conn					Die Verbindung zur Datenbank der Schule.
-	 * @param reportingParameter 	Die Informationen, die für die Generierung eines Reports verwendet werden sollen.
-	 * @param logger 				Logger, der die Erstellung der Reports protokolliert.
-	 * @param log 					Log, das die Erstellung des Reports protokolliert.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * Erstellt das Repository für häufig genutzte Daten aus der Schuldatenbank, um die Zugriffe darauf zu minimieren. Ebenso werden einzelne
+	 * Reporting-Objekte hier zwischengespeichert.
+	 * @param conn						Die Verbindung zur Datenbank.
+	 * @param reportingParameter 		Einstellungen und Daten zum Steuern der Report-Generierung.
+	 * @param logger 					Logger, der den Ablauf protokolliert und Fehlerdaten sammelt.
+	 * @param log 						Liste, die Einträge aus dem Logger sammelt.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public ReportingRepository(final DBEntityManager conn, final ReportingParameter reportingParameter, final Logger logger, final LogConsumerList log)
 			throws ApiOperationException {
@@ -197,7 +187,8 @@ public class ReportingRepository {
 			// Ermittle die Schuljahresabschnitte der Schule und erstelle damit eine Map der ReportingSchuljahresabschnitte
 			final List<Schuljahresabschnitt> datenSchuljahresabschnitte = this.conn.getUser().schuleGetStammdaten().abschnitte;
 			for (final Schuljahresabschnitt datenSchuljahresabschnitt : datenSchuljahresabschnitte) {
-				mapReportingSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id, new ProxyReportingSchuljahresabschnitt(this, datenSchuljahresabschnitt));
+				mapReportingSchuljahresabschnitte.putIfAbsent(datenSchuljahresabschnitt.id,
+						new ProxyReportingSchuljahresabschnitt(this, datenSchuljahresabschnitt));
 			}
 
 			aktuellerSchuljahresabschnitt =
@@ -235,7 +226,7 @@ public class ReportingRepository {
 		initJahrgaenge();
 
 		// Ermittle die Stundenpläne zum aktuellen und zum ausgewählten Schuljahresabschnitt.
-		initStundeplaene();
+		initStundenplaene();
 
 		this.logger.logLn(LogLevel.DEBUG, 4, "<<< Ende der Erzeugung des Reporting-Repository");
 	}
@@ -243,7 +234,7 @@ public class ReportingRepository {
 
 	/**
 	 * Initialisiert die Daten der Kataloge.
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void initKataloge() throws ApiOperationException {
 		try {
@@ -270,7 +261,7 @@ public class ReportingRepository {
 
 	/**
 	 * Initialisiert die Daten der Fächer.
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void initFachdaten() throws ApiOperationException {
 		try {
@@ -285,7 +276,7 @@ public class ReportingRepository {
 
 	/**
 	 * Initialisiert die Stammdaten der Lehrer.
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void initLehrerStammdaten() throws ApiOperationException {
 		try {
@@ -302,7 +293,7 @@ public class ReportingRepository {
 
 	/**
 	 * Initialisiert die Daten der Jahrgänge.
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void initJahrgaenge() throws ApiOperationException {
 		try {
@@ -317,11 +308,11 @@ public class ReportingRepository {
 
 	/**
 	 * Initialisiert die Daten der Stundenpläne.
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	private void initStundeplaene() throws ApiOperationException {
+	private void initStundenplaene() throws ApiOperationException {
 		try {
-			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplandefintionen der Schule.");
+			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle alle Stundenplandefinitionen der Schule.");
 			// Ermittle alle Stundenpläne zum aktuellen Schuljahresabschnitt.
 			this.stundenplandefinitionen = DataStundenplanListe.getStundenplaene(this.conn, null);
 			this.logger.logLn(LogLevel.DEBUG, 8, "Ermittle die Stundenpläne für den aktuellen und ausgewählten Schuljahresabschnitt.");
@@ -344,35 +335,35 @@ public class ReportingRepository {
 
 
 	/**
-	 * Gibt die Datenbankverbindung zurück
-	 * @return Datenbankverbindung
+	 * Die Verbindung zu Datenbank.
+	 * @return Inhalt des Feldes conn
 	 */
 	public DBEntityManager conn() {
 		return conn;
 	}
 
 	/**
-	 * Die Reporting-Parameter, mit IDs und weiteren Informationen, die für den Druck verwendet werden sollen.
-	 * @return Die übergebenen Reporting-Parameter
-	 * */
-	public ReportingParameter reportingParameter() {
-		return reportingParameter;
+	 * Liste, die Einträge aus dem Logger sammelt.
+	 * @return Inhalt des Feldes log
+	 */
+	public LogConsumerList log() {
+		return log;
 	}
 
 	/**
-	 * Logger, der die Erstellung der Reports protokolliert.
-	 * @return Der Logger zum Sammeln der Fehler
+	 * Logger, der den Ablauf protokolliert und Fehlerdaten sammelt.
+	 * @return Inhalt des Feldes logger
 	 */
 	public Logger logger() {
 		return logger;
 	}
 
 	/**
-	 * Log, das die Erstellung des Reports protokolliert.
-	 * @return Das Log, in dem Fehlerinformationen gesammelt werden.
-	 * */
-	public LogConsumerList log() {
-		return log;
+	 * Einstellungen und Daten zum Steuern der Report-Generierung.
+	 * @return Inhalt des Feldes reportingParameter
+	 */
+	public ReportingParameter reportingParameter() {
+		return reportingParameter;
 	}
 
 
@@ -570,7 +561,7 @@ public class ReportingRepository {
 	}
 
 	/**
-	 * Stelle die bereits eingelesenen Stundepläne als Map zu ihrer ID zur Verfügung.
+	 * Stelle die bereits eingelesenen Stundenpläne als Map zu ihrer ID zur Verfügung.
 	 * @return Inhalt des Feldes mapStundenplaene
 	 */
 	public Map<Long, Stundenplan> mapStundenplaene() {
@@ -599,7 +590,7 @@ public class ReportingRepository {
 						return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
 					}
 				} catch (final Exception ignore) {
-					// Stundenplan konnte nicht aus der Datenbak ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
+					// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
 				}
 			}
 		}

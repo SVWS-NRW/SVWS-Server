@@ -14,19 +14,15 @@ import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.Reportin
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schueler.</p>
- * <p>Sie enthält die Stammdaten eines Schülers, so wie alle weiteren abhängigen Daten (Lernabschnitte, Plaungsdaten usw.).</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
  */
 public class ReportingSchueler {
 
 	/** Daten des aktuellen Lernabschnitts. */
-	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt;
 
 	/** Das Anmeldedatum des Schülers. */
 	protected String anmeldedatum;
@@ -35,7 +31,7 @@ public class ReportingSchueler {
 	protected String aufnahmedatum;
 
 	/** Daten des ausgewählten Lernabschnitts. */
-	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt;
 
 	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
 	protected String bemerkungen;
@@ -86,7 +82,7 @@ public class ReportingSchueler {
 	protected Geschlecht geschlecht;
 
 	/** Daten der Abiturdaten der GOSt. */
-	protected ReportingSchuelerGostAbitur gostAbitur = null;
+	protected ReportingSchuelerGostAbitur gostAbitur;
 
 	/** Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert. */
 	protected List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren;
@@ -95,7 +91,7 @@ public class ReportingSchueler {
 	protected List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen;
 
 	/** Daten der GOSt-Laufbahnplanung. */
-	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
+	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung;
 
 	/** Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers. */
 	protected Long haltestelleID;
@@ -131,7 +127,7 @@ public class ReportingSchueler {
 	protected boolean keineAuskunftAnDritte;
 
 	/** Daten aller Lernabschnitte. */
-	protected List<ReportingSchuelerLernabschnitt> lernabschnitte = new ArrayList<>();
+	protected List<ReportingSchuelerLernabschnitt> lernabschnitte;
 
 	/** Der Nachname des Schülers. */
 	protected String nachname;
@@ -146,7 +142,7 @@ public class ReportingSchueler {
 	protected ReligionEintrag religion;
 
 	/** Daten aller Sprachbelegungen. */
-	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
+	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen;
 
 	/** Die erste Staatsangehörigkeit des Schülers. */
 	protected Nationalitaeten staatsangehoerigkeit1;

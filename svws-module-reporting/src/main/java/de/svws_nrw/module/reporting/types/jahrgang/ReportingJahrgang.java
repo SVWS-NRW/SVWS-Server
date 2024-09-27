@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.types.jahrgang;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
@@ -8,10 +7,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.</p>
- * <p>Sie enthält die Daten zum Jahrgang so wie dessen Schüler.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.
  */
 public class ReportingJahrgang {
 
@@ -25,7 +21,7 @@ public class ReportingJahrgang {
 	protected Long gueltigVon;
 
 	/** Die Daten des Folgejahrgangs. */
-	protected ReportingJahrgang folgejahrgang = null;
+	protected ReportingJahrgang folgejahrgang;
 
 	/** Die ID des Jahrgangs. */
 	protected long id;
@@ -34,7 +30,7 @@ public class ReportingJahrgang {
 	protected Long idFolgejahrgang;
 
 	/** Liste der Klassen des Jahrgangs. */
-	protected List<ReportingKlasse> klassen = new ArrayList<>();
+	protected List<ReportingKlasse> klassen;
 
 	/** Das Kürzel des Jahrgangs. */
 	protected String kuerzel;
@@ -49,7 +45,7 @@ public class ReportingJahrgang {
 	protected boolean istSichtbar;
 
 	/** Liste der Schüler des Jahrgangs. */
-	protected List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler;
 
 	/** Der Schuljahresabschnitt zu diesem Jahrgang. */
 	protected ReportingSchuljahresabschnitt schuljahresabschnitt;

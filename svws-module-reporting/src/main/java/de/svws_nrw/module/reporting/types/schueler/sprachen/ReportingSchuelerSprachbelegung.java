@@ -4,10 +4,7 @@ import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.module.reporting.types.fach.ReportingStatistikFach;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKursbelegung.</p>
- * <p>Sie enthält die Daten zur Belegung eines Kurses durch einen Schüler im Rahmen der Kursplanung der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- *  einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKursbelegung.
  */
 public class ReportingSchuelerSprachbelegung {
 
@@ -17,10 +14,10 @@ public class ReportingSchuelerSprachbelegung {
 	/** Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde */
 	protected Integer belegungBisAbschnitt;
 
-	/** Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde */
+	/** Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde */
 	protected String belegungVonJahrgang;
 
-	/** Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde */
+	/** Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten Mal belegt wurde */
 	protected Integer belegungVonAbschnitt;
 
 	/** Gibt an, ob das kleine Latinum erreicht wurde oder nicht. */
@@ -53,8 +50,8 @@ public class ReportingSchuelerSprachbelegung {
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
 	 * @param belegungBisJahrgang Der Jahrgang, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
 	 * @param belegungBisAbschnitt Der Abschnitt des Jahrgangs, in dem die Belegung der Sprache beendet wurde - sofern sie schon beendet wurde
-	 * @param belegungVonJahrgang Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
-	 * @param belegungVonAbschnitt Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde
+	 * @param belegungVonJahrgang Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde
+	 * @param belegungVonAbschnitt Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten Mal belegt wurde
 	 * @param hatKleinesLatinum Gibt an, ob das kleine Latinum erreicht wurde oder nicht.
 	 * @param hatLatinum Gibt an, ob das Latinum erreicht wurde oder nicht.
 	 * @param hatGraecum Gibt an, ob das Graecum erreicht wurde oder nicht.
@@ -102,7 +99,7 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Der Jahrgang, in dem die Sprache zum ersten mal belegt wurde
+	 * Der Jahrgang, in dem die Sprache zum ersten Mal belegt wurde
 	 * @return Inhalt des Feldes belegungVonJahrgang
 	 */
 	public String belegungVonJahrgang() {
@@ -110,7 +107,7 @@ public class ReportingSchuelerSprachbelegung {
 	}
 
 	/**
-	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten mal belegt wurde
+	 * Der Abschnitt des Jahrganges, in welchem die Sprache zum ersten Mal belegt wurde
 	 * @return Inhalt des Feldes belegungVonAbschnitt
 	 */
 	public Integer belegungVonAbschnitt() {

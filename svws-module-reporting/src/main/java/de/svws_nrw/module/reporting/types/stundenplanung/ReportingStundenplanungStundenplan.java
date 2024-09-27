@@ -7,14 +7,11 @@ import de.svws_nrw.core.types.Wochentag;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum.</p>
- * <p>Sie enthält die Grunddaten eines Raumes sowie optional IDs zu ihm in Beziehung stehen Daten wie den Stundenplan.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Stundenplan.
  */
 public class ReportingStundenplanungStundenplan {
 
-	/** Die Beschreibung des Stundeplans. */
+	/** Die Beschreibung des Stundenplans. */
 	protected String beschreibung;
 
 	/** Datum, ab dem der Stundenplan gültig ist. */
@@ -38,7 +35,7 @@ public class ReportingStundenplanungStundenplan {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
-	 * @param beschreibung			Die Beschreibung des Stundeplans
+	 * @param beschreibung			Die Beschreibung des Stundenplans
 	 * @param gueltigAb				Datum, ab dem der Stundenplan gültig ist.
 	 * @param gueltigBis			Datum, bis zu dem der Stundenplan gültig ist.
 	 * @param id					Die ID des Stundenplans.
@@ -82,7 +79,7 @@ public class ReportingStundenplanungStundenplan {
 	/**
 	 * Gibt den Raum zur übergebenen ID aus dem Stundenplan zurück.
 	 * @param idRaumStundenplan Die ID des Raumes im Stundenplan.
-	 * @return Raum zur ID oder null, wenn es zu ID keinen Raum im Stundeplan gibt.
+	 * @return Raum zur ID oder null, wenn es zu ID keinen Raum im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungRaum raum(final Long idRaumStundenplan) {
 		if (idRaumStundenplan == null)
@@ -93,7 +90,7 @@ public class ReportingStundenplanungStundenplan {
 	/**
 	 * Gibt die Stunde im Zeitraster zur übergebenen ID des Zeitrastereintrags aus dem Stundenplan zurück.
 	 * @param id Die ID des Zeitrastereintrags im Stundenplan.
-	 * @return Stunde im Zeitraster zur ID oder null, wenn es zu ID keinem Zeitrastereintrag im Stundeplan gibt.
+	 * @return Stunde im Zeitraster zur ID oder null, wenn es zu ID keinem Zeitrastereintrag im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungZeitrasterstunde zeitrasterstunde(final Long id) {
 		if (id == null)
@@ -105,7 +102,7 @@ public class ReportingStundenplanungStundenplan {
 	 * Gibt die Stunde im Zeitraster zum übergebenen Tag und zur übergebenen Stunde aus dem Stundenplan zurück.
 	 * @param wochentag 		Der Wochentag der Unterrichtsstunde aus dem Zeitraster
 	 * @param unterrichtstunde 	Die Unterrichtstunde am übergebenen Wochentag.
-	 * @return Stunde im Zeitraster oder null, wenn es zu ID keinem Zeitrastereintrag im Stundeplan gibt.
+	 * @return Stunde im Zeitraster oder null, wenn es zu ID keinem Zeitrastereintrag im Stundenplan gibt.
 	 */
 	public ReportingStundenplanungZeitrasterstunde zeitrasterstunde(final Wochentag wochentag, final int unterrichtstunde) {
 		if ((wochentag == null) || (unterrichtstunde < 0))
@@ -118,7 +115,7 @@ public class ReportingStundenplanungStundenplan {
 	// ##### Getter #####
 
 	/**
-	 * Die Beschreibung des Stundeplans.
+	 * Die Beschreibung des Stundenplans.
 	 * @return Inhalt des Feldes beschreibung
 	 */
 	public String beschreibung() {

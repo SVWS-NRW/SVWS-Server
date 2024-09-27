@@ -1,13 +1,9 @@
 package de.svws_nrw.module.reporting.types.gost.kursplanung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungSchiene.</p>
- * <p>Sie enthält die Daten zu einer Schiene Kursplanung der gymnasialen Oberstufe, unter anderem Anzahlen, Kurse und Kollisionen.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungSchiene.
  */
 public class ReportingGostKursplanungSchiene {
 
@@ -36,7 +32,7 @@ public class ReportingGostKursplanungSchiene {
 	protected List<Long> idsSchuelerMitKollisionen;
 
 	/** Eine Liste vom Typ Kurs, die alle Kurse der Schiene und deren Daten enthält. */
-	protected List<ReportingGostKursplanungKurs> kurse = new ArrayList<>();
+	protected List<ReportingGostKursplanungKurs> kurse;
 
 	/** Die Nummer der Schiene. */
 	protected int nummer;

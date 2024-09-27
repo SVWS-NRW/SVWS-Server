@@ -3,7 +3,7 @@ package de.svws_nrw.module.reporting.html.contexts;
 import org.thymeleaf.context.Context;
 
 /**
- * Abstrakte Klasse als Basisklasse für die Thymeleaf-Daten-Contexts.
+ * Abstrakte Basisklasse für die Thymeleaf-html-Daten-Contexts.
  */
 public abstract class HtmlContext {
 

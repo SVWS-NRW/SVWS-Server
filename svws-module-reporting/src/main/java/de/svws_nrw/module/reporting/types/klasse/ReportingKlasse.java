@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.types.klasse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
@@ -9,10 +8,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.</p>
- * <p>Sie enthält die Grunddaten der Klasse mit Klassenleitungen und den zugeordneten Schülern.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Klasse.
  */
 public class ReportingKlasse {
 
@@ -47,10 +43,10 @@ public class ReportingKlasse {
 	protected long idKlassenart;
 
 	/** Die Liste der IDs der Klassenleitungen der Klasse. */
-	protected List<Long> idsKlassenleitungen = new ArrayList<>();
+	protected List<Long> idsKlassenleitungen;
 
 	/** Die Liste der IDs der Schüler der Klasse. */
-	protected List<Long> idsSchueler = new ArrayList<>();
+	protected List<Long> idsSchueler;
 
 	/** Die ID für die Schulgliederung der Klasse */
 	protected long idSchulgliederung;
@@ -68,7 +64,7 @@ public class ReportingKlasse {
 	protected ReportingJahrgang jahrgang;
 
 	/** Die Liste der Klassenleitungen der Klasse. */
-	protected List<ReportingLehrer> klassenleitungen = new ArrayList<>();
+	protected List<ReportingLehrer> klassenleitungen;
 
 	/** Das Kürzel der Klasse. */
 	protected String kuerzel;
@@ -86,7 +82,7 @@ public class ReportingKlasse {
 	protected String pruefungsordnung;
 
 	/** Die Liste der Schüler der Klasse. */
-	protected List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler;
 
 	/** Der Schuljahresabschnitt der Klasse. */
 	protected ReportingSchuljahresabschnitt schuljahresabschnitt;

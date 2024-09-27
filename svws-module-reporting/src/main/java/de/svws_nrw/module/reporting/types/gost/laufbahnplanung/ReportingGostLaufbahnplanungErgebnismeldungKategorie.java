@@ -1,8 +1,7 @@
 package de.svws_nrw.module.reporting.types.gost.laufbahnplanung;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanungErgebnismeldungKategorie.</p>
- * <p>Sie stellt eine Aufzählung bereit, um die Rückmeldungen der Laufbahnprüfung zur GOSt zu kategorisieren.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanungErgebnismeldungKategorie.
  */
 public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 
@@ -16,7 +15,6 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 	protected final String kategorie;
 
 
-
 	/**
 	 * Erstellt einen Eintrag für die ENU;
 	 * @param kategorie Kategorie der Meldung.
@@ -24,7 +22,6 @@ public enum ReportingGostLaufbahnplanungErgebnismeldungKategorie {
 	ReportingGostLaufbahnplanungErgebnismeldungKategorie(final String kategorie) {
 		this.kategorie = kategorie;
 	}
-
 
 
 	// ##### Getter #####

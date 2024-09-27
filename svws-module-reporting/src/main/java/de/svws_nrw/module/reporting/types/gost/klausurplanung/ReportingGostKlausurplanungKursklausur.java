@@ -9,10 +9,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.</p>
- * <p>Sie enthält die Daten zu einer Klausur eines Kurses der Klausurplanung der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.
  */
 public class ReportingGostKlausurplanungKursklausur {
 
@@ -206,8 +203,8 @@ public class ReportingGostKlausurplanungKursklausur {
 	}
 
 	/**
-	 * Die Unterichtstunden als Zeitbereich in Textform.
-	 * @return Die Unterichtstunden der Klausur als Text.
+	 * Die Unterrichtsstunden als Zeitbereich in Textform.
+	 * @return Die Unterrichtsstunden der Klausur als Text.
 	 */
 	public String textStunden() {
 		if (!stunden().isEmpty())

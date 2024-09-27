@@ -21,11 +21,12 @@ import java.util.Objects;
 
 
 /**
- * Diese Klasse dient der Erzeugung von PDF-Dokumenten aus html.
+ * Diese Klasse dient der Erzeugung von PDF-Dokumenten aus dem Code einer html-Datei.
+ * Die Rückgabe erfolgt als ByteArray oder als Response mit PDF-Content.
  */
 public class PdfBuilder {
 
-	/** Das finale html (also keine Datei oder Vorlage), aus dem die PDF-Datei erzeugt werden soll. */
+	/** Das finale html (also keine Vorlage), aus dem die PDF-Datei erzeugt werden soll. */
 	private final String html;
 
 	/**
@@ -87,7 +88,6 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt eine Response mit der PDF-Datei als Content
-	 *
 	 * @return Response mit der PDF-Datei als Content
 	 */
 	public Response getPdfResponse() {
@@ -109,9 +109,7 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt das PDF-Dokument mit der Hilfe des PdfRendererBuilder und schreibt in den übergebenen Output-Stream.
-	 *
 	 * @param 	oStream			der {@link OutputStream}, der die Daten der PDF-Datei enthält.
-	 *
 	 * @throws 	IOException   	wenn der HTML-Code nicht erzeugt werden kann oder bei einem Fehler beim Erzeugen (siehe auch {@link PdfRendererBuilder#run()}
 	 */
 	private void erzeugePDF(final OutputStream oStream) throws IOException {

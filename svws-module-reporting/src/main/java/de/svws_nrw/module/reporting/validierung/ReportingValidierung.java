@@ -36,8 +36,7 @@ public final class ReportingValidierung {
 	/**
 	 * Validiert von der API übergebene Daten für Schüler. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
 	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
 	 * @param mitAbiturDaten 		Legt fest, ob die Daten zum Abitur in der gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
@@ -131,10 +130,8 @@ public final class ReportingValidierung {
 
 	/**
 	 * Validiert von der API übergebene Daten für GOSt-Blockungsergebnis. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException  im Fehlerfall
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public static void validiereDatenFuerGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
@@ -159,10 +156,8 @@ public final class ReportingValidierung {
 
 	/**
 	 * Validiert von der API übergebene Daten für GOSt-Klausurplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException  im Fehlerfall
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public static void validiereDatenFuerGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
@@ -174,7 +169,7 @@ public final class ReportingValidierung {
 			throw new ApiOperationException(Status.NOT_FOUND, e, "FEHLER: Keine Schule oder Schule ohne GOSt gefunden.");
 		}
 
-		// Erwartete Datensturktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - Abiturjahr - GostHalbjahrID (0-5) - usw.
+		// Erwartete Datenstruktur in idsHauptdaten der Reporting-Parameter: Abiturjahr - GostHalbjahrID (0-5) - Abiturjahr - GostHalbjahrID (0-5) - usw.
 		// Die Einträge müssen paarweise auftreten.
 		// Ist die Liste leer, so sollen alle drei Abiturjahrgänge gedruckt werden.
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();

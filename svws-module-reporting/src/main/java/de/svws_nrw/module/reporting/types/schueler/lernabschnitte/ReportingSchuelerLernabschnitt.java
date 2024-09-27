@@ -12,10 +12,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.</p>
- * <p>Sie enthält Daten eines Lernabschnitts eines Schülers, darunter Zugehörigkeiten zu Jahrgang und Klasse, Bemerkungen, Leistungsdaten, Versetzungsdaten und Nachprüfungen.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lernabschnitt.
  */
 public class ReportingSchuelerLernabschnitt {
 

@@ -5,10 +5,7 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.</p>
- * <p>Sie enthält die Daten zu einer Klausur eines Kurses der Klausurplanung der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKursklausur.
  */
 public class ReportingGostKlausurplanungSchuelerklausur {
 
@@ -21,7 +18,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	/** Die ID des Schülerklausurtermins. */
 	protected long idSchuelerklausurtermin;
 
-	/** Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur. */
+	/** Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur. */
 	protected final ReportingGostKlausurplanungKlausurraum klausurraum;
 
 	/** Der Termin der Schülerklausur aus den Klausurterminen. */
@@ -30,7 +27,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	/** Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur. */
 	protected ReportingGostKlausurplanungKursklausur kursklausur;
 
-	/** Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bzgl. der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.) */
+	/** Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bezüglich der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.) */
 	protected int nummerTerminfolge;
 
 	/** Der Schüler dieser Schülerklausur. */
@@ -45,7 +42,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	 * @param bemerkung					Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
 	 * @param id						Die ID der Schülerklausur.
 	 * @param idSchuelerklausurtermin	Die ID des Schülerklausurtermins.
-	 * @param klausurraum				Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * @param klausurraum				Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 * @param klausurtermin				Der Termin der Schülerklausur aus den Klausurterminen.
 	 * @param kursklausur				Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur.
 	 * @param nummerTerminfolge			Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bzgl. der Kursklausur (0 = Kursklausur, usw.)
@@ -112,7 +109,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	}
 
 	/**
-	 * Der Klausurraum dieses Schülerklausurtermines, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
+	 * Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
 	 * @return Inhalt des Feldes klausurraum
 	 */
 	public ReportingGostKlausurplanungKlausurraum klausurraum() {
@@ -136,7 +133,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 	}
 
 	/**
-	 * Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bzgl. der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.)
+	 * Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bezüglich der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.)
 	 * @return Inhalt des Feldes nummerTerminfolge
 	 */
 	public int nummerTerminfolge() {

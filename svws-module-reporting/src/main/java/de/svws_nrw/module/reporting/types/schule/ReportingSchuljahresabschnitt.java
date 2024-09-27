@@ -1,6 +1,5 @@
 package de.svws_nrw.module.reporting.types.schule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
@@ -8,10 +7,7 @@ import de.svws_nrw.module.reporting.types.jahrgang.ReportingJahrgang;
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt.</p>
- * <p>Sie enthälten Daten zu einem Schuljahresabschnitt, also zum Schuljahr und Halbjahr.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schuljahresabschnitt.
  */
 public class ReportingSchuljahresabschnitt {
 
@@ -37,13 +33,13 @@ public class ReportingSchuljahresabschnitt {
 	protected ReportingSchuljahresabschnitt vorherigerAbschnitt;
 
 	/** Die Fächer des Schuljahresabschnitts */
-	protected List<ReportingFach> faecher = new ArrayList<>();
+	protected List<ReportingFach> faecher;
 
 	/** Die Jahrgänge des Schuljahresabschnitts */
-	protected List<ReportingJahrgang> jahrgaenge = new ArrayList<>();
+	protected List<ReportingJahrgang> jahrgaenge;
 
 	/** Die Klassen des Schuljahresabschnitts */
-	protected List<ReportingKlasse> klassen = new ArrayList<>();
+	protected List<ReportingKlasse> klassen;
 
 
 	/**

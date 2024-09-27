@@ -20,35 +20,33 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse beinhaltet den Code zur Erstellung von Html-Inhalten auf Basis der hinterlegten html-Vorlage und den übergebenen Daten.
- * Sie setzt voraus, dass zum übergebenen html-Template eine css-Datei mit gleichem Pfad und Namen existiert.
+ * <p>Diese Klasse stellt nach dem Aufruf über die API den Einstiegspunkt in die Report-Generierung dar.</p>
+ * <p>Über die Reporting-Parameter werden unter anderem das Report-Format, das zu verwendende Template und die zu druckenden Daten definiert.</p>
+ * <p>Rückgabe ist eine dem Zielformat entsprechende Response oder im Fehlerfall eine SimpleOperationResponse mit Log-Informationen.</p>
  */
 public final class ReportingFactory {
 
-	/** Die Verbindung zur Datenbank */
+	/** Die Verbindung zur Datenbank. */
 	private final DBEntityManager conn;
 
-	/** Die Daten für die Report-Ausgabe. */
+	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
 
-	/** Repository für die Reporting */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	private final ReportingRepository reportingRepository;
 
-	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt */
+	/** Logger, der den Ablauf protokolliert und Fehlerdaten sammelt. Dieser wird in das Reporting-Repository übergeben, um auch während der Generierung der Ausgabe Fehler festzuhalten und auszugeben. */
 	private final Logger logger = new Logger();
 
 	/** Liste, die Einträge aus dem Logger sammelt. */
 	private final LogConsumerList log = new LogConsumerList();
 
 
-
 	/**
 	 * Erzeugt eine neue Reporting-Factory, um einen Report zu erzeugen.
-	 *
-	 * @param conn Die Verbindung zur Datenbank.
-	 * @param reportingParameter Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param conn 						Die Verbindung zur Datenbank.
+	 * @param reportingParameter 		Einstellungen und Daten zum Steuern der Report-Generierung.
+	 * @throws ApiOperationException   	im Fehlerfall
 	 */
 	public ReportingFactory(final DBEntityManager conn, final ReportingParameter reportingParameter) throws ApiOperationException {
 
@@ -101,14 +99,10 @@ public final class ReportingFactory {
 		this.logger.logLn(LogLevel.DEBUG, 0, "<<< Ende des Initialisierens der Reporting-Factory und des Validierens übergebener Daten.");
 	}
 
-
 	/**
 	 * Erstellt eine Response in Form einer einzelnen Datei oder ZIP-Datei mit den mehreren generierten Report-Dateien.
-	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das Dokument oder die ZIP-Datei.
-	 *     Im Fehlerfall wird eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
-	 *
-	 * @throws ApiOperationException	Im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public Response createReportResponse() throws ApiOperationException {
 
@@ -116,10 +110,10 @@ public final class ReportingFactory {
 			this.logger.logLn(LogLevel.DEBUG, 0, "### Beginn der Erzeugung einer API-Response zur Report-Generierung.");
 
 			return switch (ReportingAusgabeformat.getByID(reportingParameter.ausgabeformat)) {
-				case ReportingAusgabeformat.HTML -> new HtmlFactory(reportingRepository, reportingParameter).createHtmlResponse();
+				case ReportingAusgabeformat.HTML -> new HtmlFactory(reportingRepository).createHtmlResponse();
 				case ReportingAusgabeformat.PDF -> {
-					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository, reportingParameter);
-					yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingRepository, reportingParameter).createPdfResponse();
+					final HtmlFactory htmlFactory = new HtmlFactory(reportingRepository);
+					yield new PdfFactory(htmlFactory.createHtmlBuilders(), reportingRepository).createPdfResponse();
 				}
 				case null -> {
 					logger.logLn(LogLevel.ERROR, 4, "FEHLER: Kein bekanntes Ausgabeformat für die Report-Generierung übergeben.");

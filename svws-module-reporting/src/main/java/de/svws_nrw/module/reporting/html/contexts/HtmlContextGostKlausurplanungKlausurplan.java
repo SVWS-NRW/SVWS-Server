@@ -20,11 +20,11 @@ import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlaus
 
 
 /**
- * Ein ThymeLeaf-Html-Daten-Context zum Bereich "GostKlausurplanung", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
+ * Ein Thymeleaf-html-Daten-Context zum Bereich "GostKlausurplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
 public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext {
 
-	/** Repository für die Reporting. */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
@@ -34,11 +34,9 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public HtmlContextGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository, final List<Long> idsFilterSchueler)
 			throws ApiOperationException {
@@ -48,8 +46,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
+	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
@@ -61,15 +58,13 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 
 	/**
-	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 *
+	 * Erzeugt den Context zur GOSt-Klausurplanung.
 	 * @param idsFilterSchueler 		Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
-	 *
 	 * @throws ApiOperationException   	im Fehlerfall
 	 */
 	private void erzeugeContext(final List<Long> idsFilterSchueler) throws ApiOperationException {
 
-		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHlabjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
+		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
 		final List<Pair<Integer, Integer>> selection = new ArrayList<>();
@@ -112,8 +107,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 
 	/**
-	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 *
+	 * Erzeugt den Context zur GOSt-Klausurplanung auf Basis des Klausurplan-Objektes.
 	 * @param gostKlausurplan		Ein GOSt-Klausurplan, auf dem dieser Kontext aufbauen sollen.
 	 * @param idsFilterSchueler 	Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
@@ -130,8 +124,7 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 
 
 	/**
-	 * Teile diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils auf einen Schüler filtern.
-	 *
+	 * Teile diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils auf einen Schüler filtern. Damit können Ausgaben pro Schüler erzeugt werden.
 	 * @return	Liste der Einzel-Contexts.
 	 */
 	public List<HtmlContextGostKlausurplanungKlausurplan> getEinzelSchuelerContexts() {

@@ -1,5 +1,6 @@
 package de.svws_nrw.module.reporting.html.contexts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnis;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.data.gost.DataGostBlockungsdaten;
@@ -12,38 +13,38 @@ import org.thymeleaf.context.Context;
 
 
 /**
- * Ein ThymeLeaf-Html-Daten-Context zum Bereich "GostKursplanung", um ThymeLeaf-html-Templates mit Daten zu füllen und daraus PDF-Dateien zu erstellen.
+ * Ein Thymeleaf-Html-Daten-Context zum Bereich "GostKursplanung", um Thymeleaf-html-Templates mit Daten zu füllen.
  */
 public final class HtmlContextGostKursplanungBlockungsergebnis extends HtmlContext {
 
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
+	@JsonIgnore
+	private final ReportingRepository reportingRepository;
+
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @param reportingRepository		Repository mit Parametern, Logger und Daten zum Reporting.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public HtmlContextGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository) throws ApiOperationException {
-		erzeugeContext(reportingRepository);
+		this.reportingRepository = reportingRepository;
+		erzeugeContext();
 	}
 
 	/**
 	 * Erzeugt den Context zum Füllen eines html-Templates.
-	 *
-	 * @param reportingRepository	Das Repository mit Daten zum Reporting.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	private void erzeugeContext(final ReportingRepository reportingRepository) throws ApiOperationException {
+	private void erzeugeContext() throws ApiOperationException {
 
-		final Long idBlockungsergebnis = reportingRepository.reportingParameter().idsHauptdaten.getFirst();
+		final Long idBlockungsergebnis = this.reportingRepository.reportingParameter().idsHauptdaten.getFirst();
 
-		final GostBlockungsergebnis blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(reportingRepository.conn(), idBlockungsergebnis);
+		final GostBlockungsergebnis blockungsergebnis = DataGostBlockungsergebnisse.getErgebnisFromID(this.reportingRepository.conn(), idBlockungsergebnis);
 		final GostBlockungsdatenManager datenManager =
-				DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(reportingRepository.conn(), blockungsergebnis.blockungID);
+				DataGostBlockungsdaten.getBlockungsdatenManagerFromDB(this.reportingRepository.conn(), blockungsergebnis.blockungID);
 
 		final ReportingGostKursplanungBlockungsergebnis proxyReportingGostKursplanungBlockungsergebnis =
-				new ProxyReportingGostKursplanungBlockungsergebnis(reportingRepository, blockungsergebnis, datenManager);
+				new ProxyReportingGostKursplanungBlockungsergebnis(this.reportingRepository, blockungsergebnis, datenManager);
 
 		// Daten-Context für Thymeleaf erzeugen.
 		final Context context = new Context();

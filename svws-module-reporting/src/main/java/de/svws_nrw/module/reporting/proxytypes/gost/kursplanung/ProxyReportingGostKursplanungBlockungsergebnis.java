@@ -40,27 +40,6 @@ import java.util.stream.Collectors;
 /**
  *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungBlockungsergebnis und erweitert die Klasse
  *  {@link ReportingGostKursplanungBlockungsergebnis}.
- *  Zu der Erweiterung zählen unter anderem die Filtermöglichkeiten für die Hauptlisten Schüler und Kurse des Blockungsergebnisses.
- *  So können Reports, die auf diesen beruhen bei der Ausgabe eingeschränkt werden. Diese Filterungen greifen nicht bei den Listen,
- *  die untergeordnet sind, also zum Beispiel der Liste der Schüler eines Kurses.</p>
- *
- *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
- *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
- *  greift die Proxy-Klassen an verschiedenen Stellen auf die Datenbank zu.</p>
- *
- *  <ul>
- *      <li>Die Proxy-Klasse stellt in der Regel einen zusätzlichen Constructor zur Verfügung, um Reporting-Objekte
- *  		aus Stammdatenobjekten (aus dem Package core.data) erstellen zu können. Darin werden Felder, die Reporting-Objekte
- *  		zurückgegeben und nicht im Stammdatenobjekt enthalten sind, mit null initialisiert.</li>
- * 		<li>Die Proxy-Klasse überschreibt einzelne Getter der Super-Klasse (beispielsweise bei Felder, die mit null initialisiert wurden)
- *  		und lädt dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
- *  		halten.</li>
- *  	<li>Die Proxy-Klasse können zudem auf das Repository {@link ReportingRepository} zugreifen. Dieses
- *  		enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte
- *  		wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert werden. So sollen Datenbankzugriffe minimiert werden. Werden in der
- *  		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
- *
- *  </ul>
  */
 public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGostKursplanungBlockungsergebnis {
 
@@ -73,8 +52,7 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	private final GostBlockungsergebnisManager ergebnisManager;
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt anhand der Blockungsergebnis-ID.
-	 *
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungBlockungsergebnis}.
 	 * @param reportingRepository	Repository für die Reporting.
 	 * @param blockungsergebnis 	Das GOSt-Blockungsergebnis, welches für das Reporting genutzt werden soll.
 	 * @param datenManager 			Der zum Blockungsergebnis gehörige Datenmanager der Blockung.
@@ -244,7 +222,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 	}
 
 
-
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
@@ -257,7 +234,6 @@ public class ProxyReportingGostKursplanungBlockungsergebnis extends ReportingGos
 
 	/**
 	 * Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID
-	 *
 	 * @return Map mit den Fachwahlstatistiken zu den Fächern.
 	 */
 	@Override

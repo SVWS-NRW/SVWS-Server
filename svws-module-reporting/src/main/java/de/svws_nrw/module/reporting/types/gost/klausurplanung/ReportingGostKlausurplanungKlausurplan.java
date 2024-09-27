@@ -10,15 +10,12 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurplan.</p>
- * <p>Sie enthält die Daten zu einem Klausurplan, d. h. beispielsweise zu den Terminen.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurplan.
  */
 public class ReportingGostKlausurplanungKlausurplan {
 
 	/** Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt. */
-	protected List<Long> idsFilterSchueler = new ArrayList<>();
+	protected List<Long> idsFilterSchueler;
 
 	/** Eine Liste, die alle Termine des Klausurplanes beinhaltet. */
 	protected List<ReportingGostKlausurplanungKlausurtermin> klausurtermine;

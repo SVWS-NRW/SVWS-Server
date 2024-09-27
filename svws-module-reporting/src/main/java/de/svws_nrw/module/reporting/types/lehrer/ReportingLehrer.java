@@ -6,10 +6,7 @@ import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lehrer.</p>
- * <p>Sie enthält im Wesentlichen die Stammdaten des Lehrers.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Lehrer.
  */
 public class ReportingLehrer {
 

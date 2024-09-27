@@ -32,18 +32,20 @@ import jakarta.ws.rs.core.Response.Status;
 
 
 /**
- * Diese Klasse beinhaltet den Code zur Erstellung von Html-Inhalten auf Basis der hinterlegten html-Vorlage und den übergebenen Daten.
- * Sie setzt voraus, dass zum übergebenen html-Template eine css-Datei mit gleichem Pfad und Namen existiert.
+ * <p>Diese Klasse erstellt html-Inhalte auf Basis des in den Reporting-Parametern übergebenen html-Templates und der übergebenen Daten.</p>
+ * <p>Dabei erstellt die Factory bei der Initialisierung zunächst die Contexts mit den Daten gemäß dem html-Template.
+ * Zum Erstellen der html-Inhalte generiert die Factory einen oder mehrere html-Builder, die aus dem Template das fertige html erzeugen.</p>
+ * <p>Die html-Builder können extern weiter verarbeitet werden oder es kann intern eine Response im html-Format erzeugt werden.</p>
  */
 public class HtmlFactory {
 
-	/** Repository für die Reporting */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	private final ReportingRepository reportingRepository;
 
-	/** Die Daten für die Report-Ausgabe. */
+	/** Einstellungen und Daten zum Steuern der Report-Generierung. */
 	private final ReportingParameter reportingParameter;
 
-	/** Die Template-Definition für die Erstellung der Html-Datei */
+	/** Die Template-Definition für die Erstellung der html-Datei. */
 	private final HtmlTemplateDefinition htmlTemplateDefinition;
 
 	/** Eine Map zum Sammeln der erstellten Html-Contexts. */
@@ -51,24 +53,21 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erzeugt eine neue Html-Factory, um eine Html-Datei aus einem html-Template zu erzeugen.
-	 *
-	 * @param reportingParameter 	Das Objekt, welches die Angaben zu den Daten des Reports und den zugehörigen Einstellungen enthält.
-	 * @param reportingRepository	Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * Erzeugt eine neue html-Factory, um eine html-Datei aus einem html-Template zu erzeugen.
+	 * @param reportingRepository		Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
-	protected HtmlFactory(final ReportingRepository reportingRepository, final ReportingParameter reportingParameter)
+	protected HtmlFactory(final ReportingRepository reportingRepository)
 			throws ApiOperationException {
 
 		this.reportingRepository = reportingRepository;
-		this.reportingParameter = reportingParameter;
+		this.reportingParameter = this.reportingRepository.reportingParameter();
 
 		this.reportingRepository.logger().logLn(LogLevel.DEBUG, 0,
 				">>> Beginn der Initialisierung der html-Factory und der Validierung der übergebenen Daten.");
 
 		// Validiere die Angaben zur html-Vorlage.
-		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(reportingParameter.reportvorlage));
+		this.htmlTemplateDefinition = HtmlTemplateDefinition.getByType(ReportingReportvorlage.getByBezeichnung(this.reportingParameter.reportvorlage));
 		if (this.htmlTemplateDefinition == null) {
 			this.reportingRepository.logger()
 					.logLn(LogLevel.ERROR, 4, "FEHLER: Die Template-Definitionen für die html-Factory sind inkonsistent.");
@@ -93,9 +92,8 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erzeugte die Contexts für die html-Erstellung.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * Erzeugte die notwendigen Contexts für die html-Erstellung auf Basis des angegebenen html-Templates.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void getContexts() throws ApiOperationException {
 
@@ -151,11 +149,9 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die HtmlBuilder, aus denen die Html-Inhalte erzeugt werden können.
-	 *
-	 * @return Eine Liste mit HtmlBuilder.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * Erzeugt auf Basis des gegebenen html-Templates und der übergebenen Daten die html-Builder, aus denen die html-Inhalte erzeugt werden können.
+	 * @return Eine Liste mit htmlBuilder.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected List<HtmlBuilder> createHtmlBuilders() throws ApiOperationException {
 		return getHtmlBuilders();
@@ -163,10 +159,9 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erstellt eine Response in Form einer einzelnen Html-Datei oder ZIP-Datei mit den mehreren generierten Html-Dateien.
-	 *
-	 * @return Im Falle eines Success enthält die HTTP-Response das Html-Dokument oder die ZIP-Datei. Im Fehlerfall wird
-	 *     eine ApiOperationException ausgelöst oder bei Fehlercode 500 eine SimpleOperationResponse mit Logdaten zurückgegeben.
+	 * Erstellt eine Response in Form einer einzelnen html-Datei oder Z eine einzelne ZIP-Datei, die mehrere generierte html-Dateien enthält.
+	 * @return Im Falle eines Success enthält die HTTP-Response das html-Dokument oder die ZIP-Datei.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected Response createHtmlResponse() throws ApiOperationException {
 		try {
@@ -203,11 +198,9 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erzeugt auf Basis der gegebenen html-Vorlage und der übergebenen Daten die Html-Dateiinhalte in Form einer Map "Dateiname > Dateiinhalt"
-	 *
-	 * @return Eine Map mit den Dateinamen und Html-Dateiinhalten.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * Erzeugt auf Basis der übergebenen html-Vorlage und Daten die html-Inhalte der Dateien und legt diese Inhalte in einer Map zum Dateinamen ab.
+	 * @return Eine Map mit den Dateinamen und html-Dateiinhalten.
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private List<HtmlBuilder> getHtmlBuilders() throws ApiOperationException {
 
@@ -218,7 +211,7 @@ public class HtmlFactory {
 			// Dateiname der Dateien aus den Daten erzeugen.
 			final String dateiname = getDateiname(mapHtmlContexts);
 
-			// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
+			// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
 			reportingRepository.logger()
 					.logLn(LogLevel.DEBUG, 4,
 							"Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
@@ -241,14 +234,14 @@ public class HtmlFactory {
 					// Dateiname der Dateien aus den Daten erzeugen.
 					final String dateiname = getDateiname(mapHtmlContexts);
 
-					// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
 					htmlBuilders.add(
 							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
 									dateiname));
 				}
 			}
 		} else {
-			// Die Detaildatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden. Die Hauptdatenquelle ist dabeii für alle Einzelkontexte gleich.
+			// Die Detaildatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden. Die Hauptdatenquelle ist dabei für alle Einzelkontexte gleich.
 			if (htmlTemplateDefinition.name().startsWith("GOST_KLAUSURPLANUNG_v_SCHUELER_")) {
 				// Zerlege den Klausurplan-Context gemäß der anzuzeigenden Schüler in einzelne Contexts mit jeweils einen Schüler. Die Plandaten sind bei allen SuS gleich.
 				reportingRepository.logger().logLn(
@@ -265,7 +258,7 @@ public class HtmlFactory {
 					// Dateiname der Dateien aus den Daten erzeugen.
 					final String dateiname = getDateiname(mapHtmlContexts);
 
-					// Html-Builder erstellen und damit das html mit Daten für die Html-Datei erzeugen
+					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
 					htmlBuilders.add(
 							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
 									dateiname));
@@ -280,12 +273,9 @@ public class HtmlFactory {
 
 	/**
 	 * Erstellt den Dateinamen gemäß der in der Template-Definition hinterlegten Vorlage für den Dateinamen. Dabei können die Daten den Contexts entnommen werden.
-	 *
-	 * @param mapHtmlContexts Map mit den bereits erzeugten html-Datenkontexten, um daraus Daten für den Dateinamen entnehmen zu können.
-	 *
+	 * @param mapHtmlContexts 			Map mit den bereits erzeugten html-Datenkontexten, um daraus Daten für den Dateinamen entnehmen zu können.
 	 * @return Der fertige Dateiname.
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private String getDateiname(final Map<String, HtmlContext> mapHtmlContexts) throws ApiOperationException {
 
@@ -326,13 +316,10 @@ public class HtmlFactory {
 
 
 	/**
-	 * Erstellt eine ZIP-Datei, die alle Html-Dateien aus der übergebenen Map enthält.
-	 *
-	 * @param htmlBuilders Eine Liste mit den HtmlBuilders, die die Html-Inhalte erzeugen.
-	 *
+	 * Erstellt eine ZIP-Datei, die alle html-Dateien aus der übergebenen Map enthält.
+	 * @param htmlBuilders 				Eine Liste mit den htmlBuilders, die die html-Inhalte erzeugen.
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
-	 *
-	 * @throws ApiOperationException  im Fehlerfall
+	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private byte[] createZIP(final List<HtmlBuilder> htmlBuilders) throws ApiOperationException {
 		final byte[] zipData;
@@ -348,10 +335,10 @@ public class HtmlFactory {
 				}
 				zipData = byteArrayOutputStream.toByteArray();
 			}
-		} catch (@SuppressWarnings("unused") final IOException e) {
-			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten Html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-					"FEHLER: Die erzeugten Html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
+		} catch (final IOException e) {
+			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Die erzeugten html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
+			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+					"FEHLER: Die erzeugten html-Inhalte konnten nicht als ZIP-Datei zusammengestellt werden.");
 		}
 		return zipData;
 	}

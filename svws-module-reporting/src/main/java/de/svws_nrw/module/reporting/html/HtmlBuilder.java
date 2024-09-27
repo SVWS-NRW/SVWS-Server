@@ -13,14 +13,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * Erzeugt aus einem Thymeleaf-html-Template (html-Vorlage) und den zugehörigen Daten in den Contexts das finale html inklusive der Daten.
+ * Erzeugt aus einem Thymeleaf-html-Template (html-Vorlage) und den zugehörigen Daten in den Contexts den finalen html-Code inklusive der Daten.
+ * Die Rückgabe des html-Codes kann in Form eines Strings, eines ByteArrays oder einer Response erfolgen.
  */
 public class HtmlBuilder {
 
-	/** Html-Inhalt der Vorlagendatei. */
+	/** Der html-Inhalt des Templates. */
 	private final String htmlVorlage;
 
-	/** Html-Inhalt der finalen Html-Datei. */
+	/** Der html-Code der finalen html-Datei. */
 	private String htmlFinal;
 
 	/** Liste mit Daten-Contexts, die zu einem finalen Context zusammengefügt werden, um damit das html-Template zu füllen. */
@@ -33,7 +34,7 @@ public class HtmlBuilder {
 
 	/**
 	 * Erstellt einen neunen html-Builder und initialisiert die Variablen
-	 * @param htmlVorlage   Der Inhalt einer Html-Vorlagendatei, die mit Daten gefüllt werden soll.
+	 * @param htmlVorlage   Der Inhalt einer html-Vorlagendatei, die mit Daten gefüllt werden soll.
 	 * @param contexts 	    Liste mit Daten-Contexts, die zu einem finalen Context zusammengefügt werden, um damit das html-Template zu füllen.
 	 * @param dateiname 	Dateiname der html-Datei ohne Dateiendung.
 	 */
@@ -46,16 +47,16 @@ public class HtmlBuilder {
 
 
 	/**
-	 * Gibt den Dateinamen der Html-Datei zurück.
-	 * @return Dateiname der Html-Datei.
+	 * Gibt den Dateinamen der html-Datei zurück.
+	 * @return Dateiname der html-Datei.
 	 */
 	public String getDateiname() {
 		return dateiname;
 	}
 
 	/**
-	 * Gibt den Dateinamen der Html-Datei mit Dateiendung zurück.
-	 * @return Dateiname der Html-Datei mit Endung.
+	 * Gibt den Dateinamen der html-Datei mit Dateiendung zurück.
+	 * @return Dateiname der html-Datei mit Endung.
 	 */
 	public String getDateinameMitEndung() {
 		return dateiname + ".html";
@@ -63,8 +64,8 @@ public class HtmlBuilder {
 
 
 	/**
-	 * Gibt den finalen Html-Inhalt als String zurück.
-	 * @return String des finalen Html-Inhaltes.
+	 * Gibt den finalen html-Inhalt als String zurück.
+	 * @return String des finalen html-Inhaltes.
 	 */
 	public String getHtml() {
 		return erzeugeHtml();
@@ -72,8 +73,8 @@ public class HtmlBuilder {
 
 
 	/**
-	 * Gibt den finalen Html-Inhalt in Form eines Byte-Arrays.
-	 * @return 	das Byte-Array des finalen Html-Inhaltes im UTF-8-Format.
+	 * Gibt den finalen html-Inhalt in Form eines Byte-Arrays.
+	 * @return 	das Byte-Array des finalen html-Inhaltes im UTF-8-Format.
 	 */
 	public byte[] getHtmlByteArray() {
 		return erzeugeHtml().getBytes(StandardCharsets.UTF_8);
@@ -81,8 +82,8 @@ public class HtmlBuilder {
 
 
 	/**
-	 * Erzeugt eine Response mit einer Html-Datei als Content
-	 * @return Response mit der Html-Datei als Content
+	 * Erzeugt eine Response mit einer html-Datei als Content
+	 * @return Response mit der html-Datei als Content
 	 */
 	public Response getHtmlResponse() {
 		final String encodedFilename = "filename*=UTF-8''" + URLEncoder.encode(dateiname, StandardCharsets.UTF_8);
@@ -94,8 +95,8 @@ public class HtmlBuilder {
 
 
 	/**
-	 * Erstellt das finale Html-Dokument mit den Daten.
-	 * Hierzu werden die Variablen in der Html-Vorlage durch Daten ersetzt.
+	 * Erstellt das finale html-Dokument mit den Daten.
+	 * Hierzu werden die Variablen in der html-Vorlage durch Daten ersetzt.
 	 * @return 	Das finale Html mit den Daten
 	 */
 	private String erzeugeHtml() {
