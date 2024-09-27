@@ -8,29 +8,29 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleBenutzergruppeDaten } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppeDaten";
-import { RouteDataSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteDataSchuleBenutzergruppe";
+import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
+import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
+import { RouteDataEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteDataEinstellungenBenutzergruppe";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { BenutzergruppeAuswahlProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAuswahlProps";
-import type { BenutzergruppeAppProps } from "~/components/schule/benutzergruppen/SBenutzergruppeAppProps";
+import type { BenutzergruppeAuswahlProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahlProps";
+import type { BenutzergruppeAppProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAppProps";
 
-const SBenutzergruppeAuswahl = () => import("~/components/schule/benutzergruppen/SBenutzergruppeAuswahl.vue")
-const SBenutzergruppeApp = () => import("~/components/schule/benutzergruppen/SBenutzergruppeApp.vue")
+const SBenutzergruppeAuswahl = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahl.vue")
+const SBenutzergruppeApp = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeApp.vue")
 
-export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzergruppe, RouteApp> {
+export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstellungenBenutzergruppe, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "schule.benutzergruppen", "schule/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataSchuleBenutzergruppe());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "einstellungen.benutzergruppen", "einstellungen/benutzergruppe/:id(\\d+)?", SBenutzergruppeApp, new RouteDataEinstellungenBenutzergruppe());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeSchuleBenutzergruppeDaten
+			routeEinstellungenBenutzergruppeDaten
 		];
-		super.defaultChild = routeSchuleBenutzergruppeDaten;
+		super.defaultChild = routeEinstellungenBenutzergruppeDaten;
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
@@ -38,7 +38,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		if (id !== undefined)
-			return routeSchuleBenutzergruppeDaten.getRoute(id);
+			return routeEinstellungenBenutzergruppeDaten.getRoute(id);
 		return true;
 	}
 
@@ -73,7 +73,7 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			gotoBenutzergruppe: this.data.gotoBenutzergruppe,
 			createBenutzergruppe : this.data.create,
 			deleteBenutzergruppen : this.data.deleteBenutzergruppen,
-			gotoSchule: routeSchule.gotoSchule
+			gotoEinstellungen: routeEinstellungen.gotoEinstellungen
 		};
 	}
 
@@ -118,9 +118,9 @@ export class RouteSchuleBenutzergruppe extends RouteNode<RouteDataSchuleBenutzer
 			name: value.name,
 			params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id },
 		});
-		this.data.setView(node, routeSchule.children);
+		this.data.setView(node, routeEinstellungen.children);
 	};
 
 }
 
-export const routeSchuleBenutzergruppe = new RouteSchuleBenutzergruppe();
+export const routeEinstellungenBenutzergruppe = new RouteEinstellungenBenutzergruppe();

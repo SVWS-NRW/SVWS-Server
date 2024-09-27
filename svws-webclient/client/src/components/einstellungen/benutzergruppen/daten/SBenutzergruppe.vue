@@ -13,7 +13,7 @@
 				:aktualisiere-liste-benutzer-gruppen-benutzer="aktualisiereListeBenutzerGruppenBenutzer"
 				:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 				:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-				:go-to-benutzer="goToBenutzer" />
+				:goto-benutzer="gotoBenutzer" />
 		</div>
 	</div>
 </template>

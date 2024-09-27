@@ -18,7 +18,7 @@
 						v-model="aktiv" :spalte-links="spalteLinks"
 						:add-benutzer-to-benutzergruppe="addBenutzerToBenutzergruppe"
 						:remove-benutzer-from-benutzergruppe="removeBenutzerFromBenutzergruppe"
-						:go-to-benutzer="goToBenutzer" />
+						:goto-benutzer="gotoBenutzer" />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -37,7 +37,7 @@
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
-		goToBenutzer: (b_id: number) => Promise<void>;
+		gotoBenutzer: (b_id: number) => Promise<void>;
 		listBenutzerInGruppe: () => List<BenutzerListeEintrag>;
 	}>();
 

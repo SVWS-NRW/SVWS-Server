@@ -3,7 +3,7 @@
 		:class="spalteLinks ? 'text-black/50 hover:text-black dark:text-white/50 dark:hover:text-white cursor-copy' : ''"
 		:title="spalteLinks ? 'Benutzer zur Gruppe hinzufügen' : 'Benutzer aus Gruppe entfernen'">
 		<div class="svws-ui-td" role="cell">
-			<svws-ui-button type="icon" size="small" title="Benutzer anzeigen" @click.stop="goToBenutzer(benutzer.id)">
+			<svws-ui-button type="icon" size="small" title="Benutzer anzeigen" @click.stop="gotoBenutzer(benutzer.id)">
 				<span class="icon i-ri-link" />
 			</svws-ui-button>
 			{{ benutzer.anzeigename }}
@@ -26,7 +26,7 @@
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
-		goToBenutzer: (b_id: number) => Promise<void>;
+		gotoBenutzer: (b_id: number) => Promise<void>;
 	}>();
 
 	async function add() {

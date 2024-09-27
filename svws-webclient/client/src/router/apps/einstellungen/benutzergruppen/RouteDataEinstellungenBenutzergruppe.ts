@@ -5,12 +5,12 @@ import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
-import { routeSchuleBenutzergruppeDaten } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppeDaten";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
+import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
+import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 import { routeApp } from "../../RouteApp";
 
 
-interface RoutStateSchuleBenutzergruppe extends RouteStateInterface {
+interface RoutStateEinstellungenBenutzergruppe extends RouteStateInterface {
 	auswahl: BenutzergruppeListeEintrag | undefined;
 	mapBenutzergruppe: Map<number, BenutzergruppeListeEintrag>;
 	benutzergruppenManager: BenutzergruppenManager;
@@ -20,7 +20,7 @@ interface RoutStateSchuleBenutzergruppe extends RouteStateInterface {
 	listBenutzergruppenBenutzer: List<BenutzerListeEintrag>;
 }
 
-const defaultState = <RoutStateSchuleBenutzergruppe> {
+const defaultState = <RoutStateEinstellungenBenutzergruppe> {
 	auswahl: undefined,
 	listBenutzergruppe: new ArrayList(),
 	mapBenutzergruppe: new Map<number, BenutzergruppeListeEintrag>,
@@ -28,10 +28,10 @@ const defaultState = <RoutStateSchuleBenutzergruppe> {
 	listBenutzerAlle: new ArrayList(),
 	listBenutzergruppenBenutzer: new ArrayList(),
 	daten: undefined,
-	view: routeSchuleBenutzergruppeDaten,
+	view: routeEinstellungenBenutzergruppeDaten,
 };
 
-export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenutzergruppe> {
+export class RouteDataEinstellungenBenutzergruppe extends RouteData<RoutStateEinstellungenBenutzergruppe> {
 
 	public constructor() {
 		super(defaultState);
@@ -89,12 +89,14 @@ export class RouteDataSchuleBenutzergruppe extends RouteData<RoutStateSchuleBenu
 		})
 	}
 
+	gotoBenutzer = async (b_id: number) => await RouteManager.doRoute({ name: "einstellungen.benutzer.daten", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: b_id } });
+
 	gotoBenutzergruppe = async (value: BenutzergruppeListeEintrag | undefined) => {
 		if (value === undefined) {
-			await RouteManager.doRoute({ name: routeSchuleBenutzergruppe.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+			await RouteManager.doRoute({ name: routeEinstellungenBenutzergruppe.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
 		}
-		const redirect_name: string = (routeSchuleBenutzergruppe.selectedChild === undefined) ? routeSchuleBenutzergruppe.name : routeSchuleBenutzergruppe.selectedChild.name;
+		const redirect_name: string = (routeEinstellungenBenutzergruppe.selectedChild === undefined) ? routeEinstellungenBenutzergruppe.name : routeEinstellungenBenutzergruppe.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: value.id } });
 	}
 

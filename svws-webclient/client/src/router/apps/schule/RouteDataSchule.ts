@@ -2,8 +2,7 @@ import { BenutzerKompetenz, SMTPServerKonfiguration, type SchuleStammdaten } fro
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
-
-import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
+import { routeSchuleFaecher } from "./faecher/RouteSchuleFaecher";
 
 
 interface RouteStateSchule extends RouteStateInterface {
@@ -12,7 +11,7 @@ interface RouteStateSchule extends RouteStateInterface {
 
 const defaultState = <RouteStateSchule> {
 	smtpServerKonfiguration: new SMTPServerKonfiguration(),
-	view: routeSchuleBenutzer,
+	view: routeSchuleFaecher,
 };
 
 export class RouteDataSchule extends RouteData<RouteStateSchule> {

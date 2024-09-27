@@ -9,23 +9,33 @@
 				</template>
 				<template #default>
 					<template v-for="item in apps" :key="item.name">
-						<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
-							<template #icon>
-								<span class="inline-block icon-lg i-ri-team-line" v-if="item.name === 'klassen'" />
-								<span class="inline-block icon-lg i-ri-group-line" v-else-if="item.name === 'schueler'" />
-								<span class="inline-block icon-lg i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
-								<span class="inline-block icon-lg i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
-								<span class="inline-block icon-lg i-ri-school-line" v-else-if="item.name === 'schule'" />
-								<span class="inline-block icon-lg i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
-								<span class="inline-block icon-lg i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
-								<span class="inline-block icon-lg i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
-								<span class="inline-block icon-lg i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
-							</template>
-							<template #label><span class="text-xs"> {{ item.text }}</span> </template>
-						</svws-ui-menu-item>
+						<template v-if="item.name !== 'einstellungen'">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+								<template #icon>
+									<span class="inline-block icon-lg i-ri-team-line" v-if="item.name === 'klassen'" />
+									<span class="inline-block icon-lg i-ri-group-line" v-else-if="item.name === 'schueler'" />
+									<span class="inline-block icon-lg i-ri-bar-chart-2-line" v-else-if="item.name === 'statistik'" />
+									<span class="inline-block icon-lg i-ri-calendar-event-line" v-else-if="item.name === 'stundenplan'" />
+									<span class="inline-block icon-lg i-ri-school-line" v-else-if="item.name === 'schule'" />
+									<span class="inline-block icon-lg i-ri-archive-line" v-else-if="item.name === 'kataloge'" />
+									<span class="inline-block icon-lg i-ri-briefcase-line" v-else-if="item.name === 'lehrer'" />
+									<span class="inline-block icon-lg i-ri-book-2-line" v-else-if="item.name === 'kurse'" />
+									<span class="inline-block icon-lg i-ri-graduation-cap-line" v-else-if="item.name === 'gost'" />
+								</template>
+								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
+							</svws-ui-menu-item>
+						</template>
 					</template>
 				</template>
 				<template #footer>
+					<template v-for="item in apps" :key="item.name">
+						<template v-if="item.name === 'einstellungen'">
+							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
+								<template #icon><span class="inline-block icon-lg i-ri-settings-3-line" /></template>
+								<template #label><span class="text-xs"> {{ item.text }}</span> </template>
+							</svws-ui-menu-item>
+						</template>
+					</template>
 					<svws-ui-menu-item subline="" @click="doLogout">
 						<template #label>Abmelden</template>
 						<template #icon> <span class="icon-lg i-ri-logout-circle-line inline-block" /> </template>

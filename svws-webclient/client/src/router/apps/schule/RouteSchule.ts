@@ -8,8 +8,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
@@ -36,12 +34,9 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.children = [];
 		super.menu = [
 			// TODO { title: "Schule bearbeiten", value: "schule_bearbeiten" },
-			// TODO { title: "Einstellungen", value: "einstellungen" },
 			// TODO { title: "Datensicherung", value: "datensicherung" },
 			// TODO { title: "Schuljahreswechsel", value: "schuljahreswechsel" },
 			// TODO { title: "Werkzeuge", value: "werkzeuge" },
-			routeSchuleBenutzer,
-			routeSchuleBenutzergruppe,
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleBetriebe,

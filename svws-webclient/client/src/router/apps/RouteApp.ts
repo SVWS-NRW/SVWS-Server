@@ -8,15 +8,10 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
 import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
 import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
-import { routeKatalogAufsichtsbereiche } from "~/router/apps/stundenplan/kataloge/RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "~/router/apps/stundenplan/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/stundenplan/kataloge/RouteKatalogZeitraster";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -33,7 +28,9 @@ import { routeKatalogFoerderschwerpunkte } from "./schule/kataloge/foerderschwer
 import { routeKatalogReligionen } from "./schule/kataloge/religionen/RouteKatalogReligionen";
 import { routeKatalogSchulen } from "./schule/kataloge/schulen/RouteKatalogSchulen";
 import { routeKatalogVermerkarten } from "./schule/kataloge/vermerke/RouteKatalogVermerkarten";
-import { routeKatalogRaeume } from "./stundenplan/kataloge/RouteKatalogRaeume";
+import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
+import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
+import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 import SApp from "~/components/SApp.vue";
 
 
@@ -47,8 +44,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.children = [
 			routeBenutzerprofil,
 			routeSchule,
-			routeSchuleBenutzer,
-			routeSchuleBenutzergruppe,
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleDatenaustausch,
@@ -67,6 +62,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeStatistik,
 			routeStundenplan,
 			routeStundenplanKataloge,
+			routeEinstellungen,
+			routeEinstellungenBenutzer,
+			routeEinstellungenBenutzergruppe,
 		];
 		super.menu = [
 			routeSchule,
@@ -77,6 +75,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
+			routeEinstellungen,
 		];
 		super.defaultChild = routeSchueler;
 	}

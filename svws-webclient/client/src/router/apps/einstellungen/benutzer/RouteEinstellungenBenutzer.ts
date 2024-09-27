@@ -8,34 +8,34 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleBenutzerDaten } from "~/router/apps/schule/benutzer/RouteSchuleBenutzerDaten";
-import { RouteDataSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteDataSchuleBenutzer";
+import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellungen";
+import { routeEinstellungenBenutzerDaten } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzerDaten";
+import { RouteDataEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteDataEinstellungenBenutzer";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
-import type { BenutzerAppProps } from "~/components/schule/benutzer/SBenutzerAppProps";
-import type { BenutzerAuswahlProps } from "~/components/schule/benutzer/SBenutzerAuswahlProps";
+import type { BenutzerAppProps } from "~/components/einstellungen/benutzer/SBenutzerAppProps";
+import type { BenutzerAuswahlProps } from "~/components/einstellungen/benutzer/SBenutzerAuswahlProps";
 
-const SBenutzerAuswahl = () => import("~/components/schule/benutzer/SBenutzerAuswahl.vue");
-const SBenutzerApp = () => import("~/components/schule/benutzer/SBenutzerApp.vue");
+const SBenutzerAuswahl = () => import("~/components/einstellungen/benutzer/SBenutzerAuswahl.vue");
+const SBenutzerApp = () => import("~/components/einstellungen/benutzer/SBenutzerApp.vue");
 
-export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,RouteApp> {
+export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungenBenutzer,RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "schule.benutzer", "schule/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataSchuleBenutzer());
+		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "einstellungen.benutzer", "einstellungen/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataEinstellungenBenutzer());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzer";
 		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));
-		super.children = [routeSchuleBenutzerDaten];
-		super.defaultChild = routeSchuleBenutzerDaten;
+		super.children = [routeEinstellungenBenutzerDaten];
+		super.defaultChild = routeEinstellungenBenutzerDaten;
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
 		if (to_params.id instanceof Array)
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
-		if (id !== undefined) return routeSchuleBenutzer.getRoute(id);
+		if (id !== undefined) return routeEinstellungenBenutzer.getRoute(id);
 		return true;
 	}
 
@@ -67,7 +67,7 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 			gotoBenutzer: this.data.gotoBenutzer,
 			createBenutzerAllgemein: this.data.createBenutzerAllgemein,
 			deleteBenutzerMenge: this.data.deleteBenutzerMenge,
-			gotoSchule: routeSchule.gotoSchule
+			gotoEinstellungen: routeEinstellungen.gotoEinstellungen
 		};
 	}
 
@@ -109,8 +109,8 @@ export class RouteSchuleBenutzer extends RouteNode<RouteDataSchuleBenutzer,Route
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
-		this.data.setView(node, routeSchule.children);
+		this.data.setView(node, routeEinstellungen.children);
 	};
 }
 
-export const routeSchuleBenutzer = new RouteSchuleBenutzer();
+export const routeEinstellungenBenutzer = new RouteEinstellungenBenutzer();
