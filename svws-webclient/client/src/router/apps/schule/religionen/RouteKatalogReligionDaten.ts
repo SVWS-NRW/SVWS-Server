@@ -3,17 +3,17 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogReligionen, type RouteKatalogReligionen } from "~/router/apps/schule/kataloge/religionen/RouteKatalogReligionen";
+import { routeKatalogReligionen, type RouteKatalogReligionen } from "~/router/apps/schule/religionen/RouteKatalogReligionen";
 
 import type { ReligionDatenProps } from "~/components/schule/kataloge/religionen/daten/SReligionDatenProps";
-import { routeApp } from "../../../RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 
 const SReligionDaten = () => import("~/components/schule/kataloge/religionen/daten/SReligionDaten.vue");
 
 export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligionen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.religionen.daten", "daten", SReligionDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.religionen.daten", "daten", SReligionDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religion";

@@ -8,6 +8,5 @@ export interface SchulenAuswahlProps {
 	addEintrag: (data: Partial<SchulEintrag>) => Promise<void>;
 	gotoEintrag: (eintrag: SchulEintrag) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToKataloge: () => Promise<void>;
-	returnToSchule: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

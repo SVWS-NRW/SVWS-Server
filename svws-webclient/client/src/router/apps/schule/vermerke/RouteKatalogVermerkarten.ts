@@ -7,8 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuleKataloge } from "~/router/apps/schule/kataloge/RouteSchuleKataloge";
-import { routeKatalogVermerkartenDaten } from "~/router/apps/schule/kataloge/vermerke/RouteKatalogVermerkartenDaten";
+import { routeKatalogVermerkartenDaten } from "~/router/apps/schule/vermerke/RouteKatalogVermerkartenDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { VermerkeAppProps } from "~/components/schule/kataloge/vermerke/SVermerkeAppProps";
@@ -16,7 +15,7 @@ import type { VermerkeAuswahlProps } from "~/components/schule/kataloge/vermerke
 import { RouteDataKatalogVermerke } from "./RouteDataKatalogVermerke";
 
 import { routeError } from "~/router/error/RouteError";
-import { routeSchule } from "../../RouteSchule";
+import { routeSchule } from "../RouteSchule";
 
 const SVermerkAuswahl = () => import("~/components/schule/kataloge/vermerke/SVermerkeAuswahl.vue")
 const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerkeApp.vue")
@@ -24,7 +23,7 @@ const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerk
 export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.vermerkarten", "schule/kataloge/vermerkarten/:id(\\d+)?", SVermerkApp, new RouteDataKatalogVermerke());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.vermerkarten", "schule/vermerkarten/:id(\\d+)?", SVermerkApp, new RouteDataKatalogVermerke());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkarten";
@@ -67,8 +66,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeSchuleKataloge.returnToKataloge,
-			returnToSchule: routeSchule.gotoSchule,
+			gotoSchule: routeSchule.gotoSchule,
 			vermerkartenManager: () => this.data.vermerkartenManager,
 			commit: this.data.enforceCommit,
 		};

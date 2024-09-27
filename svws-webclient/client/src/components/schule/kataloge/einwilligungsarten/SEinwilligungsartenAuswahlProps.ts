@@ -8,6 +8,5 @@ export interface SEinwilligungsartenAuswahlProps {
 	addEintrag: (einwilligung: Partial<Einwilligungsart>) => Promise<void>;
 	deleteEintraege: (eintraege: Iterable<Einwilligungsart>) => Promise<void>;
 	gotoEintrag: (einwilligung: Einwilligungsart) => Promise<void>;
-	returnToKataloge: () => Promise<void>;
-	returnToSchule: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

@@ -7,14 +7,13 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuleKataloge } from "~/router/apps/schule/kataloge/RouteSchuleKataloge";
-import { routeKatalogReligionDaten } from "~/router/apps/schule/kataloge/religionen/RouteKatalogReligionDaten";
+import { routeKatalogReligionDaten } from "~/router/apps/schule/religionen/RouteKatalogReligionDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { ReligionenAppProps } from "~/components/schule/kataloge/religionen/SReligionenAppProps";
 import type { ReligionenAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
 import { RouteDataKatalogReligionen } from "./RouteDataKatalogReligionen";
-import { routeSchule } from "../../RouteSchule";
+import { routeSchule } from "../RouteSchule";
 
 
 const SReligionenAuswahl = () => import("~/components/schule/kataloge/religionen/SReligionenAuswahl.vue")
@@ -23,7 +22,7 @@ const SReligionenApp = () => import("~/components/schule/kataloge/religionen/SRe
 export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.religionen", "schule/kataloge/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.religionen", "schule/religion/:id(\\d+)?", SReligionenApp, new RouteDataKatalogReligionen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
@@ -66,8 +65,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			deleteEintraege: this.data.deleteEintraege,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeSchuleKataloge.returnToKataloge,
-			returnToSchule: routeSchule.gotoSchule,
+			gotoSchule: routeSchule.gotoSchule,
 		};
 	}
 

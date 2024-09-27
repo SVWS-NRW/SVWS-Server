@@ -3,10 +3,10 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogSchulen, type RouteKatalogSchulen } from "~/router/apps/schule/kataloge/schulen/RouteKatalogSchulen";
+import { routeKatalogSchulen, type RouteKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
 
 import type { SchuleDatenProps } from "~/components/schule/kataloge/schulen/daten/SSchuleDatenProps";
-import { routeApp } from "../../../RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 
 const SSchuleDaten = () => import("~/components/schule/kataloge/schulen/daten/SSchuleDaten.vue");
@@ -14,7 +14,7 @@ const SSchuleDaten = () => import("~/components/schule/kataloge/schulen/daten/SS
 export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.schulen.daten", "daten", SSchuleDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.schulen.daten", "daten", SSchuleDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";

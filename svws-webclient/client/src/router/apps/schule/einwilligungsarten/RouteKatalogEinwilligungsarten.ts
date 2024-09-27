@@ -7,14 +7,13 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchuleKataloge } from "~/router/apps/schule/kataloge/RouteSchuleKataloge";
-import { routeKatalogEinwilligungsartenDaten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteKatalogEinwilligungsartenDaten";
+import { routeKatalogEinwilligungsartenDaten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsartenDaten";
 
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SEinwilligungsartenAppProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAppProps";
 import type { SEinwilligungsartenAuswahlProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahlProps";
 import { RouteDataKatalogEinwilligungsarten } from "./RouteDataKatalogEinwilligungsarten";
-import { routeSchule } from "../../RouteSchule";
+import { routeSchule } from "../RouteSchule";
 
 const SEinwilligungsartenAuswahl = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahl.vue")
 const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenApp.vue")
@@ -22,7 +21,7 @@ const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwil
 export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEinwilligungsarten, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule.kataloge.einwilligungsarten", "schule/kataloge/einwilligungsarten/:id(\\d+)?", SEinwilligungsartenApp, new RouteDataKatalogEinwilligungsarten());
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule.einwilligungsarten", "schule/einwilligungsarten/:id(\\d+)?", SEinwilligungsartenApp, new RouteDataKatalogEinwilligungsarten());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsarten";
@@ -65,8 +64,7 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			returnToKataloge: routeSchuleKataloge.returnToKataloge,
-			returnToSchule: routeSchule.gotoSchule,
+			gotoSchule: routeSchule.gotoSchule,
 		};
 	}
 

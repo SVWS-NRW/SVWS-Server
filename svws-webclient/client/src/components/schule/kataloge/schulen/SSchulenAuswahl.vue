@@ -2,8 +2,7 @@
 	<svws-ui-secondary-menu>
 		<template #headline>
 			<nav class="secondary-menu--breadcrumbs">
-				<a @click="returnToSchule">Schule</a>
-				<a @click="returnToKataloge">Kataloge</a>
+				<a @click="gotoSchule">Schule</a>
 				<span>Schulen</span>
 			</nav>
 		</template>

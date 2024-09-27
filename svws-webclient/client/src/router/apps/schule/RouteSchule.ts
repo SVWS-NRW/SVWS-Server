@@ -18,7 +18,11 @@ import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 import { routeSchuleBetriebe } from "./betriebe/RouteSchuleBetriebe";
-import { routeSchuleKataloge } from "./kataloge/RouteSchuleKataloge";
+import { routeKatalogReligionen } from "./religionen/RouteKatalogReligionen";
+import { routeKatalogEinwilligungsarten } from "./einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogVermerkarten } from "./vermerke/RouteKatalogVermerkarten";
+import { routeKatalogFoerderschwerpunkte } from "./foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogSchulen } from "./schulen/RouteKatalogSchulen";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
@@ -40,8 +44,12 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleBetriebe,
-			routeSchuleKataloge,
 			routeSchuleDatenaustausch,
+			routeKatalogReligionen,
+			routeKatalogEinwilligungsarten,
+			routeKatalogVermerkarten,
+			routeKatalogFoerderschwerpunkte,
+			routeKatalogSchulen,
 		];
 		super.defaultChild = undefined;
 	}

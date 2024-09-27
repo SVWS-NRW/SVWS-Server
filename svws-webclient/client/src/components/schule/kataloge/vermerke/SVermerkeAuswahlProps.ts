@@ -6,6 +6,5 @@ export interface VermerkeAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<VermerkartEintrag>) => Promise<void>;
 	gotoEintrag: (vermerk: VermerkartEintrag) => Promise<void>;
 	commit: () => Promise<void>;
-	returnToKataloge: () => Promise<void>;
-	returnToSchule: () => Promise<void>;
+	gotoSchule: () => Promise<void>;
 }

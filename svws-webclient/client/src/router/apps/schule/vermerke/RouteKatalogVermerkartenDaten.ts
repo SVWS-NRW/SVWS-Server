@@ -5,19 +5,19 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { SchuelerVermerkartZusammenfassung } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/schule/kataloge/vermerke/RouteKatalogVermerkarten";
+import { routeKatalogVermerkarten, type RouteKatalogVermerkarten } from "~/router/apps/schule/vermerke/RouteKatalogVermerkarten";
 
 import type { VermerkartDatenProps } from "~/components/schule/kataloge/vermerke/daten/SVermerkartDatenProps";
-import { routeApp } from "../../../RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
-import { routeSchuelerVermerke } from "../../../schueler/vermerke/RouteSchuelerVermerke";
+import { routeSchuelerVermerke } from "../../schueler/vermerke/RouteSchuelerVermerke";
 
 const SVermerkDaten = () => import("~/components/schule/kataloge/vermerke/daten/SVermerkartDaten.vue");
 
 export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVermerkarten> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.vermerke.daten", "daten", SVermerkDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.vermerke.daten", "daten", SVermerkDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkart";

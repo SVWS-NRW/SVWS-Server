@@ -3,17 +3,17 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode, Einwilligungsart } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/kataloge/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
 
 import type { EinwilligungsartDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDatenProps";
-import { routeApp } from "../../../RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 
 const SEinwilligungsartDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDaten.vue");
 
 export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKatalogEinwilligungsarten> {
 
 	public constructor() {
-		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule.kataloge.einwilligungsarten.daten", "daten", SEinwilligungsartDaten);
+		super(Schulform.values(), [BenutzerKompetenz.KEINE], "schule.einwilligungsarten.daten", "daten", SEinwilligungsartDaten);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsart";

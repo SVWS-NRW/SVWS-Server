@@ -3,15 +3,15 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeKatalogFoerderschwerpunkte, type RouteKatalogFoerderschwerpunkte } from "~/router/apps/schule/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
-import { routeApp } from "../../../RouteApp";
+import { routeKatalogFoerderschwerpunkte, type RouteKatalogFoerderschwerpunkte } from "~/router/apps/schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeApp } from "~/router/apps/RouteApp";
 
 const SFoerderschwerpunktDaten = () => import("~/components/schule/kataloge/foerderschwerpunkte/daten/SFoerderschwerpunktDaten.vue");
 
 export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKatalogFoerderschwerpunkte> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.kataloge.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.foerderschwerpunkte.daten", "daten", SFoerderschwerpunktDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkt";

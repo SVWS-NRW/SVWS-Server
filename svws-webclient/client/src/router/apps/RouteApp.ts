@@ -22,12 +22,11 @@ import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "../error/RouteError";
 import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
-import { routeSchuleKataloge } from "./schule/kataloge/RouteSchuleKataloge";
-import { routeKatalogEinwilligungsarten } from "./schule/kataloge/einwilligungsarten/RouteKatalogEinwilligungsarten";
-import { routeKatalogFoerderschwerpunkte } from "./schule/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
-import { routeKatalogReligionen } from "./schule/kataloge/religionen/RouteKatalogReligionen";
-import { routeKatalogSchulen } from "./schule/kataloge/schulen/RouteKatalogSchulen";
-import { routeKatalogVermerkarten } from "./schule/kataloge/vermerke/RouteKatalogVermerkarten";
+import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
+import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
+import { routeKatalogVermerkarten } from "./schule/vermerke/RouteKatalogVermerkarten";
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
@@ -47,7 +46,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleDatenaustausch,
-			routeSchuleKataloge,
 			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
