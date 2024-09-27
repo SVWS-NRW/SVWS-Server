@@ -84,8 +84,9 @@
 				<template v-if="workerManager !== undefined">
 					<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager.isInitialized() === false) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
 					<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
-					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
-						<span class="icon i-ri-download-2-line" />
+					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="(selected.length === 0) || pending">
+						<span v-if="!pending" class="icon i-ri-download-2-line" />
+						<svws-ui-spinner v-else spinning />
 						<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
 					</svws-ui-button>
 					<svws-ui-button v-if="!nachfragen" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
@@ -140,6 +141,7 @@
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
+	const pending = ref<boolean>(false);
 
 	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
 
@@ -190,10 +192,12 @@
 	async function ergebnisseUebernehmen() {
 		if (selected.value.length === 0)
 			return;
+		pending.value = true;
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
 		for (const ergebnis of selected.value)
 			ergebnisse.add(ergebnis);
 		await props.addErgebnisse(ergebnisse);
+		pending.value = false;
 		closeModal();
 	}
 
