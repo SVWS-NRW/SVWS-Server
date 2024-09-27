@@ -49,7 +49,7 @@ public class ConnectionFactory {
 	 * @param config   die Datenbank-Konfiguration für die Factory
 	 */
 	ConnectionFactory(final DBConfig config) {
-		ConnectionManager.instance.unlock();
+		ConnectionManager.instance.lock();
 		this.config = config;
 		this.emf = createEntityManagerFactory();
 		ConnectionManager.instance.unlock();
