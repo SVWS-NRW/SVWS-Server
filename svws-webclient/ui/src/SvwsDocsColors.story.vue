@@ -1,14 +1,13 @@
 <template>
-	<Story title="Farben" id="farben" group="top" icon="ri:palette-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
+	<Story title="Farben (deprecated)" id="farben" group="top" icon="" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Info zu den Farben" source=" " id="info">
 			<div class="htw-prose dark:htw-prose-invert">
 				<p>
-					Für den Client und in den Components ist eine allgemeine Farbpalette definiert, mit der alle
-					möglichen Einsatzfälle abgedeckt werden können.
+					Die alten CSS-Color-Classes sollten nicht mehr verwendet werden.<br>Sie sind nur noch in alten Komponenten und Designs vorhanden und werden nach und nach durch das neue <a href="/story/color?variantId=tokens">Farbschema mit Design Tokens</a> ersetzt.
 				</p>
 			</div>
 		</Variant>
-		<Variant :title="color.name" source=" " :id="color.name" v-for="(color, index) in colors" :key="index">
+		<!-- <Variant :title="color.name" source=" " :id="color.name" v-for="(color, index) in colors" :key="index">
 			<div class="flex gap-2 text-base items-start">
 				<div class="svws-docs-color-shade" :style="{backgroundColor: color.color}" :class="{'border border-black/25': color.name.toLowerCase() === 'white'}" />
 				<div class="flex flex-wrap items-start gap-1 pt-1">
@@ -28,7 +27,7 @@
 					werden dürfen. Zum Beispiel als Hintergrundfarben für verschiedene Fächer in der Kursübersicht. Dafür können auch die weiteren Farben von Tailwind verwendet werden.
 				</p>
 			</div>
-		</Variant>
+		</Variant> -->
 	</Story>
 </template>
 <script setup lang="ts">
