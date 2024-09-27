@@ -34,7 +34,7 @@ public class ConnectionFactory {
 	private final @NotNull DBConfig config;
 
 	/** Die zum Erzeugen der {@link EntityManager} verwendete Instanz des {@link EntityManagerFactory} */
-	private final @NotNull EntityManagerFactory emf;
+	private EntityManagerFactory emf;
 
 	/** Der Zeitpunkt, wann die letzte Verbindung aufgebaut oder geschlossen wurde. */
 	private long tsLastConnection = -1;
@@ -64,6 +64,8 @@ public class ConnectionFactory {
 	 * @return der neue JPA {@link EntityManager}
 	 */
 	EntityManager getNewJPAEntityManager() {
+		if (emf == null)
+			return null;
 		return emf.createEntityManager();
 	}
 
@@ -89,9 +91,11 @@ public class ConnectionFactory {
 	 */
 	DBEntityManager connect(final Benutzer user) throws DBException {
 		ConnectionManager.instance.lock();
-		final DBEntityManager conn = new DBEntityManager(user, this);
-		connections.add(conn);
-		tsLastConnection = System.currentTimeMillis();
+		final DBEntityManager conn = (emf == null) ? null : new DBEntityManager(user, this);
+		if (conn != null) {
+			connections.add(conn);
+			tsLastConnection = System.currentTimeMillis();
+		}
 		ConnectionManager.instance.unlock();
 		return conn;
 	}
@@ -104,6 +108,10 @@ public class ConnectionFactory {
 	 */
 	void close(final DBEntityManager conn) {
 		ConnectionManager.instance.lock();
+		if (emf == null) {
+			ConnectionManager.instance.unlock();
+			return;
+		}
 		tsLastConnection = System.currentTimeMillis();
 		connections.remove(conn);
 		// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
@@ -120,13 +128,17 @@ public class ConnectionFactory {
 						Thread.currentThread().interrupt();
 						return;
 					}
+					ConnectionManager.instance.lock();
 					// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
 					// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
 					final long now = System.currentTimeMillis();
-					if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
+					if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL) {
+						ConnectionManager.instance.unlock();
 						return;
+					}
 					// Ansonsten muss die Verbindung unterbrochen werdeb...
 					ConnectionManager.instance.closeSingle(config);
+					ConnectionManager.instance.unlock();
 				});
 			}
 		}
@@ -143,9 +155,11 @@ public class ConnectionFactory {
 	 * @return true, falls die Credentials übereinstimmen, und ansonsten false
 	 */
 	boolean checkCredentials(final String username, final String password) {
+		ConnectionManager.instance.lock();
 		final Map<String, Object> curProps = emf.getProperties();
 		final String curUser = (String) curProps.get("jakarta.persistence.jdbc.user");
 		final String curPassword = (String) curProps.get("jakarta.persistence.jdbc.password");
+		ConnectionManager.instance.unlock();
 		return Objects.equals(username, curUser) && Objects.equals(password, curPassword);
 	}
 
@@ -212,7 +226,10 @@ public class ConnectionFactory {
 	 * Dort ist die Methode closeSingle aufzurufen.
 	 */
 	void close() {
-		emf.close();
+		if (emf != null) {
+			emf.close();
+			emf = null;
+		}
 	}
 
 }
