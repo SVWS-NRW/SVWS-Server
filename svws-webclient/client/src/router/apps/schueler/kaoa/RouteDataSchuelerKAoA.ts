@@ -56,7 +56,7 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 			this.setPatchedDefaultState({});
 		else {
 			try {
-				const data: List<SchuelerKAoADaten> = await api.server.getKAOAdaten(api.schema, auswahl.id);
+				const data: List<SchuelerKAoADaten> = await api.server.getKAoAdaten(api.schema, auswahl.id);
 				// TODO
 				const schuelerKAoAManager = new SchuelerKAoAManager(routeApp.data.aktAbschnitt.value.id, api.abschnitt.id, api.schuleStammdaten.abschnitte, api.schulform, data, new ArrayList());
 				this.setPatchedState({ auswahl, data, schuelerKAoAManager });
