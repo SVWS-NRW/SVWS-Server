@@ -166,6 +166,7 @@ public final class ConnectionManager {
 		if (factory == null) {
 			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Factory für Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
 					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
+			this.unlock();
 			return;
 		}
 		factory.close();
