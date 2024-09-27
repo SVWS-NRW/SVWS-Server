@@ -114,7 +114,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 		final GostJahrgang eintrag = new GostJahrgang();
 		eintrag.abiturjahr = -1;
 		eintrag.jahrgang = null;
-		eintrag.bezeichnung = "Allgemein / Vorlage";
+		eintrag.bezeichnung = "Allgemeine Vorlagen";
 		eintrag.istAbgeschlossen = false;
 		daten.add(0, eintrag);
 		return daten;

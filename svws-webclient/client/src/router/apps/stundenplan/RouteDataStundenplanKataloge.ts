@@ -26,7 +26,7 @@ export class RouteDataStundenplanKataloge extends RouteData<RouteStateStundenpla
 	public constructor() {
 		super(defaultState);
 		this.vorlageEintrag = new StundenplanListeEintrag();
-		this.vorlageEintrag.bezeichnung = "Allgemein / Vorlage";
+		this.vorlageEintrag.bezeichnung = "Allgemeine Vorlagen";
 		this.vorlageEintrag.schuljahr = -1;
 	}
 

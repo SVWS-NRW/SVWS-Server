@@ -51,7 +51,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	public constructor() {
 		super(defaultState);
 		this.vorlageEintrag = new StundenplanListeEintrag();
-		this.vorlageEintrag.bezeichnung = "Allgemein / Vorlage";
+		this.vorlageEintrag.bezeichnung = "Allgemeine Vorlagen";
 		this.vorlageEintrag.schuljahr = -1;
 	}
 
@@ -155,11 +155,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		Object.assign(daten, data);
 		if (data.wochenTypModell !== undefined)
 			this.stundenplanManager.stundenplanSetWochenTypModell(data.wochenTypModell);
-		if (data.bezeichnungStundenplan)
+		if (data.bezeichnungStundenplan !== undefined)
 			this.auswahl.bezeichnung = data.bezeichnungStundenplan;
-		if (data.gueltigAb)
+		if (data.gueltigAb !== undefined)
 			this.auswahl.gueltigAb = data.gueltigAb;
-		if (data.gueltigBis)
+		if (data.gueltigBis !== undefined)
 			this.auswahl.gueltigBis = data.gueltigBis;
 		this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
 		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
@@ -195,7 +195,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if (!raum.kuerzel || this.stundenplanManager.raumExistsByKuerzel(raum.kuerzel))
+		if ((raum.kuerzel === undefined) || this.stundenplanManager.raumExistsByKuerzel(raum.kuerzel))
 			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete raum.id;
 		api.status.start();
@@ -208,9 +208,9 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	patchRaum = async (data : Partial<StundenplanRaum>, id: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if (!data.kuerzel)
+		if (data.kuerzel === undefined)
 			return;
-		if (data.groesse && data.groesse < 1)
+		if ((data.groesse !== undefined) && data.groesse < 1)
 			throw new UserNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
 		delete data.id;
 		api.status.start();
