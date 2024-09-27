@@ -1,6 +1,6 @@
 <template>
 	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton, 's-sidebar-expanded': sidebarExpanded, 's-sidebar-collapsed': !sidebarExpanded}">
-		<div v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu">
+		<div ref="appMenu" v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu" :class="{ 'has-scrollbar': hasScrollbar }" :style="{ '--scrollbar-width': scrollbarWidth + 'px' }">
 			<slot name="sidebar" />
 			<template v-if="skeleton">
 				<svws-ui-menu>
@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang='ts'>
-	import {ref} from "vue";
+	import {onBeforeUnmount, onMounted, ref} from "vue";
 
 	const props = withDefaults(defineProps<{
 		skeleton?: boolean;
@@ -118,13 +118,36 @@
 	});
 
 	const sidebarExpanded = ref<boolean>(true);
+	const appMenu = ref<HTMLElement | null>(null);
+	const hasScrollbar = ref(false);
+	const scrollbarWidth = ref(0);
 
-	const updateSidebarExpanded = () => {
+	const scrollbarObserver = new ResizeObserver((entries) => {
+		entries.forEach((entry) => {
+			// Endlosschleife vermeiden
+			requestAnimationFrame(() => {
+				scrollbarWidth.value = (entry.target as HTMLElement).offsetWidth - entry.target.clientWidth;
+				hasScrollbar.value = scrollbarWidth.value > 0 ? true : false;
+			});
+		});
+	});
+
+	onMounted(() => {
+		if (appMenu.value !== null)
+			scrollbarObserver.observe(appMenu.value);
+	});
+
+	onBeforeUnmount(() => {
+		if (appMenu.value !== null)
+			scrollbarObserver.unobserve(appMenu.value);
+	});
+
+	function updateSidebarExpanded(): void {
 		sidebarExpanded.value = !sidebarExpanded.value;
 		localStorage.setItem('sidebarExpanded', sidebarExpanded.value ? 'true' : 'false');
-	};
+	}
 
-	if (localStorage.getItem('sidebarExpanded')) {
+	if (localStorage.getItem('sidebarExpanded') !== null) {
 		sidebarExpanded.value = localStorage.getItem('sidebarExpanded') === 'true';
 	}
 
@@ -169,10 +192,13 @@
 	}
 
 	.app--menu {
-		@apply overflow-y-auto -mr-3 pr-3 -my-3 py-3;
-		min-width: 4rem;
-		width: 4%;
-		max-width: 8rem;
+		@apply overflow-y-auto -mr-3 pr-3 -my-3 py-3 min-w-fit max-w-32;
+	}
+
+	@-moz-document url-prefix() {
+		.app--menu.has-scrollbar {
+			padding-right: calc(var(--scrollbar-width) + 0.75rem);
+		}
 	}
 
 	.app--sidebar,
@@ -263,7 +289,7 @@
 		}
 
 		.app--menu {
-			@apply w-auto min-w-full h-16 max-w-none overflow-x-auto overflow-y-hidden pt-0 pb-2 my-0 -mx-2 pl-2 pr-0;
+			@apply w-auto min-w-full min-h-fit max-w-none overflow-x-auto overflow-y-hidden pt-0 pb-2 my-0 -mx-2 pl-2 pr-0;
 
 			.sidebar--menu--header {
 				@apply min-h-[unset] h-full pl-3;

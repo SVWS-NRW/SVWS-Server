@@ -156,10 +156,10 @@
 
 <style lang="postcss">
 .sidebar--menu {
-	@apply flex min-h-full flex-1 flex-col w-full;
+	@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
 
 	@media (orientation: portrait) {
-		@apply flex-row min-h-[unset] h-full gap-x-5;
+		@apply flex-row min-h-[unset] gap-x-5;
 	}
 }
 
