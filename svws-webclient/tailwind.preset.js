@@ -102,15 +102,18 @@ export default {
 				'palette': {
 					'neutral': {
 						'100': 'rgba(255, 255, 255, 1)',
-						'300': 'rgba(244, 244, 245, 1)',
-						'400': 'rgba(231, 231, 233, 1)',
+						'200': 'rgba(244, 244, 245, 1)',
+						'300': 'rgba(234, 234, 236, 1)',
+						'400': 'rgba(226, 226, 228, 1)',
 						'500': 'rgba(213, 213, 216, 1)',
 						'600': 'rgba(165, 165, 167, 1)',
 						'700': 'rgba(91, 91, 93, 1)',
 						'800': 'rgba(38, 38, 39, 1)',
+						'850': 'rgba(165, 165, 167, 0.2)',
 						'900': 'rgba(0, 0, 0, 1)',
 					},
 					'brand': {
+						'100': 'rgba(27, 119, 193, 0.5)',
 						'200': 'rgba(166, 206, 247, 1)',
 						'300': 'rgba(121, 180, 238, 1)',
 						'400': 'rgba(66, 146, 217, 1)',
@@ -121,6 +124,7 @@ export default {
 						'900': 'rgba(0, 42, 81, 1)',
 					},
 					'statistic': {
+						'100': 'rgba(159, 55, 254, 0.5)',
 						'200': 'rgba(224, 188, 255, 1)',
 						'300': 'rgba(208, 151, 255, 1)',
 						'400': 'rgba(184, 101, 255, 1)',
@@ -131,6 +135,7 @@ export default {
 						'900': 'rgba(63, 0, 112, 1)',
 					},
 					'success': {
+						'100': 'rgba(43, 133, 0, 0.5)',
 						'200': 'rgba(189, 241, 136, 1)',
 						'300': 'rgba(134, 226, 41, 1)',
 						'400': 'rgba(91, 180, 0, 1)',
@@ -149,12 +154,15 @@ export default {
 						'900': 'rgba(92, 0, 0, 1)',
 					},
 					'warning': {
-						'200': 'rgba(255, 251, 209, 1)',
-						'300': 'rgba(252, 244, 156, 1)',
-						'500': 'rgba(230, 217, 81, 1)',
-						'600': 'rgba(214, 198, 36, 1)',
-						'700': 'rgba(186, 170, 3, 1)',
-						'800': 'rgba(160, 147, 3, 1)',
+						'100': 'rgba(232, 191, 0, 0.5)',
+						'200': 'rgba(254, 235, 149, 1)',
+						'300': 'rgba(246, 215, 76, 1)',
+						'400': 'rgba(232, 191, 0, 1)',
+						'500': 'rgba(208, 172, 7, 1)',
+						'600': 'rgba(192, 158, 2, 1)',
+						'700': 'rgba(167, 139, 6, 1)',
+						'800': 'rgba(137, 114, 5, 1)',
+						'900': 'rgba(82, 68, 3, 1)',
 					},
 				},
 			},
@@ -313,6 +321,17 @@ export default {
 					'onneutral-secondary-hover': 'var(--color-border-ui-onneutral-secondary-hover)',
 					'ondisabled': 'var(--color-border-ui-ondisabled)',
 					'ondisabled-secondary': 'var(--color-border-ui-ondisabled-secondary)',
+				}
+			},
+			'ringColor': {
+				'ui': {
+					DEFAULT: 'var(--color-ring-ui)',
+					'brand': 'var(--color-ring-ui-brand)',
+					'statistic': 'var(--color-ring-ui-statistic)',
+					'danger': 'var(--color-ring-ui-danger)',
+					'success': 'var(--color-ring-ui-success)',
+					'warning': 'var(--color-ring-ui-warning)',
+					'neutral': 'var(--color-ring-ui-neutral)',
 				}
 			},
 			opacity: {

@@ -9,6 +9,10 @@ icon: 'carbon:bookmark'
 # Veraltete Komponenten
 
 Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfernt wurden.
+## ab 0.x.x
+Farben wie `bg-red-500 text-white` werden nicht mehr verwendet. Es wird mit semantischen [Design Tokens](/story/farben) gearbeitet, in diesem Beispiel `bg-ui-danger text-ui-ondanger`. 
+
+Darkmode wird nicht mehr über `dark:bg-color` definiert, sondern automatisch mit den Tokens optimiert dargestellt. Weitere Beispiele und Details in der [Dokumentation](/story/farben).
 ## ab 0.9.3
 SvwsUiRouterTabBar, SvwsUiRouterTabBarButton, SvwsUiVerticalRouterTabBar
 stattdessen verwendet werden soll SvwsUiTabBar, SvwsUiTabBarVertical
