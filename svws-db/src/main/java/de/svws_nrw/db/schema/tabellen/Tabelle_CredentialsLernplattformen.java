@@ -54,6 +54,12 @@ public class Tabelle_CredentialsLernplattformen extends SchemaTabelle {
 	public SchemaTabelleSpalte col_AES = add("AES", SchemaDatentypen.TEXT, false)
 			.setJavaComment("AES-Schlüssel für den Credential-Datensatz");
 
+	/** Die Definition der Tabellenspalte SchulnrEigner */
+	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
+
 
 	/** Die Definition des Fremdschlüssels CredentialsLernplattformen_Lernplattform_FK */
 	public SchemaTabelleFremdschluessel fk_CredentialsLernplattformen_Lernplattform_FK = addForeignKey(
