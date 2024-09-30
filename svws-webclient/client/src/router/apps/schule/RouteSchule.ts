@@ -28,6 +28,7 @@ import { routeSchuleDatenaustauschLaufbahnplanung } from "./datenaustausch/Route
 import { routeSchuleDatenaustauschSchulbewerbung } from "./datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./datenaustausch/RouteSchuleDatenaustauschWenom";
 import { routeSchuleDatenaustauschUntis } from "./datenaustausch/untis/RouteSchuleDatenaustauschUntis";
+import { routeSchuleStammdaten } from "./RouteSchuleStammdaten";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
@@ -40,12 +41,15 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
 		super.setView("liste", SSchuleAuswahl, (route) => this.getAuswahlProps(route));
-		super.children = [];
+		super.children = [
+			routeSchuleStammdaten,
+		];
 		super.menu = [
 			// TODO { title: "Schule bearbeiten", value: "schule_bearbeiten" },
 			// TODO { title: "Datensicherung", value: "datensicherung" },
 			// TODO { title: "Schuljahreswechsel", value: "schuljahreswechsel" },
 			// TODO { title: "Werkzeuge", value: "werkzeuge" },
+			routeSchuleStammdaten,
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleBetriebe,
@@ -61,12 +65,18 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleDatenaustauschWenom,
 			routeSchuleDatenaustauschUntis,
 		];
-		super.defaultChild = undefined;
+		super.defaultChild = routeSchuleStammdaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (isEntering)
 			await this.data.ladeDaten();
+		if (to.name === this.name)
+			return this.getRoute();
+		if (!to.name.startsWith(this.data.view.name))
+			for (const child of this.children)
+				if (to.name.startsWith(child.name))
+					this.data.setView(child, this.children);
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -119,7 +129,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		this.data.setView(node, routeSchule.menu);
 	}
 
-	gotoSchule = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+	gotoSchule = async () => await RouteManager.doRoute({ name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
 	public benutzerKompetenzen = (gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> => {
 		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;

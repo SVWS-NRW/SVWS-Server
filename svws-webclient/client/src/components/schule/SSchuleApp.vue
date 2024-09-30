@@ -15,7 +15,7 @@
 			<div class="svws-ui-header--actions" />
 		</header>
 		<svws-ui-router-tab-bar :routes="[ tab ]" :hidden="[ false ]" :model-value="tab">
-			<s-schule-stammdaten :schule :patch :smpt-server-konfiguration :patch-s-m-t-p-server-konfiguration :benutzer-kompetenzen :benutzer-ist-admin />
+			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>
 </template>

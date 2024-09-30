@@ -20,7 +20,7 @@
 							<tr class="svws-ui-tr" role="row">
 								<td class="svws-ui-td border-none ml-4" role="cell">
 									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span>{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
+										<template #label><span :class="{ 'font-bold': name === child.name }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
 									</svws-ui-menu-item>
 								</td>
 							</tr>
@@ -38,7 +38,7 @@
 							<tr class="svws-ui-tr" role="row">
 								<td class="svws-ui-td border-none ml-4" role="cell">
 									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span>{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
+										<template #label><span :class="{ 'font-bold': name === child.name }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
 									</svws-ui-menu-item>
 								</td>
 							</tr>
@@ -56,7 +56,7 @@
 							<tr class="svws-ui-tr" role="row">
 								<td class="svws-ui-td border-none ml-4" role="cell">
 									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span>{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
+										<template #label><span :class="{ 'font-bold': name === child.name }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
 									</svws-ui-menu-item>
 								</td>
 							</tr>
@@ -76,7 +76,7 @@
 
 	const props = defineProps<SchuleAuswahlProps>();
 
-	const listSchulbezogen = [ "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge", "schule.vermerkarten" ];
+	const listSchulbezogen = [ "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge", "schule.vermerkarten" ];
 	const listAllgemein = [ "schule.religionen", "schule.schulen" ];
 	const listDatenaustausch = [ "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis" ];
 
