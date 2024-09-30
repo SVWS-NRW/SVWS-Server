@@ -25,8 +25,8 @@
 
 <script lang="ts" setup>
 
-	import type { AuswahlChildData } from 'src/types';
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import type { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
 		routes: AuswahlChildData[]
