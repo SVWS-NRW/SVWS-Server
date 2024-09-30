@@ -62,7 +62,6 @@
 								</div>
 							</div>
 						</svws-ui-header>
-						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton" />
 					</template>
 					<template v-else>
 						<router-view :key="app.name" />
@@ -83,12 +82,6 @@
 	const props = defineProps<AppProps>();
 
 	const pendingSetApp = ref('');
-
-	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden…' } },
-		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
-	];
-	const selectedRoute = loadingSkeletonRoutes[0];
 
 	function isVisible(item: AuswahlChildData) : boolean {
 		if ((item.name === 'config') && (!props.isServerAdmin))

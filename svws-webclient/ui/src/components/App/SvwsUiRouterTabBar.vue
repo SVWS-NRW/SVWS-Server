@@ -28,13 +28,12 @@
 
 <script lang="ts" setup>
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import { RouteRecordRaw } from 'vue-router';
 	import type { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
-		routes: RouteRecordRaw[] | AuswahlChildData[]
+		routes: AuswahlChildData[]
 		hidden: boolean[] | undefined
-		modelValue: RouteRecordRaw | AuswahlChildData
+		modelValue: AuswahlChildData
 	}>();
 
 	const emit = defineEmits<{
@@ -51,7 +50,7 @@
 
 	let processingKeyboardEvent = false;
 	const tabsListElement = ref();
-	const selected = computed<RouteRecordRaw | AuswahlChildData>({
+	const selected = computed<AuswahlChildData>({
 		get: () => props.modelValue,
 		set: (value) => emit('update:modelValue', value)
 	});
@@ -62,7 +61,7 @@
 		return props.hidden[index];
 	}
 
-	const visibleTabs = computed<RouteRecordRaw[] | AuswahlChildData[]> (() => getVisibleTabs());
+	const visibleTabs = computed<AuswahlChildData[]> (() => getVisibleTabs());
 	const selectedIndex = computed<number>(() => findTabIndex(visibleTabs.value, selected.value.name));
 
 	const state = ref<ComponentData>({
@@ -110,7 +109,7 @@
 		});
 	}
 
-	function select(route: RouteRecordRaw | AuswahlChildData) {
+	function select(route: AuswahlChildData) {
 		selected.value = route;
 	}
 
@@ -119,25 +118,24 @@
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
 			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
-					: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
-			console.log("target", targetIndex);
+				: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
 			select(visibleTabs.value[targetIndex]);
 			processingKeyboardEvent = false;
 		}
 	}
 
-	function findTabIndex(tabs: RouteRecordRaw[] | AuswahlChildData[], tabName: string | symbol | undefined): number {
+	function findTabIndex(tabs: AuswahlChildData[], tabName: string | symbol | undefined): number {
 		for (let i = 0; i < tabs.length; i++)
 			if (tabs[i].name === tabName)
 				return i;
 		return -1;
 	}
 
-	function getVisibleTabs(): RouteRecordRaw[] | AuswahlChildData[] {
-		const visibleTabs: RouteRecordRaw[] | AuswahlChildData[] = [];
+	function getVisibleTabs(): AuswahlChildData[] {
+		const visibleTabs: AuswahlChildData[] = [];
 		for (let i = 0; i < props.routes.length; i++)
 			if (!isHidden(i))
-				visibleTabs.push(props.routes[i] as AuswahlChildData & RouteRecordRaw);
+				visibleTabs.push(props.routes[i]);
 		return visibleTabs;
 	}
 

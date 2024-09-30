@@ -96,7 +96,6 @@
 								</div>
 							</div>
 						</svws-ui-header>
-						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton opacity-50" />
 					</template>
 					<template v-else>
 						<router-view :key="app.name" />
@@ -155,12 +154,6 @@
 		}
 		copied.value = true;
 	}
-
-	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: '' } },
-		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: 'Daten laden…' } },
-	];
-	const selectedRoute = loadingSkeletonRoutes[0];
 
 	function is_active(current: AuswahlChildData): boolean {
 		const routename = props.app.name.split('.')[0];

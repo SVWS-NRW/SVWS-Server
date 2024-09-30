@@ -168,6 +168,7 @@
 	import {computed, h, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
 	import type { DataTableColumn } from "@ui";
+	import type { AuswahlChildData } from "../AuswahlChildData";
 
 	const props = defineProps<StatistikAppProps>();
 
@@ -226,11 +227,11 @@
 		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4 },
 	];
 
-	const routes = [
-		{ path: "/", name: "dashboard", component: { render: () => h("h1", "Dashboard") }, meta: { text: "Übersicht" } },
-		{ path: "/schueler", name: "Schüler", component: { render: () => h("h1", "Schüler") }, meta: { text: "Schüler" } },
-		{ path: "/lehrkraefte", name: "Lehrer", component: { render: () => h("h1", "Lehrkräfte") }, meta: { text: "Lehrkräfte" } },
-		{ path: "/unterricht", name: "Unterrichts", component: { render: () => h("h1", "Unterricht") }, meta: { text: "Unterricht" } },
+	const routes : AuswahlChildData[] = [
+		{ name: "dashboard", text: "Übersicht" },
+		{ name: "Schüler", text: "Schüler" },
+		{ name: "Lehrer", text: "Lehrkräfte" },
+		{ name: "Unterrichts", text: "Unterricht" },
 	];
 
 	const hidden = ref([false, false, false]);

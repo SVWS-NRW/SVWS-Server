@@ -24,16 +24,17 @@
 </template>
 
 <script lang="ts" setup>
+
+	import type { AuswahlChildData } from 'src/types';
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { RouteRecordRaw } from "vue-router";
 
 	const props = defineProps<{
-		routes: RouteRecordRaw[]
+		routes: AuswahlChildData[]
 		hidden: boolean[] | undefined
-		modelValue: RouteRecordRaw
+		modelValue: AuswahlChildData
 	}>();
 
-	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw): void, }>();
+	const emit = defineEmits<{ (e: 'update:modelValue', value: AuswahlChildData): void, }>();
 
 	type ComponentData = {
 		scrolled: boolean;
@@ -43,13 +44,9 @@
 	}
 
 	const contentEl = ref();
-	const selected = computed<RouteRecordRaw>({
-		get() : RouteRecordRaw {
-			return props.modelValue;
-		},
-		set(value: RouteRecordRaw ) {
-			emit('update:modelValue', value);
-		}
+	const selected = computed<AuswahlChildData>({
+		get: () => props.modelValue,
+		set: (value) => emit('update:modelValue', value)
 	});
 
 	function isHidden(index: number) {
@@ -100,7 +97,7 @@
 		});
 	}
 
-	function select(route: RouteRecordRaw) {
+	function select(route: AuswahlChildData) {
 		selected.value = route;
 	}
 
@@ -108,23 +105,24 @@
 
 
 <style lang="postcss">
-    .svws-ui-tabs--vertical {
-        @apply flex flex-row flex-grow items-start;
+
+	.svws-ui-tabs--vertical {
+		@apply flex flex-row flex-grow items-start;
 		@apply w-full;
-    }
+	}
 
-    .router-vertical-tab-bar--panel {
-        @apply flex-grow overflow-y-auto;
-    }
+	.router-vertical-tab-bar--panel {
+		@apply flex-grow overflow-y-auto;
+	}
 
-    .router-vertical-tab-bar--wrapper {
+	.router-vertical-tab-bar--wrapper {
 		@apply flex flex-col flex-shrink items-start;
 		@apply overflow-hidden;
 		@apply relative;
 		@apply mr-8;
-    }
+	}
 
-    .router-vertical-tab-bar--content {
+	.router-vertical-tab-bar--content {
 		@apply bg-light rounded-md p-[2px];
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
@@ -148,45 +146,45 @@
 				@apply bottom-0 border-b-0 border-r-2 h-full pointer-events-none;
 			}
 		}
-    }
+	}
 
-    .router-vertical-tab-bar--content::-webkit-scrollbar {
-        display: none;
-        /* Remove Scrollbar in Chromium basesd Browsers */
-    }
+	.router-vertical-tab-bar--content::-webkit-scrollbar {
+		display: none;
+		/* Remove Scrollbar in Chromium basesd Browsers */
+	}
 
-    .router-vertical-tab-bar--scroll-button-background {
+	.router-vertical-tab-bar--scroll-button-background {
 		@apply absolute z-20;
 		@apply w-full;
 		@apply pointer-events-none;
 		@apply from-transparent via-light to-light;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button-background-down {
+	.router-vertical-tab-bar--scroll-button-background-down {
 		@apply bg-gradient-to-b;
 		@apply pt-8;
 		@apply rounded-b-full;
 		bottom: 0.875rem;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button-background-up {
+	.router-vertical-tab-bar--scroll-button-background-up {
 		@apply bg-gradient-to-t;
 		@apply pb-8;
 		@apply rounded-t-full;
 		top: 0.875rem;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button {
+	.router-vertical-tab-bar--scroll-button {
 		@apply w-full;
 		@apply inline-flex items-center justify-center;
 		@apply pointer-events-auto;
 		@apply py-3.5;
 		@apply rounded-full;
 		@apply text-black;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button:focus {
+	.router-vertical-tab-bar--scroll-button:focus {
 		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
-    }
+	}
 
 </style>

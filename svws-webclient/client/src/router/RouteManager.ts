@@ -275,7 +275,6 @@ export class RouteManager {
 			this._node = to_node;
 			this._routeLocation = to;
 			const from_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
-			console.log("fail", failure);
 			if (failure === undefined) {
 				if (api.mode !== ServerMode.STABLE)
 					console.log("Completed routing '" + from.fullPath + "' --> '" + to.fullPath + "'"); // + "': " + from_node?.name + " " + JSON.stringify(from.params) +  " --> " + to_node?.name + " " + JSON.stringify(to.params)
