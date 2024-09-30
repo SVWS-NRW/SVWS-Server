@@ -482,7 +482,6 @@ export class JsonCoreTypeReader {
 	}
 
 	public async loadAll() : Promise<Map<string, string>> {
-		console.log("Laden der Json-Dateien");
 		const arr = [];
 		for (const key of this.keys)
 			arr.push(this.loadJson(key));
@@ -491,7 +490,6 @@ export class JsonCoreTypeReader {
 	}
 
 	public readAll() {
-		console.log("Initialisiere die CoreTypes");
 		try {
 			this.readSchulform();
 			this.readBerufskollegAnlage();

@@ -55,7 +55,7 @@ export class JsonCoreTypeReaderStatic extends JsonCoreTypeReader {
 	mapCoreTypeNameJsonDataImport = new Map<string, object>();
 
 	constructor() {
-		super()
+		super();
 		this.mapCoreTypeNameJsonDataImport.set("Schulform", Schulform);
 		this.mapCoreTypeNameJsonDataImport.set("BerufskollegAnlage", BerufskollegAnlage);
 		this.mapCoreTypeNameJsonDataImport.set("AllgemeinbildendOrganisationsformen", AllgemeinbildendOrganisationsformen);
