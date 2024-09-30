@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.asd.types.schule.Schulform;
@@ -132,9 +133,13 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.idJahrgang = jg.ID;
 				eintrag.jahrgang = jg.ASDJahrgang;
 			}
-			eintrag.schulgliederung = (aktAbschnitt.Schulgliederung == null)
-					? Schulgliederung.getDefault(schulform).daten(schuljahr).kuerzel
-					: aktAbschnitt.Schulgliederung;
+			if (aktAbschnitt.Schulgliederung == null) {
+				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
+				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);
+				eintrag.schulgliederung = (sglke == null) ? "" : sglke.kuerzel;
+			} else {
+				eintrag.schulgliederung = aktAbschnitt.Schulgliederung;
+			}
 		}
 		eintrag.status = schueler.idStatus;
 		eintrag.istDuplikat = schueler.Duplikat;
