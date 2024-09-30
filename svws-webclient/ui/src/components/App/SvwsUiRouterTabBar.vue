@@ -116,7 +116,7 @@
 	}
 
 	function switchTab(event: KeyboardEvent) {
-		if (event.altKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
+		if (event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
 			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
