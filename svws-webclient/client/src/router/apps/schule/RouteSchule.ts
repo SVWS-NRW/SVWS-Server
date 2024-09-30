@@ -10,7 +10,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
 import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
-import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 
@@ -23,6 +22,12 @@ import { routeKatalogEinwilligungsarten } from "./einwilligungsarten/RouteKatalo
 import { routeKatalogVermerkarten } from "./vermerke/RouteKatalogVermerkarten";
 import { routeKatalogFoerderschwerpunkte } from "./foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
 import { routeKatalogSchulen } from "./schulen/RouteKatalogSchulen";
+import { routeSchuleDatenaustauschKurs42 } from "./datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
+import { routeSchuleDatenaustauschENM } from "./datenaustausch/RouteSchuleDatenaustauschENM";
+import { routeSchuleDatenaustauschLaufbahnplanung } from "./datenaustausch/RouteSchuleDatenaustauschLupo";
+import { routeSchuleDatenaustauschSchulbewerbung } from "./datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
+import { routeSchuleDatenaustauschWenom } from "./datenaustausch/RouteSchuleDatenaustauschWenom";
+import { routeSchuleDatenaustauschUntis } from "./datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleApp = () => import("~/components/schule/SSchuleApp.vue")
@@ -44,12 +49,17 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeSchuleBetriebe,
-			routeSchuleDatenaustausch,
 			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
 			routeKatalogFoerderschwerpunkte,
 			routeKatalogSchulen,
+			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchuleDatenaustauschKurs42,
+			routeSchuleDatenaustauschSchulbewerbung,
+			routeSchuleDatenaustauschENM,
+			routeSchuleDatenaustauschWenom,
+			routeSchuleDatenaustauschUntis,
 		];
 		super.defaultChild = undefined;
 	}

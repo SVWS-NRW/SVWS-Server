@@ -3,14 +3,15 @@ import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeSchuleDatenaustausch, type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
+import type { RouteApp} from "../../RouteApp";
 import { routeApp } from "../../RouteApp";
+import { routeSchule } from "../RouteSchule";
 
 const SSchuleDatenaustauschENM = () => import("~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENM.vue");
 
-export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.enm", "enm", SSchuleDatenaustauschENM);
@@ -25,7 +26,7 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteSchuleDate
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschENMProps {
 		return {
-			setImportENM: routeSchuleDatenaustausch.data.setImportENM,
+			setImportENM: routeSchule.data.setImportENM,
 		};
 	}
 }

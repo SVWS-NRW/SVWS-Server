@@ -147,7 +147,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			if (!map) {
 				const listBlockungen = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, abiturjahr, halbjahr.id);
 				const mapBlockungen: Map<number, GostBlockungListeneintrag> = new Map();
-				if (listBlockungen.size()) {
+				if (listBlockungen.size() > 0) {
 					blockung = listBlockungen.getFirst();
 					for (const b of listBlockungen) {
 						mapBlockungen.set(b.id, b);
@@ -157,7 +157,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 				}
 				mapAbiturjahr.set(halbjahr.id, mapBlockungen);
 			} else {
-				if (map.size) {
+				if (map.size > 0) {
 					blockung = map.values().next().value;
 					for (const b of map.values())
 						if (b.istAktiv)
@@ -188,7 +188,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			this.mapBlockung.set(blockung.id, blockungsdaten);
 		}
 		const ergebnisse = this.mapErgebnisse.get(blockung.id);
-		if (ergebnisse && ergebnisse.size()) {
+		if (ergebnisse && (ergebnisse.size() > 0)) {
 			ergebnis = ergebnisse.getFirst();
 			for (const e of ergebnisse) {
 				if (e.istAktiv)

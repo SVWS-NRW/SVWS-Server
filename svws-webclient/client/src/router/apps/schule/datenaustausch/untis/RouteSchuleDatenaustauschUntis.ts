@@ -2,10 +2,10 @@ import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
-import type { RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 import type { SchuleDatenaustauschUntisProps } from "~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisProps";
 import type { AuswahlChildData } from "~/components/AuswahlChildData";
 import { RouteNode } from "~/router/RouteNode";
+import type { RouteApp} from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteDataSchuleDatenaustauschUntis } from "./RouteDataSchuleDatenaustauschUntis";
@@ -15,7 +15,7 @@ import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaust
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
 
-export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDatenaustauschUntis, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDatenaustauschUntis, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis", "untis", SSchuleDatenaustauschUntis, new RouteDataSchuleDatenaustauschUntis());
