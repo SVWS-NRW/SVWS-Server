@@ -331,7 +331,7 @@
 		if (props.terminSelected.value) {
 			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
 			if (scrollToElement)
-				scrollToElement.scrollIntoView({ behavior: 'smooth' });
+				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
 		}
 	});
 
