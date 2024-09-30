@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { RouteRecordRaw } from 'vue-router';
+	import { RouteRecordRaw } from 'vue-router';
 	import type { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
@@ -49,6 +49,7 @@
 		scrollOffset: number;
 	}
 
+	let processingKeyboardEvent = false;
 	const tabsListElement = ref();
 	const selected = computed<RouteRecordRaw | AuswahlChildData>({
 		get: () => props.modelValue,
@@ -60,6 +61,9 @@
 			return false;
 		return props.hidden[index];
 	}
+
+	const visibleTabs = computed<RouteRecordRaw[] | AuswahlChildData[]> (() => getVisibleTabs());
+	const selectedIndex = computed<number>(() => findTabIndex(visibleTabs.value, selected.value.name));
 
 	const state = ref<ComponentData>({
 		scrolled: false,
@@ -74,12 +78,14 @@
 		state.value.scrolledMax = (tabsListElement.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
 		tabsListElement.value?.addEventListener("scroll", handleScroll);
 		window.addEventListener("resize", handleScroll);
+		window.addEventListener("keydown", switchTab)
 	})
 
 
 	onUnmounted(() => {
 		tabsListElement.value?.removeEventListener("scroll", handleScroll);
 		window.removeEventListener("resize", handleScroll);
+		window.removeEventListener("keydown", switchTab)
 	});
 
 
@@ -106,6 +112,33 @@
 
 	function select(route: RouteRecordRaw | AuswahlChildData) {
 		selected.value = route;
+	}
+
+	function switchTab(event: KeyboardEvent) {
+		if (event.altKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
+			processingKeyboardEvent = true;
+			const backwards = (event.key === "ArrowLeft");
+			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
+					: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
+			console.log("target", targetIndex);
+			select(visibleTabs.value[targetIndex]);
+			processingKeyboardEvent = false;
+		}
+	}
+
+	function findTabIndex(tabs: RouteRecordRaw[] | AuswahlChildData[], tabName: string | symbol | undefined): number {
+		for (let i = 0; i < tabs.length; i++)
+			if (tabs[i].name === tabName)
+				return i;
+		return -1;
+	}
+
+	function getVisibleTabs(): RouteRecordRaw[] | AuswahlChildData[] {
+		const visibleTabs: RouteRecordRaw[] | AuswahlChildData[] = [];
+		for (let i = 0; i < props.routes.length; i++)
+			if (!isHidden(i))
+				visibleTabs.push(props.routes[i] as AuswahlChildData & RouteRecordRaw);
+		return visibleTabs;
 	}
 
 </script>
