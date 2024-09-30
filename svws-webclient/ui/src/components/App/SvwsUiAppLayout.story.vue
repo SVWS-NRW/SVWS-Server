@@ -1,6 +1,7 @@
 <script setup lang="ts">
-	import {h, ref} from "vue";
-	import {logEvent} from 'histoire/client';
+
+	import { ref } from "vue";
+	import type { AuswahlChildData } from "../../types";
 
 	const routes = [
 		{ name: "home", text: "Home" },
@@ -14,6 +15,9 @@
 
 	const hidden = ref([false, false, false, true]);
 	const selectedRoute = ref(routes[0]);
+	async function setTab(tab : AuswahlChildData) {
+		selectedRoute.value = tab;
+	}
 
 </script>
 
@@ -95,8 +99,8 @@
 					<span>Title</span><br>
 					<span class="opacity-50">Subline</span>
 				</svws-ui-header>
-				<svws-ui-router-tab-bar :routes="routes" :hidden="hidden" v-model="selectedRoute">
-					Hier wird der Tab-Content dargestellt...
+				<svws-ui-router-tab-bar :tabs="routes" :hidden="hidden" :tab="selectedRoute" :set-tab="setTab">
+					Route: {{ selectedRoute.text }}
 				</svws-ui-router-tab-bar>
 			</template>
 			<template #aside>

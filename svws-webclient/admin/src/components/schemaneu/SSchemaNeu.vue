@@ -11,7 +11,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="[]" :hidden="[]" :model-value="{ name: 'Dummy', text: 'Dummy' }">
+		<svws-ui-router-tab-bar :tabs="[]" :hidden="[]" :tab="{ name: 'Dummy', text: 'Dummy' }" :set-tab="async (a) => {}">
 			<div class="page--content">
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>

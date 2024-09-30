@@ -16,7 +16,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" @update:model-value="setTab" :model-value="tab">
+		<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :set-tab="setTab" :tab="tab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>

@@ -31,7 +31,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="props.tabs()" :hidden="props.tabsHidden" :model-value="selectedTab" @update:model-value="setSelectedTab">
+		<svws-ui-router-tab-bar :tabs="props.tabs()" :hidden="props.tabsHidden" :tab="selectedTab" :set-tab="setSelectedTab">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</template>

@@ -14,7 +14,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="[ tab ]" :hidden="[ false ]" :model-value="tab">
+		<svws-ui-router-tab-bar :tabs="[ tab ]" :hidden="[ false ]" :tab="tab" :set-tab="async (a) => {}">
 			<router-view />
 		</svws-ui-router-tab-bar>
 	</div>

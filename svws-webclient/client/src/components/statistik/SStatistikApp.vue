@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routes" v-model="selectedRoute" :hidden="hidden">
+		<svws-ui-router-tab-bar :tabs="routes" :hidden="hidden" :tab="selectedRoute" :set-tab="setTab">
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
@@ -236,6 +236,10 @@
 
 	const hidden = ref([false, false, false]);
 	const selectedRoute = ref(routes[0]);
+
+	async function setTab(tab: AuswahlChildData) {
+		selectedRoute.value = tab;
+	}
 
 </script>
 

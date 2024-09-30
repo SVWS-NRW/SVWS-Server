@@ -7,8 +7,8 @@
 				</button>
 			</div>
 			<div ref="contentEl" class="router-vertical-tab-bar--content">
-				<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
-					:hidden="isHidden(index)" @select="select(route)" :key="index" />
+				<svws-ui-router-tab-bar-button v-for="(route, index) in props.tabs" :route="route" :selected="props.tab"
+					:hidden="isHidden(index)" @select="setTab(route)" :key="index" />
 			</div>
 			<div v-if="!state.scrolledMax"
 				class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-down">
@@ -25,13 +25,14 @@
 
 <script lang="ts" setup>
 
-	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
 	import type { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
-		routes: AuswahlChildData[]
+		tabs: AuswahlChildData[]
 		hidden: boolean[] | undefined
-		modelValue: AuswahlChildData
+		tab: AuswahlChildData
+		setTab: (tab: AuswahlChildData) => Promise<void>;
 	}>();
 
 	const emit = defineEmits<{ (e: 'update:modelValue', value: AuswahlChildData): void, }>();
@@ -44,10 +45,6 @@
 	}
 
 	const contentEl = ref();
-	const selected = computed<AuswahlChildData>({
-		get: () => props.modelValue,
-		set: (value) => emit('update:modelValue', value)
-	});
 
 	function isHidden(index: number) {
 		if (props.hidden?.[index] === undefined)
@@ -95,10 +92,6 @@
 			top: (dir * contentEl.value.scrollHeight) / state.value.scrollFactor,
 			behavior: "smooth"
 		});
-	}
-
-	function select(route: AuswahlChildData) {
-		selected.value = route;
 	}
 
 </script>

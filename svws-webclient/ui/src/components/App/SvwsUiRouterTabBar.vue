@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-page" :class="{'svws-single-route': props.routes.length === 1}">
+	<div class="svws-ui-page" :class="{'svws-single-route': props.tabs.length === 1}">
 		<div class="svws-ui-tabs">
 			<div class="svws-ui-tabs--wrapper">
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
@@ -8,8 +8,8 @@
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
-					<template v-for="(route, index) in props.routes" :key="index">
-						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="selected" @select="select(route)" />
+					<template v-for="(route, index) in props.tabs" :key="index">
+						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="props.tab" @select="setTab(route)" />
 					</template>
 				</div>
 				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
@@ -31,13 +31,10 @@
 	import type { AuswahlChildData } from '../../types';
 
 	const props = defineProps<{
-		routes: AuswahlChildData[]
+		tabs: AuswahlChildData[]
 		hidden: boolean[] | undefined
-		modelValue: AuswahlChildData
-	}>();
-
-	const emit = defineEmits<{
-		(e: 'update:modelValue', value: any): any,
+		tab: AuswahlChildData
+		setTab: (tab: AuswahlChildData) => Promise<void>;
 	}>();
 
 	type ComponentData = {
@@ -50,10 +47,6 @@
 
 	let processingKeyboardEvent = false;
 	const tabsListElement = ref();
-	const selected = computed<AuswahlChildData>({
-		get: () => props.modelValue,
-		set: (value) => emit('update:modelValue', value)
-	});
 
 	function isHidden(index: number) {
 		if (props.hidden?.[index] === undefined)
@@ -61,8 +54,21 @@
 		return props.hidden[index];
 	}
 
-	const visibleTabs = computed<AuswahlChildData[]> (() => getVisibleTabs());
-	const selectedIndex = computed<number>(() => findTabIndex(visibleTabs.value, selected.value.name));
+	const visibleTabs = computed<AuswahlChildData[]> (() => {
+		const visibleTabs: AuswahlChildData[] = [];
+		for (let i = 0; i < props.tabs.length; i++)
+			if (!isHidden(i))
+				visibleTabs.push(props.tabs[i]);
+		return visibleTabs;
+	});
+
+	const selectedIndex = computed<number>(() => {
+		const tabs = visibleTabs.value;
+		for (let i = 0; i < tabs.length; i++)
+			if (tabs[i].name === props.tab.name)
+				return i;
+		return -1;
+	});
 
 	const state = ref<ComponentData>({
 		scrolled: false,
@@ -109,34 +115,15 @@
 		});
 	}
 
-	function select(route: AuswahlChildData) {
-		selected.value = route;
-	}
-
 	function switchTab(event: KeyboardEvent) {
 		if (event.altKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
 			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
 				: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
-			select(visibleTabs.value[targetIndex]);
+			void props.setTab(visibleTabs.value[targetIndex]);
 			processingKeyboardEvent = false;
 		}
-	}
-
-	function findTabIndex(tabs: AuswahlChildData[], tabName: string | symbol | undefined): number {
-		for (let i = 0; i < tabs.length; i++)
-			if (tabs[i].name === tabName)
-				return i;
-		return -1;
-	}
-
-	function getVisibleTabs(): AuswahlChildData[] {
-		const visibleTabs: AuswahlChildData[] = [];
-		for (let i = 0; i < props.routes.length; i++)
-			if (!isHidden(i))
-				visibleTabs.push(props.routes[i]);
-		return visibleTabs;
 	}
 
 </script>
