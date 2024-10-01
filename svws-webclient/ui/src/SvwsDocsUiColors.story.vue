@@ -52,7 +52,11 @@
 								<div v-for="(interaction, interactionIndex) in semantics.interaction" :key="interactionIndex">
 									<div class="grid grid-cols-2 gap-1 items-center">
 										<template v-if="shouldExist(type, role, prominence, interaction)">
-											<div class="ui-docs-bg flex items-center gap-1">
+											<div class="ui-docs-bg flex items-center gap-1"
+												:style="{
+													backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
+													color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`
+												}">
 												<div class="p-2 w-12 h-8 rounded-lg" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
 												<div style="user-select: all;">
 													<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
@@ -61,7 +65,11 @@
 													<span>{{ interaction ? `-${interaction}` : '' }}</span>
 												</div>
 											</div>
-											<div class="ui-docs-bg dark flex items-center gap-1">
+											<div class="ui-docs-bg dark flex items-center gap-1"
+												:style="{
+													backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
+													color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`
+												}">
 												<div class="p-2 w-12 h-8 rounded-lg" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
 												<div style="user-select: all;">
 													<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
