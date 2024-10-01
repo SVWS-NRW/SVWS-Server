@@ -29,13 +29,13 @@ import { routeKatalogVermerkarten } from "./schule/vermerke/RouteKatalogVermerka
 import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
 import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
+import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
+import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
+import SApp from "~/components/SApp.vue";
 import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchuleDatenaustauschENM";
 import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
 import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
 import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
-import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
-import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
-import SApp from "~/components/SApp.vue";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -47,7 +47,6 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.text = "SVWS-Client";
 		super.children = [
 			routeBenutzerprofil,
-			routeSchule,
 			routeSchuleJahrgaenge,
 			routeSchuleFaecher,
 			routeKatalogReligionen,
@@ -67,12 +66,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeEinstellungen,
 			routeEinstellungenBenutzer,
 			routeEinstellungenBenutzergruppe,
-			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchule,
 			routeSchuleDatenaustauschKurs42,
+			routeSchuleDatenaustauschUntis,
+			routeSchuleDatenaustauschLaufbahnplanung,
 			routeSchuleDatenaustauschSchulbewerbung,
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
-			routeSchuleDatenaustauschUntis,
 		];
 		super.menu = [
 			routeSchule,

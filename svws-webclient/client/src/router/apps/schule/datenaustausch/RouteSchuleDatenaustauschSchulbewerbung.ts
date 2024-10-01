@@ -7,8 +7,10 @@ import { RouteNode } from "~/router/RouteNode";
 import type { SchuleDatenaustauschSchulbewerbungProps } from "~/components/schule/datenaustausch/schulbewerbung/SSchuleDatenaustauschSchulbewerbungProps";
 import type { RouteApp} from "../../RouteApp";
 import { routeApp } from "../../RouteApp";
+import { routeSchule } from "../RouteSchule";
 
 const SSchuleDatenaustauschSchulbewerbung = () => import("~/components/schule/datenaustausch/schulbewerbung/SSchuleDatenaustauschSchulbewerbung.vue");
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<any, RouteApp> {
 
@@ -17,6 +19,7 @@ export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<any, Rout
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbewerbung.de";
+		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	public getRoute() : RouteLocationRaw {

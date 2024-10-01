@@ -5,11 +5,12 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschWenomProps } from "~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenomProps";
-import type { RouteApp} from "../../RouteApp";
+import type { RouteApp } from "../../RouteApp";
 import { routeApp } from "../../RouteApp";
 import { routeSchule } from "../RouteSchule";
 
 const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenom.vue");
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 
@@ -18,6 +19,7 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";
+		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
