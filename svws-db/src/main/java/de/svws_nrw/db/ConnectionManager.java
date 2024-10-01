@@ -65,10 +65,13 @@ public final class ConnectionManager {
 	 */
 	DBEntityManager getConnection(final Benutzer user) throws DBException {
 		this.lock();
-		final @NotNull ConnectionFactory factory = this.get(user.getConfig());
-		final @NotNull DBEntityManager conn = factory.connect(user);
-		this.unlock();
-		return conn;
+		try {
+			final @NotNull ConnectionFactory factory = this.get(user.getConfig());
+			final @NotNull DBEntityManager conn = factory.connect(user);
+			return conn;
+		} finally {
+			this.unlock();
+		}
 	}
 
 
@@ -162,18 +165,20 @@ public final class ConnectionManager {
 	 */
 	void closeSingle(final DBConfig config) {
 		this.lock();
-		final ConnectionFactory factory = mapFactories.get(config);
-		if (factory == null) {
-			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Factory für Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
-					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
+		try {
+			final ConnectionFactory factory = mapFactories.get(config);
+			if (factory == null) {
+				Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Factory für Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
+						.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
+				return;
+			}
+			factory.close();
+			mapFactories.remove(config);
+			Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+					.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
+		} finally {
 			this.unlock();
-			return;
 		}
-		factory.close();
-		mapFactories.remove(config);
-		Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
-				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
-		this.unlock();
 	}
 
 
@@ -182,10 +187,13 @@ public final class ConnectionManager {
 	 */
 	private void closeAll() {
 		this.lock();
-		final List<DBConfig> configs = mapFactories.keySet().stream().toList();
-		for (final DBConfig config : configs)
-			closeSingle(config);
-		this.unlock();
+		try {
+			final List<DBConfig> configs = mapFactories.keySet().stream().toList();
+			for (final DBConfig config : configs)
+				closeSingle(config);
+		} finally {
+			this.unlock();
+		}
 	}
 
 
