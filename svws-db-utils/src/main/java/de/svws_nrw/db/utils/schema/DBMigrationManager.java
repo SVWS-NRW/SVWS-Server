@@ -522,7 +522,9 @@ public final class DBMigrationManager {
 			SVWSKonfiguration.get().deactivateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 			success = false;
 		} finally {
+			tgtManager.getConnection().close();
 			tgtManager = null;
+			srcManager.getConnection().close();
 			srcManager = null;
 			System.gc();
 			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
