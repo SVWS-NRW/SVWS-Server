@@ -25,7 +25,7 @@
 						<s-klassen-auswahl-sortierung-modal v-slot="{ openModal }" :setze-default-sortierung>
 							<svws-ui-tooltip position="bottom">
 								<svws-ui-button type="secondary" @click="openModal">
-									Standardsortierung anwenden ...
+									Standardsortierung anwenden&nbsp;...
 								</svws-ui-button>
 								<template #content>
 									Standardsortierung wiederherstellen

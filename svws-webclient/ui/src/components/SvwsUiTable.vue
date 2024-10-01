@@ -484,6 +484,9 @@
 	}
 
 	function scrollToClickedElement() {
+		// wenn eine Mehrfachauswahl durchgeführt wird, springe nicht zum ausgewählten Item
+		if (props.modelValue !== undefined && props.modelValue.length > 0)
+			return;
 		if ((props.scrollIntoView === undefined) || (props.scrollIntoView === false) || (clickedItemIndex.value === undefined))
 			return;
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116

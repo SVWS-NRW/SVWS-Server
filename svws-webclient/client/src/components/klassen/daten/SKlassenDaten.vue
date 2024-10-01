@@ -102,7 +102,7 @@
 			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
 			<svws-ui-table :columns="colsSchueler" :items="klassenListeManager().getSchuelerListe()">
 				<template #cell(status)="{ value } : { value: number}">
-					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr) || "" }}</span>
+					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text ?? "—" }}</span>
 				</template>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />

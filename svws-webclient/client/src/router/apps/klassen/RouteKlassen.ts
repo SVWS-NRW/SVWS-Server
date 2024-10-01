@@ -46,13 +46,13 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-			if (idNeu && idNeu !== id)
+			if ((idNeu !== null) && (idNeu !== id))
 				return routeKlassenDaten.getRoute(idNeu);
 
 			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-			if (this.isGruppenprozessRoute(to) && id !== undefined)
+			if (this.isGruppenprozessRoute(to) && (id !== undefined))
 				return routeKlasseGruppenprozesse.getRoute();
-			else if (this.isKlassenDatenNeuRoute(to) && id !== undefined)
+			else if (this.isKlassenDatenNeuRoute(to) && (id !== undefined))
 				return routeKlassenDatenNeu.getRoute();
 
 			if (this.isGruppenprozessRoute(to))
