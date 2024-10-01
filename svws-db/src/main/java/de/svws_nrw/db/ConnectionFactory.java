@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 public class ConnectionFactory {
 
 	/** Das Intervall, nachdem Factories nach einem close aufgeräumt werden, sofern sie nicht zwischenzeitlich neue Verbindungen aufgebaut haben. */
-	private static final long CONNECTION_CLEANUP_INTERVAL = 300000;  // 5 min
+	private static final long CONNECTION_CLEANUP_INTERVAL = 60000;  // 1 min
 
 	/** Ein Zufallszahlen-Generator */
 	private static final Random random = new Random();
@@ -123,8 +123,9 @@ public class ConnectionFactory {
 			final long now = System.currentTimeMillis();
 			if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
 				return;
-			// Ansonsten muss die Verbindung unterbrochen werden...
-			ConnectionManager.instance.closeSingle(config);
+			// Ansonsten muss die Verbindung unterbrochen werden, sofern dies nicht zwischenzeitlich passiert ist...
+			if (ConnectionManager.instance.hasFactory(config))
+				ConnectionManager.instance.closeSingle(config);
 		} finally {
 			ConnectionManager.instance.unlock();
 		}
@@ -145,7 +146,7 @@ public class ConnectionFactory {
 			connections.remove(conn);
 			// Wenn keine Verbindungen mehr da sind und es sich nicht um ein Schema aus der SVWS-Konfiguration handelt, dann kann die Factory geschlossen werden...
 			if (connections.isEmpty() && !config.equals(SVWSKonfiguration.get().getDBConfig(config.getDBSchema()))) {
-				if (config.getDBDriver().isFileBased()) {
+				if (config.getDBDriver().isFileBased() || (config.getDBDriver() == DBDriver.MSSQL)) {
 					// Datei-basierte Verbindungen werden sofort geschlossen.
 					ConnectionManager.instance.closeSingle(config);
 				} else {

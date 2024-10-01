@@ -76,6 +76,18 @@ public final class ConnectionManager {
 
 
 	/**
+	 * Gibt zurück, ob eine Factory für die übergebene Konfiguration existiert.
+	 *
+	 * @param config   die DB-Konfiguration
+	 *
+	 * @return true, falls eine Factory existiert und sonst false
+	 */
+	boolean hasFactory(final DBConfig config) {
+		return mapFactories.containsKey(config);
+	}
+
+
+	/**
 	 * Gibt die Connection-Factory passen für die übergebene Konfiguration zurück.
 	 * Sollt keine Factory existieren, so wird versucht eine neue zu erstellen.
 	 *
