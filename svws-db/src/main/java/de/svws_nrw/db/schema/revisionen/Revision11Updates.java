@@ -68,6 +68,8 @@ public final class Revision11Updates extends SchemaRevisionUpdateSQL {
 				}
 			}
 		}
+		if ((host != null) && (host.startsWith("\"")))
+			host = host.replace("\"", "");
 		if (Integer.MIN_VALUE == conn.transactionNativeUpdateAndFlush(
 				"INSERT INTO EigeneSchule_Email(ID, SMTPServer, SMTPPort, SMTPStartTLS, SMTPUseTLS, SMTPTrustTLSHost) VALUES (%d, '%s', %d, %d, %d, %s)"
 						.formatted(
