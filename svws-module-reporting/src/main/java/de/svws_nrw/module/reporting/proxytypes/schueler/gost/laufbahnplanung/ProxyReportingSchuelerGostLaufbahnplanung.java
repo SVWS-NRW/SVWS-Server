@@ -25,6 +25,7 @@ import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
@@ -47,7 +48,6 @@ import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLauf
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 
 /**
  * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung und erweitert die Klasse {@link ReportingSchuelerGostLaufbahnplanung}.
@@ -74,6 +74,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 		this.reportingRepository = reportingRepository;
 		this.auswahlSchuljahr = this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr();
+		final int auswahlSchuljahrAbschnitt = this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
 		// Initialisierung.
@@ -124,31 +125,24 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// ##### Grunddaten und Summen setzen ###############
+		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
+		super.emailText = gostJahrgangsdaten.textMailversand;
+
+		// Halbjahre gemäß Abiturjahrgang und Schuljahresabschnitte setzen.
+		eintragBeratungGostHalbjahreErzeugen();
+
+		// Aktuelle Prüfungsordnung und Klasse ergänzen, wenn Lernabschnitt vorhanden.
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
 			super.pruefungsordnung = reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung();
 			if (!super.pruefungsordnung().toLowerCase().contains("gost"))
 				super.pruefungsordnung = "APO-GOSt";
+			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
 		} else {
 			super.pruefungsordnung = "APO-GOSt";
-		}
-		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
-		super.emailText = gostJahrgangsdaten.textMailversand;
-
-		if (reportingSchueler.aktuellerLernabschnitt() != null) {
-			super.aktuellesGOStHalbjahr = reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt();
-			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
-			eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
+			super.aktuelleKlasse = "";
 		}
 
-		if (reportingSchueler.auswahlLernabschnitt() != null) {
-			super.auswahlGOStHalbjahr = reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
-			super.auswahlKlasse = reportingSchueler.auswahlLernabschnitt().klasse().kuerzel();
-			eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
-		}
-
-		eintragBeratungslehrkraefteErgaenzen(schuelerBeratungsdaten, gostJahrgangsdaten);
+		eintragBeratungslehrkraefteErzeugen(schuelerBeratungsdaten, gostJahrgangsdaten);
 		super.letzterRuecklaufDatum = schuelerBeratungsdaten.ruecklaufdatum;
 		super.letzteBeratungDatum = schuelerBeratungsdaten.beratungsdatum;
 		super.kommentar = schuelerBeratungsdaten.kommentar;
@@ -211,48 +205,43 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 
 	/**
-	 * Setzt das Beratungshalbjahr für den Schüler zum aktuellen Schuljahresabschnitt des Schülers
-	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
+	 * Setzt die Beratungshalbjahre für den Schüler gemäß der ausgewählten Schuljahresabschnitte und des Abiturjahrgangs.
 	 */
-	private void eintragBeratungAktuellesGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
-		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
-		switch (folgeHalbjahr) {
-			case 2 -> super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-			case 1 -> {
-				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
-				else
-					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
+	private void eintragBeratungGostHalbjahreErzeugen() {
+		final GostHalbjahr aktuellesGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
+				this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr(), this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt());
+		final GostHalbjahr auswahlGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
+				this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr(), this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt());
 
-			}
-			default -> super.folgeAktuellesGOStHalbjahr = "";
+		if (aktuellesGostHalbjahrAbiturjahrgang != null) {
+			super.aktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.kuerzel;
+			if (aktuellesGostHalbjahrAbiturjahrgang.next() != null)
+				super.folgeAktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.next().kuerzel;
+			else
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+		} else {
+			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
+			super.aktuellesGOStHalbjahr = "";
+			if (this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			else
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
 		}
-		// Frühestes Beratungshalbjahr kann die EF.1 sein.
-		if (super.folgeAktuellesGOStHalbjahr().compareTo("EF.1") < 0)
-			super.folgeAktuellesGOStHalbjahr = "EF.1";
-	}
 
-
-	/**
-	 * Setzt das Beratungshalbjahr für den Schüler zum ausgewählten Schuljahresabschnitt des Schülers
-	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
-	 */
-	private void eintragBeratungAuswahlGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
-		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
-		switch (folgeHalbjahr) {
-			case 2 -> super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-			case 1 -> {
-				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
-				else
-					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-
-			}
-			default -> super.folgeAuswahlGOStHalbjahr = "";
+		if (auswahlGostHalbjahrAbiturjahrgang != null) {
+			super.auswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.kuerzel;
+			if (auswahlGostHalbjahrAbiturjahrgang.next() != null)
+				super.folgeAuswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.next().kuerzel;
+			else
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+		} else {
+			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
+			super.auswahlGOStHalbjahr = "";
+			if (this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			else
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
 		}
-		// Frühestes Beratungshalbjahr kann die EF.1 sein.
-		if (super.folgeAuswahlGOStHalbjahr().compareTo("EF.1") < 0)
-			super.folgeAuswahlGOStHalbjahr = "EF.1";
 	}
 
 
@@ -261,7 +250,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param gostBeratungsdaten	Oberstufenschüler, dessen Beratungslehrkräfte ermitteln werden sollen.
 	 * @param gostJahrgangsdaten	Die Daten des GOSt-Jahrgangs.
 	 */
-	private void eintragBeratungslehrkraefteErgaenzen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
+	private void eintragBeratungslehrkraefteErzeugen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
 			super.letzteBeratungLehrkraft = new ProxyReportingLehrer(
