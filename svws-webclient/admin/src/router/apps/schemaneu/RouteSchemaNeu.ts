@@ -44,6 +44,7 @@ export class RouteSchemaNeu extends RouteNode<unknown, RouteApp> {
 			importSchema: routeSchema.data.importSchema,
 			migrateSchema: routeSchema.data.migrateSchema,
 			duplicateSchema: routeSchema.data.duplicateSchema,
+			schema: routeSchema.data.auswahl?.name,
 		};
 	}
 

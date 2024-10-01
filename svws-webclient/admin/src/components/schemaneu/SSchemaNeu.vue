@@ -22,7 +22,7 @@
 						<!-- In Neues Schema migrieren -->
 						<s-schema-neu-migrate :migrate-schema :migration-quellinformationen :logs-function :loading-function :status-function :validator-username :is-active="currentAction === 'migrate'" @click="clickMigrate" />
 						<!-- Das ausgewählte Schema in ein neues Schema duplizieren -->
-						<s-schema-neu-duplicate :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" :validator-username @click="clickDuplicate" />
+						<s-schema-neu-duplicate v-if="schema !== undefined" :duplicate-schema :logs-function :loading-function :status-function :is-active="currentAction === 'duplicate'" :validator-username @click="clickDuplicate" :schema />
 					</svws-ui-content-card>
 				</div>
 				<div class="col-span-full">

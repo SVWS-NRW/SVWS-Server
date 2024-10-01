@@ -57,7 +57,6 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// Aufräumen der Quelldaten für Migrationen aus RouteData, damit diese beim Abmelden nicht erhalten bleiben!
 		this.data.resetMigrationQuellinformationen();
-		await this.data.setSchema(undefined);
 	}
 
 	public getRoute(schema?: string) : RouteLocationRaw {
