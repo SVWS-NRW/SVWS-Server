@@ -28,6 +28,31 @@
 				<svws-ui-textarea-input placeholder="Signatur"	:model-value="benutzerEMailDaten().signatur" @change="signatur => patchBenutzerEMailDaten({ signatur: signatur ?? '' })" resizeable="vertical" autoresize />
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
+		<svws-ui-content-card title="Ansicht">
+			<div class="flex flex-col gap-5">
+				<div class="flex flex-col gap-2 text-left">
+					<span class="font-bold">Skalierung</span>
+					<svws-ui-radio-group :row="true">
+						<svws-ui-radio-option value="small" v-model="fontSize" name="fontSize" label="Kleiner" @click="updateFontSize('small')" />
+						<svws-ui-radio-option value="default" v-model="fontSize" name="fontSize" label="Normal" @click="updateFontSize('default')" />
+						<svws-ui-radio-option value="large" v-model="fontSize" name="fontSize" label="Größer" @click="updateFontSize('large')" />
+					</svws-ui-radio-group>
+				</div>
+				<div class="flex flex-col gap-2 text-left">
+					<span class="font-bold">Theme</span>
+					<svws-ui-radio-group :row="true">
+						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light" @click="updateTheme('light')" />
+						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)" @click="updateTheme('dark')" />
+					</svws-ui-radio-group>
+					<div v-if="themeRef === 'dark'" class="mt-2 text-white/50">
+						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
+						vollständig umgesetzt.
+						<span
+							class="font-bold text-white">Es kann an einigen Stellen zu Darstellungsproblemen führen.</span>
+					</div>
+				</div>
+			</div>
+		</svws-ui-content-card>
 	</div>
 </template>
 
@@ -73,5 +98,30 @@
 			_smtpPassword.value = "";
 		}
 	}
+
+	const themeRef = ref<string>('light');
+	const fontSize = ref<string>('default');
+	const updateFontSize = (size: string | null) => {
+		if (size === null)
+			return;
+		document.documentElement.classList.remove('font-size-small', 'font-size-large');
+		if (size !== 'default')
+			document.documentElement.classList.add(`font-size-${size}`);
+		localStorage.setItem('fontSize', size);
+		fontSize.value = size;
+	};
+
+	const updateTheme = (theme: string | null) => {
+		if (theme === null)
+			return;
+		document.documentElement.classList.remove('light', 'dark');
+		if (theme !== 'auto')
+			document.documentElement.classList.add(theme);
+		localStorage.setItem('theme', theme);
+		themeRef.value = theme;
+	};
+
+	updateTheme(localStorage.getItem('theme'));
+	updateFontSize(localStorage.getItem('fontSize'));
 
 </script>
