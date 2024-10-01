@@ -80,8 +80,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.abiturjahr;
 	}
 
-	public setAbiturjahr = async (abiturjahr: number | undefined) => {
-		if (abiturjahr === this._state.value.abiturjahr)
+	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) => {
+		if ((abiturjahr === this._state.value.abiturjahr) && (!force))
 			return;
 		if (abiturjahr === undefined) {
 			this.setDefaultState();
