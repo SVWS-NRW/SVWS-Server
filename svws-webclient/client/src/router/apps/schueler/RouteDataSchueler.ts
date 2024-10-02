@@ -10,7 +10,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { type RouteNode } from "~/router/RouteNode";
-import { useManualRefHistory } from "@vueuse/core";
 
 
 interface RouteStateSchueler extends RouteStateInterface {
@@ -47,6 +46,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+			// Problem: Filter müsste entsprechend der Schuljahresauswahl angepasst werden, sonst wird der Schüler nicht geufunden.
 			// if (this._state.value.schuelerListeManager !== undefined)
 			// 	manager.useFilter(this._state.value.schuelerListeManager);
 		}
