@@ -18,6 +18,7 @@
 				:statistics
 				:headless
 				:disabled
+				:required
 				:debounce-ms="0"
 				role="combobox"
 				:aria-label="label || title"
