@@ -64,7 +64,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			if (isEntering)
+			if (isEntering || (this.data.idSchuljahresabschnitt !== routeApp.data.aktAbschnitt.value.id))
 				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
 			let cur: RouteNode<any, any> = to;
 			while (cur.parent !== this)
@@ -79,7 +79,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			if (this.name !== to.name)
 				return;
 			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-			if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
+			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false)
 				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 		} catch (e) {
 			return routeError.getRoute(e as DeveloperNotificationException);
@@ -93,9 +93,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: (abiturjahr || -1).toString() }))
+		if (redirect.hidden({ abiturjahr: (abiturjahr ?? -1).toString() }) !== false)
 			redirect = this.defaultChild!;
-		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: (abiturjahr || -1) }};
+		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: (abiturjahr ?? -1) }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
@@ -150,7 +150,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr || -1 } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr ?? -1 } });
 		this.data.setView(node, this.children);
 	}
 

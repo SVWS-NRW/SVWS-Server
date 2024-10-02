@@ -67,13 +67,12 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		for (const j of mapAbiturjahrgaenge.values())
 			jahrgaengeMitAbiturjahrgang.add(j.jahrgang);
 		const map = new Map<number, JahrgangsDaten>();
-		for (const j of mapJahrgaenge.values()) {
+		for (const j of mapJahrgaenge.values())
 			if (!jahrgaengeMitAbiturjahrgang.has(j.kuerzel)) {
 				const abiturjahr = this.getAbiturjahrFuerJahrgangMitMap(j.id, mapJahrgaenge);
 				if (abiturjahr !== null)
 					map.set(j.id, j);
 			}
-		}
 		return map;
 	}
 
@@ -112,8 +111,9 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		const auswahl = this.firstAbiturjahrgang(mapAbiturjahrgaenge);
 		const mapJahrgaenge = await this.ladeJahrgaenge(idSchuljahresabschnitt);
 		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);
-		const jahrgangsdaten = await this.ladeJahrgangsdaten(undefined);
-		const faecherManager = await this.ladeFaecherManager(undefined);
+		const abiturjahrgang = this.auswahl;
+		const jahrgangsdaten = await this.ladeJahrgangsdaten(abiturjahrgang);
+		const faecherManager = await this.ladeFaecherManager(abiturjahrgang);
 		return <Partial<RouteStateGost>>{
 			idSchuljahresabschnitt,
 			auswahl,
@@ -132,7 +132,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number) {
-		this.setPatchedDefaultState(await this.ladeDatenFuerSchuljahresabschnitt(idSchuljahresabschnitt));
+		const daten = await this.ladeDatenFuerSchuljahresabschnitt(idSchuljahresabschnitt);
+		this.setPatchedDefaultState(daten);
 	}
 
 	get jahrgangsdaten(): GostJahrgangsdaten {
@@ -204,18 +205,14 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	private async ladeDatenFuerAbiturjahrgang(jahrgang: GostJahrgang | undefined, curState : Partial<RouteDataGost>, isEntering: boolean) : Promise<Partial<RouteDataGost>> {
 		if (jahrgang && (jahrgang.abiturjahr === curState.auswahl?.abiturjahr) && (curState.jahrgangsdaten !== undefined) && !isEntering)
 			return curState;
-		if ((jahrgang === undefined) || (this.mapJahrgaenge.size === 0)) {
-			return Object.assign({ ... this._defaultState }, {
-				idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt,
-			});
-		}
+		if ((jahrgang === undefined) || (this.mapJahrgaenge.size === 0))
+			return Object.assign({ ... this._defaultState }, { idSchuljahresabschnitt: this._state.value.idSchuljahresabschnitt });
 		let auswahl : GostJahrgang | undefined = jahrgang;
-		if (curState.mapAbiturjahrgaenge?.get(jahrgang.abiturjahr) === undefined) {
+		if (curState.mapAbiturjahrgaenge?.get(jahrgang.abiturjahr) === undefined)
 			if (curState.mapAbiturjahrgaenge?.size === 0)
 				auswahl = undefined;
 			else
-				auswahl = curState.mapAbiturjahrgaenge?.values().next().value;
-		}
+				[auswahl] = curState.mapAbiturjahrgaenge !== undefined ? curState.mapAbiturjahrgaenge.values() : [undefined];
 		const jahrgangsdaten = await this.ladeJahrgangsdaten(auswahl);
 		const faecherManager = await this.ladeFaecherManager(auswahl);
 		return Object.assign({ ... curState }, {
@@ -232,11 +229,10 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 	}
 
 	gotoAbiturjahrgang = async (value: GostJahrgang | undefined) => {
-		if (value === undefined) {
+		if (value === undefined)
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
 			// await RouteManager.doRoute({ name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
-		}
 		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostBeratung.name : routeGost.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: value.abiturjahr } });
 	}
