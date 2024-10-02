@@ -2787,6 +2787,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgaengeFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgaenge/{idAbschnitt : \d+}
+	 *
+	 * Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Abiturjahrgänge.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostJahrgang>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Abiturjahrgänge auszulesen.
+	 *   Code 404: Kein Abiturjahrgang gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idAbschnitt - der Pfad-Parameter idAbschnitt
+	 *
+	 * @returns Die Liste der Abiturjahrgänge.
+	 */
+	public async getGostAbiturjahrgaengeFuerAbschnitt(schema : string, idAbschnitt : number) : Promise<List<GostJahrgang>> {
+		const path = "/db/{schema}/gost/abiturjahrgaenge/{idAbschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idAbschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idAbschnitt.toString());
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostJahrgang>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgang.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getGostAbiturjahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgang/{abiturjahr : -?\d+}
 	 *
 	 * Liest die Grunddaten des Jahrgangs der gymnasialen Oberstufe zu dem Jahr, in welchem der Jahrgang Abitur machen wird, aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen der Jahrgangsinformationen besitzt.

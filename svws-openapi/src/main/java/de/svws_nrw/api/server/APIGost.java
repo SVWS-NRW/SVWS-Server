@@ -97,7 +97,36 @@ public class APIGost {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Abiturjahrgänge auszulesen.")
 	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
 	public Response getGostAbiturjahrgaenge(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn).getAll(),
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt().id).getAll(),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.KEINE);
+	}
+
+
+	/**
+	 * Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.
+	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen
+	 * besitzt.
+	 *
+	 * @param schema        das Schema aus dem die Leistungsdaten des Schülers kommen sollen
+	 * @param idAbschnitt   die ID des Schuljahresabschnittes, für welchen die Abiturjahrgänge bestimmt werden
+	 *
+	 * @param request  die Informationen zur HTTP-Anfrage
+	 *
+	 * @return eine Liste der Abiturjahrgänge
+	 */
+	@GET
+	@Path("/abiturjahrgaenge/{idAbschnitt : \\d+}")
+	@Operation(summary = "Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.",
+			description = "Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind."
+					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen besitzt.")
+	@ApiResponse(responseCode = "200", description = "Die Liste der Abiturjahrgänge.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GostJahrgang.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um die Liste der Abiturjahrgänge auszulesen.")
+	@ApiResponse(responseCode = "404", description = "Kein Abiturjahrgang gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden")
+	public Response getGostAbiturjahrgaengeFuerAbschnitt(@PathParam("schema") final String schema, @PathParam("idAbschnitt") final long idAbschnitt,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn, idAbschnitt).getAll(),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.KEINE);
 	}
@@ -125,7 +154,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response createGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("jahrgangid") final long jahrgangID,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn).create(jahrgangID),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt().id).create(jahrgangID),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN);
@@ -155,7 +185,8 @@ public class APIGost {
 	@ApiResponse(responseCode = "404", description = "Der Abiturjahrgang wurde nicht gefunden.")
 	public Response deleteGostAbiturjahrgang(@PathParam("schema") final String schema, @PathParam("abiturjahr") final int abiturjahr,
 			@Context final HttpServletRequest request) {
-		return DBBenutzerUtils.runWithTransaction(conn -> new DataGostJahrgangsliste(conn).delete(abiturjahr),
+		return DBBenutzerUtils.runWithTransaction(
+				conn -> new DataGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt().id).delete(abiturjahr),
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 				BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN);

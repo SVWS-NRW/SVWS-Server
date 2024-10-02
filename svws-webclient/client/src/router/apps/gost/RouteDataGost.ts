@@ -54,8 +54,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return mapAbiturjahrgaenge.values().next().value;
 	}
 
-	private async ladeAbiturjahrgaenge(): Promise<Map<number, GostJahrgang>> {
-		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema);
+	private async ladeAbiturjahrgaenge(idSchuljahresabschnitt: number): Promise<Map<number, GostJahrgang>> {
+		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaengeFuerAbschnitt(api.schema, idSchuljahresabschnitt);
 		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
 		for (const l of listAbiturjahrgaenge)
 			mapAbiturjahrgaenge.set(l.abiturjahr, l);
@@ -108,7 +108,7 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 
 	private async ladeDatenFuerSchuljahresabschnitt(idSchuljahresabschnitt: number) : Promise<Partial<RouteStateGost>> {
 		// TODO Lade die Lehrerliste in Abhängigkeit von dem angegebenen Schuljahresabschnitt, sobald die API-Methode dafür existiert
-		const mapAbiturjahrgaenge = await this.ladeAbiturjahrgaenge();
+		const mapAbiturjahrgaenge = await this.ladeAbiturjahrgaenge(idSchuljahresabschnitt);
 		const auswahl = this.firstAbiturjahrgang(mapAbiturjahrgaenge);
 		const mapJahrgaenge = await this.ladeJahrgaenge(idSchuljahresabschnitt);
 		const mapJahrgaengeOhneAbiJahrgang = this.ladeJahrgaengeOhneAbiJahrgang(mapAbiturjahrgaenge, mapJahrgaenge);

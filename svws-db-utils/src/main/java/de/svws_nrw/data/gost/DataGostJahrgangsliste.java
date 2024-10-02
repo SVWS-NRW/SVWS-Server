@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -47,34 +48,35 @@ import jakarta.ws.rs.core.Response.Status;
  */
 public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
+	/** Die ID des Schuljahresabschnitts, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen */
+	private final long idSchuljahresabschnitt;
+
 	/**
 	 * Erstellt einen neuen {@link DataManager} für den Core-DTO
 	 * {@link GostJahrgang}.
 	 *
-	 * @param conn die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param conn                     die Datenbank-Verbindung für den Datenbankzugriff
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnittes, auf den sich die Jahrgangsinformationen bei den Abiturjahrgängen beziehen
 	 */
-	public DataGostJahrgangsliste(final DBEntityManager conn) {
+	public DataGostJahrgangsliste(final DBEntityManager conn, final long idSchuljahresabschnitt) {
 		super(conn);
+		this.idSchuljahresabschnitt = idSchuljahresabschnitt;
 	}
 
 
 	/**
 	 * Bestimmt die Liste der Abiturjahrgänge
 	 *
-	 * @param conn   die Datenbankverbindung
+	 * @param conn        die Datenbankverbindung
+	 * @param abschnitt   der Schuljahresabschnitt auf den sich die Anfrage (und die damit die Jahrgänge) bezieht
 	 *
 	 * @return die Liste der Abiturjahrgänge
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn) throws ApiOperationException {
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-
-		// Bestimme den aktuellen Schuljahresabschnitt der Schule
-		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (aktuellerAbschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Aktueller Schuljahresabschnitt konnte nicht bestimmt werden.");
+	public static List<GostJahrgang> getGostJahrgangsliste(final DBEntityManager conn, final Schuljahresabschnitt abschnitt) throws ApiOperationException {
+		if (!conn.getUser().schuleHatGymOb())
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
 
 		// Bestimme die Jahrgaenge der Schule
 		final List<DTOJahrgang> dtosJahrgaenge = conn.queryAll(DTOJahrgang.class);
@@ -91,8 +93,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 					continue;
 				final GostJahrgang eintrag = new GostJahrgang();
 				eintrag.abiturjahr = jahrgangsdaten.Abi_Jahrgang;
-				final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
+				final int restjahre = jahrgangsdaten.Abi_Jahrgang - abschnitt.schuljahr;
 				for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
+					final Schulform schulform = conn.getUser().schuleGetSchulform();
 					Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel),
 							jahrgang.ASDJahrgang);
 					if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
@@ -122,7 +125,7 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<GostJahrgang> daten = getGostJahrgangsliste(conn);
+		final List<GostJahrgang> daten = getGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(idSchuljahresabschnitt));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -77,7 +77,7 @@ public final class DataGostKlausuren {
 		// Pair<Abiturjahr, GostHalbjahr (-1 für alle Halbjahre)>
 		final List<Pair<Integer, Integer>> jgs = new ArrayList<>();
 		if (selection == null) {
-			for (final GostJahrgang jg : DataGostJahrgangsliste.getGostJahrgangsliste(conn))
+			for (final GostJahrgang jg : DataGostJahrgangsliste.getGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt()))
 				jgs.add(new Pair<>(jg.abiturjahr, -1));
 		} else
 			jgs.addAll(selection);

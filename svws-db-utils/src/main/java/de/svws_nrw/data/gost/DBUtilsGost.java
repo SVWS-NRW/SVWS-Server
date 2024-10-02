@@ -66,12 +66,8 @@ public final class DBUtilsGost {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-		if ((schulform == null) || (schulform.daten(schuljahresabschnitt.Jahr) == null) || (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb))
-			throw new ApiOperationException(Status.NOT_FOUND);
+		if (!conn.getUser().schuleHatGymOb())
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schule hat eine Schulform ohne gymnasiale Oberstufe.");
 		return schule;
 	}
 

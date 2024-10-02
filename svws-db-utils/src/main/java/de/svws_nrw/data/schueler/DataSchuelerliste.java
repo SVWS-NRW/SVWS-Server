@@ -25,17 +25,14 @@ import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKursliste;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -339,17 +336,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
-		// Bestimme die Schulform
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if ((schule == null) || (schule.SchulformKuerzel == null))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schulform der Schule konnte nicht ermittelt werden.");
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
-		if (schulform == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schulform der Schule konnte nicht ermittelt werden.");
-
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
-		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
-		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
 					.formatted(idSchuljahresabschnitt));
 
@@ -363,8 +352,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
-		if (schulform.daten(mapSchuljahresabschnitte.get(idSchuljahresabschnitt).Jahr).hatGymOb)
-			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn));
+		if (conn.getUser().schuleHatGymOb())
+			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn, schuljahresabschnitt));
 
 		// ermittle ggf. weitere Klassen
 		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());

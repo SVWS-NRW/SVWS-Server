@@ -95,7 +95,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	}
 
 	public async ladeAbiturjahrgaenge() {
-		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema);
+		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaengeFuerAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
 		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
 		for (const l of listAbiturjahrgaenge)
 			mapAbiturjahrgaenge.set(l.abiturjahr, l);
