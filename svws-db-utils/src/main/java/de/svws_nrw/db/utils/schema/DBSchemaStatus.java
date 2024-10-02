@@ -47,10 +47,8 @@ public final class DBSchemaStatus {
 	 *
 	 * @param conn         die Datenbank-Verbindung für den Zugriff auf die Tabellen
 	 * @param schemaName   der Name des Schemas, dessen Status abgefragt werden soll
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private DBSchemaStatus(final DBEntityManager conn, final String schemaName) throws DBException {
+	private DBSchemaStatus(final DBEntityManager conn, final String schemaName) {
 		this.conn = conn;
 		this.schemaName = schemaName;
 		update();
@@ -120,10 +118,8 @@ public final class DBSchemaStatus {
 
 	/**
 	 * Aktualisiert den Schema-Status
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public void update() throws DBException {
+	public void update() {
 		this.update(conn);
 	}
 
@@ -178,6 +174,10 @@ public final class DBSchemaStatus {
 	}
 
 
+	/** Die Menge der Spalten, welche bei der Abfrage von Informationen zur Schule benötigt wird. */
+	private final List<String> colsEigeneSchule =
+			List.of("ID", "SchulNr", "SchulformKrz", "Bezeichnung1", "Bezeichnung2", "Bezeichnung3", "Strassenname", "HausNr", "HausNrZusatz", "PLZ", "Ort");
+
 	/**
 	 * Liest die Informationen zu der Schule des Schemas ein.
 	 *
@@ -188,7 +188,8 @@ public final class DBSchemaStatus {
 	private SchuleInfo leseSchuleInfo(final DBEntityManager conn) {
 		if ((conn.getDBDriver() != DBDriver.MARIA_DB) && (conn.getDBDriver() != DBDriver.MYSQL))
 			return null;
-		if (!hasTable("EigeneSchule"))
+		final List<String> existingCols = filterColumns("EigeneSchule", colsEigeneSchule);
+		if (existingCols.size() != colsEigeneSchule.size())
 			return null;
 		try {
 			final List<Object[]> results = conn.query(
@@ -279,10 +280,8 @@ public final class DBSchemaStatus {
 	 * @param colname    der zu prüfende Spaltenname
 	 *
 	 * @return true, falls die Spalte bei der Tabelle vorhanden ist und ansonsten false
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean hasColumn(final String tabname, final String colname) throws DBException {
+	public boolean hasColumn(final String tabname, final String colname) {
 		if (!hasTable(tabname))
 			return false;
 		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
@@ -300,10 +299,8 @@ public final class DBSchemaStatus {
 	 * @param cols      eine Liste mit Spaltennamen, die gefiltert werden soll
 	 *
 	 * @return die gefilterte Liste von Spaltennamen
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public List<String> filterColumns(final String tabname, final List<String> cols) throws DBException {
+	public List<String> filterColumns(final String tabname, final List<String> cols) {
 		if (!hasTable(tabname))
 			return new ArrayList<>();
 		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
