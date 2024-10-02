@@ -33,7 +33,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionSQLite = '3.46.0.0';
 		def versionUCanAccess = '5.1.1';
 		def versionJackcess = '4.0.6';
-		def versionMySQL = '8.4.0';
+		def versionMySQL = '9.0.0';
 		def versionMSSQL = '12.6.0.jre11';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
