@@ -15,7 +15,6 @@
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"components.d.ts",
-		"../core/src/**/*.ts",
 	],
 	"exclude": [
 		"tailwind.config.js",
