@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
+		<div v-if="auswahlGruppe.length > 0" class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Schemata löschen." icon="i-ri-delete-bin-line"
 				:action-function="removeSchemata" action-label="Löschen" :is-loading="apiStatus.pending" :is-active="currentAction === 'delete'"
 				:action-disabled="!checkDeletable[0]" @click="toggleDelete">
@@ -15,6 +15,7 @@
 				</template>
 			</svws-ui-action-button>
 		</div>
+		<div v-else class="flex"><svws-ui-spinner spinning /><span>&nbsp;Laden des zuletzt ausgewählten Schemas …</span></div>
 	</div>
 </template>
 
