@@ -10,6 +10,7 @@ import { RouteManager } from "~/router/RouteManager";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import { type RouteNode } from "~/router/RouteNode";
+import { useManualRefHistory } from "@vueuse/core";
 
 
 interface RouteStateSchueler extends RouteStateInterface {
@@ -46,15 +47,16 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-			if (this._state.value.schuelerListeManager !== undefined)
-				manager.useFilter(this._state.value.schuelerListeManager);
+			// if (this._state.value.schuelerListeManager !== undefined)
+			// 	manager.useFilter(this._state.value.schuelerListeManager);
 		}
 
 		if (manager === undefined)
 			throw new DeveloperNotificationException("Der Schüler-Liste-Manager ist nicht gültig initialisiert. Dies sollte an dieser Stelle nicht mehr der Fall sein.");
 
-		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist
-		const schuelerAuswahl = await this.getSchuelerAuswahl(idSchueler, manager, isEntering);
+		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist und dieser im neuen Manager vorhanden ist
+		const newIdSchueler = ((idSchueler === undefined) || (!manager.liste.has(idSchueler))) ? undefined : idSchueler;
+		const schuelerAuswahl = await this.getSchuelerAuswahl(newIdSchueler, manager, isEntering);
 		const schuelerStammdaten = await this.loadSchuelerStammdaten(schuelerAuswahl);
 		manager.setDaten(schuelerStammdaten);
 		manager.filterInvalidateCache();
