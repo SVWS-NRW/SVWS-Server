@@ -28,9 +28,7 @@
 										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
 										<div class="flex gap-2">
-											<svws-ui-button type="transparent" disabled>
-												Hilfe
-											</svws-ui-button>
+											<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
 											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 												Anmelden
 												<svws-ui-spinner v-if="authenticating" spinning />
