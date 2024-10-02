@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-page" :class="{'svws-single-tab': props.tabs.length === 1}">
+	<div class="svws-ui-page" :class="{ 'svws-single-tab': tabManager().tabs.length === 1 }">
 		<div class="svws-ui-tabs">
 			<div class="svws-ui-tabs--wrapper">
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
@@ -8,8 +8,8 @@
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
-					<template v-for="(route, index) in props.tabs" :key="index">
-						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="props.tab" @select="setTab(route)" />
+					<template v-for="(tab, index) in props.tabManager().tabs" :key="index">
+						<svws-ui-tab-bar-button v-if="!(tab.hide === true)" :tab :selected="tabManager().tab" @select="tabManager().setTab(tab)" />
 					</template>
 				</div>
 				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
@@ -28,14 +28,11 @@
 
 <script lang="ts" setup>
 
-	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { TabData } from './TabData';
+	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import type { TabManager } from './TabManager';
 
 	const props = defineProps<{
-		tabs: TabData[];
-		hidden?: boolean[] | undefined;
-		tab: TabData;
-		setTab: (tab: TabData) => Promise<void>;
+		tabManager: () => TabManager;
 	}>();
 
 	type ComponentData = {
@@ -48,28 +45,6 @@
 
 	let processingKeyboardEvent = false;
 	const tabsListElement = ref();
-
-	function isHidden(index: number) {
-		if (props.hidden?.[index] === undefined)
-			return false;
-		return props.hidden[index];
-	}
-
-	const visibleTabs = computed<TabData[]> (() => {
-		const visibleTabs: TabData[] = [];
-		for (let i = 0; i < props.tabs.length; i++)
-			if (!isHidden(i))
-				visibleTabs.push(props.tabs[i]);
-		return visibleTabs;
-	});
-
-	const selectedIndex = computed<number>(() => {
-		const tabs = visibleTabs.value;
-		for (let i = 0; i < tabs.length; i++)
-			if (tabs[i].name === props.tab.name)
-				return i;
-		return -1;
-	});
 
 	const state = ref<ComponentData>({
 		scrolled: false,
@@ -120,9 +95,8 @@
 		if (event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
 			processingKeyboardEvent = true;
 			const backwards = (event.key === "ArrowLeft");
-			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
-				: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
-			void props.setTab(visibleTabs.value[targetIndex]);
+			const newTab = backwards ? props.tabManager().prevTab : props.tabManager().nextTab;
+			void props.tabManager().setTab(newTab);
 			processingKeyboardEvent = false;
 		}
 	}
@@ -134,7 +108,7 @@
 
 	.svws-ui-page {
 		@apply flex flex-col items-start overflow-hidden h-full;
-		&.svws-single-route {
+		&.svws-single-tab {
 			.svws-ui-tabs--list {
 				@apply invisible
 			}

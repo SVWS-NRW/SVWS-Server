@@ -1,16 +1,16 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
-import { useRoute } from "vue-router";
 
 import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
+import type { TabData} from "@ui";
+import { TabManager } from "@ui";
+
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
 import type { RouteData } from "./RouteData";
-
-type ValueOf<T> = T extends any[] ? T[number] : T[keyof T]
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -262,8 +262,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns ein Array mit der
 	 */
 	public children_hidden() : ComputedRef<boolean[]> {
-		const route = useRoute();
-		return computed(() => this.children.map(c => c.hidden(route.params) !== false));
+		return computed(() => this.children.map(c => c.hidden(routerManager.getRouteParams()) !== false));
 	}
 
 	/**
@@ -300,6 +299,29 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public get defaultChild() : RouteNode<any, any> | undefined {
 		return this._defaultChild;
+	}
+
+	/**
+	 * Erstellt anhand der Children einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param tabname   der Name des ausgewählten Tabs
+	 * @param setTab    die Callback-Methode
+	 */
+	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>) {
+		const tabs: TabData[] = [];
+		let tab = null;
+		for (const c of this.children) {
+			if (c.hatEineKompetenz() && c.hatSchulform()) {
+				const newTab = <TabData>{ name: c.name, text: c.text };
+				tabs.push(newTab);
+				if (c.name === tabname)
+					tab = newTab;
+			}
+		}
+		if (tab === null)
+			tab = tabs[0];
+		return new TabManager(tabs, tab, setTab, this.children_hidden().value);
 	}
 
 	/**
@@ -357,7 +379,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public isSelected(name: RouteRecordName | null | undefined): boolean {
 		const node = RouteNode.getNodeByName(this.name);
-		if (node === undefined || !name)
+		if ((node === undefined) || (name === null) || (name === ""))
 			return false;
 		if (node.name === name)
 			return true;
@@ -634,7 +656,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			const value = params[name];
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
-			else if (!value || value.toString().trim().length === 0)
+			else if ((value === undefined) || (value.toString().trim().length === 0))
 				res[name] = undefined;
 			else res[name] = parseInt(value);
 		}
@@ -656,7 +678,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			const value = params[name];
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
-			else if (!value || value.toString().trim().length === 0)
+			else if ((value === undefined) || (value.toString().trim().length === 0))
 				res[name] = undefined;
 			else res[name] = value.toString();
 		}
