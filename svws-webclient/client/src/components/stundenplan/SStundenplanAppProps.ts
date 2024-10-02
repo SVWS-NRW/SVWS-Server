@@ -1,10 +1,10 @@
 import type { StundenplanListeEintrag } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
+import type { TabData } from "@ui";
 
 export interface StundenplanAppProps {
 	auswahl: StundenplanListeEintrag | undefined;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
+	setTab: (value: TabData) => Promise<void>;
+	tab: TabData;
+	tabs: TabData[];
 	tabsHidden: boolean[];
 }

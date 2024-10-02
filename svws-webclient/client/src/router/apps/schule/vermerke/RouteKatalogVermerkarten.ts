@@ -9,7 +9,7 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKatalogVermerkartenDaten } from "~/router/apps/schule/vermerke/RouteKatalogVermerkartenDaten";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { VermerkeAppProps } from "~/components/schule/kataloge/vermerke/SVermerkeAppProps";
 import type { VermerkeAuswahlProps } from "~/components/schule/kataloge/vermerke/SVermerkeAuswahlProps";
 import { RouteDataKatalogVermerke } from "./RouteDataKatalogVermerke";
@@ -82,19 +82,19 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

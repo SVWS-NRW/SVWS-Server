@@ -10,7 +10,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleFachDaten } from "~/router/apps/schule/faecher/RouteSchuleFachDaten";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { FaecherAppProps } from "~/components/schule/faecher/SFaecherAppProps";
 import type { FaecherAuswahlProps } from "~/components/schule/faecher/SFaecherAuswahlProps";
 import { RouteDataSchuleFaecher } from "./RouteDataSchuleFaecher";
@@ -111,19 +111,19 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

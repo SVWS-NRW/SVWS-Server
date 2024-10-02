@@ -165,10 +165,9 @@
 
 <script setup lang="ts">
 
-	import {computed, h, ref} from "vue";
+	import {computed, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
-	import type { DataTableColumn } from "@ui";
-	import type { AuswahlChildData } from "../AuswahlChildData";
+	import type { TabData, DataTableColumn } from "@ui";
 
 	const props = defineProps<StatistikAppProps>();
 
@@ -227,7 +226,7 @@
 		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4 },
 	];
 
-	const routes : AuswahlChildData[] = [
+	const routes : TabData[] = [
 		{ name: "dashboard", text: "Übersicht" },
 		{ name: "Schüler", text: "Schüler" },
 		{ name: "Lehrer", text: "Lehrkräfte" },
@@ -237,7 +236,7 @@
 	const hidden = ref([false, false, false]);
 	const selectedRoute = ref(routes[0]);
 
-	async function setTab(tab: AuswahlChildData) {
+	async function setTab(tab: TabData) {
 		selectedRoute.value = tab;
 	}
 

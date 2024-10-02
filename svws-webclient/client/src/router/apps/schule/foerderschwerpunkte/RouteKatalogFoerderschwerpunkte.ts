@@ -10,7 +10,7 @@ import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKatalogFoerderschwerpunktDaten } from "~/router/apps/schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunktDaten";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { FoerderschwerpunkteAppProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAppProps";
 import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahlProps";
 import { RouteDataKatalogFoerderschwerpunkte } from "./RouteDataKatalogFoerderschwerpunkte";
@@ -84,19 +84,19 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

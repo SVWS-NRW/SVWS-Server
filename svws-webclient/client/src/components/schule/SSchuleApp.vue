@@ -23,10 +23,10 @@
 <script setup lang="ts">
 
 	import type { SchuleAppProps } from "./SSchuleAppProps";
-	import type { AuswahlChildData } from "../AuswahlChildData";
+	import type { TabData } from "@ui";
 
 	const props = defineProps<SchuleAppProps>();
 
-	const tab: AuswahlChildData = { name: 'stammdaten', text: 'Stammdaten' };
+	const tab: TabData = { name: 'stammdaten', text: 'Stammdaten' };
 
 </script>

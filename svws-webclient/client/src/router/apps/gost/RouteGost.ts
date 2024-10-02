@@ -17,7 +17,7 @@ import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/Route
 
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
@@ -129,12 +129,12 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		let list = super.menu;
 		if (list.length < 1)
 			list = super.children;
@@ -144,7 +144,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

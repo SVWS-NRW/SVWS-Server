@@ -11,15 +11,15 @@
 <script lang="ts" setup>
 
 	import { computed } from 'vue';
-	import type { AuswahlChildData } from '../../types';
+	import type { TabData } from './TabData';
 
 	const emit = defineEmits<{
-		(e: 'select', value: AuswahlChildData) : void;
+		(e: 'select', value: TabData) : void;
 	}>();
 
 	const props = defineProps<{
-		route: AuswahlChildData;
-		selected: AuswahlChildData;
+		route: TabData;
+		selected: TabData;
 		hidden?: boolean;
 	}>();
 

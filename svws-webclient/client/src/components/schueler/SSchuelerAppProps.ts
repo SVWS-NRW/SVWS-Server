@@ -1,10 +1,10 @@
 import type { SchuelerListeManager } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
+import type { TabData } from "@ui";
 
 export interface SchuelerAppProps {
 	schuelerListeManager: () => SchuelerListeManager;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
+	setTab: (value: TabData) => Promise<void>;
+	tab: TabData;
+	tabs: TabData[];
 	tabsHidden: boolean[];
 }

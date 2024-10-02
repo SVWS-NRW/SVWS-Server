@@ -14,7 +14,7 @@ import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaec
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 import { routeSchuleBetriebe } from "./betriebe/RouteSchuleBetriebe";
 import { routeKatalogReligionen } from "./religionen/RouteKatalogReligionen";
@@ -109,19 +109,19 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		};
 	}
 
-	private getChild(): AuswahlChildData {
+	private getChild(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getChildData(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getChildData(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of this.menu)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setChild = async (value: AuswahlChildData) => {
+	private setChild = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");

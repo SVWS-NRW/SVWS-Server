@@ -65,7 +65,7 @@
 				</template>
 			</svws-ui-menu>
 		</template>
-		<template #secondaryMenu v-if="app.hideAuswahl !== true">
+		<template #secondaryMenu v-if="app.hide !== true">
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>
@@ -129,7 +129,7 @@
 <script setup lang="ts">
 
 	import { computed, ref, onErrorCaptured } from "vue";
-	import type { AuswahlChildData } from './AuswahlChildData';
+	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
 	import { githash } from '../../githash';
@@ -155,7 +155,7 @@
 		copied.value = true;
 	}
 
-	function is_active(current: AuswahlChildData): boolean {
+	function is_active(current: TabData): boolean {
 		const routename = props.app.name.split('.')[0];
 		const title = current.text + " - " + schulname.value;
 		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
@@ -169,7 +169,7 @@
 		return true;
 	}
 
-	async function startSetApp(app: AuswahlChildData) {
+	async function startSetApp(app: TabData) {
 		pendingSetApp.value = app.text;
 		await props.setApp(app);
 		pendingSetApp.value = '';

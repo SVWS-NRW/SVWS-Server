@@ -1,5 +1,5 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
@@ -131,7 +131,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
-			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hideAuswahl: true },
+			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
@@ -139,12 +139,12 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		};
 	}
 
-	private getApp(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text, hideAuswahl: !this.data.view.hasView('liste') };
+	private getApp(): TabData {
+		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
 	}
 
-	private getApps(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getApps(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.menu) {
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
@@ -152,7 +152,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 
-	private setApp = async (value: AuswahlChildData) => {
+	private setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

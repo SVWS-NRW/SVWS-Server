@@ -27,14 +27,15 @@
 </template>
 
 <script lang="ts" setup>
+
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { AuswahlChildData } from '../../types';
+	import type { TabData } from './TabData';
 
 	const props = defineProps<{
-		tabs: AuswahlChildData[]
+		tabs: TabData[]
 		hidden: boolean[] | undefined
-		tab: AuswahlChildData
-		setTab: (tab: AuswahlChildData) => Promise<void>;
+		tab: TabData
+		setTab: (tab: TabData) => Promise<void>;
 	}>();
 
 	type ComponentData = {
@@ -54,8 +55,8 @@
 		return props.hidden[index];
 	}
 
-	const visibleTabs = computed<AuswahlChildData[]> (() => {
-		const visibleTabs: AuswahlChildData[] = [];
+	const visibleTabs = computed<TabData[]> (() => {
+		const visibleTabs: TabData[] = [];
 		for (let i = 0; i < props.tabs.length; i++)
 			if (!isHidden(i))
 				visibleTabs.push(props.tabs[i]);

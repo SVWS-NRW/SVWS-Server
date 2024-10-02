@@ -12,7 +12,7 @@ import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellung
 import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
 import { RouteDataEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteDataEinstellungenBenutzergruppe";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { BenutzergruppeAuswahlProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahlProps";
 import type { BenutzergruppeAppProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAppProps";
 
@@ -98,19 +98,19 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		});
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of this.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");

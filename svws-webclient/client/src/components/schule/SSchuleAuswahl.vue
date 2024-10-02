@@ -72,7 +72,7 @@
 
 	import { computed, ref } from 'vue';
 	import type { SchuleAuswahlProps } from './SSchuleAuswahlProps';
-	import type { AuswahlChildData } from '../AuswahlChildData';
+	import type { TabData } from "@ui";
 
 	const props = defineProps<SchuleAuswahlProps>();
 
@@ -80,8 +80,8 @@
 	const listAllgemein = [ "schule.religionen", "schule.schulen" ];
 	const listDatenaustausch = [ "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis" ];
 
-	const mapChildren = computed<Map<string, AuswahlChildData>>(() => {
-		const result = new Map<string, AuswahlChildData>();
+	const mapChildren = computed<Map<string, TabData>>(() => {
+		const result = new Map<string, TabData>();
 		for (const child of props.children)
 			result.set(child.name, child);
 		return result;

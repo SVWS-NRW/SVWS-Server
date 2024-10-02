@@ -9,7 +9,7 @@ import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { KurseAppProps } from "~/components/kurse/SKurseAppProps";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
@@ -104,19 +104,19 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 	import { ref } from "vue";
-	import type { AuswahlChildData } from "../../types";
+	import type { TabData } from "./TabData";
 
 	const routes = [
 		{ name: "home", text: "Home" },
@@ -25,7 +25,7 @@
 
 	const hidden = ref([false, false, false, true]);
 	const selectedRoute = ref(routes[0]);
-	async function setTab(tab : AuswahlChildData) {
+	async function setTab(tab : TabData) {
 		selectedRoute.value = tab;
 	}
 

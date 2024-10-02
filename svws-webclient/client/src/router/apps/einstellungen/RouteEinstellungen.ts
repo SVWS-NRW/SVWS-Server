@@ -13,7 +13,7 @@ import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/be
 import { RouteDataEinstellungen } from "~/router/apps/einstellungen/RouteDataEinstellungen";
 
 import type { EinstellungenAuswahlProps } from "~/components/einstellungen/EinstellungenAuswahlProps";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { EinstellungenProps } from "~/components/einstellungen/EinstellungenProps";
 import { api } from "~/router/Api";
 
@@ -62,19 +62,19 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 		};
 	}
 
-	private getChild(): AuswahlChildData {
+	private getChild(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getChildData(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getChildData(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of this.menu)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setChild = async (value: AuswahlChildData) => {
+	private setChild = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");

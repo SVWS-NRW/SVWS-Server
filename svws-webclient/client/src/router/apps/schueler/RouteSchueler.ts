@@ -20,7 +20,7 @@ import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchu
 
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
@@ -115,19 +115,19 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of this.children)
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		this.data.autofocus = true;
 		if (value.name === this.data.view.name)
 			return;

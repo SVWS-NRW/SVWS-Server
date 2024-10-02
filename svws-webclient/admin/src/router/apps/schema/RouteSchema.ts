@@ -8,7 +8,7 @@ import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSche
 
 import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "../../../../../ui/src/components/App/TabData";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
@@ -100,18 +100,18 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const { name, text } of this.children)
 			result.push({ name, text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

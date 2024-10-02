@@ -1,10 +1,6 @@
 import type { WritableComputedRef } from "vue";
 import type { GostHalbjahr, GostJahrgangsdaten, GostKlausurplanManager } from "@core";
-
-export interface GostKlausurplanungAuswahlChildData {
-	name: string,
-	text: string,
-}
+import type { TabData } from "@ui";
 
 export interface GostKlausurplanungAuswahlProps {
 	kMan: () => GostKlausurplanManager;
@@ -12,8 +8,8 @@ export interface GostKlausurplanungAuswahlProps {
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	gotoHalbjahr: (value: GostHalbjahr) => Promise<void>;
 	halbjahr: GostHalbjahr;
-	setChild: (value: GostKlausurplanungAuswahlChildData) => Promise<void>;
-	child: GostKlausurplanungAuswahlChildData;
-	children: GostKlausurplanungAuswahlChildData[];
+	setChild: (value: TabData) => Promise<void>;
+	child: TabData;
+	children: TabData[];
 	childrenHidden: boolean[];
 }

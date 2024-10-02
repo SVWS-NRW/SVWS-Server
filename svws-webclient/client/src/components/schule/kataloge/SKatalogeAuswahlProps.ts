@@ -1,11 +1,11 @@
-import type { AuswahlChildData } from "../../AuswahlChildData";
+import type { TabData } from "@ui";
 import type { AbschnittAuswahlDaten } from "@comp";
 
 export interface KatalogeAuswahlProps {
 	returnToSchule: () => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	setChild: (value: AuswahlChildData) => Promise<void>;
-	child: AuswahlChildData;
-	children: AuswahlChildData[];
+	setChild: (value: TabData) => Promise<void>;
+	child: TabData;
+	children: TabData[];
 	childrenHidden: boolean[];
 }

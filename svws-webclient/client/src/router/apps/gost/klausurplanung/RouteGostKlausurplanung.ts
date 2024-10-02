@@ -18,12 +18,13 @@ import { routeGostKlausurplanungNachschreibAnsicht } from "~/router/apps/gost/kl
 
 import { RouteDataGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteDataGostKlausurplanung";
 
-import type { GostKlausurplanungAuswahlChildData, GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
+import type { GostKlausurplanungAuswahlProps } from "~/components/gost/klausurplanung/SGostKlausurplanungAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
 import type { GostKlausurplanungProps } from "~/components/gost/klausurplanung/SGostKlausurplanungProps";
 import { routeGostKlausurplanungProbleme } from "./RouteGostKlausurplanungProbleme";
+import type { TabData } from "@ui";
 
 
 const SGostKlausurplanung = () => import("~/components/gost/klausurplanung/SGostKlausurplanung.vue");
@@ -145,12 +146,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		};
 	}
 
-	private getChild(): GostKlausurplanungAuswahlChildData {
+	private getChild(): TabData {
 		return this.data.view;
 	}
 
-	private getChildData(): GostKlausurplanungAuswahlChildData[] {
-		const result: GostKlausurplanungAuswahlChildData[] = [];
+	private getChildData(): TabData[] {
+		const result: TabData[] = [];
 		if (this.data.abiturjahr === -1) {
 			result.push(routeGostKlausurplanungVorgaben);
 			// result.push(routeGostKlausurplanungKalender);
@@ -161,7 +162,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return result;
 	}
 
-	private setChild = async (value: GostKlausurplanungAuswahlChildData) => {
+	private setChild = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

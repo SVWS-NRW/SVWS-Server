@@ -1,5 +1,5 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "../../../../ui/src/components/App/TabData";
 import type { AppProps } from "~/components/SAppProps";
 
 import { api } from "~/router/Api";
@@ -68,18 +68,18 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		};
 	}
 
-	private getApp(): AuswahlChildData {
+	private getApp(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getApps(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getApps(): TabData[] {
+		const result: TabData[] = [];
 		for (const { name, text } of super.menu)
 			result.push({ name, text });
 		return result;
 	}
 
-	private setApp = async (value: AuswahlChildData) => {
+	private setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

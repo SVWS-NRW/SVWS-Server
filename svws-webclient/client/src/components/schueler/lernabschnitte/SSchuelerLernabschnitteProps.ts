@@ -1,16 +1,12 @@
 import type { SchuelerLernabschnittListeEintrag, List } from "@core";
-
-export interface SchuelerLernabschnitteAuswahlChildData {
-	name: string,
-	text: string,
-}
+import type { TabData } from "@ui";
 
 export interface SchuelerLernabschnitteProps {
 	lernabschnitt: SchuelerLernabschnittListeEintrag | undefined;
 	lernabschnitte: List<SchuelerLernabschnittListeEintrag>;
 	gotoLernabschnitt: (value: SchuelerLernabschnittListeEintrag) => Promise<void>;
-	setChild: (value: SchuelerLernabschnitteAuswahlChildData) => Promise<void>;
-	child: SchuelerLernabschnitteAuswahlChildData;
-	children: SchuelerLernabschnitteAuswahlChildData[];
+	setChild: (value: TabData) => Promise<void>;
+	child: TabData;
+	children: TabData[];
 	childrenHidden: boolean[];
 }

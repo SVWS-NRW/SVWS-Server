@@ -26,16 +26,14 @@
 <script lang="ts" setup>
 
 	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { AuswahlChildData } from '../../types';
+	import type { TabData } from './TabData';
 
 	const props = defineProps<{
-		tabs: AuswahlChildData[]
-		hidden: boolean[] | undefined
-		tab: AuswahlChildData
-		setTab: (tab: AuswahlChildData) => Promise<void>;
+		tabs: TabData[];
+		hidden: boolean[] | undefined;
+		tab: TabData;
+		setTab: (tab: TabData) => Promise<void>;
 	}>();
-
-	const emit = defineEmits<{ (e: 'update:modelValue', value: AuswahlChildData): void, }>();
 
 	type ComponentData = {
 		scrolled: boolean;

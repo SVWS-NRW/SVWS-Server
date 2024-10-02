@@ -1,10 +1,9 @@
 import type { GostJahrgang } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
-
+import type { TabData } from "@ui";
 export interface GostAppProps {
 	auswahl: GostJahrgang | undefined;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
+	setTab: (value: TabData) => Promise<void>;
+	tab: TabData;
+	tabs: TabData[];
 	tabsHidden: boolean[];
 }

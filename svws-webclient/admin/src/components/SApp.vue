@@ -74,22 +74,22 @@
 
 <script setup lang="ts">
 
-	import type { AuswahlChildData } from './AuswahlChildData';
 	import type { AppProps } from './SAppProps';
 	import { ref } from "vue";
 	import { version } from '../../version';
+	import type { TabData } from '../../../ui/src/components/App/TabData';
 
 	const props = defineProps<AppProps>();
 
 	const pendingSetApp = ref('');
 
-	function isVisible(item: AuswahlChildData) : boolean {
+	function isVisible(item: TabData) : boolean {
 		if ((item.name === 'config') && (!props.isServerAdmin))
 			return false;
 		return true;
 	}
 
-	function is_active(current: AuswahlChildData): boolean {
+	function is_active(current: TabData): boolean {
 		const routename = props.app.name.split('.')[0];
 		const title = current.text;
 		if (routename !== current.name)
@@ -99,7 +99,7 @@
 		return true;
 	}
 
-	async function startSetApp(app: AuswahlChildData) {
+	async function startSetApp(app: TabData) {
 		pendingSetApp.value = app.text;
 		await props.setApp(app);
 		pendingSetApp.value = '';

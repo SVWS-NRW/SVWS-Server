@@ -14,9 +14,10 @@ import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/l
 import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
+import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 import { routeApp } from "../../RouteApp";
+import type { TabData } from "@ui";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
 
@@ -80,18 +81,18 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		};
 	}
 
-	private getChild(): SchuelerLernabschnitteAuswahlChildData {
+	private getChild(): TabData {
 		return this.data.view;
 	}
 
-	private getChildData(): SchuelerLernabschnitteAuswahlChildData[] {
-		const result: SchuelerLernabschnitteAuswahlChildData[] = [];
+	private getChildData(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of this.children)
 			result.push(c);
 		return result;
 	}
 
-	private setChild = async (value: SchuelerLernabschnitteAuswahlChildData) => {
+	private setChild = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
