@@ -6,9 +6,10 @@
 			:readonly="!autocomplete || readonly"
 			:is-select-input="!readonly"
 			:placeholder="label || title"
-			:statistics="statistics"
-			:headless="headless"
-			:disabled="disabled"
+			:statistics
+			:headless
+			:disabled
+			:required
 			role="combobox"
 			:aria-label="label || title"
 			:aria-expanded="showList"
@@ -38,9 +39,8 @@
 		</button>
 	</div>
 	<Teleport to="body" v-if="isMounted">
-		<svws-ui-dropdown-list v-if="showList" :statistics="statistics" :filtered-list="filteredList" :item-text="itemText"
-			:strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :selected-item-list="selectedItemList"
-			:select-item="selectItem" ref="refList" :search-text="searchText" :highlight-item="(highlightItem as Item|undefined)" />
+		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text="itemText" :strategy :floating-left :floating-top :selected-item-list
+			:select-item ref="refList" :search-text :highlight-item="(highlightItem as Item|undefined)" />
 	</Teleport>
 </template>
 
