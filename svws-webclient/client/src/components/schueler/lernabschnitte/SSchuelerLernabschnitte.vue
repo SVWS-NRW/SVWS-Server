@@ -21,7 +21,7 @@
 		</div>
 		<Teleport to=".svws-sub-nav-target" defer>
 			<nav class="svws-ui-secondary-tabs">
-				<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child" :hidden="childrenHidden[index]" @select="setChild(c)" :key="index" />
+				<svws-ui-tab-bar :tab-manager secondary />
 			</nav>
 		</Teleport>
 		<div class="grow h-full">

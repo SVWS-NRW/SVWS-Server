@@ -202,8 +202,4 @@
 		@apply overflow-x-auto flex-shrink-0;
 	}
 
-	.svws-ui-secondary-tabs {
-		@apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
-	}
-
 </style>

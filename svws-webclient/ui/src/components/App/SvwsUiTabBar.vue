@@ -1,6 +1,6 @@
 <template>
-	<div class="svws-ui-page" :class="{ 'svws-single-tab': tabManager().tabs.length === 1 }">
-		<div class="svws-ui-tabs">
+	<div :class="{ 'svws-ui-page': !secondary, 'svws-single-tab': tabManager().tabs.length === 1 }">
+		<div class="svws-ui-tabs" :class="{ 'svws-ui-tabs--secondary': secondary }">
 			<div class="svws-ui-tabs--wrapper">
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
 					<svws-ui-button type="icon">
@@ -31,9 +31,12 @@
 	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
 	import type { TabManager } from './TabManager';
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		tabManager: () => TabManager;
-	}>();
+		secondary?: boolean;
+	}>(), {
+		secondary: false,
+	});
 
 	type ComponentData = {
 		scrolled: boolean;
@@ -126,7 +129,12 @@
 	.svws-sub-nav-target {
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20 w-full;
 		@apply print:hidden;
+
+		.svws-ui-tabs--secondary {
+			@apply px-0;
+		}
 	}
+
 
 	.svws-sub-nav-target {
 		@apply w-full relative z-30;
@@ -177,7 +185,7 @@
 	}
 
 	.svws-ui-secondary-tabs {
-		@apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
+		@apply text-button flex gap-[2px] pt-1.5 pb-3 px-1 -mt-px rounded-md;
 	}
 
 </style>

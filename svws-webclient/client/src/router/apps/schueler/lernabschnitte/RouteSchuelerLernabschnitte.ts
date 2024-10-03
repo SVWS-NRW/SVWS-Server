@@ -74,25 +74,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			lernabschnitt: routeSchuelerLernabschnitte.data.auswahl,
 			lernabschnitte: routeSchuelerLernabschnitte.data.listAbschnitte,
 			gotoLernabschnitt: routeSchuelerLernabschnitte.data.gotoLernabschnitt,
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getChild(): TabData {
-		return this.data.view;
-	}
-
-	private getChildData(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of this.children)
-			result.push(c);
-		return result;
-	}
-
-	private setChild = async (value: TabData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

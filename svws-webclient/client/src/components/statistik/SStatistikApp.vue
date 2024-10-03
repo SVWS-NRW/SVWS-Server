@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :tabs="routes" :hidden="hidden" :tab="selectedRoute" :set-tab="setTab">
+		<svws-ui-tab-bar :tab-manager>
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
@@ -156,7 +156,7 @@
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-bar-chart-2-line" />
@@ -167,7 +167,7 @@
 
 	import {computed, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
-	import type { TabData, DataTableColumn } from "@ui";
+	import { type TabData, type DataTableColumn, TabManager } from "@ui";
 
 	const props = defineProps<StatistikAppProps>();
 
@@ -226,19 +226,18 @@
 		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4 },
 	];
 
-	const routes : TabData[] = [
+	async function setTab(tab: TabData) {
+		selectedRoute.value = tab;
+	}
+
+	const tabManager = () => new TabManager([
 		{ name: "dashboard", text: "Übersicht" },
 		{ name: "Schüler", text: "Schüler" },
 		{ name: "Lehrer", text: "Lehrkräfte" },
 		{ name: "Unterrichts", text: "Unterricht" },
-	];
+	], { name: "dashboard", text: "Übersicht" }, setTab);
 
-	const hidden = ref([false, false, false]);
-	const selectedRoute = ref(routes[0]);
-
-	async function setTab(tab: TabData) {
-		selectedRoute.value = tab;
-	}
+	const selectedRoute = ref(tabManager().tab);
 
 </script>
 
