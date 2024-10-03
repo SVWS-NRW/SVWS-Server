@@ -122,20 +122,20 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
 	import type { GostJahrgangsdaten } from "../../../../../core/src/core/data/gost/GostJahrgangsdaten";
 	import type { GostFach } from "../../../../../core/src/core/data/gost/GostFach";
-	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import type { AbiturFachbelegung } from "../../../../../core/src/core/data/gost/AbiturFachbelegung";
 	import type { Sprachbelegung } from "../../../../../core/src/core/data/schueler/Sprachbelegung";
 	import type { GostSchuelerFachwahl } from "../../../../../core/src/core/data/gost/GostSchuelerFachwahl";
+	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
+	import { AbiturdatenManager } from "../../../../../core/src/core/abschluss/gost/AbiturdatenManager";
+	import { Fach } from "../../../../../core/src/asd/types/fach/Fach";
 	import { SprachendatenUtils } from "../../../../../core/src/core/utils/schueler/SprachendatenUtils";
 	import { GostHalbjahr } from "../../../../../core/src/core/types/gost/GostHalbjahr";
 	import { Fachgruppe } from "../../../../../core/src/asd/types/fach/Fachgruppe";
 	import { AbiturFachbelegungHalbjahr } from "../../../../../core/src/core/data/gost/AbiturFachbelegungHalbjahr";
 	import { GostKursart } from "../../../../../core/src/core/types/gost/GostKursart";
 	import { Note } from "../../../../../core/src/asd/types/Note";
-	import type { GostJahrgangFachkombination } from "../../../../../core/src/core/data/gost/GostJahrgangFachkombination";
 	import { GostFachbereich } from "../../../../../core/src/core/types/gost/GostFachbereich";
 	import { GostAbiturFach } from "../../../../../core/src/core/types/gost/GostAbiturFach";
 	import { GostFachUtils } from "../../../../../core/src/core/utils/gost/GostFachUtils";
@@ -156,23 +156,18 @@
 	});
 
 	const schuljahr = computed<number>(() => props.abiturdatenManager().getSchuljahr());
-
 	const fachgruppe = computed<Fachgruppe | null>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getFachgruppe(schuljahr.value) ?? null);
-
 	const istFremdsprache = computed<boolean>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.istFremdsprache ?? false);
-
 	const bgColor = computed<string>(() => Fach.getBySchluesselOrDefault(props.fach.kuerzel).getHMTLFarbeRGB(schuljahr.value));
-
 	const fachbelegung = computed<AbiturFachbelegung | null>(() => props.abiturdatenManager().getFachbelegungByID(props.fach.id));
 
 	const sprachbelegung = computed<Sprachbelegung | null>(() => {
 		const sprach_kuerzel = Fach.getBySchluesselOrDefault(props.fach.kuerzel).daten(schuljahr.value)?.kuerzel ?? null;
 		if (sprach_kuerzel === null)
 			return null;
-		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen) {
+		for (const sprache of props.abiturdatenManager().getSprachendaten().belegungen)
 			if (sprache.sprache === sprach_kuerzel)
 				return sprache;
-		}
 		return null;
 	})
 
@@ -360,7 +355,6 @@
 	});
 
 	const ist_VTF = computed<boolean>(() => fachgruppe.value === Fachgruppe.FG_VX);
-
 	const ist_PJK = computed<boolean>(() => fachgruppe.value === Fachgruppe.FG_PX);
 
 	const getAndereFachwahl = computed<GostSchuelerFachwahl | null>(() => {
