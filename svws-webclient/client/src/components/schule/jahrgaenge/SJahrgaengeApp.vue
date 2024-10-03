@@ -11,9 +11,9 @@
 				<span class="opacity-40">{{ auswahl()!.kuerzel }}</span>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :tab="tab" :set-tab="setTab">
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-archive-line" />

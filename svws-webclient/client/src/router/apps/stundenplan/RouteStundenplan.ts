@@ -109,23 +109,9 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 	public getProps(to: RouteLocationNormalized): StundenplanAppProps {
 		return {
 			auswahl: this.data.auswahl,
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
+
 		};
-	}
-
-	private getTab(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of this.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
 	}
 
 	private setTab = async (value: TabData) => {

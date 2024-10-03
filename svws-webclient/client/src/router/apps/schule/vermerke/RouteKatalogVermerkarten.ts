@@ -74,24 +74,9 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 
 	public getProps(to: RouteLocationNormalized): VermerkeAppProps {
 		return {
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
 			vermerkartenManager: () => this.data.vermerkartenManager,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
-	}
-
-	private getTab(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of super.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
 	}
 
 	private setTab = async (value: TabData) => {

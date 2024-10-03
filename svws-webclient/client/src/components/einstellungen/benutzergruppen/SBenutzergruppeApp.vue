@@ -8,9 +8,9 @@
 				</svws-ui-badge>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :set-tab="setTab" :tab="tab">
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-school-line" />

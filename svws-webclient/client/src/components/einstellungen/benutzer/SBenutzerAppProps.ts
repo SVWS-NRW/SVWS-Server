@@ -1,10 +1,7 @@
 import type { BenutzerListeEintrag } from "@core";
-import type { TabData } from "@ui";
+import type { TabManager } from "@ui";
 
 export interface BenutzerAppProps {
 	auswahl: () => BenutzerListeEintrag | undefined;
-	setTab: (value: TabData) => Promise<void>;
-	tab: TabData;
-	tabs: TabData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
 }

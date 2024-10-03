@@ -96,24 +96,8 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
 			lehrerListeManager: () => this.data.lehrerListeManager,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
-	}
-
-	private getTab(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of super.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
 	}
 
 	private setTab = async (value: TabData) => {

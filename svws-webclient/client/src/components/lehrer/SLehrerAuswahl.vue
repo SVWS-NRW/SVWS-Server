@@ -76,7 +76,6 @@
 		for (const pair of props.lehrerListeManager().orderGet())
 			if (pair.b !== null)
 				map.set(pair.a, pair.b);
-		console.log(map)
 		return map;
 	})
 

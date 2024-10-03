@@ -10,12 +10,12 @@
 		</div>
 		<div class="svws-ui-header--actions" />
 	</header>
-	<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :tab="tab" :set-tab="setTab">
+	<svws-ui-tab-bar :tab-manager>
 		<div class="page--content page--content--flex-row">
 			<router-view name="eintraege" />
 			<router-view />
 		</div>
-	</svws-ui-router-tab-bar>
+	</svws-ui-tab-bar>
 </template>
 
 <script setup lang="ts">

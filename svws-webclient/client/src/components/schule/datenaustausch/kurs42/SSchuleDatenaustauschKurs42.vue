@@ -7,9 +7,9 @@
 				<span class="icon-xl i-ri-download-2-line" />
 			</span>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :tab="tab" :set-tab="setTab">
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 </template>
 
