@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.crypto.SecretKey;
@@ -15,7 +14,6 @@ import javax.crypto.SecretKey;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
 import de.svws_nrw.base.crypto.AESException;
-import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
