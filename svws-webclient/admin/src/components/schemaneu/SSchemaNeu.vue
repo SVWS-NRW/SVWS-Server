@@ -11,7 +11,7 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :tabs="[]" :hidden="[]" :tab="{ name: 'Dummy', text: 'Dummy' }" :set-tab="async (a) => {}">
+		<svws-ui-tab-bar :tab-manager="() => new TabManager([], { name: 'Dummy', text: 'Dummy' }, async (a) => {})">
 			<div class="page--content">
 				<div class="flex flex-col gap-y-16 lg:gap-y-20">
 					<svws-ui-content-card>
@@ -33,7 +33,7 @@
 					</log-box>
 				</div>
 			</div>
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 </template>
 
@@ -42,6 +42,7 @@
 	import { ref, shallowRef } from "vue";
 	import type { SchemaNeuProps } from "./SSchemaNeuProps";
 	import type { List } from "../../../../core/src/java/util/List";
+	import { TabManager } from "../../../../ui/src/components/App/TabManager";
 
 	const props = defineProps<SchemaNeuProps>();
 

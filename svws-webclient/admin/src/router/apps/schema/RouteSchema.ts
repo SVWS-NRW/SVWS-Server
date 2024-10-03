@@ -9,6 +9,7 @@ import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSche
 import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 
 import type { TabData } from "../../../../../ui/src/components/App/TabData";
+import { TabManager } from "../../../../../ui/src/components/App/TabManager";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
@@ -92,11 +93,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		return {
 			auswahl: this.data.auswahl,
 			schuleInfo: () => this.data.schuleInfo,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => new TabManager(this.getTabs(), this.getTab(), this.setTab),
 		};
 	}
 
