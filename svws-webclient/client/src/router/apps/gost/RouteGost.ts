@@ -23,6 +23,7 @@ import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
+import { RouteType } from "~/router/RouteType";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -121,27 +122,16 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	public getProps(to: RouteLocationNormalized): GostAppProps {
 		return {
 			auswahl: this.data.auswahl,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
 		};
 	}
 
-	private getTab(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): TabData[] {
-		const result: TabData[] = [];
-		let list = super.menu;
-		if (list.length < 1)
-			list = super.children;
-		for (const c of list)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
+	private getType() : RouteType {
+		// if (this.data.gruppenprozesseEnabled)
+		// 	return RouteType.GRUPPENPROZESSE;
+		// if (this.data.creationModeEnabled)
+		// 	return RouteType.HINZUFUEGEN;
+		return RouteType.DEFAULT;
 	}
 
 	private setTab = async (value: TabData) => {

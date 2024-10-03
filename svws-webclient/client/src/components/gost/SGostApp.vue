@@ -10,9 +10,9 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :tabs="tabs" :hidden="tabsHidden" :tab="tab" :set-tab="setTab" :class="`router--tab--${tab.name} router--tab--${tab.name.replace('.', '_')}`">
+		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`">
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-graduation-cap-line" />

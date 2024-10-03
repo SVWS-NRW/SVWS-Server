@@ -333,7 +333,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		for (const c of this.children) {
 			if (!c.types.has(type))
 				continue;
-			if (c.hatEineKompetenz() && c.hatSchulform())
+			if (!(c.hatEineKompetenz() && c.hatSchulform()))
 				continue;
 			const newTab = <TabData>{ name: c.name, text: c.text };
 			tabs.push(newTab);
