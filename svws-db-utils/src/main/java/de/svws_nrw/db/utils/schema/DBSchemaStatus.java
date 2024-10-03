@@ -284,7 +284,7 @@ public final class DBSchemaStatus {
 	public boolean hasColumn(final String tabname, final String colname) {
 		if (!hasTable(tabname))
 			return false;
-		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, schemaName, tabname);
 		if (spalten == null)
 			return false;
 		return spalten.containsKey(colname.toLowerCase());
@@ -303,7 +303,7 @@ public final class DBSchemaStatus {
 	public List<String> filterColumns(final String tabname, final List<String> cols) {
 		if (!hasTable(tabname))
 			return new ArrayList<>();
-		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, tabname);
+		final Map<String, DTOInformationSchemaTableColumn> spalten = DTOInformationSchemaTableColumn.query(conn, schemaName, tabname);
 		if (spalten == null)
 			return new ArrayList<>();
 		return cols.stream().filter(col -> (spalten.containsKey(col.toLowerCase()))).toList();
