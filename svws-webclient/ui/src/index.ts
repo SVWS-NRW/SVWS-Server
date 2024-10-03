@@ -38,7 +38,6 @@ export { default as SvwsUiMenuItem } from "./components/App/Sidebar/SvwsUiMenuIt
 export { default as SvwsUiSecondaryMenu } from "./components/App/Sidebar/SvwsUiSecondaryMenu.vue";
 // App.Router
 export { default as SvwsUiTabBar } from "./components/App/SvwsUiTabBar.vue";
-export { default as SvwsUiTabBarButton } from "./components/App/SvwsUiTabBarButton.vue";
 export { default as SvwsUiTabBarVertical } from "./components/App/SvwsUiTabBarVertical.vue";
 // DEPRECATED
 export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabBar.vue";
