@@ -93,11 +93,11 @@ public class DBBackupManager {
 		} catch (final DBException e) {
 			logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
 			success = false;
-		}
-
-		if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
-			logger.logLn("-> Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!");
-			success = false;
+		} finally {
+			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
+				logger.logLn("-> Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!");
+				success = false;
+			}
 		}
 
 		logger.modifyIndent(-2);
@@ -149,11 +149,11 @@ public class DBBackupManager {
 		} catch (final DBException e) {
 			logger.logLn("-> Import fehlgeschlagen! (" + e.getMessage() + ")");
 			success = false;
-		}
-
-		if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
-			logger.logLn("-> Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!");
-			success = false;
+		} finally {
+			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
+				logger.logLn("-> Fehler beim Freigeben des Datenbank-Schemas. Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!");
+				success = false;
+			}
 		}
 
 		logger.modifyIndent(-2);

@@ -274,13 +274,13 @@ public class DBUpdater {
 		} finally {
 			// Perform a rollback if necessary
 			conn.transactionRollback();
-		}
 
-		// Entsperre ggf. das Datenbankschema
-		if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
-			logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas."
-					+ " Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
-			return false;
+			// Entsperre ggf. das Datenbankschema
+			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
+				logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas."
+						+ " Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+				success = false;
+			}
 		}
 		return success;
 	}
