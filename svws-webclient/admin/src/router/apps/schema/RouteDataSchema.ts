@@ -435,6 +435,16 @@ export class RouteDataSchema {
 		return result;
 	}
 
+	createEmptySchema = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein leeres SVWS-Schema in einem Schema erstellt werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		const result = await api.privileged.createSchemaCurrentInto(this.auswahl.name);
+		await this.setSchema(this.auswahl);
+		api.status.stop();
+		return result;
+	}
+
 	addExistingSchemaToConfig = async(data: BenutzerKennwort, schema: string) => {
 		if (schema === "")
 			throw new DeveloperNotificationException("Es soll ein Schema zur Konfiguration hinzugefügt werden, aber es ist kein Schemaname angegeben.");

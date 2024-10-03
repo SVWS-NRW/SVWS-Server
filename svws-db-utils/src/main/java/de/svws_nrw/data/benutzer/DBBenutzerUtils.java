@@ -131,7 +131,8 @@ public final class DBBenutzerUtils {
 			final String path = request.getRequestURI();
 			if (path == null)
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE, "Der Dienst ist noch nicht verfügbar, da kein gültiger Pfad angegeben wurde.");
-			final boolean allowDeactivatedSchema = path.matches("/api/schema/import/.*") || path.matches("/api/schema/migrate/.*");
+			final boolean allowDeactivatedSchema = path.matches("/api/schema/import/.*") || path.matches("/api/schema/migrate/.*")
+					|| path.matches("/api/schema/create/.*");
 			if (SVWSKonfiguration.get().isDeactivatedSchema(config.getDBSchema()) && !allowDeactivatedSchema)
 				throw new ApiOperationException(Status.SERVICE_UNAVAILABLE,
 						"Datenbank-Schema ist zur Zeit deaktviert, da es fehlerhaft ist. Bitte wenden Sie sich an Ihren System-Administrator.");

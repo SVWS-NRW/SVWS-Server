@@ -253,12 +253,14 @@ public final class DBUtilsSchema {
 	 *
 	 * @param conn         die usprüngliche Datenbankverbindung zu dem Information-Schema
 	 * @param schemaname   der Name des Schemas
+	 * @param pu           die zu verwendende Persistence-Unit
 	 *
 	 * @return der Datenbank-Benutzer für die neue Verbindung
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
+	public static Benutzer getBenutzerFuerSVWSSchema(final DBEntityManager conn, final String schemaname, final PersistenceUnits pu)
+			throws ApiOperationException {
 		final List<SchemaListeEintrag> schemata = getSVWSSchemaListe(conn, true);
 		SchemaListeEintrag schema = null;
 		for (final SchemaListeEintrag s : schemata) {
@@ -277,7 +279,7 @@ public final class DBUtilsSchema {
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Das SVWS-Schema %s ist neuer (%d) als die vom Server unterstützte Version (%d).".formatted(schemaname, schema.revision, rev.revision));
 		try {
-			return conn.getUser().connectTo(schemaname);
+			return conn.getUser().connectTo(schemaname, pu);
 		} catch (@SuppressWarnings("unused") final DBException e) {
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Fehler beim Zugriff auf das SVWS-Schema %s.".formatted(schemaname));
 		}
@@ -295,7 +297,7 @@ public final class DBUtilsSchema {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static List<BenutzerListeEintrag> getAdmins(final DBEntityManager conn, final String schemaname) throws ApiOperationException {
-		final Benutzer neu = getBenutzerFuerSVWSSchema(conn, schemaname);
+		final Benutzer neu = getBenutzerFuerSVWSSchema(conn, schemaname, conn.getUser().getConfig().getPersistenceUnit());
 		try (DBEntityManager schemaConn = neu.getEntityManager()) {
 			final List<DTOViewBenutzerdetails> admins = schemaConn.queryList(DTOViewBenutzerdetails.QUERY_BY_ISTADMIN, DTOViewBenutzerdetails.class, true);
 			final List<BenutzerListeEintrag> result = new ArrayList<>();

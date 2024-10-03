@@ -1318,7 +1318,7 @@ public class APIPrivilegedSchema {
 	public Response initSchemaMitSchule(@PathParam("schema") final String schema, @PathParam("schulnummer") final int schulnummer,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> {
-			final Benutzer schemaUser = DBUtilsSchema.getBenutzerFuerSVWSSchema(conn, schema);
+			final Benutzer schemaUser = DBUtilsSchema.getBenutzerFuerSVWSSchema(conn, schema, PersistenceUnits.SVWS_DB);
 			try (DBEntityManager conn2 = schemaUser.getEntityManager()) {
 				return DBBenutzerUtils.runWithTransaction(c2 -> new DataSchuleStammdaten(c2).init(schulnummer), conn2);
 			}

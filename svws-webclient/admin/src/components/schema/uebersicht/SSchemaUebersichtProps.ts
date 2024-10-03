@@ -18,6 +18,7 @@ export interface SchemaUebersichtProps {
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	upgradeSchema: () => Promise<SimpleOperationResponse>;
 	initSchema: (schulnummer: number) => Promise<SchuleStammdaten>;
+	createEmptySchema: () => Promise<SimpleOperationResponse>;
 	addExistingSchemaToConfig: (data: BenutzerKennwort, schema: string) => Promise<void>;
 	revision: number | null;
 	schuleInfo: () => SchuleInfo | undefined;
