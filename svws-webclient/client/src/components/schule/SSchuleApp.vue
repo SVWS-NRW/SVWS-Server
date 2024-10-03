@@ -14,19 +14,21 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :tabs="[ tab ]" :hidden="[ false ]" :tab="tab" :set-tab="async (a) => {}">
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 </template>
 
 <script setup lang="ts">
 
 	import type { SchuleAppProps } from "./SSchuleAppProps";
-	import type { TabData } from "@ui";
+	import { TabManager, type TabData } from "@ui";
 
 	const props = defineProps<SchuleAppProps>();
 
 	const tab: TabData = { name: 'stammdaten', text: 'Stammdaten' };
+
+	const tabManager = () => new TabManager([ { name: 'stammdaten', text: 'Stammdaten' } ], { name: 'stammdaten', text: 'Stammdaten' }, async (a) => {});
 
 </script>
