@@ -139,30 +139,17 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			gotoHalbjahr: this.data.gotoHalbjahr,
 			halbjahr: this.data.halbjahr,
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getChild(): TabData {
-		return this.data.view;
+	protected checkTabVisibility(tab: TabData) {
+		if (this.data.abiturjahr === -1)
+			return (tab.name === routeGostKlausurplanungVorgaben.name);
+		return true;
 	}
 
-	private getChildData(): TabData[] {
-		const result: TabData[] = [];
-		if (this.data.abiturjahr === -1) {
-			result.push(routeGostKlausurplanungVorgaben);
-			// result.push(routeGostKlausurplanungKalender);
-			return result;
-		}
-		for (const c of this.children)
-			result.push(c);
-		return result;
-	}
-
-	private setChild = async (value: TabData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

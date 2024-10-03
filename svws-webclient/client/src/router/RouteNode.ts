@@ -336,6 +336,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			if (!(c.hatEineKompetenz() && c.hatSchulform()))
 				continue;
 			const newTab = <TabData>{ name: c.name, text: c.text };
+			if (!this.checkTabVisibility(newTab))
+				continue;
 			tabs.push(newTab);
 			if (c.name === tabname)
 				tab = newTab;
@@ -343,6 +345,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		if (tab === null)
 			tab = tabs[0];
 		return new TabManager(tabs, tab, setTab, this.children_hidden().value);
+	}
+
+	/**
+	 * Prüft, ob das übergeben Tab sichtbar ist oder nicht. Diese Methode kann von Route-Nodes
+	 * überschrieben werden, um bedingte Sichtbarkeit der Child-Routes zu steuern.
+	 *
+	 * @param tab   der zu prüfende Tab
+	 *
+	 * @returns true, falls der Tab sichtbar ist, und ansonsten false
+	 */
+	protected checkTabVisibility(tab: TabData) {
+		return true;
 	}
 
 	/**

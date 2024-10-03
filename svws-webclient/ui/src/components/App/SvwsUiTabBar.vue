@@ -12,9 +12,7 @@
 						<button v-if="!(tab.hide === true) && (tab.text !== '')" @click="tabManager().setTab(tab)" class="svws-ui-tab-button flex flex-row"
 							:class="{ 'svws-active': tab.name === tabManager().tab.name }">
 							<span>{{ tab.text }}</span>
-							<template v-if="$slots.badge">
-								<slot name="badge" />
-							</template>
+							<slot name="badge" :tab />
 						</button>
 					</template>
 				</div>
