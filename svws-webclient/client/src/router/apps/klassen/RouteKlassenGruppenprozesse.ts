@@ -7,6 +7,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import type { KlassenGruppenprozesseProps } from "~/components/klassen/gruppenprozesse/SKlassenGruppenprozesseProps";
 import { routeApp } from "../RouteApp";
+import { RouteType } from "~/router/RouteType";
 
 const SKlassenGruppenprozesse = () => import("~/components/klassen/gruppenprozesse/SKlassenGruppenprozesse.vue");
 
@@ -14,6 +15,7 @@ export class RouteKlasseGruppenprozesse extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "klassen.gruppenprozesse", "gruppenprozesse", SKlassenGruppenprozesse);
+		super.types = new Set([ RouteType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";

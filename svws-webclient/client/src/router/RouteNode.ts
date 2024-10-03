@@ -11,6 +11,7 @@ import { TabManager } from "@ui";
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
 import type { RouteData } from "./RouteData";
+import { RouteType } from "./RouteType";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -61,6 +62,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
 	protected _defaultChild: RouteNode<any, any> | undefined = undefined;
 
+	/** Gibt den bzw. die Typen der Route an */
+	protected _types: Set<RouteType>;
+
 	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
 	private _mode: ServerMode = ServerMode.DEV;
 
@@ -94,6 +98,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		this._menu = [];
 		this._hasData = (data !== undefined);
 		this._data = (data !== undefined) ? data : {} as TRouteData;
+		this._types = new Set([ RouteType.DEFAULT ]);
 		// Setze die erlaubten Schulformen
 		for (const sf of schulformen)
 			this._schulformenErlaubt.add(sf);
@@ -168,6 +173,20 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected set mode(mode : ServerMode) {
 		this._mode = mode;
+	}
+
+	/**
+	 * Gibt die Routen-Typen zurück, welche der Route zugeordnet sind.
+	 */
+	public get types() : Set<RouteType> {
+		return this._types;
+	}
+
+	/**
+	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
+	 */
+	protected set types(types : Set<RouteType>) {
+		this._types = types;
 	}
 
 	/**
@@ -308,16 +327,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname   der Name des ausgewählten Tabs
 	 * @param setTab    die Callback-Methode
 	 */
-	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>) {
+	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const c of this.children) {
-			if (c.hatEineKompetenz() && c.hatSchulform()) {
-				const newTab = <TabData>{ name: c.name, text: c.text };
-				tabs.push(newTab);
-				if (c.name === tabname)
-					tab = newTab;
-			}
+			if (!c.types.has(type))
+				continue;
+			if (c.hatEineKompetenz() && c.hatSchulform())
+				continue;
+			const newTab = <TabData>{ name: c.name, text: c.text };
+			tabs.push(newTab);
+			if (c.name === tabname)
+				tab = newTab;
 		}
 		if (tab === null)
 			tab = tabs[0];

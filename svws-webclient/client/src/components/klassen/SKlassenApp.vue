@@ -31,9 +31,9 @@
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :tabs="props.tabs()" :hidden="props.tabsHidden" :tab="selectedTab" :set-tab="setSelectedTab">
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-team-line" />

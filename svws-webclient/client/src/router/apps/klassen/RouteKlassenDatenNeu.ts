@@ -7,6 +7,7 @@ import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlas
 import { routeApp } from "../RouteApp";
 import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
 import { api } from "~/router/Api";
+import { RouteType } from "~/router/RouteType";
 
 const SKlassenDatenNeu = () => import("~/components/klassen/daten/SKlassenDatenNeu.vue");
 
@@ -14,6 +15,7 @@ export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "klassen.datenNeu", "neu", SKlassenDatenNeu);
+		super.types = new Set([ RouteType.HINZUFUEGEN ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klasse Neu";

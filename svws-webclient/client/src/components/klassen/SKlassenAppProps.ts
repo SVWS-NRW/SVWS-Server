@@ -1,12 +1,9 @@
 import type { KlassenListeManager } from "@core";
-import type { TabData } from "@ui";
+import type { TabManager } from "@ui";
 
 export interface KlassenAppProps {
 	klassenListeManager: () => KlassenListeManager;
-	setSelectedTab: (value: TabData) => Promise<void>;
-	selectedTab: TabData;
-	tabs: () => TabData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
 	gruppenprozesseEnabled: boolean;
 	creationModeEnabled: boolean;
 }

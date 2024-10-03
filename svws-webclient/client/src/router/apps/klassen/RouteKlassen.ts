@@ -16,6 +16,7 @@ import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlPr
 import { routeError } from "~/router/error/RouteError";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
+import { RouteType } from "~/router/RouteType";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -50,14 +51,14 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 				return routeKlassenDaten.getRoute(idNeu);
 
 			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-			if (this.isGruppenprozessRoute(to) && (id !== undefined))
+			if (to.types.has(RouteType.GRUPPENPROZESSE) && (id !== undefined))
 				return routeKlasseGruppenprozesse.getRoute();
-			else if (this.isKlassenDatenNeuRoute(to) && (id !== undefined))
+			else if (to.types.has(RouteType.HINZUFUEGEN) && (id !== undefined))
 				return routeKlassenDatenNeu.getRoute();
 
-			if (this.isGruppenprozessRoute(to))
+			if (to.types.has(RouteType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozess(false);
-			else if (this.isKlassenDatenNeuRoute(to))
+			else if (to.types.has(RouteType.HINZUFUEGEN))
 				await this.data.gotoCreationMode(false);
 			else
 				await this.data.gotoEintrag(id)
@@ -103,41 +104,18 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
-			setSelectedTab: this.setTab,
-			selectedTab: this.getSelectedTab(),
-			tabs: () => this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
 			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
 			creationModeEnabled: this.data.creationModeEnabled,
 		};
 	}
 
-	private getSelectedTab(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private isGruppenprozessRoute(child : RouteNode<any, any>) : boolean {
-		return (child === routeKlasseGruppenprozesse);
-	}
-
-	private isKlassenDatenNeuRoute(child: RouteNode<any, any>): boolean {
-		return (child === routeKlassenDatenNeu);
-	}
-
-
-	private getTabs(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of super.children) {
-			if (!c.hatEineKompetenz() || !c.hatSchulform())
-				continue;
-			if (!this.data.gruppenprozesseEnabled && !this.data.creationModeEnabled && !this.isGruppenprozessRoute(c) && !this.isKlassenDatenNeuRoute(c))
-				result.push({ name: c.name, text: c.text });
-			if (this.data.gruppenprozesseEnabled && this.isGruppenprozessRoute(c) && !this.isKlassenDatenNeuRoute(c))
-				result.push({name: c.name, text: c.text});
-			if (this.data.creationModeEnabled && !this.isGruppenprozessRoute(c) && this.isKlassenDatenNeuRoute(c))
-				result.push({ name: c.name, text: c.text });
-		}
-		return result;
+	private getType() : RouteType {
+		if (this.data.gruppenprozesseEnabled)
+			return RouteType.GRUPPENPROZESSE;
+		if (this.data.creationModeEnabled)
+			return RouteType.HINZUFUEGEN;
+		return RouteType.DEFAULT;
 	}
 
 	private setTab = async (value: TabData) => {
