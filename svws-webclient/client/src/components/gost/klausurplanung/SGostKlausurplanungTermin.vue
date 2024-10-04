@@ -87,9 +87,9 @@
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
-										<svws-ui-tooltip :hover="false" :indicator="false">
+										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open>
 											<template #content>
-												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" />
 											</template>
 											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										</svws-ui-tooltip>
@@ -143,13 +143,11 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
-	import { BenutzerKompetenz} from "@core";
-	import { GostHalbjahr} from "@core";
-	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+	import { computed, ref } from "vue";
 	import type {DataTableColumn} from "@ui";
-	import {computed} from "vue";
-	import {DateUtils } from "@core";
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
+	import { GostHalbjahr, BenutzerKompetenz, DateUtils } from "@core";
 
 	const props = withDefaults(defineProps<{
 		benutzerKompetenzen: Set<BenutzerKompetenz>,
@@ -190,6 +188,7 @@
 		inTooltip: false,
 	});
 
+	const keepOpen = ref<boolean>(false);
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTermin(props.termin, props.showKursklausurenNachschreiber);

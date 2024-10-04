@@ -115,6 +115,8 @@
 	}
 
 	function hideTooltip() {
+		if (props.keepOpen)
+			return;
 		isOpen.value = false;
 		emit("close");
 	}

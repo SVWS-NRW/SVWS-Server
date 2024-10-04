@@ -4,7 +4,7 @@
 			Grund für Fehlen angeben
 		</template>
 		<template #modalContent>
-			<svws-ui-text-input focus placeholder="z.B. Krankheit" @update:modelValue="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
+			<svws-ui-text-input focus placeholder="z.B. Krankheit" @update:model-value="bemerkung => terminSelected.bemerkung = bemerkung" @keyup.enter="createTermin(true)" />
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="createTermin(false)"> Abbrechen </svws-ui-button>
@@ -42,10 +42,9 @@
 </template>
 
 <script setup lang="ts">
-	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostKlausurenCollectionSkrsKrsData} from '@core';
+	import { ref, watchEffect } from 'vue';
+	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostKlausurenCollectionSkrsKrsData } from '@core';
 	import { GostSchuelerklausurTermin } from '@core';
-	import type { Ref} from 'vue';
-	import { ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		kMan: () => GostKlausurplanManager;
@@ -59,10 +58,21 @@
 		patchKlausur: undefined,
 	});
 
+	const emit = defineEmits<{
+		'modal': [value: boolean];
+	}>();
+
 	const _showModalTerminGrund = ref<boolean>(false);
 	const showModalTerminGrund = () => _showModalTerminGrund;
 
-	const terminSelected: Ref<GostSchuelerklausurTermin> = ref(new GostSchuelerklausurTermin());
+	watchEffect(() => {
+		if (_showModalTerminGrund.value)
+			emit('modal', true);
+		else
+			emit('modal', false);
+	})
+
+	const terminSelected = ref<GostSchuelerklausurTermin>(new GostSchuelerklausurTermin());
 
 	const createTermin = async (create: boolean) => {
 		if (props.patchKlausur && props.createSchuelerklausurTermin && create) {
