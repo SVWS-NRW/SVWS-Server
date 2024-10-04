@@ -176,8 +176,6 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 			result.add(u);
 		}
 		stundenplan.unterrichte.addAll(result);
-		for (final StundenplanSchiene s : setSchienen)
-			stundenplan.daten.schienen.add(s);
 		for (final StundenplanRaum r : setRaeume)
 			stundenplan.daten.raeume.add(r);
 		for (final StundenplanKlasse k : setKlassen)
@@ -212,6 +210,8 @@ public final class DataLehrerStundenplan extends DataManager<Long> {
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.lehrer.stream().flatMap(l -> l.faecher.stream()).toList());
 		stundenplan.unterrichtsverteilung.faecher.addAll(DataStundenplanFaecher.getFaecher(conn, idStundenplan).stream()
 				.filter(f -> fachIDs.contains(f.id)).toList());
+		// Füge die Schienen hinzu
+		stundenplan.daten.schienen.addAll(DataStundenplanSchienen.getSchienen(conn, idStundenplan));
 	}
 
 

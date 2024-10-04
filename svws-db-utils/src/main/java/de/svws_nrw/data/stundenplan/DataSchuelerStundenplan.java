@@ -135,6 +135,8 @@ public final class DataSchuelerStundenplan extends DataManager<Long> {
 				.filter(k -> kursIDs.contains(k.id)).toList());
 		stundenplan.daten.raeume.addAll(DataStundenplanRaeume.getRaeume(conn, idStundenplan).stream()
 				.filter(r -> raumIDs.contains(r.id)).toList());
+		// Ergänze die Informationen zu den Schienen. Hierbei sind die Schienen zu beachten, die ggf. durch neue Kurse ergänzt wurden.
+		schienenIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.schienen.stream()).toList());
 		stundenplan.daten.schienen.addAll(DataStundenplanSchienen.getSchienen(conn, idStundenplan).stream()
 				.filter(s -> schienenIDs.contains(s.id)).toList());
 		// Füge die Kurs-Schüler hinzu und ergänze ggf. noch Klasseneinträge, die bei diesen Schülern vorkommen
