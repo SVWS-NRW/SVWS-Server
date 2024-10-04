@@ -1,7 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<span class="line-clamp-2">Schule</span>
+			Schule
 		</template>
 		<template #abschnitt>
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
@@ -9,60 +9,30 @@
 		<template #header />
 		<template #content>
 			<div class="secondary-menu--navigation">
-				<table class="svws-ui-table" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead cursor-default mb-1" role="rowgroup" aria-label="Tabellenkopf">
-						<tr class="svws-ui-tr" role="row" @click="toggleSchulbezogen">
-							<td class="svws-ui-td" role="columnheader">Schulbezogene Kataloge</td>
-						</tr>
-					</thead>
-					<tbody v-if="!collapsedSchulbezogen" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
-						<template v-for="name of listSchulbezogen" :key="name">
-							<tr class="svws-ui-tr" role="row">
-								<td class="svws-ui-td border-none ml-4" role="cell">
-									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span :class="{ 'font-bold': name === child.name }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
-									</svws-ui-menu-item>
+				<template v-for="tabgroup of tabManager().tabgroups" :key="tabgroup">
+					<table class="svws-ui-table" role="table" aria-label="Tabelle">
+						<thead class="svws-ui-thead cursor-pointer mb-1" role="rowgroup" aria-label="Tabellenkopf">
+							<tr class="svws-ui-tr" role="row" @click="toggle(tabgroup)">
+								<td class="svws-ui-td" role="columnheader">
+									<span v-if="isCollapsed.has(tabgroup)" class="icon i-ri-arrow-right-s-line" />
+									<span v-else class="icon i-ri-arrow-down-s-line" />
+									{{ tabgroup }}
 								</td>
 							</tr>
-						</template>
-					</tbody>
-				</table>
-				<table class="svws-ui-table" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead cursor-default mb-1" role="rowgroup" aria-label="Tabellenkopf">
-						<tr class="svws-ui-tr" role="row" @click="toggleAllgemein">
-							<td class="svws-ui-td" role="columnheader">Allgemeine Kataloge</td>
-						</tr>
-					</thead>
-					<tbody v-if="!collapsedAllgemein" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
-						<template v-for="name of listAllgemein" :key="name">
-							<tr class="svws-ui-tr" role="row">
-								<td class="svws-ui-td border-none ml-4" role="cell">
-									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span :class="{ 'font-bold': name === child.name }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
-									</svws-ui-menu-item>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
-				<table class="svws-ui-table" role="table" aria-label="Tabelle">
-					<thead class="svws-ui-thead cursor-default mb-1" role="rowgroup" aria-label="Tabellenkopf">
-						<tr class="svws-ui-tr" role="row" @click="toggleDatenaustausch">
-							<td class="svws-ui-td" role="columnheader">Datenaustausch</td>
-						</tr>
-					</thead>
-					<tbody v-if="!collapsedDatenaustausch" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
-						<template v-for="name of listDatenaustausch" :key="name">
-							<tr class="svws-ui-tr" role="row">
-								<td class="svws-ui-td border-none ml-4" role="cell">
-									<svws-ui-menu-item @click="setChild(mapChildren.get(name) ?? props.child)">
-										<template #label><span :class="{ 'font-bold': child.name.startsWith(name) }">{{ mapChildren.get(name)?.text ?? '---' }}</span></template>
-									</svws-ui-menu-item>
-								</td>
-							</tr>
-						</template>
-					</tbody>
-				</table>
+						</thead>
+						<tbody v-if="!isCollapsed.has(tabgroup)" class="svws-ui-tbody" role="rowgroup" aria-label="Tabelleninhalt">
+							<template v-for="tab of tabManager().getTabsOfGroup(tabgroup)" :key="tab.name">
+								<tr class="svws-ui-tr" role="row">
+									<td class="svws-ui-td border-none ml-4" role="cell">
+										<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)">
+											<template #label><span>{{ tab.text }}</span></template>
+										</svws-ui-menu-item>
+									</td>
+								</tr>
+							</template>
+						</tbody>
+					</table>
+				</template>
 			</div>
 		</template>
 	</svws-ui-secondary-menu>
@@ -70,37 +40,31 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from 'vue';
+	import { ref } from 'vue';
 	import type { SchuleAuswahlProps } from './SSchuleAuswahlProps';
-	import type { TabData } from "@ui";
+	import type { TabData } from '@ui';
 
 	const props = defineProps<SchuleAuswahlProps>();
 
-	const listSchulbezogen = [ "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge", "schule.vermerkarten" ];
-	const listAllgemein = [ "schule.religionen", "schule.schulen" ];
-	const listDatenaustausch = [ "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis" ];
+	// Eine Map, welche für die Tab-Gruppen festlegt, ob diese zusammengeklapt sind oder nicht.
+	const isCollapsed = ref<Set<string>>(new Set());
 
-	const mapChildren = computed<Map<string, TabData>>(() => {
-		const result = new Map<string, TabData>();
-		for (const child of props.children)
-			result.set(child.name, child);
-		return result;
-	});
-
-	const collapsedSchulbezogen = ref(false);
-	const collapsedAllgemein = ref(false);
-	const collapsedDatenaustausch = ref(false);
-
-	function toggleSchulbezogen() {
-		collapsedSchulbezogen.value = !collapsedSchulbezogen.value;
+	function toggle(tabgroup: string) {
+		console.log("tabgroup", tabgroup);
+		if (isCollapsed.value.has(tabgroup)) {
+			isCollapsed.value.delete(tabgroup);
+		} else {
+			isCollapsed.value.add(tabgroup);
+		}
 	}
 
-	function toggleAllgemein() {
-		collapsedAllgemein.value = !collapsedAllgemein.value;
+	function isCurrent(tab: TabData) : boolean {
+		return (tab.name === props.tabManager().tab.name);
 	}
 
-	function toggleDatenaustausch() {
-		collapsedDatenaustausch.value = !collapsedDatenaustausch.value;
+	async function setTab(tab: TabData) {
+		if (!isCurrent(tab))
+			await props.tabManager().setTab(tab)
 	}
 
 </script>

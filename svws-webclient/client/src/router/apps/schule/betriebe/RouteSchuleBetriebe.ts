@@ -15,6 +15,7 @@ import type { BetriebeAuswahlProps } from "~/components/schule/betriebe/SBetrieb
 import { RouteDataSchuleBetriebe } from "./RouteDataSchuleBetriebe";
 import { routeSchuleBetriebeDaten } from "./RouteSchuleBetriebeDaten";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SBetriebeAuswahl = () => import("~/components/schule/betriebe/SBetriebeAuswahl.vue")
 const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue")
@@ -26,6 +27,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 		super.mode = ServerMode.ALPHA;
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));
 
 		super.children = [

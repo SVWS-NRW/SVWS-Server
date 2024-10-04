@@ -9,6 +9,7 @@ import type { RouteApp} from "../../RouteApp";
 import { routeApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue");
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
@@ -20,6 +21,7 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, Rou
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "LuPO Laufbahnplanung";
+		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 

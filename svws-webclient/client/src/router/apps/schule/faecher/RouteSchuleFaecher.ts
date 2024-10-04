@@ -16,6 +16,7 @@ import type { FaecherAuswahlProps } from "~/components/schule/faecher/SFaecherAu
 import { RouteDataSchuleFaecher } from "./RouteDataSchuleFaecher";
 import { routeError } from "~/router/error/RouteError";
 import { routeFachStundenplan } from "./stundenplan/RouteFachStundenplan";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SFaecherAuswahl = () => import("~/components/schule/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/schule/faecher/SFaecherApp.vue")
@@ -27,6 +28,7 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fächer";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleFachDaten,

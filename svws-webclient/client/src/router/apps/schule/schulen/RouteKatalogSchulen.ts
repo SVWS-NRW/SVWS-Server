@@ -14,6 +14,7 @@ import type { SchulenAppProps } from "~/components/schule/kataloge/schulen/SSchu
 import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SSchulenAuswahlProps";
 import { RouteDataKatalogSchulen } from "./RouteDataKatalogSchulen";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SSchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SSchulenAuswahl.vue")
 const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenApp.vue")
@@ -25,6 +26,7 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulen";
+		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
 		super.setView("liste", SSchulenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogSchuleDaten,

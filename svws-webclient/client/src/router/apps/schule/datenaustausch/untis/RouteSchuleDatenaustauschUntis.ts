@@ -13,6 +13,7 @@ import { routeSchuleDatenaustauschUntisStundenplan } from "./RouteSchuleDatenaus
 import { routeSchuleDatenaustauschUntisRaeume } from "./RouteSchuleDatenaustauschUntisRaeume";
 import { routeSchuleDatenaustauschUntisBlockungen } from "./RouteSchuleDatenaustauschUntisBlockungen";
 import { routeSchule } from "../../RouteSchule";
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschUntis = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntis.vue");
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
@@ -24,6 +25,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Untis";
+		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschUntisStundenplan,

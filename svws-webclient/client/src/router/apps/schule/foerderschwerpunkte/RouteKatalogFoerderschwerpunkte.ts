@@ -15,6 +15,7 @@ import type { FoerderschwerpunkteAppProps } from "~/components/schule/kataloge/f
 import type { FoerderschwerpunkteAuswahlProps } from "~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahlProps";
 import { RouteDataKatalogFoerderschwerpunkte } from "./RouteDataKatalogFoerderschwerpunkte";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 
 
@@ -28,6 +29,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Förderschwerpunkte";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogFoerderschwerpunktDaten

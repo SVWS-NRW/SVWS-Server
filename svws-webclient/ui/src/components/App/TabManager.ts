@@ -22,6 +22,8 @@ export class TabManager {
 	// Eine Map für den schnellen Zugriff auf den Index des Arrays anhand des Tabnamens
 	private _mapNameToIndex = new Map<string, number>();
 
+	/** Eine Map mit den Tab-Groups für die Darstellung */
+	private _tabgroups = new Map<string, Array<TabData>>();
 
 	/**
 	 * Erstellt einen neuen Manager.
@@ -40,6 +42,13 @@ export class TabManager {
 				this._tabs[i].hide = hidden[i];
 			this._mapName.set(this._tabs[i].name, this._tabs[i]);
 			this._mapNameToIndex.set(this._tabs[i].name, i);
+			const groupname = this.tabs[i].tabgroup ?? "";
+			let group = this._tabgroups.get(groupname);
+			if (group === undefined) {
+				group = new Array<TabData>();
+				this._tabgroups.set(groupname, group);
+			}
+			group.push(this._tabs[i]);
 		}
 	}
 
@@ -55,6 +64,13 @@ export class TabManager {
 	 */
 	public get tab() : TabData {
 		return this._tab;
+	}
+
+	/**
+	 * Gibt ein Array mit den Tab-Groups zurück.
+	 */
+	public get tabgroups() : string[] {
+		return [ ... this._tabgroups.keys()];
 	}
 
 	/**
@@ -153,6 +169,18 @@ export class TabManager {
 	 */
 	public getImage(name: string) : string | null {
 		return this.getTab(name).image ?? null;
+	}
+
+
+	/**
+	 * Gibt alle Tabs zurück, die der angegebenen Tab-Group zugeordnet sind.
+	 *
+	 * @param groupname   der Name der Tab-Group
+	 *
+	 * @returns das Array mit den Tabs
+	 */
+	public getTabsOfGroup(groupname : string) : Array<TabData> {
+		return this._tabgroups.get(groupname) ?? new Array<TabData>();
 	}
 
 }

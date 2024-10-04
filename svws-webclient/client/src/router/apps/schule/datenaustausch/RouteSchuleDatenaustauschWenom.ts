@@ -8,6 +8,7 @@ import type { SchuleDatenaustauschWenomProps } from "~/components/schule/datenau
 import type { RouteApp } from "../../RouteApp";
 import { routeApp } from "../../RouteApp";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenom.vue");
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
@@ -19,6 +20,7 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";
+		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 

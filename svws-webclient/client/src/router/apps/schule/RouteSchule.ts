@@ -14,7 +14,7 @@ import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaec
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
-import type { TabData } from "@ui";
+import { TabManager, type TabData } from "@ui";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 import { routeSchuleBetriebe } from "./betriebe/RouteSchuleBetriebe";
 import { routeKatalogReligionen } from "./religionen/RouteKatalogReligionen";
@@ -45,24 +45,23 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 			routeSchuleStammdaten,
 		];
 		super.menu = [
-			// TODO { title: "Schule bearbeiten", value: "schule_bearbeiten" },
-			// TODO { title: "Datensicherung", value: "datensicherung" },
-			// TODO { title: "Schuljahreswechsel", value: "schuljahreswechsel" },
-			// TODO { title: "Werkzeuge", value: "werkzeuge" },
+			// Schulbezogen
 			routeSchuleStammdaten,
-			routeSchuleJahrgaenge,
-			routeSchuleFaecher,
 			routeSchuleBetriebe,
-			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
-			routeKatalogVermerkarten,
+			routeSchuleFaecher,
 			routeKatalogFoerderschwerpunkte,
+			routeSchuleJahrgaenge,
+			routeKatalogVermerkarten,
+			// Allgemein
+			routeKatalogReligionen,
 			routeKatalogSchulen,
-			routeSchuleDatenaustauschLaufbahnplanung,
-			routeSchuleDatenaustauschKurs42,
-			routeSchuleDatenaustauschSchulbewerbung,
+			// Datenaustausch
 			routeSchuleDatenaustauschENM,
 			routeSchuleDatenaustauschWenom,
+			routeSchuleDatenaustauschSchulbewerbung,
+			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchuleDatenaustauschKurs42,
 			routeSchuleDatenaustauschUntis,
 		];
 		super.defaultChild = routeSchuleStammdaten;
@@ -101,24 +100,9 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {
 		return {
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByMenu(this.data.view.name, this.setChild),
 			schule: () => api.schuleStammdaten,
 		};
-	}
-
-	private getChild(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getChildData(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of this.menu)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
 	}
 
 	private setChild = async (value: TabData) => {

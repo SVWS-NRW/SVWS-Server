@@ -16,6 +16,7 @@ import { RouteDataKatalogVermerke } from "./RouteDataKatalogVermerke";
 
 import { routeError } from "~/router/error/RouteError";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SVermerkAuswahl = () => import("~/components/schule/kataloge/vermerke/SVermerkeAuswahl.vue")
 const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerkeApp.vue")
@@ -27,6 +28,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Vermerkarten";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SVermerkAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogVermerkartenDaten

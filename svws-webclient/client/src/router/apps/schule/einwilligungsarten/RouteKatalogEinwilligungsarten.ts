@@ -14,6 +14,7 @@ import type { SEinwilligungsartenAppProps } from "~/components/schule/kataloge/e
 import type { SEinwilligungsartenAuswahlProps } from "~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahlProps";
 import { RouteDataKatalogEinwilligungsarten } from "./RouteDataKatalogEinwilligungsarten";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SEinwilligungsartenAuswahl = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahl.vue")
 const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenApp.vue")
@@ -25,6 +26,7 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einwilligungsarten";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SEinwilligungsartenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogEinwilligungsartenDaten

@@ -15,6 +15,7 @@ import type { TabData } from "@ui";
 import type { JahrgaengeAppProps } from "~/components/schule/jahrgaenge/SJahrgaengeAppProps";
 import type { JahrgaengeAuswahlProps } from "~/components/schule/jahrgaenge/SJahrgaengeAuswahlProps";
 import { RouteDataSchuleJahrgaenge } from "./RouteDataSchuleJahrgaenge";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SJahrgaengeAuswahl = () => import("~/components/schule/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeApp.vue")
@@ -26,6 +27,7 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
+		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleJahrgaengeDaten

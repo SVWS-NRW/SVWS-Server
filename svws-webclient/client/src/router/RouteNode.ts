@@ -91,7 +91,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
-				text: name // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				text: name, // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				menugroup: "" // Die Menu-Gruppe, falls die Route einem Menu zugeordnet ist und dort einer Gruppe
 			}
 		};
 		this._children = [];
@@ -134,8 +135,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public abstract getRoute(...args: any[]) : RouteLocationRaw;
 
 	/**
-   * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
-   */
+	 * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
+	 */
 	public get text() : string {
 		return (this._record.meta as { text: string }).text;
 	}
@@ -145,6 +146,20 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public set text(text : string) {
 		(this._record.meta as { text: string }).text = text;
+	}
+
+	/**
+	 * Gibt die Menu-Gruppe der Route zurück, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public get menugroup() : string {
+		return (this._record.meta as { menugroup: string }).menugroup;
+	}
+
+	/**
+	 * Setzt die Menu-Gruppe der Route, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public set menugroup(menugroup : string) {
+		(this._record.meta as { menugroup: string }).menugroup = menugroup;
 	}
 
 	/**
@@ -321,6 +336,47 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
+	 * Gibt ein passend zu dem getter menu ein Array zurück,
+	 * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
+	 * nicht.
+	 *
+	 * @returns ein Array mit der
+	 */
+	public menu_hidden() : ComputedRef<boolean[]> {
+		return computed(() => this.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false));
+	}
+
+	/**
+	 * Erstellt anhand der Children einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param nodes         die Kind- oder Menu-Knoten
+	 * @param nodesHidden   die Information zu den Knoten, ob diese versteckt sind oder nicht
+	 * @param tabname       der Name des ausgewählten Tabs
+	 * @param setTab        die Callback-Methode
+	 */
+	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
+		const tabs: TabData[] = [];
+		let tab = null;
+		for (const node of nodes) {
+			if (!node.types.has(type))
+				continue;
+			if (!(node.hatEineKompetenz() && node.hatSchulform()))
+				continue;
+			const newTab = <TabData>{ name: node.name, text: node.text };
+			if (!this.checkTabVisibility(newTab))
+				continue;
+			newTab.tabgroup = node.menugroup;
+			tabs.push(newTab);
+			if (node.name === tabname)
+				tab = newTab;
+		}
+		if (tab === null)
+			tab = tabs[0];
+		return new TabManager(tabs, tab, setTab, nodesHidden);
+	}
+
+	/**
 	 * Erstellt anhand der Children einen neuen Tab-Manager mit dem angegebenen Tab
 	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
 	 *
@@ -328,23 +384,18 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param setTab    die Callback-Methode
 	 */
 	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
-		const tabs: TabData[] = [];
-		let tab = null;
-		for (const c of this.children) {
-			if (!c.types.has(type))
-				continue;
-			if (!(c.hatEineKompetenz() && c.hatSchulform()))
-				continue;
-			const newTab = <TabData>{ name: c.name, text: c.text };
-			if (!this.checkTabVisibility(newTab))
-				continue;
-			tabs.push(newTab);
-			if (c.name === tabname)
-				tab = newTab;
-		}
-		if (tab === null)
-			tab = tabs[0];
-		return new TabManager(tabs, tab, setTab, this.children_hidden().value);
+		return this.createTabManager(this.children, this.children_hidden().value, tabname, setTab, type);
+	}
+
+	/**
+	 * Erstellt anhand der Menu-Einträge einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param tabname   der Name des ausgewählten Tabs
+	 * @param setTab    die Callback-Methode
+	 */
+	public createTabManagerByMenu(tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
+		return this.createTabManager(this.menu, this.menu_hidden().value, tabname, setTab, type);
 	}
 
 	/**

@@ -14,6 +14,7 @@ import type { ReligionenAppProps } from "~/components/schule/kataloge/religionen
 import type { ReligionenAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
 import { RouteDataKatalogReligionen } from "./RouteDataKatalogReligionen";
 import { routeSchule } from "../RouteSchule";
+import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 
 const SReligionenAuswahl = () => import("~/components/schule/kataloge/religionen/SReligionenAuswahl.vue")
@@ -26,6 +27,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
+		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten
