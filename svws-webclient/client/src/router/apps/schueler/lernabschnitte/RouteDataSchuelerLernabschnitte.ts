@@ -110,8 +110,19 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			found = curState.listAbschnitte.get(curState.listAbschnitte.size()-1);
 		}
 		const daten = await api.server.getSchuelerLernabschnittsdatenByID(api.schema, found.id);
-		const listKurse = await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt);
-		const listKlassen = await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt);
+		let listKurse;
+		let listKlassen;
+		if ((this.hatAuswahl) && (found.schuljahresabschnitt === this.auswahl.schuljahresabschnitt)) {
+			listKurse = this.manager.kursGetMenge();
+			listKlassen = this.manager.klasseGetMenge();
+		} else {
+			const data = await Promise.all([
+				await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+				await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+			]);
+			listKurse = data[0];
+			listKlassen = data[1];
+		}
 		const schueler = routeSchueler.data.schuelerListeManager.auswahl();
 		const mapSchuljahresabschnitte = api.mapAbschnitte.value;
 		const schuljahresabschnitt = mapSchuljahresabschnitte.get(daten.schuljahresabschnitt);
@@ -154,10 +165,27 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 				break;
 			}
 		}
-		const listFaecher = await api.server.getFaecher(api.schema);
-		const listFoerderschwerpunkte = await api.server.getSchuelerFoerderschwerpunkte(api.schema);
-		const listJahrgaenge = await api.server.getJahrgaenge(api.schema);
-		const listLehrer = await api.server.getLehrer(api.schema);
+		let listFaecher;
+		let listFoerderschwerpunkte;
+		let listJahrgaenge;
+		let listLehrer;
+		if (this.hatAuswahl) {
+			listFaecher = this.manager.fachGetMenge();
+			listFoerderschwerpunkte = this.manager.foerderschwerpunktGetMenge();
+			listJahrgaenge = this.manager.jahrgangGetMenge();
+			listLehrer = this.manager.lehrerGetMenge();
+		} else {
+			const data = await Promise.all([
+				await api.server.getFaecher(api.schema),
+				await api.server.getSchuelerFoerderschwerpunkte(api.schema),
+				await api.server.getJahrgaenge(api.schema),
+				await api.server.getLehrer(api.schema),
+			]);
+			listFaecher = data[0];
+			listFoerderschwerpunkte = data[1];
+			listJahrgaenge = data[2];
+			listLehrer = data[3];
+		}
 		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
 		newState = await this.updateSchuljahresabschnitt(newState,
@@ -184,7 +212,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 
 	public async setLernabschnitt(idSchuljahresabschnitt : number, wechselNr : number) {
 		const curAuswahl = this._state.value.auswahl;
-		if ((curAuswahl === undefined) || ((idSchuljahresabschnitt === curAuswahl.schuljahresabschnitt)) && (wechselNr === curAuswahl.wechselNr))
+		if ((curAuswahl === undefined) || ((idSchuljahresabschnitt === curAuswahl.schuljahresabschnitt) && (wechselNr === curAuswahl.wechselNr)))
 			return;
 		const newState = await this.updateSchuljahresabschnitt(this._state.value, idSchuljahresabschnitt, wechselNr);
 		this.setPatchedState(newState);

@@ -61,6 +61,10 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 		}
 	}
 
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
+	}
+
 	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
 		return { name: this.data.view.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
