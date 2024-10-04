@@ -63,8 +63,11 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			else
 				await this.data.gotoEintrag(id)
 
-			if (to.name === this.name)
-				return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
+			if (to.name === this.name) {
+				if (this.data.klassenListeManager.hasDaten())
+					return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
+				return;
+			}
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))
