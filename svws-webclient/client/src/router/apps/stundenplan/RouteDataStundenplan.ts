@@ -259,7 +259,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const p of pausenzeiten) {
-			if (p.wochentag && p.beginn && p.ende) {
+			if ((p.wochentag !== undefined) && (p.beginn !== undefined) && (p.ende !== undefined)) {
 				delete p.id;
 				list.add(p);
 			}
@@ -327,7 +327,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		/** Der folgende Teil ist falsch, weil von einer einzigen Pausenzeit und einem einzigen Lehrer ausgegangen wird. Daher ist auch nur ein Element in der List zulässig. */
 		const listAdd = new ArrayList<Partial<StundenplanPausenaufsicht>>();
 		for (const aufsichtsbereich of update.listHinzuzufuegen)
-			if (aufsichtsbereich.idPausenaufsicht < 0 && idPausenzeit && idLehrer) {
+			if ((aufsichtsbereich.idPausenaufsicht < 0) && (idPausenzeit !== undefined) && (idLehrer !== undefined)) {
 				const aufsichtNeu: Partial<StundenplanPausenaufsicht> = new StundenplanPausenaufsicht();
 				aufsichtNeu.idPausenzeit = idPausenzeit;
 				aufsichtNeu.idLehrer = idLehrer;
@@ -339,7 +339,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (!listAdd.isEmpty()) {
 			const res = await api.server.addStundenplanPausenaufsichten(listAdd, api.schema, id);
 			this.stundenplanManager.pausenaufsichtAddAll(res);
-			if (res.size()) {
+			if (res.size() > 0) {
 				const aufsichtErstellt = res.get(0);
 				for (const aufsichtsbereich of update.listHinzuzufuegen)
 					if (aufsichtsbereich.idPausenaufsicht < 0)
@@ -394,7 +394,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const id = this._state.value.auswahl?.id;
 		if (id === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if (!aufsichtsbereich.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(aufsichtsbereich.kuerzel))
+		if ((aufsichtsbereich.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(aufsichtsbereich.kuerzel))
 			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete aufsichtsbereich.id;
 		api.status.start();
@@ -407,7 +407,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	patchAufsichtsbereich = async (aufsichtsbereich : Partial<StundenplanAufsichtsbereich>, id: number) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
-		if (!aufsichtsbereich.kuerzel)
+		if (aufsichtsbereich.kuerzel === undefined)
 			return;
 		api.status.start();
 		await api.server.patchStundenplanAufsichtsbereich(aufsichtsbereich, api.schema, id);
@@ -578,7 +578,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const jahrgang = new StundenplanJahrgang();
 		for (const j of this.listJahrgaenge)
 			if (j.id === id) {
-				jahrgang.kuerzel = j.kuerzel || j.kuerzelStatistik;
+				jahrgang.kuerzel = j.kuerzel ?? j.kuerzelStatistik;
 				jahrgang.id = j.id;
 			}
 		this.stundenplanManager.jahrgangAdd(jahrgang);

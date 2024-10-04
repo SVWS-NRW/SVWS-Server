@@ -50,7 +50,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 	addPausenzeiten = async (eintraege: Iterable<Partial<StundenplanPausenzeit>>) => {
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const eintrag of eintraege) {
-			if (!eintrag.wochentag || !eintrag.beginn || !eintrag.ende || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
+			if ((eintrag.wochentag === undefined) || (eintrag.beginn === undefined) || (eintrag.ende === undefined) || this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(eintrag.wochentag, eintrag.beginn, eintrag.ende))
 				throw new UserNotificationException('Eine Pausenzeit existiert bereits an diesem Tag und zu dieser Zeit');
 			delete eintrag.id;
 			delete eintrag.klassen;
@@ -97,7 +97,7 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		const pausenzeiten: Partial<StundenplanPausenzeit>[] = JSON.parse(json);
 		const list = new ArrayList<Partial<StundenplanPausenzeit>>();
 		for (const item of pausenzeiten)
-			if (item.wochentag && item.beginn && item.ende && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
+			if ((item.wochentag !== undefined) && (item.beginn !== undefined) && (item.ende !== undefined) && !this.stundenplanManager.pausenzeitExistsByWochentagAndBeginnAndEnde(item.wochentag, item.beginn, item.ende)) {
 				// Muss nach JSON umgewandelt werden und zurück nach Pausenzeit, weil das reguläre JSON.parse ein Array als Array einliest.
 				const p = JSON.stringify(item);
 				const pp: Partial<StundenplanPausenzeit> = StundenplanPausenzeit.transpilerFromJSON(p);

@@ -55,9 +55,9 @@ describe("SvwsUiTooltip", () => {
 		expect(wrapper.find(".i-ri-alert-fill").exists()).toBe(true);
 	});
 
-	test("Mit indicator prop 'danger' wird alert Icon gerendert", () => {
+	test("Mit indicator prop 'help' wird Hilfe Icon gerendert", () => {
 		const wrapper = mount(SvwsUiTooltip, {
-			props: { indicator: " " },
+			props: { indicator: "help" },
 		});
 		expect(wrapper.find(".i-ri-question-line").exists()).toBe(true);
 	});

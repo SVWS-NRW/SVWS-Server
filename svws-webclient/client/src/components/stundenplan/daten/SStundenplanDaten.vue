@@ -122,7 +122,7 @@
 
 	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
-	const jahrgaenge = computed(()=> {
+	const jahrgaenge = computed(() => {
 		const list = props.stundenplanManager().jahrgangGetMengeAsList();
 		const a = [];
 		for (const j of list)
@@ -162,7 +162,7 @@
 
 	const raum = ref<StundenplanRaum | undefined>();
 	const selected = ref<StundenplanRaum[]>([]);
-	const items = computed(()=>[...props.stundenplanManager().raumGetMengeAsList()]);
+	const items = computed(() => [...props.stundenplanManager().raumGetMengeAsList()]);
 
 	const colsRaeume = [
 		{key: 'kuerzel', label: 'Kürzel', span: 1},

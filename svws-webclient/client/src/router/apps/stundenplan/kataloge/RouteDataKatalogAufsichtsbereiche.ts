@@ -49,7 +49,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(eintrag.id));
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
-		if (!eintrag.kuerzel || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
+		if ((eintrag.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))
 			throw new UserNotificationException('Eine Aufsichtsbereich mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const aufsichtsbereich = await api.server.addAufsichtsbereich(eintrag, api.schema);

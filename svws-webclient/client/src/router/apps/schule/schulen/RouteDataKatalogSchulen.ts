@@ -41,7 +41,7 @@ export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen>
 		let auswahl;
 		for (const l of listKatalogeintraege) {
 			mapKatalogeintraege.set(l.id, l);
-			if ((auswahl === undefined) && (l.kuerzel))
+			if ((auswahl === undefined) && (l.kuerzel !== null))
 				auswahl = l;
 		}
 		if ((auswahl === undefined) && (listKatalogeintraege.size() > 0))

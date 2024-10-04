@@ -69,20 +69,20 @@
 					<svws-ui-dashboard-tile color="dark" number="516" number-label="Fehler insgesamt">
 						Relevante Daten für die Statistik müssen noch korrigiert werden.
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Schülerdaten" number="351" number-label="zu korrigieren" @click="() => selectedRoute = routes[1]" clickable>
+					<svws-ui-dashboard-tile title="Schülerdaten" number="351" number-label="zu korrigieren" @click="setTab({ name: 'Schüler', text: 'Schüler' })" clickable>
 						1.421 Schüler angemeldet
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Lehrerdaten" number="51" number-label="zu korrigieren" @click="() => selectedRoute = routes[2]" clickable>
+					<svws-ui-dashboard-tile title="Lehrerdaten" number="51" number-label="zu korrigieren" @click="setTab({ name: 'Lehrer', text: 'Lehrer' })" clickable>
 						121 Lehrkräfte angestellt
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Unterrichtsdaten" number="32" number-label="zu korrigieren" @click="() => selectedRoute = routes[3]" clickable>
+					<svws-ui-dashboard-tile title="Unterrichtsdaten" number="32" number-label="zu korrigieren" @click="setTab({ name: 'Unterrichts', text: 'Unterricht' })" clickable>
 						80 Kurse angeboten
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
 			<template v-if="selectedRoute.name !== 'dashboard'">
 				<div class="page--content--dashboard">
-					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${selectedRoute.name}daten`">
+					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${tabManager().tab.name}daten`">
 						<p>
 							Dieser Bereich ist aktuell nur eine Vorschau. Alle Inhalte sind Beispiele und keine aktuellen Daten aus dem Client.
 						</p>

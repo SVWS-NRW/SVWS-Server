@@ -44,9 +44,8 @@ export class RouteFachStundenplan extends RouteNode<RouteDataFachStundenplan, Ro
 		if (to.name === this.name) {
 			// Und wähle dann einen Eintrag aus der Stundenplanliste aus, wenn diese nicht leer ist
 			if (routeFachStundenplan.data.mapStundenplaene.size !== 0) {
-				const stundenplan = routeFachStundenplan.data.mapStundenplaene.entries().next().value;
-				if (stundenplan !== undefined)
-					return routeFachStundenplanDaten.getRoute(idFach, stundenplan.id, 0);
+				const [idStundenplan] = routeFachStundenplan.data.mapStundenplaene.keys();
+				return routeFachStundenplanDaten.getRoute(idFach, idStundenplan, 0);
 			}
 		}
 	}

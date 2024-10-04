@@ -136,7 +136,7 @@ export class ApiConnection {
 	get config(): Config {
 		if (this._config.value === undefined)
 			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
-		return this._config.value;
+		return this._config.value as Config;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.

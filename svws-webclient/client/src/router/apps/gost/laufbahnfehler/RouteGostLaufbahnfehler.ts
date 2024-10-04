@@ -52,8 +52,10 @@ export class RouteGostLaufbahnfehler extends RouteNode<RouteDataGostLaufbahnfehl
 				if (this.parent === undefined)
 					throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 				const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-				if (abiturjahr === undefined || abiturjahr === -1)
-					return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.parent.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
+				if (abiturjahr === undefined || abiturjahr === -1) {
+					const [alternativ] = this.parent.data.mapAbiturjahrgaenge.values();
+					return { name: this.parent.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: alternativ.abiturjahr }};
+				}
 			}
 			return true;
 		} catch (e) {

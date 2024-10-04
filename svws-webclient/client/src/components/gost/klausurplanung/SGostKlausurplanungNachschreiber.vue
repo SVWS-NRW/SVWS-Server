@@ -130,7 +130,7 @@
 						:update-klausurblockung
 						:show-schuelerklausuren="true"
 						:goto-kalenderwoche
-						:goto-raumzeit-termin/>
+						:goto-raumzeit-termin />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />

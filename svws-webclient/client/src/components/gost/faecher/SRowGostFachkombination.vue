@@ -70,7 +70,7 @@
 
 	const kursart1 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart1),
-		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel || null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel ?? null }, props.kombination.id)
 	});
 
 	const fach2 = computed<GostFach | null>({
@@ -80,7 +80,7 @@
 
 	const kursart2 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart2),
-		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel || null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel ?? null }, props.kombination.id)
 	});
 
 	const gueltigEF1 = computed<boolean>({
@@ -142,7 +142,7 @@
 			? 'erfordert' : 'erlaubt kein'
 		const k1 = kursart1.value?.kuerzel ?? '';
 		const k2 = kursart2.value?.kuerzel ?? '';
-		return `${fach1.value?.kuerzel || ''} ${k1} ${typ} ${fach2.value?.kuerzel || ''} ${k2}`;
+		return `${fach1.value?.kuerzel ?? ''} ${k1} ${typ} ${fach2.value?.kuerzel ?? ''} ${k2}`;
 	})
 
 </script>

@@ -75,7 +75,7 @@
 		await props.patchFach(data, props.fachId);
 	}
 
-	const fach = computed(()=> {
+	const fach = computed(() => {
 		const fach = props.faecherManager().get(props.fachId);
 		if (fach === null)
 			throw new DeveloperNotificationException("Fehler, es gibt kein gültiges Fach.");
@@ -111,7 +111,7 @@
 			const result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
+		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id ?? null })
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
@@ -121,7 +121,7 @@
 			const result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
+		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id ?? null })
 	});
 
 	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => props.abiturjahr < 0);

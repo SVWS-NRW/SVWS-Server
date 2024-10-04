@@ -169,7 +169,7 @@ export class RouteDataEinstellungenBenutzer extends RouteData<RouteStateEinstell
 	setAnzeigename = async (anzeigename : string | null): Promise<void> => {
 		await api.server.setAnzeigename(anzeigename, api.schema, this.benutzerManager.getID());
 		for (const benutzer of this.listBenutzer)
-			if (benutzer.id === this.daten.id && anzeigename)
+			if ((benutzer.id === this.daten.id) && (anzeigename !== null))
 				benutzer.anzeigename = anzeigename;
 		this.benutzerManager.setAnzeigename(anzeigename ?? '');
 		this.commit();
