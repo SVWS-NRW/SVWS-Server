@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<svws-ui-table :columns="cols" :items="undefined" has-background class="col-span-2 -mt-1">
+		<svws-ui-table :columns :items="leistungen" has-background class="col-span-2 -mt-1">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />
@@ -18,62 +18,60 @@
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Halbjahresnote"> Halbjahr </div>
 				</div>
 			</template>
-			<template #body="">
-				<template v-for="leistung in leistungen" :key="leistung.id">
-					<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id) }">
-						<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
-							<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
-								:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-								@update:model-value="(value : FachDaten | null) => void patchFach(value, leistung)"
-								class="w-full" headless use-null />
-							<div v-else>{{ manager().fachGetByLeistungIdOrException(leistung.id)?.bezeichnung ?? '—' }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
-								:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="(value : KursDaten | null) => void patchKurs(value, leistung)"
-								class="w-full" headless removable use-null />
-							<div v-else>{{ manager().kursGetByLeistungIdOrNull(leistung.id)?.kuerzel ?? '—' }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
-							<template v-if="(manager().kursGetByLeistungIdOrNull(leistung.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg).size() === 1">
-								<span>{{ leistung.kursart }}</span>
-							</template>
-							<template v-else>
-								<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg)" :item-text="zk => zk.daten(schuljahr)?.kuerzel ?? '—'"
-									:model-value="(leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)"
-									@update:model-value="value => patchLeistung({ kursart: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-									class="w-full" headless />
-								<div v-else>{{ (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
-							</template>
-						</div>
-						<div class="svws-ui-td svws-divider" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMenge()" :item-text="lehrer => textLehrer(lehrer)"
-								:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, leistung.id)"
-								class="w-full" headless />
-							<div v-else>{{ textLehrer(manager().lehrerGetByLeistungIdOrNull(leistung.id)) }}</div>
-						</div>
-						<div class="svws-ui-td svws-divider" role="cell">
-							<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
-								@update:model-value="value => patchLeistung({ noteQuartal: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-								headless class="w-full" />
-							<div v-else>{{ Note.fromKuerzel(leistung.noteQuartal).daten(schuljahr)?.kuerzel }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
-								:model-value="Note.fromKuerzel(leistung.note)"
-								@update:model-value="value => patchLeistung({ note: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
-								headless class="w-full" />
-							<div v-else>{{ Note.fromKuerzel(leistung.note).daten(schuljahr)?.kuerzel }}</div>
-						</div>
+			<template #rowCustom="{ row: leistung }">
+				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id) }">
+					<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
+						<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
 					</div>
-				</template>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
+							:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
+							@update:model-value="(value : FachDaten | null) => void patchFach(value, leistung)"
+							class="w-full" headless use-null />
+						<div v-else>{{ manager().fachGetByLeistungIdOrException(leistung.id)?.bezeichnung ?? '—' }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
+							:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
+							@update:model-value="(value : KursDaten | null) => void patchKurs(value, leistung)"
+							class="w-full" headless removable use-null />
+						<div v-else>{{ manager().kursGetByLeistungIdOrNull(leistung.id)?.kuerzel ?? '—' }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
+						<template v-if="(manager().kursGetByLeistungIdOrNull(leistung.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg).size() === 1">
+							<span>{{ leistung.kursart }}</span>
+						</template>
+						<template v-else>
+							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg)" :item-text="zk => zk.daten(schuljahr)?.kuerzel ?? '—'"
+								:model-value="(leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)"
+								@update:model-value="value => patchLeistung({ kursart: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+								class="w-full" headless />
+							<div v-else>{{ (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+						</template>
+					</div>
+					<div class="svws-ui-td svws-divider" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMenge()" :item-text="lehrer => textLehrer(lehrer)"
+							:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
+							@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, leistung.id)"
+							class="w-full" headless />
+						<div v-else>{{ textLehrer(manager().lehrerGetByLeistungIdOrNull(leistung.id)) }}</div>
+					</div>
+					<div class="svws-ui-td svws-divider" role="cell">
+						<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
+							:model-value="Note.fromKuerzel(leistung.noteQuartal)"
+							@update:model-value="value => patchLeistung({ noteQuartal: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+							headless class="w-full" />
+						<div v-else>{{ Note.fromKuerzel(leistung.noteQuartal).daten(schuljahr)?.kuerzel }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
+							:model-value="Note.fromKuerzel(leistung.note)"
+							@update:model-value="value => patchLeistung({ note: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+							headless class="w-full" />
+						<div v-else>{{ Note.fromKuerzel(leistung.note).daten(schuljahr)?.kuerzel }}</div>
+					</div>
+				</div>
 			</template>
 			<template v-if="hatUpdateKompetenz" #footer>
 				<div class="svws-ui-tr flex flex-row" role="row">
@@ -122,7 +120,7 @@
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 
-	const cols = computed(() => {
+	const columns = computed(() => {
 		const result = [];
 		if (hatUpdateKompetenz.value)
 			result.push({ key: "auswahl", label: "Auswahl", fixedWidth: 1.5 });
@@ -176,12 +174,11 @@
 			for (const l of oldLeistungen)
 				tmpSetIDs.add(l.id);
 			let changed : boolean = false;
-			for (const l of newLeistungen) {
+			for (const l of newLeistungen)
 				if (!tmpSetIDs.has(l.id)) {
 					changed = true;
 					break;
 				}
-			}
 			if (!changed)
 				return;
 		}
