@@ -100,12 +100,12 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 	public getAuswahlProps(to: RouteLocationNormalized): SchuleAuswahlProps {
 		return {
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
-			tabManager: () => this.createTabManagerByMenu(this.data.view.name, this.setChild),
+			tabManager: () => this.createTabManagerByMenu(this.data.view.name, this.setTab),
 			schule: () => api.schuleStammdaten,
 		};
 	}
 
-	private setChild = async (value: TabData) => {
+	private setTab = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");

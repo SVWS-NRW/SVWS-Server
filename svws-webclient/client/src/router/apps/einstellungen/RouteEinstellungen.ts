@@ -30,6 +30,7 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 		super.setView("liste", SEinstellungenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [];
 		super.menu = [
+			// Benutzerverwaltung
 			routeEinstellungenBenutzer,
 			routeEinstellungenBenutzergruppe,
 		];
@@ -55,26 +56,11 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 
 	public getAuswahlProps(to: RouteLocationNormalized): EinstellungenAuswahlProps {
 		return {
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByMenu(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getChild(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getChildData(): TabData[] {
-		const result: TabData[] = [];
-		for (const c of this.menu)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
-	}
-
-	private setChild = async (value: TabData) => {
+	private setTab = async (value: TabData) => {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");

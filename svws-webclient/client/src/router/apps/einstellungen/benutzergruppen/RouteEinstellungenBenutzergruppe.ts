@@ -15,6 +15,7 @@ import { RouteDataEinstellungenBenutzergruppe } from "~/router/apps/einstellunge
 import type { TabData } from "@ui";
 import type { BenutzergruppeAuswahlProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahlProps";
 import type { BenutzergruppeAppProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAppProps";
+import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
 
 const SBenutzergruppeAuswahl = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeApp.vue")
@@ -26,6 +27,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Benutzergruppen";
+		super.menugroup = RouteEinstellungenMenuGroup.BENUTZERVERWALTUNG;
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeEinstellungenBenutzergruppeDaten
@@ -52,11 +54,11 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		if (to.name === this.name) {
 			if (this.data.mapBenutzergruppe.size === 0)
 				return;
-			return this.getRoute(this.data.mapBenutzergruppe.values().next().value.id);
+			return this.getRoute(this.data.mapBenutzergruppe.values().next().value?.id);
 		}
 		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
 		if(id !== undefined && !this.data.mapBenutzergruppe.has(id))
-			return this.getRoute(this.data.mapBenutzergruppe.values().next().value.id);
+			return this.getRoute(this.data.mapBenutzergruppe.values().next().value?.id);
 		const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
 		await this.data.setBenutzergruppe(eintrag);
 	}
