@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
@@ -126,18 +127,42 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 
 
 	/**
-	 * Ermittel die Schienen, welche in der Kursliste definiert sind und erzeugt dafür Einträge für den Stundenplan.
+	 * Liste die Schienen aus der Datenbank ein und erstellt eine HashMap2D, welche von der
+	 * Schienen-Nummer (int) und der Jahrgangs-ID (long) auf das DTO für die Schiene abbildet.
+	 *
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 *
+	 * @return die HashMap2D
+	 */
+	public static @NotNull HashMap2D<Integer, Long, DTOStundenplanSchienen> getMapDTOs(final DBEntityManager conn, final long idStundenplan) {
+		final List<DTOStundenplanSchienen> listSchienen =
+				conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID, DTOStundenplanSchienen.class, idStundenplan);
+		final HashMap2D<Integer, Long, DTOStundenplanSchienen> result = new HashMap2D<>();
+		for (final DTOStundenplanSchienen schiene : listSchienen)
+			result.put(schiene.Nummer, schiene.Jahrgang_ID, schiene);
+		return result;
+	}
+
+
+	/**
+	 * Ermittelt die Schienen, welche in der Kursliste definiert sind und erzeugt für bisher
+	 * in der übergebenen map nicht bestehende Einträge beim Stundenplan neue Einträge für den Stundenplan.
 	 *
 	 * @param conn            die Datenbankverbindung
 	 * @param idStundenplan   die ID des Stundenplans
 	 * @param kurse           die Liste der Kurse
+	 * @param mapDTOs         die map mit den bestehenden Einträgen, welche von der Schienen-Nummer (int)
+	 *                        und der Jahrgangs-ID (long) auf das DTO für die Schiene abbildet
 	 */
-	public static void addSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse) {
+	public static void updateSchienenFromKurslisteInternal(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse,
+			final @NotNull HashMap2D<Integer, Long, DTOStundenplanSchienen> mapDTOs) {
 		final Set<Pair<Long, Integer>> setJahrgangsSchienen = new HashSet<>();
 		for (final KursDaten kurs : kurse)
 			for (final long idJahrgang : kurs.idJahrgaenge)
 				for (final int schiene : kurs.schienen)
-					setJahrgangsSchienen.add(new Pair<>(idJahrgang, schiene));
+					if (!mapDTOs.contains(schiene, idJahrgang))
+						setJahrgangsSchienen.add(new Pair<>(idJahrgang, schiene));
 		long id = conn.transactionGetNextID(DTOStundenplanSchienen.class);
 		for (final Pair<Long, Integer> s : setJahrgangsSchienen) {
 			final DTOStundenplanSchienen dto = new DTOStundenplanSchienen(id++, idStundenplan, s.b, "Schiene " + s.b);
@@ -145,6 +170,32 @@ public final class DataStundenplanSchienen extends DataManager<Long> {
 			conn.transactionPersist(dto);
 		}
 		conn.transactionFlush();
+	}
+
+
+	/**
+	 * Ermittelt die Schienen, welche in der Kursliste definiert sind und erzeugt dafür
+	 * Einträge für den Stundenplan.
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param kurse           die Liste der Kurse
+	 */
+	public static void addSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse) {
+		updateSchienenFromKurslisteInternal(conn, idStundenplan, kurse, new HashMap2D<>());
+	}
+
+
+	/**
+	 * Ermittelt die Schienen, welche in der Kursliste definiert sind und erzeugt für bisher
+	 * nicht bestehende Einträge beim Stundenplan neue Einträge für den Stundenplan.
+	 *
+	 * @param conn            die Datenbankverbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 * @param kurse           die Liste der Kurse
+	 */
+	public static void updateSchienenFromKursliste(final DBEntityManager conn, final Long idStundenplan, final List<KursDaten> kurse) {
+		updateSchienenFromKurslisteInternal(conn, idStundenplan, kurse, getMapDTOs(conn, idStundenplan));
 	}
 
 

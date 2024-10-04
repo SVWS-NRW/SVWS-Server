@@ -156,7 +156,7 @@ public final class DataStundenplanListe extends DataManager<Long> {
 			conn.transactionFlush();
 			// Füge die Schienen, welche bereits in der Kursliste angegeben sind zum Stundenplan hinzu
 			final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, false);
-			DataStundenplanSchienen.addSchienenFromKursliste(conn, stundenplan.ID, kurse);
+			DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.ID, kurse);
 			// Geben den neuen Stundenplan-Listeneintrag zurück
 			final StundenplanListeEintrag daten = DataStundenplanListe.dtoMapper.apply(stundenplan);
 			daten.schuljahr = abschnitt.Jahr;

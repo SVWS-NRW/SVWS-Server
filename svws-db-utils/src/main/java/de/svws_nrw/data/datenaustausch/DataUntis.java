@@ -137,7 +137,7 @@ public final class DataUntis {
 		// Übertrage den Katalog mit dem Zeitraster
 		DataStundenplanZeitraster.addZeitraster(conn, dtoStundenplan, DataKatalogZeitraster.getZeitraster(conn));
 		// Erzeuge die Einträge für die Kurs-Schienen
-		DataStundenplanSchienen.addSchienenFromKursliste(conn, idStundenplan, kurse);
+		DataStundenplanSchienen.updateSchienenFromKursliste(conn, idStundenplan, kurse);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, idStundenplan);
 		final HashMap2D<Long, Integer, StundenplanSchiene> mapSchienen = new HashMap2D<>();
 		for (final StundenplanSchiene schiene : schienen)
