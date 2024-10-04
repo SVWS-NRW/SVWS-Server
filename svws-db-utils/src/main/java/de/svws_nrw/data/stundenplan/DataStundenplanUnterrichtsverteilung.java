@@ -78,7 +78,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		final List<Long> idsLehrerFehlende = Stream.concat(
 				kurse.stream().flatMap(k -> k.lehrer.stream()),
 				klassenunterricht.stream().flatMap(ku -> ku.lehrer.stream()))
-				.filter(l -> !idsLehrer.contains(l)).toList();
+				.distinct().filter(l -> !idsLehrer.contains(l)).toList();
 		if (!idsLehrerFehlende.isEmpty()) {
 			final List<DTOLehrer> lehrerFehlende = conn.queryByKeyList(DTOLehrer.class, idsLehrerFehlende);
 			if (lehrerFehlende.size() != idsLehrerFehlende.size())
@@ -96,7 +96,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 				kurse.stream().flatMap(k -> k.schueler.stream()),
 				klassenunterricht.stream().flatMap(ku -> ku.schueler.stream())),
 				klassen.stream().flatMap(k -> k.schueler.stream()))
-				.filter(s -> !idsSchueler.contains(s)).toList();
+				.distinct().filter(s -> !idsSchueler.contains(s)).toList();
 		if (!idsSchuelerFehlende.isEmpty()) {
 			final List<DTOSchueler> schuelerFehlende = conn.queryByKeyList(DTOSchueler.class, idsSchuelerFehlende);
 			if (schuelerFehlende.size() != idsSchuelerFehlende.size())
