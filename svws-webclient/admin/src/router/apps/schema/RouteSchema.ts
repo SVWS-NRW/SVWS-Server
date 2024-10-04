@@ -39,7 +39,7 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		// Prüfe, ob bereits ein Schema ausgewählt wurde. Wenn nicht, dann lade die Liste vom Server und wähle ein Default-Schema aus
 		const auswahl = this.data.auswahl;
 		if (auswahl === undefined) {
-			await this.data.init(to_params.schema);
+			await this.data.init(to_params.schema, isEntering);
 			// Prüfe, ob ein Schema in der neu geladenen Liste vorhanden ist
 			if (this.data.auswahl !== undefined)
 				return this.getChildRoute(this.data.auswahl.name);

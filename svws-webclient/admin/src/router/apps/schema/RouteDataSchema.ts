@@ -141,7 +141,7 @@ export class RouteDataSchema {
 	/**
 	 * Initialisiert die Schema-Liste
 	 */
-	public async init(schemaname : string | undefined) {
+	public async init(schemaname : string | undefined, refreshOnly? : boolean) {
 		api.status.start();
 		const mapSchema = new Map<string, SchemaListeEintrag>();
 		const listSchema : List<SchemaListeEintrag> = await api.privileged.getSchemaListe();
@@ -155,8 +155,8 @@ export class RouteDataSchema {
 			if (currSchema === undefined)
 				currSchema = mapSchema.values().next().value;
 		}
-		const revision = await api.server.getServerDBRevision();
-		const schulen: List<SchulenKatalogEintrag> = await api.privileged.getAllgemeinenKatalogSchulen();
+		const revision = (refreshOnly === true) ? this._state.value.revision : await api.server.getServerDBRevision();
+		const schulen: List<SchulenKatalogEintrag> = (refreshOnly === true) ? this._state.value.schulen : await api.privileged.getAllgemeinenKatalogSchulen();
 		const view = routeSchemaUebersicht;
 		const { auswahl, schuleInfo, admins } = await this.getSchemaInformation(currSchema);
 		this.setPatchedDefaultState({ mapSchema, auswahl, schuleInfo, admins, revision, schulen, view });
@@ -234,7 +234,7 @@ export class RouteDataSchema {
 		api.status.start();
 		const result = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
 		api.status.stop();
-		await this.init(this.auswahl.name);
+		await this.init(this.auswahl.name, true);
 		return result;
 	}
 
@@ -255,15 +255,8 @@ export class RouteDataSchema {
 	addSchema = async (data: BenutzerKennwort, schema: string) => {
 		api.status.start();
 		const result = await api.privileged.createSchemaCurrent(data, schema);
-		const list = await api.privileged.getSVWSSchemaListe();
-		for (const item of list)
-			if (item.name === schema) {
-				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
-				this.setPatchedState({mapSchema: this.mapSchema});
-				await this.setSchema(item);
-				break;
-			}
 		api.status.stop();
+		await this.init(schema, true);
 		return result;
 	}
 
@@ -271,7 +264,7 @@ export class RouteDataSchema {
 		api.status.start();
 		const result = await api.privileged.importSQLite2Schema(data, schema);
 		api.status.stop();
-		await this.init(schema);
+		await this.init(schema, true);
 		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
@@ -312,7 +305,7 @@ export class RouteDataSchema {
 			}
 		}
 		api.status.stop();
-		await this.init(this.auswahl.name);
+		await this.init(this.auswahl.name, true);
 		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
@@ -327,6 +320,7 @@ export class RouteDataSchema {
 		formData.append("database", data);
 		const result = await this.importSchema(formData, duplikat);
 		api.status.stop();
+		await this.init(duplikat, true);
 		return result;
 	}
 
@@ -419,7 +413,9 @@ export class RouteDataSchema {
 				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + out);
 			}
 		}
-		await this.init(schema ?? undefined);
+		api.status.stop();
+		await this.init(schema ?? undefined, true);
+		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
 		return result;
@@ -430,8 +426,8 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		const result = await api.privileged.initSchemaMitSchule(this.auswahl.name, schulnummer);
-		await this.setSchema(this.auswahl);
 		api.status.stop();
+		await this.init(this.auswahl.name, true);
 		return result;
 	}
 
@@ -440,8 +436,8 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein leeres SVWS-Schema in einem Schema erstellt werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		const result = await api.privileged.createSchemaCurrentInto(this.auswahl.name);
-		await this.setSchema(this.auswahl);
 		api.status.stop();
+		await this.init(this.auswahl.name, true);
 		return result;
 	}
 
@@ -457,6 +453,6 @@ export class RouteDataSchema {
 		this.commit();
 	}
 
-	refresh = async () => await this.init(undefined);
+	refresh = async () => await this.init(undefined, true);
 
 }

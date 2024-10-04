@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotNull;
 public class ConnectionFactory {
 
 	/** Das Intervall, nachdem Factories nach einem close aufgeräumt werden, sofern sie nicht zwischenzeitlich neue Verbindungen aufgebaut haben. */
-	private static final long CONNECTION_CLEANUP_INTERVAL = 60000;  // 1 min
+	private static final long CONNECTION_CLEANUP_INTERVAL = 300000;  // 5 min
 
 	/** Ein Zufallszahlen-Generator */
 	private static final Random random = new Random();
