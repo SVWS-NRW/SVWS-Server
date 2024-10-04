@@ -61,19 +61,23 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 	 *
 	 * @param conn            die Datenbankverbindung
 	 * @param idStundenplan   die ID des Stundenplans
+	 * @param nurAktive       gibt an, ob nur aktive Lehrer ermittelt werden sollen
 	 *
 	 * @return die Liste der Lehrer
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	public static List<StundenplanLehrer> getLehrer(final @NotNull DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
+	public static List<StundenplanLehrer> getLehrer(final @NotNull DBEntityManager conn, final long idStundenplan, final boolean nurAktive)
+			throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOLehrer> lehrerliste = conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true);
+		final List<DTOLehrer> lehrerliste = nurAktive
+				? conn.queryList(DTOLehrer.QUERY_BY_SICHTBAR, DTOLehrer.class, true)
+				: conn.queryAll(DTOLehrer.class);
 		final ArrayList<StundenplanLehrer> daten = new ArrayList<>();
 		for (final DTOLehrer l : lehrerliste) {
-			if ((l.DatumAbgang != null)) {
+			if (nurAktive && (l.DatumAbgang != null)) {
 				// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt
 			}
 			final StundenplanLehrer lehrer = dtoMapper.apply(l);
@@ -86,7 +90,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final List<StundenplanLehrer> daten = getLehrer(conn, this.stundenplanID);
+		final List<StundenplanLehrer> daten = getLehrer(conn, this.stundenplanID, true);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -107,7 +111,7 @@ public final class DataStundenplanLehrer extends DataManager<Long> {
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
 		final DTOLehrer lehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
-		if ((lehrer == null) || ((lehrer.Sichtbar != null) && !lehrer.Sichtbar))
+		if (lehrer == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde keine Lehrkraft mit der ID %d gefunden.".formatted(idLehrer));
 		if ((lehrer.DatumAbgang != null)) {
 			// TODO DatumAbgang bei Filterung berücksichtigen, wenn gesetzt

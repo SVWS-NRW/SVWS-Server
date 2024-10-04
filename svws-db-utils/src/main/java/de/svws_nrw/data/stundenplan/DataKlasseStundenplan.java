@@ -120,7 +120,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 
 		final Map<Long, List<StundenplanKlasse>> klassenByUnterrichtIds = DataStundenplanKlassen.getKlassenByUnterrichtIds(conn, idStundenplan, unterrichtIds);
 		final Map<Long, StundenplanLehrer> lehrerById =
-				DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
+				DataStundenplanLehrer.getLehrer(conn, idStundenplan, true).stream().collect(Collectors.toMap(l -> l.id, Function.identity()));
 		final List<DTOStundenplanUnterrichtLehrer> unterrichtLehrerList = unterrichtIds.isEmpty() ? new ArrayList<>()
 				: conn.queryList(DTOStundenplanUnterrichtLehrer.QUERY_LIST_BY_UNTERRICHT_ID, DTOStundenplanUnterrichtLehrer.class, unterrichtIds);
 		final Map<Long, List<StundenplanLehrer>> lehrerByUnterrichtId = new HashMap<>();
@@ -193,7 +193,7 @@ public final class DataKlasseStundenplan extends DataManager<Long> {
 		weitereLehrerIDs.addAll(stundenplan.unterrichtsverteilung.kurse.stream().flatMap(k -> k.lehrer.stream()).toList());
 		weitereLehrerIDs.removeAll(stundenplan.unterrichtsverteilung.lehrer.stream().map(l -> l.id).toList());
 		if (!weitereLehrerIDs.isEmpty())
-			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan).stream()
+			stundenplan.unterrichtsverteilung.lehrer.addAll(DataStundenplanLehrer.getLehrer(conn, idStundenplan, false).stream()
 					.filter(l -> weitereLehrerIDs.contains(l.id)).toList());
 		// Füge die Fächer hinzu
 		fachIDs.addAll(stundenplan.unterrichtsverteilung.klassenunterricht.stream().map(ku -> ku.idFach).distinct().toList());

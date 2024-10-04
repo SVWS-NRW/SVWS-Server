@@ -67,7 +67,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, idStundenplan);
+		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, idStundenplan, true);
 		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, idStundenplan);
 		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, idStundenplan);
 		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, idStundenplan);
