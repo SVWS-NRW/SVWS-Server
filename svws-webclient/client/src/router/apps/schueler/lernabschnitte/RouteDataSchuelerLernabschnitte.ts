@@ -116,12 +116,10 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			listKurse = this.manager.kursGetMenge();
 			listKlassen = this.manager.klasseGetMenge();
 		} else {
-			const data = await Promise.all([
-				await api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt),
-				await api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+			[ listKurse, listKlassen ] = await Promise.all([
+				api.server.getKurseFuerAbschnitt(api.schema, found.schuljahresabschnitt),
+				api.server.getKlassenFuerAbschnitt(api.schema, found.schuljahresabschnitt),
 			]);
-			listKurse = data[0];
-			listKlassen = data[1];
 		}
 		const schueler = routeSchueler.data.schuelerListeManager.auswahl();
 		const mapSchuljahresabschnitte = api.mapAbschnitte.value;
@@ -175,16 +173,12 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 			listJahrgaenge = this.manager.jahrgangGetMenge();
 			listLehrer = this.manager.lehrerGetMenge();
 		} else {
-			const data = await Promise.all([
-				await api.server.getFaecher(api.schema),
-				await api.server.getSchuelerFoerderschwerpunkte(api.schema),
-				await api.server.getJahrgaenge(api.schema),
-				await api.server.getLehrer(api.schema),
+			[ listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer ] = await Promise.all([
+				api.server.getFaecher(api.schema),
+				api.server.getSchuelerFoerderschwerpunkte(api.schema),
+				api.server.getJahrgaenge(api.schema),
+				api.server.getLehrer(api.schema),
 			]);
-			listFaecher = data[0];
-			listFoerderschwerpunkte = data[1];
-			listJahrgaenge = data[2];
-			listLehrer = data[3];
 		}
 		let newState = <RouteStateDataSchuelerLernabschnitte>{ idSchueler, listAbschnitte, hatGymOb, listFaecher, listFoerderschwerpunkte, listJahrgaenge, listLehrer, view: this._state.value.view };
 		const alteAuswahl = this._state.value.auswahl;
