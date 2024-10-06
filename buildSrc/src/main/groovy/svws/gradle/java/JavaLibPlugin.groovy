@@ -44,6 +44,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('database', 'com.healthmarketscience.jackcess:jackcess:' + versionJackcess);
 		project.dependencies.add('database', 'com.mysql:mysql-connector-j:' + versionMySQL);
 		project.dependencies.add('database', 'com.microsoft.sqlserver:mssql-jdbc:' + versionMSSQL);
+		// vulnerability fix for: com.mysql:mysql-connector-j:9.0.0 -> pin com.google.protobuf:protobuf-java:4.28.2
+		project.dependencies.add('database', 'com.google.protobuf:protobuf-java:4.28.2');
 	}
 
 
@@ -81,6 +83,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
 		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
+		// vulnerability fix for: io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.22 -> pin commons-io:commons-io:2.17.0
+		project.dependencies.add('pdf', 'commons-io:commons-io:2.17.0');
 	}
 
 
@@ -98,6 +102,8 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-multipart-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jaxb-provider:' + version);
+		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.10.Final -> pin commons-io:commons-io:2.17.0
+		project.dependencies.add('resteasy', 'commons-io:commons-io:2.17.0');
 	}
 
 
