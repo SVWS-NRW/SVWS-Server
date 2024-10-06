@@ -117,7 +117,7 @@ public class PdfFactory {
 		final List<PdfBuilder> pdfBuilders = new ArrayList<>();
 
 		for (final HtmlBuilder htmlBuilder : this.htmlBuilders) {
-			pdfBuilders.add(new PdfBuilder(htmlBuilder.getHtml(), htmlTemplateDefinition.getPfadCss(), htmlBuilder.getDateiname()));
+			pdfBuilders.add(new PdfBuilder(htmlBuilder.getHtml(), htmlTemplateDefinition.getRootPfad(), htmlBuilder.getDateiname()));
 		}
 
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, "<<< Ende der Erzeugung der PDF-Builder.");

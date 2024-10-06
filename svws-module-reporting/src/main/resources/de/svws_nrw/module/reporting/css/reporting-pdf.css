@@ -1,0 +1,24 @@
+/* css-Definitionen, die ausschließlich von OpenHtmlToPDF genutzt werden.
+Siehe dazu folgenden Auszug aus https://github.com/danfickle/openhtmltopdf/wiki/Custom-CSS-properties
+
+-fs-table-paginate: paginate
+This property will paginate a table by repeating the thead and tfoot elements on every page where the table rows appear. There is a paginated table sample at the sandbox. Sadly, there are some known bugs with this property, especially with nested tables. It is best used with the -fs-page-break-min-height property to avoid the thead sitting on a page by itself.
+
+-fs-page-break-min-height: 1.5cm
+This property, which takes a length, will attempt to stop a block or block-like box sitting at the bottom of a page by itself. For example, if it is set to 2cm for a table and only 1cm of the table would fit on the page, a page break is inserted before the table to satisfy the constraint. This property is similar to the orphans property but takes a length rather than a number of lines and is applicable to a wider range of boxes such as tables.
+
+-fs-border-rendering: no-bevel
+This property, which is set to auto by default, can be used to turn off bevels on borders for a box and its descendants (it inherits). Unfortunately, bevels on a box, such as a table cell can cause viewers to anti-alias border lines. This leads to ugly effects such as some borders, despite being the same width, looking thicker or thinner than others. See #752 for a screenshot. This property was implemented in PR#761 and will be released in version 1.0.10. The property is only honored for solid borders with zero border-radius. Example:
+table {
+  border-collapse: collapse;
+  -fs-border-rendering: no-bevel;
+}
+
+-fs-max-justification-inter-char and -fs-max-justification-inter-word
+These properties control the maximum extra space that the justification algorithm can use when text-align: justify is in effect. The initial value for inter character space is 0.5 millimetres and inter word spacing is 2 centimetres. These properties can only be used on block and block-like (such as table cells) elements. These properties inherit by default.
+Note: These properties are instead of the text-justify property which only allows a on/off for inter-word/inter-char spacing rather than a configurable length.
+ */
+table {
+    -fs-table-paginate: paginate;
+    -fs-page-break-min-height: 0.4cm;
+}

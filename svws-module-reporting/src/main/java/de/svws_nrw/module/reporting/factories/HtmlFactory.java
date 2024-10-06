@@ -207,6 +207,9 @@ public class HtmlFactory {
 		reportingRepository.logger().logLn(LogLevel.DEBUG, 0, ">>> Beginn der Erzeugung der html-Builder.");
 		final List<HtmlBuilder> htmlBuilders = new ArrayList<>();
 
+		// Lade den in Inhalt des html-Codes aus dem Template.
+		final String htmlTemplateCode = ResourceUtils.text(htmlTemplateDefinition.getRootPfadHtmlTemplate());
+
 		if (!reportingParameter.einzelausgabeHauptdaten && !reportingParameter.einzelausgabeDetaildaten) {
 			// Dateiname der Dateien aus den Daten erzeugen.
 			final String dateiname = getDateiname(mapHtmlContexts);
@@ -215,8 +218,7 @@ public class HtmlFactory {
 			reportingRepository.logger()
 					.logLn(LogLevel.DEBUG, 4,
 							"Verarbeite Template (%s) und Daten aus den Kontexten zum finalen html-Dateiinhalt.".formatted(htmlTemplateDefinition.name()));
-			htmlBuilders.add(
-					new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(), dateiname));
+			htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
 		} else if (reportingParameter.einzelausgabeHauptdaten) {
 			// Die Hauptdatenquelle soll in einzelne Kontexte für Einzeldateien zerlegt werden.
 			if (htmlTemplateDefinition.name().startsWith("SCHUELER_v_")) {
@@ -235,9 +237,7 @@ public class HtmlFactory {
 					final String dateiname = getDateiname(mapHtmlContexts);
 
 					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(
-							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
-									dateiname));
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
 				}
 			}
 		} else {
@@ -259,9 +259,7 @@ public class HtmlFactory {
 					final String dateiname = getDateiname(mapHtmlContexts);
 
 					// html-Builder erstellen und damit das html mit Daten für die html-Datei erzeugen
-					htmlBuilders.add(
-							new HtmlBuilder(ResourceUtils.text(htmlTemplateDefinition.getPfadHtmlTemplate()), mapHtmlContexts.values().stream().toList(),
-									dateiname));
+					htmlBuilders.add(new HtmlBuilder(htmlTemplateCode, mapHtmlContexts.values().stream().toList(), dateiname));
 				}
 			}
 		}

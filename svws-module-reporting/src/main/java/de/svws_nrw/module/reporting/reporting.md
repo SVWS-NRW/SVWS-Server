@@ -63,7 +63,11 @@ Die Aufgabe der html-Builder besteht darin, aus dem gewählten [html-Template](#
 
 
 ## html-Templates
-Die html-Templates werden durch Thymeleaf verarbeitet. Daher ist dessen Syntax für die Templates zu verwenden. Gleichzeitig ist zu bedenken, dass der generierte html-Code in der Regel für die Druckausgabe gedacht ist und dafür durch OPenHtmlToPDF in eine PDF-Datei umgewandelt wird. Daher ist hier insbesondere beim CSS auf die Verwendung von PrintCSS zu achten.
+Die html-Templates werden durch Thymeleaf verarbeitet. Daher ist dessen Syntax für die Templates zu verwenden. Gleichzeitig ist zu bedenken, dass der generierte html-Code in der Regel für die Druckausgabe gedacht ist und dafür durch OpenHtmlToPDF in eine PDF-Datei umgewandelt wird. Daher ist hier insbesondere beim CSS auf die Verwendung von PrintCSS zu achten.
 
-Ein Template wird mit seinen html- und css-Dateien sowie weiteren Eigenschaften in der Enum *HtmlTemplateDefinition* definiert. Dafür wird vorab auch eine Definition unter dem CoreType *ReportingReportvorlage* benötigt. Bzgl. der einzelnen Einträge in der ENUM ist unbedingt die dortige Kommenteireung zu beachten.
+Ein Template wird mit seiner html-Dateien sowie weiteren Eigenschaften in der Enum *HtmlTemplateDefinition* definiert. Dafür wird vorab auch eine Definition unter dem CoreType *ReportingReportvorlage* benötigt. Bzgl. der einzelnen Einträge in der ENUM ist unbedingt die dortige Kommentierung zu beachten.
+
+In der *HtmlTemplateDefinition* wird ein Root-Pfad angegeben. Unter dem müssen alle Ressourcen (html, css, fonts) gefunden werden können. Alle weiteren Pfadangaben werden relativ zu diesem Root-Pfad angegeben. Bei der Verlinkung von css-Dateien bedeutet dies beispielsweise, dass bei einer css-Datei, die neben dem html-Template im gleichen Verzeichnis liegt, zunächst relativ zum Root-Verzeichnis hochgegangen wird (mit "../") und dann wieder durch Angabe des Pfads zum html-Verzeichnis zurück. Beispiel: "../../listen/schueler/kakao-listen.css".
+
+Zudem müssen die css-Dateien mittels Thymeleaf th:href eingebunden werden, damit die Pfade im realen Betrieb auch korrekt gesetzt werden. Ein solcher Aufruf wäre: *\<link rel="stylesheet" th:href="@{css/svws-reporting.css}" href="../../../css/svws-reporting.css" />*
 
