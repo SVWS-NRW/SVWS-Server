@@ -52,8 +52,9 @@ ext.windowsservicewrapper_version = "2.10.3"
 //ext.windowsservicewrapper_win_url = "https://github.com/winsw/winsw/releases/download/v${windowsservicewrapper_version}/WinSW.NETCore31.x64.exe"
 ext.windowsservicewrapper_win_url = "${base_url}winsw/${windowsservicewrapper_version}/servicewrapper-v${windowsservicewrapper_version}-windows.exe"
 
+//ext.curl_version = "8.10.1_3"
+//ext.curl_win_url = "https://curl.se/windows/dl-${curl_version}/curl-${curl_version}-win64-mingw.zip"
 ext.curl_version = "7.72.0"
-//ext.curl_win_url = "https://curl.haxx.se/windows/dl-${curl_version}_4/curl-${curl_version}_4-win64-mingw.zip"
 ext.curl_win_url = "${base_url}curl/${curl_version}/curl-${curl_version}-windows.zip"
 
 configurations {
