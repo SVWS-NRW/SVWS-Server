@@ -1,7 +1,7 @@
 <template>
-	<div class="page--content page--content--full">
+	<div class="page--content">
 		<s-card-gost-faecher :faecher-manager :abiturjahr="jahrgangsdaten()?.abiturjahr ?? -1" :patch-fach :hat-update-kompetenz />
-		<div class="flex flex-col gap-y-16 lg:gap-y-20 sticky top-8 h-fit">
+		<div class="flex flex-col gap-y-16 lg:gap-y-20 top-8 h-full overflow-y-auto overflow-x-hidden pr-4 scrollbar-thin">
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.VERBOTEN" :faecher-manager
 				:map-fachkombinationen :patch-fachkombination :hat-update-kompetenz :add-fachkombination :remove-fachkombination />
 			<s-card-gost-fachkombinationen :typ="GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH" :faecher-manager
@@ -30,12 +30,16 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid grid-cols-1;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
+		grid-auto-rows: 100%;
+		grid-template-columns: minmax(min-content, 1.5fr) minmax(min-content, 1fr);
+		grid-auto-columns: max-content;
+	}
 
-		@media (min-width: theme("screens.2xl")) {
-			grid-template-columns: minmax(min-content, 1fr) minmax(42rem, 0.75fr);
-			grid-auto-columns: max-content;
-		}
+	.scrollbar-thin {
+		scrollbar-gutter: stable;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(0,0,0,0.2) transparent;
 	}
 
 </style>
