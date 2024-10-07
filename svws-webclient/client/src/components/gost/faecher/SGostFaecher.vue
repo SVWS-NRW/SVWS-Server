@@ -24,15 +24,18 @@
 			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN)
 				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.jahrgangsdaten().abiturjahr))
 	});
+
 </script>
 
 <style lang="postcss" scoped>
-	.page--content {
-    @apply grid grid-cols-1;
 
-    @media (min-width: theme("screens.2xl")) {
-      grid-template-columns: minmax(min-content, 1fr) minmax(42rem, 0.75fr);
-      grid-auto-columns: max-content;
-    }
-  }
+	.page--content {
+		@apply grid grid-cols-1;
+
+		@media (min-width: theme("screens.2xl")) {
+			grid-template-columns: minmax(min-content, 1fr) minmax(42rem, 0.75fr);
+			grid-auto-columns: max-content;
+		}
+	}
+
 </style>

@@ -96,8 +96,10 @@
 </script>
 
 <style lang="postcss" scoped>
-.page--content {
-  @apply grid;
-  grid-template-columns: 1fr minmax(36rem, 1fr);
-}
+
+	.page--content {
+		@apply grid;
+		grid-template-columns: 1fr minmax(36rem, 1fr);
+	}
+
 </style>

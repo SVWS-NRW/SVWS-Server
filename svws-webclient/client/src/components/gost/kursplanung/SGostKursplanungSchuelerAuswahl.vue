@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-content-card v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl" overflow-scroll>
+	<div v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl flex flex-col" overflow-scroll>
 		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined"
 			:filter-open="isSchuelerFilterOpen()" @update:filter-open="setIsSchuelerFilterOpen"
 			:filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'"
@@ -181,7 +181,7 @@
 				</div>
 			</template>
 		</svws-ui-table>
-	</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">
