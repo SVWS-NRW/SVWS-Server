@@ -35,7 +35,6 @@ import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.gost.DBUtilsGostLaufbahn;
 import de.svws_nrw.data.gost.DataGostJahrgangFachkombinationen;
 import de.svws_nrw.data.gost.DataGostJahrgangsdaten;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
@@ -133,7 +132,7 @@ public class GenerateTestdatenLaufbahn {
 				}
 
 				// Prüfe die Schulform
-				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 				if (schule == null)
 					throw new DeveloperNotificationException("Keine Schule angelegt.");
 				final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);

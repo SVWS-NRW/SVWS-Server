@@ -24,7 +24,6 @@ import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -118,8 +117,7 @@ public final class DBUtilsGostLaufbahn {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Abiturdaten get(final DBEntityManager conn, final long id) throws ApiOperationException {
-		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final DTOSchueler dtoSchueler = conn.queryByKey(DTOSchueler.class, id);
 		if (dtoSchueler == null)
 			throw new ApiOperationException(Status.NOT_FOUND);

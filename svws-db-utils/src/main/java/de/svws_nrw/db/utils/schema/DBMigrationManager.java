@@ -32,7 +32,6 @@ import de.svws_nrw.core.types.schueler.Herkunftsarten;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AdressenUtils;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -95,7 +94,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
-import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Methoden zur Verfügung, um ein Schild2-Datenbankschema in
@@ -546,7 +545,9 @@ public final class DBMigrationManager {
 	 */
 	private boolean fixSchulform() throws ApiOperationException {
 		final DBEntityManager conn = tgtManager.getConnection();
-		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
 		final Schulform tmpSchulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
 		logger.logLn("- Schulnummer: " + schule.SchulNr);

@@ -32,7 +32,6 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.gost.DBUtilsGost;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -55,7 +54,6 @@ import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
 
 
@@ -216,8 +214,12 @@ public class LupoMDB {
 	 */
 	public void getFromLeistungsdaten(final Benutzer user, final String jahrgang) throws ApiOperationException {
 		try (DBEntityManager conn = user.getEntityManager()) {
-			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-			final @NotNull DTOSchuljahresabschnitte schuljahresabschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
+			final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+			if (schule == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
+			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+			if (schuljahresabschnitt  == null)
+				throw new ApiOperationException(Status.NOT_FOUND);
 			if ((jahrgang == null) || ((!"EF".equalsIgnoreCase(jahrgang)) && (!"Q1".equalsIgnoreCase(jahrgang)) && (!"Q2".equalsIgnoreCase(jahrgang)))) {
 				logger.logLn("Ungültiger Jahrgang! Erzeuge Daten für eine leere LuPO-Datei...");
 				logger.modifyIndent(2);
@@ -568,8 +570,9 @@ public class LupoMDB {
 		try (DBEntityManager conn = user.getEntityManager()) {
 			try {
 				conn.transactionBegin();
-
-				final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
+				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+				if (schule == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
 				final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte = conn.queryAll(DTOSchuljahresabschnitte.class).stream()
 						.collect(Collectors.toMap(a -> a.ID, a -> a));
 				final Map<Long, DTOKlassen> mapKlassen = conn.queryAll(DTOKlassen.class).stream().collect(Collectors.toMap(k -> k.ID, k -> k));

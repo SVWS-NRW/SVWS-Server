@@ -23,7 +23,6 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.schueler.DBUtilsSchuelerLernabschnittsdaten;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostSchuelerFachbelegungen;
 import de.svws_nrw.db.dto.current.gost.kursblockung.DTOGostBlockung;
@@ -39,9 +38,7 @@ import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
@@ -1207,9 +1204,9 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response synchronisiere(final Long idErgebnis) throws ApiOperationException {
-		// Bestimmt die aktuellen Daten der Schule, insbesondere den aktuellen Schuljahresabschnitt
-		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final DTOSchuljahresabschnitte schuleAbschnitt = SchulUtils.getSchuljahreabschnitt(conn, schule.Schuljahresabschnitts_ID);
+		// Bestimmt den aktuellen Schuljahresabschnitt der Schule
+		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schuljahresabschnitt schuleAbschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
 
 		// Bestimme das Blockungsergebnis und erzeuge die zugehörigen Manager-Klassen
 		final DTOGostBlockungZwischenergebnis dtoErgebnis = conn.queryByKey(DTOGostBlockungZwischenergebnis.class, idErgebnis);
@@ -1224,7 +1221,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(datenManager.daten().abijahrgang);
 		// Prüfe, ob der Schuljahresabschnitt des Ergebnisses in der Vergangenheit liegt
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
-		if ((schuleAbschnitt.Jahr > abschnitt.schuljahr) || ((schuleAbschnitt.Jahr == abschnitt.schuljahr) && (schuleAbschnitt.Abschnitt > abschnitt.abschnitt)))
+		if ((schuleAbschnitt.schuljahr > abschnitt.schuljahr)
+				|| ((schuleAbschnitt.schuljahr == abschnitt.schuljahr) && (schuleAbschnitt.abschnitt > abschnitt.abschnitt)))
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Schuljahresabschnitt des Blockungsergebnisses liegt bereits in der Vergangenheit und darf deswegen nicht mehr synchronisiert werden.");
 		// Prüfe, ob der Schuljahresabschnitt bereits angelegt sind - wenn nicht, dann existiert auch keine persistierte Blockung

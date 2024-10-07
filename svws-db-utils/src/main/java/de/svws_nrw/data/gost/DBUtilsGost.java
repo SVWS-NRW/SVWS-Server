@@ -30,7 +30,6 @@ import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -388,8 +387,7 @@ public final class DBUtilsGost {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static GostLeistungen getLeistungsdaten(final DBEntityManager conn, final long id) throws ApiOperationException {
-		final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 
 		final DTOSchueler schueler = conn.queryByKey(DTOSchueler.class, id);
