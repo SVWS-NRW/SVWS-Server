@@ -21,7 +21,7 @@ export class RouteKatalogReligionDaten extends RouteNode<any, RouteKatalogReligi
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogReligionen.data.religionListeManager.auswahlID() === null)
-			return routeKatalogReligionen.getRoute(undefined)
+			return routeKatalogReligionen.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

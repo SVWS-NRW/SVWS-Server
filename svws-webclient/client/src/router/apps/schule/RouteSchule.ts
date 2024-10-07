@@ -14,7 +14,7 @@ import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaec
 import { RouteDataSchule } from "~/router/apps/schule/RouteDataSchule";
 
 import type { SchuleAuswahlProps } from "~/components/schule/SSchuleAuswahlProps";
-import { TabManager, type TabData } from "@ui";
+import type { TabData } from "@ui";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 import { routeSchuleBetriebe } from "./betriebe/RouteSchuleBetriebe";
 import { routeKatalogReligionen } from "./religionen/RouteKatalogReligionen";

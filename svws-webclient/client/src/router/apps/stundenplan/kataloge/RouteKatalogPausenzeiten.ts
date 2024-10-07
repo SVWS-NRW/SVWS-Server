@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { StundenplanPausenzeit } from "@core";
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import type { StundenplanPausenzeit , DeveloperNotificationException} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
@@ -11,8 +11,9 @@ import { routeApp } from "~/router/apps/RouteApp";
 import type { PausenzeitenAuswahlProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahlProps";
 import type { PausenzeitenProps } from "~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenProps";
 import { RouteDataKatalogPausenzeiten } from "./RouteDataKatalogPausenzeiten";
+import { routeError } from "~/router/error/RouteError";
 
-const SPausenzeitenAuswahl = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue")
+const SPausenzeitenAuswahl = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeitenAuswahl.vue");
 const SPausenzeiten = () => import("~/components/stundenplan/kataloge/pausenzeiten/SPausenzeiten.vue");
 
 export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenzeiten, RouteApp> {
@@ -26,23 +27,25 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty())
-			return;
-		let eintrag: StundenplanPausenzeit | null = null;
-		if (!to_params.id && this.data.auswahl)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
-			return this.getRoute(eintrag.id);
-		} else {
-			const id = parseInt(to_params.id);
-			eintrag = this.data.stundenplanManager.pausenzeitGetByIdOrException(id);
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (isEntering)
+				await this.data.ladeListe();
+			if (this.data.stundenplanManager.pausenzeitGetMengeAsList().isEmpty())
+				return;
+			let eintrag: StundenplanPausenzeit | null = null;
+			if ((id === undefined) && this.data.auswahl)
+				return this.getRoute(this.data.auswahl.id);
+			if (id === undefined) {
+				eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
+				return this.getRoute(eintrag.id);
+			} else {
+				eintrag = this.data.stundenplanManager.pausenzeitGetByIdOrException(id);
+			}
+			await this.data.setEintrag(eintrag);
+		} catch (error) {
+			return routeError.getRoute(error as DeveloperNotificationException);
 		}
-		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

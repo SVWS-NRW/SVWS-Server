@@ -21,7 +21,7 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogEinwilligungsarten.data.auswahl === undefined)
-			return routeKatalogEinwilligungsarten.getRoute(undefined)
+			return routeKatalogEinwilligungsarten.getRoute(undefined);
 	}
 
 	public getRoute(id: number): RouteLocationRaw {

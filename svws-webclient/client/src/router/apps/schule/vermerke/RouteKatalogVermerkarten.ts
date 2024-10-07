@@ -18,8 +18,8 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
-const SVermerkAuswahl = () => import("~/components/schule/kataloge/vermerke/SVermerkeAuswahl.vue")
-const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerkeApp.vue")
+const SVermerkAuswahl = () => import("~/components/schule/kataloge/vermerke/SVermerkeAuswahl.vue");
+const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerkeApp.vue");
 
 export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke, RouteApp> {
 
@@ -31,7 +31,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SVermerkAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogVermerkartenDaten
+			routeKatalogVermerkartenDaten,
 		];
 		super.defaultChild = routeKatalogVermerkartenDaten;
 	}
@@ -44,7 +44,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 			} else {
 				if (!this.data.vermerkartenManager.hasDaten())
 					await this.data.ladeListe();
-				const eintrag = this.data.vermerkartenManager.liste.get(idVermerkart)
+				const eintrag = this.data.vermerkartenManager.liste.get(idVermerkart);
 				if (eintrag) {
 					return await this.data.setEintrag(eintrag);
 				}
@@ -54,7 +54,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		}
 
 		if ((to.name === this.name)) {
-			const route = this.getRoute(this.data.vermerkartenManager.auswahl().id)
+			const route = this.getRoute(this.data.vermerkartenManager.auswahl().id);
 			return route;
 		}
 	}

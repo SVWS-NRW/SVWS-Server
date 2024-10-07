@@ -26,7 +26,7 @@ export class RouteKatalogVermerkartenDaten extends RouteNode<any, RouteKatalogVe
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 
 		if (routeKatalogVermerkarten.data.vermerkartenManager.auswahlID() === null)
-			return routeKatalogVermerkarten.getRoute(undefined)
+			return routeKatalogVermerkarten.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

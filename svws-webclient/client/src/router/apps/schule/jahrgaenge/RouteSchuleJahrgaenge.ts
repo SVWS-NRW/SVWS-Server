@@ -16,6 +16,7 @@ import type { JahrgaengeAppProps } from "~/components/schule/jahrgaenge/SJahrgae
 import type { JahrgaengeAuswahlProps } from "~/components/schule/jahrgaenge/SJahrgaengeAuswahlProps";
 import { RouteDataSchuleJahrgaenge } from "./RouteDataSchuleJahrgaenge";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import { routeError } from "~/router/error/RouteError";
 
 const SJahrgaengeAuswahl = () => import("~/components/schule/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeApp.vue")
@@ -30,30 +31,32 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeSchuleJahrgaengeDaten
+			routeSchuleJahrgaengeDaten,
 		];
 		super.defaultChild = routeSchuleJahrgaengeDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
-			return;
-		let eintrag: JahrgangsDaten | undefined;
-		if (!to_params.id && this.data.auswahl !== undefined)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
-			return this.getRoute(eintrag?.id);
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (isEntering)
+				await this.data.ladeListe();
+			if (this.data.mapKatalogeintraege.size < 1)
+				return;
+			let eintrag: JahrgangsDaten | undefined;
+			if ((id === undefined) && (this.data.auswahl !== undefined))
+				return this.getRoute(this.data.auswahl.id);
+			if (id === undefined) {
+				eintrag = this.data.mapKatalogeintraege.get(0);
+				return this.getRoute(eintrag?.id);
+			}
+			eintrag = this.data.mapKatalogeintraege.get(id);
+			if (eintrag === undefined)
+				return this.getRoute(undefined);
+			await this.data.setEintrag(eintrag);
+		} catch (error) {
+			return routeError.getRoute(error as DeveloperNotificationException);
 		}
-		const id = parseInt(to_params.id);
-		eintrag = this.data.mapKatalogeintraege.get(id);
-		if (eintrag === undefined)
-			return this.getRoute(undefined);
-		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

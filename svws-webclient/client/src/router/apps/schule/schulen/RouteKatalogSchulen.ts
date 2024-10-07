@@ -15,9 +15,10 @@ import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/S
 import { RouteDataKatalogSchulen } from "./RouteDataKatalogSchulen";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import { routeError } from "~/router/error/RouteError";
 
-const SSchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SSchulenAuswahl.vue")
-const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenApp.vue")
+const SSchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SSchulenAuswahl.vue");
+const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenApp.vue");
 
 export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, RouteApp> {
 
@@ -35,24 +36,24 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (to_params.id === undefined) {
-			await this.data.ladeListe();
-		} else {
-			const id = parseInt(to_params.id);
-			const eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined && this.data.auswahl !== undefined) {
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if ((id === undefined) || isEntering)
 				await this.data.ladeListe();
-				return this.getRoute(this.data.auswahl.id);
+			else {
+				const eintrag = this.data.mapKatalogeintraege.get(id);
+				if (eintrag === undefined && this.data.auswahl !== undefined) {
+					await this.data.ladeListe();
+					return this.getRoute(this.data.auswahl.id);
+				}
+				else if (eintrag)
+					this.data.setEintrag(eintrag);
 			}
-			else if (eintrag)
-				this.data.setEintrag(eintrag);
+			if (to.name === this.name && this.data.auswahl !== undefined)
+				return this.getRoute(this.data.auswahl.id);
+		} catch (error) {
+			return routeError.getRoute(error as DeveloperNotificationException);
 		}
-		if (to.name === this.name && this.data.auswahl !== undefined)
-			return this.getRoute(this.data.auswahl.id);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

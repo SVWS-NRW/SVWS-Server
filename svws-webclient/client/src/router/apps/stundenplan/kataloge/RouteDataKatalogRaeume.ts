@@ -53,7 +53,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 	}
 
 	addEintrag = async (eintrag: Partial<Raum>) => {
-		if (!eintrag.kuerzel || this.raumListeManager.getByKuerzelOrNull(eintrag.kuerzel) !== null)
+		if ((eintrag.kuerzel === undefined) || (this.raumListeManager.getByKuerzelOrNull(eintrag.kuerzel) !== null))
 			throw new UserNotificationException('Ein Raum mit diesem Kürzel existiert bereits');
 		delete eintrag.id;
 		const raum = await api.server.addRaum(eintrag, api.schema);
@@ -78,7 +78,7 @@ export class RouteDataKatalogRaeume extends RouteData<RouteStateKatalogRaeume> {
 		const idRaum = this.raumListeManager.auswahlID();
 		if (idRaum === null)
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode wurden keine gültigen Daten geladen.");
-		if (eintrag.groesse && eintrag.groesse < 1)
+		if ((eintrag.groesse !== undefined) && (eintrag.groesse < 1))
 			throw new DeveloperNotificationException("Ein Raum muss mindestens eine Größe von 1 haben.");
 		const raumListeManager = this.raumListeManager;
 		await api.server.patchRaum(eintrag, api.schema, idRaum);

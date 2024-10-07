@@ -22,7 +22,7 @@ export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrga
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeSchuleJahrgaenge.data.auswahl === undefined)
-			return routeSchuleJahrgaenge.getRoute(undefined)
+			return routeSchuleJahrgaenge.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -35,7 +35,7 @@ export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrga
 			schulform: api.schulform,
 			patch: routeSchuleJahrgaenge.data.patch,
 			data: () => routeSchuleJahrgaenge.data.daten,
-			mapJahrgaenge: routeSchuleJahrgaenge.data.mapKatalogeintraege
+			mapJahrgaenge: routeSchuleJahrgaenge.data.mapKatalogeintraege,
 		};
 	}
 

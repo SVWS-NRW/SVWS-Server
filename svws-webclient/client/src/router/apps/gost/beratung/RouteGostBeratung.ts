@@ -27,17 +27,15 @@ export class RouteGostBeratung extends RouteNode<RouteDataGostBeratung, RouteGos
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (this.parent === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (!to_params.abiturjahr)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein"));
-		const abiturjahr = parseInt(to_params.abiturjahr);
 		try {
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (this.parent === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			if (abiturjahr === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Ein Abiturjahrgang muss angegeben sein");
 			await this.data.ladeDaten(abiturjahr, isEntering);
-		} catch(error) {
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Fehler beim Laden der Daten"));
+		} catch(e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 

@@ -1,7 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import type { StundenplanAufsichtsbereich } from "@core";
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import type { StundenplanAufsichtsbereich , DeveloperNotificationException} from "@core";
+import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
@@ -11,10 +11,11 @@ import { routeApp } from "~/router/apps/RouteApp";
 import type { AufsichtsbereicheProps } from "~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheProps";
 import type { AufsichtsbereicheAuswahlProps } from "~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahlProps";
 import { RouteDataKatalogAufsichtsbereiche } from "./RouteDataKatalogAufsichtsbereiche";
+import { routeError } from "~/router/error/RouteError";
 
 
-const SAufsichtsbereicheAuswahl = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue")
-const SAufsichtsbereiche = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereiche.vue")
+const SAufsichtsbereicheAuswahl = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereicheAuswahl.vue");
+const SAufsichtsbereiche = () => import("~/components/stundenplan/kataloge/aufsichtsbereiche/SAufsichtsbereiche.vue");
 
 export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAufsichtsbereiche, RouteApp> {
 
@@ -27,23 +28,24 @@ export class RouteKatalogAufsichtsbereiche extends RouteNode<RouteDataKatalogAuf
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty())
-			return;
-		let eintrag: StundenplanAufsichtsbereich | undefined;
-		if (!to_params.id && this.data.auswahl)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
-			return this.getRoute(eintrag.id);
-		} else {
-			const id = parseInt(to_params.id);
-			eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (isEntering)
+				await this.data.ladeListe();
+			if (this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().isEmpty())
+				return;
+			let eintrag: StundenplanAufsichtsbereich | undefined;
+			if ((id === undefined) && this.data.auswahl)
+				return this.getRoute(this.data.auswahl.id);
+			if (id === undefined) {
+				eintrag = this.data.stundenplanManager.aufsichtsbereichGetMengeAsList().get(0);
+				return this.getRoute(eintrag.id);
+			} else
+				eintrag = this.data.stundenplanManager.aufsichtsbereichGetByIdOrException(id);
+			await this.data.setEintrag(eintrag);
+		} catch (error) {
+			return routeError.getRoute(error as DeveloperNotificationException);
 		}
-		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

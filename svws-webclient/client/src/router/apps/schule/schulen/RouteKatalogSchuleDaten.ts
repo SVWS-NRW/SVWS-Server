@@ -22,7 +22,7 @@ export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen>
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogSchulen.data.auswahl === undefined)
-			return routeKatalogSchulen.getRoute(undefined)
+			return routeKatalogSchulen.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {

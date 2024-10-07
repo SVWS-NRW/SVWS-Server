@@ -16,6 +16,7 @@ import { RouteDataSchuleBetriebe } from "./RouteDataSchuleBetriebe";
 import { routeSchuleBetriebeDaten } from "./RouteSchuleBetriebeDaten";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import { routeError } from "~/router/error/RouteError";
 
 const SBetriebeAuswahl = () => import("~/components/schule/betriebe/SBetriebeAuswahl.vue")
 const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue")
@@ -38,27 +39,28 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.ladeListe();
-		if (to_params.id instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		if (this.data.mapKatalogeintraege.size < 1)
-			return;
-		let eintrag: BetriebListeEintrag | undefined;
-		if (!to_params.id && this.data.auswahl)
-			return this.getRoute(this.data.auswahl.id);
-		if (!to_params.id) {
-			eintrag = this.data.mapKatalogeintraege.get(0);
-			return this.getRoute(eintrag?.id);
-		}
-		else {
-			const id = parseInt(to_params.id);
-			eintrag = this.data.mapKatalogeintraege.get(id);
-			if (eintrag === undefined) {
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (isEntering)
+				await this.data.ladeListe();
+			if (this.data.mapKatalogeintraege.size < 1)
 				return;
+			let eintrag: BetriebListeEintrag | undefined;
+			if ((id === undefined) && this.data.auswahl)
+				return this.getRoute(this.data.auswahl.id);
+			if (id === undefined) {
+				eintrag = this.data.mapKatalogeintraege.get(0);
+				return this.getRoute(eintrag?.id);
 			}
+			else {
+				eintrag = this.data.mapKatalogeintraege.get(id);
+				if (eintrag === undefined)
+					return;
+			}
+			await this.data.setEintrag(eintrag);
+		} catch(e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		await this.data.setEintrag(eintrag);
 	}
 
 	public getRoute(id: number | undefined) : RouteLocationRaw {

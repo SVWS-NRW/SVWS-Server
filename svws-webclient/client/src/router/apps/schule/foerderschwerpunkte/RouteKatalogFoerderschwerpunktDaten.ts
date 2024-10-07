@@ -19,7 +19,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKat
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFoerderschwerpunkte.data.auswahl === undefined)
-			return routeKatalogFoerderschwerpunkte.getRoute(undefined)
+			return routeKatalogFoerderschwerpunkte.getRoute(undefined);
 	}
 
 	public getRoute(id: number) : RouteLocationRaw {
@@ -31,7 +31,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKat
 			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,
 			patch: routeKatalogFoerderschwerpunkte.data.patch,
 			data: routeKatalogFoerderschwerpunkte.data.daten,
-			mapKatalogeintraege: routeKatalogFoerderschwerpunkte.data.mapKatalogeintraege
+			mapKatalogeintraege: routeKatalogFoerderschwerpunkte.data.mapKatalogeintraege,
 		};
 	}
 
