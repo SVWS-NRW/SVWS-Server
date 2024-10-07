@@ -3,9 +3,24 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<h2 class="svws-headline">
-						<span>{{ bezeichnung_abiturjahr }}</span>
-					</h2>
+					<template v-if="props.gruppenprozesseEnabled">
+						<h2 class="svws-headline"> Gruppenprozesse für die Abiturjahrgänge </h2>
+						<span class="svws-subline"> {{ selected().map(jg => "" + jg.abiturjahr).join(", ") }}</span>
+					</template>
+					<template v-else-if="props.creationModeEnabled">
+						<h2 class="svws-headline"> Anlegen von Abiturjahrgängen... </h2>
+						<span class="svws-subline">&nbsp;</span>
+					</template>
+					<template v-else>
+						<template v-if="(auswahl === undefined) || (auswahl.abiturjahr < 0)">
+							<h2 class="svws-headline"> {{ bezeichnung_abiturjahr }} </h2>
+							<span class="svws-subline">&nbsp;</span>
+						</template>
+						<template v-else>
+							<h2 class="svws-headline"> Abiturjahrgang {{ auswahl.abiturjahr }} </h2>
+							<span class="svws-subline"> Jahrgang {{ auswahl.jahrgang }}, {{ schuljahresabschnitt().abschnitt }}.Halbjahr </span>
+						</template>
+					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />

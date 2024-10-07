@@ -24,6 +24,8 @@ import { ConfigElement } from "~/components/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
 import { RouteType } from "~/router/RouteType";
+import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
+import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -51,7 +53,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			routeGostLaufbahnfehler,
 			routeGostFachwahlen,
 			routeGostKursplanung,
-			routeGostKlausurplanung
+			routeGostKlausurplanung,
+			routeGostAbiturjahrNeu,
+			routeGostGruppenprozesse,
 		];
 		super.defaultChild = routeGostFaecher;
 		api.config.addElements([
@@ -113,24 +117,31 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
 			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang,
-			removeAbiturjahrgang: this.data.removeAbiturjahrgang,
 			filterNurAktuelle: () => this.data.filterNurAktuelle,
 			setFilterNurAktuelle: this.data.setFilterNurAktuelle,
+			gotoCreationMode: this.data.gotoCreationMode,
+			gotoGruppenprozess: this.data.gotoGruppenprozess,
+			selected: () => this.data.selected,
+			setSelected: this.data.setSelected,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostAppProps {
 		return {
+			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 			auswahl: this.data.auswahl,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
+			creationModeEnabled: this.data.creationModeEnabled,
+			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
+			selected: () => this.data.selected,
 		};
 	}
 
 	private getType() : RouteType {
-		// if (this.data.gruppenprozesseEnabled)
-		// 	return RouteType.GRUPPENPROZESSE;
-		// if (this.data.creationModeEnabled)
-		// 	return RouteType.HINZUFUEGEN;
+		if (this.data.gruppenprozesseEnabled)
+			return RouteType.GRUPPENPROZESSE;
+		if (this.data.creationModeEnabled)
+			return RouteType.HINZUFUEGEN;
 		return RouteType.DEFAULT;
 	}
 

@@ -1,6 +1,7 @@
 package de.svws_nrw.data.gost;
 
 import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
@@ -710,7 +711,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	}
 
 
-	private void kursHinzufuegen(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr,
+	private void kursHinzufuegen(final GostBlockungsergebnisManager ergebnisManager, final Schuljahresabschnitt abschnitt, final GostHalbjahr halbjahr,
 			final DTOJahrgang jahrgang, final long id, final GostBlockungKurs kurs, final HashMap<Long, Long> mapKursIDs,
 			final HashMap<Long, DTOKurs> mapKursDTOs) {
 		final GostBlockungsdatenManager datenManager = ergebnisManager.getParent();
@@ -729,7 +730,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				kursLehrerZusatzkraefte.add(kl);
 			}
 		}
-		final DTOKurs dto = new DTOKurs(id, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id);
+		final DTOKurs dto = new DTOKurs(id, abschnitt.id, datenManager.kursGetName(kurs.id), kurs.fach_id);
 		dto.Jahrgang_ID = jahrgang.ID;
 		dto.ASDJahrgang = halbjahr.jahrgang;
 		dto.KursartAllg = GostKursart.fromID(kurs.kursart).kuerzel;
@@ -805,7 +806,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void persist(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr)
+	private void persist(final GostBlockungsergebnisManager ergebnisManager, final Schuljahresabschnitt abschnitt, final GostHalbjahr halbjahr)
 			throws ApiOperationException {
 		// Bestimme die ID des Jahrgangs
 		final List<DTOJahrgang> jahrgangsliste =
@@ -829,7 +830,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		long idSLA = (dbID == null) ? 1 : (dbID.MaxID + 1);
 		final HashMap<Long, Long> mapLernabschnitte = new HashMap<>();
 		for (final Schueler schueler : datenManager.daten().schueler) {
-			DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.get(conn, schueler.id, abschnitt.ID);
+			DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.get(conn, schueler.id, abschnitt.id);
 			if (lernabschnitt == null)
 				lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.createByPrevious(idSLA++, conn, schueler.id, abschnitt);
 			mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
@@ -912,27 +913,27 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
 				leistung.NotenKrz = switch (halbjahr) {
 					case EF1 -> switch (fachwahl.EF1_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 					case EF2 -> switch (fachwahl.EF2_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 					case Q21 -> switch (fachwahl.Q21_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 					case Q22 -> switch (fachwahl.Q22_Kursart) {
-						case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+						case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 						default -> null;
 					};
 				};
@@ -991,7 +992,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(datenManager.daten().abijahrgang);
 		// Prüfe, ob der Schuljahresabschnitt bereits angelegt wurde
-		final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 		if (DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt))
 			throw new ApiOperationException(Status.CONFLICT);
 		persist(ergebnisManager, abschnitt, halbjahr);
@@ -1024,7 +1025,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND,
 					"Die ID %d ist nicht gültig als ID für ein Halbjahr der gymnasialen Oberstufe.".formatted(idHalbjahr));
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
-		final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 		// ... und versuche die Leistungsdaten und die Kurse zu entfernen
 		DBUtilsGost.deleteOberstufenKurseUndLeistungsdaten(conn, halbjahr, abschnitt);
 		return Response.status(Status.NO_CONTENT).build();
@@ -1043,7 +1044,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	private void synchronisiere(final GostBlockungsergebnisManager ergebnisManager, final DTOSchuljahresabschnitte abschnitt, final GostHalbjahr halbjahr)
+	private void synchronisiere(final GostBlockungsergebnisManager ergebnisManager, final Schuljahresabschnitt abschnitt, final GostHalbjahr halbjahr)
 			throws ApiOperationException {
 		// Bestimme die ID des Jahrgangs
 		final List<DTOJahrgang> jahrgangsliste =
@@ -1064,7 +1065,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 			final List<DTOKurs> kurseVorhanden = conn.queryList(
 					"SELECT e FROM DTOKurs e WHERE e.Schuljahresabschnitts_ID = ?1 AND e.KurzBez = ?2 AND e.Fach_ID = ?3"
 							+ " AND e.Jahrgang_ID = ?4 AND e.ASDJahrgang = ?5 AND e.KursartAllg = ?6",
-					DTOKurs.class, abschnitt.ID, datenManager.kursGetName(kurs.id), kurs.fach_id, jahrgang.ID, halbjahr.jahrgang,
+					DTOKurs.class, abschnitt.id, datenManager.kursGetName(kurs.id), kurs.fach_id, jahrgang.ID, halbjahr.jahrgang,
 					GostKursart.fromID(kurs.kursart).kuerzel);
 			if (kurseVorhanden.size() > 1)
 				throw new ApiOperationException(Status.CONFLICT,
@@ -1078,7 +1079,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		// Durchwandere alle Schüler des Abitur-Jahrgangs und lege ggf. fehlende Lernabschnitte an
 		final HashMap<Long, Long> mapLernabschnitte = new HashMap<>();
 		for (final Schueler schueler : datenManager.daten().schueler) {
-			final DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.get(conn, schueler.id, abschnitt.ID);
+			final DTOSchuelerLernabschnittsdaten lernabschnitt = DBUtilsSchuelerLernabschnittsdaten.get(conn, schueler.id, abschnitt.id);
 			if (lernabschnitt == null)
 				continue;    // TODO Hier könnte ggf. ein Lernabschnitt angelegt werden... Dann müsste aber die Beschreibung der Methode bis hin zum Client angepasst werden...
 			mapLernabschnitte.put(schueler.id, lernabschnitt.ID);
@@ -1152,30 +1153,30 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				};
 				leistung.KursartAllg = kursart.kuerzel;
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
-				if ((leistung.NotenKrz == null) || (Objects.equals(leistung.NotenKrz, Note.KEINE.daten(abschnitt.Jahr).kuerzel))) {
+				if ((leistung.NotenKrz == null) || (Objects.equals(leistung.NotenKrz, Note.KEINE.daten(abschnitt.schuljahr).kuerzel))) {
 					leistung.NotenKrz = switch (halbjahr) {
 						case EF1 -> switch (fachwahl.EF1_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case EF2 -> switch (fachwahl.EF2_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q11 -> switch (fachwahl.Q11_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q12 -> switch (fachwahl.Q12_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q21 -> switch (fachwahl.Q21_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 						case Q22 -> switch (fachwahl.Q22_Kursart) {
-							case "AT" -> Note.ATTEST.daten(abschnitt.Jahr).kuerzel;
+							case "AT" -> Note.ATTEST.daten(abschnitt.schuljahr).kuerzel;
 							default -> leistung.NotenKrz;
 						};
 					};
@@ -1222,8 +1223,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(datenManager.daten().gostHalbjahr);
 		final int schuljahr = halbjahr.getSchuljahrFromAbiturjahr(datenManager.daten().abijahrgang);
 		// Prüfe, ob der Schuljahresabschnitt des Ergebnisses in der Vergangenheit liegt
-		final DTOSchuljahresabschnitte abschnitt = SchulUtils.getSchuljahreabschnitt(conn, schuljahr, halbjahr.halbjahr);
-		if ((schuleAbschnitt.Jahr > abschnitt.Jahr) || ((schuleAbschnitt.Jahr == abschnitt.Jahr) && (schuleAbschnitt.Abschnitt > abschnitt.Abschnitt)))
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
+		if ((schuleAbschnitt.Jahr > abschnitt.schuljahr) || ((schuleAbschnitt.Jahr == abschnitt.schuljahr) && (schuleAbschnitt.Abschnitt > abschnitt.abschnitt)))
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Schuljahresabschnitt des Blockungsergebnisses liegt bereits in der Vergangenheit und darf deswegen nicht mehr synchronisiert werden.");
 		// Prüfe, ob der Schuljahresabschnitt bereits angelegt sind - wenn nicht, dann existiert auch keine persistierte Blockung

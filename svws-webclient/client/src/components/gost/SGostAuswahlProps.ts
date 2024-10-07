@@ -15,7 +15,10 @@ export interface GostAuswahlProps {
 	addAbiturjahrgang: (idJahrgang: number) => Promise<void>;
 	gotoAbiturjahrgang: (abiturjahrgang: GostJahrgang) => Promise<void>;
 	getAbiturjahrFuerJahrgang: (idJahrgang: number) => number;
-	removeAbiturjahrgang: () => Promise<void>;
+	selected: () => GostJahrgang[];
+	setSelected: (value: GostJahrgang[]) => void;
+	gotoCreationMode: (navigate: boolean) => Promise<void>;
+	gotoGruppenprozess: (navigate: boolean) => Promise<void>;
 	// Config
 	filterNurAktuelle: () => boolean;
 	setFilterNurAktuelle: (value: boolean) => Promise<void>;

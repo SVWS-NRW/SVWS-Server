@@ -13,6 +13,7 @@ import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
@@ -106,9 +107,9 @@ public final class DBUtilsGost {
 	 * @return true, wenn bereits Kurse vorhanden sind und ansonsten false
 	 */
 	public static boolean pruefeHatOberstufenKurseInAbschnitt(final DBEntityManager conn,
-			final GostHalbjahr halbjahr, final DTOSchuljahresabschnitte abschnitt) {
+			final GostHalbjahr halbjahr, final Schuljahresabschnitt abschnitt) {
 		final List<DTOKurs> kurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = ?1 AND e.Schuljahresabschnitts_ID = ?2",
-				DTOKurs.class, halbjahr.jahrgang, abschnitt.ID);
+				DTOKurs.class, halbjahr.jahrgang, abschnitt.id);
 		for (final DTOKurs kurs : kurse) {
 			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
 			if (kursart != null)
@@ -129,9 +130,9 @@ public final class DBUtilsGost {
 	 * @return die Menge der Kurse (DB-DTOs)
 	 */
 	public static Set<DTOKurs> getOberstufenKurseInAbschnitt(final DBEntityManager conn, final GostHalbjahr halbjahr,
-			final DTOSchuljahresabschnitte abschnitt) {
+			final Schuljahresabschnitt abschnitt) {
 		final List<DTOKurs> kurse = conn.queryList("SELECT e FROM DTOKurs e WHERE e.ASDJahrgang = ?1 AND e.Schuljahresabschnitts_ID = ?2",
-				DTOKurs.class, halbjahr.jahrgang, abschnitt.ID);
+				DTOKurs.class, halbjahr.jahrgang, abschnitt.id);
 		final Set<DTOKurs> result = new HashSet<>();
 		for (final DTOKurs kurs : kurse) {
 			final GostKursart kursart = GostKursart.fromKuerzel(kurs.KursartAllg);
@@ -155,7 +156,7 @@ public final class DBUtilsGost {
 	 *     wurden, ansonsten false
 	 */
 	public static List<DTOSchuelerLernabschnittsdaten> getLernabschnitteFuerGostHalbjahrInAbschnitt(final DBEntityManager conn,
-			final GostHalbjahr halbjahr, final DTOSchuljahresabschnitte abschnitt) {
+			final GostHalbjahr halbjahr, final Schuljahresabschnitt abschnitt) {
 		// Bestimme alle Jahrgänge der Schule, welche den passenden ASD-Jahrgang haben
 		final List<DTOJahrgang> listJahrgaengeGost = conn.queryList(DTOJahrgang.QUERY_BY_ASDJAHRGANG, DTOJahrgang.class, halbjahr.jahrgang);
 		final List<Long> listJahrgaengeGostIDs = listJahrgaengeGost.stream().map(j -> j.ID).toList();
@@ -163,7 +164,7 @@ public final class DBUtilsGost {
 		return (listJahrgaengeGostIDs.isEmpty()) ? new ArrayList<>()
 				: conn.queryList(
 						"SELECT sla FROM DTOSchuelerLernabschnittsdaten sla JOIN DTOSchueler s ON s.Geloescht <> true AND sla.Schueler_ID = s.ID AND sla.Schuljahresabschnitts_ID = ?1 AND sla.Jahrgang_ID IN ?2",
-						DTOSchuelerLernabschnittsdaten.class, abschnitt.ID, listJahrgaengeGostIDs);
+						DTOSchuelerLernabschnittsdaten.class, abschnitt.id, listJahrgaengeGostIDs);
 	}
 
 
@@ -181,7 +182,7 @@ public final class DBUtilsGost {
 	 *     wurden, ansonsten false
 	 */
 	public static boolean pruefeHatNotenFuerOberstufeInAbschnitt(final DBEntityManager conn, final GostHalbjahr halbjahr,
-			final DTOSchuljahresabschnitte abschnitt) {
+			final Schuljahresabschnitt abschnitt) {
 		// Bestimme die SchuelerLernabschnitte von Schülern der Stufe
 		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = getLernabschnitteFuerGostHalbjahrInAbschnitt(conn, halbjahr, abschnitt);
 		final List<Long> idsSchuelerLernabschnittsdaten = schuelerLernabschnittsdaten.stream().map(l -> l.ID).toList();
@@ -215,7 +216,7 @@ public final class DBUtilsGost {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static void deleteOberstufenKurseUndLeistungsdaten(final DBEntityManager conn, final GostHalbjahr halbjahr,
-			final DTOSchuljahresabschnitte abschnitt) throws ApiOperationException {
+			final Schuljahresabschnitt abschnitt) throws ApiOperationException {
 		// Bestimme zunächst die Kurse der gymnasialen Oberstufe für diesen Fall
 		final Set<DTOKurs> kurse = getOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 		if (kurse.isEmpty())

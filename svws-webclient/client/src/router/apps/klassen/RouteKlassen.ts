@@ -34,7 +34,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			routeKlassenDaten,
 			routeKlassenDatenNeu,
 			routeKlassenStundenplan,
-			routeKlasseGruppenprozesse
+			routeKlasseGruppenprozesse,
 		];
 		super.defaultChild = routeKlassenDaten;
 	}

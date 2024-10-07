@@ -9,6 +9,9 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeGost } from "~/router/apps/gost/RouteGost";
 
 import { routeGostBeratung } from "~/router/apps/gost/beratung/RouteGostBeratung";
+import type { RouteNode } from "~/router/RouteNode";
+import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
+import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
 interface RouteStateGost extends RouteStateInterface {
 	params: RouteParams;
@@ -19,6 +22,10 @@ interface RouteStateGost extends RouteStateInterface {
 	mapAbiturjahrgaenge: Map<number, GostJahrgang>;
 	mapJahrgaenge: Map<number, JahrgangsDaten>;
 	mapJahrgaengeOhneAbiJahrgang: Map<number, JahrgangsDaten>;
+	oldView?: RouteNode<any, any>;
+	creationModeEnabled: boolean;
+	gruppenprozesseEnabled: boolean;
+	selected: GostJahrgang[];
 }
 
 const defaultState = <RouteStateGost> {
@@ -30,7 +37,11 @@ const defaultState = <RouteStateGost> {
 	mapAbiturjahrgaenge: new Map(),
 	mapJahrgaenge: new Map(),
 	mapJahrgaengeOhneAbiJahrgang: new Map(),
-	view: routeGostBeratung
+	view: routeGostBeratung,
+	oldView: undefined,
+	creationModeEnabled: false,
+	gruppenprozesseEnabled: false,
+	selected: [],
 };
 
 export class RouteDataGost extends RouteData<RouteStateGost> {
@@ -47,6 +58,13 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		await api.config.setValue('gost.auswahl.filterNurAktuelle', value ? "true" : "false");
 	}
 
+	get creationModeEnabled(): boolean {
+		return this._state.value.creationModeEnabled;
+	}
+
+	get gruppenprozesseEnabled(): boolean {
+		return this._state.value.gruppenprozesseEnabled;
+	}
 
 	private firstAbiturjahrgang(mapAbiturjahrgaenge: Map<number, GostJahrgang>): GostJahrgang | undefined {
 		if (mapAbiturjahrgaenge.size === 0)
@@ -174,6 +192,14 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return this._state.value.mapJahrgaengeOhneAbiJahrgang;
 	}
 
+	get selected(): GostJahrgang[] {
+		return this._state.value.selected;
+	}
+
+	setSelected = (selected: GostJahrgang[]) => {
+		this.setPatchedState({ selected });
+	}
+
 	patchJahrgangsdaten = async (data: Partial<GostJahrgangsdaten>, abiturjahr : number) => {
 		await api.server.patchGostAbiturjahrgang(data, api.schema, abiturjahr)
 		this.setPatchedState({ jahrgangsdaten: Object.assign(this.jahrgangsdaten, data) })
@@ -220,6 +246,8 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			jahrgangsdaten,
 			faecherManager,
 			view: this._state.value.view,
+			creationModeEnabled: this.creationModeEnabled,
+			gruppenprozesseEnabled: this.gruppenprozesseEnabled,
 		});
 	}
 
@@ -233,7 +261,9 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 			// TODO: Das ist ein Bug in der Tabelle, die bei gleicher Auswahl undefined schickt
 			// await RouteManager.doRoute({ name: routeGost.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 			return;
-		const redirect_name: string = (routeGost.selectedChild === undefined) ? routeGostBeratung.name : routeGost.selectedChild.name;
+		this._state.value.creationModeEnabled = false;
+		this._state.value.gruppenprozesseEnabled = false;
+		const redirect_name: string = ((routeGost.selectedChild === undefined) || (routeGost.selectedChild.name === routeGostAbiturjahrNeu.name) || (routeGost.selectedChild.name === routeGostGruppenprozesse.name)) ? routeGostBeratung.name : routeGost.selectedChild.name;
 		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: value.abiturjahr } });
 	}
 
@@ -257,12 +287,53 @@ export class RouteDataGost extends RouteData<RouteStateGost> {
 		return abiturjahr;
 	}
 
+	public removeAbiturjahrgaengeCheck = (): [boolean, ArrayList<string>] => {
+		const errorLog: ArrayList<string> = new ArrayList();
+		if (this.selected.length === 0)
+			errorLog.add('Es wurde kein Abiturjahrgang zum Löschen ausgewählt.')
+		for (const abiturjahrgang of this.selected)
+			if (abiturjahrgang.istBlockungFestgelegt.some(jg => (jg === true)))
+				errorLog.add(`Der Abiturjahrgang ${abiturjahrgang.abiturjahr} kann nicht gelöscht werden, da ihm bereits Kurse zugeordnet sind.`);
+		return [errorLog.isEmpty(), errorLog];
+	}
 
-	removeAbiturjahrgang = async () => {
-		await api.server.deleteGostAbiturjahrgang(api.schema, this.jahrgangsdaten.abiturjahr);
-		let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
-		state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state, true);
-		this.setPatchedDefaultState(state);
+	removeAbiturjahrgaenge = async (): Promise<[boolean, ArrayList<string | null>]> => {
+		for (const j of this.selected) {
+			await api.server.deleteGostAbiturjahrgang(api.schema, j.abiturjahr);
+			this.mapAbiturjahrgaenge.delete(j.abiturjahr);
+		}
+		// let state = await this.ladeDatenFuerSchuljahresabschnitt(this.idSchuljahresabschnitt);
+		// state = await this.ladeDatenFuerAbiturjahrgang(state.auswahl, state, true);
+		this.setPatchedState({ mapAbiturjahrgaenge: this.mapAbiturjahrgaenge });
+		return [true, new ArrayList<null|string>()];
+	}
+
+	gotoCreationMode = async (navigate: boolean) => {
+		if (this._state.value.creationModeEnabled || (this._state.value.view === routeGostAbiturjahrNeu))
+			return;
+		this._state.value.creationModeEnabled = true;
+		this._state.value.gruppenprozesseEnabled = false;
+		this._state.value.oldView = this._state.value.view;
+		if (navigate)
+			await RouteManager.doRoute(routeGostAbiturjahrNeu.getRoute());
+		this._state.value.view = routeGostAbiturjahrNeu;
+	}
+
+	gotoGruppenprozess = async (navigate: boolean) => {
+		if (this._state.value.gruppenprozesseEnabled || (this._state.value.view === routeGostGruppenprozesse))
+			return;
+		this._state.value.gruppenprozesseEnabled = true;
+		this._state.value.creationModeEnabled = false;
+		this._state.value.oldView = this._state.value.view;
+		if (navigate)
+			await RouteManager.doRoute(routeGostGruppenprozesse.getRoute());
+		this._state.value.view = routeGostGruppenprozesse;
+	}
+
+	cancelCreationMode = async () => {
+		this._state.value.creationModeEnabled = false;
+		const route = this._state.value.oldView !== undefined ? this._state.value.oldView.getRoute() : routeGost.getRoute();
+		await RouteManager.doRoute(route);
 	}
 
 }

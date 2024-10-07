@@ -85,9 +85,9 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 
 		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
 		final ArrayList<GostJahrgang> daten = new ArrayList<>();
-		List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
+		final List<DTOGostJahrgangsdaten> dtos = conn.queryAll(DTOGostJahrgangsdaten.class);
 		if (dtos != null) {
-			dtos = dtos.stream().sorted((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang)).toList();
+			dtos.sort((a, b) -> Integer.compare(a.Abi_Jahrgang, b.Abi_Jahrgang));
 			for (final DTOGostJahrgangsdaten jahrgangsdaten : dtos) {
 				if (jahrgangsdaten.Abi_Jahrgang < 0)
 					continue;
@@ -106,8 +106,17 @@ public final class DataGostJahrgangsliste extends DataManager<Integer> {
 							break;
 					}
 				}
+				eintrag.halbjahr = abschnitt.abschnitt;
 				eintrag.bezeichnung = "Abi " + eintrag.abiturjahr + ((eintrag.jahrgang == null) ? "" : " (" + eintrag.jahrgang + ")");
 				eintrag.istAbgeschlossen = (restjahre < 1);
+				// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
+				final @NotNull List<Schuljahresabschnitt> abschnitte =
+						conn.getUser().schuleGetAbschnitteBySchuljahre(eintrag.abiturjahr - 1, eintrag.abiturjahr - 2, eintrag.abiturjahr - 3);
+				for (final Schuljahresabschnitt a : abschnitte) {
+					final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(eintrag.abiturjahr, a.schuljahr, a.abschnitt);
+					eintrag.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, a);
+					eintrag.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, a);
+				}
 				daten.add(eintrag);
 			}
 		}

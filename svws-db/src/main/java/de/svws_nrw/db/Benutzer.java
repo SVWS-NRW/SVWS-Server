@@ -14,6 +14,7 @@ import javax.crypto.SecretKey;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.asd.data.schule.SchuleStammdaten;
@@ -60,6 +61,12 @@ public final class Benutzer {
 	 * Eine Map für den schnellen Zugriff auf die Schuljahresabschnitte aus den Stammdaten der Schule
 	 */
 	private final @NotNull Map<Long, Schuljahresabschnitt> _mapSchuljahresabschnitte = new HashMap<>();
+
+	/**
+	 * Eine Map für den schnellen Zugriff auf die Schuljahresabschnitte aus den Stammdaten der Schule anhand
+	 * des Schuljahres und des Halbjahres
+	 */
+	private final @NotNull HashMap2D<Integer, Integer, Schuljahresabschnitt> _mapSchuljahresabschnitteByJahrUndHalbjahr = new HashMap2D<>();
 
 	/**
 	 * Enthält die Information welche Kompetenzen der Benutzer in Bezug auf den Datenbankzugriff hat.
@@ -421,9 +428,12 @@ public final class Benutzer {
 	public void schuleSetStammdaten(final SchuleStammdaten stammdaten) {
 		_stammdaten = stammdaten;
 		this._mapSchuljahresabschnitte.clear();
-		if (_stammdaten != null)
-			for (final @NotNull Schuljahresabschnitt abschnitt : _stammdaten.abschnitte)
+		if (_stammdaten != null) {
+			for (final @NotNull Schuljahresabschnitt abschnitt : _stammdaten.abschnitte) {
 				_mapSchuljahresabschnitte.put(abschnitt.id, abschnitt);
+				_mapSchuljahresabschnitteByJahrUndHalbjahr.put(abschnitt.schuljahr, abschnitt.abschnitt, abschnitt);
+			}
+		}
 	}
 
 
@@ -436,6 +446,37 @@ public final class Benutzer {
 	 */
 	public Schuljahresabschnitt schuleGetAbschnittById(final long id) {
 		return _mapSchuljahresabschnitte.get(id);
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt zu dem Schuljahr und dem Halbjahr zurück oder null, wenn keiner existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param halbjahr    das Halbjar
+	 *
+	 * @return der Schuljahresabschnitt oder null
+	 */
+	public Schuljahresabschnitt schuleGetAbschnittBySchuljahrUndHalbjahr(final int schuljahr, final int halbjahr) {
+		return _mapSchuljahresabschnitteByJahrUndHalbjahr.getOrNull(schuljahr, halbjahr);
+	}
+
+
+	/**
+	 * Bestimmt die Liste der Schuljahresabschnitte zu den übergebenen Schuljahren
+	 *
+	 * @param schuljahre   die Schuljahre
+	 *
+	 * @return die Liste der Schuljahresabschnitte
+	 */
+	public @NotNull List<Schuljahresabschnitt> schuleGetAbschnitteBySchuljahre(final int... schuljahre) {
+		final List<Schuljahresabschnitt> result = new ArrayList<>();
+		for (final int schuljahr : schuljahre) {
+			final Map<Integer, Schuljahresabschnitt> mapHalbjahre = _mapSchuljahresabschnitteByJahrUndHalbjahr.getSubMapOrNull(schuljahr);
+			if (mapHalbjahre != null)
+				result.addAll(mapHalbjahre.values());
+		}
+		return result;
 	}
 
 

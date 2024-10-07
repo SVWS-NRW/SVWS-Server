@@ -4,9 +4,7 @@
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
 					<template v-if="props.gruppenprozesseEnabled">
-						<h2 class="svws-headline">
-							Gruppenprozesse
-						</h2>
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
 						<span class="svws-subline">{{ selectedKlassen }}</span>
 					</template>
 					<template v-else-if="props.creationModeEnabled">
@@ -15,9 +13,7 @@
 					<template v-else>
 						<h2 class="svws-headline">
 							<span>
-								{{
-									klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—'
-								}}
+								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
 								<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
 									ID: {{ klassenListeManager().daten().id }}
 								</svws-ui-badge>
