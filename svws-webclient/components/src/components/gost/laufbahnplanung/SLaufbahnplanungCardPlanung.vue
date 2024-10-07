@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns has-background>
+	<svws-ui-table :items="abiturdatenManager().faecher().faecher()" :columns has-background scroll>
 		<template #header>
 			<div role="row" class="svws-ui-tr">
 				<div role="columnheader" class="svws-ui-td col-span-3 svws-divider">

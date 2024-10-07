@@ -1,5 +1,5 @@
 <template>
-	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full relative">
+	<div v-if="jahrgangsdaten() !== undefined" class="page--content page--content--full page--content--gost-beratung">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<svws-ui-button :type="modus === 'normal' ? 'transparent' : 'danger'" @click="switchModus" title="Modus wechseln">
@@ -13,10 +13,12 @@
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe> <hilfe-gost-beratung /> </svws-ui-modal-hilfe>
 		</Teleport>
-		<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :hat-update-kompetenz
-			:abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl ignoriere-sprachenfolge />
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
-			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer">
+		<div class="flex-grow overflow-y-auto overflow-x-hidden min-w-fit">
+			<s-laufbahnplanung-card-planung title="Vorlage für Schüler des Abiturjahrgangs" :goto-kursblockung :hat-update-kompetenz
+				:abiturdaten-manager :modus :faecher-anzeigen="'alle'" :gost-jahrgangsdaten="jahrgangsdaten()" :set-wahl ignoriere-sprachenfolge />
+		</div>
+		<div class="overflow-y-auto overflow-x-hidden flex flex-col gap-y-8 lg:gap-y-12 scrollbar-thin pr-4">
+			<svws-ui-content-card v-if="istAbiturjahrgang" title="Beratungslehrer" class="m-0">
 				<svws-ui-table :items="beratungslehrer()" :selectable="hatUpdateKompetenz" :model-value="selected" @update:model-value="selected=$event" count :columns="[{key: 'kuerzel', label: 'Kürzel', span: 0.25}, {key: 'name', label: 'Name'}]">
 					<template #cell(name)="{ rowData: l }">
 						{{ `${l.nachname}, ${l.vorname}` }}
@@ -28,7 +30,7 @@
 					</template>
 				</svws-ui-table>
 			</svws-ui-content-card>
-			<svws-ui-content-card title="Textvorlagen">
+			<svws-ui-content-card title="Textvorlagen" class="m-0">
 				<svws-ui-input-wrapper>
 					<svws-ui-textarea-input :disabled="!hatUpdateKompetenz" placeholder="Beratungsbögen" :model-value="jahrgangsdaten().textBeratungsbogen"
 						@change="textBeratungsbogen => patchJahrgangsdaten({ textBeratungsbogen }, props.jahrgangsdaten().abiturjahr)" resizeable="vertical" autoresize />
@@ -98,8 +100,21 @@
 <style lang="postcss" scoped>
 
 	.page--content {
-		@apply grid;
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 lg:gap-x-12;
+		grid-auto-rows: 100%;
 		grid-template-columns: 1fr minmax(36rem, 1fr);
+		grid-auto-columns: max-content;
+	}
+
+	.page--content--gost-beratung {
+		@apply gap-x-8 2xl:gap-x-12 relative overflow-y-hidden h-full;
+		@apply px-4 lg:px-6 3xl:px-8 4xl:px-12 pt-8 pb-8;
+	}
+
+	.scrollbar-thin {
+		scrollbar-gutter: stable;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(0,0,0,0.2) transparent;
 	}
 
 </style>

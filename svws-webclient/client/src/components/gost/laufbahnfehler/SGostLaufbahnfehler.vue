@@ -1,5 +1,5 @@
 <template>
-	<div class="page--content">
+	<div class="page--content page--content--gost-laufbahnfehler overflow-x-auto">
 		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<s-modal-laufbahnplanung-alle-fachwahlen-loeschen :gost-jahrgangsdaten="jahrgangsdaten" :reset-fachwahlen="resetFachwahlenAlle" />
@@ -13,7 +13,7 @@
 				<template #icon> <svws-ui-spinner spinning v-if="apiStatus.pending" /> <span class="icon i-ri-printer-line" v-else /> </template>
 			</svws-ui-button-select>
 		</Teleport>
-		<svws-ui-content-card title="Laufbahnplanungen im Jahrgang">
+		<div class="h-full flex flex-col">
 			<div class="flex flex-wrap gap-x-10 gap-y-3 items-center justify-between mb-5 content-card--headline">
 				<div class="flex flex-wrap gap-x-5">
 					<svws-ui-checkbox type="toggle" :model-value="filterFehler()" @update:model-value="setFilterFehler">Nur Fehler</svws-ui-checkbox>
@@ -25,7 +25,7 @@
 				</svws-ui-radio-group>
 			</div>
 			<svws-ui-table :items="filtered" :no-data="filtered.isEmpty()" no-data-html="Keine Laufbahnfehler gefunden."
-				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns selectable v-model="auswahl">
+				clickable :clicked="schueler" @update:clicked="schueler=$event" :columns selectable v-model="auswahl" scroll>
 				<template #header(linkToSchueler)>
 					<span class="icon i-ri-group-line" />
 				</template>
@@ -55,25 +55,33 @@
 					<span :class="counter(f.fehlercodes) === 0 ? 'opacity-25' : ''">{{ counter(f.fehlercodes) }}</span>
 				</template>
 			</svws-ui-table>
-		</svws-ui-content-card>
-		<svws-ui-content-card v-if="!filtered.isEmpty() && schueler">
-			<template #title>
-				<svws-ui-tooltip :indicator="false">
-					<span class="text-headline-md" title="Zur Laufbahnplanung">{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
-					<template #content>
-						ID: {{ schueler?.schueler?.id || '' }}
-					</template>
-				</svws-ui-tooltip>
-			</template>
-			<template #actions>
-				<div class="flex flex-col">
-					<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Laufbahnplanung</svws-ui-button>
-					<svws-ui-button type="transparent" @click="gotoSprachenfolge(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Sprachenfolge</svws-ui-button>
+		</div>
+		<div v-if="!filtered.isEmpty() && schueler" class="h-full overflow-y-hidden flex flex-col">
+			<div class="flex flex-row w-full mb-2">
+				<div class="flex-grow">
+					<svws-ui-tooltip :indicator="false">
+						<span class="text-headline-md" title="Zur Laufbahnplanung">{{ `${schueler?.schueler?.vorname} ${schueler?.schueler?.nachname}` }}</span>
+						<template #content>
+							ID: {{ schueler?.schueler?.id || '' }}
+						</template>
+					</svws-ui-tooltip>
 				</div>
-			</template>
-			<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
-			<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
-		</svws-ui-content-card>
+				<div>
+					<div class="flex flex-col">
+						<svws-ui-button type="transparent" @click="gotoLaufbahnplanung(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Laufbahnplanung</svws-ui-button>
+						<svws-ui-button type="transparent" @click="gotoSprachenfolge(schueler?.schueler?.id || 0)"><span class="icon i-ri-link" />Zur Sprachenfolge</svws-ui-button>
+					</div>
+				</div>
+			</div>
+			<div class="h-full flex-grow overflow-y-auto flex flex-col">
+				<div class="pb-2">
+					<s-laufbahnplanung-fehler :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+				</div>
+				<div>
+					<s-laufbahnplanung-informationen :fehlerliste="() => schueler.ergebnis.fehlercodes" :belegpruefungs-art="gostBelegpruefungsArt" />
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -214,7 +222,18 @@
 </script>
 
 <style lang="postcss" scoped>
-.page--content {
-	grid-template-columns: minmax(20rem, 0.5fr) 1fr;
-}
+
+	.page--content {
+		@apply grid overflow-y-hidden overflow-x-auto h-full pb-3 pt-6 gap-x-8 lg:gap-x-12;
+		grid-auto-rows: 100%;
+		grid-template-columns: minmax(20rem, 0.5fr) 1fr;
+		grid-auto-columns: max-content;
+	}
+
+	.scrollbar-thin {
+		scrollbar-gutter: stable;
+		scrollbar-width: thin;
+		scrollbar-color: rgba(0,0,0,0.2) transparent;
+	}
+
 </style>

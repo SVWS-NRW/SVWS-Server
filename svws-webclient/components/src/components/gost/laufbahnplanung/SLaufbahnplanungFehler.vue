@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" no-data-text="" :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]" type="navigation">
+	<svws-ui-table :items="[]" :no-data="false" no-data-text="" :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]"
+		type="navigation" :scroll>
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">
@@ -37,10 +38,13 @@
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		belegpruefungsArt: () => GostBelegpruefungsArt;
-	}>();
+		scroll?: boolean;
+	}>(), {
+		scroll: false,
+	});
 
 	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
