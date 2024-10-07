@@ -16,6 +16,7 @@ import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlPr
 import { routeError } from "~/router/error/RouteError";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
+import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteType } from "~/router/RouteType";
 
 
@@ -127,8 +128,9 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.klassenListeManager.auswahlID() } });
-		this.data.setView(node, this.children);
+		const result = await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.klassenListeManager.auswahlID() } });
+		if (result === RoutingStatus.SUCCESS)
+			this.data.setView(node, this.children);
 	}
 
 }

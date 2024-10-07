@@ -31,6 +31,7 @@ export { default as SvwsUiHeader } from "./components/App/SvwsUiHeader.vue";
 export { default as SvwsUiSubNav } from "./components/App/SvwsUiSubNav.vue";
 export { default as SvwsUiContentCard } from "./components/App/SvwsUiContentCard.vue";
 export { default as SvwsUiModal } from "./components/App/SvwsUiModal.vue";
+export { default as SvwsUiCheckpointModal } from "./components/App/SvwsUiCheckpointModal.vue";
 // App.Sidebar
 export { default as SvwsUiMenu } from "./components/App/Sidebar/SvwsUiMenu.vue";
 export { default as SvwsUiMenuHeader } from "./components/App/Sidebar/SvwsUiMenuHeader.vue";
@@ -52,3 +53,4 @@ export type { TabData } from "./components/App/TabData";
 
 // Class exports
 export { TabManager } from "./components/App/TabManager";
+export { Checkpoint } from "./components/Checkpoint";

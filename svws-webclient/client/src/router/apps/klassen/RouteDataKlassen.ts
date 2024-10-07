@@ -5,7 +5,7 @@ import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-
+import { RoutingStatus } from "~/router/RoutingStatus";
 import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
@@ -13,6 +13,7 @@ import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
+import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 
 
 interface RouteStateKlassen extends RouteStateInterface {
@@ -271,28 +272,39 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		await this.gotoEintrag(neueKlasse.id);
 	}
 
-	gotoEintrag = async (eintragId?: number | null) => {
-		this.klassenListeManager.liste.auswahlClear();
+	private setDefaults() {
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this._state.value.gruppenprozesseEnabled = false;
 		this._state.value.creationModeEnabled = false;
+		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKlassenDaten;
+	}
 
-		if ((eintragId !== null) && (eintragId !== undefined)) {
-			// Deaktivieren des Gruppenprozess Modus falls noch aktiv
-			const view = ((this._state.value.view === routeKlasseGruppenprozesse) || (this._state.value.view === routeKlassenDatenNeu))
-				? routeKlassenDaten : this.view;
-			if (this.klassenListeManager.liste.has(eintragId)) {
-				await RouteManager.doRoute(view.getRoute(eintragId));
+	gotoEintrag = async (eintragId?: number | null) => {
+		this._state.value.oldView = this._state.value.view;
+		if ((eintragId !== null) && (eintragId !== undefined) && this.klassenListeManager.liste.has(eintragId)) {
+			const route = ((this.view === routeKlassenDaten) || (this.view === routeKlassenStundenplan)) ? this.view.getRoute(eintragId) : routeKlassenDaten.getRoute(eintragId)
+			const result = await RouteManager.doRoute(route);
+			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
 				await this.setEintrag(this.klassenListeManager.liste.get(eintragId));
-				return;
-			}
+
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+				this.setDefaults();
+
+			this.commit();
+			return;
 		}
 
+		// Default Eintrag selektieren, wenn keine ID übergeben wurde
 		const filtered = this.klassenListeManager.filtered();
 		if (!filtered.isEmpty()) {
 			const klasse = this.klassenListeManager.filtered().getFirst();
-			await RouteManager.doRoute(routeKlassenDaten.getRoute(klasse.id));
+			const route = routeKlassenDaten.getRoute(klasse.id);
+			const result = await RouteManager.doRoute(route);
+			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
+				this.setDefaults();
+
 			await this.setEintrag(klasse);
+			this.commit();
 		}
 	}
 
@@ -314,12 +326,16 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this._state.value.gruppenprozesseEnabled = false;
 		this._state.value.oldView = this._state.value.view;
 
-		if (navigate)
-			await RouteManager.doRoute(routeKlassenDatenNeu.getRoute());
+		if (navigate) {
+			const result = await RouteManager.doRoute(routeKlassenDatenNeu.getRoute());
+			if (result === RoutingStatus.SUCCESS)
+				this.klassenListeManager.liste.auswahlClear();
+		}
 
 		this._state.value.view = routeKlassenDatenNeu;
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this.klassenListeManager.setDaten(null);
+		this.commit();
 	}
 
 	gotoGruppenprozess = async (navigate: boolean) => {
@@ -337,6 +353,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 		this._state.value.view = routeKlasseGruppenprozesse;
 		this.klassenListeManager.setDaten(null);
+		this.commit();
 	}
 
 }

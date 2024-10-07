@@ -5,6 +5,7 @@ import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationExceptio
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
+import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
@@ -158,8 +159,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
-		this.data.setView(node, this.children);
+		const result = await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		if (result === RoutingStatus.SUCCESS)
+			this.data.setView(node, this.children);
 	}
 
 }

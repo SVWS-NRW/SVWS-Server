@@ -35,11 +35,11 @@
 				</div>
 			</svws-ui-content-card>
 		</div>
+		<svws-ui-checkpoint-modal :checkpoint="props.checkpoint" :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
 <script setup lang="ts">
-
 	import { ref, computed, onMounted, watch } from "vue";
 	import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
@@ -52,7 +52,6 @@
 
 	const isLoading = ref<boolean>(false);
 	const isValid = ref<boolean>(false);
-
 	const data = ref<Partial<KlassenDaten>>({});
 
 	onMounted(() => {
@@ -64,10 +63,16 @@
 			idSchulgliederung: Schulgliederung.getDefault(props.schulform)?.daten(props.klassenListeManager().getSchuljahr())?.id ?? -1,
 			idKlassenart: Klassenart.getDefault(props.schulform).daten(props.klassenListeManager().getSchuljahr())?.id ?? Klassenart.UNDEFINIERT.daten(props.klassenListeManager().getSchuljahr())?.id,
 			idAllgemeinbildendOrganisationsform: AllgemeinbildendOrganisationsformen.GANZTAG.daten(props.klassenListeManager().getSchuljahr())?.id ?? null
-		};
-	})
+		}
 
-	watch(() => data.value, () => validateAll(), { immediate: false, deep: true });
+		watch(() => data.value, async () => {
+			if (isLoading.value)
+				return;
+
+			props.checkpoint.active = true;
+			validateAll();
+		}, { immediate: false, deep: true });
+	})
 
 	const parallelitaet = computed<string | null>({
 		get: () => data.value.parallelitaet ?? '---',
@@ -140,14 +145,17 @@
 	const kuerzelFolgeklasse = computed<string | null>(() => (data.value.kuerzelFolgeklasse === null) ? '&nbsp;' : data.value.kuerzelFolgeklasse ?? null);
 
 	async function cancel() {
+		props.checkpoint.active = false;
 		await props.gotoEintrag(null);
 	}
 
 	async function addKlasse() {
 		if (isLoading.value === true)
 			return;
+
 		isLoading.value = true;
-		await props.add(data.value)
+		props.checkpoint.active = false;
+		await props.add(data.value);
 		isLoading.value = false;
 	}
 

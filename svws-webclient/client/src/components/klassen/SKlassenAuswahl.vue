@@ -149,7 +149,6 @@
 	}
 
 	async function startCreationMode(): Promise<void> {
-		props.klassenListeManager().liste.auswahlClear();
 		await props.gotoCreationMode(true)
 	}
 

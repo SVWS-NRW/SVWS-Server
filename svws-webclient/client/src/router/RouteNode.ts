@@ -5,8 +5,8 @@ import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RoutePa
 import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
-import type { TabData} from "@ui";
-import { TabManager } from "@ui";
+import type { TabData } from "@ui";
+import { TabManager, Checkpoint } from "@ui";
 
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
@@ -68,6 +68,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
 	private _mode: ServerMode = ServerMode.DEV;
 
+	/** Checkpoint der beim Verlassen dieser Route, für eine Checkpoint Aktion genutzt werden kann. */
+	private _checkpoint: Checkpoint | undefined = undefined;
 
 	/**
 	 * Erstellt einen neuen Knoten für das Routing mithilfe einer
@@ -80,7 +82,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
 	 * @param path          der Pfad der Route (siehe RouteRecordRaw)
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
-	* @param data          die dem Knoten zugeordneten Daten
+	 * @param data          die dem Knoten zugeordneten Daten
 	 */
 	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
@@ -188,6 +190,27 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected set mode(mode : ServerMode) {
 		this._mode = mode;
+	}
+
+	/**
+	 * Gibt an, ob ein Checkpoint hinterlegt ist und dieser gerade aktiv ist.
+	 */
+	public isCheckpointActive() : boolean {
+		return (this._checkpoint !== undefined) && this._checkpoint.active;
+	}
+
+	/**
+	 * Gibt den hinterlegten Checkpoint zurück.
+	 */
+	public get checkpoint() : Checkpoint | undefined {
+		return this._checkpoint;
+	}
+
+	/**
+	 * Wenn <code>true</code> übergeben wird, wird ein Checkpoint für diese RouteNode erzeugt, ansonsten wird der Checkpoint entfernt.
+	 */
+	public set setCheckpoint(checkpoint: boolean) {
+		this._checkpoint = checkpoint ? new Checkpoint() : undefined;
 	}
 
 	/**
@@ -518,6 +541,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		return {};
 	}
 
+	/**
+	 * Hook die ausgeführt wird, nach dem ein aktiver Checkpoint betreten wurde.
+	 *
+	 * @param destination Ziel Route zu der ursprünglich navigiert werden sollte.
+	 */
+	public async doCheckpoint(destination: RouteLocationRaw): Promise<void> {
+		return this._checkpoint?.doCheckpoint(destination);
+	}
 
 	/**
 	 * TODO see RouterManager - global hook

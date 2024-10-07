@@ -83,7 +83,7 @@
 		<template #main>
 			<div class="app--page" :class="app.name">
 				<div class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
-					<template v-if="pendingSetApp">
+					<div v-show="pendingSetApp">
 						<svws-ui-header>
 							<div class="flex items-center">
 								<div class="w-20 mr-6" v-if="app.name === 'schueler' || app.name === 'lehrer'">
@@ -96,10 +96,10 @@
 								</div>
 							</div>
 						</svws-ui-header>
-					</template>
-					<template v-else>
+					</div>
+					<div v-show="!pendingSetApp">
 						<router-view :key="app.name" />
-					</template>
+					</div>
 				</div>
 			</div>
 		</template>
@@ -158,6 +158,7 @@
 	function is_active(current: TabData): boolean {
 		const routename = props.app.name.split('.')[0];
 		const title = current.text + " - " + schulname.value;
+
 		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
 			return true;
 		if (routename !== current.name)
