@@ -107,10 +107,8 @@ public final class Benutzer {
 	 * verwendende {@link DBConfig} angegeben wird.
 	 *
 	 * @param config   die Datenbank-Konfiguration
-	 *
-	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-	private Benutzer(final DBConfig config) throws DBException {
+	private Benutzer(final DBConfig config) {
 		this._username = "niemand";
 		this._password = "keines";
 		this._aes = null;
@@ -125,10 +123,8 @@ public final class Benutzer {
 	 * @param config   die Datenbank-Konfiguration.
 	 *
 	 * @return die neue Instanz des {@link Benutzer}
-	 *
-	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-	public static Benutzer create(final DBConfig config) throws DBException {
+	public static Benutzer create(final DBConfig config) {
 		return new Benutzer(config);
 	}
 

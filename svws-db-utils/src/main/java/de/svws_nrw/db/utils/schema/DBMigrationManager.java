@@ -316,30 +316,22 @@ public final class DBMigrationManager {
 			return false;
 		}
 		// Leere das bestehende Schema der Zieldatenbank
-		DBEntityManager tgtConn;
-		try {
-			logger.log("-> Verbinde zur Ziel-Datenbank... ");
-			final Benutzer tgtUser = Benutzer.create(tgtConfig);
-			tgtConn = tgtUser.getEntityManager();
+		logger.log("-> Verbinde zur Ziel-Datenbank... ");
+		final Benutzer tgtUser = Benutzer.create(tgtConfig);
+		try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 			logger.logLn("[OK]");
-		} catch (final DBException e) {
-			logger.logLn("[Fehler]");
-			logger.logLn(2, e.getMessage());
-			return false;
-		}
-		try {
 			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtConn, true, logger);
 			if (!tgtManager.dropSVWSSchema())
 				return false;
+			final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+			final boolean success = migrationManager.doMigrate();
+			logger.modifyIndent(-2);
+			return success;
 		} catch (final DBException e) {
 			logger.logLn("[Fehler]");
 			logger.logLn(2, e.getMessage());
 			return false;
 		}
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
-		final boolean success = migrationManager.doMigrate();
-		logger.modifyIndent(-2);
-		return success;
 	}
 
 

@@ -104,14 +104,8 @@ public class Main {
 		logger.modifyIndent(2);
 		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 		boolean schemaOK = true;
-		Benutzer dbUser = null;
-		try {
-			dbUser = Benutzer.create(dbconfig);
-		} catch (final DBException e) {
-			logger.logLn(e.getMessage());
-			schemaOK = false;
-		}
-		if (schemaOK && (dbUser != null)) {
+		final Benutzer dbUser = Benutzer.create(dbconfig);
+		if (dbUser != null) {
 			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 				if (dbConn == null) {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");

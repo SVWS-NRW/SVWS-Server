@@ -15,7 +15,6 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
-import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
@@ -122,13 +121,7 @@ public class ExportLuPOMDB {
 			final String srcUser = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
 			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_DB, srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false);
-			final Benutzer user;
-			try {
-				user = Benutzer.create(srcConfig);
-			} catch (@SuppressWarnings("unused") final DBException db) {
-				logger.logLn("Fehler beim Erstellen der Datenbankverbindung zum Quell-Schema. Sind die Anmeldedaten korrekt?");
-				return;
-			}
+			final Benutzer user = Benutzer.create(srcConfig);
 
 			final String jahrgang = cmdLine.getValue("k", "Q2");
 

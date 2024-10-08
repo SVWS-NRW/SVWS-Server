@@ -65,12 +65,7 @@ public final class DBUtilsSchema {
 				dbconfig = dbconfig.switchSchema(PersistenceUnits.SVWS_ROOT, "");
 				break;
 		}
-		final Benutzer user;
-		try {
-			user = Benutzer.create(dbconfig);
-		} catch (@SuppressWarnings("unused") final DBException db) {
-			return false;
-		}
+		final Benutzer user = Benutzer.create(dbconfig);
 		try (DBEntityManager em = user.getEntityManager()) {
 			return (em != null);
 		} catch (@SuppressWarnings("unused") final Exception pe) {

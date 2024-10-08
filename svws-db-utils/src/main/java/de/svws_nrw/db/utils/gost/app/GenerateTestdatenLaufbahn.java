@@ -114,13 +114,7 @@ public class GenerateTestdatenLaufbahn {
 			if (dbSchema == null)
 				throw new IOException("Es wurde kein gültiges Datenbank-Schema zum Einlesen der Laufbahndaten angegeben.");
 			final DBConfig dbConfig = svwsconfig.getDBConfig(dbSchema);
-			final Benutzer user;
-			try {
-				user = Benutzer.create(dbConfig);
-			} catch (@SuppressWarnings("unused") final DBException db) {
-				logger.logLn("Fehler beim Erstellen der Datenbankverbindung. Sind die Anmeldedaten korrekt?");
-				return;
-			}
+			final Benutzer user = Benutzer.create(dbConfig);
 			try (DBEntityManager conn = user.getEntityManager()) {
 
 				// Lese die ID für den ersten generierten Jahrgang ein
