@@ -118,12 +118,15 @@ public class ConnectionFactory {
 		}
 		ConnectionManager.instance.lock();
 		try {
+			// Prüfe zunächst, ob noch eine offene Verbindung existiert. Ist dies der Fall, so darf die Factory noch nicht geschlossen werden
+			if (!connections.isEmpty())
+				return;
 			// Wenn in der Zwischenzeit nicht mindestens CONNECTION_CLEANUP_INTERVAL an Zeit vergangen ist, dann gab
 			// es zwischendurch eine weitere Verbindung und dieser Thread ist nicht mehr zuständig
 			final long now = System.currentTimeMillis();
 			if (now - tsLastConnection < CONNECTION_CLEANUP_INTERVAL)
 				return;
-			// Ansonsten muss die Verbindung unterbrochen werden, sofern dies nicht zwischenzeitlich passiert ist...
+			// Ansonsten muss die Factory geschlossen werden, sofern dies nicht zwischenzeitlich passiert ist...
 			if (ConnectionManager.instance.hasFactory(config))
 				ConnectionManager.instance.closeSingle(config);
 		} finally {
