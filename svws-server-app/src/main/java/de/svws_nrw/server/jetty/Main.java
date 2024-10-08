@@ -14,7 +14,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import jakarta.ws.rs.core.Response.Status;
