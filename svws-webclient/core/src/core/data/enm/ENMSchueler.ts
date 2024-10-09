@@ -4,6 +4,7 @@ import { ENMLernabschnitt } from '../../../core/data/enm/ENMLernabschnitt';
 import { ENMLeistungBemerkungen } from '../../../core/data/enm/ENMLeistungBemerkungen';
 import { ENMZP10 } from '../../../core/data/enm/ENMZP10';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { ENMSchuelerAnkreuzkompetenz } from '../../../core/data/enm/ENMSchuelerAnkreuzkompetenz';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import { ENMBKAbschluss } from '../../../core/data/enm/ENMBKAbschluss';
@@ -72,6 +73,11 @@ export class ENMSchueler extends JavaObject {
 	public leistungsdaten : List<ENMLeistung> = new ArrayList<ENMLeistung>();
 
 	/**
+	 * Die Ankreuzkompetenzen des Schülers in dem Lernabschnitt der Notendatei
+	 */
+	public ankreuzkompetenzen : List<ENMSchuelerAnkreuzkompetenz> = new ArrayList<ENMSchuelerAnkreuzkompetenz>();
+
+	/**
 	 * Die Bemerkungen bei dem Schüler in Bezug auf den Lernabschnitt der Notendatei
 	 */
 	public bemerkungen : ENMLeistungBemerkungen = new ENMLeistungBemerkungen();
@@ -136,6 +142,11 @@ export class ENMSchueler extends JavaObject {
 				result.leistungsdaten.add(ENMLeistung.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (obj.ankreuzkompetenzen !== undefined) {
+			for (const elem of obj.ankreuzkompetenzen) {
+				result.ankreuzkompetenzen.add(ENMSchuelerAnkreuzkompetenz.transpilerFromJSON(JSON.stringify(elem)));
+			}
+		}
 		if (obj.bemerkungen === undefined)
 			throw new Error('invalid json format, missing attribute bemerkungen');
 		result.bemerkungen = ENMLeistungBemerkungen.transpilerFromJSON(JSON.stringify(obj.bemerkungen));
@@ -169,6 +180,14 @@ export class ENMSchueler extends JavaObject {
 			const elem = obj.leistungsdaten.get(i);
 			result += ENMLeistung.transpilerToJSON(elem);
 			if (i < obj.leistungsdaten.size() - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
+		result += '"ankreuzkompetenzen" : [ ';
+		for (let i = 0; i < obj.ankreuzkompetenzen.size(); i++) {
+			const elem = obj.ankreuzkompetenzen.get(i);
+			result += ENMSchuelerAnkreuzkompetenz.transpilerToJSON(elem);
+			if (i < obj.ankreuzkompetenzen.size() - 1)
 				result += ',';
 		}
 		result += ' ]' + ',';
@@ -228,6 +247,16 @@ export class ENMSchueler extends JavaObject {
 				const elem = obj.leistungsdaten.get(i);
 				result += ENMLeistung.transpilerToJSON(elem);
 				if (i < obj.leistungsdaten.size() - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
+		}
+		if (obj.ankreuzkompetenzen !== undefined) {
+			result += '"ankreuzkompetenzen" : [ ';
+			for (let i = 0; i < obj.ankreuzkompetenzen.size(); i++) {
+				const elem = obj.ankreuzkompetenzen.get(i);
+				result += ENMSchuelerAnkreuzkompetenz.transpilerToJSON(elem);
+				if (i < obj.ankreuzkompetenzen.size() - 1)
 					result += ',';
 			}
 			result += ' ]' + ',';

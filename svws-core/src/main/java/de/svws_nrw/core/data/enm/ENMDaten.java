@@ -103,6 +103,10 @@ public class ENMDaten {
 			description = "Ein Array mit den Informationen zu den Fächern, die in der Notendatei vorhanden sind."))
 	public @NotNull List<ENMFach> faecher = new ArrayList<>();
 
+	/** Der Katalog der Ankreuzkompetenzen (Grundschulzeugnisse und Inklusionszeugnisse) */
+	@Schema(description = "der Katalog der Ankreuzkompetenzen (Grundschulzeugnisse und Inklusionszeugnisse)")
+	public @NotNull ENMAnkreuzkompetenzenKatalog ankreuzkompetenzen = new ENMAnkreuzkompetenzenKatalog();
+
 	// TODO Katalog der Kursarten
 
 	/** Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind. */
