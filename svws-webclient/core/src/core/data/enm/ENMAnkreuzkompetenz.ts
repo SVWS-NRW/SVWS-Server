@@ -21,7 +21,7 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 	/**
 	 * Das Statistik-Kürzel des Jahrgangs zu der die Ankreuzfloskel gehört.
 	 */
-	public Jahrgang : string = "";
+	public jahrgang : string = "";
 
 	/**
 	 * Der Text der Ankreuzkompetenz.
@@ -58,9 +58,9 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 			throw new Error('invalid json format, missing attribute istFachkompetenz');
 		result.istFachkompetenz = obj.istFachkompetenz;
 		result.fachID = (obj.fachID === undefined) ? null : obj.fachID === null ? null : obj.fachID;
-		if (obj.Jahrgang === undefined)
-			throw new Error('invalid json format, missing attribute Jahrgang');
-		result.Jahrgang = obj.Jahrgang;
+		if (obj.jahrgang === undefined)
+			throw new Error('invalid json format, missing attribute jahrgang');
+		result.jahrgang = obj.jahrgang;
 		if (obj.text === undefined)
 			throw new Error('invalid json format, missing attribute text');
 		result.text = obj.text;
@@ -75,7 +75,7 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"istFachkompetenz" : ' + obj.istFachkompetenz.toString() + ',';
 		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
-		result += '"Jahrgang" : ' + JSON.stringify(obj.Jahrgang) + ',';
+		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result = result.slice(0, -1);
@@ -94,8 +94,8 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
 		}
-		if (obj.Jahrgang !== undefined) {
-			result += '"Jahrgang" : ' + JSON.stringify(obj.Jahrgang) + ',';
+		if (obj.jahrgang !== undefined) {
+			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		}
 		if (obj.text !== undefined) {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';

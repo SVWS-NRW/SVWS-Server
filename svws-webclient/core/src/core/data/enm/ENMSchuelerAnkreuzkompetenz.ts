@@ -11,32 +11,12 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	/**
 	 * Die ID der der Ankreuzkompetenz, auf welches sich der Eintrag bezieht
 	 */
-	public fachID : number | null = null;
+	public kompetenzID : number | null = null;
 
 	/**
-	 * Gibt an, ob Stufe 1 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
+	 * Gibt für die einzelnen Stufen 1-5 der Ankreuzkompetenzen an, ob diese zugewiesen ist oder nicht (hier mit einer Verschiebung von 1 zum Array-Index).
 	 */
-	public stufe1 : boolean = false;
-
-	/**
-	 * Gibt an, ob Stufe 2 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
-	 */
-	public stufe2 : boolean = false;
-
-	/**
-	 * Gibt an, ob Stufe 3 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
-	 */
-	public stufe3 : boolean = false;
-
-	/**
-	 * Gibt an, ob Stufe 4 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
-	 */
-	public stufe4 : boolean = false;
-
-	/**
-	 * Gibt an, ob Stufe 5 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
-	 */
-	public stufe5 : boolean = false;
+	public stufen : Array<boolean> = Array(5).fill(false);
 
 	/**
 	 * Der Zeitstempel der letzten Änderung an den zugewiesenen Stufen
@@ -64,22 +44,12 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		result.fachID = (obj.fachID === undefined) ? null : obj.fachID === null ? null : obj.fachID;
-		if (obj.stufe1 === undefined)
-			throw new Error('invalid json format, missing attribute stufe1');
-		result.stufe1 = obj.stufe1;
-		if (obj.stufe2 === undefined)
-			throw new Error('invalid json format, missing attribute stufe2');
-		result.stufe2 = obj.stufe2;
-		if (obj.stufe3 === undefined)
-			throw new Error('invalid json format, missing attribute stufe3');
-		result.stufe3 = obj.stufe3;
-		if (obj.stufe4 === undefined)
-			throw new Error('invalid json format, missing attribute stufe4');
-		result.stufe4 = obj.stufe4;
-		if (obj.stufe5 === undefined)
-			throw new Error('invalid json format, missing attribute stufe5');
-		result.stufe5 = obj.stufe5;
+		result.kompetenzID = (obj.kompetenzID === undefined) ? null : obj.kompetenzID === null ? null : obj.kompetenzID;
+		if (obj.stufen !== undefined) {
+			for (let i = 0; i < obj.stufen.length; i++) {
+				result.stufen[i] = obj.stufen[i];
+			}
+		}
 		result.tsStufe = (obj.tsStufe === undefined) ? null : obj.tsStufe === null ? null : obj.tsStufe;
 		return result;
 	}
@@ -87,12 +57,15 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	public static transpilerToJSON(obj : ENMSchuelerAnkreuzkompetenz) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
-		result += '"stufe1" : ' + obj.stufe1.toString() + ',';
-		result += '"stufe2" : ' + obj.stufe2.toString() + ',';
-		result += '"stufe3" : ' + obj.stufe3.toString() + ',';
-		result += '"stufe4" : ' + obj.stufe4.toString() + ',';
-		result += '"stufe5" : ' + obj.stufe5.toString() + ',';
+		result += '"kompetenzID" : ' + ((!obj.kompetenzID) ? 'null' : obj.kompetenzID.toString()) + ',';
+		result += '"stufen" : [ ';
+		for (let i = 0; i < obj.stufen.length; i++) {
+			const elem = obj.stufen[i];
+			result += JSON.stringify(elem);
+			if (i < obj.stufen.length - 1)
+				result += ',';
+		}
+		result += ' ]' + ',';
 		result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -104,23 +77,19 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
+		if (obj.kompetenzID !== undefined) {
+			result += '"kompetenzID" : ' + ((!obj.kompetenzID) ? 'null' : obj.kompetenzID.toString()) + ',';
 		}
-		if (obj.stufe1 !== undefined) {
-			result += '"stufe1" : ' + obj.stufe1.toString() + ',';
-		}
-		if (obj.stufe2 !== undefined) {
-			result += '"stufe2" : ' + obj.stufe2.toString() + ',';
-		}
-		if (obj.stufe3 !== undefined) {
-			result += '"stufe3" : ' + obj.stufe3.toString() + ',';
-		}
-		if (obj.stufe4 !== undefined) {
-			result += '"stufe4" : ' + obj.stufe4.toString() + ',';
-		}
-		if (obj.stufe5 !== undefined) {
-			result += '"stufe5" : ' + obj.stufe5.toString() + ',';
+		if (obj.stufen !== undefined) {
+			const a = obj.stufen;
+			result += '"stufen" : [ ';
+			for (let i = 0; i < a.length; i++) {
+				const elem = a[i];
+				result += JSON.stringify(elem);
+				if (i < a.length - 1)
+					result += ',';
+			}
+			result += ' ]' + ',';
 		}
 		if (obj.tsStufe !== undefined) {
 			result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';

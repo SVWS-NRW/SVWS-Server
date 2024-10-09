@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
 import de.svws_nrw.core.data.enm.ENMFloskel;
@@ -42,6 +43,9 @@ import de.svws_nrw.data.oauth2.DataOauthClientSecrets;
 import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
+import de.svws_nrw.db.dto.current.schild.grundschule.DTOSchuelerAnkreuzfloskeln;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFloskelgruppen;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOFloskeln;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
@@ -56,6 +60,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
@@ -160,6 +165,7 @@ public final class DataENMDaten extends DataManager<Long> {
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
 		if ((id != null) && (dtoLehrer == null))
 			throw new ApiOperationException(Status.NOT_FOUND);
+		final Map<Long, DTOAnkreuzfloskeln> mapKatalogAnkreuzkompetenzen = getAnkreuzkompetenzenListe(conn);
 		final Map<Long, DTOSchueler> mapSchueler = getSchuelerListe(conn, abschnitt);
 		final Map<Long, DTOFach> mapFaecher = getFaecherListe(conn);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = getJahrgangsListe(conn);
@@ -174,15 +180,14 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (dtoLehrer != null)
 			manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht,
 					dtoLehrer.eMailDienstlich);
-		initManager(manager, conn.getUser().schuleGetStammdaten(), abschnitt);
+		initManager(manager, conn.getUser().schuleGetStammdaten(), conn.querySingle(DTOAnkreuzdaten.class), abschnitt);
 
 		// Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM.
-		// Dabei wird unter anderem auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge)
-		// bei den Daten für das ENM einzutragen sind.
+		// Dabei wird u.a. auch ermittelt, welche Kataloginformationen (Klassen, Lehrer, Jahrgänge) bei den Daten für das ENM einzutragen sind.
 		final List<DTOENMLehrerSchuelerAbschnittsdaten> schuelerabschnitte = (dtoLehrer == null)
 				? DTOENMLehrerSchuelerAbschnittsdaten.queryAll(conn, abschnitt.id)
 				: DTOENMLehrerSchuelerAbschnittsdaten.query(conn, abschnitt.id, dtoLehrer.Kuerzel);
-		// Bestimme zunächst noch eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
+		// Bestimme zusätzlich eine Übersicht zu den Einzelleistungen zu den Leistungsdaten
 		final List<Long> idsLeistungen = schuelerabschnitte.stream().map(a -> a.leistungID).toList();
 		final List<DTOSchuelerTeilleistung> listTeilleistungen = idsLeistungen.isEmpty() ? new ArrayList<>()
 				: conn.queryList(DTOSchuelerTeilleistung.QUERY_LIST_BY_LEISTUNG_ID, DTOSchuelerTeilleistung.class, idsLeistungen);
@@ -190,6 +195,17 @@ public final class DataENMDaten extends DataManager<Long> {
 		final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
 		final Map<Long, DTOTimestampsSchuelerTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
 				: conn.queryByKeyList(DTOTimestampsSchuelerTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+		// Bestimme zusätzlich eine Übersicht zu den Ankreuzkompetenzen
+		final List<Long> idsLernabschnitte = schuelerabschnitte.stream().map(a -> a.abschnittID).distinct().toList();
+		final List<DTOSchuelerAnkreuzfloskeln> listAnkreuzkompetenzen = idsLernabschnitte.isEmpty() ? new ArrayList<>()
+				: conn.queryList(DTOSchuelerAnkreuzfloskeln.QUERY_LIST_BY_ABSCHNITT_ID, DTOSchuelerAnkreuzfloskeln.class, idsLernabschnitte);
+		final Map<Long, List<DTOSchuelerAnkreuzfloskeln>> mapAnkreuzkompetenzen =
+				listAnkreuzkompetenzen.stream().collect(Collectors.groupingBy(a -> a.Abschnitt_ID));
+		final List<Long> idsAnkreuzkompetenzen = listAnkreuzkompetenzen.stream().map(t -> t.ID).toList();
+		final Map<Long, DTOTimestampsSchuelerAnkreuzkompetenzen> mapAnkreuzkompetenzenTimestamps = idsAnkreuzkompetenzen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerAnkreuzkompetenzen.class, idsAnkreuzkompetenzen).stream()
+						.collect(Collectors.toMap(t -> t.ID, t -> t));
+		// Durchwandere die Lernabschnitt der Schüler...
 		for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
 			final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
 			if (dtoKlasse == null)
@@ -257,6 +273,31 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
 				enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
 				enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;
+
+				// Ankreuzkompetenzen hinzufügen und deren Katalog-Einträge hinzufügen
+				final List<DTOSchuelerAnkreuzfloskeln> ankreuzkompetenzen = mapAnkreuzkompetenzen.get(schuelerabschnitt.abschnittID);
+				if (ankreuzkompetenzen != null) {
+					for (final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz : ankreuzkompetenzen) {
+						// Prüfe die Teilleistungsart und ergänze sie ggf.
+						final ENMAnkreuzkompetenz enmAnkreuzkompetenz = manager.getAnkreuzkompetenz(ankreuzkompetenz.Floskel_ID);
+						if (enmAnkreuzkompetenz == null) {
+							final DTOAnkreuzfloskeln dtoAnkreuzkompetenz = mapKatalogAnkreuzkompetenzen.get(ankreuzkompetenz.Floskel_ID);
+							if (dtoAnkreuzkompetenz == null) // DB-Error -> should not happen
+								throw new NullPointerException();
+							manager.addAnkreuzkompetenz(dtoAnkreuzkompetenz.ID, (dtoAnkreuzkompetenz.IstASV == 0), dtoAnkreuzkompetenz.Fach_ID,
+									dtoAnkreuzkompetenz.Jahrgang, dtoAnkreuzkompetenz.FloskelText, dtoAnkreuzkompetenz.Sortierung);
+						}
+						// Füge die Schueler-Ankreuzkompetenz hinzu
+						final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTimestamps = mapAnkreuzkompetenzenTimestamps.get(ankreuzkompetenz.ID);
+						if (ankreuzkompetenzTimestamps == null)
+							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
+									"Es konnten keine Zeitstempel für die Ankreuzkompetenzen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
+						final boolean[] stufen = { ankreuzkompetenz.Stufe1, ankreuzkompetenz.Stufe2, ankreuzkompetenz.Stufe3, ankreuzkompetenz.Stufe4,
+								ankreuzkompetenz.Stufe5 };
+						manager.addSchuelerAnkreuzkompetenz(enmSchueler, ankreuzkompetenz.ID, ankreuzkompetenz.Floskel_ID, stufen,
+								ankreuzkompetenzTimestamps.tsStufe);
+					}
+				}
 			}
 
 			// Hier wird die temporäre LerngruppenID erstellt, mit der in der Klasse ENMDaten gearbeitet wird.
@@ -334,7 +375,7 @@ public final class DataENMDaten extends DataManager<Long> {
 					if (teilleistung.Art_ID == null)
 						continue;
 					// Prüfe die Teilleistungsart und ergänze sie ggf.
-					ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
+					final ENMTeilleistungsart enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
 					if (enmTeilleistungsart == null) {
 						final DTOTeilleistungsarten dtoArt = mapTeilleistungsarten.get(teilleistung.Art_ID);
 						if (dtoArt == null) // DB-Error -> should not happen
@@ -342,7 +383,6 @@ public final class DataENMDaten extends DataManager<Long> {
 						manager.addTeilleistungsart(dtoArt.ID, dtoArt.Bezeichnung,
 								(dtoArt.Sortierung == null) ? 32000 : dtoArt.Sortierung,
 								(dtoArt.Gewichtung == null) ? 1.0 : dtoArt.Gewichtung);
-						enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
 					}
 					// Füge die Teilleistung hinzu
 					final DTOTimestampsSchuelerTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
@@ -354,6 +394,7 @@ public final class DataENMDaten extends DataManager<Long> {
 							teilleistung.NotenKrz, teilleistungTimestamps.tsNotenKrz);
 				}
 			}
+
 			// TODO check and add ZP10 - Data
 			// TODO check and add BKAbschluss - Data
 		}
@@ -371,23 +412,36 @@ public final class DataENMDaten extends DataManager<Long> {
 	}
 
 
-	private static void initManager(final ENMDatenManager manager, final SchuleStammdaten schule, final Schuljahresabschnitt abschnitt) {
+	private static void initManager(final ENMDatenManager manager, final SchuleStammdaten schule, final DTOAnkreuzdaten ankreuzkompetenzenStufen,
+			final Schuljahresabschnitt abschnitt) {
 		// Setze die grundlegenden Schuldaten
 		manager.setSchuldaten((int) schule.schulNr, abschnitt.schuljahr, (int) schule.schuleAbschnitte.anzahlAbschnitte, abschnitt.abschnitt,
 				/* TODO */ null, /* TODO */ true, /* TODO */ false, /* TODO */ true,
 				schule.schulform, /* TODO */ null);
+		// Setze die Informationen zu den Stufen der Ankreuzkompetenzen
+		if (ankreuzkompetenzenStufen == null)
+			manager.setAnkreuzkompetenzenStufen(null, null, null, null, null, null);
+		else
+			manager.setAnkreuzkompetenzenStufen(ankreuzkompetenzenStufen.TextStufe1, ankreuzkompetenzenStufen.TextStufe2, ankreuzkompetenzenStufen.TextStufe3,
+					ankreuzkompetenzenStufen.TextStufe4, ankreuzkompetenzenStufen.TextStufe5, ankreuzkompetenzenStufen.BezeichnungSONST);
 		// Kopiere den Noten-Katalog aus dem Core-type in die ENM-Daten
 		manager.addNoten(abschnitt.schuljahr);
 		// Kopiere den Förderschwerpunkt-Katalog aus dem Core-type in die ENM-Daten
 		manager.addFoerderschwerpunkte(abschnitt.schuljahr, Schulform.data().getWertByKuerzel(schule.schulform));
 	}
 
-	// TODO Optimierung: Lese nur die aktiven Lehrer aus der Datenbank aus.
 	private static Map<Long, DTOLehrer> getLehrerListe(final DBEntityManager conn) throws ApiOperationException {
 		final List<DTOLehrer> lehrer = conn.queryAll(DTOLehrer.class);
 		if (lehrer.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+	}
+
+	private static Map<Long, DTOAnkreuzfloskeln> getAnkreuzkompetenzenListe(final DBEntityManager conn) {
+		final List<DTOAnkreuzfloskeln> ankreuzkompetenzen = conn.queryAll(DTOAnkreuzfloskeln.class);
+		if (ankreuzkompetenzen.isEmpty())
+			return new HashMap<>();
+		return ankreuzkompetenzen.stream().collect(Collectors.toMap(s -> s.ID, s -> s));
 	}
 
 	private static Map<Long, DTOSchueler> getSchuelerListe(final DBEntityManager conn, final Schuljahresabschnitt abschnitt)

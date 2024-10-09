@@ -14,7 +14,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 	/**
 	 * Der für die frei definierbare Zeugnisrubrik "Sonstiges" zu verwendenden Text.
 	 */
-	public textSonstiges : string = "";
+	public textSonstiges : string | null = null;
 
 	/**
 	 * Die Katalog-Einträge für die Ankreuzkompetenzen, die in der Notendatei enthalten sind.
@@ -44,9 +44,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 				result.textStufen[i] = obj.textStufen[i] === null ? null : obj.textStufen[i];
 			}
 		}
-		if (obj.textSonstiges === undefined)
-			throw new Error('invalid json format, missing attribute textSonstiges');
-		result.textSonstiges = obj.textSonstiges;
+		result.textSonstiges = (obj.textSonstiges === undefined) ? null : obj.textSonstiges === null ? null : obj.textSonstiges;
 		if (obj.kompetenzen !== undefined) {
 			for (const elem of obj.kompetenzen) {
 				result.kompetenzen.add(ENMAnkreuzkompetenz.transpilerFromJSON(JSON.stringify(elem)));
@@ -65,7 +63,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"textSonstiges" : ' + JSON.stringify(obj.textSonstiges) + ',';
+		result += '"textSonstiges" : ' + ((!obj.textSonstiges) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
 		result += '"kompetenzen" : [ ';
 		for (let i = 0; i < obj.kompetenzen.size(); i++) {
 			const elem = obj.kompetenzen.get(i);
@@ -93,7 +91,7 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.textSonstiges !== undefined) {
-			result += '"textSonstiges" : ' + JSON.stringify(obj.textSonstiges) + ',';
+			result += '"textSonstiges" : ' + ((!obj.textSonstiges) ? 'null' : JSON.stringify(obj.textSonstiges)) + ',';
 		}
 		if (obj.kompetenzen !== undefined) {
 			result += '"kompetenzen" : [ ';

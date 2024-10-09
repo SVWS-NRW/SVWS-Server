@@ -12,9 +12,11 @@ import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
 import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
 import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
 import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
+import { ENMSchuelerAnkreuzkompetenz } from '../../../core/data/enm/ENMSchuelerAnkreuzkompetenz';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
+import { ENMAnkreuzkompetenz } from '../../../core/data/enm/ENMAnkreuzkompetenz';
 import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
 import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
 import { Note } from '../../../asd/types/Note';
@@ -63,6 +65,11 @@ export class ENMDatenManager extends JavaObject {
 	 * Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.
 	 */
 	private readonly mapTeilleistungsarten : JavaMap<number, ENMTeilleistungsart> = new HashMap<number, ENMTeilleistungsart>();
+
+	/**
+	 * Temporäre Map für das Befüllen des ENMAnkreuzkompetenz-Vektors.
+	 */
+	private readonly mapAnkreuzkompetenzen : JavaMap<number, ENMAnkreuzkompetenz> = new HashMap<number, ENMAnkreuzkompetenz>();
 
 	/**
 	 * Zählt die Id der Lerngruppe hoch.
@@ -134,6 +141,25 @@ export class ENMDatenManager extends JavaObject {
 		this.daten.fehlstundenSIIFachbezogen = fehlstundenSIIFachbezogen;
 		this.daten.schulform = schulform;
 		this.daten.mailadresse = mailadresse;
+	}
+
+	/**
+	 * Setzt die Informationen zu den Texten der einzelnen Kompetenzstufen für Ankreuzkompetenzen.
+	 *
+	 * @param stufe1     der Text für die Stufe 1
+	 * @param stufe2     der Text für die Stufe 2
+	 * @param stufe3     der Text für die Stufe 3
+	 * @param stufe4     der Text für die Stufe 4
+	 * @param stufe5     der Text für die Stufe 5
+	 * @param sonstige   der Text für die frei definierbare Zeugnisrubrik "Sonstiges"
+	 */
+	public setAnkreuzkompetenzenStufen(stufe1 : string | null, stufe2 : string | null, stufe3 : string | null, stufe4 : string | null, stufe5 : string | null, sonstige : string | null) : void {
+		this.daten.ankreuzkompetenzen.textStufen[0] = stufe1;
+		this.daten.ankreuzkompetenzen.textStufen[1] = stufe2;
+		this.daten.ankreuzkompetenzen.textStufen[2] = stufe3;
+		this.daten.ankreuzkompetenzen.textStufen[3] = stufe4;
+		this.daten.ankreuzkompetenzen.textStufen[4] = stufe5;
+		this.daten.ankreuzkompetenzen.textSonstiges = sonstige;
 	}
 
 	/**
@@ -346,6 +372,33 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt eine Ankreuzkompetenz zum Katalog hinzu und überprüft dabei, ob sie schon in der Liste vorhanden ist.
+	 *
+	 * @param id                 die eindeutige ID der Ankreuzkompetenz
+	 * @param istFachkompetenz   gibt an, on es sich um eine Fach-bezogene Ankreuzkompetenz handelt oder nicht
+	 * @param fachID             die ID des Faches
+	 * @param jahrgang           der ASD-Jahrgang, dem die Ankreuzkompetenz zugeordnet ist
+	 * @param text               der Text der Ankreuzkompetenz
+	 * @param sortierung         die Reihenfolge der Ankreuzkompetenzen
+	 *
+	 * @return true, falls die Ankreuzkompetenz hinzugefügt wurde, ansonsten false
+	 */
+	public addAnkreuzkompetenz(id : number, istFachkompetenz : boolean, fachID : number | null, jahrgang : string, text : string, sortierung : number) : boolean {
+		if (this.mapAnkreuzkompetenzen.get(id) !== null)
+			return false;
+		const kompetenz : ENMAnkreuzkompetenz = new ENMAnkreuzkompetenz();
+		kompetenz.id = id;
+		kompetenz.istFachkompetenz = istFachkompetenz;
+		kompetenz.fachID = fachID;
+		kompetenz.jahrgang = jahrgang;
+		kompetenz.text = text;
+		kompetenz.sortierung = sortierung;
+		this.daten.ankreuzkompetenzen.kompetenzen.add(kompetenz);
+		this.mapAnkreuzkompetenzen.put(id, kompetenz);
+		return true;
+	}
+
+	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
 	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
 	 * hinzugefügt wurden.
@@ -436,6 +489,18 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das ENMAnkreuzkompetenz-Objekt für die angegebene Ankreuzkompetenz-ID zurück,
+	 * sofern die Ankreuzkompetenz hinzugefügt wurde.
+	 *
+	 * @param id   die ID der Ankreuzkompetenz
+	 *
+	 * @return das ENMAnkreuzkompetenz-Objekt
+	 */
+	public getAnkreuzkompetenz(id : number) : ENMAnkreuzkompetenz | null {
+		return this.mapAnkreuzkompetenzen.get(id);
+	}
+
+	/**
 	 * Fügt eine neue Lerngruppe mit den angegebenen Parametern hinzu, falls sie noch nicht existiert. Die strID ist dabei
 	 * eine temporäre ID, die nur bei der Erstellung von ENMLerngruppen auf Serverseite genutzt wird.
 	 *
@@ -503,6 +568,27 @@ export class ENMDatenManager extends JavaObject {
 	 */
 	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : string | null, fachID : number, fachKuerzel : string | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : number | null, belegungBisAbschnitt : number | null, referenzniveau : string | null, belegungSekI : number | null) : void {
 		// empty block
+	}
+
+	/**
+	 * Fügt die Leistungsdaten mit den übergebenen Informationen zu den Leistungsdaten eines Schülers hinzu
+	 *
+	 * @param schueler      der Schüler
+	 * @param id            die ID der Schüler-Ankreuzkompetenz in der SVWS-DB (z.B. 307956)
+	 * @param kompetenzID   die Katalog-ID der Ankreuzkompetenz
+	 * @param stufen        die Information der Zuweisung zu den einzelnen Kompetenzstufen (Ein boolean-Array mit genau 5 Elementen)
+	 * @param tsStufe       der Zeitstempel der letzten Änderung an der Zuweisung der Kompetenzstufen
+	 *
+	 * @return die neue ENM-Leistung
+	 */
+	public addSchuelerAnkreuzkompetenz(schueler : ENMSchueler, id : number, kompetenzID : number | null, stufen : Array<boolean>, tsStufe : string | null) : ENMSchuelerAnkreuzkompetenz {
+		const kompetenz : ENMSchuelerAnkreuzkompetenz = new ENMSchuelerAnkreuzkompetenz();
+		kompetenz.id = id;
+		kompetenz.kompetenzID = kompetenzID;
+		kompetenz.stufen = stufen;
+		kompetenz.tsStufe = tsStufe;
+		schueler.ankreuzkompetenzen.add(kompetenz);
+		return kompetenz;
 	}
 
 	/**

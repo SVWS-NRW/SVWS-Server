@@ -238,8 +238,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				        LEFT JOIN TimestampsSchuelerLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN TimestampsSchuelerLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 				     la.Schueler_ID, la.ID, ld.ID
 				;
@@ -318,8 +318,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				        LEFT JOIN TimestampsSchuelerLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN TimestampsSchuelerLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 				     la.Schueler_ID, la.ID, ld.ID
 				;

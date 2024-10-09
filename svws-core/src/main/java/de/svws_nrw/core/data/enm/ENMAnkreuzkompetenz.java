@@ -30,7 +30,7 @@ public class ENMAnkreuzkompetenz {
 
 	/** Das Statistik-Kürzel des Jahrgangs zu der die Ankreuzfloskel gehört. */
 	@Schema(description = "das Statistik-Kürzel des Jahrgangs zu der die Ankreuzfloskel gehört", example = "03")
-	public @NotNull String Jahrgang = "";
+	public @NotNull String jahrgang = "";
 
 	/** Der Text der Ankreuzkompetenz. */
 	@Schema(description = "der Text der Ankreuzkompetenz", example = " - arbeitet auch längere Zeit konzentriert und zielstrebig.")

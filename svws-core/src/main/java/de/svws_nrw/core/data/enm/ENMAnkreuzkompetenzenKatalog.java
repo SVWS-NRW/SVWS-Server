@@ -25,7 +25,7 @@ public class ENMAnkreuzkompetenzenKatalog {
 
 	/** Der für die frei definierbare Zeugnisrubrik "Sonstiges" zu verwendenden Text. */
 	@Schema(description = "Der für die frei definierbare Zeugnisrubrik \"Sonstiges\" zu verwendenden Text.", example = "100815")
-	public @NotNull String textSonstiges = "";
+	public String textSonstiges = null;
 
 	/** Die Katalog-Einträge für die Ankreuzkompetenzen, die in der Notendatei enthalten sind.  */
 	@ArraySchema(schema = @Schema(implementation = ENMAnkreuzkompetenz.class,
