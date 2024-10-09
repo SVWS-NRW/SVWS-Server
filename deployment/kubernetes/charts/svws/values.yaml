@@ -1,0 +1,28 @@
+application:
+  # Service & Deployment Name
+  name: "svws"
+  # Version des SVWS-Servers
+  version: "0.9.2"
+  # Default port
+  port: "8443"
+  # Setzt SVWS_TLS_KEYSTORE_CREATE
+  createKeystore: "true"
+  resources:
+    # minimal verfügbare Ressourcen auf der kubernetes node
+    requests:
+      memory: "700Mi"
+      cpu: "100m"
+    # Maximaler Ressourcenverbrauch des pods
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  # Datenbank konfiguration
+  db:
+    host: "mariadb"
+    database: "gynabi"
+    user: "gynabi"
+    # Existierendes secret für Datenbank-Passwörter
+    existingSecret: "svws-mariadb-secret" # erwartet werden die keys mariadb-root-password & mariadb-root-password
+# Horizontale Skalierung
+deployment:
+  replicas: 1

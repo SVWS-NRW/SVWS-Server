@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.application.name }}
+  labels:
+    app: {{ .Values.application.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.application.name }}
+  replicas: {{ .Values.deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.application.name }}
+    spec:
+      containers:
+        - name: {{ .Values.application.name }}
+          image: "svwsnrw/svws-server:{{- .Values.application.version }}"
+
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.application.port }}
+          resources:
+            requests:
+              memory: {{ .Values.application.resources.requests.memory }}
+              cpu: {{ .Values.application.resources.requests.cpu }}
+            limits:
+              memory: {{ .Values.application.resources.limits.memory }}
+              cpu: {{ .Values.application.resources.limits.cpu }}
+          env:
+            - name: SVWS_TLS_KEYSTORE_CREATE
+              value: {{ .Values.application.createKeystore }}
+            - name: MariaDB_HOST
+              value: {{ .Values.application.db.host }}
+            - name: MariaDB_DATABASE
+              value: {{ .Values.application.db.database }}
+            - name: MariaDB_USER
+              value: {{ .Values.application.db.user }}
+            - name: MariaDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.db.existingSecret }}
+                  key: mariadb-root-password
+            - name: MariaDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.application.db.existingSecret }}
+                  key: mariadb-root-password
