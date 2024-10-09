@@ -1,4 +1,6 @@
 :root {
+    color-scheme: light;
+
     --color-bg-ui: theme('colors.palette.neutral.100');
     --color-bg-ui-hover: theme('colors.palette.neutral.200');
     --color-bg-ui-brand: theme('colors.palette.brand.500');
@@ -147,6 +149,23 @@
     --color-border-ui-ondisabled: theme('colors.palette.neutral.500');
     --color-border-ui-ondisabled-secondary: theme('colors.palette.neutral.500');
 
+    --color-accent-ui: theme('colors.palette.brand.500');
+    --color-accent-ui-brand: theme('colors.palette.brand.500');
+    --color-accent-ui-statistic: theme('colors.palette.statistic.500');
+    --color-accent-ui-danger: theme('colors.palette.danger.500');
+    --color-accent-ui-success: theme('colors.palette.success.500');
+    --color-accent-ui-warning: theme('colors.palette.warning.700');
+    --color-accent-ui-neutral: theme('colors.palette.neutral.900');
+    --color-accent-ui-disabled: theme('colors.palette.neutral.600');
+    --color-accent-ui-onbrand: theme('colors.palette.neutral.100');
+    --color-accent-ui-onstatistic: theme('colors.palette.neutral.100');
+    --color-accent-ui-onselected: theme('colors.palette.brand.700');
+    --color-accent-ui-ondanger: theme('colors.palette.neutral.100');
+    --color-accent-ui-onsuccess: theme('colors.palette.neutral.100');
+    --color-accent-ui-onwarning: theme('colors.palette.neutral.900');
+    --color-accent-ui-onneutral: theme('colors.palette.neutral.900');
+    --color-accent-ui-ondisabled: theme('colors.palette.neutral.500');
+
     --color-ring-ui: theme('colors.palette.brand.100');
     --color-ring-ui-brand: theme('colors.palette.brand.100');
     --color-ring-ui-statistic: theme('colors.palette.statistic.100');
@@ -158,6 +177,8 @@
 
 .htw-dark,
 .dark {
+    color-scheme: dark;
+
     --color-bg-ui: theme('colors.palette.neutral.800');
     --color-bg-ui-hover: theme('colors.palette.neutral.700');
     --color-bg-ui-brand: theme('colors.palette.brand.500');
@@ -306,6 +327,23 @@
     --color-border-ui-ondisabled: theme('colors.palette.neutral.850');
     --color-border-ui-ondisabled-secondary: theme('colors.palette.neutral.850');
 
+    --color-accent-ui: theme('colors.palette.brand.300');
+    --color-accent-ui-brand: theme('colors.palette.brand.300');
+    --color-accent-ui-statistic: theme('colors.palette.statistic.300');
+    --color-accent-ui-danger: theme('colors.palette.danger.500');
+    --color-accent-ui-success: theme('colors.palette.success.300');
+    --color-accent-ui-warning: theme('colors.palette.warning.300');
+    --color-accent-ui-neutral: theme('colors.palette.neutral.200');
+    --color-accent-ui-disabled: theme('colors.palette.neutral.600');
+    --color-accent-ui-onbrand: theme('colors.palette.neutral.100');
+    --color-accent-ui-onstatistic: theme('colors.palette.neutral.100');
+    --color-accent-ui-onselected: theme('colors.palette.brand.200');
+    --color-accent-ui-ondanger: theme('colors.palette.neutral.100');
+    --color-accent-ui-onsuccess: theme('colors.palette.neutral.100');
+    --color-accent-ui-onwarning: theme('colors.palette.neutral.900');
+    --color-accent-ui-onneutral: theme('colors.palette.neutral.100');
+    --color-accent-ui-ondisabled: theme('colors.palette.neutral.700');
+
     --color-ring-ui: theme('colors.palette.brand.100');
     --color-ring-ui-brand: theme('colors.palette.brand.100');
     --color-ring-ui-statistic: theme('colors.palette.statistic.100');
@@ -314,6 +352,11 @@
     --color-ring-ui-warning: theme('colors.palette.warning.100');
     --color-ring-ui-neutral: rgba(255, 255, 255, 0.2);
 }
+
+/* .htw-dark input[type="checkbox"]:checked,
+.dark input[type="checkbox"]:checked {
+    color-scheme: light;
+} */
 
 @media (prefers-color-scheme: dark) {
     :root {

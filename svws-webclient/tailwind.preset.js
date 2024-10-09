@@ -325,6 +325,26 @@ export default {
 					'ondisabled-secondary': 'var(--color-border-ui-ondisabled-secondary)',
 				}
 			},
+			'accentColor': {
+				'ui': {
+					DEFAULT: 'var(--color-accent-ui)',
+					'brand': 'var(--color-accent-ui-brand)',
+					'statistic': 'var(--color-accent-ui-statistic)',
+					'danger': 'var(--color-accent-ui-danger)',
+					'success': 'var(--color-accent-ui-success)',
+					'warning': 'var(--color-accent-ui-warning)',
+					'neutral': 'var(--color-accent-ui-neutral)',
+					'disabled': 'var(--color-accent-ui-disabled)',
+					'onbrand': 'var(--color-accent-ui-onbrand)',
+					'onstatistic': 'var(--color-accent-ui-onstatistic)',
+					'onselected': 'var(--color-accent-ui-onselected)',
+					'ondanger': 'var(--color-accent-ui-ondanger)',
+					'onsuccess': 'var(--color-accent-ui-onsuccess)',
+					'onwarning': 'var(--color-accent-ui-onwarning)',
+					'onneutral': 'var(--color-accent-ui-onneutral)',
+					'ondisabled': 'var(--color-accent-ui-ondisabled)',
+				}
+			},
 			'ringColor': {
 				'ui': {
 					DEFAULT: 'var(--color-ring-ui)',

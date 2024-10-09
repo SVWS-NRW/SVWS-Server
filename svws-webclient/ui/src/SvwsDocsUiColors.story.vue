@@ -50,9 +50,11 @@
 										<div class="ui-docs-bg flex items-center gap-1"
 											:style="{
 												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
-												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`
+												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
-											<div class="p-2 w-12 h-8 rounded-lg ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -65,9 +67,11 @@
 											:class="{darkOnDisabled: role.startsWith('ondisabled')}"
 											:style="{
 												backgroundColor: `${role.startsWith('on') ? `var(--color-bg-ui-${role.replace('on', '')})` : ''}`,
-												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`
+												color: `${role.startsWith('on') ? `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })` : ''}`,
+												accentColor: `${type.startsWith('accent') ? `var(--color-accent-ui${ role ? `-${role}` : '' })` : ''}`
 											}">
-											<div class="p-2 w-12 h-8 rounded-lg ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div class="ui-docs-color-swatch" :style="{backgroundColor: `var(--color-${type}-ui${ role ? `-${role}` : '' }${ prominence ? `-${prominence}` : '' }${ interaction ? `-${interaction}` : '' })`}" />
+											<div v-if="type === 'accent'" class="ui-docs-preview-checkbox"><input type="checkbox" checked style="pointer-events: none;"></div>
 											<div style="user-select: all;">
 												<span><span class="font-bold">{{ type }}</span><span class="opacity-50 font-bold">-ui</span></span>
 												<span>{{ role ? `-${role}` : '' }}</span>
@@ -210,7 +214,7 @@
 	import { onMounted } from 'vue';
 
 	const semantics = {
-		type: ['bg', 'text', 'border', 'ring'], // icon sind mit css filtern gefärbt und können aktuell nicht konform mit den tokens dargestellt werden
+		type: ['bg', 'text', 'border', 'accent', 'ring'], // icon sind mit css filtern gefärbt und können aktuell nicht konform mit den tokens dargestellt werden
 		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'onneutral', 'ondisabled'],
 		prominence: ['', 'secondary'], // strong, weak
 		interaction: ['', 'hover'], // active
@@ -221,6 +225,9 @@
 			return false;
 		}
 		if ((type === 'ring') && (role === 'selected' || role.includes('disabled') || role.startsWith('on') || prominence !== '' || interaction !== '')) {
+			return false;
+		}
+		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== '')) {
 			return false;
 		}
 		return true;
@@ -299,9 +306,28 @@ html:not(.htw-dark) .ui-docs-bg {
 html:not(.htw-dark) .ui-docs-bg.dark {
 	background-color: theme(colors.palette.neutral.800);
 	color: theme(colors.palette.neutral.100);
+	color-scheme: dark;
 }
 
 .htw-dark .ui-docs-bg.dark {
 	display: none;
+}
+
+.contrast-value {
+	@apply ml-auto;
+}
+
+.darkOnDisabled {
+	@apply relative;
+}
+.darkOnDisabled:before {
+	content: '';
+	@apply absolute inset-0 -z-10;
+	background-color: theme(colors.palette.neutral.800);
+}
+
+.ui-docs-color-swatch,
+.ui-docs-preview-checkbox {
+	@apply p-2 w-12 h-8 rounded-lg;
 }
 </style>
