@@ -14,9 +14,34 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	public fachID : number | null = null;
 
 	/**
-	 * Die zugewiesene Stufe (1-5) bei der Ankreuzkompetenz oder null, falls noch keine Stufe zugewiesen wurde.
+	 * Gibt an, ob Stufe 1 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
 	 */
-	public stufe : number | null = null;
+	public stufe1 : boolean = false;
+
+	/**
+	 * Gibt an, ob Stufe 2 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
+	 */
+	public stufe2 : boolean = false;
+
+	/**
+	 * Gibt an, ob Stufe 3 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
+	 */
+	public stufe3 : boolean = false;
+
+	/**
+	 * Gibt an, ob Stufe 4 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
+	 */
+	public stufe4 : boolean = false;
+
+	/**
+	 * Gibt an, ob Stufe 5 bei der Ankreuzkompetenz zugewiesen ist oder nicht.
+	 */
+	public stufe5 : boolean = false;
+
+	/**
+	 * Der Zeitstempel der letzten Änderung an den zugewiesenen Stufen
+	 */
+	public tsStufe : string | null = null;
 
 
 	public constructor() {
@@ -40,7 +65,22 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
 		result.fachID = (obj.fachID === undefined) ? null : obj.fachID === null ? null : obj.fachID;
-		result.stufe = (obj.stufe === undefined) ? null : obj.stufe === null ? null : obj.stufe;
+		if (obj.stufe1 === undefined)
+			throw new Error('invalid json format, missing attribute stufe1');
+		result.stufe1 = obj.stufe1;
+		if (obj.stufe2 === undefined)
+			throw new Error('invalid json format, missing attribute stufe2');
+		result.stufe2 = obj.stufe2;
+		if (obj.stufe3 === undefined)
+			throw new Error('invalid json format, missing attribute stufe3');
+		result.stufe3 = obj.stufe3;
+		if (obj.stufe4 === undefined)
+			throw new Error('invalid json format, missing attribute stufe4');
+		result.stufe4 = obj.stufe4;
+		if (obj.stufe5 === undefined)
+			throw new Error('invalid json format, missing attribute stufe5');
+		result.stufe5 = obj.stufe5;
+		result.tsStufe = (obj.tsStufe === undefined) ? null : obj.tsStufe === null ? null : obj.tsStufe;
 		return result;
 	}
 
@@ -48,7 +88,12 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
-		result += '"stufe" : ' + ((!obj.stufe) ? 'null' : obj.stufe.toString()) + ',';
+		result += '"stufe1" : ' + obj.stufe1.toString() + ',';
+		result += '"stufe2" : ' + obj.stufe2.toString() + ',';
+		result += '"stufe3" : ' + obj.stufe3.toString() + ',';
+		result += '"stufe4" : ' + obj.stufe4.toString() + ',';
+		result += '"stufe5" : ' + obj.stufe5.toString() + ',';
+		result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -62,8 +107,23 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 		if (obj.fachID !== undefined) {
 			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
 		}
-		if (obj.stufe !== undefined) {
-			result += '"stufe" : ' + ((!obj.stufe) ? 'null' : obj.stufe.toString()) + ',';
+		if (obj.stufe1 !== undefined) {
+			result += '"stufe1" : ' + obj.stufe1.toString() + ',';
+		}
+		if (obj.stufe2 !== undefined) {
+			result += '"stufe2" : ' + obj.stufe2.toString() + ',';
+		}
+		if (obj.stufe3 !== undefined) {
+			result += '"stufe3" : ' + obj.stufe3.toString() + ',';
+		}
+		if (obj.stufe4 !== undefined) {
+			result += '"stufe4" : ' + obj.stufe4.toString() + ',';
+		}
+		if (obj.stufe5 !== undefined) {
+			result += '"stufe5" : ' + obj.stufe5.toString() + ',';
+		}
+		if (obj.tsStufe !== undefined) {
+			result += '"tsStufe" : ' + ((!obj.tsStufe) ? 'null' : JSON.stringify(obj.tsStufe)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

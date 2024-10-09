@@ -12,9 +12,9 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle EnmLeistungsdaten.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle TimestampsSchuelerLeistungsdaten.
  */
-public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
+public class Tabelle_TimestampsSchuelerLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
@@ -58,67 +58,66 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 			.setJavaComment("Der Zeitstempel der letzten Änderung, ob gemahnt wird.");
 
 
-	/** Die Definition des Fremdschlüssels EnmLeistungsdaten_FK */
-	public SchemaTabelleFremdschluessel fk_EnmLeistungsdaten_FK = addForeignKey(
-			"EnmLeistungsdaten_FK",
+	/** Die Definition des Fremdschlüssels TimestampsSchuelerLeistungsdaten_FK */
+	public SchemaTabelleFremdschluessel fk_TimestampsSchuelerLeistungsdaten_FK = addForeignKey(
+			"TimestampsSchuelerLeistungsdaten_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_SchuelerLeistungsdaten.col_ID));
 
 
-	/** Trigger t_INSERT_EnmLeistungsdaten */
-	public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmLeistungsdaten = addTrigger(
-			"t_INSERT_EnmLeistungsdaten",
+	/** Trigger t_INSERT_TimestampsSchuelerLeistungsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerLeistungsdaten = addTrigger(
+			"t_INSERT_TimestampsSchuelerLeistungsdaten",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON SchuelerLeistungsdaten FOR EACH ROW
-			INSERT INTO EnmLeistungsdaten(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
-			""", Schema.tab_SchuelerLeistungsdaten, Schema.tab_EnmLeistungsdaten);
+			INSERT INTO TimestampsSchuelerLeistungsdaten(ID, tsNotenKrz, tsNotenKrzQuartal, tsFehlStd, tsuFehlStd, tsLernentw, tsWarnung) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
+			""", Schema.tab_SchuelerLeistungsdaten, Schema.tab_TimestampsSchuelerLeistungsdaten);
 
-	/** Trigger t_UPDATE_EnmLeistungsdaten */
-	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmLeistungsdaten = addTrigger(
-			"t_UPDATE_EnmLeistungsdaten",
+	/** Trigger t_UPDATE_TimestampsSchuelerLeistungsdaten */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerLeistungsdaten = addTrigger(
+			"t_UPDATE_TimestampsSchuelerLeistungsdaten",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER UPDATE ON SchuelerLeistungsdaten FOR EACH ROW
 			BEGIN
 			    IF (OLD.NotenKrz IS NULL AND NEW.NotenKrz IS NOT NULL) OR (OLD.NotenKrz <> NEW.NotenKrz) THEN
-			        UPDATE EnmLeistungsdaten SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.NotenKrzQuartal IS NULL AND NEW.NotenKrzQuartal IS NOT NULL) OR (OLD.NotenKrzQuartal <> NEW.NotenKrzQuartal) THEN
-			        UPDATE EnmLeistungsdaten SET tsNotenKrzQuartal = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsNotenKrzQuartal = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.FehlStd IS NULL AND NEW.FehlStd IS NOT NULL) OR (OLD.FehlStd <> NEW.FehlStd) THEN
-			        UPDATE EnmLeistungsdaten SET tsFehlStd = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsFehlStd = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.uFehlStd IS NULL AND NEW.uFehlStd IS NOT NULL) OR (OLD.uFehlStd <> NEW.uFehlStd) THEN
-			        UPDATE EnmLeistungsdaten SET tsuFehlStd = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsuFehlStd = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.Lernentw IS NULL AND NEW.Lernentw IS NOT NULL) OR (OLD.Lernentw <> NEW.Lernentw) THEN
-			        UPDATE EnmLeistungsdaten SET tsLernentw = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsLernentw = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.Warnung IS NULL AND NEW.Warnung IS NOT NULL) OR (OLD.Warnung <> NEW.Warnung) THEN
-			        UPDATE EnmLeistungsdaten SET tsWarnung = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerLeistungsdaten SET tsWarnung = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
-			Schema.tab_SchuelerLeistungsdaten, Schema.tab_EnmLeistungsdaten);
+			Schema.tab_SchuelerLeistungsdaten, Schema.tab_TimestampsSchuelerLeistungsdaten);
 
 	// TODO Trigger für SQLite
 
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle EnmLeistungsdaten.
+	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerLeistungsdaten.
 	 */
-	public Tabelle_EnmLeistungsdaten() {
-		super("EnmLeistungsdaten", SchemaRevisionen.REV_6);
+	public Tabelle_TimestampsSchuelerLeistungsdaten() {
+		super("TimestampsSchuelerLeistungsdaten", SchemaRevisionen.REV_25);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("svws.enm");
-		setJavaClassName("DTOEnmLeistungsdaten");
-		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
-				+ "der Datenbanktabelle für Leistungsdaten Änderungen vorgenommen wurden.");
-		setVeraltet(SchemaRevisionen.REV_25);
+		setJavaSubPackage("svws.timestamps");
+		setJavaClassName("DTOTimestampsSchuelerLeistungsdaten");
+		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an ausgewählten Spalten der Datenbanktabelle für Leistungsdaten Änderungen"
+				+ " vorgenommen wurden.");
 	}
 
 }

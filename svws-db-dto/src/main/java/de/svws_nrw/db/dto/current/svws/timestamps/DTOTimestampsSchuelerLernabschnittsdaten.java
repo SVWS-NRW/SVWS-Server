@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.current.svws.enm;
+package de.svws_nrw.db.dto.current.svws.timestamps;
 
 import de.svws_nrw.db.DBEntityManager;
 
@@ -11,69 +11,69 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle EnmLernabschnittsdaten.
+ * Diese Klasse dient als DTO für die Datenbanktabelle TimestampsSchuelerLernabschnittsdaten.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "EnmLernabschnittsdaten")
+@Table(name = "TimestampsSchuelerLernabschnittsdaten")
 @JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsBemerkungVersetzung"})
-public final class DTOEnmLernabschnittsdaten {
+public final class DTOTimestampsSchuelerLernabschnittsdaten {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOEnmLernabschnittsdaten e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsSumFehlStd */
-	public static final String QUERY_BY_TSSUMFEHLSTD = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd = ?1";
+	public static final String QUERY_BY_TSSUMFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsSumFehlStd = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsSumFehlStd */
-	public static final String QUERY_LIST_BY_TSSUMFEHLSTD = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStd IN ?1";
+	public static final String QUERY_LIST_BY_TSSUMFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsSumFehlStd IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsSumFehlStdU */
-	public static final String QUERY_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU = ?1";
+	public static final String QUERY_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsSumFehlStdU = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsSumFehlStdU */
-	public static final String QUERY_LIST_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsSumFehlStdU IN ?1";
+	public static final String QUERY_LIST_BY_TSSUMFEHLSTDU = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsSumFehlStdU IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsZeugnisBem */
-	public static final String QUERY_BY_TSZEUGNISBEM = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem = ?1";
+	public static final String QUERY_BY_TSZEUGNISBEM = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsZeugnisBem = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsZeugnisBem */
-	public static final String QUERY_LIST_BY_TSZEUGNISBEM = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsZeugnisBem IN ?1";
+	public static final String QUERY_LIST_BY_TSZEUGNISBEM = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsZeugnisBem IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsASV */
-	public static final String QUERY_BY_TSASV = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV = ?1";
+	public static final String QUERY_BY_TSASV = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsASV = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsASV */
-	public static final String QUERY_LIST_BY_TSASV = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsASV IN ?1";
+	public static final String QUERY_LIST_BY_TSASV = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsASV IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsAUE */
-	public static final String QUERY_BY_TSAUE = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE = ?1";
+	public static final String QUERY_BY_TSAUE = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsAUE = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsAUE */
-	public static final String QUERY_LIST_BY_TSAUE = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsAUE IN ?1";
+	public static final String QUERY_LIST_BY_TSAUE = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsAUE IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsBemerkungVersetzung */
-	public static final String QUERY_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = ?1";
+	public static final String QUERY_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsBemerkungVersetzung */
-	public static final String QUERY_LIST_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOEnmLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN ?1";
+	public static final String QUERY_LIST_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsBemerkungVersetzung IN ?1";
 
 	/** ID der Lernabschnittsdaten */
 	@Id
@@ -112,14 +112,14 @@ public final class DTOEnmLernabschnittsdaten {
 	public String tsBemerkungVersetzung;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOEnmLernabschnittsdaten ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerLernabschnittsdaten ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOEnmLernabschnittsdaten() {
+	private DTOTimestampsSchuelerLernabschnittsdaten() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOEnmLernabschnittsdaten ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerLernabschnittsdaten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param tsSumFehlStd   der Wert für das Attribut tsSumFehlStd
 	 * @param tsSumFehlStdU   der Wert für das Attribut tsSumFehlStdU
@@ -128,7 +128,7 @@ public final class DTOEnmLernabschnittsdaten {
 	 * @param tsAUE   der Wert für das Attribut tsAUE
 	 * @param tsBemerkungVersetzung   der Wert für das Attribut tsBemerkungVersetzung
 	 */
-	public DTOEnmLernabschnittsdaten(final long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
+	public DTOTimestampsSchuelerLernabschnittsdaten(final long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
 		this.ID = ID;
 		if (tsSumFehlStd == null) {
 			throw new NullPointerException("tsSumFehlStd must not be null");
@@ -165,7 +165,7 @@ public final class DTOEnmLernabschnittsdaten {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOEnmLernabschnittsdaten other = (DTOEnmLernabschnittsdaten) obj;
+		DTOTimestampsSchuelerLernabschnittsdaten other = (DTOTimestampsSchuelerLernabschnittsdaten) obj;
 		return ID == other.ID;
 	}
 
@@ -185,7 +185,7 @@ public final class DTOEnmLernabschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOEnmLernabschnittsdaten(ID=" + this.ID + ", tsSumFehlStd=" + this.tsSumFehlStd + ", tsSumFehlStdU=" + this.tsSumFehlStdU + ", tsZeugnisBem=" + this.tsZeugnisBem + ", tsASV=" + this.tsASV + ", tsAUE=" + this.tsAUE + ", tsBemerkungVersetzung=" + this.tsBemerkungVersetzung + ")";
+		return "DTOTimestampsSchuelerLernabschnittsdaten(ID=" + this.ID + ", tsSumFehlStd=" + this.tsSumFehlStd + ", tsSumFehlStdU=" + this.tsSumFehlStdU + ", tsZeugnisBem=" + this.tsZeugnisBem + ", tsASV=" + this.tsASV + ", tsAUE=" + this.tsAUE + ", tsBemerkungVersetzung=" + this.tsBemerkungVersetzung + ")";
 	}
 
 }

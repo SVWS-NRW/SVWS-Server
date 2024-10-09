@@ -228,6 +228,10 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Zeitraster;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TextExportVorlagen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerAnkreuzkompetenzen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLeistungsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Usergroups;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Users;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Versetzung;
@@ -960,6 +964,19 @@ public final class Schema {
 
 	/** Tabelle EigeneSchule_Email */
 	public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
+
+	/** Tabelle TimestampsSchuelerLeistungsdaten */
+	public static final Tabelle_TimestampsSchuelerLeistungsdaten tab_TimestampsSchuelerLeistungsdaten = add(new Tabelle_TimestampsSchuelerLeistungsdaten());
+
+	/** Tabelle TimestampsSchuelerLernabschnittsdaten */
+	public static final Tabelle_TimestampsSchuelerLernabschnittsdaten tab_TimestampsSchuelerLernabschnittsdaten =
+			add(new Tabelle_TimestampsSchuelerLernabschnittsdaten());
+
+	/** Tabelle TimestampsSchuelerTeilleistungen */
+	public static final Tabelle_TimestampsSchuelerTeilleistungen tab_TimestampsSchuelerTeilleistungen = add(new Tabelle_TimestampsSchuelerTeilleistungen());
+
+	/** Tabelle TimestampsSchuelerAnkreuzkompetenzen */
+	public static final Tabelle_TimestampsSchuelerAnkreuzkompetenzen tab_TimestampsSchuelerAnkreuzkompetenzen = add(new Tabelle_TimestampsSchuelerAnkreuzkompetenzen());
 
 	/** Tabelle Wiedervorlage */
 	public static final Tabelle_Wiedervorlage tab_Wiedervorlage = add(new Tabelle_Wiedervorlage());

@@ -12,9 +12,9 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 
 /**
- * Diese Klasse beinhaltet die Schema-Definition für die Tabelle EnmTeilleistungen.
+ * Diese Klasse beinhaltet die Schema-Definition für die Tabelle TimestampsSchuelerTeilleistungen.
  */
-public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
+public class Tabelle_TimestampsSchuelerTeilleistungen extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
@@ -52,64 +52,61 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 			.setJavaComment("Der Zeitstempel der letzten Änderung an der Note.");
 
 
-	/** Die Definition des Fremdschlüssels EnmTeilleistungen_FK */
-	public SchemaTabelleFremdschluessel fk_EnmTeilleistungen_FK = addForeignKey(
-			"EnmTeilleistungen_FK",
+	/** Die Definition des Fremdschlüssels TimestampsSchuelerTeilleistungen_FK */
+	public SchemaTabelleFremdschluessel fk_TimestampsSchuelerTeilleistungen_FK = addForeignKey(
+			"TimestampsSchuelerTeilleistungen_FK",
 			/* OnUpdate: */ SchemaFremdschluesselAktionen.CASCADE,
 			/* OnDelete: */ SchemaFremdschluesselAktionen.CASCADE,
 			new Pair<>(col_ID, Schema.tab_SchuelerEinzelleistungen.col_ID));
 
 
-	/** Trigger t_INSERT_EnmTeilleistungen */
-	public SchemaTabelleTrigger trigger_MariaDB_INSERT_EnmTeilleistungen = addTrigger(
-			"t_INSERT_EnmTeilleistungen",
+	/** Trigger t_INSERT_TimestampsSchuelerTeilleistungen */
+	public SchemaTabelleTrigger trigger_MariaDB_INSERT_TimestampsSchuelerTeilleistungen = addTrigger(
+			"t_INSERT_TimestampsSchuelerTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER INSERT ON SchuelerEinzelleistungen FOR EACH ROW
-			INSERT INTO EnmTeilleistungen(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
-			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_EnmTeilleistungen);
+			INSERT INTO TimestampsSchuelerTeilleistungen(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz) VALUES (NEW.ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3));
+			""", Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen);
 
-	/** Trigger t_UPDATE_EnmTeilleistungen */
-	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_EnmTeilleistungen = addTrigger(
-			"t_UPDATE_EnmTeilleistungen",
+	/** Trigger t_UPDATE_TimestampsSchuelerTeilleistungen */
+	public SchemaTabelleTrigger trigger_MariaDB_UPDATE_TimestampsSchuelerTeilleistungen = addTrigger(
+			"t_UPDATE_TimestampsSchuelerTeilleistungen",
 			DBDriver.MARIA_DB,
 			"""
 			AFTER UPDATE ON SchuelerEinzelleistungen FOR EACH ROW
 			BEGIN
 			    IF (OLD.Datum IS NULL AND NEW.Datum IS NOT NULL) OR (OLD.Datum <> NEW.Datum) THEN
-			        UPDATE EnmTeilleistungen SET tsDatum = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsDatum = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.Lehrer_ID IS NULL AND NEW.Lehrer_ID IS NOT NULL) OR (OLD.Lehrer_ID <> NEW.Lehrer_ID) THEN
-			        UPDATE EnmTeilleistungen SET tsLehrer_ID = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsLehrer_ID = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.Art_ID IS NULL AND NEW.Art_ID IS NOT NULL) OR (OLD.Art_ID <> NEW.Art_ID) THEN
-			        UPDATE EnmTeilleistungen SET tsArt_ID = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsArt_ID = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.Bemerkung IS NULL AND NEW.Bemerkung IS NOT NULL) OR (OLD.Bemerkung <> NEW.Bemerkung) THEN
-			        UPDATE EnmTeilleistungen SET tsBemerkung = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsBemerkung = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			    IF (OLD.NotenKrz IS NULL AND NEW.NotenKrz IS NOT NULL) OR (OLD.NotenKrz <> NEW.NotenKrz) THEN
-			        UPDATE EnmTeilleistungen SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
+			        UPDATE TimestampsSchuelerTeilleistungen SET tsNotenKrz = CURTIME(3) WHERE ID = NEW.ID;
 			    END IF;
 			END
 			""",
-			Schema.tab_SchuelerEinzelleistungen, Schema.tab_EnmTeilleistungen);
-
-	// TODO Trigger für SQLite
+			Schema.tab_SchuelerEinzelleistungen, Schema.tab_TimestampsSchuelerTeilleistungen);
 
 
 	/**
-	 * Erstellt die Schema-Definition für die Tabelle EnmTeilleistungen.
+	 * Erstellt die Schema-Definition für die Tabelle TimestampsSchuelerTeilleistungen.
 	 */
-	public Tabelle_EnmTeilleistungen() {
-		super("EnmTeilleistungen", SchemaRevisionen.REV_14);
+	public Tabelle_TimestampsSchuelerTeilleistungen() {
+		super("TimestampsSchuelerTeilleistungen", SchemaRevisionen.REV_25);
 		setMigrate(false);
 		setImportExport(true);
-		setJavaSubPackage("svws.enm");
-		setJavaClassName("DTOEnmTeilleistungen");
-		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
-				+ "der Datenbanktabelle für Teilleistungen Änderungen vorgenommen wurden.");
-		setVeraltet(SchemaRevisionen.REV_25);
+		setJavaSubPackage("svws.timestamps");
+		setJavaClassName("DTOTimestampsSchuelerTeilleistungen");
+		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an ausgewählten Spalten der Datenbanktabelle für Teilleistungen Änderungen"
+				+ " vorgenommen wurden.");
 	}
 
 }

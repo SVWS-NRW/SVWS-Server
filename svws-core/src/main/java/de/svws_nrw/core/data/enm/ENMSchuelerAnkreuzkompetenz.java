@@ -22,12 +22,28 @@ public class ENMSchuelerAnkreuzkompetenz {
 	@Schema(description = "die ID der der Ankreuzkompetenz, auf welches sich der Eintrag bezieht", example = "42")
 	public Long fachID = null;
 
-	/** Die zugewiesene Stufe (1-5) bei der Ankreuzkompetenz oder null, falls noch keine Stufe zugewiesen wurde. */
-	@Schema(description = "die zugewiesene Stufe (1-5) bei der Ankreuzkompetenz oder null, falls noch keine Stufe zugewiesen wurde.", example = "2")
-	public Integer stufe = null;
+	/** Gibt an, ob Stufe 1 bei der Ankreuzkompetenz zugewiesen ist oder nicht. */
+	@Schema(description = "gibt an, ob Stufe 1 bei der Ankreuzkompetenz zugewiesen ist oder nicht.", example = "false")
+	public boolean stufe1 = false;
 
-	/** Der Zeitstempel der letzten Änderung an der zugewiesenen Stufe */
-	@Schema(description = "Der Zeitstempel der letzten Änderung an der zugewiesenen Stufe.", example = "2013-11-14 13:12:48.774")
+	/** Gibt an, ob Stufe 2 bei der Ankreuzkompetenz zugewiesen ist oder nicht. */
+	@Schema(description = "gibt an, ob Stufe 2 bei der Ankreuzkompetenz zugewiesen ist oder nicht.", example = "true")
+	public boolean stufe2 = false;
+
+	/** Gibt an, ob Stufe 3 bei der Ankreuzkompetenz zugewiesen ist oder nicht. */
+	@Schema(description = "gibt an, ob Stufe 3 bei der Ankreuzkompetenz zugewiesen ist oder nicht.", example = "true")
+	public boolean stufe3 = false;
+
+	/** Gibt an, ob Stufe 4 bei der Ankreuzkompetenz zugewiesen ist oder nicht. */
+	@Schema(description = "gibt an, ob Stufe 4 bei der Ankreuzkompetenz zugewiesen ist oder nicht.", example = "false")
+	public boolean stufe4 = false;
+
+	/** Gibt an, ob Stufe 5 bei der Ankreuzkompetenz zugewiesen ist oder nicht. */
+	@Schema(description = "gibt an, ob Stufe 5 bei der Ankreuzkompetenz zugewiesen ist oder nicht.", example = "false")
+	public boolean stufe5 = false;
+
+	/** Der Zeitstempel der letzten Änderung an den zugewiesenen Stufen */
+	@Schema(description = "Der Zeitstempel der letzten Änderung an den zugewiesenen Stufen.", example = "2013-11-14 13:12:48.774")
 	public String tsStufe;
 
 }

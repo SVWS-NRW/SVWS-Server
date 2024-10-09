@@ -56,9 +56,9 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
-import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLeistungsdaten;
-import de.svws_nrw.db.dto.current.svws.enm.DTOEnmLernabschnittsdaten;
-import de.svws_nrw.db.dto.current.svws.enm.DTOEnmTeilleistungen;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
 import jakarta.ws.rs.core.MediaType;
@@ -188,8 +188,8 @@ public final class DataENMDaten extends DataManager<Long> {
 				: conn.queryList(DTOSchuelerTeilleistung.QUERY_LIST_BY_LEISTUNG_ID, DTOSchuelerTeilleistung.class, idsLeistungen);
 		final Map<Long, List<DTOSchuelerTeilleistung>> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.groupingBy(st -> st.Leistung_ID));
 		final List<Long> idsTeilleistungen = listTeilleistungen.stream().map(t -> t.ID).toList();
-		final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
-				: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+		final Map<Long, DTOTimestampsSchuelerTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
 		for (final DTOENMLehrerSchuelerAbschnittsdaten schuelerabschnitt : schuelerabschnitte) {
 			final DTOKlassen dtoKlasse = mapKlassen.get(schuelerabschnitt.klasse);
 			if (dtoKlasse == null)
@@ -345,7 +345,7 @@ public final class DataENMDaten extends DataManager<Long> {
 						enmTeilleistungsart = manager.getTeilleistungsart(teilleistung.Art_ID);
 					}
 					// Füge die Teilleistung hinzu
-					final DTOEnmTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
+					final DTOTimestampsSchuelerTeilleistungen teilleistungTimestamps = mapTeilleistungenTimestamps.get(teilleistung.ID);
 					if (teilleistungTimestamps == null)
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 								"Es konnten keine Zeitstempel für die Teilleistungen ausgelesen werden. Dies deutet auf einen Fehler in der Datenbank hin.");
@@ -566,28 +566,28 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOSchuelerTeilleistung> mapTeilleistungen = listTeilleistungen.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 
 		// Bestimme die ENM-Timestamps für die Lernabschnitte, die Leistungen und die Teilleistungen
-		final Map<Long, DTOEnmLernabschnittsdaten> mapLernabschnitteTimestamps = idsLernabschnitte.isEmpty() ? new HashMap<>()
-				: conn.queryByKeyList(DTOEnmLernabschnittsdaten.class, idsLernabschnitte).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
-		final Map<Long, DTOEnmLeistungsdaten> mapLeistungenTimestamps = idsLeistungen.isEmpty() ? new HashMap<>()
-				: conn.queryByKeyList(DTOEnmLeistungsdaten.class, idsLeistungen).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
-		final Map<Long, DTOEnmTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
-				: conn.queryByKeyList(DTOEnmTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+		final Map<Long, DTOTimestampsSchuelerLernabschnittsdaten> mapLernabschnitteTimestamps = idsLernabschnitte.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerLernabschnittsdaten.class, idsLernabschnitte).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, DTOTimestampsSchuelerLeistungsdaten> mapLeistungenTimestamps = idsLeistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerLeistungsdaten.class, idsLeistungen).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		final Map<Long, DTOTimestampsSchuelerTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
 
 		// Sets, um die veränderten DTOs zwischenzuspeichern und später in einem Rutsch in der DB zu persistieren
 		final Set<DTOSchuelerLernabschnittsdaten> setLernabschnitte = new HashSet<>();
 		final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungen = new HashSet<>();
 		final Set<DTOSchuelerPSFachBemerkungen> setLernabschnittsbemerkungenNeu = new HashSet<>();
-		final Set<DTOEnmLernabschnittsdaten> setLernabschnitteTimestamps = new HashSet<>();
+		final Set<DTOTimestampsSchuelerLernabschnittsdaten> setLernabschnitteTimestamps = new HashSet<>();
 		final Set<DTOSchuelerLeistungsdaten> setLeistungen = new HashSet<>();
-		final Set<DTOEnmLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
+		final Set<DTOTimestampsSchuelerLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
 		final Set<DTOSchuelerTeilleistung> setTeilleistungen = new HashSet<>();
-		final Set<DTOEnmTeilleistungen> setTeilleistungenTimestamps = new HashSet<>();
+		final Set<DTOTimestampsSchuelerTeilleistungen> setTeilleistungenTimestamps = new HashSet<>();
 		long idNeueFachbemerkung = conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class);
 
 		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
 		for (final ENMSchueler enmSchueler : listEnmSchueler) {
 			final DTOSchuelerLernabschnittsdaten lernabschnitt = mapLernabschnitte.get(enmSchueler.lernabschnitt.id);
-			final DTOEnmLernabschnittsdaten lernabschnittTS = mapLernabschnitteTimestamps.get(enmSchueler.lernabschnitt.id);
+			final DTOTimestampsSchuelerLernabschnittsdaten lernabschnittTS = mapLernabschnitteTimestamps.get(enmSchueler.lernabschnitt.id);
 			boolean neuBemerkungen = false;
 			DTOSchuelerPSFachBemerkungen lernabschnittsbemerkungen = mapLernabschnittsbemerkungen.get(enmSchueler.lernabschnitt.id);
 			if (lernabschnittsbemerkungen == null) {
@@ -640,7 +640,7 @@ public final class DataENMDaten extends DataManager<Long> {
 
 			for (final ENMLeistung enmLeistung : enmSchueler.leistungsdaten) {
 				final DTOSchuelerLeistungsdaten leistung = mapLeistungen.get(enmLeistung.id);
-				final DTOEnmLeistungsdaten leistungTS = mapLeistungenTimestamps.get(enmLeistung.id);
+				final DTOTimestampsSchuelerLeistungsdaten leistungTS = mapLeistungenTimestamps.get(enmLeistung.id);
 
 				boolean updatedLeistung = false;
 				if (isTimestampAfter(enmLeistung.tsFachbezogeneBemerkungen, leistungTS.tsLernentw)) {
@@ -681,7 +681,7 @@ public final class DataENMDaten extends DataManager<Long> {
 
 				for (final ENMTeilleistung enmTeilleistung : enmLeistung.teilleistungen) {
 					final DTOSchuelerTeilleistung teilleistung = mapTeilleistungen.get(enmTeilleistung.id);
-					final DTOEnmTeilleistungen teilleistungTS = mapTeilleistungenTimestamps.get(enmTeilleistung.id);
+					final DTOTimestampsSchuelerTeilleistungen teilleistungTS = mapTeilleistungenTimestamps.get(enmTeilleistung.id);
 
 					boolean updatedTeilleistung = false;
 					if (isTimestampAfter(enmTeilleistung.tsArtID, teilleistungTS.tsArt_ID)) {

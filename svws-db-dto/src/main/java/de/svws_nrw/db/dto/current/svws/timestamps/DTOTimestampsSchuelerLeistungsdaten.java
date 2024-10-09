@@ -1,4 +1,4 @@
-package de.svws_nrw.db.dto.current.svws.enm;
+package de.svws_nrw.db.dto.current.svws.timestamps;
 
 import de.svws_nrw.db.DBEntityManager;
 
@@ -11,69 +11,69 @@ import jakarta.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 /**
- * Diese Klasse dient als DTO für die Datenbanktabelle EnmLeistungsdaten.
+ * Diese Klasse dient als DTO für die Datenbanktabelle TimestampsSchuelerLeistungsdaten.
  * Sie wurde automatisch per Skript generiert und sollte nicht verändert werden,
  * da sie aufgrund von Änderungen am DB-Schema ggf. neu generiert und überschrieben wird.
  */
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
-@Table(name = "EnmLeistungsdaten")
+@Table(name = "TimestampsSchuelerLeistungsdaten")
 @JsonPropertyOrder({"ID", "tsNotenKrz", "tsNotenKrzQuartal", "tsFehlStd", "tsuFehlStd", "tsLernentw", "tsWarnung"})
-public final class DTOEnmLeistungsdaten {
+public final class DTOTimestampsSchuelerLeistungsdaten {
 
 	/** Die Datenbankabfrage für alle DTOs */
-	public static final String QUERY_ALL = "SELECT e FROM DTOEnmLeistungsdaten e";
+	public static final String QUERY_ALL = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e";
 
 	/** Die Datenbankabfrage für DTOs anhand der Primärschlüsselattribute */
-	public static final String QUERY_PK = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1";
+	public static final String QUERY_PK = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Primärschlüsselattributwerten */
-	public static final String QUERY_LIST_PK = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_PK = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für alle DTOs im Rahmen der Migration, wobei die Einträge entfernt werden, die nicht der Primärschlüssel-Constraint entsprechen */
-	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IS NOT NULL";
+	public static final String QUERY_MIGRATION_ALL = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.ID IS NOT NULL";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes ID */
-	public static final String QUERY_BY_ID = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID = ?1";
+	public static final String QUERY_BY_ID = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.ID = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes ID */
-	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.ID IN ?1";
+	public static final String QUERY_LIST_BY_ID = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.ID IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsNotenKrz */
-	public static final String QUERY_BY_TSNOTENKRZ = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz = ?1";
+	public static final String QUERY_BY_TSNOTENKRZ = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsNotenKrz = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsNotenKrz */
-	public static final String QUERY_LIST_BY_TSNOTENKRZ = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrz IN ?1";
+	public static final String QUERY_LIST_BY_TSNOTENKRZ = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsNotenKrz IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsNotenKrzQuartal */
-	public static final String QUERY_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal = ?1";
+	public static final String QUERY_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsNotenKrzQuartal = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsNotenKrzQuartal */
-	public static final String QUERY_LIST_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsNotenKrzQuartal IN ?1";
+	public static final String QUERY_LIST_BY_TSNOTENKRZQUARTAL = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsNotenKrzQuartal IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsFehlStd */
-	public static final String QUERY_BY_TSFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd = ?1";
+	public static final String QUERY_BY_TSFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsFehlStd = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsFehlStd */
-	public static final String QUERY_LIST_BY_TSFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsFehlStd IN ?1";
+	public static final String QUERY_LIST_BY_TSFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsFehlStd IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsuFehlStd */
-	public static final String QUERY_BY_TSUFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd = ?1";
+	public static final String QUERY_BY_TSUFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsuFehlStd = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsuFehlStd */
-	public static final String QUERY_LIST_BY_TSUFEHLSTD = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsuFehlStd IN ?1";
+	public static final String QUERY_LIST_BY_TSUFEHLSTD = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsuFehlStd IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsLernentw */
-	public static final String QUERY_BY_TSLERNENTW = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw = ?1";
+	public static final String QUERY_BY_TSLERNENTW = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsLernentw = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsLernentw */
-	public static final String QUERY_LIST_BY_TSLERNENTW = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsLernentw IN ?1";
+	public static final String QUERY_LIST_BY_TSLERNENTW = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsLernentw IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsWarnung */
-	public static final String QUERY_BY_TSWARNUNG = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung = ?1";
+	public static final String QUERY_BY_TSWARNUNG = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsWarnung = ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsWarnung */
-	public static final String QUERY_LIST_BY_TSWARNUNG = "SELECT e FROM DTOEnmLeistungsdaten e WHERE e.tsWarnung IN ?1";
+	public static final String QUERY_LIST_BY_TSWARNUNG = "SELECT e FROM DTOTimestampsSchuelerLeistungsdaten e WHERE e.tsWarnung IN ?1";
 
 	/** ID der Leistungsdaten */
 	@Id
@@ -112,14 +112,14 @@ public final class DTOEnmLeistungsdaten {
 	public String tsWarnung;
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOEnmLeistungsdaten ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerLeistungsdaten ohne eine Initialisierung der Attribute.
 	 */
 	@SuppressWarnings("unused")
-	private DTOEnmLeistungsdaten() {
+	private DTOTimestampsSchuelerLeistungsdaten() {
 	}
 
 	/**
-	 * Erstellt ein neues Objekt der Klasse DTOEnmLeistungsdaten ohne eine Initialisierung der Attribute.
+	 * Erstellt ein neues Objekt der Klasse DTOTimestampsSchuelerLeistungsdaten ohne eine Initialisierung der Attribute.
 	 * @param ID   der Wert für das Attribut ID
 	 * @param tsNotenKrz   der Wert für das Attribut tsNotenKrz
 	 * @param tsNotenKrzQuartal   der Wert für das Attribut tsNotenKrzQuartal
@@ -128,7 +128,7 @@ public final class DTOEnmLeistungsdaten {
 	 * @param tsLernentw   der Wert für das Attribut tsLernentw
 	 * @param tsWarnung   der Wert für das Attribut tsWarnung
 	 */
-	public DTOEnmLeistungsdaten(final long ID, final String tsNotenKrz, final String tsNotenKrzQuartal, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
+	public DTOTimestampsSchuelerLeistungsdaten(final long ID, final String tsNotenKrz, final String tsNotenKrzQuartal, final String tsFehlStd, final String tsuFehlStd, final String tsLernentw, final String tsWarnung) {
 		this.ID = ID;
 		if (tsNotenKrz == null) {
 			throw new NullPointerException("tsNotenKrz must not be null");
@@ -165,7 +165,7 @@ public final class DTOEnmLeistungsdaten {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DTOEnmLeistungsdaten other = (DTOEnmLeistungsdaten) obj;
+		DTOTimestampsSchuelerLeistungsdaten other = (DTOTimestampsSchuelerLeistungsdaten) obj;
 		return ID == other.ID;
 	}
 
@@ -185,7 +185,7 @@ public final class DTOEnmLeistungsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOEnmLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ", tsNotenKrzQuartal=" + this.tsNotenKrzQuartal + ", tsFehlStd=" + this.tsFehlStd + ", tsuFehlStd=" + this.tsuFehlStd + ", tsLernentw=" + this.tsLernentw + ", tsWarnung=" + this.tsWarnung + ")";
+		return "DTOTimestampsSchuelerLeistungsdaten(ID=" + this.ID + ", tsNotenKrz=" + this.tsNotenKrz + ", tsNotenKrzQuartal=" + this.tsNotenKrzQuartal + ", tsFehlStd=" + this.tsFehlStd + ", tsuFehlStd=" + this.tsuFehlStd + ", tsLernentw=" + this.tsLernentw + ", tsWarnung=" + this.tsWarnung + ")";
 	}
 
 }
