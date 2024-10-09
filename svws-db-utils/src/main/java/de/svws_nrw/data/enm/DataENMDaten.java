@@ -27,6 +27,7 @@ import de.svws_nrw.core.data.enm.ENMKlasse;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
+import de.svws_nrw.core.data.enm.ENMSchuelerAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMTeilleistung;
 import de.svws_nrw.core.data.enm.ENMTeilleistungsart;
 import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
@@ -601,6 +602,16 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Map<Long, DTOSchuelerPSFachBemerkungen> mapLernabschnittsbemerkungen = listLernabschnittsbemerkungen.isEmpty() ? new HashMap<>()
 				: listLernabschnittsbemerkungen.stream().collect(Collectors.toMap(b -> b.Abschnitt_ID, b -> b));
 
+		// Bestimme die Schüler-Ankreuzkompetenzen in der DB anhand der IDs auf dem Import
+		final List<ENMSchuelerAnkreuzkompetenz> enmSchuelerAnkreuzkompetenz = listEnmSchueler.stream().flatMap(s -> s.ankreuzkompetenzen.stream()).toList();
+		final List<Long> idsSchuelerAnkreuzkompetenz = enmSchuelerAnkreuzkompetenz.stream().map(l -> l.id).toList();
+		final List<DTOSchuelerAnkreuzfloskeln> listSchuelerAnkreuzkompetenz = idsSchuelerAnkreuzkompetenz.isEmpty() ? new ArrayList<>()
+				: conn.queryByKeyList(DTOSchuelerAnkreuzfloskeln.class, idsSchuelerAnkreuzkompetenz);
+		if (listSchuelerAnkreuzkompetenz.size() != enmSchuelerAnkreuzkompetenz.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Ankreuzkompetenzen aus den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+		final Map<Long, DTOSchuelerAnkreuzfloskeln> mapSchuelerAnkreuzkompetenz =
+				listSchuelerAnkreuzkompetenz.stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+
 		// Bestimme die Schüler-Leistungsdaten in der DB anhand der IDs auf dem Import
 		final List<ENMLeistung> enmLeistungen = listEnmSchueler.stream().flatMap(s -> s.leistungsdaten.stream()).toList();
 		final List<Long> idsLeistungen = enmLeistungen.stream().map(l -> l.id).toList();
@@ -626,6 +637,9 @@ public final class DataENMDaten extends DataManager<Long> {
 				: conn.queryByKeyList(DTOTimestampsSchuelerLeistungsdaten.class, idsLeistungen).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
 		final Map<Long, DTOTimestampsSchuelerTeilleistungen> mapTeilleistungenTimestamps = idsTeilleistungen.isEmpty() ? new HashMap<>()
 				: conn.queryByKeyList(DTOTimestampsSchuelerTeilleistungen.class, idsTeilleistungen).stream().collect(Collectors.toMap(t -> t.ID, t -> t));
+		final Map<Long, DTOTimestampsSchuelerAnkreuzkompetenzen> mapAnkreuzkompetenzenTimestamps = idsSchuelerAnkreuzkompetenz.isEmpty() ? new HashMap<>()
+				: conn.queryByKeyList(DTOTimestampsSchuelerAnkreuzkompetenzen.class, idsSchuelerAnkreuzkompetenz).stream()
+						.collect(Collectors.toMap(t -> t.ID, t -> t));
 
 		// Sets, um die veränderten DTOs zwischenzuspeichern und später in einem Rutsch in der DB zu persistieren
 		final Set<DTOSchuelerLernabschnittsdaten> setLernabschnitte = new HashSet<>();
@@ -636,6 +650,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		final Set<DTOTimestampsSchuelerLeistungsdaten> setLeistungenTimestamps = new HashSet<>();
 		final Set<DTOSchuelerTeilleistung> setTeilleistungen = new HashSet<>();
 		final Set<DTOTimestampsSchuelerTeilleistungen> setTeilleistungenTimestamps = new HashSet<>();
+		final Set<DTOSchuelerAnkreuzfloskeln> setAnkreuzkompetenzen = new HashSet<>();
+		final Set<DTOTimestampsSchuelerAnkreuzkompetenzen> setAnkreuzkompetenzenTimestamps = new HashSet<>();
 		long idNeueFachbemerkung = conn.transactionGetNextID(DTOSchuelerPSFachBemerkungen.class);
 
 		// Durchwandere die importierten ENM-Daten und gleiche diese mit den Daten in der Datenbank ab.
@@ -691,6 +707,27 @@ public final class DataENMDaten extends DataManager<Long> {
 				setLernabschnitte.add(lernabschnitt);
 			if (updatedBemerkungen || updatedLernabschnitt)
 				setLernabschnitteTimestamps.add(lernabschnittTS);
+
+			for (final ENMSchuelerAnkreuzkompetenz enmAnkreuzkompetenz : enmSchueler.ankreuzkompetenzen) {
+				final DTOSchuelerAnkreuzfloskeln ankreuzkompetenz = mapSchuelerAnkreuzkompetenz.get(enmAnkreuzkompetenz.id);
+				final DTOTimestampsSchuelerAnkreuzkompetenzen ankreuzkompetenzTS = mapAnkreuzkompetenzenTimestamps.get(enmAnkreuzkompetenz.id);
+
+				boolean updatedAnkreuzkompetenz = false;
+				if (isTimestampAfter(enmAnkreuzkompetenz.tsStufe, ankreuzkompetenzTS.tsStufe)) {
+					ankreuzkompetenz.Stufe1 = enmAnkreuzkompetenz.stufen[0];
+					ankreuzkompetenz.Stufe2 = enmAnkreuzkompetenz.stufen[1];
+					ankreuzkompetenz.Stufe3 = enmAnkreuzkompetenz.stufen[2];
+					ankreuzkompetenz.Stufe4 = enmAnkreuzkompetenz.stufen[3];
+					ankreuzkompetenz.Stufe5 = enmAnkreuzkompetenz.stufen[4];
+					ankreuzkompetenzTS.tsStufe = enmAnkreuzkompetenz.tsStufe;
+					updatedAnkreuzkompetenz = true;
+				}
+
+				if (updatedAnkreuzkompetenz) {
+					setAnkreuzkompetenzen.add(ankreuzkompetenz);
+					setAnkreuzkompetenzenTimestamps.add(ankreuzkompetenzTS);
+				}
+			}
 
 			for (final ENMLeistung enmLeistung : enmSchueler.leistungsdaten) {
 				final DTOSchuelerLeistungsdaten leistung = mapLeistungen.get(enmLeistung.id);
@@ -776,15 +813,18 @@ public final class DataENMDaten extends DataManager<Long> {
 			conn.transactionPersistAll(setLeistungen);
 		if (!setTeilleistungen.isEmpty())
 			conn.transactionPersistAll(setTeilleistungen);
+		if (!setAnkreuzkompetenzen.isEmpty())
+			conn.transactionPersistAll(setAnkreuzkompetenzen);
 		conn.transactionFlush();
 
-		// TODO Prüfen, ob das Neusetzen der Timestamps nicht einen Konflikt mit den Triggern durch die Persistierung oben hervorruft...
 		if (!setLernabschnitteTimestamps.isEmpty())
 			conn.transactionPersistAll(setLernabschnitteTimestamps);
 		if (!setLeistungenTimestamps.isEmpty())
 			conn.transactionPersistAll(setLeistungenTimestamps);
 		if (!setTeilleistungenTimestamps.isEmpty())
 			conn.transactionPersistAll(setTeilleistungenTimestamps);
+		if (!setAnkreuzkompetenzenTimestamps.isEmpty())
+			conn.transactionPersistAll(setAnkreuzkompetenzenTimestamps);
 		conn.transactionFlush();
 	}
 
