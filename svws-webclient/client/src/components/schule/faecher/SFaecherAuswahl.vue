@@ -11,7 +11,7 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="fachListeManager().auswahl()" clickable @update:clicked="gotoEintrag" :items="fachListeManager().filtered()" :columns :filter-open="true">
+			<svws-ui-table :clicked="fachListeManager().auswahl()" clickable @update:clicked="gotoEintrag" :items="fachListeManager().filtered()" :columns :filter-open="true" scroll-into-view>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>

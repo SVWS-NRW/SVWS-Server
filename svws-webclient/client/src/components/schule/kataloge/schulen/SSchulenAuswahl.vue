@@ -11,7 +11,7 @@
 		</template>
 		<template #header />
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="schulen" :columns selectable v-model="liste" scroll-into-view>
 				<template #cell(kurzbezeichnung)="{ rowData }">
 					<div class="text-ellipsis overflow-hidden whitespace-nowrap" :title="`${rowData.plz || ''} ${rowData.ort || ''}${rowData.ort ? ',': ''} ${rowData.name}`">{{ rowData.kurzbezeichnung }}</div>
 				</template>

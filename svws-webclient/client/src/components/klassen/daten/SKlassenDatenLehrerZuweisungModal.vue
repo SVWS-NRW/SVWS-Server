@@ -4,7 +4,7 @@
 		<template #modalTitle>Lehrkraft als Klassenleitung hinzufügen</template>
 		<template #modalContent>
 			<div style="height:250pt">
-				<svws-ui-table clickable v-model:clicked="clickedRow" :items="rowsFiltered.values()" :columns="cols" count scroll-into-view scroll>
+				<svws-ui-table clickable v-model:clicked="clickedRow" :items="rowsFiltered.values()" :columns="cols" count scroll>
 					<template #search>
 						<svws-ui-text-input type="search" placeholder="Lehrkraft suchen" v-model="search" />
 					</template>

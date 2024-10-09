@@ -177,7 +177,7 @@
 
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
-	import { computed, toRef, toRaw, ref, watch, nextTick } from "vue";
+	import { computed, toRef, toRaw, ref, watch, nextTick, onMounted } from "vue";
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
 
 	type DataTableColumnSource = DataTableColumn | string
@@ -497,6 +497,7 @@
 				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
 			else if(!isInView(clickedElementHtml))
 				clickedElementHtml.scrollIntoView(scrollOptions);
+			clickedElementHtml?.focus();
 		}
 	}
 
@@ -529,6 +530,10 @@
 			return true;
 		return false;
 	});
+
+	onMounted(() => {
+		scrollToClickedElement();
+	})
 
 </script>
 

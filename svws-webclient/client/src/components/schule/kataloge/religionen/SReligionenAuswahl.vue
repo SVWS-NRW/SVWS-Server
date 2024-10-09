@@ -12,7 +12,7 @@
 		<template #header />
 		<template #content>
 			<svws-ui-table :clicked @update:clicked="gotoEintrag" :items="religionListeManager().filtered()" :columns
-				clickable selectable v-model="selected" :filter-open="true">
+				clickable selectable v-model="selected" :filter-open="true" scroll-into-view>
 				<template #filterAdvanced>
 					<svws-ui-checkbox type="toggle" v-model="filterNurSichtbare">Nur Sichtbare</svws-ui-checkbox>
 				</template>
