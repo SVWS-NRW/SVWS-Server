@@ -228,6 +228,7 @@ import de.svws_nrw.db.schema.tabellen.Tabelle_Stundenplan_Zeitraster;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel;
 import de.svws_nrw.db.schema.tabellen.Tabelle_Stundentafel_Faecher;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TextExportVorlagen;
+import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsLehrerNotenmodulCredentials;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.schema.tabellen.Tabelle_TimestampsSchuelerLernabschnittsdaten;
@@ -964,6 +965,10 @@ public final class Schema {
 
 	/** Tabelle EigeneSchule_Email */
 	public static final Tabelle_EigeneSchule_Email tab_EigeneSchule_Email = add(new Tabelle_EigeneSchule_Email());
+
+	/** Tabelle TimestampsLehrerNotenmodulCredentials */
+	public static final Tabelle_TimestampsLehrerNotenmodulCredentials tab_TimestampsLehrerNotenmodulCredentials =
+			add(new Tabelle_TimestampsLehrerNotenmodulCredentials());
 
 	/** Tabelle TimestampsSchuelerLeistungsdaten */
 	public static final Tabelle_TimestampsSchuelerLeistungsdaten tab_TimestampsSchuelerLeistungsdaten = add(new Tabelle_TimestampsSchuelerLeistungsdaten());

@@ -222,6 +222,7 @@ import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollection;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer;
 import de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
@@ -472,6 +473,7 @@ public final class DTOs {
              mapDTOName2DTOClass.put(DTODavRessourceCollectionsACL.class.getSimpleName(), DTODavRessourceCollectionsACL.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenLehrer.class.getSimpleName(), DTODavSyncTokenLehrer.class);
              mapDTOName2DTOClass.put(DTODavSyncTokenSchueler.class.getSimpleName(), DTODavSyncTokenSchueler.class);
+             mapDTOName2DTOClass.put(DTOTimestampsLehrerNotenmodulCredentials.class.getSimpleName(), DTOTimestampsLehrerNotenmodulCredentials.class);
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerAnkreuzkompetenzen.class.getSimpleName(), DTOTimestampsSchuelerAnkreuzkompetenzen.class);
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerLeistungsdaten.class.getSimpleName(), DTOTimestampsSchuelerLeistungsdaten.class);
              mapDTOName2DTOClass.put(DTOTimestampsSchuelerLernabschnittsdaten.class.getSimpleName(), DTOTimestampsSchuelerLernabschnittsdaten.class);
@@ -725,6 +727,7 @@ public final class DTOs {
              mapTablename2DTOClass.put("DavRessourceCollectionsACL", DTODavRessourceCollectionsACL.class);
              mapTablename2DTOClass.put("DavSyncTokenLehrer", DTODavSyncTokenLehrer.class);
              mapTablename2DTOClass.put("DavSyncTokenSchueler", DTODavSyncTokenSchueler.class);
+             mapTablename2DTOClass.put("TimestampsLehrerNotenmodulCredentials", DTOTimestampsLehrerNotenmodulCredentials.class);
              mapTablename2DTOClass.put("TimestampsSchuelerAnkreuzkompetenzen", DTOTimestampsSchuelerAnkreuzkompetenzen.class);
              mapTablename2DTOClass.put("TimestampsSchuelerLeistungsdaten", DTOTimestampsSchuelerLeistungsdaten.class);
              mapTablename2DTOClass.put("TimestampsSchuelerLernabschnittsdaten", DTOTimestampsSchuelerLernabschnittsdaten.class);

@@ -433,6 +433,7 @@
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavRessourceCollectionsACL</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenLehrer</class>
         <class>de.svws_nrw.db.dto.current.svws.dav.DTODavSyncTokenSchueler</class>
+        <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten</class>
         <class>de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten</class>

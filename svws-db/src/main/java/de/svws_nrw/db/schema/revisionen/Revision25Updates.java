@@ -33,7 +33,7 @@ public class Revision25Updates extends SchemaRevisionUpdateSQL {
 						.formatted(Schema.tab_TimestampsSchuelerTeilleistungen.name(), Schema.tab_EnmTeilleistungen.name()),
 				Schema.tab_TimestampsSchuelerTeilleistungen, Schema.tab_SchuelerEinzelleistungen);
 		add("Setze/Aktualisisere die Zeitstempel für die Ankreuzkompetenzen der Schüler",
-				"INSERT INTO %1$s(ID, tsStufe) SELECT id, CURTIME(3) FROM %2$s WHERE ID NOT IN (SELECT ID FROM %1$s);"
+				"INSERT INTO %1$s(ID, tsStufe) SELECT ID, CURTIME(3) FROM %2$s WHERE ID NOT IN (SELECT ID FROM %1$s);"
 					.formatted(Schema.tab_TimestampsSchuelerAnkreuzkompetenzen.name(), Schema.tab_SchuelerAnkreuzfloskeln.name()),
 				Schema.tab_TimestampsSchuelerAnkreuzkompetenzen, Schema.tab_SchuelerAnkreuzfloskeln
 		);

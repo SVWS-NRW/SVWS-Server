@@ -18,6 +18,7 @@ import de.svws_nrw.db.schema.revisionen.Revision22Updates;
 import de.svws_nrw.db.schema.revisionen.Revision23Updates;
 import de.svws_nrw.db.schema.revisionen.Revision24Updates;
 import de.svws_nrw.db.schema.revisionen.Revision25Updates;
+import de.svws_nrw.db.schema.revisionen.Revision26Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
@@ -174,21 +175,24 @@ public enum SchemaRevisionen {
 	REV_24(24, "2024-10-07"),
 
 	/** Umbenennung der Tabellen für die Zeitstempel-Informationen und Hinzufügen der Zeitstempel-Information für die Tabelle SchuelerAnkreuzfloskeln */
-	REV_25(25, "2024-10-09");
+	REV_25(25, "2024-10-09"),
+
+	/** Hinzufügen der Zeitstempel-Information für die Tabelle LehrerNotenmodulCredentials */
+	REV_26(26, "2024-10-10");
 
 	/**
 	 * Gibt die größte Revisionsnummer an, die in dieser Enumeration definiert wurde und
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_25;
+	public static final SchemaRevisionen maxRevision = REV_26;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_25;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_26;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -266,6 +270,7 @@ public enum SchemaRevisionen {
 				case REV_23 -> new Revision23Updates();
 				case REV_24 -> new Revision24Updates();
 				case REV_25 -> new Revision25Updates();
+				case REV_26 -> new Revision26Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}
