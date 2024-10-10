@@ -52,7 +52,7 @@ class DataSchuelerKAoADatenTest {
 	public static final String STATUS = "status";
 
 	public static final String ID = "id";
-	public static final String LERNABSCHNITT = "idLernabschnitt";
+	public static final String SCHULJAHRESABSCHNTT = "idSchuljahresabschnitt";
 	public static final String JAHRGANG = "idJahrgang";
 	public static final String KATEGORIE = "idKategorie";
 	public static final String MERKMAL = "idMerkmal";
@@ -112,10 +112,13 @@ class DataSchuelerKAoADatenTest {
 		data.idBerufsfeld = 12L;
 		data.idEbene4 = 11L;
 		data.bemerkung = "schule ist toll";
-		when(this.conn.queryByKey(any(), any())).thenReturn(data);
+		when(this.conn.queryByKey(DTOSchuelerKAoADaten.class, 123L)).thenReturn(data);
 		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
 		jahrgaengeKatalogEintrag.id = 1L;
 		doReturn(jahrgaengeKatalogEintrag).when(dataSchuelerKAoADaten).getJahrgaengeKatalogEintrag(any());
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(lernabschnittsdaten);
 
 		assertThat(dataSchuelerKAoADaten.getById(123L))
 				.isInstanceOf(SchuelerKAoADaten.class)
@@ -150,11 +153,17 @@ class DataSchuelerKAoADatenTest {
 		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
 		jahrgaengeKatalogEintrag.id = 8000000L;
 		doReturn(jahrgaengeKatalogEintrag).when(dataSchuelerKAoADaten).getJahrgaengeKatalogEintrag(any());
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 123L))
+				.thenReturn(lernabschnittsdaten);
 
 		assertThat(this.dataSchuelerKAoADaten.map(dtoSchuelerKAoADaten))
 				.isInstanceOf(SchuelerKAoADaten.class)
 				.hasFieldOrPropertyWithValue(ID, 123L)
-				.hasFieldOrPropertyWithValue(LERNABSCHNITT, 123L)
+				.hasFieldOrPropertyWithValue(SCHULJAHRESABSCHNTT, 7L)
 				.hasFieldOrPropertyWithValue(KATEGORIE, 10L)
 				.hasFieldOrPropertyWithValue(MERKMAL, 51L)
 				.hasFieldOrPropertyWithValue(ZUSATZMERKMAL, 68L)
@@ -169,13 +178,17 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("mapAttribute | erfolgreiches mapping")
 	@MethodSource("provideMappingAttributes")
 	void mapAttributeTest(final String key, final Object value) {
-		final var expectedDTO = new DTOSchuelerKAoADaten(0, 0, 0);
+		final var expectedDTO = new DTOSchuelerKAoADaten(0, 7L, 0);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 2L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 2L))
+				.thenReturn(List.of(lernabschnittsdaten));
 
 		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.mapAttribute(expectedDTO, key, value, null));
 
 		switch (key) {
 			case JAHRGANG -> assertThat(expectedDTO.jahrgang).isEqualTo("08");
-			case LERNABSCHNITT -> assertThat(expectedDTO.idLernabschnitt).isEqualTo(value);
+			case SCHULJAHRESABSCHNTT -> assertThat(expectedDTO.idLernabschnitt).isEqualTo(value);
 			case KATEGORIE -> assertThat(expectedDTO.idKategorie).isEqualTo(value);
 			case MERKMAL -> assertThat(expectedDTO.idMerkmal).isEqualTo(value);
 			case ZUSATZMERKMAL -> assertThat(expectedDTO.idZusatzmerkmal).isEqualTo(value);
@@ -205,10 +218,15 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("getAll | erfolg")
 	void getAllTest() throws ApiOperationException {
 		dataSchuelerKAoADaten = spy(dataSchuelerKAoADaten);
-		final var dtoSchuelerKAoADaten = new DTOSchuelerKAoADaten(456L, 123L, 10L);
+		final var dtoSchuelerKAoADaten = new DTOSchuelerKAoADaten(123L, 7L, 10L);
 		dtoSchuelerKAoADaten.idMerkmal = 51L;
 		dtoSchuelerKAoADaten.idZusatzmerkmal = 51L;
-		when(this.conn.queryList(any(), eq(DTOSchuelerLernabschnittsdaten.class), any())).thenReturn(List.of(mock(DTOSchuelerLernabschnittsdaten.class)));
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, 123L))
+				.thenReturn(List.of(lernabschnittsdaten));
 		when(this.conn.queryList(any(), eq(DTOSchuelerKAoADaten.class), any())).thenReturn(List.of(dtoSchuelerKAoADaten));
 		final var jahrgaengeKatalogEintrag = new JahrgaengeKatalogEintrag();
 		jahrgaengeKatalogEintrag.id = 8000000L;
@@ -216,8 +234,8 @@ class DataSchuelerKAoADatenTest {
 
 		assertThat(((List<?>) this.dataSchuelerKAoADaten.getAll()).getFirst())
 				.isInstanceOf(SchuelerKAoADaten.class)
-				.hasFieldOrPropertyWithValue(ID, 456L)
-				.hasFieldOrPropertyWithValue(LERNABSCHNITT, 123L)
+				.hasFieldOrPropertyWithValue(ID, 123L)
+				.hasFieldOrPropertyWithValue(SCHULJAHRESABSCHNTT, 7L)
 				.hasFieldOrPropertyWithValue(KATEGORIE, 10L)
 				.hasFieldOrPropertyWithValue(MERKMAL, 51L);
 	}
@@ -230,9 +248,12 @@ class DataSchuelerKAoADatenTest {
 		schuljahresabschnitt.schuljahr = 2024;
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(new DTOSchuelerLernabschnittsdaten(123L, 123L, 7L, false, false));
-
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
 		assertDoesNotThrow(() -> dataSchuelerKAoADaten.checkBeforeCreation(1L, initAttributes));
 	}
 
@@ -243,8 +264,12 @@ class DataSchuelerKAoADatenTest {
 		schuljahresabschnitt.schuljahr = 2024;
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenReturn(schuljahresabschnitt);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(new DTOSchuelerLernabschnittsdaten(123L, 123L, 7L, false, false));
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
 		final var dto = new DTOSchuelerKAoADaten(1L, 7L, 10L);
 		dto.jahrgang = "08";
 		dto.idMerkmal = 51L;
@@ -258,7 +283,7 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("patchCoreDTo - wrong field")
 	void patchCoreDtoTest() {
 		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(LERNABSCHNITT, 7L);
+		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
 		initAttributes.put(JAHRGANG, 8000000L);
 		initAttributes.put("hakuna matata", 10L);
 		initAttributes.put(MERKMAL, 51L);
@@ -281,7 +306,7 @@ class DataSchuelerKAoADatenTest {
 
 		assertThat(throwable)
 				.isInstanceOf(ApiOperationException.class)
-				.hasMessageStartingWith("Die Anzahl nicht leerer optionaler Attribute ist ungleich 1.")
+				.hasMessageStartingWith("Die Anzahl vorhandener optionaler Attribute ist größer 1")
 				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
 	}
 
@@ -289,12 +314,17 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("validateLernabschnittsdaten | Lernabschnittsdaten sind null -> Exception")
 	void validateLernabschnittsdatenTest_LernabschnittsdatenNull() {
 		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(LERNABSCHNITT, 7L);
+		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
 		initAttributes.put(JAHRGANG, 8000000L);
 		initAttributes.put(KATEGORIE, 10L);
 		initAttributes.put(MERKMAL, 51L);
 		initAttributes.put(ZUSATZMERKMAL, 68);
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
+
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 123L)).thenReturn(null);
 
 		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
@@ -306,39 +336,23 @@ class DataSchuelerKAoADatenTest {
 	}
 
 
-	@Test
-	@DisplayName("validateLernabschnittsdaten | Lernabschnittsdaten und Schueler doesnt match -> Exception")
-	void validateLernabschnittsdatenTest_DoesntMatchSchuelerId() {
-		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(LERNABSCHNITT, 7L);
-		initAttributes.put(JAHRGANG, 8000000L);
-		initAttributes.put(KATEGORIE, 10L);
-		initAttributes.put(MERKMAL, 51L);
-		initAttributes.put(ZUSATZMERKMAL, 68);
-		initAttributes.put(BEMERKUNG, "schule ist toll!");
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L)).thenReturn(new DTOSchuelerLernabschnittsdaten(
-				123L, 456L, 7L, false, false));
-		final var throwable = catchThrowable(() -> this.dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
-
-		assertThat(throwable)
-				.isInstanceOf(ApiOperationException.class)
-				.hasMessage("Lernabschnittsdaten mit der ID 7 passen nicht zum Schueler mit der ID 123")
-				.hasFieldOrPropertyWithValue(STATUS, Response.Status.BAD_REQUEST);
-	}
-
 	@ParameterizedTest
 	@DisplayName("validateKategorie | falsche KategorieId -> Exception")
 	@ValueSource(longs = { 5, 15, -1 })
 	void validateKategorieTest_KategorieIdWrong(final long kategorieId) {
 		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(LERNABSCHNITT, 7L);
+		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
 		initAttributes.put(JAHRGANG, 8000000L);
 		initAttributes.put(KATEGORIE, kategorieId);
 		initAttributes.put(MERKMAL, 51L);
 		initAttributes.put(ZUSATZMERKMAL, 68);
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(new DTOSchuelerLernabschnittsdaten(123L, 123L, 7L, false, false));
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
 
 		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
 
@@ -352,16 +366,20 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("validateGetSchuljahr | kein passender Schuljahresabschnitt gefunden")
 	void validateGetSchuljahrTest() {
 		final var initAttributes = new HashMap<String, Object>();
-		initAttributes.put(LERNABSCHNITT, 7L);
+		initAttributes.put(SCHULJAHRESABSCHNTT, 7L);
 		initAttributes.put(JAHRGANG, 8000000L);
 		initAttributes.put(KATEGORIE, 10L);
 		initAttributes.put(MERKMAL, 51L);
 		initAttributes.put(ZUSATZMERKMAL, 68);
 		initAttributes.put(BEMERKUNG, "schule ist toll!");
-		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false));
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
 		when(this.conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(7L)).thenThrow(DeveloperNotificationException.class);
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
+		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
 
 		final var throwable = catchThrowable(() -> dataSchuelerKAoADaten.checkBeforeCreation(123L, initAttributes));
 
@@ -375,8 +393,12 @@ class DataSchuelerKAoADatenTest {
 	@DisplayName("validateTests")
 	@MethodSource("provideValidateTestsObjects")
 	void validateTests(final Map<String, Object> initAttributes, final String errorMessage, final Response.Status errorCode) {
+		final var lernabschnittsdaten = new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false);
+		lernabschnittsdaten.WechselNr = 0;
 		when(this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, 7L))
-				.thenReturn(new DTOSchuelerLernabschnittsdaten(7L, 123L, 7L, false, false));
+				.thenReturn(lernabschnittsdaten);
+		when(this.conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, 7L))
+				.thenReturn(List.of(lernabschnittsdaten));
 		final var schuljahresabschnitt = new Schuljahresabschnitt();
 		schuljahresabschnitt.schuljahr = 2024;
 		when(this.conn.getUser()).thenReturn(mock(Benutzer.class));
@@ -394,7 +416,7 @@ class DataSchuelerKAoADatenTest {
 		return Stream.of(
 				arguments(ID, 1L),
 				arguments(JAHRGANG, 8000000),
-				arguments(LERNABSCHNITT, 2L),
+				arguments(SCHULJAHRESABSCHNTT, 7L),
 				arguments(KATEGORIE, 3L),
 				arguments(MERKMAL, 4L),
 				arguments(ZUSATZMERKMAL, 5L),
@@ -408,28 +430,28 @@ class DataSchuelerKAoADatenTest {
 
 	private static Stream<Arguments> provideSchuelerKAoADatenForSuccess() {
 		final var mapBemerkung = new HashMap<String, Object>();
-		mapBemerkung.put(LERNABSCHNITT, 7L);
+		mapBemerkung.put(SCHULJAHRESABSCHNTT, 7L);
 		mapBemerkung.put(JAHRGANG, 8000000L);
 		mapBemerkung.put(KATEGORIE, 10L);
 		mapBemerkung.put(MERKMAL, 51L);
 		mapBemerkung.put(ZUSATZMERKMAL, 68);
 		mapBemerkung.put(BEMERKUNG, "schule ist toll!");
 		final var mapAnschlussoption = new HashMap<String, Object>();
-		mapAnschlussoption.put(LERNABSCHNITT, 7L);
+		mapAnschlussoption.put(SCHULJAHRESABSCHNTT, 7L);
 		mapAnschlussoption.put(JAHRGANG, 10000000L);
 		mapAnschlussoption.put(KATEGORIE, 14L);
 		mapAnschlussoption.put(MERKMAL, 69L);
 		mapAnschlussoption.put(ZUSATZMERKMAL, 117L);
 		mapAnschlussoption.put(ANSCHLUSSOPTION, 24L);
 		final var mapBerufsfeld = new HashMap<String, Object>();
-		mapBerufsfeld.put(LERNABSCHNITT, 7L);
+		mapBerufsfeld.put(SCHULJAHRESABSCHNTT, 7L);
 		mapBerufsfeld.put(JAHRGANG, 8000000L);
 		mapBerufsfeld.put(KATEGORIE, 9L);
 		mapBerufsfeld.put(MERKMAL, 47L);
 		mapBerufsfeld.put(ZUSATZMERKMAL, 44L);
 		mapBerufsfeld.put(BERUFSFELD, 2L);
 		final var mapEbene4 = new HashMap<String, Object>();
-		mapEbene4.put(LERNABSCHNITT, 7L);
+		mapEbene4.put(SCHULJAHRESABSCHNTT, 7L);
 		mapEbene4.put(JAHRGANG, 8000000L);
 		mapEbene4.put(KATEGORIE, 10L);
 		mapEbene4.put(MERKMAL, 55L);
@@ -446,7 +468,7 @@ class DataSchuelerKAoADatenTest {
 
 	private static Stream<Arguments> provideSchuelerKAoADatenForValidateOptionalAttributesException() {
 		final var mapTwoOptionals = new HashMap<String, Object>();
-		mapTwoOptionals.put(LERNABSCHNITT, 7L);
+		mapTwoOptionals.put(SCHULJAHRESABSCHNTT, 7L);
 		mapTwoOptionals.put(JAHRGANG, 8000000L);
 		mapTwoOptionals.put(KATEGORIE, 10L);
 		mapTwoOptionals.put(MERKMAL, 51L);
@@ -454,7 +476,7 @@ class DataSchuelerKAoADatenTest {
 		mapTwoOptionals.put(BEMERKUNG, "schule ist toll!");
 		mapTwoOptionals.put(ANSCHLUSSOPTION, 24L);
 		final var mapThreeOptionals = new HashMap<String, Object>();
-		mapThreeOptionals.put(LERNABSCHNITT, 7L);
+		mapThreeOptionals.put(SCHULJAHRESABSCHNTT, 7L);
 		mapThreeOptionals.put(JAHRGANG, 8000000L);
 		mapThreeOptionals.put(KATEGORIE, 10L);
 		mapThreeOptionals.put(MERKMAL, 51L);
@@ -463,7 +485,7 @@ class DataSchuelerKAoADatenTest {
 		mapThreeOptionals.put(ANSCHLUSSOPTION, 24L);
 		mapThreeOptionals.put(BERUFSFELD, 2L);
 		final var mapFourOptionals = new HashMap<String, Object>();
-		mapFourOptionals.put(LERNABSCHNITT, 7L);
+		mapFourOptionals.put(SCHULJAHRESABSCHNTT, 7L);
 		mapFourOptionals.put(JAHRGANG, 8000000L);
 		mapFourOptionals.put(KATEGORIE, 10L);
 		mapFourOptionals.put(MERKMAL, 51L);
@@ -472,73 +494,66 @@ class DataSchuelerKAoADatenTest {
 		mapFourOptionals.put(ANSCHLUSSOPTION, 24L);
 		mapFourOptionals.put(BERUFSFELD, 2L);
 		mapFourOptionals.put(EBENE_4, 1L);
-		final var mapNoOptional = new HashMap<String, Object>();
-		mapNoOptional.put(LERNABSCHNITT, 7L);
-		mapNoOptional.put(JAHRGANG, 8000000L);
-		mapNoOptional.put(KATEGORIE, 10L);
-		mapNoOptional.put(MERKMAL, 51L);
-		mapNoOptional.put(ZUSATZMERKMAL, 68);
 
 		return Stream.of(
 				arguments(mapTwoOptionals),
 				arguments(mapThreeOptionals),
-				arguments(mapFourOptionals),
-				arguments(mapNoOptional)
+				arguments(mapFourOptionals)
 		);
 	}
 
 	private static Stream<Arguments> provideValidateTestsObjects() {
 		final var wrongIdJahrgang = new HashMap<String, Object>();
-		wrongIdJahrgang.put(LERNABSCHNITT, 7L);
+		wrongIdJahrgang.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdJahrgang.put(JAHRGANG, 1L);
 		wrongIdJahrgang.put(KATEGORIE, 10L);
 		wrongIdJahrgang.put(MERKMAL, 51L);
 		wrongIdJahrgang.put(ZUSATZMERKMAL, 68);
 		wrongIdJahrgang.put(BEMERKUNG, "schule ist toll!");
 		final var jahrgangAndKategorieDoesntMatch = new HashMap<String, Object>();
-		jahrgangAndKategorieDoesntMatch.put(LERNABSCHNITT, 7L);
+		jahrgangAndKategorieDoesntMatch.put(SCHULJAHRESABSCHNTT, 7L);
 		jahrgangAndKategorieDoesntMatch.put(JAHRGANG, 8000000L);
 		jahrgangAndKategorieDoesntMatch.put(KATEGORIE, 14L);
 		jahrgangAndKategorieDoesntMatch.put(MERKMAL, 51L);
 		jahrgangAndKategorieDoesntMatch.put(ZUSATZMERKMAL, 68);
 		jahrgangAndKategorieDoesntMatch.put(BEMERKUNG, "schule ist toll!");
 		final var noJahrgangWithThisIdExists = new HashMap<String, Object>();
-		noJahrgangWithThisIdExists.put(LERNABSCHNITT, 7L);
+		noJahrgangWithThisIdExists.put(SCHULJAHRESABSCHNTT, 7L);
 		noJahrgangWithThisIdExists.put(JAHRGANG, 123456L);
 		noJahrgangWithThisIdExists.put(KATEGORIE, 14L);
 		noJahrgangWithThisIdExists.put(MERKMAL, 51L);
 		noJahrgangWithThisIdExists.put(ZUSATZMERKMAL, 68);
 		noJahrgangWithThisIdExists.put(BEMERKUNG, "schule ist toll!");
 		final var merkmalDoesntMatchKategorie = new HashMap<String, Object>();
-		merkmalDoesntMatchKategorie.put(LERNABSCHNITT, 7L);
+		merkmalDoesntMatchKategorie.put(SCHULJAHRESABSCHNTT, 7L);
 		merkmalDoesntMatchKategorie.put(JAHRGANG, 8000000L);
 		merkmalDoesntMatchKategorie.put(KATEGORIE, 10L);
 		merkmalDoesntMatchKategorie.put(MERKMAL, 55L);
 		merkmalDoesntMatchKategorie.put(ZUSATZMERKMAL, 68);
 		merkmalDoesntMatchKategorie.put(BEMERKUNG, "schule ist toll!");
 		final var wrongIdMerkmal = new HashMap<String, Object>();
-		wrongIdMerkmal.put(LERNABSCHNITT, 7L);
+		wrongIdMerkmal.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdMerkmal.put(JAHRGANG, 8000000L);
 		wrongIdMerkmal.put(KATEGORIE, 10L);
 		wrongIdMerkmal.put(MERKMAL, 1000L);
 		wrongIdMerkmal.put(ZUSATZMERKMAL, 68);
 		wrongIdMerkmal.put(BEMERKUNG, "schule ist toll!");
 		final var zusatzmerkmalDoesntMatch = new HashMap<String, Object>();
-		zusatzmerkmalDoesntMatch.put(LERNABSCHNITT, 7L);
+		zusatzmerkmalDoesntMatch.put(SCHULJAHRESABSCHNTT, 7L);
 		zusatzmerkmalDoesntMatch.put(JAHRGANG, 8000000L);
 		zusatzmerkmalDoesntMatch.put(KATEGORIE, 10L);
 		zusatzmerkmalDoesntMatch.put(MERKMAL, 51L);
 		zusatzmerkmalDoesntMatch.put(ZUSATZMERKMAL, 35L);
 		zusatzmerkmalDoesntMatch.put(BEMERKUNG, "schule ist toll!");
 		final var wrongIdZusatzmerkmal = new HashMap<String, Object>();
-		wrongIdZusatzmerkmal.put(LERNABSCHNITT, 7L);
+		wrongIdZusatzmerkmal.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdZusatzmerkmal.put(JAHRGANG, 8000000L);
 		wrongIdZusatzmerkmal.put(KATEGORIE, 10L);
 		wrongIdZusatzmerkmal.put(MERKMAL, 51L);
 		wrongIdZusatzmerkmal.put(ZUSATZMERKMAL, 3500000L);
 		wrongIdZusatzmerkmal.put(BEMERKUNG, "schule ist toll!");
 		final var bemerkungNull = new HashMap<String, Object>();
-		bemerkungNull.put(LERNABSCHNITT, 7L);
+		bemerkungNull.put(SCHULJAHRESABSCHNTT, 7L);
 		bemerkungNull.put(JAHRGANG, 8000000L);
 		bemerkungNull.put(KATEGORIE, 10L);
 		bemerkungNull.put(MERKMAL, 51L);
@@ -546,7 +561,7 @@ class DataSchuelerKAoADatenTest {
 		bemerkungNull.put(EBENE_4, 68);
 		bemerkungNull.put(BEMERKUNG, "");
 		final var idBerufsfeldNull = new HashMap<String, Object>();
-		idBerufsfeldNull.put(LERNABSCHNITT, 7L);
+		idBerufsfeldNull.put(SCHULJAHRESABSCHNTT, 7L);
 		idBerufsfeldNull.put(JAHRGANG, 8000000L);
 		idBerufsfeldNull.put(KATEGORIE, 9L);
 		idBerufsfeldNull.put(MERKMAL, 47L);
@@ -554,14 +569,14 @@ class DataSchuelerKAoADatenTest {
 		idBerufsfeldNull.put(BEMERKUNG, "abc");
 		idBerufsfeldNull.put(BERUFSFELD, null);
 		final var wrongIdBerufsfeld = new HashMap<String, Object>();
-		wrongIdBerufsfeld.put(LERNABSCHNITT, 7L);
+		wrongIdBerufsfeld.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdBerufsfeld.put(JAHRGANG, 8000000L);
 		wrongIdBerufsfeld.put(KATEGORIE, 9L);
 		wrongIdBerufsfeld.put(MERKMAL, 47L);
 		wrongIdBerufsfeld.put(ZUSATZMERKMAL, 44L);
 		wrongIdBerufsfeld.put(BERUFSFELD, 370000);
 		final var idAnschlussoptionNull = new HashMap<String, Object>();
-		idAnschlussoptionNull.put(LERNABSCHNITT, 7L);
+		idAnschlussoptionNull.put(SCHULJAHRESABSCHNTT, 7L);
 		idAnschlussoptionNull.put(JAHRGANG, 10000000L);
 		idAnschlussoptionNull.put(KATEGORIE, 14L);
 		idAnschlussoptionNull.put(MERKMAL, 69L);
@@ -569,21 +584,21 @@ class DataSchuelerKAoADatenTest {
 		idAnschlussoptionNull.put(ANSCHLUSSOPTION, null);
 		idAnschlussoptionNull.put(BEMERKUNG, "abc");
 		final var wrongIdAnschlussOption = new HashMap<String, Object>();
-		wrongIdAnschlussOption.put(LERNABSCHNITT, 7L);
+		wrongIdAnschlussOption.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdAnschlussOption.put(JAHRGANG, 10000000L);
 		wrongIdAnschlussOption.put(KATEGORIE, 14L);
 		wrongIdAnschlussOption.put(MERKMAL, 69L);
 		wrongIdAnschlussOption.put(ZUSATZMERKMAL, 117L);
 		wrongIdAnschlussOption.put(ANSCHLUSSOPTION, 3551545L);
 		final var idAnschlussoptionDoesntMatch = new HashMap<String, Object>();
-		idAnschlussoptionDoesntMatch.put(LERNABSCHNITT, 7L);
+		idAnschlussoptionDoesntMatch.put(SCHULJAHRESABSCHNTT, 7L);
 		idAnschlussoptionDoesntMatch.put(JAHRGANG, 10000000L);
 		idAnschlussoptionDoesntMatch.put(KATEGORIE, 14L);
 		idAnschlussoptionDoesntMatch.put(MERKMAL, 69L);
 		idAnschlussoptionDoesntMatch.put(ZUSATZMERKMAL, 117L);
 		idAnschlussoptionDoesntMatch.put(ANSCHLUSSOPTION, 33L);
 		final var idEbene4Null = new HashMap<String, Object>();
-		idEbene4Null.put(LERNABSCHNITT, 7L);
+		idEbene4Null.put(SCHULJAHRESABSCHNTT, 7L);
 		idEbene4Null.put(JAHRGANG, 8000000L);
 		idEbene4Null.put(KATEGORIE, 10L);
 		idEbene4Null.put(MERKMAL, 55L);
@@ -591,14 +606,14 @@ class DataSchuelerKAoADatenTest {
 		idEbene4Null.put(BEMERKUNG, "abc");
 		idEbene4Null.put(EBENE_4, null);
 		final var wrongIdEbene4 = new HashMap<String, Object>();
-		wrongIdEbene4.put(LERNABSCHNITT, 7L);
+		wrongIdEbene4.put(SCHULJAHRESABSCHNTT, 7L);
 		wrongIdEbene4.put(JAHRGANG, 8000000L);
 		wrongIdEbene4.put(KATEGORIE, 10L);
 		wrongIdEbene4.put(MERKMAL, 55L);
 		wrongIdEbene4.put(ZUSATZMERKMAL, 80L);
 		wrongIdEbene4.put(EBENE_4, 987654321L);
 		final var idEbene4DoesntMatch = new HashMap<String, Object>();
-		idEbene4DoesntMatch.put(LERNABSCHNITT, 7L);
+		idEbene4DoesntMatch.put(SCHULJAHRESABSCHNTT, 7L);
 		idEbene4DoesntMatch.put(JAHRGANG, 8000000L);
 		idEbene4DoesntMatch.put(KATEGORIE, 10L);
 		idEbene4DoesntMatch.put(MERKMAL, 55L);

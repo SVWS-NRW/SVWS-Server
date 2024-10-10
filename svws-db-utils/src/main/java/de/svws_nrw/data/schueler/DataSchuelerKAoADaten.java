@@ -120,7 +120,7 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 		result.idEbene4 = schuelerKAoADaten.idEbene4;
 		result.idBerufsfeld = schuelerKAoADaten.idBerufsfeld;
 		result.idJahrgang = getJahrgaengeKatalogEintrag(schuelerKAoADaten).id;
-		result.idLernabschnitt = schuelerKAoADaten.idLernabschnitt;
+		result.idSchuljahresabschnitt = getLernabschnittsdaten(schuelerKAoADaten.idLernabschnitt).Schuljahresabschnitts_ID;
 		result.bemerkung = schuelerKAoADaten.bemerkung;
 		return result;
 	}
@@ -171,7 +171,7 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 					throw new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang mit der ID %d wurde nicht gefunden".formatted(idJahrgang));
 				dto.jahrgang = eintrag.schluessel;
 			}
-			case "idLernabschnitt" -> dto.idLernabschnitt = JSONMapper.convertToLong(value, false, "Lernabschnitt");
+			case "idSchuljahresabschnitt" -> dto.idLernabschnitt = getIdLernabschnitt(JSONMapper.convertToLong(value, false, "Schuljahresabschnitt"));
 			case "idKategorie" -> dto.idKategorie = JSONMapper.convertToLong(value, false, "Kategorie");
 			case "idMerkmal" -> dto.idMerkmal = JSONMapper.convertToLong(value, false, "Merkmal");
 			case "idZusatzmerkmal" -> dto.idZusatzmerkmal = JSONMapper.convertToLong(value, false, "Zusatzmerkmal");
@@ -205,9 +205,9 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 	 */
 	private void validateAttributes(final SchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
 		validateOptionalAttributes(schuelerKAoADaten);
-		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = validateLernabschnittsdaten(schuelerKAoADaten.idLernabschnitt);
+		validateLernabschnittsdaten(getIdLernabschnitt(schuelerKAoADaten.idSchuljahresabschnitt));
 		final KAOAKategorie kategorie = validateKategorie(schuelerKAoADaten.idKategorie);
-		final int schuljahr = getSchuljahr(lernabschnittsdaten.Schuljahresabschnitts_ID);
+		final int schuljahr = getSchuljahr(schuelerKAoADaten.idSchuljahresabschnitt);
 		validateJahrgang(schuelerKAoADaten.idJahrgang, kategorie, schuljahr);
 		final KAOAMerkmal merkmal = validateMerkmal(schuelerKAoADaten.idMerkmal, kategorie, schuljahr);
 		final KAOAZusatzmerkmal zusatzmerkmal = validateZusatzmerkmal(schuelerKAoADaten.idZusatzmerkmal, merkmal, schuljahr);
@@ -242,9 +242,16 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 			nonEmptyOptionalAttributeCount++;
 		if ((schuelerKAoADaten.bemerkung != null) && !schuelerKAoADaten.bemerkung.isBlank())
 			nonEmptyOptionalAttributeCount++;
-		if (nonEmptyOptionalAttributeCount != 1) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl nicht leerer optionaler Attribute ist ungleich 1.");
+		if (nonEmptyOptionalAttributeCount > 1) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl vorhandener optionaler Attribute ist größer 1");
 		}
+	}
+
+	private long getIdLernabschnitt(final long idSchuljahresabschnitt) throws ApiOperationException {
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
+				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, idSchuljahresabschnitt);
+		return schuelerLernabschnittsdaten.stream().filter(e -> e.Schueler_ID == idSchueler).filter(e -> e.WechselNr == 0).findFirst().map(e -> e.ID)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur IdSchuljahresabschnitt %d gefunden".formatted(idSchuljahresabschnitt)));
 	}
 
 	/**
@@ -252,17 +259,19 @@ public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSch
 	 *
 	 * @param idLernabschnitt   idLernabschnitt
 	 *
-	 * @return DTOSchuelerLernabschnittsdaten
-	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private DTOSchuelerLernabschnittsdaten validateLernabschnittsdaten(final long idLernabschnitt) throws ApiOperationException {
-		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idLernabschnitt);
-		if (lernabschnittsdaten == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten mit der ID %d vorhanden.".formatted(idLernabschnitt));
+	private void validateLernabschnittsdaten(final long idLernabschnitt) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = getLernabschnittsdaten(idLernabschnitt);
 		if (lernabschnittsdaten.Schueler_ID != idSchueler)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Lernabschnittsdaten mit der ID %d passen nicht zum Schueler mit der ID %d"
 					.formatted(idLernabschnitt, idSchueler));
+	}
+
+	private DTOSchuelerLernabschnittsdaten getLernabschnittsdaten(final long idLernabschnitt) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idLernabschnitt);
+		if (lernabschnittsdaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten mit der ID %d vorhanden.".formatted(idLernabschnitt));
 		return lernabschnittsdaten;
 	}
 

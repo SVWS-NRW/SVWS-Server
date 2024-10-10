@@ -9,9 +9,9 @@ export class SchuelerKAoADaten extends JavaObject {
 	public id : number = -1;
 
 	/**
-	 * Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID des Schuljahresabschnitts zu dem diese KAOA Daten gehören.
 	 */
-	public idLernabschnitt : number = -1;
+	public idSchuljahresabschnitt : number = -1;
 
 	/**
 	 * Die ID des Jahrgangs des Schülers, zu dem diese KAOA Daten gehören.
@@ -19,32 +19,32 @@ export class SchuelerKAoADaten extends JavaObject {
 	public idJahrgang : number = -1;
 
 	/**
-	 * Der Kategorie des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID der Kategorie des Schülers, zu dem diese KAOA Daten gehören.
 	 */
 	public idKategorie : number = -1;
 
 	/**
-	 * Das Merkmal des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID des Merkmals des Schülers, zu dem diese KAOA Daten gehören.
 	 */
 	public idMerkmal : number = -1;
 
 	/**
-	 * Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID des Zusatzmerkmals des Schülers, zu dem diese KAOA Daten gehören.
 	 */
 	public idZusatzmerkmal : number = -1;
 
 	/**
-	 * Die Anschlussoption des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID der Anschlussoption des Schülers, zu dem diese KAOA Daten gehören.
 	 */
 	public idAnschlussoption : number | null = null;
 
 	/**
-	 * Das Berufsfeld des Schülers, zu dem diese KAOA Daten gehören.
+	 * Die ID de Berufsfelds des Schülers, zu dem diese KAOA Daten gehören.
 	 */
 	public idBerufsfeld : number | null = null;
 
 	/**
-	 * Ebene4 dieser KAOA Daten
+	 * Die ID der Ebene4 dieser KAOA Daten
 	 */
 	public idEbene4 : number | null = null;
 
@@ -74,9 +74,9 @@ export class SchuelerKAoADaten extends JavaObject {
 		if (obj.id === undefined)
 			throw new Error('invalid json format, missing attribute id');
 		result.id = obj.id;
-		if (obj.idLernabschnitt === undefined)
-			throw new Error('invalid json format, missing attribute idLernabschnitt');
-		result.idLernabschnitt = obj.idLernabschnitt;
+		if (obj.idSchuljahresabschnitt === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
+		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
 		if (obj.idJahrgang === undefined)
 			throw new Error('invalid json format, missing attribute idJahrgang');
 		result.idJahrgang = obj.idJahrgang;
@@ -99,7 +99,7 @@ export class SchuelerKAoADaten extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerKAoADaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"idLernabschnitt" : ' + obj.idLernabschnitt.toString() + ',';
+		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
 		result += '"idKategorie" : ' + obj.idKategorie.toString() + ',';
 		result += '"idMerkmal" : ' + obj.idMerkmal.toString() + ',';
@@ -118,8 +118,8 @@ export class SchuelerKAoADaten extends JavaObject {
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
-		if (obj.idLernabschnitt !== undefined) {
-			result += '"idLernabschnitt" : ' + obj.idLernabschnitt.toString() + ',';
+		if (obj.idSchuljahresabschnitt !== undefined) {
+			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt.toString() + ',';
 		}
 		if (obj.idJahrgang !== undefined) {
 			result += '"idJahrgang" : ' + obj.idJahrgang.toString() + ',';
