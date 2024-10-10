@@ -593,6 +593,34 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
+	 * Setzt das Kennwort des Lehrers auf das Initialkennwort zurück. Ist kein Initialkennwort vorhanden,
+	 * so wird ein neues generiert.
+	 *
+	 * @param conn       die Datenbankverbindung
+	 * @param idLehrer   die ID des Lehrers
+	 *
+	 * @throws ApiOperationException   NOT_FOUND: falls kein Lehrer mit der angegeben ID existiert
+	 */
+	public static void resetInitialPassword(final DBEntityManager conn, final long idLehrer) throws ApiOperationException {
+		final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
+		if (dtoLehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
+		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		if (cred == null) {
+			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
+			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+		} else {
+			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			if (!hasInitial)
+				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+		}
+		conn.transactionPersist(cred);
+	}
+
+
+	/**
 	 * Integriert die Veränderungen bei den importierten ENM-Daten gegenüber dem Stand
 	 * der SVWS-DB in die SVWS-DB.
 	 *

@@ -160,6 +160,34 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode zum Zurücksetzen eines Kennwortes für Lehrer für das externe Notenmodul. Hat der Lehrer
+	 * noch kein Initialkennwort, so wird dieses neu erzeugt.
+	 *
+	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param id        die ID des Lehrers
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/credentials/reset/{id : \\d+}")
+	@Operation(summary = "Setzt das Kennwort des Lehrers für das externe Notenmodul auf das Initial-Kennwort zurück.",
+			description = "Setzt das Kennwort des Lehrers für das externe Notenmodul auf das Initial-Kennwort zurück. "
+					+ "Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt.")
+	@ApiResponse(responseCode = "204", description = "Das Initial-Kennwort wurde gesetzt.")
+	@ApiResponse(responseCode = "404", description = "Die ID des Lehrers ist in der DB nicht vorhanden.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response resetENMLehrerPasswordToInitial(@PathParam("schema") final String schema, @PathParam("id") final long id,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			DataENMDaten.resetInitialPassword(conn, id);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
 	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
 	 *
