@@ -1957,6 +1957,32 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode setENMLehrerPassword für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/set/{id : \d+}
+	 *
+	 * Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort. Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt, allerdings das übergebene Kennwort gesetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Kennwort wurde gesetzt.
+	 *   Code 400: Das Kennwort ist leer oder entspricht nicht den Minimal-Anforderungen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setENMLehrerPassword(data : string | null, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/set/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode downloadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/download
 	 *
 	 * Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.

@@ -621,6 +621,40 @@ public final class DataENMDaten extends DataManager<Long> {
 
 
 	/**
+	 * Setzt das Kennwort des Lehrers auf das übergebene Kennwort. Das Initialkennwort bleibt dabei
+	 * bestehen oder wird durch ein generiertes gesetzt, wenn der Lehrer vorher kein Initialkennwort hatte.
+	 *
+	 * @param conn       die Datenbankverbindung
+	 * @param idLehrer   die ID des Lehrers
+	 * @param password   das neu zu setzende Kennwort
+	 *
+	 * @throws ApiOperationException   NOT_FOUND: falls kein Lehrer mit der angegeben ID existiert
+	 */
+	public static void setPassword(final DBEntityManager conn, final long idLehrer, final String password) throws ApiOperationException {
+		// TODO geeignetere Kriterien festlegen und in Passwords.java als Methode zum Prüfen implementieren
+		if ((password == null) || (password.isBlank()) || (password.length() < 6))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein neues Kennwort darf nicht leer sein und muss mindestens 6 Zeichen enthalten.");
+		// Prüfe, ob der Lehrer in der DB vorhanden ist
+		final DTOLehrer dtoLehrer = conn.queryByKey(DTOLehrer.class, idLehrer);
+		if (dtoLehrer == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Ein Lehrer mit der ID %d konnte nicht gefunden werden.".formatted(idLehrer));
+		// Setze die Credentials und erzeuge bei Bedarf neue
+		DTOLehrerNotenmodulCredentials cred = conn.queryByKey(DTOLehrerNotenmodulCredentials.class, idLehrer);
+		final String hash = BCrypt.hashpw(password, BCrypt.gensalt());
+		if (cred == null) {
+			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred = new DTOLehrerNotenmodulCredentials(idLehrer, initial, hash);
+		} else {
+			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			if (!hasInitial)
+				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			cred.PasswordHash = hash;
+		}
+		conn.transactionPersist(cred);
+	}
+
+
+	/**
 	 * Integriert die Veränderungen bei den importierten ENM-Daten gegenüber dem Stand
 	 * der SVWS-DB in die SVWS-DB.
 	 *
