@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout>
+	<svws-ui-app-layout no-secondary-menu tertiary-menu>
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
@@ -66,6 +66,9 @@
 			</svws-ui-menu>
 		</template>
 		<template #secondaryMenu v-if="app.hide !== true">
+			<router-view :key="app.name" name="submenu" />
+		</template>
+		<template #tertiaryMenu v-if="app.hide !== true">
 			<template v-if="pendingSetApp">
 				<svws-ui-secondary-menu>
 					<template #headline>
@@ -264,6 +267,7 @@
 </script>
 
 <style lang="postcss">
+
 	.app--page {
 		@apply flex flex-grow flex-col justify-between;
 		@apply h-screen;
@@ -279,4 +283,5 @@
 	.page--flex {
 		@apply flex flex-col w-full h-full;
 	}
+
 </style>

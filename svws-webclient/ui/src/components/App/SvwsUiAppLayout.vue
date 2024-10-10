@@ -1,5 +1,8 @@
 <template>
-	<div class="app--layout" :class="{'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton, 's-sidebar-expanded': sidebarExpanded, 's-sidebar-collapsed': !sidebarExpanded}">
+	<div class="app--layout" :class="{ 'app--layout--has-aside': $slots.aside, 'loading-skeleton pointer-events-none': skeleton,
+		's-sidebar': $slots.secondaryMenu && hasSecondaryMenu,
+		's-all-sidebars-collapsed' : (!$slots.secondaryMenu || !hasSecondaryMenu || !sidebarExpanded) && (!$slots.tertiaryMenu || !hasTertiaryMenu || !secondSidebarExpanded),
+		's-sidebar-collapsed': !sidebarExpanded, 's-second-sidebar-collapsed': !secondSidebarExpanded }">
 		<div ref="appMenu" v-if="($slots.sidebar && !fullwidthContent) || skeleton" class="app--menu" :class="{ 'has-scrollbar': hasScrollbar }" :style="{ '--scrollbar-width': scrollbarWidth + 'px' }">
 			<slot name="sidebar" />
 			<template v-if="skeleton">
@@ -51,8 +54,8 @@
 				</svws-ui-menu>
 			</template>
 		</div>
-		<div v-if="($slots.secondaryMenu && !fullwidthContent && !noSecondaryMenu) || skeleton" class="app--sidebar">
-			<div class="s-toggle" v-if="!skeleton" :class="sidebarExpanded ? '' : 'mt-8'">
+		<div v-if="$slots.secondaryMenu && hasSecondaryMenu || skeleton" class="app--sidebar">
+			<div class="s-toggle-first" v-if="!skeleton">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
 						<span class="icon i-ri-menu-fold-line" v-if="sidebarExpanded" />
@@ -77,8 +80,34 @@
 				</template>
 			</div>
 		</div>
+		<div v-if="$slots.tertiaryMenu && hasTertiaryMenu || skeleton" class="app--second-sidebar">
+			<div class="s-toggle-second" v-if="!skeleton">
+				<svws-ui-tooltip>
+					<button type="button" @click="updateSecondSidebarExpanded">
+						<span class="icon i-ri-menu-fold-line" v-if="secondSidebarExpanded" />
+						<span class="icon i-ri-menu-unfold-line" v-else />
+					</button>
+					<template #content>
+						Second Sidebar {{ !secondSidebarExpanded ? 'einblenden' : 'ausblenden' }}
+					</template>
+				</svws-ui-tooltip>
+			</div>
+			<div class="app--second-sidebar-container">
+				<slot name="tertiaryMenu" />
+				<template v-if="skeleton">
+					<svws-ui-secondary-menu>
+						<template #headline>
+							<span>SVWS NRW</span>
+						</template>
+						<template #abschnitt>
+							<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+						</template>
+					</svws-ui-secondary-menu>
+				</template>
+			</div>
+		</div>
 		<main class="app--content">
-			<div class="app--content-container relative" :class="{'fullwidth-content' : fullwidthContent}">
+			<div class="app--content-container relative" :class="{ 'fullwidth-content' : fullwidthContent }">
 				<div class="app--page" v-if="skeleton">
 					<svws-ui-header>
 						<div class="flex items-center">
@@ -105,22 +134,29 @@
 </template>
 
 <script setup lang='ts'>
-	import {onBeforeUnmount, onMounted, ref} from "vue";
+
+	import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 
 	const props = withDefaults(defineProps<{
 		skeleton?: boolean;
 		fullwidthContent?: boolean;
 		noSecondaryMenu?: boolean;
+		tertiaryMenu?: boolean;
 	}>(), {
 		skeleton: false,
 		fullwidthContent: false,
-		noSecondaryMenu: false
+		noSecondaryMenu: false,
+		tertiaryMenu: false,
 	});
 
 	const sidebarExpanded = ref<boolean>(true);
+	const secondSidebarExpanded = ref<boolean>(true);
 	const appMenu = ref<HTMLElement | null>(null);
 	const hasScrollbar = ref(false);
 	const scrollbarWidth = ref(0);
+
+	const hasSecondaryMenu = computed<boolean>(() => !props.fullwidthContent && !props.noSecondaryMenu);
+	const hasTertiaryMenu = computed<boolean>(() => !props.fullwidthContent && props.tertiaryMenu);
 
 	const scrollbarObserver = new ResizeObserver((entries) => {
 		entries.forEach((entry) => {
@@ -149,6 +185,15 @@
 
 	if (localStorage.getItem('sidebarExpanded') !== null) {
 		sidebarExpanded.value = localStorage.getItem('sidebarExpanded') === 'true';
+	}
+
+	function updateSecondSidebarExpanded(): void {
+		secondSidebarExpanded.value = !secondSidebarExpanded.value;
+		localStorage.setItem('secondSidebarExpanded', secondSidebarExpanded.value ? 'true' : 'false');
+	}
+
+	if (localStorage.getItem('secondSidebarExpanded') !== null) {
+		secondSidebarExpanded.value = localStorage.getItem('secondSidebarExpanded') === 'true';
 	}
 
 </script>
@@ -202,6 +247,7 @@
 	}
 
 	.app--sidebar,
+	.app--second-sidebar,
 	.app--content-container {
 		@apply bg-white dark:bg-black rounded-3xl;
 		@apply h-full;
@@ -210,7 +256,8 @@
 		@apply overflow-y-auto;
 	}
 
-	.app--content-container {
+	.app--content-container,
+	.app--second-sidebar {
 		@apply border-l-0 rounded-l-none;
 	}
 
@@ -222,14 +269,14 @@
 
 		.app--sidebar-container {
 			@apply rounded-2xl h-full;
-      @apply border border-black/20 dark:border-white/20;
+			@apply border border-black/20 dark:border-white/20;
 		}
 
 		.secondary-menu--headline {
 			@apply -mt-2;
 		}
 
-		.s-toggle {
+		.s-toggle-first {
 			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 			button {
@@ -251,32 +298,103 @@
 		}
 	}
 
-  @media (orientation: portrait) {
-    .app--sidebar .s-toggle {
-      @apply hidden;
-    }
-  }
+	.app--second-sidebar {
+		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
+		width: 20%;
+		min-width: 24rem;
+		max-width: 30rem;
 
-  @media (orientation: landscape) {
-    .s-sidebar-collapsed {
-      .app--sidebar {
-        @apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
-        @apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
+		.app--second-sidebar-container {
+			@apply rounded-2xl h-full;
+			@apply border border-black/20 dark:border-white/20;
+		}
 
-        .app--sidebar-container {
-          @apply hidden;
-        }
-      }
+		.secondary-menu--headline {
+			@apply -mt-2;
+		}
 
-      .s-toggle {
-        @apply relative pt-0 pr-0 pl-1 pointer-events-auto top-0.5 left-0.5;
-      }
+		.s-toggle-second {
+			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
-      .app--content-container {
-        @apply border border-black/10 dark:border-white/5 rounded-l-2xl;
-      }
-    }
-  }
+			button {
+				@apply rounded-lg text-black/50 dark:text-white/50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+
+				svg {
+					@apply flex-shrink-0 text-headline-md;
+				}
+
+				&:hover,
+				&:focus-visible {
+					@apply bg-black/10 dark:bg-white/10 text-black dark:text-white;
+				}
+			}
+
+			.s-title {
+				writing-mode: sideways-lr;
+			}
+		}
+	}
+
+	@media (orientation: portrait) {
+		.app--sidebar .s-toggle-first .s-toggle-second {
+			@apply hidden;
+		}
+	}
+
+	@media (orientation: landscape) {
+
+		.s-sidebar-collapsed {
+			.app--sidebar {
+				@apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
+				@apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
+
+				.app--sidebar-container {
+					@apply hidden;
+				}
+			}
+
+			.s-toggle-first {
+				@apply relative pr-0 pl-1 pointer-events-auto top-0.5 left-0.5;
+			}
+
+			.app--second-sidebar {
+				@apply pl-8 rounded-l-2xl;
+			}
+
+		}
+
+		.s-second-sidebar-collapsed {
+			.app--second-sidebar {
+				@apply w-9 h-auto min-w-0 bg-transparent dark:bg-transparent pointer-events-none z-40 pt-1 px-1 border-0;
+				@apply -ml-1 3xl:-ml-0.5 -mr-10 3xl:-mr-11;
+
+				.app--second-sidebar-container {
+					@apply hidden;
+				}
+			}
+
+			.s-toggle-second {
+				@apply relative pr-0 pl-1 pointer-events-auto top-0.5 left-0.5;
+			}
+		}
+
+		.s-all-sidebars-collapsed {
+			.app--content-container {
+				@apply border border-black/10 dark:border-white/5 rounded-l-2xl;
+			}
+
+			.s-toggle-second {
+				@apply mt-9;
+			}
+		}
+
+		.s-all-sidebars-collapsed:not(.s-sidebar) {
+			.s-toggle-second {
+				@apply mt-0;
+			}
+		}
+
+	}
 
 	.app--content {
 		@apply flex-1 overflow-hidden relative;
@@ -301,6 +419,7 @@
 		}
 
 		.app--sidebar,
+		.app--second-sidebar,
 		.app--content {
 			.app--layout:not(.app--layout--login) & {
 				height: calc(100% - 4rem);
@@ -333,14 +452,16 @@
 		@apply shadow-xl bg-white dark:bg-black border border-black/10 dark:border-white/10;
 	}
 
-	.app--sidebar-container {
+	.app--sidebar-container,
+	.app--second-sidebar-container {
 		@apply overflow-hidden;
 	}
 
 	.secondary-menu--headline,
 	.secondary-menu--header,
 	.secondary-menu--content .text-headline,
-  .app--sidebar .svws-ui-table-filter {
+	.app--sidebar .svws-ui-table-filter,
+	.app--second-sidebar .svws-ui-table-filter {
 		@apply px-7;
 	}
 
@@ -356,7 +477,8 @@
 		.secondary-menu--headline,
 		.secondary-menu--header,
 		.secondary-menu--content .text-headline,
-    .app--sidebar .svws-ui-table-filter {
+		.app--sidebar .svws-ui-table-filter,
+		.app--second-sidebar .svws-ui-table-filter {
 			@apply px-8;
 		}
 
@@ -410,4 +532,5 @@
 	.app-layout--notification-list {
 		@apply fixed top-0 left-0 right-0 bottom-0 pointer-events-none z-50;
 	}
+
 </style>
