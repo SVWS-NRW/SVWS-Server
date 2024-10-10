@@ -43,6 +43,7 @@ import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.oauth2.DataOauthClientSecrets;
 import de.svws_nrw.data.oauth2.OAuth2Client;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.lehrer.DTOLehrerNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzdaten;
 import de.svws_nrw.db.dto.current.schild.grundschule.DTOAnkreuzfloskeln;
@@ -61,6 +62,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerTeilleistung;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOTeilleistungsarten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.dto.current.svws.auth.DTOSchuleOAuthSecrets;
+import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsLehrerNotenmodulCredentials;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerAnkreuzkompetenzen;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLeistungsdaten;
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabschnittsdaten;
@@ -163,6 +165,8 @@ public final class DataENMDaten extends DataManager<Long> {
 		// Lese die Daten aus der Datenbank ein
 		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnitt();
 		final Map<Long, DTOLehrer> mapLehrer = getLehrerListe(conn);
+		final Map<Long, String> mapLehrerPWHash = getLehrerCredsListe(conn);
+		final Map<Long, String> mapLehrerPWHashTimestamps = getLehrerCredsTimstampsListe(conn);
 		final DTOLehrer dtoLehrer = (id == null) ? null : mapLehrer.get(id);   // Ermittle den Lehrer nur, falls ENM-Daten für einen speziellen Lehrer bestimt werden.
 		if ((id != null) && (dtoLehrer == null))
 			throw new ApiOperationException(Status.NOT_FOUND);
@@ -178,9 +182,12 @@ public final class DataENMDaten extends DataManager<Long> {
 
 		// Erstelle einen ENM-Daten-Manager und füge ggf. den Lehrer hinzu für welchen die ENM-Daten erzeugt werden
 		final ENMDatenManager manager = new ENMDatenManager(id);
-		if (dtoLehrer != null)
+		if (dtoLehrer != null) {
+			final String creds = mapLehrerPWHash.get(manager.daten.lehrerID);
+			final String tsCreds = mapLehrerPWHashTimestamps.get(manager.daten.lehrerID);
 			manager.addLehrer(manager.daten.lehrerID, dtoLehrer.Kuerzel, dtoLehrer.Nachname, dtoLehrer.Vorname, dtoLehrer.Geschlecht,
-					dtoLehrer.eMailDienstlich);
+					dtoLehrer.eMailDienstlich, (creds == null) ? "" : creds, (tsCreds == null) ? null : tsCreds);
+		}
 		initManager(manager, conn.getUser().schuleGetStammdaten(), conn.querySingle(DTOAnkreuzdaten.class), abschnitt);
 
 		// Aggregiert aus den Schülerabschnittsdaten und -leistungsdaten die einzelnen Informationen für das ENM.
@@ -221,8 +228,11 @@ public final class DataENMDaten extends DataManager<Long> {
 						if (manager.getLehrer(kl.Lehrer_ID) == null) {
 							final DTOLehrer dtoKlassenlehrer = mapLehrer.get(kl.Lehrer_ID);
 							if (dtoKlassenlehrer != null) {
-								manager.addLehrer(dtoKlassenlehrer.ID, dtoKlassenlehrer.Kuerzel,
-										dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname, dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich);
+								final String creds = (dtoLehrer == null) ? mapLehrerPWHash.get(dtoKlassenlehrer.ID) : "";
+								final String tsCreds = (dtoLehrer == null) ? mapLehrerPWHashTimestamps.get(dtoKlassenlehrer.ID) : null;
+								manager.addLehrer(dtoKlassenlehrer.ID, dtoKlassenlehrer.Kuerzel, dtoKlassenlehrer.Nachname, dtoKlassenlehrer.Vorname,
+										dtoKlassenlehrer.Geschlecht, dtoKlassenlehrer.eMailDienstlich,
+										(creds == null) ? "" : creds, (tsCreds == null) ? null : tsCreds);
 							}
 						}
 						enmKlasse.klassenlehrer.add(kl.Lehrer_ID);
@@ -338,8 +348,11 @@ public final class DataENMDaten extends DataManager<Long> {
 				if (manager.getLehrer(schuelerabschnitt.lehrerID) == null) {
 					final DTOLehrer dtoFachlehrer = mapLehrer.get(schuelerabschnitt.lehrerID);
 					if (dtoFachlehrer != null) {
-						manager.addLehrer(dtoFachlehrer.ID, dtoFachlehrer.Kuerzel,
-								dtoFachlehrer.Nachname, dtoFachlehrer.Vorname, dtoFachlehrer.Geschlecht, dtoFachlehrer.eMailDienstlich);
+						final String creds = (dtoLehrer == null) ? mapLehrerPWHash.get(dtoFachlehrer.ID) : "";
+						final String tsCreds = (dtoLehrer == null) ? mapLehrerPWHashTimestamps.get(dtoFachlehrer.ID) : null;
+						manager.addLehrer(dtoFachlehrer.ID, dtoFachlehrer.Kuerzel, dtoFachlehrer.Nachname, dtoFachlehrer.Vorname,
+								dtoFachlehrer.Geschlecht, dtoFachlehrer.eMailDienstlich,
+								(creds == null) ? "" : creds, (tsCreds == null) ? null : tsCreds);
 					}
 				}
 				// TODO ggf. im Team-Teaching unterrichtende Lehrer hinzufügen (Zusatzkraft in Leistungsdaten bzw. weitere Lehrkraft bei Kursen)
@@ -436,6 +449,20 @@ public final class DataENMDaten extends DataManager<Long> {
 		if (lehrer.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return lehrer.stream().collect(Collectors.toMap(e -> e.ID, e -> e));
+	}
+
+	private static Map<Long, String> getLehrerCredsListe(final DBEntityManager conn) {
+		final List<DTOLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
+		if (lehrer.isEmpty())
+			return new HashMap<>();
+		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.PasswordHash));
+	}
+
+	private static Map<Long, String> getLehrerCredsTimstampsListe(final DBEntityManager conn) {
+		final List<DTOTimestampsLehrerNotenmodulCredentials> lehrer = conn.queryAll(DTOTimestampsLehrerNotenmodulCredentials.class);
+		if (lehrer.isEmpty())
+			return new HashMap<>();
+		return lehrer.stream().collect(Collectors.toMap(e -> e.Lehrer_ID, e -> e.tsPasswordHash));
 	}
 
 	private static Map<Long, DTOAnkreuzfloskeln> getAnkreuzkompetenzenListe(final DBEntityManager conn) {

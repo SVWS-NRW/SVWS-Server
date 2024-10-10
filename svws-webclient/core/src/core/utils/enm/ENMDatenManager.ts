@@ -217,10 +217,12 @@ export class ENMDatenManager extends JavaObject {
 	 * @param vorname       der Vorname des Lehrers
 	 * @param geschlecht        das Geschlecht des Lehrers
 	 * @param eMailDienstlich   die Dienst-Email-Adresse des Lehrers
+	 * @param passwordHash      der Password-Hash des Lehrer-Kennwortes für das Notenmodul
+	 * @param tsPasswordHash    der Zeitstempel, wann der Password-Hash zuletzt geändert wurde
 	 *
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false
 	 */
-	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null) : boolean {
+	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null, passwordHash : string, tsPasswordHash : string | null) : boolean {
 		if (this.mapLehrer.get(id) !== null)
 			return false;
 		const enmLehrer : ENMLehrer = new ENMLehrer();
@@ -230,6 +232,8 @@ export class ENMDatenManager extends JavaObject {
 		enmLehrer.vorname = vorname;
 		enmLehrer.geschlecht = geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = eMailDienstlich;
+		enmLehrer.passwordHash = passwordHash;
+		enmLehrer.tsPasswordHash = tsPasswordHash;
 		this.daten.lehrer.add(enmLehrer);
 		this.mapLehrer.put(id, enmLehrer);
 		return true;

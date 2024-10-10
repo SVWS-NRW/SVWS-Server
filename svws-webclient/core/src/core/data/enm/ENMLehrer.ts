@@ -33,6 +33,16 @@ export class ENMLehrer extends JavaObject {
 	 */
 	public eMailDienstlich : string | null = null;
 
+	/**
+	 * Der BCrypt-Kennwort-Hash des Lehrerkennwortes
+	 */
+	public passwordHash : string = "";
+
+	/**
+	 * Der Zeitstempel der letzten Änderung an dem Password-Hash
+	 */
+	public tsPasswordHash : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -59,6 +69,10 @@ export class ENMLehrer extends JavaObject {
 		result.vorname = (obj.vorname === undefined) ? null : obj.vorname === null ? null : obj.vorname;
 		result.geschlecht = (obj.geschlecht === undefined) ? null : obj.geschlecht === null ? null : obj.geschlecht;
 		result.eMailDienstlich = (obj.eMailDienstlich === undefined) ? null : obj.eMailDienstlich === null ? null : obj.eMailDienstlich;
+		if (obj.passwordHash === undefined)
+			throw new Error('invalid json format, missing attribute passwordHash');
+		result.passwordHash = obj.passwordHash;
+		result.tsPasswordHash = (obj.tsPasswordHash === undefined) ? null : obj.tsPasswordHash === null ? null : obj.tsPasswordHash;
 		return result;
 	}
 
@@ -70,6 +84,8 @@ export class ENMLehrer extends JavaObject {
 		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
+		result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
+		result += '"tsPasswordHash" : ' + ((!obj.tsPasswordHash) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -94,6 +110,12 @@ export class ENMLehrer extends JavaObject {
 		}
 		if (obj.eMailDienstlich !== undefined) {
 			result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
+		}
+		if (obj.passwordHash !== undefined) {
+			result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
+		}
+		if (obj.tsPasswordHash !== undefined) {
+			result += '"tsPasswordHash" : ' + ((!obj.tsPasswordHash) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

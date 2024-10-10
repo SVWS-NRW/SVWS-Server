@@ -200,11 +200,13 @@ public class ENMDatenManager {
 	 * @param vorname       der Vorname des Lehrers
 	 * @param geschlecht        das Geschlecht des Lehrers
 	 * @param eMailDienstlich   die Dienst-Email-Adresse des Lehrers
+	 * @param passwordHash      der Password-Hash des Lehrer-Kennwortes für das Notenmodul
+	 * @param tsPasswordHash    der Zeitstempel, wann der Password-Hash zuletzt geändert wurde
 	 *
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false
 	 */
 	public boolean addLehrer(final long id, final String kuerzel, final String nachname, final String vorname, final @NotNull Geschlecht geschlecht,
-			final String eMailDienstlich) {
+			final String eMailDienstlich, final @NotNull String passwordHash, final String tsPasswordHash) {
 		if (mapLehrer.get(id) != null)
 			return false;
 		final @NotNull ENMLehrer enmLehrer = new ENMLehrer();
@@ -214,6 +216,8 @@ public class ENMDatenManager {
 		enmLehrer.vorname = vorname;
 		enmLehrer.geschlecht = geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = eMailDienstlich;
+		enmLehrer.passwordHash = passwordHash;
+		enmLehrer.tsPasswordHash = tsPasswordHash;
 		daten.lehrer.add(enmLehrer);
 		mapLehrer.put(id, enmLehrer);
 		return true;
@@ -396,7 +400,7 @@ public class ENMDatenManager {
 
 	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
-	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
+	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String, String, String)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Lehrers
