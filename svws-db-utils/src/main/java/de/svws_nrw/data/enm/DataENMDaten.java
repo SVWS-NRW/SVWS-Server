@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.base.compression.CompressionException;
+import de.svws_nrw.base.crypto.Passwords;
 import de.svws_nrw.core.data.enm.ENMAnkreuzkompetenz;
 import de.svws_nrw.core.data.enm.ENMDaten;
 import de.svws_nrw.core.data.enm.ENMFach;
@@ -70,6 +71,7 @@ import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerLernabsch
 import de.svws_nrw.db.dto.current.svws.timestamps.DTOTimestampsSchuelerTeilleistungen;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.dto.enm.DTOENMLehrerSchuelerAbschnittsdaten;
+import de.svws_nrw.ext.jbcrypt.BCrypt;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -556,6 +558,36 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmFG.floskeln.add(enmFl);
 			}
 			// TODO else ... Fehlerbehandlung: Wie ordnet man die Floskel zu? -> allgemein
+		}
+	}
+
+
+	/**
+	 * Erstellt für alle Lehrer initiale Credentials, sofern ein Lehrer nicht bereits welche besitzt.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 */
+	public static void generateInitialCredentials(final DBEntityManager conn) {
+		// Prüfe zunächst die existierenden Credentials auf Vollständigkeit
+		final List<DTOLehrerNotenmodulCredentials> existing = conn.queryAll(DTOLehrerNotenmodulCredentials.class);
+		for (final DTOLehrerNotenmodulCredentials cred : existing) {
+			final boolean hasInitial = (cred.Initialkennwort != null) && (!cred.Initialkennwort.isBlank());
+			final boolean hasHash = (cred.PasswordHash != null) && (!cred.PasswordHash.isBlank());
+			if (hasInitial && hasHash)
+				continue;
+			if (!hasInitial)
+				cred.Initialkennwort = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			if (!hasHash)
+				cred.PasswordHash = BCrypt.hashpw(cred.Initialkennwort, BCrypt.gensalt());
+			conn.transactionPersist(cred);
+		}
+		// Erstelle dann die noch fehlenden Credentials
+		final Set<Long> idsExisting = existing.stream().map(c -> c.Lehrer_ID).collect(Collectors.toUnmodifiableSet());
+		final List<Long> ids = conn.queryAll(DTOLehrer.class).stream().map(l -> l.ID).filter(l -> !idsExisting.contains(l)).toList();
+		for (final long id : ids) {
+			final String initial = Passwords.generateRandomPasswordWithoutSpecialChars(10);
+			final String hash = BCrypt.hashpw(initial, BCrypt.gensalt());
+			conn.transactionPersist(new DTOLehrerNotenmodulCredentials(id, initial, hash));
 		}
 	}
 

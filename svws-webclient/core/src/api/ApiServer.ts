@@ -1914,6 +1914,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode generateENMLehrerCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/generate
+	 *
+	 * Generiert Initial-Kennwörter für Lehrer für das externe Notenmodul, sofern diese noch keine haben.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Kennwörter und die Password-Hashes wurden erzeugt oder es war nichts zu tun.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Erzeugen der Credentials.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async generateENMLehrerCredentials(schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/generate"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode downloadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/download
 	 *
 	 * Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.

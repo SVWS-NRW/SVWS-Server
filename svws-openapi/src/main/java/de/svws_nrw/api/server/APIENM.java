@@ -137,6 +137,29 @@ public class APIENM {
 
 
 	/**
+	 * Die OpenAPI-Methode zum Generieren von Initial-Kennwörtern für Lehrer für das externe Notenmodul, sofern diese noch keine haben.
+	 *
+	 * @param schema     das Datenbankschema, auf welches die Abfrage ausgeführt werden soll
+	 * @param request    die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Reponse
+	 */
+	@POST
+	@Path("/credentials/generate")
+	@Operation(summary = "Generiert Initial-Kennwörter für Lehrer für das externe Notenmodul, sofern diese noch keine haben.",
+			description = "Generiert Initial-Kennwörter für Lehrer für das externe Notenmodul, sofern diese noch keine haben.")
+	@ApiResponse(responseCode = "204", description = "Die Kennwörter und die Password-Hashes wurden erzeugt oder es war nichts zu tun.")
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte zum Erzeugen der Credentials.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response generateENMLehrerCredentials(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransaction(conn -> {
+			DataENMDaten.generateInitialCredentials(conn);
+			return Response.status(Status.NO_CONTENT).build();
+		}, request, ServerMode.STABLE, BenutzerKompetenz.NOTENMODUL_ADMINISTRATION);
+	}
+
+
+	/**
 	 * Die OpenAPI-Methode zum Importieren von ENM-Daten in die SVWS-Datenbank. Dabei wird die
 	 * Aktualität der zu importierenden Daten anhand der Zeitstempel in den ENM-Daten geprüft.
 	 *
