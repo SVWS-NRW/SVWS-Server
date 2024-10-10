@@ -15,7 +15,7 @@
 					<template v-for="tab of tabManager().getTabsOfGroup(tabgroup)" :key="tab.name">
 						<tr class="svws-ui-tr" role="row">
 							<td class="svws-ui-td border-none ml-4" role="cell">
-								<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)">
+								<svws-ui-menu-item @click="setTab(tab)" :active="isCurrent(tab)" :focus="isCurrent(tab)">
 									<template #label><span>{{ tab.text }}</span></template>
 								</svws-ui-menu-item>
 							</td>
