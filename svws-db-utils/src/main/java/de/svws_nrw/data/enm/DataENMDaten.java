@@ -24,6 +24,7 @@ import de.svws_nrw.core.data.enm.ENMFloskel;
 import de.svws_nrw.core.data.enm.ENMFloskelgruppe;
 import de.svws_nrw.core.data.enm.ENMJahrgang;
 import de.svws_nrw.core.data.enm.ENMKlasse;
+import de.svws_nrw.core.data.enm.ENMLehrer;
 import de.svws_nrw.core.data.enm.ENMLeistung;
 import de.svws_nrw.core.data.enm.ENMLerngruppe;
 import de.svws_nrw.core.data.enm.ENMSchueler;
@@ -589,7 +590,52 @@ public final class DataENMDaten extends DataManager<Long> {
 	public static void importDaten(final DBEntityManager conn, final ENMDaten daten) throws ApiOperationException {
 		// TODO Prüfe (daten.lehrer == null) - dann ist es eine Gesamt-ENM-Datei und nicht lehrerspezifisch
 		// TODO Führe eine Prüfung der Integrität der Daten durch
+		importEnmLehrer(conn, daten.lehrer);
 		importEnmSchueler(conn, daten.schueler);
+	}
+
+
+	/**
+	 * Importiert die Hashes aus den gegebenen ENMLehrer-Daten in die SVWS-Datenbank. Prüft dazu die Zeitstempel
+	 * und aktualisiert neuere Datensätze und deren Zeitstempel.
+	 *
+	 * @param conn              die Datenbank-Verbindung
+	 * @param listEnmLehrer     die zu importierenden Lehrer-Daten
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static void importEnmLehrer(final DBEntityManager conn, final List<ENMLehrer> listEnmLehrer) throws ApiOperationException {
+		// Bestimme die Lehrer-IDs, anhand der zu importierenden Daten
+		if (listEnmLehrer.isEmpty())
+			return; // nichts zu tun, da keine Daten vorhanden sind
+		final List<Long> idsLehrer = listEnmLehrer.stream().map(s -> s.id).distinct().toList();
+		if (idsLehrer.size() != listEnmLehrer.size())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die ENM-Daten haben mindestens eine Lehrer-ID doppelt enthalten. Dies ist nicht zulässig.");
+		// Bestimme die Datenbank-DTOs des Lehrers
+		final Map<Long, DTOLehrer> mapLehrerDTOs = conn.queryByKeyList(DTOLehrer.class, idsLehrer).stream().collect(Collectors.toMap(l -> l.ID, l -> l));
+		if (mapLehrerDTOs.keySet().size() != idsLehrer.size())
+			throw new ApiOperationException(Status.NOT_FOUND, "Nicht alle Lehrer in den ENM-Daten konnten auch in der Datenbank gefunden werden.");
+		final Map<Long, DTOLehrerNotenmodulCredentials> mapLehrerCreds =
+				conn.queryByKeyList(DTOLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(c -> c.Lehrer_ID, c -> c));
+		final Map<Long, DTOTimestampsLehrerNotenmodulCredentials> mapLehrerCredsTimestamps =
+				conn.queryByKeyList(DTOTimestampsLehrerNotenmodulCredentials.class, idsLehrer).stream().collect(Collectors.toMap(t -> t.Lehrer_ID, t -> t));
+		// Gehe die einzelnen Lehrer durch und aktualisieren ggf. die Credentials
+		for (final ENMLehrer enmLehrer : listEnmLehrer) {
+			final DTOLehrer dtoLehrer = mapLehrerDTOs.get(enmLehrer.id);
+			if (dtoLehrer == null)
+				throw new ApiOperationException(Status.NOT_FOUND,
+						"Der Lehrer in den ENM-Daten mit der ID %d konnte in der Datenbank nicht gefunden werden.".formatted(enmLehrer.id));
+			DTOLehrerNotenmodulCredentials cred = mapLehrerCreds.get(enmLehrer.id);
+			final DTOTimestampsLehrerNotenmodulCredentials credTS = mapLehrerCredsTimestamps.get(enmLehrer.id);
+			if (isTimestampAfter(enmLehrer.tsPasswordHash, credTS == null ? null : credTS.tsPasswordHash)) {
+				if (cred == null)
+					cred = new DTOLehrerNotenmodulCredentials(enmLehrer.id, "", enmLehrer.passwordHash);
+				else
+					cred.PasswordHash = enmLehrer.passwordHash;
+				conn.transactionPersist(cred);
+			}
+		}
+		conn.transactionFlush();
 	}
 
 

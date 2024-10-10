@@ -404,7 +404,7 @@ export class ENMDatenManager extends JavaObject {
 
 	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
-	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
+	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String, String, String)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Lehrers
