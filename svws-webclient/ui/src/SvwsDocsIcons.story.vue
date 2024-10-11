@@ -308,24 +308,24 @@
 <style lang="postcss" scoped>
 
 	.svws-docs-icon-table {
-		@apply w-full;
+		@apply w-full text-ui;
 
 		+ .svws-docs-icon-table {
 			@apply mt-8;
 		}
 
 		tr {
-			@apply grid border-b border-black/10 last:border-0;
+			@apply grid border-b border-ui-secondary last:border-0;
 			grid-template-columns: 0.25fr 1fr 2fr;
 
 			&:hover {
-				@apply text-svws;
+				@apply text-ui-hover;
 			}
 		}
 
 		th,
 		td {
-			@apply py-1 px-2 border-r border-black/10 last:border-0 h-full flex items-center leading-tight;
+			@apply py-1 px-2 border-r border-ui-secondary last:border-0 h-full flex items-center leading-tight;
 
 			svg {
 				@apply text-headline-md;
@@ -333,7 +333,7 @@
 		}
 
 		code {
-			@apply select-all bg-black/5 rounded px-1 -my-0.5 dark:bg-white/5;
+			@apply select-all bg-ui-neutral rounded px-1 -my-0.5;
 		}
 
 		th {
