@@ -52,6 +52,7 @@
 
 <style lang="postcss">
 .badge {
+	@apply border;
 	@apply font-bold leading-none;
 	@apply rounded inline-flex items-center align-text-top;
 	font-size: 0.65em;
@@ -70,33 +71,33 @@
 }
 
 .badge--error {
-	@apply bg-error;
-	@apply border-error;
-	@apply text-white;
+	@apply bg-ui-danger;
+	@apply border-ui-danger;
+	@apply text-ui-ondanger;
 }
 
 .badge--primary {
-	@apply bg-primary;
-	@apply border-primary;
-	@apply text-white;
+	@apply bg-ui-brand;
+	@apply border-ui-brand;
+	@apply text-ui-onbrand;
 }
 
 .badge--light {
-	@apply bg-light dark:bg-white/10;
-	@apply border border-black/5 dark:border-white/20;
-	@apply text-dark dark:text-white;
+	@apply bg-ui-neutral;
+	@apply border-ui-secondary;
+	@apply text-ui-onneutral;
 }
 
 .badge--success {
-	@apply bg-success;
-	@apply border-success;
-	@apply text-dark;
+	@apply bg-ui-success;
+	@apply border-ui-success;
+	@apply text-ui-onsuccess;
 }
 
 .badge--highlight {
-	@apply bg-highlight;
-	@apply border-highlight;
-	@apply text-dark;
+	@apply bg-ui-warning;
+	@apply border-ui-warning;
+	@apply text-ui-onwarning;
 }
 
 .badge--short {

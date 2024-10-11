@@ -1,42 +1,33 @@
 <script setup lang="ts">
+	type BadgeType = 'primary' | 'success' | 'error' | 'highlight' | 'light';
+	type BadgeSize = 'small' | 'normal' | 'medium' | 'big';
+
+	interface Variant {
+		title: string;
+		id: string;
+		type?: BadgeType;
+		size?: BadgeSize;
+	}
+
+	const variants: Variant[] = [
+		{ title: 'Primary', id: 'Primary', type: 'primary' },
+		{ title: 'Success', id: 'Success', type: 'success' },
+		{ title: 'Error', id: 'Error', type: 'error' },
+		{ title: 'Highlight', id: 'Highlight', type: 'highlight' },
+		{ title: 'Light', id: 'Light', type: 'light' },
+		{ title: 'Small', id: 'Small', size: 'small' },
+		{ title: 'Normal', id: 'Normal', size: 'normal' },
+		{ title: 'Medium', id: 'Medium', size: 'medium' },
+		{ title: 'Big', id: 'Big', size: 'big' },
+	];
 </script>
 
 <template>
 	<Story title="Badge" id="svws-ui-badge" :layout="{type: 'grid', width: '45%'}" icon="ri:shield-line">
-		<Variant title="Primary" id="Primary">
-			<svws-ui-badge type="primary" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Success" id="Success">
-			<svws-ui-badge type="success" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Error" id="Error">
-			<svws-ui-badge type="error" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Highlight" id="Highlight">
-			<svws-ui-badge type="highlight" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Light" id="Light">
-			<svws-ui-badge type="light" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Small" id="Small">
-			<svws-ui-badge type="primary" size="small">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Normal" id="Normal">
-			<svws-ui-badge type="primary" size="normal">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Medium" id="Medium">
-			<svws-ui-badge type="primary" size="medium">Badge</svws-ui-badge>
-		</Variant>
-
-		<Variant title="Big" id="Big">
-			<svws-ui-badge type="primary" size="big">Badge</svws-ui-badge>
+		<Variant v-for="variant in variants" :key="variant.id" :title="variant.title" :id="variant.id">
+			<div class="p-4">
+				<svws-ui-badge :type="variant.type" :size="variant.size">Badge</svws-ui-badge>
+			</div>
 		</Variant>
 	</Story>
 </template>
