@@ -12,6 +12,7 @@
 <style lang="postcss">
 	.svws-ui-header,
 	.page--header {
+		@apply text-ui;
 		@apply px-6 lg:px-9 3xl:px-12 4xl:px-20;
 		@apply py-2 gap-2;
 		@apply flex-shrink-0 flex flex-col justify-center;
@@ -38,7 +39,8 @@
 		}
 
 		.svws-subline {
-			@apply opacity-50 w-full;
+			@apply text-ui-secondary;
+			@apply w-full;
 		}
 	}
 

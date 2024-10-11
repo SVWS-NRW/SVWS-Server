@@ -37,15 +37,16 @@
 		@apply h-fit;
 
 		&.svws-has-background {
-			@apply bg-light dark:bg-white/5 px-6 py-3;
+			@apply bg-ui-neutral;
+			@apply px-6 py-3;
 
-      &:first-child {
-        @apply pt-6;
-      }
+			&:first-child {
+				@apply pt-6;
+			}
 
-      &:last-child {
-        @apply pb-6;
-      }
+			&:last-child {
+				@apply pb-6;
+			}
 
 			.svws-ui-table {
 				@apply rounded-lg;
@@ -78,8 +79,8 @@
 		}
 
 		&--headline {
+			@apply text-ui;
 			@apply text-headline-md;
-			@apply text-black dark:text-white;
 			@apply flex-shrink-0 max-w-full leading-none;
 
 			&--large {
@@ -117,7 +118,7 @@
 	}
 
 	.content-card--wrapper--light-bg .content-card--header {
-		@apply bg-white dark:bg-black;
+		@apply bg-ui;
 	}
 
 	.page--wrapper[class*="gost_kursplanung_halbjahr_ergebnis"] .svws-ui-tab-content {
