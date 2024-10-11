@@ -1,8 +1,10 @@
 <template>
-	<Story title="Action Button" id="svws-ui-action-button" icon="ri:cursor-line" auto-props-disabled responsive-disabled>
+	<Story title="Action Button" id="svws-ui-action-button" icon="ri:cursor-line" auto-props-disabled>
 		<Variant title="Default" id="Default" :source="source">
-			<svws-ui-action-button :title="state.title" :description="state.description" :icon="state.icon" :is-loading="state.isLoading" :action-function="() => console.log('Action')" :action-label="state.actionLabel" :action-disabled="state.actionDisabled">Button</svws-ui-action-button>
-			<svws-ui-action-button title="Another Action Button">Inhalt</svws-ui-action-button>
+			<div class="p-4">
+				<svws-ui-action-button :title="state.title" @click="state.isActive = !state.isActive" :description="state.description" :icon="state.icon" :is-active="state.isActive" :is-loading="state.isLoading" :action-function="() => console.log('Action')" :action-label="state.actionLabel" :action-disabled="state.actionDisabled"><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, quisquam sunt. Repellat adipisci maiores dolore sed porro ducimus soluta eligendi delectus veritatis modi, dignissimos impedit numquam corporis! Expedita, veritatis dolor.</p></svws-ui-action-button>
+				<svws-ui-action-button title="Another Action Button">Inhalt</svws-ui-action-button>
+			</div>
 
 			<template #controls>
 				<HstText v-model="state.title" title="Title" />
@@ -30,6 +32,7 @@
 		description: 'Description',
 		icon: 'i-ri-archive-line',
 		isLoading: false,
+		isActive: true,
 		actionLabel: '',
 		actionDisabled: false,
 	})
