@@ -86,14 +86,28 @@
 	}
 
 	&--active {
-		@apply bg-svws/10 text-svws dark:bg-svws/20;
+		@apply bg-ui-selected text-ui-onselected;
+
+		&:focus {
+			@apply outline-none;
+		}
+
+		&:hover,
+		&:focus-visible {
+			@apply bg-ui-selected text-ui-onselected;
+		}
+
+		&:focus-visible {
+			@apply ring ring-ui-brand;
+		}
+
 		.icon-lg {
 			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-		}
+		} /* TODO: COLORS icon */
 
 		&.sidebar--menu-item--statistik {
-			@apply bg-violet-500/20 text-violet-500;
+			@apply bg-ui-statistic-weak text-ui-statistic;
 		}
 	}
 }
@@ -105,7 +119,7 @@
 .sidebar--menu--footer .sidebar--menu-item:hover,
 .sidebar--menu--footer .sidebar--menu-item:focus {
 	&:not(.sidebar--menu-item--active) {
-		@apply bg-black/10 dark:bg-white/10;
+		@apply bg-ui-hover;
 	}
 }
 
@@ -121,15 +135,20 @@
 }
 
 .secondary-menu--content .sidebar--menu-item {
-	@apply text-black dark:text-white px-3 inline-block my-1;
+	@apply text-ui;
+	@apply px-3 inline-block my-1;
+
+	&:focus {
+		@apply outline-none;
+	}
 
 	&:hover,
-	&:focus {
-		@apply bg-light dark:bg-white/5;
+	&:focus-visible {
+		@apply bg-ui-hover;
 	}
 
 	&--active {
-		@apply bg-svws/5 text-svws;
+		@apply bg-ui-selected text-ui-onselected;
 	}
 }
 
@@ -162,9 +181,8 @@
 	&,
 	&:hover,
 	&:focus {
-		@apply bg-light border-black text-black !important;
-		@apply opacity-25;
-		@apply cursor-not-allowed;
+		@apply bg-ui-disabled text-ui-disabled border-ui-disabled !important;
+		@apply pointer-events-none;
 	}
 }
 </style>

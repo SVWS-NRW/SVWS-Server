@@ -10,10 +10,10 @@
 		</div>
 		<div class="sidebar--menu--footer">
 			<slot name="footer" />
-			<div class="sidebar--menu--footer-credits flex flex-col items-center opacity-25 dark:opacity-50">
+			<div class="sidebar--menu--footer-credits flex flex-col items-center text-ui-secondary">
 				<div class="text-sm mt-2 mb-2 text-center">Powered by<br>SVWS NRW</div>
 				<button role="link" @click="showModalInfo().value = true"
-					class="mb-1 hover:opacity-100 underline hover:no-underline text-sm">
+					class="mb-1 underline hover:text-ui-secondary-hover text-sm">
 					Client Info
 				</button>
 			</div>
@@ -29,7 +29,7 @@
 					Version
 					<slot name="version" />
 				</div>
-				<p class="text-left opacity-50">
+				<p class="text-left text-ui-secondary">
 					Hinweis: Um eine gute Lesbarkeit zu erzeugen, wird bei SVWS-NRW möglichst auf geschlechtsneutrale
 					Begriffe wie Lehrkräfte, Klassenleitung, Erzieher usw. zurückgegriffen. An Stellen, wo das nicht
 					möglich ist, wird versucht alle Geschlechter gleichermaßen zu berücksichtigen.
@@ -83,6 +83,7 @@
 
 <style lang="postcss">
 .sidebar--menu {
+	@apply text-ui;
 	@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
 
 	@media (orientation: portrait) {
