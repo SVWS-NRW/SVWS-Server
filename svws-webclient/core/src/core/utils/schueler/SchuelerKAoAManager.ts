@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { JahrgaengeKatalogEintrag } from '../../../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
@@ -27,6 +28,7 @@ import { JavaLong } from '../../../java/lang/JavaLong';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
 import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
+import { KAOABerufsfeldKatalogEintrag } from '../../../asd/data/kaoa/KAOABerufsfeldKatalogEintrag';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
@@ -319,84 +321,84 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	/**
 	 * Gibt alle KAoA Kategorien zurück, die den gegebenen Jahrgang beinhalten
 	 *
-	 * @param jahrgang jahrgang
+	 * @param jahrgaengeEintrag jahrgang
 	 *
 	 * @return Die KAoA Kategorien
 	 */
-	public getKAOAKategorienByJahrgangAuswahl(jahrgang : Jahrgaenge | null) : List<KAOAKategorie> {
-		const result : List<KAOAKategorie> = new ArrayList<KAOAKategorie>();
-		if (jahrgang === null)
+	public getKAOAKategorienByJahrgangAuswahl(jahrgaengeEintrag : JahrgaengeKatalogEintrag | null) : List<KAOAKategorieKatalogEintrag> {
+		const result : List<KAOAKategorieKatalogEintrag> = new ArrayList<KAOAKategorieKatalogEintrag>();
+		if (jahrgaengeEintrag === null)
 			return result;
 		const kategorien : List<KAOAKategorie> | null = this.getKAOAKategorien();
 		for (const k of kategorien)
-			if (k.hatJahrgang(this.getSchuljahr(), jahrgang))
-				result.add(k);
+			if (k.hatJahrgang(this.getSchuljahr(), Jahrgaenge.data().getWertByID(jahrgaengeEintrag.id)))
+				result.add(k.daten(this.getSchuljahr()));
 		return result;
 	}
 
 	/**
 	 * Gibt alle KAoA Merkmale zurück, die der angegebenen Kategorie zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
 	 *
-	 * @param kategorie Die Kategorie
+	 * @param kategorieEintrag Die Kategorie
 	 *
 	 * @return Die KAoA Merkmale
 	 */
-	public getKAOAMerkmaleByKategorie(kategorie : KAOAKategorie | null) : List<KAOAMerkmal> {
-		if (kategorie === null)
-			return Collections.emptyList();
-		const kategorieEintrag : KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
+	public getKAOAMerkmaleByKategorie(kategorieEintrag : KAOAKategorieKatalogEintrag | null) : List<KAOAMerkmalKatalogEintrag> {
 		if (kategorieEintrag === null)
-			return new ArrayList();
-		return MapUtils.getOrCreateArrayList(this._mapMerkmalByKategorie, kategorieEintrag.kuerzel);
+			return Collections.emptyList();
+		const merkmale : List<KAOAMerkmalKatalogEintrag> | null = new ArrayList<KAOAMerkmalKatalogEintrag>();
+		for (const merkmal of MapUtils.getOrCreateArrayList(this._mapMerkmalByKategorie, kategorieEintrag.kuerzel))
+			merkmale.add(merkmal.daten(this.getSchuljahr()));
+		return merkmale;
 	}
 
 	/**
-	 * Gibt alle Zusatzmerkmale zurück, die dem angegeben Merkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
+	 * Gibt alle Zusatzmerkmale zurück, die dem angegebenen Merkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
 	 *
-	 * @param merkmal Das Merkmal
+	 * @param merkmalEintrag Das Merkmal
 	 *
 	 * @return Die Zusatzmerkmale
 	 */
-	public getKAOAZusatzmerkmaleByMerkmal(merkmal : KAOAMerkmal | null) : List<KAOAZusatzmerkmal> {
-		if (merkmal === null)
-			return Collections.emptyList();
-		const merkmalEintrag : KAOAMerkmalKatalogEintrag | null = merkmal.daten(this.getSchuljahr());
+	public getKAOAZusatzmerkmaleByMerkmal(merkmalEintrag : KAOAMerkmalKatalogEintrag | null) : List<KAOAZusatzmerkmalKatalogEintrag> {
 		if (merkmalEintrag === null)
-			return new ArrayList();
-		return MapUtils.getOrCreateArrayList(this._mapZusatzmerkmalByMerkmal, merkmalEintrag.kuerzel);
+			return Collections.emptyList();
+		const zusatzmerkmale : List<KAOAZusatzmerkmalKatalogEintrag> | null = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
+		for (const zusatzmerkmal of MapUtils.getOrCreateArrayList(this._mapZusatzmerkmalByMerkmal, merkmalEintrag.kuerzel))
+			zusatzmerkmale.add(zusatzmerkmal.daten(this.getSchuljahr()));
+		return zusatzmerkmale;
 	}
 
 	/**
 	 * Gibt alle KAoA Anschlussoptionen zurück, die dem angegebenen Zusatzmerkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste
 	 * zurückgegeben.
 	 *
-	 * @param zusatzmerkmal Das Zusatzmerkmal
+	 * @param zusatzmerkmalEintrag Das Zusatzmerkmal
 	 *
 	 * @return Die Anschlussoptionen
 	 */
-	public getKAOAAnschlussoptionenByZusatzmerkmal(zusatzmerkmal : KAOAZusatzmerkmal | null) : List<KAOAAnschlussoptionen> {
-		if (zusatzmerkmal === null)
-			return Collections.emptyList();
-		const zusatzmerkmalEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(this.getSchuljahr());
+	public getKAOAAnschlussoptionenByZusatzmerkmal(zusatzmerkmalEintrag : KAOAZusatzmerkmalKatalogEintrag | null) : List<KAOAAnschlussoptionenKatalogEintrag> {
 		if (zusatzmerkmalEintrag === null)
-			return new ArrayList();
-		return MapUtils.getOrCreateArrayList(this._mapAnschlussoptionByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel);
+			return Collections.emptyList();
+		const anschlussoptionen : List<KAOAAnschlussoptionenKatalogEintrag> | null = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
+		for (const anschlussoption of MapUtils.getOrCreateArrayList(this._mapAnschlussoptionByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel))
+			anschlussoptionen.add(anschlussoption.daten(this.getSchuljahr()));
+		return anschlussoptionen;
 	}
 
 	/**
 	 * Gibt alle Ebene4 Optionen zurück, die dem angegebenen Zusatzmerkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
 	 *
-	 * @param zusatzmerkmal Das Zusatzmerkmal
+	 * @param zusatzmerkmalEintrag Das Zusatzmerkmal
 	 *
 	 * @return Die Ebene4 Optionen
 	 */
-	public getKAOAEbene4ByZusatzmerkmal(zusatzmerkmal : KAOAZusatzmerkmal | null) : List<KAOAEbene4> {
-		if (zusatzmerkmal === null)
-			return Collections.emptyList();
-		const zusatzmerkmalEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(this.getSchuljahr());
+	public getKAOAEbene4ByZusatzmerkmal(zusatzmerkmalEintrag : KAOAZusatzmerkmalKatalogEintrag | null) : List<KAOAEbene4KatalogEintrag> {
 		if (zusatzmerkmalEintrag === null)
-			return new ArrayList();
-		return MapUtils.getOrCreateArrayList(this._mapEbene4ByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel);
+			return Collections.emptyList();
+		const ebene4liste : List<KAOAEbene4KatalogEintrag> | null = new ArrayList<KAOAEbene4KatalogEintrag>();
+		for (const ebene4 of MapUtils.getOrCreateArrayList(this._mapEbene4ByZusatzmerkmal, zusatzmerkmalEintrag.kuerzel))
+			ebene4liste.add(ebene4.daten(this.getSchuljahr()));
+		return ebene4liste;
 	}
 
 	/**
@@ -404,8 +406,11 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	 *
 	 * @return Die Berufsfelder
 	 */
-	public getKAOABerufsfelder() : List<KAOABerufsfeld> {
-		return this._berufsfelder;
+	public getKAOABerufsfelder() : List<KAOABerufsfeldKatalogEintrag> {
+		const berufsfelder : List<KAOABerufsfeldKatalogEintrag> | null = new ArrayList<KAOABerufsfeldKatalogEintrag>();
+		for (const berufsfeld of this._berufsfelder)
+			berufsfelder.add(berufsfeld.daten(this.getSchuljahr()));
+		return berufsfelder;
 	}
 
 	transpilerCanonicalName(): string {

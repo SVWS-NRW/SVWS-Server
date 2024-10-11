@@ -3,22 +3,13 @@
 	<div class="page--content">
 		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().getSchuelerKAoADatenAuswahl()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectedEntry = item">
 			<template #cell(idKategorie)="{ value } : { value: number }">
-				<span>
-					{{ KAOAKategorie.data().getEintragByID(value)?.kuerzel || "" }}
-					{{ KAOAKategorie.data().getEintragByID(value)?.text || "" }}
-				</span>
+				<span>{{ getKategorieFullName(value) }}</span>
 			</template>
 			<template #cell(idMerkmal)="{ value } : { value: number }">
-				<span>
-					{{ KAOAMerkmal.data().getEintragByID(value)?.kuerzel || "" }}
-					{{ KAOAMerkmal.data().getEintragByID(value)?.text || "" }}
-				</span>
+				<span>{{ getMerkmalFullName(value) }}</span>
 			</template>
 			<template #cell(idZusatzmerkmal)="{ value } : { value: number }">
-				<span>
-					{{ KAOAZusatzmerkmal.data().getEintragByID(value)?.kuerzel || "" }}
-					{{ KAOAZusatzmerkmal.data().getEintragByID(value)?.text || "" }}
-				</span>
+				<span>{{ getZusatzmerkmalFullName(value) }}</span>
 			</template>
 		</svws-ui-table>
 		<svws-ui-button title="DeleteButton" v-if="selectedEntry" @click="deleteEntry">
@@ -27,12 +18,12 @@
 		<br>
 		<div>
 			<svws-ui-select title="KAoAKategorie" :items="props.schuelerKaoaManager().getKAOAKategorienByJahrgangAuswahl(jahrgangAuswahl)" :item-text="itemText" v-model="selectedKategorie" />
-			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(kaoaKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
-			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(kaoaMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
-			<svws-ui-select title="KAoAEbene4" v-if="selectedZusatzmerkmal && optionsartIsEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(kaoaZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />
-			<svws-ui-select title="KAoAAnschlussoption" v-if="selectedZusatzmerkmal && optionsartIsAnschlussoption" :items="props.schuelerKaoaManager().getKAOAAnschlussoptionenByZusatzmerkmal(kaoaZusatzmerkmal)" :item-text="itemText" v-model="selectedAnschlussoption" />
-			<svws-ui-select title="KAoABerufsfeld" v-if="selectedZusatzmerkmal && optionsartIsBerufsfeld" :items="props.schuelerKaoaManager().getKAOABerufsfelder()" :item-text="itemText" v-model="selectedBerufsfeld" />
-			<svws-ui-text-input title="Bemerkung" v-if="selectedZusatzmerkmal && optionsartIsBemerkung" v-model="selectedBemerkung" placeholder="Freitext" type="text" />
+			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(selectedKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
+			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(selectedMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
+			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />
+			<svws-ui-select title="KAoAAnschlussoption" v-if="selectedZusatzmerkmal && showAnschlussoption" :items="props.schuelerKaoaManager().getKAOAAnschlussoptionenByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedAnschlussoption" />
+			<svws-ui-select title="KAoABerufsfeld" v-if="showBerufsfeld" :items="props.schuelerKaoaManager().getKAOABerufsfelder()" :item-text="itemText" v-model="selectedBerufsfeld" />
+			<svws-ui-text-input title="Bemerkung" v-if="showFreitext" v-model="selectedBemerkung" placeholder="Freitext" type="text" />
 			<svws-ui-button title="AddButton" v-if="validateRequiredFieldsFilled()" @click="add">
 				<span class="icon i-ri-add-line" />
 			</svws-ui-button>
@@ -42,35 +33,35 @@
 
 <script setup lang="ts">
 	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
-	import type { SchuelerKAoADaten } from "@core";
-	import { Jahrgaenge, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
+	import type {CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten,
+		KAOAEbene4KatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag} from "@core";
+	import { Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { ref, computed, watch } from 'vue';
 
-
 	const props = defineProps<SchuelerKAoAProps>();
-	const selectedKategorie = ref<KAOAKategorie | null>(null);
-	const selectedMerkmal = ref<KAOAMerkmal | null>(null);
-	const selectedZusatzmerkmal = ref<KAOAZusatzmerkmal | null>(null);
-	const selectedEbene4 = ref<KAOAEbene4 | null>(null);
-	const selectedAnschlussoption = ref<KAOAAnschlussoptionen | null>(null);
-	const selectedBerufsfeld = ref<KAOABerufsfeld | null>(null);
+
+	const selectedKategorie = ref<KAOAKategorieKatalogEintrag | null>(null);
+	const selectedMerkmal = ref<KAOAMerkmalKatalogEintrag | null>(null);
+	const selectedZusatzmerkmal = ref<KAOAZusatzmerkmalKatalogEintrag | null>(null);
+	const selectedEbene4 = ref<KAOAEbene4KatalogEintrag | null>(null);
+	const selectedAnschlussoption = ref<KAOAAnschlussoptionenKatalogEintrag | null>(null);
+	const selectedBerufsfeld = ref<KAOABerufsfeldKatalogEintrag | null>(null);
 	const selectedBemerkung = ref<string | null>(null)
 	const selectedEntry = ref<SchuelerKAoADaten | null>()
+
 	const schuljahr = computed(() => props.schuelerKaoaManager().getSchuljahr())
-	const optionsart = computed(() => (kaoaZusatzmerkmal.value?.daten(schuljahr.value)) ? kaoaZusatzmerkmal.value.daten(schuljahr.value)?.optionsart : null);
-	const optionsartIsEbene4 = computed(() => optionsart.value === 'SBO_EBENE_4');
-	const optionsartIsAnschlussoption = computed(() => optionsart.value === 'ANSCHLUSSOPTION');
-	const optionsartIsBerufsfeld = computed(() => optionsart.value === 'BERUFSFELD');
-	const optionsartIsBemerkung = computed(() => (optionsart.value === 'FREITEXT') || (optionsart.value === 'FREITEXT_BERUF'));
-	const kaoaKategorie = computed(() => (selectedKategorie.value?.name) ? KAOAKategorie.data().getWertByBezeichner(selectedKategorie.value.name()) : null);
-	const kaoaMerkmal = computed(() => (selectedMerkmal.value?.name) ? KAOAMerkmal.data().getWertByBezeichner(selectedMerkmal.value.name()) : null);
-	const kaoaZusatzmerkmal = computed(() => (selectedZusatzmerkmal.value?.name) ? KAOAZusatzmerkmal.data().getWertByBezeichner(selectedZusatzmerkmal.value.name()) : null);
-	const kaoaBerufsfeld = computed(() => (selectedBerufsfeld.value?.name) ? KAOABerufsfeld.data().getWertByBezeichner(selectedBerufsfeld.value.name()) : null);
-	const kaoaEbene4 = computed(() => (selectedEbene4.value?.name) ? KAOAEbene4.data().getWertByBezeichner(selectedEbene4.value.name()) : null);
-	const kaoaAnschlussoption = computed(() => (selectedAnschlussoption.value?.name) ? KAOAAnschlussoptionen.data().getWertByBezeichner(selectedAnschlussoption.value.name()) : null);
-	const jahrgangAuswahl = computed (() => Jahrgaenge.data().getWertByKuerzel(props.auswahl().jahrgang));
-	const itemText = computed(() => (i: { daten: (schuljahr: number) => any }) => i.daten(schuljahr.value).kuerzel + '- ' + i.daten(schuljahr.value).text);
+	const optionsart = computed(() => selectedZusatzmerkmal.value?.optionsart);
+
+	const showEbene4 = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'SBO_EBENE_4'));
+	const showAnschlussoption = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'ANSCHLUSSOPTION'));
+	const showBerufsfeld = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'BERUFSFELD'));
+	const showFreitext = computed(() => (selectedZusatzmerkmal.value !== null) && ((optionsart.value === 'FREITEXT') || (optionsart.value === 'FREITEXT_BERUF')));
+
+	const jahrgangAuswahl = computed (() => Jahrgaenge.data().getWertByKuerzel(props.auswahl().jahrgang)?.daten(schuljahr.value));
+
+	const itemText = computed(() => (i: CoreTypeData) => i.kuerzel + '- ' + i.text);
+
 	function validateRequiredFieldsFilled() {
 		if (!selectedKategorie.value || !selectedMerkmal.value || !selectedZusatzmerkmal.value || optionsart.value === null)
 			return false;
@@ -94,18 +85,16 @@
 	async function add(){
 		if (!validateRequiredFieldsFilled())
 			return false //todo Fehlerbehandlung
-		if (jahrgangAuswahl.value === null)
-			return false //todo Fehlerbehandlung
 		const data: Partial<SchuelerKAoADaten> = {
 			idSchuljahresabschnitt: props.schuelerKaoaManager().getSchuljahresabschnittAuswahl()?.id,
-			idJahrgang: Jahrgaenge.data().getEintragBySchuljahrUndWert(schuljahr.value, jahrgangAuswahl.value)?.id,
-			idKategorie: kaoaKategorie.value?.daten(schuljahr.value)?.id,
-			idMerkmal: kaoaMerkmal.value?.daten(schuljahr.value)?.id,
-			idZusatzmerkmal: kaoaZusatzmerkmal.value?.daten(schuljahr.value)?.id,
-			idBerufsfeld: optionsart.value === 'BERUFSFELD' ? kaoaBerufsfeld.value?.daten(schuljahr.value)?.id : null,
-			idEbene4: optionsart.value === 'SBO_EBENE_4' ? kaoaEbene4.value?.daten(schuljahr.value)?.id : null,
-			idAnschlussoption: optionsart.value === 'ANSCHLUSSOPTION' ? kaoaAnschlussoption.value?.daten(schuljahr.value)?.id : null,
-			bemerkung: (optionsart.value === 'FREITEXT' || optionsart.value === 'FREITEXT_BERUF') ? selectedBemerkung.value : null,
+			idJahrgang: jahrgangAuswahl.value?.id,
+			idKategorie: selectedKategorie.value?.id,
+			idMerkmal: selectedMerkmal.value?.id,
+			idZusatzmerkmal: selectedZusatzmerkmal.value?.id,
+			idBerufsfeld: selectedBerufsfeld.value?.id,
+			idEbene4: selectedEbene4.value?.id,
+			idAnschlussoption: selectedAnschlussoption.value?.id,
+			bemerkung: selectedBemerkung.value,
 		}
 		const idSchueler = props.auswahl().id;
 		await props.addKaoaDaten(data, idSchueler)
@@ -159,4 +148,19 @@
 		{ key: "idMerkmal", label: "Merkmal", sortable: true, align: "center" },
 		{ key: "idZusatzmerkmal", label: "Zusatzmerkmal", sortable: true, align: "center" },
 	];
+
+	function getKategorieFullName(kategorieId: number) {
+		const kategorieEintrag = KAOAKategorie.data().getEintragByID(kategorieId);
+		return kategorieEintrag?.kuerzel + " " + kategorieEintrag?.text
+	}
+
+	function getMerkmalFullName(merkmalId: number) {
+		const merkmalEintrag = KAOAMerkmal.data().getEintragByID(merkmalId);
+		return merkmalEintrag?.kuerzel + " " + merkmalEintrag?.text
+	}
+
+	function getZusatzmerkmalFullName(zusatzmerkmalId: number) {
+		const zusatzmerkmalEintrag = KAOAZusatzmerkmal.data().getEintragByID(zusatzmerkmalId);
+		return zusatzmerkmalEintrag?.kuerzel + " " + zusatzmerkmalEintrag?.text
+	}
 </script>
