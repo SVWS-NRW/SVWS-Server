@@ -110,3 +110,9 @@
 	const selectedTab = ref(tabManager().tab);
 
 </script>
+
+<style lang="postcss" scoped>
+.histoire-generic-render-story .app--layout {
+	@apply h-[60vh];
+}
+</style>

@@ -9,47 +9,47 @@
 				<svws-ui-menu>
 					<template #header>
 						<div class="flex items-center justify-center w-full">
-							<span class="inline-block h-12 rounded-xl animate-pulse w-12 bg-black/5 dark:bg-white/5" />
+							<span class="inline-block h-12 rounded-xl animate-pulse w-12 bg-ui-disabled" />
 						</div>
 					</template>
 					<template #default>
 						<svws-ui-menu-item :active="false">
 							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-ui-disabled" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-ui-disabled" />
 							</template>
 						</svws-ui-menu-item>
 						<svws-ui-menu-item :active="false">
 							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-ui-disabled" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-ui-disabled" />
 							</template>
 						</svws-ui-menu-item>
 						<svws-ui-menu-item :active="false">
 							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-ui-disabled" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-ui-disabled" />
 							</template>
 						</svws-ui-menu-item>
 					</template>
 					<template #footer>
 						<svws-ui-menu-item :active="false">
 							<template #label>
-								<span class="inline-block h-3 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+								<span class="inline-block h-3 rounded animate-pulse w-16 bg-ui-disabled" />
 							</template>
 							<template #icon>
-								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-black/5 dark:bg-white/5" />
+								<span class="inline-block h-5 rounded-full animate-pulse w-5 bg-ui-disabled" />
 							</template>
 						</svws-ui-menu-item>
 					</template>
 					<template #version>
-						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10" />
+						<span class="inline-block h-4 rounded animate-pulse w-16 bg-ui-disabled" />
 					</template>
 				</svws-ui-menu>
 			</template>
@@ -74,7 +74,7 @@
 							<span>SVWS NRW</span>
 						</template>
 						<template #abschnitt>
-							<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+							<span class="inline-block h-4 rounded animate-pulse w-16 bg-ui-disabled -mb-1" />
 						</template>
 					</svws-ui-secondary-menu>
 				</template>
@@ -112,7 +112,7 @@
 					<svws-ui-header>
 						<div class="flex items-center">
 							<div class="w-20 mr-6">
-								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-ui-disabled" />
 							</div>
 							<div class="animate-pulse">
 								<span>Daten</span>
@@ -205,10 +205,10 @@
 <style lang="postcss">
 	html {
 		font-size: 10px;
-		@apply bg-light;
+		@apply bg-ui-neutral text-ui;
 
 		&.dark {
-			@apply bg-[#000] text-white;
+			@apply bg-ui-black;
 		}
 
 		&.font-size-small {
@@ -235,7 +235,7 @@
 	}
 
 	.app--layout {
-		@apply relative h-screen w-full overflow-hidden;
+		@apply relative h-screen w-full overflow-hidden bg-ui-neutral;
 		@apply flex flex-row gap-2 p-2;
 		/*@apply max-w-[220rem] mx-auto;*/
 	}
@@ -253,10 +253,9 @@
 	.app--sidebar,
 	.app--second-sidebar,
 	.app--content-container {
-		@apply bg-white dark:bg-black rounded-3xl;
-		@apply h-full;
+		@apply bg-ui;
+		@apply h-full rounded-3xl;
 		@apply flex flex-col;
-		@apply border border-black/10 dark:border-white/5;
 		@apply overflow-y-auto;
 	}
 
@@ -273,7 +272,7 @@
 
 		.app--sidebar-container {
 			@apply rounded-2xl h-full;
-			@apply border border-black/20 dark:border-white/20;
+      @apply border border-ui-secondary;
 		}
 
 		.secondary-menu--headline {
@@ -284,15 +283,24 @@
 			@apply absolute right-0 top-0 z-40 pt-4 pr-2 flex flex-col;
 
 			button {
-				@apply rounded-lg text-black/50 dark:text-white/50 p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				@apply rounded-lg text-ui-secondary p-0.5 inline-flex flex-col items-center gap-1 text-headline-sm;
+				/* TODO: COLORS icon */
 
 				svg {
 					@apply flex-shrink-0 text-headline-md;
 				}
 
+				&:focus {
+					@apply outline-none;
+				}
+
 				&:hover,
 				&:focus-visible {
-					@apply bg-black/10 dark:bg-white/10 text-black dark:text-white;
+					@apply bg-ui-hover text-ui;
+				}
+
+				&:focus-visible {
+					@apply ring ring-ui;
 				}
 			}
 
@@ -464,8 +472,8 @@
 	}
 
 	.app-layout--aside {
-		@apply -ml-4 z-50 w-1/2 absolute top-5 right-5 bottom-5 rounded-2xl;
-		@apply shadow-xl bg-white dark:bg-black border border-black/10 dark:border-white/10;
+		@apply bg-ui text-ui border border-ui-secondary;
+		@apply -ml-4 z-50 w-1/2 absolute top-9 right-2 bottom-2 rounded-2xl;
 	}
 
 	.app--sidebar-container,
