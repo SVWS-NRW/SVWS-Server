@@ -7,17 +7,26 @@
     --color-bg-ui-brand-hover: theme('colors.palette.brand.600');
     --color-bg-ui-statistic: theme('colors.palette.statistic.500');
     --color-bg-ui-statistic-hover: theme('colors.palette.statistic.600');
-    --color-bg-ui-selected: theme('colors.palette.brand.200');
-    --color-bg-ui-selected-hover: theme('colors.palette.brand.300');
+    --color-bg-ui-selected: theme('colors.palette.brand.50');
+    --color-bg-ui-selected-hover: theme('colors.palette.brand.500');
     --color-bg-ui-danger: theme('colors.palette.danger.500');
     --color-bg-ui-danger-hover: theme('colors.palette.danger.600');
     --color-bg-ui-success: theme('colors.palette.success.500');
     --color-bg-ui-success-hover: theme('colors.palette.success.600');
-    --color-bg-ui-warning: theme('colors.palette.warning.500');
-    --color-bg-ui-warning-hover: theme('colors.palette.warning.700');
+    --color-bg-ui-warning: theme('colors.palette.warning.400');
+    --color-bg-ui-warning-hover: theme('colors.palette.warning.600');
     --color-bg-ui-neutral: theme('colors.palette.neutral.200');
     --color-bg-ui-neutral-hover: theme('colors.palette.neutral.400');
     --color-bg-ui-disabled: theme('colors.palette.neutral.300');
+    --color-bg-ui-inverted: theme('colors.palette.neutral.900');
+    --color-bg-ui-white: theme('colors.palette.neutral.100');
+    --color-bg-ui-black: theme('colors.palette.neutral.900');
+    --color-bg-ui-brand-weak: theme('colors.palette.brand.50');
+    --color-bg-ui-statistic-weak: theme('colors.palette.statistic.50');
+    --color-bg-ui-danger-weak: theme('colors.palette.danger.50');
+    --color-bg-ui-success-weak: theme('colors.palette.success.50');
+    --color-bg-ui-warning-weak: theme('colors.palette.warning.50');
+    --color-bg-ui-neutral-weak: theme('colors.palette.neutral.50');
 
     --color-text-ui: theme('colors.palette.neutral.900');
     --color-text-ui-hover: theme('colors.palette.brand.500');
@@ -51,7 +60,7 @@
     --color-text-ui-neutral-hover: theme('colors.palette.neutral.600');
     --color-text-ui-neutral-secondary: theme('colors.palette.neutral.700');
     --color-text-ui-neutral-secondary-hover: theme('colors.palette.neutral.600');
-    --color-text-ui-disabled: theme('colors.palette.neutral.850');
+    --color-text-ui-disabled: theme('colors.palette.neutral.500');
     --color-text-ui-disabled-secondary: theme('colors.palette.neutral.850');
     --color-text-ui-onbrand: theme('colors.palette.neutral.100');
     --color-text-ui-onbrand-hover: theme('colors.palette.neutral.200');
@@ -61,10 +70,10 @@
     --color-text-ui-onstatistic-hover: theme('colors.palette.neutral.200');
     --color-text-ui-onstatistic-secondary: theme('colors.palette.statistic.200');
     --color-text-ui-onstatistic-secondary-hover: theme('colors.palette.statistic.200');
-    --color-text-ui-onselected: theme('colors.palette.brand.700');
-    --color-text-ui-onselected-hover: theme('colors.palette.brand.700');
-    --color-text-ui-onselected-secondary: theme('colors.palette.brand.500');
-    --color-text-ui-onselected-secondary-hover: theme('colors.palette.brand.500');
+    --color-text-ui-onselected: theme('colors.palette.brand.600');
+    --color-text-ui-onselected-hover: theme('colors.palette.brand.600');
+    --color-text-ui-onselected-secondary: theme('colors.palette.brand.400');
+    --color-text-ui-onselected-secondary-hover: theme('colors.palette.brand.400');
     --color-text-ui-ondanger: theme('colors.palette.neutral.100');
     --color-text-ui-ondanger-hover: theme('colors.palette.neutral.200');
     --color-text-ui-ondanger-secondary: theme('colors.palette.danger.200');
@@ -154,7 +163,7 @@
     --color-accent-ui-statistic: theme('colors.palette.statistic.500');
     --color-accent-ui-danger: theme('colors.palette.danger.500');
     --color-accent-ui-success: theme('colors.palette.success.500');
-    --color-accent-ui-warning: theme('colors.palette.warning.700');
+    --color-accent-ui-warning: theme('colors.palette.warning.300');
     --color-accent-ui-neutral: theme('colors.palette.neutral.900');
     --color-accent-ui-disabled: theme('colors.palette.neutral.600');
     --color-accent-ui-onbrand: theme('colors.palette.neutral.100');
@@ -175,27 +184,40 @@
     --color-ring-ui-neutral: rgba(0, 0, 0, 0.1);
 }
 
+html {
+    color: var(--color-text-ui);
+}
+
 .htw-dark,
 .dark {
     color-scheme: dark;
 
     --color-bg-ui: theme('colors.palette.neutral.800');
-    --color-bg-ui-hover: theme('colors.palette.neutral.700');
+    --color-bg-ui-hover: theme('colors.palette.neutral.750');
     --color-bg-ui-brand: theme('colors.palette.brand.500');
     --color-bg-ui-brand-hover: theme('colors.palette.brand.400');
     --color-bg-ui-statistic: theme('colors.palette.statistic.500');
     --color-bg-ui-statistic-hover: theme('colors.palette.statistic.400');
-    --color-bg-ui-selected: theme('colors.palette.brand.800');
-    --color-bg-ui-selected-hover: theme('colors.palette.brand.600');
+    --color-bg-ui-selected: theme('colors.palette.brand.900');
+    --color-bg-ui-selected-hover: theme('colors.palette.brand.500');
     --color-bg-ui-danger: theme('colors.palette.danger.500');
     --color-bg-ui-danger-hover: theme('colors.palette.danger.400');
     --color-bg-ui-success: theme('colors.palette.success.500');
     --color-bg-ui-success-hover: theme('colors.palette.success.400');
     --color-bg-ui-warning: theme('colors.palette.warning.500');
     --color-bg-ui-warning-hover: theme('colors.palette.warning.300');
-    --color-bg-ui-neutral: theme('colors.palette.neutral.700');
-    --color-bg-ui-neutral-hover: theme('colors.palette.neutral.600');
+    --color-bg-ui-neutral: theme('colors.palette.neutral.750');
+    --color-bg-ui-neutral-hover: theme('colors.palette.neutral.700');
     --color-bg-ui-disabled: theme('colors.palette.neutral.850');
+    --color-bg-ui-inverted: theme('colors.palette.neutral.100');
+    --color-bg-ui-white: theme('colors.palette.neutral.100');
+    --color-bg-ui-black: theme('colors.palette.neutral.900');
+    --color-bg-ui-brand-weak: theme('colors.palette.brand.50');
+    --color-bg-ui-statistic-weak: theme('colors.palette.statistic.50');
+    --color-bg-ui-danger-weak: theme('colors.palette.danger.50');
+    --color-bg-ui-success-weak: theme('colors.palette.success.50');
+    --color-bg-ui-warning-weak: theme('colors.palette.warning.50');
+    --color-bg-ui-neutral-weak: theme('colors.palette.neutral.950');
     
     --color-text-ui: theme('colors.palette.neutral.100');
     --color-text-ui-hover: theme('colors.palette.brand.400');
@@ -256,16 +278,16 @@
     --color-text-ui-onwarning-secondary: theme('colors.palette.warning.900');
     --color-text-ui-onwarning-secondary-hover: theme('colors.palette.warning.900');
     --color-text-ui-onneutral: theme('colors.palette.neutral.100');
-    --color-text-ui-onneutral-hover: theme('colors.palette.brand.300');
+    --color-text-ui-onneutral-hover: theme('colors.palette.brand.400');
     --color-text-ui-onneutral-secondary: theme('colors.palette.neutral.400');
     --color-text-ui-onneutral-secondary-hover: theme('colors.palette.brand.200');
     --color-text-ui-ondisabled: theme('colors.palette.neutral.700');
     --color-text-ui-ondisabled-secondary: theme('colors.palette.neutral.700');
     
-    --color-border-ui: theme('colors.palette.neutral.700');
-    --color-border-ui-hover: theme('colors.palette.brand.400');
-    --color-border-ui-secondary: theme('colors.palette.neutral.600');
-    --color-border-ui-secondary-hover: theme('colors.palette.brand.300');
+    --color-border-ui: theme('colors.palette.neutral.500');
+    --color-border-ui-hover: theme('colors.palette.brand.300');
+    --color-border-ui-secondary: theme('colors.palette.neutral.700');
+    --color-border-ui-secondary-hover: theme('colors.palette.brand.400');
     --color-border-ui-brand: theme('colors.palette.brand.400');
     --color-border-ui-brand-hover: theme('colors.palette.brand.300');
     --color-border-ui-brand-secondary: theme('colors.palette.brand.500');
@@ -290,7 +312,7 @@
     --color-border-ui-warning-hover: theme('colors.palette.warning.600');
     --color-border-ui-warning-secondary: theme('colors.palette.warning.800');
     --color-border-ui-warning-secondary-hover: theme('colors.palette.warning.700');
-    --color-border-ui-neutral: theme('colors.palette.neutral.600');
+    --color-border-ui-neutral: theme('colors.palette.neutral.700');
     --color-border-ui-neutral-hover: theme('colors.palette.neutral.500');
     --color-border-ui-neutral-secondary: theme('colors.palette.neutral.700');
     --color-border-ui-neutral-secondary-hover: theme('colors.palette.neutral.600');

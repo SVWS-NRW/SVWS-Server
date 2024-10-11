@@ -215,12 +215,15 @@
 
 	const semantics = {
 		type: ['bg', 'text', 'border', 'accent', 'ring'], // icon sind mit css filtern gefärbt und können aktuell nicht konform mit den tokens dargestellt werden
-		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'onneutral', 'ondisabled'],
-		prominence: ['', 'secondary'], // strong, weak
+		role: ['', 'brand', 'statistic', 'selected', 'danger', 'success', 'warning', 'neutral', 'disabled', 'onbrand', 'onstatistic', 'onselected', 'ondanger', 'onsuccess', 'onwarning', 'onneutral', 'ondisabled', 'inverted'],
+		prominence: ['', 'secondary', 'weak'], // strong, weak
 		interaction: ['', 'hover'], // active
 	}
 
 	function shouldExist(type = '', role = '', prominence = '', interaction = '') {
+		if((type === 'bg' && prominence === 'weak' && interaction === '' && !role.startsWith('on') && role !== 'disabled' && role !== 'inverted' && role !== 'selected' && role !== '')) {
+			return true;
+		}
 		if ((type === 'bg' && role !== '' && role.startsWith('on')) || (type === 'bg' && prominence !== '') || (role.includes('disabled') && interaction !== '')) {
 			return false;
 		}
@@ -228,6 +231,9 @@
 			return false;
 		}
 		if ((type === 'accent') && (role === 'selected' || prominence !== '' || interaction !== '')) {
+			return false;
+		}
+		if((type !== 'bg' && role === 'inverted') || (type === 'bg' && role === 'inverted' && interaction !== '') || (type !== 'bg' && prominence === 'weak')) {
 			return false;
 		}
 		return true;
