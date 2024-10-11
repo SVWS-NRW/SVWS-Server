@@ -66,6 +66,17 @@
 	@apply cursor-pointer relative;
 	@apply select-none;
 	@apply text-button;
+
+	&:focus-within input {
+		@apply rounded;
+		outline-color: var(--color-ring-ui-brand);
+	}
+
+	&.radio--statistics {
+		&:focus-within input {
+			outline-color: var(--color-ring-ui-statistic);
+		}
+	}
 }
 
 .radio--label--text {
@@ -84,46 +95,35 @@
 	.radio--row .radio--label--no-icon & {
 		padding-left: 0.75em;
 	}
-
-	&:focus {
-		@apply ring-svws/50;
-
-		.radio--statistics &,
-		.page--statistik & {
-			@apply ring-violet-500/50;
-		}
-	}
 }
 
 .radio--label:hover {
 	.radio--label--text {
-		@apply bg-black/10 dark:bg-white/10;
+		@apply bg-ui-hover text-ui-hover;
+	}
+
+	&.radio--statistics .radio--label--text,
+	.page--statistik & .radio--label--text {
+		@apply text-ui-statistic;
 	}
 
 	.radio--indicator ~ .radio--indicator-icon {
 		@apply opacity-100;
+		/* TODO: COLORS icon */
 	}
 }
 
 .radio--indicator {
 	@apply appearance-none absolute inset-0 w-full h-full pointer-events-none;
-
-	&:focus {
-		@apply ring-0;
-	}
 }
 
 .radio--indicator:checked ~ .radio--label--text,
 .radio--label--checked .radio--label--text {
-	@apply bg-svws/5 dark:bg-svws/10 text-svws;
+	@apply bg-ui-selected text-ui-onselected;
+	/* TODO: COLORS icon */
 
 	.svws-sub-nav-target & {
-		@apply bg-white dark:bg-black shadow;
-	}
-
-	.radio--statistics &,
-	.page--statistik & {
-		@apply bg-violet-500/5 text-violet-500;
+		@apply bg-ui shadow;
 	}
 }
 
@@ -137,15 +137,17 @@
 
 .radio--indicator:checked ~ .radio--indicator-icon,
 .radio--label--checked .radio--indicator-icon {
-	@apply opacity-100 text-svws;
+	@apply opacity-100 text-ui-brand;
+	
 	span.icon {
-	-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
-	filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+		-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
+		filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 	}
+	/* TODO: COLORS icon */
 
 	.radio--statistics &,
 	.page--statistik & {
-		@apply text-violet-500;
+		@apply text-ui-statistic;
 	}
 }
 
@@ -163,17 +165,13 @@
 .radio--label--disabled {
   @apply cursor-not-allowed pointer-events-none;
 
-  .radio--label--text,
-  &:hover .radio--label--text,
-  &:focus .radio--label--text,
-  &:focus-visible .radio--label--text {
-    @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
-    @apply opacity-25;
+  .radio--label--text {
+    @apply bg-ui-disabled text-ui-disabled;
   }
 
   .radio--indicator:checked ~ .radio--indicator-icon,
   &.radio--label--checked .radio--indicator-icon {
-    @apply opacity-25 text-black dark:text-white;
+	@apply text-ui-disabled;
 		span.icon {
 			-webkit-filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
 			filter: invert(23%) sepia(18%) saturate(978%) hue-rotate(158deg) brightness(96%) contrast(91%);
@@ -185,17 +183,17 @@
 
     .radio--statistics &,
     .page--statistik & {
-      @apply opacity-25 text-black dark:text-white;
+      	@apply text-ui-disabled;
     }
   }
 
   .radio--indicator:checked ~ .radio--label--text,
   &.radio--label--checked .radio--label--text {
-    @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
+    @apply bg-ui-disabled text-ui-disabled;
 
     .radio--statistics &,
     .page--statistik & {
-      @apply bg-black/20 text-black dark:bg-white/20 dark:text-white;
+      @apply bg-ui-disabled text-ui-disabled;
     }
   }
 }
