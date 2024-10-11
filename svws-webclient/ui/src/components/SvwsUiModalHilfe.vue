@@ -29,7 +29,7 @@
 <style lang="postcss">
 
 	.markdown-body {
-		@apply prose leading-tight;
+		@apply prose leading-tight bg-ui text-ui;
 
 		* {
 			@apply first:mt-0;
