@@ -5,7 +5,7 @@
 			<span v-for="(item, index) in data" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
 				<button v-if="!readonly" role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
-					<span class="icon i-ri-close-line -my-0.5" />
+					<span class="icon i-ri-close-line" />
 				</button>
 			</span>
 		</div>
@@ -42,8 +42,8 @@
 				@keydown.tab="onTab" />
 		</div>
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
-			<div class="icon i-ri-expand-up-down-line" v-if="headless" />
-			<div class="icon i-ri-expand-up-down-fill" v-else />
+			<span class="icon i-ri-expand-up-down-line" v-if="headless" />
+			<span class="icon i-ri-expand-up-down-fill" v-else />
 		</button>
 	</div>
 	<Teleport to="body" v-if="isMounted">
@@ -333,11 +333,11 @@
 
 	.svws-ui-multi-select {
 		&:not(.svws-headless) {
-			@apply bg-white dark:bg-black;
-			@apply rounded-md border border-black/5 dark:border-white/5;
+			@apply bg-ui border border-ui-secondary text-ui;
+			@apply rounded-md;
 
 			&:hover {
-				@apply border-black/25 dark:border-white/25;
+				@apply border-ui;
 			}
 		}
 
@@ -360,25 +360,31 @@
 				@apply absolute top-0 left-0 w-full h-full cursor-pointer;
 			}
 
-		&.svws-open.svws-autocomplete {
-			.text-input--control {
-				@apply h-[2.25rem] mt-auto pl-3;
+			&.svws-open.svws-autocomplete {
+				.text-input--control {
+					@apply h-[2.25rem] mt-auto pl-3;
+				}
 			}
-		}
 
-		&:not(.svws-open) {
-			.text-input--control {
-				@apply hidden;
+			&:not(.svws-open) {
+				.text-input--control {
+					@apply hidden;
+				}
 			}
-		}
 		}
 
 		.svws-tags {
 			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pr-7 pointer-events-none;
 
 			.svws-remove {
-				@apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
-				&:hover {
+				@apply relative top-0 left-0.5 -my-1 w-auto h-auto pointer-events-auto py-0;
+
+				.icon {
+					@apply mt-0 w-4 h-4;
+					/* TODO: COLORS icon darkmode */
+				}
+
+				&:hover .icon {
 					-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 					filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 				}
@@ -386,10 +392,13 @@
 		}
 
 		.svws-tag {
-			@apply inline-flex items-center mt-2 gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
+			@apply bg-ui border border-ui-secondary;
+			@apply inline-flex items-center gap-0.5 rounded leading-none py-[0.15rem] pl-2 pr-1 text-base;
 		}
 
 		&.svws-disabled {
+			@apply pointer-events-none;
+
 			.svws-tags {
 				@apply opacity-25;
 
@@ -401,19 +410,18 @@
 	}
 </style>
 
-<!--TODO: Duplicate CSS und JS Functions (identisch zu SvwsUiSelect) entfernen-->
+<!--TODO: Duplicate CSS und JS Functions (identisch zu SvwsUiSelect) entfernen?-->
 <style lang="postcss">
-
 	.svws-ui-select {
 		@apply relative w-full cursor-pointer flex;
 
 		.svws-ui-table & {
-			@apply p-0;
+			@apply p-0 -my-0.5;
 		}
 
 		.svws-dropdown-icon,
 		.svws-remove {
-			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded;
+			@apply inline-flex w-5 h-7 absolute text-headline-md top-1 rounded items-center justify-center;
 
 			svg {
 				@apply my-auto;
@@ -421,12 +429,25 @@
 		}
 
 		.svws-dropdown-icon {
-			@apply pointer-events-none right-1 bg-light dark:bg-white/5 border border-black/10 dark:border-white/10;
+			@apply bg-ui-neutral border border-ui-secondary;
+			@apply pointer-events-none right-1;
+		}
+
+		.text-input-component {
+			&:hover,
+			&:focus-visible,
+			&:focus-within {
+				& ~ .svws-dropdown-icon {
+					@apply bg-ui-neutral-hover border-ui-neutral-hover;
+					/* TODO: COLORS icon */
+				}
+			}
 		}
 
 		&.svws-statistik {
 			.svws-dropdown-icon {
-				@apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+				@apply bg-ui-statistic-weak text-ui-statistic border-transparent;
+				/* TODO: COLORS icon */
 			}
 
 			.text-input-component {
@@ -434,17 +455,23 @@
 				&:focus-visible,
 				&:focus-within {
 					~ .svws-dropdown-icon {
-						@apply bg-violet-500/10 dark:bg-violet-500/20;
+						@apply border-ui-statistic bg-ui-statistic-weak;
+						/* TODO: COLORS icon */
 					}
 				}
 			}
 		}
 
 		.svws-remove {
-			@apply right-7 text-black/50 dark:text-white/50;
+			@apply right-7 top-2 w-5 h-5 text-ui-secondary;
+
+			.icon {
+				margin-top: 0.3rem;
+				/* TODO: COLORS icon */
+			}
 
 			&:hover {
-				@apply text-error;
+				@apply text-ui-danger;
 			}
 
 			&:focus,
@@ -453,17 +480,7 @@
 			}
 
 			&:focus-visible {
-				@apply ring ring-error/25 bg-error text-white dark:text-white;
-			}
-		}
-
-		.text-input-component {
-			&:hover,
-			&:focus-visible,
-			&:focus-within {
-				~ .svws-dropdown-icon {
-					@apply bg-black/10 dark:bg-white/10;
-				}
+				@apply ring ring-ui-danger bg-ui-danger text-ui-ondanger;
 			}
 		}
 
@@ -490,7 +507,7 @@
 		}
 
 		.text-input--headless {
-			@apply pl-4;
+			@apply pl-5;
 		}
 
 		&.svws-removable&.svws-has-value {
@@ -510,7 +527,13 @@
 			}
 
 			.svws-dropdown-icon {
-				@apply w-4 -left-0.5 bg-transparent dark:bg-transparent border-0 text-sm text-black/50 dark:text-white/50;
+				@apply text-ui-secondary bg-transparent;
+				@apply w-4 border-0 text-sm;
+				/* TODO: COLORS icon */
+
+				.svws-ui-table .svws-clicked & {
+					@apply text-ui-selected;
+				}
 			}
 
 			.svws-remove {
@@ -522,13 +545,14 @@
 			}
 
 			.text-input-component {
-				@apply pr-1;
+				@apply pr-1 my-0;
 
 				&:hover,
 				&:focus-visible,
 				&:focus-within {
 					~ .svws-dropdown-icon {
-						@apply text-black dark:text-white;
+						@apply text-ui;
+						/* TODO: COLORS icon */
 					}
 				}
 			}
@@ -537,7 +561,7 @@
 				.text-input-component {
 					&:focus-visible {
 						~ .svws-dropdown-icon {
-							@apply ring-2 ring-black/25 dark:ring-white/25;
+							@apply ring ring-ui;
 						}
 					}
 				}
@@ -545,7 +569,8 @@
 
 			&.svws-statistik {
 				.svws-dropdown-icon {
-					@apply text-violet-500/75 dark:text-violet-500/75;
+					@apply text-ui-statistic;
+					/* TODO: COLORS icon */
 				}
 
 				.text-input-component {
@@ -553,15 +578,24 @@
 					&:focus-visible,
 					&:focus-within {
 						~ .svws-dropdown-icon {
-							@apply text-violet-500 dark:text-violet-500;
+							@apply bg-ui-statistic-weak;
 						}
 					}
+				}
+			}
+		}
 
-					&:focus-visible {
-						~ .svws-dropdown-icon {
-							@apply ring-violet-500/25 dark:ring-violet-500/25;
-						}
-					}
+		&.svws-danger {
+			@apply text-ui-danger;
+
+			.text-input--headless {
+				@apply font-bold;
+			}
+
+			&.svws-headless {
+				.svws-dropdown-icon {
+					@apply text-ui-danger;
+					/* TODO: COLORS icon */
 				}
 			}
 		}
@@ -569,13 +603,17 @@
 		&.svws-disabled {
 			@apply cursor-default pointer-events-none;
 
-			.text-input--headless {
-				@apply opacity-25;
+			&.svws-headless .text-input--headless,
+			&.svws-removable&.svws-has-value .text-input--headless {
+				@apply opacity-25 pl-5;
 			}
 
-			.svws-dropdown-icon,
+			.svws-dropdown-icon {
+				@apply opacity-10;
+			}
+
 			.svws-remove {
-				@apply opacity-25;
+				@apply hidden;
 			}
 		}
 	}

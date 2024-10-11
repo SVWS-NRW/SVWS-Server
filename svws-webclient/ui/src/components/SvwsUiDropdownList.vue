@@ -7,7 +7,7 @@
 			class="svws-ui-dropdown-list--items"
 			role="listbox"
 			@mouseenter="activeItemIndex = -1">
-			<li v-if="listEmpty" class="px-2 py-1.5 text-base opacity-50 inline-block">
+			<li v-if="listEmpty" class="px-2 py-1.5 text-base text-ui-disabled inline-block">
 				<template v-if="!searchText">
 					Keine Einträge gefunden
 				</template>
@@ -91,48 +91,42 @@
 
 
 <style lang="postcss">
-
-	.svws-ui-dropdown-list {
-		@apply w-full z-50 min-w-[11rem];
-		@apply rounded-lg border border-black/25 dark:border-white/25 bg-white dark:bg-black;
-		@apply shadow-xl;
-	}
+.svws-ui-dropdown-list {
+	@apply border bg-ui border-ui-secondary text-ui;
+	@apply w-full z-50 min-w-[11rem] shadow-xl rounded-lg;
+}
 
 	.svws-ui-dropdown-list--items {
 		@apply overflow-y-auto overflow-x-hidden flex flex-col gap-px pt-1 px-1 pb-1;
 		max-height: 24rem;
 	}
 
-	.svws-ui-dropdown-list--item {
-		@apply rounded px-2 py-1.5 inline-flex items-start justify-between gap-0.5 text-base font-medium cursor-pointer;
+.svws-ui-dropdown-list--item {
+	@apply border border-transparent;
+  	@apply rounded px-2 py-1.5 inline-flex items-start justify-between gap-0.5 text-base font-medium cursor-pointer;
+
+	&.svws-selected {
+		@apply bg-ui-selected text-ui-onselected font-bold border-ui-selected;
+	}
+
+	&.svws-active,
+	&:hover,
+	&:focus-visible {
+		@apply bg-ui-hover border-ui;
 
 		&.svws-selected {
-			@apply bg-svws/5 dark:bg-svws/10 text-svws font-bold;
-
-			.svws-statistik & {
-				@apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
-			}
-		}
-
-		&:not(.svws-selected) {
-			&.svws-active,
-			&:hover,
-			&:focus-visible {
-				@apply bg-black/10 dark:bg-white/10;
-			}
-		}
-
-		&.svws-active {
-			@apply ring-2 ring-black/25 dark:ring-white/25;
-
-			&.svws-selected {
-				@apply ring-svws/25 dark:ring-svws/25;
-
-				.svws-statistik & {
-					@apply ring-violet-500/25 dark:ring-violet-500/25;
-				}
-			}
+			@apply bg-ui-selected-hover text-ui-onselected-hover border-ui-selected;
 		}
 	}
 
+	&.svws-active {
+		@apply ring ring-ui border-ui-brand z-10;
+
+		.svws-statistik & {
+			@apply ring-ui-statistic border-ui-statistic;
+		}
+	}
+}
+
+/* TODO: COLORS icon (multi-select checkmark) */
 </style>
