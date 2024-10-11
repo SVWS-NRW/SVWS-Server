@@ -3,10 +3,12 @@
 </script>
 
 <template>
-	<Story title="Avatar" id="svws-ui-avatar" icon="ri:user-line" :layout="{type: 'grid', width: '90%'}">
+	<Story title="Avatar" id="svws-ui-avatar" icon="ri:user-line">
 		<Variant title="Default" id="Default">
-			<div class="w-20">
-				<svws-ui-avatar @image:captured="logEvent('Image captured', $event)" @image:uploaded="logEvent('Image Uploaded', $event)" />
+			<div class="p-4">
+				<div class="w-20">
+					<svws-ui-avatar @image:captured="logEvent('Image captured', $event)" @image:uploaded="logEvent('Image Uploaded', $event)" />
+				</div>
 			</div>
 		</Variant>
 	</Story>

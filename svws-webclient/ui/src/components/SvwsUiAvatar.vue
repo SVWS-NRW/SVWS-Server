@@ -1,7 +1,7 @@
 <template>
 	<div class="svws-ui-avatar" :class="{'is-capturing': isCapturing}">
 		<div class="avatar--edit" v-if="capture || upload || src" tabindex="0">
-			<span class="avatar--edit-trigger w-6 h-6 p-0.5 rounded bg-light dark:bg-white/10 mt-auto ml-auto -mr-1.5 -mb-0.5 border border-black/10 dark:border-white/10">
+			<span class="avatar--edit-trigger">
 				<span class="icon i-ri-camera-line w-full h-full opacity-50 inline-block" />
 			</span>
 
@@ -39,7 +39,7 @@
 				<span class="icon i-ri-check-line inline-block" />
 			</svws-ui-button>
 		</div>
-		<div class="avatar">
+		<div class="avatar" :class="{'avatar--has-image': uploadedImage}">
 			<template v-if="isCapturing">
 				<span v-if="capturingError">{{ capturingError }}</span>
 				<template v-else>
@@ -103,15 +103,26 @@
 <style lang="postcss">
 .svws-ui-avatar {
 	@apply relative;
+
+	.avatar--edit-trigger {
+		@apply bg-ui border border-ui-neutral;
+		@apply w-6 h-6 p-0.5 rounded mt-auto ml-auto -mr-1.5 -mb-0.5;
+		/* TODO: COLORS icon */
+	}
 }
 
 .avatar {
-	@apply w-full rounded-xl overflow-hidden relative bg-light;
-	@apply border border-black/5 dark:border-white/5;
+	@apply bg-ui-neutral border border-ui-secondary;
+	@apply w-full rounded-xl overflow-hidden relative;
 	padding-bottom: 100%;
 
+	&--has-image {
+		@apply border-transparent;
+	}
+
 	svg {
-		@apply absolute -bottom-0.5 w-full h-5/6 text-svws-950 opacity-20;
+		@apply text-ui-secondary opacity-50;
+		@apply absolute -bottom-0.5 w-full h-5/6;
 		margin-bottom: -5%;
 	}
 
@@ -121,7 +132,7 @@
 	}
 
 	video {
-		@apply bg-light;
+		@apply bg-ui-neutral;
 	}
 
 	&--edit {
@@ -134,10 +145,6 @@
 
 		.button {
 			@apply hidden;
-
-			&:hover, &:focus {
-				@apply bg-opacity-100;
-			}
 		}
 
 		.button--icon {
@@ -147,7 +154,7 @@
 		&:hover,
 		&:focus,
 		&:focus-within {
-			@apply outline-none;
+			@apply outline-none bg-ui rounded-xl border border-ui-disabled;
 
 			.avatar--edit-trigger {
 				@apply hidden;
@@ -156,15 +163,11 @@
 			.button {
 				@apply block;
 			}
-
-			+ .avatar {
-				@apply opacity-10 border-black/50;
-			}
 		}
 
 		&:focus-visible {
 			+ .avatar {
-				@apply ring ring-primary;
+				@apply ring ring-ui-brand;
 			}
 		}
 	}
@@ -179,12 +182,12 @@
 }
 
 .is-capturing {
+	@apply bg-ui;
 	@apply fixed inset-0 z-[100] h-screen;
-	@apply bg-light/90 dark:bg-[#000]/90 backdrop-filter backdrop-grayscale;
 	@apply flex flex-col justify-center items-center;
 
 	.avatar {
-		@apply p-0 -order-1;
+		@apply p-0 -order-1 border-none;
 		@apply rounded-3xl;
 		width: 90vmin;
 		height: 90vmin;
