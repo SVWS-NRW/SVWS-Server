@@ -50,7 +50,7 @@
 		}
 
 		.notifications__open & {
-			@apply bg-white shadow-xl;
+			@apply bg-ui shadow-xl;
 		}
 	}
 
