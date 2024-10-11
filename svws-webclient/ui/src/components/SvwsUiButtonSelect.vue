@@ -16,7 +16,7 @@
 		<Teleport to="body">
 			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
 				<template #item="{ item }">
-					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-dark">
+					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-ui-neutral">
 					<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
 						{{ item.text }}
 					</button>
@@ -105,8 +105,10 @@
 		.svws-toggle.button {
 			@apply rounded-l-none rounded-r-md px-0.5;
 		}
-	}
 
+		/* TODO: COLORS icon darkmode/ .icon {
+		}*/
+	}
 </style>
 
 <style lang="postcss" scoped>
@@ -120,7 +122,7 @@
 	}
 
 	.svws-ui-dropdown-list--item {
-		@apply text-button;
+		@apply text-button text-ui;
 	}
 
 </style>

@@ -72,7 +72,7 @@
 	}
 
 	&:focus-visible {
-		@apply ring;
+		@apply ring ring-ui-brand;
 
 		.page--statistik & {
 			@apply ring-ui-statistic;
@@ -120,12 +120,13 @@
 
 	.notification--error &,
 	.svws-ui-stundenplan--unterricht--warning & {
-		@apply text-white dark:text-black border-white/25 dark:border-black/25;
+		@apply text-ui-ondanger border-ui-ondanger;
 	}
 
 	&:hover,
 	&:focus-visible {
 		@apply border-ui-brand text-ui-brand;
+
 		.icon, .icon-sm, .icon-lg {
 			-webkit-filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
 			filter: invert(44%) sepia(52%) saturate(1260%) hue-rotate(173deg) brightness(91%) contrast(86%);
@@ -137,14 +138,14 @@
 
 		.notification--error &,
 		.svws-ui-stundenplan--unterricht--warning & {
-			@apply border-white dark:border-black text-white dark:text-black;
+			@apply text-ui-ondanger-hover border-ui-ondanger-hover;
 		}
 	}
 
 	&:focus-visible {
 		.notification--error &,
 		.svws-ui-stundenplan--unterricht--warning & {
-			@apply ring-white/25 dark:ring-black/25 border-white dark:border-black;
+			@apply ring-ui-neutral; /* TODO: COLORS ring-ui-ondanger */
 		}
 	}
 }
@@ -257,16 +258,14 @@
 	&:hover,
 	&:focus,
 	&:focus-visible {
-		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled cursor-not-allowed pointer-events-none;
+		@apply bg-ui-disabled text-ui-ondisabled border-ui-disabled;
+		@apply cursor-not-allowed pointer-events-none;
+
 		span.icon {
 			-webkit-filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
 			filter: invert(32%) sepia(97%) saturate(0%) hue-rotate(163deg) brightness(103%) contrast(104%);
 		}
 	}
-}
-
-.hover--danger:hover {
-	@apply text-error bg-error/10;
 }
 
 .button--small,
@@ -304,9 +303,9 @@
 }
 
 .button--badge {
+	@apply bg-ui-brand text-ui-onbrand;
 	@apply absolute top-0 left-[100%];
-	@apply font-bold text-white;
-	@apply bg-primary rounded-full shadow;
+	@apply font-bold rounded-full shadow;
 	@apply flex items-center justify-center;
 	@apply pointer-events-none;
 	@apply -mt-3 -ml-3;
