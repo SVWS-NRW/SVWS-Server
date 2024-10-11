@@ -135,7 +135,7 @@
 												{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 											</template>
 											<template v-else>
-												<span class="text-black/25 dark:text-white/25">—</span>
+												<span class="text-ui-secondary">—</span>
 											</template>
 										</slot>
 									</div>
@@ -157,8 +157,8 @@
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
 						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt, {{ modelValue.length }} insgesamt</template></template>
-						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/{{ sortedRows.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt, {{ modelValue.length }} insgesamt</template></template>
-						<template v-else>{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</template></template>
+						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/<span class="text-ui-secondary">{{ sortedRows.length }}</span> ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt, {{ modelValue.length }} insgesamt</template></template>
+						<template v-else><span class="text-ui-secondary">{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}</span><template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</template></template>
 					</div>
 					<div v-if="$slots.actions" class="flex-grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
@@ -536,18 +536,17 @@
 <style lang="postcss">
 
 	.svws-ui-table {
-		@apply flex max-h-full w-full flex-col bg-white tabular-nums dark:bg-black;
-		@apply border-black/25 dark:border-white/25;
+		@apply bg-ui text-ui border-ui-secondary;
+		@apply flex max-h-full w-full flex-col tabular-nums;
 		--checkbox-width: 1.75rem;
-		--background-color: rgb(var(--color-white));
+		--background-color: rgb(var(--color-bg-ui));
 
 		& + & {
 			@apply mt-10;
 		}
 
 		&.svws-has-background {
-			@apply text-black dark:text-black;
-			/*@apply rounded-lg border border-black/50 border-b-0 ring-4 ring-light dark:ring-white/5;*/
+			@apply text-ui-black;
 		}
 
 		&.svws-no-data,
@@ -555,7 +554,7 @@
 		&.svws-no-data .svws-ui-tbody,
 		&.svws-no-data .svws-ui-tfoot,
 		&.svws-no-data .svws-ui-td {
-			@apply border-black/10 dark:border-white/10;
+			@apply border-ui-disabled;
 		}
 
 		.app--sidebar-container & {
@@ -591,9 +590,15 @@
 		}
 
 		.svws-ui-badge {
+			@apply text-ui-black;
+
 			&.svws-has-background & {
 				@apply border-transparent;
 			}
+		}
+
+		input[type="checkbox"] {
+			@apply ring-offset-0;
 		}
 	}
 
@@ -606,11 +611,11 @@
 	.svws-ui-thead,
 	.svws-ui-tfoot,
 	.svws-ui-tfoot--data {
-		@apply sticky bg-white dark:bg-black dark:text-white;
-		@apply border-black/25 dark:border-white/25;
+		@apply bg-ui text-ui border-ui-secondary;
+		@apply sticky;
 
 		.svws-ui-table.svws-has-background & {
-			@apply border-black/50 dark:border-white/50;
+			@apply border-ui;
 		}
 
 		.svws-ui-tr:last-child .svws-ui-td {
@@ -627,11 +632,13 @@
 		}
 
 		.svws-ui-badge {
-			@apply text-button font-bold;
+			@apply text-button font-bold text-ui-black;
 		}
 
 		.svws-no-data & {
-			@apply pointer-events-none text-black dark:text-white opacity-25;
+			@apply text-ui-disabled;
+			@apply pointer-events-none;
+			/* TODO: COLORS icon */
 		}
 
 		.svws-ui-td {
@@ -646,7 +653,7 @@
 
 				&:not(.svws-active):hover {
 					.svws-sorting-icon {
-						@apply bg-light dark:bg-white/10;
+						@apply bg-ui-hover;
 
 						.svws-sorting-asc,
 						.svws-sorting-desc {
@@ -657,36 +664,38 @@
 
 				&:focus-visible {
 					.svws-sorting-icon {
-						@apply ring-2 ring-black/25 ring-offset-1;
+						@apply bg-ui-hover ring ring-ui;
 					}
 				}
 
 				&.svws-active,
 				&.svws-active:hover {
-					@apply text-svws;
+					@apply text-ui-brand;
 
 					.svws-sorting-icon {
-						@apply bg-svws/5 dark:bg-svws/10;
+						@apply bg-ui-selected text-ui-onselected;
+						/* TODO: COLORS icon */
 
 						.page--statistik & {
-							@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
+							@apply bg-ui-statistic-weak text-ui-statistic;
 						}
 					}
 				}
 			}
 
 			.svws-sorting-icon {
-				@apply relative -my-2 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-0;
+				@apply relative -my-2 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded border-0;
 
 				.svws-sorting-asc,
 				.svws-sorting-desc {
 					@apply absolute h-4 w-4 opacity-25 top-0.5 left-0.5;
 
 					&.svws-active {
-						@apply opacity-100 text-svws;
+						@apply opacity-100 text-ui-brand;
+						/* TODO: COLORS icon */
 
 						.page--statistik & {
-							@apply text-violet-500;
+							@apply text-ui-statistic;
 						}
 					}
 				}
@@ -713,12 +722,9 @@
 			.svws-ui-tr {
 				@apply cursor-pointer;
 
-				&:not(.svws-clicked):hover {
-					@apply bg-black/5 dark:bg-white/5;
-				}
-
-				&:focus-visible {
-					@apply bg-black/10 dark:bg-white/10;
+				&:not(.svws-clicked):hover,
+				&:not(.svws-clicked):focus-visible {
+					@apply bg-ui-hover;
 				}
 			}
 		}
@@ -758,10 +764,10 @@
 
 		.svws-has-selection & {
 			.svws-ui-tr:not(.svws-selected):not(.svws-clicked) {
-				@apply text-black/50 dark:text-white/50;
+				@apply text-ui-secondary;
 
 				.svws-ui-badge {
-					@apply text-black opacity-50 dark:text-white;
+					@apply text-ui-black opacity-100;
 				}
 			}
 		}
@@ -804,18 +810,19 @@
 		}
 
 		&.svws-clicked {
-			@apply font-bold bg-svws/5 text-svws dark:bg-svws/5;
+			@apply bg-ui-selected text-ui-onselected;
+			@apply font-bold;
 
 			.svws-ui-badge {
-			@apply border-black/25 dark:border-white/25 font-bold;
+				@apply font-bold;
 			}
 
 			.page--statistik & {
-				@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
+				@apply bg-ui-statistic-weak text-ui-statistic;
 			}
 
 			.svws-ui-tr:not(.svws-clicked) {
-				@apply bg-white font-medium text-black dark:text-white;
+				@apply bg-ui text-ui font-medium;
 			}
 		}
 
@@ -838,7 +845,8 @@
 	}
 
 	.svws-ui-td {
-		@apply flex items-start gap-1 overflow-hidden border-b border-black/25 leading-none dark:border-white/25;
+		@apply border-ui-secondary;
+		@apply flex items-start gap-1 overflow-hidden border-b leading-none;
 		padding: 0.3rem 0.25rem;
 
 		&.svws-no-padding {
@@ -862,7 +870,7 @@
 		}
 
 		.svws-ui-table.svws-has-background & {
-			@apply border-black/50 dark:border-white/50;
+			@apply border-ui;
 		}
 
 		&.svws-align-right {
@@ -877,38 +885,40 @@
 		.svws-disabled &,
 		&.svws-disabled-soft,
 		.svws-disabled-soft & {
-			@apply relative cursor-default text-black/50 dark:text-white/50;
+			@apply text-ui-disabled;
+			@apply relative cursor-default;
 
 			.svws-ui-table.svws-has-background & {
-				@apply text-black/75 dark:text-black/75;
+				@apply text-ui-secondary;
 			}
 
 			&:before {
-				@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10 border border-black/5;
+				@apply bg-ui-inverted border border-ui opacity-10;
+				@apply pointer-events-none absolute inset-0;
 				content: '';
 
 				.svws-ui-table.svws-has-background & {
-					@apply bg-black/40;
+					@apply opacity-30;
 				}
 			}
 		}
 
 		&.svws-disabled-soft,
 		.svws-disabled-soft & {
-			@apply text-black dark:text-white;
+			@apply text-ui;
 
 			.svws-has-background & {
-				@apply text-black/80 dark:text-black/80;
+				@apply text-ui;
 
 				.button {
-					@apply text-black dark:text-black;
+					@apply text-ui;
 				}
 			}
 
 			&:before {
 				.svws-ui-table.svws-has-background & {
-					@apply bg-black/20;
-					box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+					@apply bg-ui-black opacity-20;
+					box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
 				}
 			}
 		}
@@ -963,7 +973,8 @@
 			}
 
 			> .svws-ui-tr:not(:last-child) {
-				@apply border-b border-dashed border-black/50 dark:border-white/50;
+				@apply border-ui-secondary;
+				@apply border-b border-dashed;
 			}
 		}
 
@@ -972,7 +983,7 @@
 
 			&:hover,
 			&:focus-visible {
-				@apply bg-black/10 dark:bg-white/10;
+				@apply bg-ui-hover;
 			}
 		}
 	}
@@ -998,16 +1009,16 @@
 	}
 
 	.svws-ui-table.svws-type-grid {
-		@apply border-x border-t border-black/25 dark:border-white/25;
+		@apply border-x border-t border-ui-secondary;
 
 		&.svws-has-background {
-			@apply border-black/50 dark:border-black/50;
+			@apply border-ui-black;
 		}
 
 		.svws-ui-thead,
 		.svws-ui-tbody {
 			.svws-ui-td:not(:last-child) {
-				@apply border-r border-black/25 dark:border-white/25;
+				@apply border-r border-ui-secondary;
 			}
 
 			.svws-ui-td:not(.svws-align-center) {
@@ -1027,7 +1038,7 @@
 			.svws-ui-thead,
 			.svws-ui-tbody {
 				.svws-ui-td:not(:last-child) {
-					@apply border-black/50 dark:border-black/50;
+					@apply border-ui-black;
 				}
 			}
 		}
@@ -1044,7 +1055,8 @@
 	}
 
 	.svws-ui-table-filter {
-		@apply mb-5;
+		@apply mb-5 text-ui;
+		/* TODO: COLORS icon */
 
 		.svws-ui-checkbox {
 			@apply font-normal text-button;
@@ -1055,20 +1067,17 @@
 		}
 
 		.button--badge {
-			@apply left-auto mt-0 h-2 w-2 p-0 bg-svws right-0.5 top-1.5;
+			@apply bg-ui-brand;
+			@apply left-auto mt-0 h-2 w-2 p-0 right-0.5 top-1.5;
 		}
 	}
 
 	.svws-ui-table-filter--advanced {
 		@apply grid grid-cols-1 gap-2 pt-5 sm:grid-cols-2;
-
-		.svws-ui-toggle {
-			@apply mt-2;
-		}
 	}
 
 	.svws-fachwahlen--has-selection .svws-ui-tbody .svws-ui-td:not(.svws-selected) {
-		@apply bg-white/50 text-black/50 dark:text-black/50 font-normal;
+		@apply bg-ui text-ui font-normal;
 	}
 
 	.svws-fachwahlen--has-selection .svws-ui-td.svws-selected {
