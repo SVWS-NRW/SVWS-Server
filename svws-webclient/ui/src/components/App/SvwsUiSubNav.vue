@@ -25,8 +25,9 @@
 
 <style lang="postcss">
 .router-tab-bar--subnav {
+	@apply bg-ui-neutral;
 	@apply relative z-10 w-auto h-9 py-2 px-[2px] -mt-[2px] -mx-3;
-	@apply flex items-center gap-[2px] flex-shrink-0 bg-light dark:bg-white/5;
+	@apply flex items-center gap-[2px] flex-shrink-0;
 	@apply text-sm rounded-md;
 
 	&:before {

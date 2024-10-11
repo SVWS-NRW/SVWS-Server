@@ -1,7 +1,7 @@
 <template>
 	<Story title="Tab Bar" id="svws-ui-tab-bar" group="app" icon="ri:route-line" :layout="{type: 'grid', width: '90%'}">
 		<Variant title="Default" id="Default">
-			<svws-ui-header><span>Headline</span><br><span class="opacity-50">Subtitle</span></svws-ui-header>
+			<svws-ui-header><span class="svws-headline">Headline</span><br><span class="svws-subline">Subtitle</span></svws-ui-header>
 			<svws-ui-tab-bar :tab-manager>
 				Route: {{ selectedRoute.text }}
 			</svws-ui-tab-bar>
@@ -26,7 +26,7 @@
 		{ name: "home", text: "Home" },
 		{ name: "about", text: "About" },
 		{ name: "settings", text: "Settings" },
-		{ name: "hidden", text: "Hidden" },
+		{ name: "hidden", text: "Hidden", hide: true },
 		{ name: "link1", text: "Link mit einem sehr langen Titel" },
 		{ name: "link2", text: "Link mit einem sehr langen Titel 2" },
 		{ name: "link3", text: "Link mit einem sehr langen Titel 3" }
@@ -41,7 +41,7 @@
 		{ name: "home", text: "Home" },
 		{ name: "about", text: "About" },
 		{ name: "settings", text: "Settings" },
-		{ name: "hidden", text: "Hidden" },
+		{ name: "hidden", text: "Hidden", hide: true },
 		{ name: "link1", text: "Link1" },
 		{ name: "link2", text: "Link2" },
 		{ name: "link3", text: "Link3" }
