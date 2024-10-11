@@ -13,7 +13,7 @@
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
-		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
+		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-25 before:content-[attr(data-before)]" />
 		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
 		<div v-if="readonly && !isSelectInput" :class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }">
 			{{ data }}
@@ -35,17 +35,17 @@
 		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
 			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
-			<span class="icon-xs i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid || minLenValid}">
+			<span class="icon-sm i-ri-alert-line ml-0.5 inline-block -mt-0.5 icon-error" v-if="(isValid === false && !required)" />
+			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid && minLenValid}">
 				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
 				{{ (minLen !== undefined) && (maxLen !== undefined) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
 			</span>
-			<span v-if="statistics" class="cursor-pointer">
+			<span v-if="statistics" class="cursor-pointer inline-block -my-1">
 				<svws-ui-tooltip position="right">
-					<span class="inline-flex items-center">
-						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill" v-if="data === '' || data === null || data === undefined" />
+					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5">
+						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto" />
+						<span class="icon i-ri-alert-fill icon-error" v-if="data === '' || data === null || data === undefined" />
 					</span>
 					<template #content>
 						{{ statisticsText }}
@@ -54,7 +54,7 @@
 			</span>
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
-		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-line" />
+		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
 	</label>
@@ -209,16 +209,17 @@
 <style lang="postcss">
 
 	.text-input-component {
+		@apply text-ui;
 		@apply flex;
 		@apply relative;
 		@apply w-full;
 		@apply overflow-hidden whitespace-nowrap text-base;
 
 		input::placeholder {
-			@apply text-black dark:text-white opacity-25;
+			@apply opacity-30;
 
 			.placeholder--visible & {
-				@apply text-black dark:text-white;
+				@apply opacity-100;
 			}
 		}
 
@@ -240,23 +241,31 @@
 		}
 	}
 
+	.dark .text-input-component .icon.svws-icon,
+	.htw-dark .text-input-component .icon.svws-icon,
+	.dark .text-input-component .text-input--search-icon,
+	.htw-dark .text-input-component .text-input--search-icon {
+		-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+		/* TODO: COLORS icon darkmode */
+	}
+
 	.text-input-component .icon.svws-icon {
-		@apply pointer-events-none absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base opacity-25 mt-1;
+		@apply pointer-events-none absolute top-1 right-1.5 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base opacity-50 mt-1;
 
 		&--remove {
 			@apply pointer-events-auto cursor-pointer absolute top-1 right-1 bottom-1 w-5 rounded inline-flex items-center justify-end pr-1 text-base mr-6 mt-1;
+
+			.dark &,
+			.htw-dark & {
+				-webkit-filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				filter: invert(95%) sepia(100%) saturate(14%) hue-rotate(213deg) brightness(104%) contrast(104%);
+				/* TODO: COLORS icon darkmode */
+			}
+
 			&:hover {
 				-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 				filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
-			}
-		}
-	}
-
-	.text-input-component:not(.text-input--readonly) {
-		&:hover,
-		&:focus-within {
-			.svws-icon.icon {
-				@apply opacity-50;
 			}
 		}
 	}
@@ -284,37 +293,33 @@
 				@apply w-6 h-6 -top-1 right-0 relative;
 			}
 		}
-
-		&:focus-within {
-			.svws-icon.icon {
-				@apply opacity-75;
-			}
-		}
 	}
 
 	.text-input--statistics .svws-icon.icon {
-		@apply text-violet-500 opacity-50;
+		@apply text-ui-statistic-secondary;
+		/* TODO: COLORS icon */
 	}
 
 	.text-input--invalid .svws-icon {
-		@apply text-error;
+		@apply text-ui-danger;
+		/* TODO: COLORS icon */
 	}
 
 	.text-input--control {
-		@apply bg-white dark:bg-black;
-		@apply rounded-md border border-black/5 dark:border-white/5;
+		@apply bg-ui border border-ui-secondary;
+		@apply rounded-md;
 		@apply h-9 w-full;
 		@apply text-base;
 		@apply whitespace-nowrap;
 		padding: 0.5em 0.7em;
 
-		&:hover {
-			@apply border-black/25 dark:border-white/25;
+		&:focus {
+			@apply outline-none;
 		}
 	}
 
 	.text-input--prefix {
-		padding-left: 4.3em;
+		padding-left: 4.2em;
 	}
 
 	.text-input--rounded {
@@ -329,51 +334,24 @@
 
 	.text-input-component:focus-within .text-input--control,
 	.text-input--filled .text-input--control {
-		@apply border-black dark:border-white;
-		@apply outline-none;
+		@apply border-ui;
 	}
 
-	.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
-		@apply border-black/25 dark:border-white/25;
-	}
-
-	.text-input--statistics.text-input--filled:not(:focus-within):not(:hover) .text-input--control,
-	.text-input--statistics:not(:focus-within):not(:hover) .text-input--control {
-		@apply border-violet-500/25 dark:border-violet-800/25;
-	}
-
-	.text-input--invalid.text-input--filled:not(:focus-within):not(:hover) .text-input--control {
-		@apply border-error/25 dark:border-error/25;
-	}
-
-	.text-input--statistics.text-input--filled:not(:focus-within):hover .text-input--control,
-	.text-input--statistics:not(:focus-within):hover .text-input--control {
-		@apply border-violet-500/50 dark:border-violet-800/50;
-	}
-
-	.text-input--invalid.text-input--filled:not(:focus-within):hover .text-input--control {
-		@apply border-error/50 dark:border-error/50;
-	}
-
-	.text-input--invalid.text-input--filled:focus-within:hover .text-input--control {
-		@apply border-error/50 dark:border-error/50;
-	}
-
-	.text-input--filled:not(:focus-within):hover .text-input--control {
-		@apply border-black/50 dark:border-white/50;
+	.text-input-component .text-input--control:focus-visible {
+		@apply ring ring-ui-neutral;
 	}
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
 	.text-input--statistics.text-input--filled .text-input--control {
-		@apply border-violet-500;
+		@apply border-ui-statistic;
 	}
 
-	.text-input--readonly:not(.text-input--select):hover .text-input--control {
-		@apply border-black/5 dark:border-white/5;
+	.text-input--statistics:not(.text-input--filled) .text-input--control {
+		@apply border-ui-statistic-secondary;
 	}
 
-	.text-input--readonly.text-input--filled:not(.text-input--select):hover .text-input--control {
-		@apply border-black/25 dark:border-white/25;
+	.text-input--invalid.text-input--filled:not(:focus-within) .text-input--control {
+		@apply border-ui-danger;
 	}
 
 	.text-input--control--multiselect-tags {
@@ -382,7 +360,8 @@
 
 	.text-input--statistics {
 		.tooltip-trigger--triggered span.icon {
-			@apply text-violet-800;
+			@apply text-ui-statistic;
+			/* TODO: COLORS icon */
 		}
 	}
 
@@ -390,16 +369,17 @@
 		@apply relative;
 
 		&.text-input--filled {
-			@apply text-svws;
+			@apply text-ui-brand;
 		}
 
 		&-icon {
 			@apply absolute left-2 opacity-25;
 			top: 50%;
 			transform: translateY(-50%) scale(90%);
+			/* TODO: COLORS icon darkmode */
 
 			.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover & {
-				@apply opacity-50;
+				@apply opacity-100;
 			}
 
 			.text-input-component:focus-within &,
@@ -411,6 +391,10 @@
 
 		input {
 			@apply pl-8;
+
+			&::placeholder {
+				@apply text-ui opacity-50 font-normal;
+			}
 		}
 	}
 
@@ -421,12 +405,14 @@
 
 	.text-input--readonly .text-input--control {
 		@apply pointer-events-auto cursor-default select-none;
+		/* @apply border-dashed border-ui-secondary;
+		@apply pointer-events-auto cursor-default select-all; */
 	}
 
 	.text-input--placeholder {
 		@apply absolute;
 		@apply pointer-events-none;
-		@apply opacity-60;
+		@apply opacity-50 font-medium;
 		@apply transform;
 		@apply flex items-center font-medium;
 
@@ -435,24 +421,22 @@
 		line-height: 1.33;
 	}
 
-	.text-input-component:not(.text-input--filled) .text-input--placeholder {
+	.text-input-component:not(.text-input--filled):not(:focus-within) .text-input--placeholder {
 		@apply font-normal;
 
-		.wrapper--tag-list & {
-			@apply font-medium;
-		}
-
+		.wrapper--tag-list &,
 		.wrapper--tag-list:not(.wrapper--filled) & {
 			@apply font-medium;
 		}
 	}
 
-	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):not(.text-input--readonly):hover .text-input--placeholder {
-		@apply opacity-100;
+	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):not(.text-input--readonly):hover .text-input--placeholder,
+	.text-input-component.text-input--search:not(:focus-within):not(.text-input--disabled):hover input::placeholder {
+		@apply opacity-75;
 	}
 
 	.text-input--placeholder--prefix {
-		left: 4.5em;
+		left: 4.3em;
 		top: 0.5em;
 	}
 
@@ -462,41 +446,36 @@
 
 	.text-input-component:focus-within .text-input--placeholder,
 	.text-input--filled .text-input--placeholder {
+		@apply bg-ui opacity-100;
 		@apply -translate-y-1/2;
-		@apply bg-white dark:bg-black opacity-100;
 		@apply rounded;
 		@apply px-1;
 
 		top: 0;
 		left: 0.7em;
 		font-size: 0.78rem;
-
-		&:after {
-			content: "";
-		}
 	}
 
 	.text-input--statistics .text-input--placeholder {
-		@apply text-violet-500 font-bold;
+		@apply text-ui-statistic font-bold;
 	}
 
-	.text-input--invalid:not(:focus-within) .text-input--placeholder,
+	.text-input--invalid .text-input--placeholder,
 	.text-input--invalid:not(:focus-within) .text-input--control {
-		@apply text-error;
+		@apply text-ui-danger;
 	}
 
+	.text-input--control:disabled,
 	.text-input--disabled {
-		@apply cursor-default;
+		.text-input--control {
+			@apply bg-ui text-ui-disabled border-ui-disabled;
+			@apply pointer-events-none;
+
+		}
 
 		.text-input--placeholder {
-			@apply text-black/25 dark:text-white/25;
+			@apply bg-ui text-ui-disabled;
 		}
-	}
-
-	.text-input--control:disabled {
-		@apply bg-black/10 dark:bg-white/10 border-black/25 dark:border-white/25 text-black;
-		@apply opacity-20;
-		@apply pointer-events-none;
 	}
 
 	.text-input-component:focus-within,
@@ -505,12 +484,22 @@
 	}
 
 	.text-input--placeholder--required:after {
-		@apply text-error inline-block font-normal relative;
+		@apply inline-block font-bold relative opacity-50;
 		content: "*";
-		font-size: 1.2em;
+		font-size: 1em;
 		margin-bottom: -0.2em;
-		top: -0.1em;
+		top: -0.2em;
 		left: 0.1em;
+	}
+
+	.text-input--invalid .text-input--placeholder--required:after {
+		@apply text-ui-danger opacity-100;
+	}
+
+	.text-input-component--headless .text-input--control {
+		&:not([class*="text-ui"]) {
+			color: inherit;
+		}
 	}
 
 	.text-input--headless,
@@ -519,6 +508,10 @@
 
 		&:not([class*="bg-"]) {
 			background-color: unset;
+		}
+
+		&:not([class*="text-"]) {
+			color: inherit;
 		}
 
 		&::placeholder {
