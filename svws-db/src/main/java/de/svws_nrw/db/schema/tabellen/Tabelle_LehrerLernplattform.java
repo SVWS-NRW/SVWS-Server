@@ -29,12 +29,21 @@ public class Tabelle_LehrerLernplattform extends SchemaTabelle {
 	public SchemaTabelleSpalte col_CredentialID = add("CredentialID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("CredentialD für den Lernplattform-Datensatz");
 
+	/** Die Definition der Tabellenspalte EinwilligungenAbgefragt */
+	public SchemaTabelleSpalte col_EinwilligungenAbgefragt = add("EinwilligungenAbgefragt", SchemaDatentypen.INT, false)
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung wurde abgefragt")
+			.setVeraltet(SchemaRevisionen.REV_1);
+
 	/** Die Definition der Tabellenspalte EinwilligungAbgefragt */
 	public SchemaTabelleSpalte col_EinwilligungAbgefragt = add("EinwilligungAbgefragt", SchemaDatentypen.INT, false)
 			.setDefault("0")
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
-			.setJavaComment("Einwilligung wurde abgefragt");
+			.setJavaComment("Einwilligung wurde abgefragt")
+			.setRevision(SchemaRevisionen.REV_1);
 
 	/** Die Definition der Tabellenspalte EinwilligungNutzung */
 	public SchemaTabelleSpalte col_EinwilligungNutzung = add("EinwilligungNutzung", SchemaDatentypen.INT, false)

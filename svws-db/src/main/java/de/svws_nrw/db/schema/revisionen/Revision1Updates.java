@@ -45,6 +45,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		uebertrageLehrerStammschule();
 		verschiebeDatenVonEigeneSchule();
 		korrigiereCaseUbergangsempfehlungenUndSchulformen();
+		korrigiereLernplattformenTabelle();
 	}
 
 
@@ -2921,6 +2922,24 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				"UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(),
 						Schema.tab_Schueler.col_LSSchulformSIM.name()),
 				Schema.tab_Schueler);
+	}
+
+	private void korrigiereLernplattformenTabelle() {
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_LehrerLernplattform.name(),
+						Schema.tab_LehrerLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_LehrerLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_LehrerLernplattform);
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_SchuelerLernplattform.name(),
+						Schema.tab_SchuelerLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_SchuelerLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_SchuelerLernplattform);
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_ErzieherLernplattform.name(),
+						Schema.tab_ErzieherLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_ErzieherLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_ErzieherLernplattform);
 	}
 
 }
