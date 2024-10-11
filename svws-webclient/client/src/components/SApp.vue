@@ -98,23 +98,19 @@
 		<template #main>
 			<div class="app--page" :class="app.name">
 				<div class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
-					<div v-show="pendingSetApp">
-						<svws-ui-header>
-							<div class="flex items-center">
-								<div class="w-20 mr-6" v-if="app.name === 'schueler' || app.name === 'lehrer'">
-									<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
-								</div>
-								<div>
-									<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
-									<br>
-									<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
-								</div>
+					<svws-ui-header v-show="pendingSetApp">
+						<div class="flex items-center">
+							<div class="w-20 mr-6" v-if="app.name === 'schueler' || app.name === 'lehrer'">
+								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
 							</div>
-						</svws-ui-header>
-					</div>
-					<div v-show="!pendingSetApp">
-						<router-view :key="app.name" />
-					</div>
+							<div>
+								<span class="inline-block h-[1em] rounded animate-pulse w-52 bg-black/10 dark:bg-white/10" />
+								<br>
+								<span class="inline-block h-[1em] rounded animate-pulse w-20 bg-black/5 dark:bg-white/5" />
+							</div>
+						</div>
+					</svws-ui-header>
+					<router-view :key="app.name" v-show="!pendingSetApp" />
 				</div>
 			</div>
 		</template>
