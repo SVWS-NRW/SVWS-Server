@@ -40,7 +40,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schule";
-		super.setView("liste", SSchuleAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleStammdaten,
 		];
@@ -112,8 +112,6 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 		this.data.setView(node, routeSchule.menu);
 	}
-
-	gotoSchule = async () => await RouteManager.doRoute({ name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
 	public benutzerKompetenzen = (gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> => {
 		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;

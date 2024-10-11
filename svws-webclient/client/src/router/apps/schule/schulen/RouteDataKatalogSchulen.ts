@@ -65,7 +65,7 @@ export class RouteDataKatalogSchulen extends RouteData<RouteStateKatalogSchulen>
 		this.setPatchedState({ mapKatalogeintraege: this.mapKatalogeintraege })
 		if (leave === true) {
 			this._state.value.auswahl = undefined;
-			return RouteManager.doRoute(routeKatalogSchulen.getRoute(undefined));
+			await RouteManager.doRoute(routeKatalogSchulen.getRoute(undefined));
 		}
 	}
 

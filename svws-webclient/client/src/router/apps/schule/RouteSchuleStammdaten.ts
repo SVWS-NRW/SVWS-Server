@@ -12,6 +12,7 @@ import type { RouteSchule} from "./RouteSchule";
 import { routeSchule } from "./RouteSchule";
 import { RouteSchuleMenuGroup } from "./RouteSchuleMenuGroup";
 
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchuleStammdaten = () => import("~/components/schule/SSchuleStammdaten.vue")
 
 export class RouteSchuleStammdaten extends RouteNode<any, RouteSchule> {
@@ -21,6 +22,7 @@ export class RouteSchuleStammdaten extends RouteNode<any, RouteSchule> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Stammdaten der Schule";
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 	}
 

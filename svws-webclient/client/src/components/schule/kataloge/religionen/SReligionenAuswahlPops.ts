@@ -8,5 +8,4 @@ export interface ReligionenAuswahlProps {
 	deleteEintraege: (eintraege: Iterable<ReligionEintrag>) => Promise<void>;
 	gotoEintrag: (religion: ReligionEintrag) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	gotoSchule: () => Promise<void>;
 }

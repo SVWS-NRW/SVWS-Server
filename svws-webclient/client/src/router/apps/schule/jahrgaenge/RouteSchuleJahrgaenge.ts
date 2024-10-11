@@ -18,6 +18,7 @@ import { RouteDataSchuleJahrgaenge } from "./RouteDataSchuleJahrgaenge";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SJahrgaengeAuswahl = () => import("~/components/schule/jahrgaenge/SJahrgaengeAuswahl.vue")
 const SJahrgaengeApp = () => import("~/components/schule/jahrgaenge/SJahrgaengeApp.vue")
 
@@ -29,6 +30,7 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Jahrgänge";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SJahrgaengeAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeSchuleJahrgaengeDaten,
@@ -69,7 +71,6 @@ export class RouteSchuleJahrgaenge extends RouteNode<RouteDataSchuleJahrgaenge, 
 			mapKatalogeintraege: () => this.data.mapKatalogeintraege,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			gotoSchule: routeSchule.gotoSchule
 		};
 	}
 

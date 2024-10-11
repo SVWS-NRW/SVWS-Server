@@ -6,5 +6,4 @@ export interface FoerderschwerpunkteAuswahlProps {
 	mapKatalogeintraege: Map<number, FoerderschwerpunktEintrag>;
 	gotoEintrag: (eintrag: FoerderschwerpunktEintrag) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	gotoSchule: () => Promise<void>;
 }

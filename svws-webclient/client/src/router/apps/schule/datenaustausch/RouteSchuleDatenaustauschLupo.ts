@@ -22,7 +22,7 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, Rou
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "LuPO Laufbahnplanung";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	public getRoute() : RouteLocationRaw {

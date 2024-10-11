@@ -11,6 +11,7 @@ export interface AppProps {
 	setApp: (value: TabData) => Promise<void>;
 	benutzerprofilApp: TabData;
 	app: TabData;
+	selectedChild: TabData;
 	apps: TabData[];
 	appsHidden: boolean[];
 	apiStatus: ApiStatus;

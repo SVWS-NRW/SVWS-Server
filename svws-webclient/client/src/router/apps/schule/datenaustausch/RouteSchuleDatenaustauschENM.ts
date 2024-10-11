@@ -21,7 +21,7 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteApp> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "ENM Notenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	public getRoute() : RouteLocationRaw {

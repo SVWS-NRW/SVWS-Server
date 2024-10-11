@@ -11,5 +11,4 @@ export interface BetriebeAuswahlProps{
 	deleteEintraege: (betrieb: BetriebListeEintrag[]) => Promise<void>;
 	gotoEintrag:(eintrag: BetriebListeEintrag) => Promise<void>;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	returnToSchule: () => Promise<void>;
 }

@@ -17,7 +17,7 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SReligionenAuswahl = () => import("~/components/schule/kataloge/religionen/SReligionenAuswahl.vue");
 const SReligionenApp = () => import("~/components/schule/kataloge/religionen/SReligionenApp.vue");
 
@@ -29,6 +29,7 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten,
@@ -70,7 +71,6 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 			deleteEintraege: this.data.deleteEintraege,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			gotoSchule: routeSchule.gotoSchule,
 		};
 	}
 

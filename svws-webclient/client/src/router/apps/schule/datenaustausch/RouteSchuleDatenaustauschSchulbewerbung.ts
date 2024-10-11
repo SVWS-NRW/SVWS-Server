@@ -21,7 +21,7 @@ export class RouteSchuleDatenaustauschSchulbewerbung extends RouteNode<any, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulbewerbung.de";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	public getRoute() : RouteLocationRaw {

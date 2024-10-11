@@ -17,6 +17,7 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SEinwilligungsartenAuswahl = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenAuswahl.vue");
 const SEinwilligungsartenApp = () => import("~/components/schule/kataloge/einwilligungsarten/SEinwilligungsartenApp.vue");
 
@@ -29,6 +30,7 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 		super.text = "Einwilligungsarten";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SEinwilligungsartenAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeKatalogEinwilligungsartenDaten,
 		];
@@ -67,7 +69,6 @@ export class RouteKatalogEinwilligungsarten extends RouteNode<RouteDataKatalogEi
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			gotoSchule: routeSchule.gotoSchule,
 		};
 	}
 

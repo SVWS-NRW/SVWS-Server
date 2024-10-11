@@ -18,8 +18,7 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-
-
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SFoerderschwerpunkteAuswahl = () => import("~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteAuswahl.vue");
 const SFoerderschwerpunkteApp = () => import("~/components/schule/kataloge/foerderschwerpunkte/SFoerderschwerpunkteApp.vue");
 
@@ -32,6 +31,7 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 		super.text = "Förderschwerpunkte";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SFoerderschwerpunkteAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeKatalogFoerderschwerpunktDaten,
 		];
@@ -73,7 +73,6 @@ export class RouteKatalogFoerderschwerpunkte extends RouteNode<RouteDataKatalogF
 			mapKatalogeintraege: this.data.mapKatalogeintraege,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
 			gotoEintrag: this.data.gotoEintrag,
-			gotoSchule: routeSchule.gotoSchule,
 		};
 	}
 

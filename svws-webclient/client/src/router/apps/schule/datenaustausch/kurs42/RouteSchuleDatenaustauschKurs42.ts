@@ -27,7 +27,7 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschKurs42Blockung,
 			routeSchuleDatenaustauschKurs42Raeume

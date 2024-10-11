@@ -18,6 +18,7 @@ import { routeError } from "~/router/error/RouteError";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SVermerkAuswahl = () => import("~/components/schule/kataloge/vermerke/SVermerkeAuswahl.vue");
 const SVermerkApp = () => import("~/components/schule/kataloge/vermerke/SVermerkeApp.vue");
 
@@ -30,6 +31,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		super.text = "Vermerkarten";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SVermerkAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeKatalogVermerkartenDaten,
 		];
@@ -68,7 +70,6 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			gotoSchule: routeSchule.gotoSchule,
 			vermerkartenManager: () => this.data.vermerkartenManager,
 			commit: this.data.enforceCommit,
 		};

@@ -1,10 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<nav class="secondary-menu--breadcrumbs">
-				<a @click="gotoSchule">Schule</a>
-				<span> Vermerkarten </span>
-			</nav>
+			<span> Vermerkarten </span>
 		</template>
 		<template #abschnitt>
 			<!-- <abschnitt-auswahl :daten="schuljahresabschnittsauswahl" /> -->

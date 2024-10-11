@@ -1,10 +1,7 @@
 <template>
 	<svws-ui-secondary-menu>
 		<template #headline>
-			<nav class="secondary-menu--breadcrumbs">
-				<a title="Einstellungen" @click="gotoEinstellungen">Einstellungen</a>
-				<span title="Benutzer">Benutzer</span>
-			</nav>
+			<span title="Benutzer">Benutzer</span>
 		</template>
 		<template #abschnitt>
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />

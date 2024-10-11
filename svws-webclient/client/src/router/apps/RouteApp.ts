@@ -132,6 +132,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
+			selectedChild: this.getSelectedChild(),
 			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
@@ -140,8 +141,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		};
 	}
 
+	private getSelectedChild(): TabData {
+		const child = this.selectedChild!;
+		return { name: child.name, text: child.text, hide: false };
+	}
+
 	private getApp(): TabData {
-		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') };
+		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') && !this.data.view.hasView('submenu') };
 	}
 
 	private getApps(): TabData[] {

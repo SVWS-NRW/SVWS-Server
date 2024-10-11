@@ -17,6 +17,7 @@ import type { BenutzerAppProps } from "~/components/einstellungen/benutzer/SBenu
 import type { BenutzerAuswahlProps } from "~/components/einstellungen/benutzer/SBenutzerAuswahlProps";
 import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
 
+const SEinstellungenAuswahl = () => import("~/components/einstellungen/SEinstellungenAuswahl.vue")
 const SBenutzerAuswahl = () => import("~/components/einstellungen/benutzer/SBenutzerAuswahl.vue");
 const SBenutzerApp = () => import("~/components/einstellungen/benutzer/SBenutzerApp.vue");
 
@@ -29,6 +30,7 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		super.text = "Benutzer";
 		super.menugroup = RouteEinstellungenMenuGroup.BENUTZERVERWALTUNG;
 		super.setView("liste", SBenutzerAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SEinstellungenAuswahl, (route) => routeEinstellungen.getAuswahlProps(route));
 		super.children = [routeEinstellungenBenutzerDaten];
 		super.defaultChild = routeEinstellungenBenutzerDaten;
 	}
@@ -69,7 +71,6 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 			gotoBenutzer: this.data.gotoBenutzer,
 			createBenutzerAllgemein: this.data.createBenutzerAllgemein,
 			deleteBenutzerMenge: this.data.deleteBenutzerMenge,
-			gotoEinstellungen: routeEinstellungen.gotoEinstellungen
 		};
 	}
 

@@ -23,21 +23,23 @@ const SEinstellungen = () => import("~/components/einstellungen/SEinstellungen.v
 export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "einstellungen", "einstellungen", SEinstellungen, new RouteDataEinstellungen());
+		super(Schulform.values(), [ BenutzerKompetenz.ADMIN ], "einstellungen", "einstellungen", SEinstellungen, new RouteDataEinstellungen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Einstellungen";
-		super.setView("liste", SEinstellungenAuswahl, (route) => this.getAuswahlProps(route));
+		super.setView("submenu", SEinstellungenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [];
 		super.menu = [
 			// Benutzerverwaltung
 			routeEinstellungenBenutzer,
 			routeEinstellungenBenutzergruppe,
 		];
-		super.defaultChild = undefined;
+		super.defaultChild = routeEinstellungenBenutzer;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+		if (to.name === this.name)
+			return this.defaultChild?.getRoute();
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -65,10 +67,8 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
-		this.data.setView(node, routeEinstellungen.menu);
+		this.data.setView(node, this.menu);
 	}
-
-	gotoEinstellungen = async () => await RouteManager.doRoute({ name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
 
 	public benutzerKompetenzen = (gruppe : BenutzerKompetenzGruppe) : List<BenutzerKompetenz> => {
 		const schuljahr = routeApp.data.aktAbschnitt.value.schuljahr;

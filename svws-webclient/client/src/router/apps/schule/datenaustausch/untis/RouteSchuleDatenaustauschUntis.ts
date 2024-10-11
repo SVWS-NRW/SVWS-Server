@@ -26,7 +26,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Untis";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("liste", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschUntisStundenplan,
 			routeSchuleDatenaustauschUntisRaeume,

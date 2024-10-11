@@ -54,7 +54,7 @@
 				</svws-ui-menu>
 			</template>
 		</div>
-		<div v-if="$slots.secondaryMenu && hasSecondaryMenu || skeleton" class="app--sidebar">
+		<div v-if="$slots.secondaryMenu && hasSecondaryMenu || skeleton" class="app--sidebar" :class="{ 'app--sidebar-normal' : !secondaryMenuSmall }">
 			<div class="s-toggle-first" v-if="!skeleton">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSidebarExpanded">
@@ -80,7 +80,7 @@
 				</template>
 			</div>
 		</div>
-		<div v-if="$slots.tertiaryMenu && hasTertiaryMenu || skeleton" class="app--second-sidebar">
+		<div v-if="$slots.tertiaryMenu && hasTertiaryMenu || skeleton" class="app--second-sidebar" :class="{ 'app--sidebar-normal' : !tertiaryMenuSmall }">
 			<div class="s-toggle-second" v-if="!skeleton">
 				<svws-ui-tooltip>
 					<button type="button" @click="updateSecondSidebarExpanded">
@@ -142,11 +142,15 @@
 		fullwidthContent?: boolean;
 		noSecondaryMenu?: boolean;
 		tertiaryMenu?: boolean;
+		secondaryMenuSmall?: boolean;
+		tertiaryMenuSmall?: boolean;
 	}>(), {
 		skeleton: false,
 		fullwidthContent: false,
 		noSecondaryMenu: false,
 		tertiaryMenu: false,
+		secondaryMenuSmall: false,
+		tertiaryMenuSmall: false,
 	});
 
 	const sidebarExpanded = ref<boolean>(true);
@@ -298,6 +302,12 @@
 		}
 	}
 
+	.app--sidebar:not(.app--sidebar-normal) {
+		width: 15%;
+		min-width: 16rem;
+		max-width: 20rem;
+	}
+
 	.app--second-sidebar {
 		@apply flex-shrink-0 -mr-2 rounded-r-none p-2 pr-0 h-full border-r-0 relative;
 		width: 20%;
@@ -333,6 +343,12 @@
 				writing-mode: sideways-lr;
 			}
 		}
+	}
+
+	.app--second-sidebar:not(.app--sidebar-normal) {
+		width: 15%;
+		min-width: 16rem;
+		max-width: 20rem;
 	}
 
 	@media (orientation: portrait) {

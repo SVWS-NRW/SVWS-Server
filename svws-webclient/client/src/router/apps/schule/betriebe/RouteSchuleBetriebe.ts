@@ -18,6 +18,7 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SBetriebeAuswahl = () => import("~/components/schule/betriebe/SBetriebeAuswahl.vue")
 const SBetriebeApp = () => import("~/components/schule/betriebe/SBetriebeApp.vue")
 
@@ -29,6 +30,7 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text="Betriebe";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SBetriebeAuswahl, (route) => this.getAuswahlProps(route));
 
 		super.children = [
@@ -78,7 +80,6 @@ export class RouteSchuleBetriebe extends RouteNode<RouteDataSchuleBetriebe, Rout
 			addEintrag: this.data.addEintrag,
 			deleteEintraege: this.data.deleteEintraege,
 			gotoEintrag: this.data.gotoEintrag,
-			returnToSchule: routeSchule.gotoSchule,
 		};
 	}
 

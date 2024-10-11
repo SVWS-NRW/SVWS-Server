@@ -1,5 +1,5 @@
 <template>
-	<svws-ui-app-layout no-secondary-menu tertiary-menu>
+	<svws-ui-app-layout :no-secondary-menu="!showSubmenu()" :tertiary-menu="showAuswahlliste()" secondary-menu-small>
 		<template #sidebar>
 			<svws-ui-menu>
 				<template #header>
@@ -66,7 +66,19 @@
 			</svws-ui-menu>
 		</template>
 		<template #secondaryMenu v-if="app.hide !== true">
-			<router-view :key="app.name" name="submenu" />
+			<template v-if="pendingSetApp">
+				<svws-ui-secondary-menu>
+					<template #headline>
+						<span>{{ pendingSetApp }}</span>
+					</template>
+					<template #abschnitt>
+						<span class="inline-block h-4 rounded animate-pulse w-16 bg-black/10 dark:bg-white/10 -mb-1" />
+					</template>
+				</svws-ui-secondary-menu>
+			</template>
+			<template v-else>
+				<router-view :key="app.name" name="submenu" />
+			</template>
 		</template>
 		<template #tertiaryMenu v-if="app.hide !== true">
 			<template v-if="pendingSetApp">
@@ -156,6 +168,26 @@
 			copied.value = false;
 		}
 		copied.value = true;
+	}
+
+	const showSubmenus = new Set<string>([
+		"schule", "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge", "schule.vermerkarten",
+		"schule.religionen", "schule.schulen",
+		"schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung",
+		"schule.datenaustausch.wenom",
+		"einstellungen", "einstellungen.benutzer", "einstellungen.benutzergruppen"
+	]);
+	function showSubmenu() : boolean {
+		return showSubmenus.has(props.selectedChild.name);
+	}
+
+	const hideAuswahlliste = new Set<string>([ "statistik", "einstellungen",
+		"schule", "schule.stammdaten",
+		"schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung",
+		"schule.datenaustausch.wenom"
+	]);
+	function showAuswahlliste() : boolean {
+		return !hideAuswahlliste.has(props.selectedChild.name);
 	}
 
 	function is_active(current: TabData): boolean {
