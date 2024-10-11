@@ -39,10 +39,7 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name)
-			return this.defaultChild?.getRoute();
-	}
-
-	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+			return this.data.view.getRoute();
 	}
 
 	public getRoute() : RouteLocationRaw {

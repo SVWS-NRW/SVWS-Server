@@ -21,7 +21,7 @@ const SEinstellungenAuswahl = () => import("~/components/einstellungen/SEinstell
 const SBenutzerAuswahl = () => import("~/components/einstellungen/benutzer/SBenutzerAuswahl.vue");
 const SBenutzerApp = () => import("~/components/einstellungen/benutzer/SBenutzerApp.vue");
 
-export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungenBenutzer,RouteApp> {
+export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungenBenutzer, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [BenutzerKompetenz.ADMIN], "einstellungen.benutzer", "einstellungen/benutzer/:id(\\d+)?", SBenutzerApp, new RouteDataEinstellungenBenutzer());
