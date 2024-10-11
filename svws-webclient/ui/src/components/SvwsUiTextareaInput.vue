@@ -20,13 +20,13 @@
 				'textarea-input--placeholder--required': required
 			}">
 			<span>{{ placeholder }}</span>
-			<span class="icon i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span class="icon i-ri-alert-line ml-0.5 -my-0.5 icon-error" v-if="(isValid === false)" />
+			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-ui-danger': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
 						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto ml-0.5" />
-						<span class="icon i-ri-alert-fill" v-if="data === '' || data === null" />
+						<span class="icon i-ri-alert-fill icon-error" v-if="data === '' || data === null" />
 					</span>
 					<template #content>
 						Relevant für die Statistik
@@ -145,21 +145,26 @@
 		@apply relative;
 
 		textarea::placeholder {
-			@apply text-black/25;
+			@apply text-ui-secondary;
 		}
 	}
 
 	.textarea-input--control {
-		@apply bg-white dark:bg-black;
-		@apply rounded-md border border-black/5 dark:border-white/5;
+		@apply bg-ui border border-ui-secondary text-ui;
+		@apply rounded-md;
 		@apply w-full;
 		@apply text-base;
 		@apply cursor-text;
 		padding: 0.5em 0.7em;
-		min-height: theme("spacing.9");
+		min-height: 2.5em;
+		min-width: 10em;
 
-		&:hover {
-			@apply border-black/25 dark:border-white/25;
+		&:focus {
+			@apply outline-none;
+		}
+
+		&:focus-visible {
+			@apply ring ring-ui-neutral;
 		}
 	}
 
@@ -170,24 +175,19 @@
 
 	.textarea-input--focus .textarea-input--control,
 	.textarea-input--filled .textarea-input--control {
-		@apply border-black dark:border-white;
-		@apply outline-none;
-	}
-
-	.textarea-input--filled:not(:focus-within):not(:hover) .textarea-input--control {
-		@apply border-black/25 dark:border-white/25;
-	}
-
-	.textarea-input--filled:not(:focus-within):hover .textarea-input--control {
-		@apply border-black/50 dark:border-white/50;
-	}
-
-	.textarea-input--disabled .textarea-input--control {
-		@apply cursor-not-allowed;
+		@apply border-ui;
 	}
 
 	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
-		@apply border-error;
+		@apply border-ui-danger;
+	}
+
+	.textarea-input--statistics .textarea-input--control {
+		@apply border-ui-statistic;
+	}
+
+	.textarea-input--statistics:not(.textarea-input--filled) .textarea-input--control {
+		@apply border-ui-statistic-secondary;
 	}
 
 	.textarea-input--resize-none .textarea-input--control {
@@ -216,42 +216,32 @@
 		top: 0.5em;
 		left: 0.7em;
 		line-height: 1.33;
-	}
 
-	.textarea-input:not(.textarea-input--filled) .textarea-input--placeholder {
-		@apply font-normal;
+		.icon {
+			@apply w-[1.4em];
+		}
 	}
 
 	.textarea-input:not(.textarea-input--filled):not(:focus-within):not(.textarea-input--disabled):hover .textarea-input--placeholder {
 		@apply opacity-100;
 	}
 
-	.textarea-input--statistics .textarea-input--control {
-		@apply border-violet-500;
-	}
-
 	.textarea-input--statistics.textarea-input--invalid .textarea-input--control {
-		@apply border-error;
+		@apply border-ui-danger;
 	}
 
 	.textarea-input--statistics .textarea-input--placeholder {
-		@apply text-violet-500;
-	}
-
-	.textarea-input--statistics {
-		.tooltip-trigger--triggered svg {
-			@apply text-violet-800;
-		}
+		@apply text-ui-statistic;
 	}
 
 	.textarea-input--statistics.textarea-input--invalid .textarea-input--placeholder {
-		@apply text-violet-500 font-medium;
+		@apply text-ui-statistic;
 	}
 
 	.textarea-input--focus .textarea-input--placeholder,
 	.textarea-input--filled .textarea-input--placeholder {
 		@apply -translate-y-1/2;
-		@apply bg-white dark:bg-black opacity-100;
+		@apply bg-ui opacity-100;
 		@apply rounded;
 		@apply px-1;
 
@@ -264,28 +254,23 @@
 		}
 	}
 
-	.textarea-input--invalid:not(:focus-within) .textarea-input--placeholder,
+	.textarea-input--invalid .textarea-input--placeholder,
 	.textarea-input--invalid:not(:focus-within) .textarea-input--control {
-		@apply text-error;
-	}
-
-	.textarea-input--disabled {
-		@apply cursor-not-allowed;
-
-		.textarea-input--placeholder {
-			@apply text-black/25 dark:text-white;
-		}
-
-		.textarea-input--control {
-			@apply bg-black/10 dark:bg-white/10 border-black/25 dark:border-white/25 text-black dark:text-white;
-			@apply opacity-20;
-			@apply cursor-not-allowed pointer-events-none;
-		}
+		@apply text-ui-danger;
 	}
 
 	.textarea-input--placeholder--required:after {
-		@apply text-error;
+		@apply text-ui-danger;
 		content: " *";
+	}
+
+	.textarea-input--disabled .textarea-input--control {
+		@apply bg-ui text-ui-disabled border-ui-disabled;
+		@apply pointer-events-none resize-none;
+	}
+
+	.textarea-input--disabled .textarea-input--placeholder {
+		@apply bg-ui text-ui-disabled;
 	}
 
 </style>
