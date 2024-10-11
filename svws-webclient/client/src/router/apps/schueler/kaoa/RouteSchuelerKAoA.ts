@@ -56,6 +56,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 			schuelerKaoaManager: () => this.data.schuelerKaoaManager,
 			auswahl: () => this.data.auswahl,
 			addKaoaDaten: routeSchuelerKAoA.data.addKaoaDaten,
+			deleteKaoaDaten: routeSchuelerKAoA.data.deleteKaoaDaten
 		};
 	}
 

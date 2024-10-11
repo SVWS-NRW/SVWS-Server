@@ -285,11 +285,23 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	}
 
 	/**
+	 * Fügt der Liste der SchuelerKaoaDaten den Eintrag hinzu
 	 *
-	 * @param eintrag
+	 * @param eintrag SchuelerKaoaDaten
 	 */
 	public void addKaoaDaten(final @NotNull SchuelerKAoADaten eintrag) {
 		this.liste.add(eintrag);
+	}
+
+	/**
+	 * Löscht den Eintrag aus der Liste der SchuelerKaoaDaten
+	 *
+	 * @param id Id der zu löschenden SchuelerKaoaDaten
+	 */
+	public void deleteKaoaDaten(final long id) {
+		final SchuelerKAoADaten schuelerKAoADaten = this.liste.get(id);
+		if (schuelerKAoADaten != null)
+			this.liste.remove(schuelerKAoADaten);
 	}
 
 	/**

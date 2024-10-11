@@ -285,11 +285,23 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	}
 
 	/**
+	 * Fügt der Liste der SchuelerKaoaDaten den Eintrag hinzu
 	 *
-	 * @param eintrag
+	 * @param eintrag SchuelerKaoaDaten
 	 */
 	public addKaoaDaten(eintrag : SchuelerKAoADaten) : void {
 		this.liste.add(eintrag);
+	}
+
+	/**
+	 * Löscht den Eintrag aus der Liste der SchuelerKaoaDaten
+	 *
+	 * @param id Id der zu löschenden SchuelerKaoaDaten
+	 */
+	public deleteKaoaDaten(id : number) : void {
+		const schuelerKAoADaten : SchuelerKAoADaten | null = this.liste.get(id);
+		if (schuelerKAoADaten !== null)
+			this.liste.remove(schuelerKAoADaten);
 	}
 
 	/**

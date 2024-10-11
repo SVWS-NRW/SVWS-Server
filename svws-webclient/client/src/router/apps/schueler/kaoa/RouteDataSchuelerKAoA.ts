@@ -52,6 +52,18 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		api.status.stop()
 	}
 
+	deleteKaoaDaten = async (idSchueler: number, idKaoaEntry: number) => {
+		api.status.start()
+		try {
+			await api.server.deleteKAoAdaten(api.schema, idSchueler, idKaoaEntry)
+			this.schuelerKaoaManager.deleteKaoaDaten(idKaoaEntry)
+			this.commit()
+		} catch (error: OpenApiError) {
+			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
+		}
+		api.status.stop()
+	}
+
 
 	public async ladeDaten(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)

@@ -1,7 +1,7 @@
 <!-- eslint-disable @typescript-eslint/consistent-type-imports -->
 <template>
 	<div class="page--content">
-		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().getSchuelerKAoADatenAuswahl()" class="col-span-full">
+		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().getSchuelerKAoADatenAuswahl()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectedEntry = item">
 			<template #cell(idKategorie)="{ value } : { value: number }">
 				<span>
 					{{ KAOAKategorie.data().getEintragByID(value)?.kuerzel || "" }}
@@ -21,9 +21,12 @@
 				</span>
 			</template>
 		</svws-ui-table>
+		<svws-ui-button title="DeleteButton" v-if="selectedEntry" @click="deleteEntry">
+			<span class="icon i-ri-delete-bin-line" />
+		</svws-ui-button>
 		<br>
 		<div>
-			<svws-ui-select title="KAoAKategorie" :items="props.schuelerKaoaManager().getKAOAKategorien()" :item-text="itemText" v-model="selectedKategorie" />
+			<svws-ui-select title="KAoAKategorie" :items="props.schuelerKaoaManager().getKAOAKategorienByJahrgangAuswahl(jahrgangAuswahl)" :item-text="itemText" v-model="selectedKategorie" />
 			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(kaoaKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
 			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(kaoaMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
 			<svws-ui-select title="KAoAEbene4" v-if="selectedZusatzmerkmal && optionsartIsEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(kaoaZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />
@@ -53,6 +56,7 @@
 	const selectedAnschlussoption = ref<KAOAAnschlussoptionen | null>(null);
 	const selectedBerufsfeld = ref<KAOABerufsfeld | null>(null);
 	const selectedBemerkung = ref<string | null>(null)
+	const selectedEntry = ref<SchuelerKAoADaten | null>()
 	const schuljahr = computed(() => props.schuelerKaoaManager().getSchuljahr())
 	const optionsart = computed(() => (kaoaZusatzmerkmal.value?.daten(schuljahr.value)) ? kaoaZusatzmerkmal.value.daten(schuljahr.value)?.optionsart : null);
 	const optionsartIsEbene4 = computed(() => optionsart.value === 'SBO_EBENE_4');
@@ -106,6 +110,12 @@
 		const idSchueler = props.auswahl().id;
 		await props.addKaoaDaten(data, idSchueler)
 		resetFields();
+	}
+	async function deleteEntry() {
+		if (selectedEntry.value === null || selectedEntry.value === undefined)
+			return false //todo Fehlerbehandlung
+		await props.deleteKaoaDaten(props.auswahl().id, selectedEntry.value.id)
+		selectedEntry.value = null;
 	}
 	function resetFields() {
 		selectedKategorie.value = null;
