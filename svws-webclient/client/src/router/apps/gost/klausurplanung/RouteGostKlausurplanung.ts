@@ -132,14 +132,23 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
+	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
+		return {
+			apiStatus: api.status,
+			kMan: () => routeGostKlausurplanung.data.manager,
+			getPDF: this.data.getPDF,
+			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
+			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			halbjahr: this.data.halbjahr,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
+		}
+	}
+
 	public getAuswahlProps(to: RouteLocationNormalized): GostKlausurplanungAuswahlProps {
 		return {
 			kMan: () => routeGostKlausurplanung.data.manager,
-			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
-			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			gotoHalbjahr: this.data.gotoHalbjahr,
 			halbjahr: this.data.halbjahr,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
@@ -157,14 +166,6 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			throw new DeveloperNotificationException("Unbekannte Route");
 		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.abiturjahr, halbjahr: this.data.halbjahr.id } });
 		this.data.setView(node, this.children);
-	}
-
-	public getProps(to: RouteLocationNormalized): GostKlausurplanungProps {
-		return {
-			apiStatus: api.status,
-			kMan: () => routeGostKlausurplanung.data.manager,
-			getPDF: this.data.getPDF,
-		}
 	}
 
 }
