@@ -751,6 +751,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Revalidiert alle Ergebnis. Dies führt zur Aktualisierung aller Ergebnisse.
+	 */
+	public ergebnisAlleRevalidieren() : void {
+		for (const ergebnisManager of this._map_idErgebnis_ErgebnisManager.values())
+			ergebnisManager.stateRevalidateEverything();
+	}
+
+	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
@@ -1624,6 +1632,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.regeln.sort(this._compRegel);
 		for (const listOfTyp of this._map_regeltyp_regeln.values())
 			listOfTyp.sort(this._compRegel);
+		this.ergebnisAlleRevalidieren();
 	}
 
 	/**
@@ -1837,6 +1846,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._map_multikey_regeln.remove(multikey);
 			this._daten.regeln.remove(regel);
 		}
+		this.ergebnisAlleRevalidieren();
 	}
 
 	private static regelToMultikey(regel : GostBlockungRegel) : LongArrayKey {

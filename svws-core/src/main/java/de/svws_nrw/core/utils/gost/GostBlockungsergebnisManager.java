@@ -244,7 +244,7 @@ public class GostBlockungsergebnisManager {
 	/**
 	 * Baut alle Datenstrukturen neu auf.
 	 */
-	private void stateRevalidateEverything() {
+	public void stateRevalidateEverything() {
 		stateClear();
 	}
 

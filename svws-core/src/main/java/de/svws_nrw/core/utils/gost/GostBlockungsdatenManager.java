@@ -756,6 +756,14 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Revalidiert alle Ergebnis. Dies führt zur Aktualisierung aller Ergebnisse.
+	 */
+	public void ergebnisAlleRevalidieren() {
+		for (final GostBlockungsergebnisManager ergebnisManager: _map_idErgebnis_ErgebnisManager.values())
+			ergebnisManager.stateRevalidateEverything();
+	}
+
+	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
@@ -1710,6 +1718,9 @@ public class GostBlockungsdatenManager {
 		// Sortieren der pro Regeltyp zugeordneten Regelmenge.
 		for (final @NotNull List<GostBlockungRegel> listOfTyp : _map_regeltyp_regeln.values())
 			listOfTyp.sort(_compRegel);
+
+		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
+		ergebnisAlleRevalidieren();
 	}
 
 	/**
@@ -1950,6 +1961,8 @@ public class GostBlockungsdatenManager {
 
 		}
 
+		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
+		ergebnisAlleRevalidieren();
 	}
 
 	private static @NotNull LongArrayKey regelToMultikey(final @NotNull GostBlockungRegel regel) {

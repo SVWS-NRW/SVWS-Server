@@ -318,7 +318,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	/**
 	 * Baut alle Datenstrukturen neu auf.
 	 */
-	private stateRevalidateEverything() : void {
+	public stateRevalidateEverything() : void {
 		this.stateClear();
 	}
 
