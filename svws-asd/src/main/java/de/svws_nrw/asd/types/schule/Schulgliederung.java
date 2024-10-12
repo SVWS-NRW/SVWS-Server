@@ -207,6 +207,13 @@ public enum Schulgliederung implements @NotNull CoreType<SchulgliederungKatalogE
 	B10,
 
 	/**
+	 * Schulgliederung B11:
+	 *   Anlage B (Berufsfachschule),
+	 *   Typ 11 (Berufsabschl./HSA Kl. 10 oder mittl. Schulabschluss berufsbegleitend (BAB/HSA10-FOR, 3j. TZ))
+	 */
+	B11,
+
+	/**
 	 * Schulgliederung BT:
 	 *   Schule für Kranke: Berufsbildend (Teilzeit)
 	 */

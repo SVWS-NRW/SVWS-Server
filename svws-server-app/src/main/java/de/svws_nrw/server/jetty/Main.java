@@ -80,7 +80,7 @@ public class Main {
 		logger.logLn("Core-Types veraltet - führe Update aus...");
 		logger.modifyIndent(2);
 
-		final boolean success = dbManager.updater.coreTypes.update(dbManager.getConnection(), true, -1);
+		final boolean success = dbManager.updater.coreTypes.updateNewTransaction(dbManager.getConnection(), true, -1);
 		logger.modifyIndent(-2);
 		if (logfile != null)
 			logger.removeConsumer(logfile);

@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "OA",
 		"idHistorie": 1,
@@ -30,8 +30,8 @@
 			"schluessel": "1",
 			"kuerzel": "VERS",
 			"text": "Versetzungszeugnis",
-			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigVon": 2005,
+			"gueltigBis": 2015
 		} ]
 	}, {
 		"bezeichner": "AUFB",
@@ -41,7 +41,7 @@
 			"schluessel": "1",
 			"kuerzel": "AUFB",
 			"text": "Abschlusszeugnis in Aufbaubildungsgängen",
-			"gueltigVon": null,
+			"gueltigVon": 2015,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -78,15 +78,47 @@
 			"gueltigBis": null
 		} ]
 	}, {
+		"bezeichner": "ASZBK",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 160000,
+			"schluessel": "1",
+			"kuerzel": "ASZBK",
+			"text": "Abschlusszeugnis der Vorklasse zum BGJ",
+			"gueltigVon": null,
+			"gueltigBis": 2000
+		}, {
+			"id": 160001,
+			"schluessel": "1",
+			"kuerzel": "ASZBK",
+			"text": "Abschlusszeugnis der Vorklasse zum BGJ (berufliche Kenntnisse)",
+			"gueltigVon": 2001,
+			"gueltigBis": 2001
+		}, {
+			"id": 160002,
+			"schluessel": "1",
+			"kuerzel": "ASZBK",
+			"text": "Abschlusszeugnis (berufliche Kenntnisse)",
+			"gueltigVon": 2002,
+			"gueltigBis": 2015
+		}, {
+			"id": 160003,
+			"schluessel": "1",
+			"kuerzel": "ASZBK",
+			"text": "Abschlusszeugnis (berufliche Kenntnisse, Fähigkeiten und Fertigkeiten)",
+			"gueltigVon": 2016,
+			"gueltigBis": null
+		} ]
+	}, {
 		"bezeichner": "BG",
 		"idHistorie": 8,
 		"historie": [ {
 			"id": 200000,
 			"schluessel": "2",
 			"kuerzel": "BG",
-			"text": "Abschluss der Berufschulgrundjahres",
+			"text": "Berufsgrundbildung",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2017
 		} ]
 	}, {
 		"bezeichner": "BS",
@@ -106,8 +138,15 @@
 			"id": 400000,
 			"schluessel": "4",
 			"kuerzel": "BK",
-			"text": "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"text": "Berufliche Kenntnisse",
 			"gueltigVon": null,
+			"gueltigBis": 2015
+		}, {
+			"id": 400001,
+			"schluessel": "4",
+			"kuerzel": "BK",
+			"text": "Berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"gueltigVon": 2016,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -128,9 +167,20 @@
 			"id": 600000,
 			"schluessel": "6",
 			"kuerzel": "BW",
-			"text": "Fachschulabschluss (berufliche Weiterbildung)",
+			"text": "Fachschulabschluss",
 			"gueltigVon": null,
 			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EBK",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 700000,
+			"schluessel": "7",
+			"kuerzel": "EBK",
+			"text": "Erweiterte berufliche Kenntnisse",
+			"gueltigVon": null,
+			"gueltigBis": 2013
 		} ]
 	}, {
 		"bezeichner": "VBK",
@@ -139,8 +189,15 @@
 			"id": 800000,
 			"schluessel": "8",
 			"kuerzel": "VBK",
-			"text": "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"text": "Vertiefte berufliche Kenntnisse",
 			"gueltigVon": null,
+			"gueltigBis": 2015
+		},  {
+			"id": 800001,
+			"schluessel": "8",
+			"kuerzel": "VBK",
+			"text": "Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten",
+			"gueltigVon": 2016,
 			"gueltigBis": null
 		} ]
 	}, {

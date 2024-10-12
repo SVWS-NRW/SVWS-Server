@@ -34,6 +34,9 @@ public enum SchulabschlussBerufsbildend implements CoreType<SchulabschlussBerufs
 	/** Abschluss der Berufschulgrundjahres */
 	BG,
 
+	/** Abschlusszeugnis berufliche Kenntnisse */
+	ASZBK,
+
 	/** Berufschulabschluss */
 	BS,
 
@@ -45,6 +48,9 @@ public enum SchulabschlussBerufsbildend implements CoreType<SchulabschlussBerufs
 
     /** Fachschulabschluss (berufliche Weiterbildung) */
 	BW,
+
+	/** Erweiterte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
+	EBK,
 
 	/** Vertiefte berufliche Kenntnisse, Fähigkeiten und Fertigkeiten */
 	VBK,

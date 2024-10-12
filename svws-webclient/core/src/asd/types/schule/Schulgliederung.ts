@@ -210,396 +210,403 @@ export class Schulgliederung extends JavaEnum<Schulgliederung> implements CoreTy
 	public static readonly B10 : Schulgliederung = new Schulgliederung("B10", 27, );
 
 	/**
+	 *  Schulgliederung B11:
+	 *    Anlage B (Berufsfachschule),
+	 *    Typ 11 (Berufsabschl./HSA Kl. 10 oder mittl. Schulabschluss berufsbegleitend (BAB/HSA10-FOR, 3j. TZ))
+	 */
+	public static readonly B11 : Schulgliederung = new Schulgliederung("B11", 28, );
+
+	/**
 	 *  Schulgliederung BT:
 	 *    Schule für Kranke: Berufsbildend (Teilzeit)
 	 */
-	public static readonly BT : Schulgliederung = new Schulgliederung("BT", 28, );
+	public static readonly BT : Schulgliederung = new Schulgliederung("BT", 29, );
 
 	/**
 	 *  Schulgliederung BV:
 	 *    Schule für Kranke: Berufsbildend (Vollzeit)
 	 */
-	public static readonly BV : Schulgliederung = new Schulgliederung("BV", 29, );
+	public static readonly BV : Schulgliederung = new Schulgliederung("BV", 30, );
 
 	/**
 	 *  Schulgliederung C01:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 01 (Berufsabschluss/Fachhochschulreife (ohne Berufspraktikum) BAB/FHR 3j; VZ BFS)
 	 */
-	public static readonly C01 : Schulgliederung = new Schulgliederung("C01", 30, );
+	public static readonly C01 : Schulgliederung = new Schulgliederung("C01", 31, );
 
 	/**
 	 *  Schulgliederung C02:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 02 (Berufsabschluss f. Hochschulzugangsberechtigte (BAB 2j; VZ) BFS)
 	 */
-	public static readonly C02 : Schulgliederung = new Schulgliederung("C02", 31, );
+	public static readonly C02 : Schulgliederung = new Schulgliederung("C02", 32, );
 
 	/**
 	 *  Schulgliederung C03:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 03 (Berufliche Kenntnisse/FHR (BK/FHR 2j; VZ) HBFS)
 	 */
-	public static readonly C03 : Schulgliederung = new Schulgliederung("C03", 32, );
+	public static readonly C03 : Schulgliederung = new Schulgliederung("C03", 33, );
 
 	/**
 	 *  Schulgliederung C04 (ausgelaufen):
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 04 (Berufliche Kenntnisse/Sonderform für Abiturienten (BK 1j; VZ) HBFS)
 	 */
-	public static readonly C04 : Schulgliederung = new Schulgliederung("C04", 33, );
+	public static readonly C04 : Schulgliederung = new Schulgliederung("C04", 34, );
 
 	/**
 	 *  Schulgliederung C05:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 05 (Fachoberschule Kl. 11 (BK/FHR 1j; TZ))
 	 */
-	public static readonly C05 : Schulgliederung = new Schulgliederung("C05", 34, );
+	public static readonly C05 : Schulgliederung = new Schulgliederung("C05", 35, );
 
 	/**
 	 *  Schulgliederung C06:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 06 (Fachoberschule Kl. 12S (BK/FHR 1j; VZ))
 	 */
-	public static readonly C06 : Schulgliederung = new Schulgliederung("C06", 35, );
+	public static readonly C06 : Schulgliederung = new Schulgliederung("C06", 36, );
 
 	/**
 	 *  Schulgliederung C07:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 07 (Fachoberschule Kl. 12B (BK/FHR 2j; TZ))
 	 */
-	public static readonly C07 : Schulgliederung = new Schulgliederung("C07", 36, );
+	public static readonly C07 : Schulgliederung = new Schulgliederung("C07", 37, );
 
 	/**
 	 *  Schulgliederung C08:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 08 (Fachoberschule Kl. 12B (BK/FHR 1j; VZ))
 	 */
-	public static readonly C08 : Schulgliederung = new Schulgliederung("C08", 37, );
+	public static readonly C08 : Schulgliederung = new Schulgliederung("C08", 38, );
 
 	/**
 	 *  Schulgliederung C09 (ausgelaufen):
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 09 (Berufspraktikum Erzieher/innen (Vollzeit) (BP/Erz 1j; VZ))
 	 */
-	public static readonly C09 : Schulgliederung = new Schulgliederung("C09", 38, );
+	public static readonly C09 : Schulgliederung = new Schulgliederung("C09", 39, );
 
 	/**
 	 *  Schulgliederung C10 (ausgelaufen):
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 10 (Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ))
 	 */
-	public static readonly C10 : Schulgliederung = new Schulgliederung("C10", 39, );
+	public static readonly C10 : Schulgliederung = new Schulgliederung("C10", 40, );
 
 	/**
 	 *  Schulgliederung C11:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 11 (Fachoberschule Kl. 12B (BK/FHR 3j; TZ))
 	 */
-	public static readonly C11 : Schulgliederung = new Schulgliederung("C11", 40, );
+	public static readonly C11 : Schulgliederung = new Schulgliederung("C11", 41, );
 
 	/**
 	 *  Schulgliederung C12:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 12 (Berufsabschluss/Fachhochschulreife (mit  Berufspraktikum) BAB/FHR 3,5j; VZ)
 	 */
-	public static readonly C12 : Schulgliederung = new Schulgliederung("C12", 41, );
+	public static readonly C12 : Schulgliederung = new Schulgliederung("C12", 42, );
 
 	/**
 	 *  Schulgliederung C13:
 	 *    Anlage C (Berufsfachschule und Fachoberschule),
 	 *    Typ 13 (Berufsabschluss/Fachhochschulreife (gestuft) (BAB/FHR 3j; VZ))
 	 */
-	public static readonly C13 : Schulgliederung = new Schulgliederung("C13", 42, );
+	public static readonly C13 : Schulgliederung = new Schulgliederung("C13", 43, );
 
 	/**
 	 *  Schulgliederung D01:
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 01 (Berufsabschluss/Allg. Hochschulreife (mit Berufspraktikum) (BAB/AHR 4j; VZ))
 	 */
-	public static readonly D01 : Schulgliederung = new Schulgliederung("D01", 43, );
+	public static readonly D01 : Schulgliederung = new Schulgliederung("D01", 44, );
 
 	/**
 	 *  Schulgliederung D02:
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 02 (Berufl. Kenntnisse/Allg. Hochschulreife (BK/AHR 3j; VZ))
 	 */
-	public static readonly D02 : Schulgliederung = new Schulgliederung("D02", 44, );
+	public static readonly D02 : Schulgliederung = new Schulgliederung("D02", 45, );
 
 	/**
 	 *  Schulgliederung D03 (ausgelaufen):
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 03 (Berufspraktikum (Vollzeit) (BP 1j; VZ))
 	 */
-	public static readonly D03 : Schulgliederung = new Schulgliederung("D03", 45, );
+	public static readonly D03 : Schulgliederung = new Schulgliederung("D03", 46, );
 
 	/**
 	 *  Schulgliederung D04 (ausgelaufen):
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 04 (Berufspraktikum Erzieher/innen (Teilzeit) (BP/Erz 2j; TZ))
 	 */
-	public static readonly D04 : Schulgliederung = new Schulgliederung("D04", 46, );
+	public static readonly D04 : Schulgliederung = new Schulgliederung("D04", 47, );
 
 	/**
 	 *  Schulgliederung D05:
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 05 (AHR (gem. § 2 Abs. 3 Anlage D) (AHR 1j; VZ) FOS13)
 	 */
-	public static readonly D05 : Schulgliederung = new Schulgliederung("D05", 47, );
+	public static readonly D05 : Schulgliederung = new Schulgliederung("D05", 48, );
 
 	/**
 	 *  Schulgliederung D06:
 	 *    Anlage D (Berufliches Gymnasium und Fachoberschule),
 	 *    Typ 06 (AHR (gem. § 2 Abs. 3 Anlage D) (AHR 2j; TZ) FOS13)
 	 */
-	public static readonly D06 : Schulgliederung = new Schulgliederung("D06", 48, );
+	public static readonly D06 : Schulgliederung = new Schulgliederung("D06", 49, );
 
 	/**
 	 *  Schulgliederung E01:
 	 *    Anlage E (Fachschule),
 	 *    Typ 01 (Fachschule Vollzeit (BW 2j; VZ))
 	 */
-	public static readonly E01 : Schulgliederung = new Schulgliederung("E01", 49, );
+	public static readonly E01 : Schulgliederung = new Schulgliederung("E01", 50, );
 
 	/**
 	 *  Schulgliederung E02:
 	 *    Anlage E (Fachschule),
 	 *    Typ 02 (Fachschule Teilzeit (BW 4j; TZ))
 	 */
-	public static readonly E02 : Schulgliederung = new Schulgliederung("E02", 50, );
+	public static readonly E02 : Schulgliederung = new Schulgliederung("E02", 51, );
 
 	/**
 	 *  Schulgliederung E03:
 	 *    Anlage E (Fachschule),
 	 *    Typ 03 (Fachschule (verkürzt) Vollzeit (BW 1j; VZ))
 	 */
-	public static readonly E03 : Schulgliederung = new Schulgliederung("E03", 51, );
+	public static readonly E03 : Schulgliederung = new Schulgliederung("E03", 52, );
 
 	/**
 	 *  Schulgliederung E04:
 	 *    Anlage E (Fachschule),
 	 *    Typ 04 (Fachschule (verkürzt) Teilzeit (BW 2j; TZ))
 	 */
-	public static readonly E04 : Schulgliederung = new Schulgliederung("E04", 52, );
+	public static readonly E04 : Schulgliederung = new Schulgliederung("E04", 53, );
 
 	/**
 	 *  Schulgliederung E05:
 	 *    Anlage E (Fachschule),
 	 *    Typ 05 (Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 3j; VZ))
 	 */
-	public static readonly E05 : Schulgliederung = new Schulgliederung("E05", 53, );
+	public static readonly E05 : Schulgliederung = new Schulgliederung("E05", 54, );
 
 	/**
 	 *  Schulgliederung E06 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 06 (Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 1j; VZ))
 	 */
-	public static readonly E06 : Schulgliederung = new Schulgliederung("E06", 54, );
+	public static readonly E06 : Schulgliederung = new Schulgliederung("E06", 55, );
 
 	/**
 	 *  Schulgliederung E07:
 	 *    Anlage E (Fachschule),
 	 *    Typ 07 (Fachschule für Sozialwesen (mit Berufspraktikum) (BAB 6j; TZ))
 	 */
-	public static readonly E07 : Schulgliederung = new Schulgliederung("E07", 55, );
+	public static readonly E07 : Schulgliederung = new Schulgliederung("E07", 56, );
 
 	/**
 	 *  Schulgliederung E08 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 08 (Fachschule für Sozialpädagogik / Heilerziehungspflege (Praxis) (BAB/FP 2j; TZ))
 	 */
-	public static readonly E08 : Schulgliederung = new Schulgliederung("E08", 56, );
+	public static readonly E08 : Schulgliederung = new Schulgliederung("E08", 57, );
 
 	/**
 	 *  Schulgliederung E09 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 09 (Fachschule (Sonderform) Vollzeit (BW 3j; VZ))
 	 */
-	public static readonly E09 : Schulgliederung = new Schulgliederung("E09", 57, );
+	public static readonly E09 : Schulgliederung = new Schulgliederung("E09", 58, );
 
 	/**
 	 *  Schulgliederung E10 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 10 (Fachschule (Sonderform) Teilzeit (BW 6j; TZ))
 	 */
-	public static readonly E10 : Schulgliederung = new Schulgliederung("E10", 58, );
+	public static readonly E10 : Schulgliederung = new Schulgliederung("E10", 59, );
 
 	/**
 	 *  Schulgliederung E11 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 11 (Berufspraktikum Erzieher/innen (FS/BP/Erz 1j; VZ))
 	 */
-	public static readonly E11 : Schulgliederung = new Schulgliederung("E11", 59, );
+	public static readonly E11 : Schulgliederung = new Schulgliederung("E11", 60, );
 
 	/**
 	 *  Schulgliederung E12 (ausgelaufen):
 	 *    Anlage E (Fachschule),
 	 *    Typ 12 (Berufspraktikum Erzieher/innen (FS/BP/Erz 2j; TZ))
 	 */
-	public static readonly E12 : Schulgliederung = new Schulgliederung("E12", 60, );
+	public static readonly E12 : Schulgliederung = new Schulgliederung("E12", 61, );
 
 	/**
 	 *  Schulgliederung E13:
 	 *    Anlage E (Fachschule),
 	 *    Typ 13 (Fachschule Teilzeit (BW 3j; TZ))
 	 */
-	public static readonly E13 : Schulgliederung = new Schulgliederung("E13", 61, );
+	public static readonly E13 : Schulgliederung = new Schulgliederung("E13", 62, );
 
 	/**
 	 *  Schulgliederung ER:
 	 *    kooperative Form: Erweiterungsebene
 	 */
-	public static readonly ER : Schulgliederung = new Schulgliederung("ER", 62, );
+	public static readonly ER : Schulgliederung = new Schulgliederung("ER", 63, );
 
 	/**
 	 *  Schulgliederung EVB:
 	 *    Evangelische Bekenntnisschule
 	 */
-	public static readonly EVB : Schulgliederung = new Schulgliederung("EVB", 63, );
+	public static readonly EVB : Schulgliederung = new Schulgliederung("EVB", 64, );
 
 	/**
 	 *  Schulgliederung G01:
 	 *    Aufbaugymnasium
 	 */
-	public static readonly G01 : Schulgliederung = new Schulgliederung("G01", 64, );
+	public static readonly G01 : Schulgliederung = new Schulgliederung("G01", 65, );
 
 	/**
 	 *  Schulgliederung G02:
 	 *    Bildungsgang Abendgymnasium
 	 */
-	public static readonly G02 : Schulgliederung = new Schulgliederung("G02", 65, );
+	public static readonly G02 : Schulgliederung = new Schulgliederung("G02", 66, );
 
 	/**
 	 *  Schulgliederung GGS (auslaufend):
 	 *    Gemeinschaftsschule (auslaufend) integrierte Form
 	 */
-	public static readonly GGS : Schulgliederung = new Schulgliederung("GGS", 66, );
+	public static readonly GGS : Schulgliederung = new Schulgliederung("GGS", 67, );
 
 	/**
 	 *  Schulgliederung GGY (auslaufend):
 	 *    Gemeinschaftsschule (auslaufend) Gymnasialbildungsgang
 	 */
-	public static readonly GGY : Schulgliederung = new Schulgliederung("GGY", 67, );
+	public static readonly GGY : Schulgliederung = new Schulgliederung("GGY", 68, );
 
 	/**
 	 *  Schulgliederung GMS:
 	 *    Gemeinschaftsschule
 	 */
-	public static readonly GMS : Schulgliederung = new Schulgliederung("GMS", 68, );
+	public static readonly GMS : Schulgliederung = new Schulgliederung("GMS", 69, );
 
 	/**
 	 *  Schulgliederung GR:
 	 *    kooperative Form: Grundebene
 	 */
-	public static readonly GR : Schulgliederung = new Schulgliederung("GR", 69, );
+	public static readonly GR : Schulgliederung = new Schulgliederung("GR", 70, );
 
 	/**
 	 *  Schulgliederung GRH (auslaufend):
 	 *    Gemeinschaftsschule auslaufend: teilintegrierte Form
 	 */
-	public static readonly GRH : Schulgliederung = new Schulgliederung("GRH", 70, );
+	public static readonly GRH : Schulgliederung = new Schulgliederung("GRH", 71, );
 
 	/**
 	 *  Schulgliederung GS:
 	 *    integrierte Form (Binnendifferenzierung)
 	 */
-	public static readonly GS : Schulgliederung = new Schulgliederung("GS", 71, );
+	public static readonly GS : Schulgliederung = new Schulgliederung("GS", 72, );
 
 	/**
 	 *  Schulgliederung GY:
 	 *    Bildungsgang Gymnasium
 	 */
-	public static readonly GY : Schulgliederung = new Schulgliederung("GY", 72, );
+	public static readonly GY : Schulgliederung = new Schulgliederung("GY", 73, );
 
 	/**
 	 *  Schulgliederung GY8:
 	 *    Bildungsgang G8-Gymnasium
 	 */
-	public static readonly GY8 : Schulgliederung = new Schulgliederung("GY8", 73, );
+	public static readonly GY8 : Schulgliederung = new Schulgliederung("GY8", 74, );
 
 	/**
 	 *  Schulgliederung GY9:
 	 *    Bildungsgang G9-Gymnasium
 	 */
-	public static readonly GY9 : Schulgliederung = new Schulgliederung("GY9", 74, );
+	public static readonly GY9 : Schulgliederung = new Schulgliederung("GY9", 75, );
 
 	/**
 	 *  Schulgliederung H:
 	 *    Bildungsgang Hauptschule
 	 */
-	public static readonly H : Schulgliederung = new Schulgliederung("H", 75, );
+	public static readonly H : Schulgliederung = new Schulgliederung("H", 76, );
 
 	/**
 	 *  Schulgliederung H01:
 	 *    Berufsgrundbildung (Jahrgang 07 bis 10)
 	 */
-	public static readonly H01 : Schulgliederung = new Schulgliederung("H01", 76, );
+	public static readonly H01 : Schulgliederung = new Schulgliederung("H01", 77, );
 
 	/**
 	 *  Schulgliederung H02:
 	 *    Berufsausbildung (Jahrgang 11 und 12)
 	 */
-	public static readonly H02 : Schulgliederung = new Schulgliederung("H02", 77, );
+	public static readonly H02 : Schulgliederung = new Schulgliederung("H02", 78, );
 
 	/**
 	 *  Schulgliederung K02:
 	 *    Bildungsgang Kolleg
 	 */
-	public static readonly K02 : Schulgliederung = new Schulgliederung("K02", 78, );
+	public static readonly K02 : Schulgliederung = new Schulgliederung("K02", 79, );
 
 	/**
 	 *  Schulgliederung R:
 	 *    Bildungsgang Realschule
 	 */
-	public static readonly R : Schulgliederung = new Schulgliederung("R", 79, );
+	public static readonly R : Schulgliederung = new Schulgliederung("R", 80, );
 
 	/**
 	 *  Schulgliederung R00:
 	 *    Realschule
 	 */
-	public static readonly R00 : Schulgliederung = new Schulgliederung("R00", 80, );
+	public static readonly R00 : Schulgliederung = new Schulgliederung("R00", 81, );
 
 	/**
 	 *  Schulgliederung R01:
 	 *    Aufbaurealschule
 	 */
-	public static readonly R01 : Schulgliederung = new Schulgliederung("R01", 81, );
+	public static readonly R01 : Schulgliederung = new Schulgliederung("R01", 82, );
 
 	/**
 	 *  Schulgliederung R02:
 	 *    Bildungsgang Abendrealschule
 	 */
-	public static readonly R02 : Schulgliederung = new Schulgliederung("R02", 82, );
+	public static readonly R02 : Schulgliederung = new Schulgliederung("R02", 83, );
 
 	/**
 	 *  Schulgliederung RH:
 	 *    teilintegrierte Form
 	 */
-	public static readonly RH : Schulgliederung = new Schulgliederung("RH", 83, );
+	public static readonly RH : Schulgliederung = new Schulgliederung("RH", 84, );
 
 	/**
 	 *  Schulgliederung RKB:
 	 *    Katholische  Bekenntnisschule
 	 */
-	public static readonly RKB : Schulgliederung = new Schulgliederung("RKB", 84, );
+	public static readonly RKB : Schulgliederung = new Schulgliederung("RKB", 85, );
 
 	/**
 	 *  Schulgliederung SRH (auslaufend):
 	 *    Sekundarschule, teilintegrierte Form (auslaufend)
 	 */
-	public static readonly SRH : Schulgliederung = new Schulgliederung("SRH", 85, );
+	public static readonly SRH : Schulgliederung = new Schulgliederung("SRH", 86, );
 
 	/**
 	 *  Schulgliederung SSI (auslaufend):
 	 *    Sekundarschule, integrierte Form (auslaufend)
 	 */
-	public static readonly SSI : Schulgliederung = new Schulgliederung("SSI", 86, );
+	public static readonly SSI : Schulgliederung = new Schulgliederung("SSI", 87, );
 
 	/**
 	 *  Schulgliederung Y8:
 	 *    Lehrplan G8
 	 */
-	public static readonly Y8 : Schulgliederung = new Schulgliederung("Y8", 87, );
+	public static readonly Y8 : Schulgliederung = new Schulgliederung("Y8", 88, );
 
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);

@@ -1,10 +1,10 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {	
 		"bezeichner": "HAUSFRUEERZIEHUNG",
 		"idHistorie": 27,
 		"historie": [ {
-			"id" : 100000,
+			"id": 90000,
 			"schluessel": "90",
 			"kuerzel": "90",
 			"text": "Hausfrüherziehung für Hör- bzw. Sehgeschädigte",
@@ -16,7 +16,7 @@
 		"bezeichner": "JAHRGANG_00",
 		"idHistorie": 20,
 		"historie": [ {
-			"id" : 0,
+			"id": 0,
 			"schluessel": "00", 
 			"kuerzel": "00", 
 			"text": "Frühkindliche Förderung, Förderschulkindergarten", 
@@ -32,8 +32,16 @@
 			"schluessel": "91",
 			"kuerzel": "91",
 			"text": "Vorkurs (1. Semester)",
-			"schulformen": [ "WB" ],
+			"schulformen": [ "WB", "S", "KS" ],
 			"gueltigVon": null,
+			"gueltigBis": 2014
+		}, {
+			"id": 200001,
+			"schluessel": "91",
+			"kuerzel": "91",
+			"text": "Vorkurs (1. Semester)",
+			"schulformen": [ "WB" ],
+			"gueltigVon": 2015,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -268,12 +276,20 @@
 		"bezeichner": "BERUFSPRAXISSTUFE",
 		"idHistorie": 17,
 		"historie": [ {
-			"id" : 30000000,
+			"id": 30000000,
+			"schluessel": "85,86",
+			"kuerzel": "BP",
+			"text": "Werkstufe der Förderschulen für Geistige Entwicklung",
+			"schulformen": [ "FW", "WF", "S", "KS" ],
+			"gueltigVon": null,
+			"gueltigBis": 2011
+		}, {
+			"id": 30000001,
 			"schluessel": "85,86",
 			"kuerzel": "BP",
 			"text": "Berufspraxisstufe der Förderschulen für Geistige Entwicklung",
 			"schulformen": [ "FW", "WF", "S", "KS" ],
-			"gueltigVon": null,
+			"gueltigVon": 2012,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -281,11 +297,19 @@
 		"idHistorie": 21,
 		"historie": [ {
 			"id": 1500000,
-			"schluessel": "201",
+			"schluessel": "S1",
+			"kuerzel": "S1",
+			"text": "1. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 1500001,
+			"schluessel": "S1",
 			"kuerzel": "S1",
 			"text": "1. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -293,11 +317,19 @@
 		"idHistorie": 22,
 		"historie": [ {
 			"id": 2500000,
-			"schluessel": "202",
+			"schluessel": "S2",
+			"kuerzel": "S2",
+			"text": "2. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 2500001,
+			"schluessel": "S2",
 			"kuerzel": "S2",
 			"text": "2. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -305,11 +337,19 @@
 		"idHistorie": 23,
 		"historie": [ {
 			"id": 3500000,
-			"schluessel": "203",
+			"schluessel": "S3",
+			"kuerzel": "S3",
+			"text": "3. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 3500001,
+			"schluessel": "S3",
 			"kuerzel": "S3",
 			"text": "3. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -317,11 +357,19 @@
 		"idHistorie": 24,
 		"historie": [ {
 			"id": 4500000,
-			"schluessel": "204",
+			"schluessel": "S4",
+			"kuerzel": "S4",
+			"text": "4. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 4500001,
+			"schluessel": "S4",
 			"kuerzel": "S4",
 			"text": "4. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -329,11 +377,19 @@
 		"idHistorie": 25,
 		"historie": [ {
 			"id": 5500000,
-			"schluessel": "205",
+			"schluessel": "S5",
+			"kuerzel": "S5",
+			"text": "5. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 5500001,
+			"schluessel": "S5",
 			"kuerzel": "S5",
 			"text": "5. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -341,11 +397,19 @@
 		"idHistorie": 26,
 		"historie": [ {
 			"id": 6500000,
-			"schluessel": "206",
+			"schluessel": "S6",
+			"kuerzel": "S6",
+			"text": "6. Semester",
+			"schulformen": [ "WB" ],
+			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 6500001,
+			"schluessel": "S6",
 			"kuerzel": "S6",
 			"text": "6. Semester",
 			"schulformen": [ "HI", "WB" ],
-			"gueltigVon": null,
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	} ]

@@ -43,7 +43,6 @@ import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
-import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
@@ -214,29 +213,25 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision.
 	 *
-	 * @param user         der Datenbank-Benutzer für den Verbindungsaufbau zur Datenbank
+	 * @param conn         die Datenbankverbindung ohne aktive Transaktion
 	 * @param lockSchema   gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
 	 *                     notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.
 	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
 	 *
 	 * @return true im Erfolgsfall, sonst false
-	 *
-	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean update(final Benutzer user, final boolean lockSchema, final long rev) throws DBException {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				boolean result = update(conn, lockSchema, rev);
-				if (result && (!conn.transactionCommit()))
-					result = false;
-				return result;
-			} catch (final Exception e) {
-				e.printStackTrace();
-				return false;
-			} finally {
-				conn.transactionRollback();
-			}
+	public boolean updateNewTransaction(final DBEntityManager conn, final boolean lockSchema, final long rev) {
+		try {
+			conn.transactionBegin();
+			boolean result = update(conn, lockSchema, rev);
+			if (result && (!conn.transactionCommit()))
+				result = false;
+			return result;
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			conn.transactionRollback();
 		}
 	}
 
@@ -388,6 +383,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(kuerzel).append("'").append(")");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.data().getVersion(), sql.toString());
 	};
 
