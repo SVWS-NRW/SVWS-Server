@@ -226,12 +226,12 @@ public final class MigrationDTOSchuelerAbgaenge {
 	@JsonProperty
 	public String LSEntlassArt;
 
-	/** Statiatikkürzel Schulform zur abgebenden Schule */
+	/** Statistikkürzel Schulform zur abgebenden Schule */
 	@Column(name = "LSSchulformSIM")
 	@JsonProperty
 	public String LSSchulformSIM;
 
-	/** Entalssdtaum zur abgebenden Schule */
+	/** Entlassdtaum zur abgebenden Schule */
 	@Column(name = "LSSchulEntlassDatum")
 	@JsonProperty
 	@Convert(converter = MigrationDatumConverter.class)

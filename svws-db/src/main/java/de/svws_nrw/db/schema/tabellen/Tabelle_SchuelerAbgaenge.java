@@ -65,12 +65,12 @@ public class Tabelle_SchuelerAbgaenge extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte LSSchulformSIM */
 	public SchemaTabelleSpalte col_LSSchulformSIM = add("LSSchulformSIM", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-			.setJavaComment("Statiatikkürzel Schulform zur abgebenden Schule");
+			.setJavaComment("Statistikkürzel Schulform zur abgebenden Schule");
 
 	/** Die Definition der Tabellenspalte LSSchulEntlassDatum */
 	public SchemaTabelleSpalte col_LSSchulEntlassDatum = add("LSSchulEntlassDatum", SchemaDatentypen.DATE, false)
 			.setConverter(DatumConverter.class)
-			.setJavaComment("Entalssdtaum zur abgebenden Schule");
+			.setJavaComment("Entlassdtaum zur abgebenden Schule");
 
 	/** Die Definition der Tabellenspalte LSVersetzung */
 	public SchemaTabelleSpalte col_LSVersetzung = add("LSVersetzung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
