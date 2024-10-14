@@ -68,7 +68,7 @@ export class RouteKatalogRaeume extends RouteNode<RouteDataKatalogRaeume, RouteS
 	public getProps(to: RouteLocationNormalized): RaeumeProps {
 		return {
 			patch: routeKatalogRaeume.data.patch,
-			auswahl: routeKatalogRaeume.data.raumListeManager.auswahl(),
+			auswahl: routeKatalogRaeume.data.raumListeManager.hasDaten() ? routeKatalogRaeume.data.raumListeManager.auswahl() : undefined,
 		};
 	}
 
