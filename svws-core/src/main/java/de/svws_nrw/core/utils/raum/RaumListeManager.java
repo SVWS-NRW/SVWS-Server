@@ -40,11 +40,13 @@ public final class RaumListeManager extends AuswahlManager<Long, Raum, Raum> {
 			final @NotNull List<Raum> raeume) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, raeume, RaumUtils.comparator, _raumToId, _raumToId,
 				Arrays.asList());
-		initRaeume();
+		onMehrfachauswahlChanged();
 	}
 
 
-	private void initRaeume() {
+	@Override
+	protected void onMehrfachauswahlChanged() {
+		this._mapRaumByKuerzel.clear();
 		for (final @NotNull Raum f : this.liste.list()) {
 			if (f.kuerzel != null)
 				this._mapRaumByKuerzel.put(f.kuerzel, f);

@@ -37,10 +37,11 @@ export class RaumListeManager extends AuswahlManager<number, Raum, Raum> {
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, raeume : List<Raum>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, raeume, RaumUtils.comparator, RaumListeManager._raumToId, RaumListeManager._raumToId, Arrays.asList());
-		this.initRaeume();
+		this.onMehrfachauswahlChanged();
 	}
 
-	private initRaeume() : void {
+	protected onMehrfachauswahlChanged() : void {
+		this._mapRaumByKuerzel.clear();
 		for (const f of this.liste.list()) {
 			if (f.kuerzel !== null)
 				this._mapRaumByKuerzel.put(f.kuerzel, f);
