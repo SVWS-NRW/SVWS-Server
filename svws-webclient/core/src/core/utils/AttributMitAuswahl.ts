@@ -186,7 +186,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public addAll(values : List<V>) : void {
 		let added : boolean = false;
 		for (const value of values)
-			added = added || this.addInternal(value);
+			added = this.addInternal(value) || added;
 		if ((added) && (this._eventHandlerListeGeaendert !== null))
 			this._eventHandlerListeGeaendert.run();
 	}
@@ -242,7 +242,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public removeAll(values : List<V>) : void {
 		let removed : boolean = false;
 		for (const value of values)
-			removed = removed || this.removeInternal(value);
+			removed = this.removeInternal(value) || removed;
 		if (!removed)
 			return;
 		if (this._eventHandlerListeGeaendert !== null)
