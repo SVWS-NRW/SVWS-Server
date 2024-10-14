@@ -114,7 +114,11 @@
 		selectedBerufsfeld.value = null;
 		selectedEbene4.value = null;
 		selectedBemerkung.value = null;
+		selectedEntry.value = null;
 	}
+	watch(props, () => {
+		resetFields();
+	});
 	watch(selectedKategorie, (value) => {
 		if (value) {
 			selectedMerkmal.value = null;
