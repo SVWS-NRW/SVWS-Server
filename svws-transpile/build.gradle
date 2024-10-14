@@ -40,10 +40,10 @@ apply from: "$rootDir/publish-helper.gradle"
 publishing {
   publications {
     publishJava(MavenPublication) {
-      artifactId = 'svws-schulen'
+      artifactId = 'svws-transpile'
       pom {
-        name = 'SVWS Bibliothek für den Zugriff auf die Daten des vom Land NRW bereitgestellten Web-Services zu Informationen rund um Schulen'
-        description = 'Diese Bibliothek ermöglicht den Zugriff auf die Schulinformationen, wie sie vom Web-Service des Landes NRW bereitgestellt werden.'
+        name = 'SVWS Bibliothek für das Transpilieren von Java-Code nach Typecript.'
+        description = 'Diese Bibliothek ermöglicht das Transpilieren von Java-Code nach Typecript.'
       }
     }
   }
