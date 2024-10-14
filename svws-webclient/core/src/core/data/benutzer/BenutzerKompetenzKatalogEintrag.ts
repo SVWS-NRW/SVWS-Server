@@ -24,6 +24,11 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	public bezeichnung : string = "";
 
 	/**
+	 * Eine kurze Erläuterung zu der Kompetenz, die im Tooltip angezeigt werden kann.
+	 */
+	public tooltip : string = "";
+
+	/**
 	 * Die Schulformen.
 	 */
 	public nurSchulformen : List<string> | null = null;
@@ -41,23 +46,26 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
+	 * @param tooltip        der Tooltip
 	 */
-	public constructor(id : number, gruppe : BenutzerKompetenzGruppe, bezeichnung : string, schulformen : List<Schulform> | null);
+	public constructor(id : number, gruppe : BenutzerKompetenzGruppe, bezeichnung : string, schulformen : List<Schulform> | null, tooltip : string);
 
 	/**
 	 * Implementation for method overloads of 'constructor'
 	 */
-	public constructor(__param0? : number, __param1? : BenutzerKompetenzGruppe, __param2? : string, __param3? : List<Schulform> | null) {
+	public constructor(__param0? : number, __param1? : BenutzerKompetenzGruppe, __param2? : string, __param3? : List<Schulform> | null, __param4? : string) {
 		super();
-		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined)) {
+		if ((__param0 === undefined) && (__param1 === undefined) && (__param2 === undefined) && (__param3 === undefined) && (__param4 === undefined)) {
 			// empty method body
-		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null))) {
+		} else if (((__param0 !== undefined) && typeof __param0 === "number") && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.types.benutzer.BenutzerKompetenzGruppe')))) && ((__param2 !== undefined) && (typeof __param2 === "string")) && ((__param3 !== undefined) && ((__param3 instanceof JavaObject) && (__param3.isTranspiledInstanceOf('java.util.List'))) || (__param3 === null)) && ((__param4 !== undefined) && (typeof __param4 === "string"))) {
 			const id : number = __param0 as number;
 			const gruppe : BenutzerKompetenzGruppe = cast_de_svws_nrw_core_types_benutzer_BenutzerKompetenzGruppe(__param1);
 			const bezeichnung : string = __param2;
 			const schulformen : List<Schulform> | null = cast_java_util_List(__param3);
+			const tooltip : string = __param4;
 			this.id = id;
 			this.bezeichnung = bezeichnung;
+			this.tooltip = tooltip;
 			this.gruppe_id = gruppe.daten.id;
 			if (schulformen !== null) {
 				this.nurSchulformen = new ArrayList();
@@ -89,6 +97,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		if (obj.bezeichnung === undefined)
 			throw new Error('invalid json format, missing attribute bezeichnung');
 		result.bezeichnung = obj.bezeichnung;
+		if (obj.tooltip === undefined)
+			throw new Error('invalid json format, missing attribute tooltip');
+		result.tooltip = obj.tooltip;
 		if ((obj.nurSchulformen !== undefined) && (obj.nurSchulformen !== null)) {
 			result.nurSchulformen = new ArrayList();
 			for (const elem of obj.nurSchulformen) {
@@ -105,6 +116,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"gruppe_id" : ' + obj.gruppe_id.toString() + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		result += '"tooltip" : ' + JSON.stringify(obj.tooltip) + ',';
 		if (!obj.nurSchulformen) {
 			result += '"nurSchulformen" : null';
 		} else {
@@ -132,6 +144,9 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
+		}
+		if (obj.tooltip !== undefined) {
+			result += '"tooltip" : ' + JSON.stringify(obj.tooltip) + ',';
 		}
 		if (obj.nurSchulformen !== undefined) {
 			if (!obj.nurSchulformen) {

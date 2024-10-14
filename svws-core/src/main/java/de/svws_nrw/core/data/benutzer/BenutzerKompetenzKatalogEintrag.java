@@ -31,6 +31,11 @@ public class BenutzerKompetenzKatalogEintrag {
 	@Schema(description = "die Bezeichnung der Benutzerkompetenz", example = "Ansehen")
 	public @NotNull String bezeichnung = "";
 
+	/** Eine kurze Erläuterung zu der Kompetenz, die im Tooltip angezeigt werden kann. */
+	@Schema(description = "eine kurze Erläuterung zu der Kompetenz, die im Tooltip angezeigt werden kann",
+			example = "Ermöglicht die vollständige Bearbeitung aller Leistungsdaten eines Schülers.")
+	public @NotNull String tooltip = "";
+
 	/** Die Schulformen. */
 	@Schema(description = "die Schulformen, bei denen die Kompetenz zulässig ist", example = "Liste")
 	public List<String> nurSchulformen = null;
@@ -50,11 +55,13 @@ public class BenutzerKompetenzKatalogEintrag {
 	 * @param gruppe         die Gruppe, welcher die Benutzerkompetenz zugeordnet ist
 	 * @param bezeichnung    die Bezeichnung der Benutzerkompetenz
 	 * @param schulformen    die Schulformen, bei denen die Kompetenz zulässig ist.
+	 * @param tooltip        der Tooltip
 	 */
 	public BenutzerKompetenzKatalogEintrag(final long id, final @NotNull BenutzerKompetenzGruppe gruppe,
-			final @NotNull String bezeichnung, final List<Schulform> schulformen) {
+			final @NotNull String bezeichnung, final List<Schulform> schulformen, final @NotNull String tooltip) {
 		this.id = id;
 		this.bezeichnung = bezeichnung;
+		this.tooltip = tooltip;
 		this.gruppe_id = gruppe.daten.id;
 		if (schulformen != null) {
 			this.nurSchulformen = new ArrayList<>();
