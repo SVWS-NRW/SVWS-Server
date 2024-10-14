@@ -155,16 +155,10 @@
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
-					<div v-if="count" class="text-sm svws-ui-td" role="cell">
-						<span v-if="allRowsSelected && modelValue" class="font-medium">
-							Alle {{ modelValue.length }} ausgewählt
-						</span>
-						<span v-else-if="someNotAllRowsSelected && modelValue" class="font-medium">
-							{{ modelValue.length }}<span class="opacity-50">/{{ sortedRows.length }}</span> ausgewählt
-						</span>
-						<span v-else class="opacity-50">
-							{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}
-						</span>
+					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
+						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
+						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/{{ sortedRows.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
+						<template v-else>{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</template></template>
 					</div>
 					<div v-if="$slots.actions" class="flex-grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
@@ -405,17 +399,18 @@
 	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))
 	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.filter(row => !props.unselectable.has(row.source)).every(isRowSelected));
 	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
+	const selectedItemsNotListed = computed(() => selectedItemsRaw.value.filter(i => !sortedRows.value.some(r => toRaw(r.source) === i)));
 
 	function isRowSelected(row: DataTableRow) {
 		return selectedItemsRaw.value.includes(row.source)
 	}
 
 	function selectAllRows() {
-		emit('update:modelValue', [...sortedRows.value.filter(row => !props.unselectable.has(row.source)).map(row => row.source)]);
+		emit('update:modelValue', [...sortedRows.value.filter(row => !props.unselectable.has(row.source)).map(row => row.source).concat(selectedItemsNotListed.value)]);
 	}
 
 	function unselectAllRows() {
-		emit('update:modelValue', []);
+		emit('update:modelValue', [...selectedItemsNotListed.value]);
 	}
 
 	function selectRow(row: DataTableRow) {
@@ -433,16 +428,16 @@
 		if (!props.selectable)
 			return;
 		if (isRowSelected(row))
-			unselectRow(row)
+			unselectRow(row);
 		else
-			selectRow(row)
+			selectRow(row);
 	}
 
 	function toggleBulkSelection() {
 		if (allRowsSelected.value)
-			unselectAllRows()
+			unselectAllRows();
 		else
-			selectAllRows()
+			selectAllRows();
 	}
 
 	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));

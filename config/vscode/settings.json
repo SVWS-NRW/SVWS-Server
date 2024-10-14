@@ -6,8 +6,6 @@
 		"addDeprecated",
 		"invertEquals",
 		"addFinalModifier",
-		"qualifyStaticMembers",
-		"stringConcatToTextBlock",
 		"lambdaExpressionFromAnonymousClass",
 		"renameFileToType"
 	],

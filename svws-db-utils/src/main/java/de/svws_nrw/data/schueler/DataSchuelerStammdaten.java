@@ -3,6 +3,7 @@ package de.svws_nrw.data.schueler;
 import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
@@ -20,6 +21,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerFoto;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -399,5 +401,48 @@ public final class DataSchuelerStammdaten extends DataManager<Long> {
 		schueler.Ortsteil_ID = ortsteilIDNeu;
 	}
 
+	/**
+	 * Löscht mehrere Schüler und gibt das Ergebnis der Lösch-Operationen als Liste von {@link SimpleOperationResponse} zurück.
+	 *
+	 * @param ids   die IDs der zu löschenden Schüler
+	 *
+	 * @return die Response mit einer Liste von {@link SimpleOperationResponse} zu den angefragten Lösch-Operationen.
+	 */
+	public Response deleteMultipleAsResponse(final List<Long> ids) {
+		// Bestimme die Datenbank-DTOs der Schüler
+		final List<DTOSchueler> schuelerList = this.conn.queryByKeyList(DTOSchueler.class, ids).stream().toList();
+
+		// Prüfe, ob das Löschen der Schüler erlaubt ist
+		final Map<Long, SimpleOperationResponse> mapResponses = schuelerList.stream()
+				.collect(Collectors.toMap(r -> r.ID, this::checkDeletePreConditions));
+
+		// Lösche die Schüler und gib den Erfolg in der Response zurück
+		for (final DTOSchueler schueler : schuelerList) {
+			final SimpleOperationResponse operationResponse = mapResponses.get(schueler.ID);
+			if (operationResponse == null)
+				throw new DeveloperNotificationException("Das SimpleOperationResponse Objekt zu der ID %d existiert nicht.".formatted(schueler.ID));
+
+			if (operationResponse.log.isEmpty()) {
+				schueler.Geloescht = true;
+				operationResponse.success = this.conn.transactionPersist(schueler);
+			}
+		}
+
+		return Response.ok().entity(mapResponses.values()).build();
+	}
+
+	/**
+	 * Diese Methode prüft, ob alle Vorbedingungen zum Löschen eines Schülers erfüllt sind.
+	 * Es wird eine {@link SimpleOperationResponse} zurückgegeben.
+	 *
+	 * @param dtoSchueler   das DTO des Schülers, die gelöscht werden soll
+	 *
+	 * @return Liefert eine Response mit dem Log der Vorbedingungsprüfung zurück.
+	 */
+	SimpleOperationResponse checkDeletePreConditions(final @NotNull DTOSchueler dtoSchueler) {
+		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
+		operationResponse.id = dtoSchueler.ID;
+		return operationResponse;
+	}
 
 }

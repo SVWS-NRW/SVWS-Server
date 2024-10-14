@@ -5,17 +5,17 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeApp } from "../RouteApp";
-import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
 import { api } from "~/router/Api";
 import { RouteType } from "~/router/RouteType";
 import { RouteManager } from "~/router/RouteManager";
+import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 
-const SKlassenDatenNeu = () => import("~/components/klassen/daten/SKlassenDatenNeu.vue");
+const SKlassenNeu = () => import("~/components/klassen/SKlassenNeu.vue");
 
-export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
+export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "klassen.datenNeu", "neu", SKlassenDatenNeu);
+		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "klassen.neu", "neu", SKlassenNeu);
 		super.types = new Set([ RouteType.HINZUFUEGEN ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
@@ -27,7 +27,7 @@ export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
 		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
 	}
 
-	public getProps(to: RouteLocationNormalized): KlassenDatenNeuProps {
+	public getProps(to: RouteLocationNormalized): KlassenNeuProps {
 		return {
 			klassenListeManager: () => routeKlassen.data.klassenListeManager,
 			schulform: api.schulform,
@@ -36,10 +36,10 @@ export class RouteKlassenDatenNeu extends RouteNode<any, RouteKlassen> {
 			add: routeKlassen.data.add,
 			gotoEintrag: routeKlassen.data.gotoEintrag,
 			checkpoint: this.checkpoint,
-			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint()
+			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};
 	}
 
 }
 
-export const routeKlassenDatenNeu = new RouteKlassenDatenNeu();
+export const routeKlassenNeu = new RouteKlassenNeu();

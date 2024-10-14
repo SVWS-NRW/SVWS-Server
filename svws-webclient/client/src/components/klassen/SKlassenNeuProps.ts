@@ -2,7 +2,7 @@ import type { Schulform, KlassenDaten, KlassenListeManager } from "@core";
 import type { Checkpoint } from "@ui";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
-export interface KlassenDatenNeuProps {
+export interface KlassenNeuProps {
 	klassenListeManager: () => KlassenListeManager;
 	schulform: Schulform;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;

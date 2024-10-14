@@ -7,8 +7,8 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table clickable :clicked="schuelerListeManager().hasDaten() ? schuelerListeManager().auswahl() : null" @update:clicked="gotoSchueler"
-				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
+			<svws-ui-table :clickable="!schuelerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultRoute(schueler.id)"
+				:items="rowsFiltered" :model-value="[...props.schuelerListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allow-arrow-key-selection>
 				<template #search>
@@ -38,12 +38,17 @@
 						</template>
 					</svws-ui-tooltip>
 				</template>
-				<!-- <template #actions>
-					<svws-ui-button v-if="selectedItems.length > 0" type="transparent" @click="showModalGruppenaktionen().value = true">
-					<svws-ui-button type="icon" @click="addLine()">
-						<span class="icon i-ri-add-line" />
-					</svws-ui-button>
-				</template> -->
+
+				<template #actions>
+					<svws-ui-tooltip position="bottom" v-if="props.serverMode.checkServerMode(ServerMode.DEV)">
+						<svws-ui-button type="icon" @click="startCreationMode">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
+						<template #content>
+							Neuen Schüler anlegen
+						</template>
+					</svws-ui-tooltip>
+				</template>
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -72,9 +77,11 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
+	import { ServerMode } from "@core";
 	import { SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
+	import { RouteType } from "~/router/RouteType";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 
@@ -84,6 +91,10 @@
 	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
 
 	const search = ref<string>("");
+
+	async function startCreationMode(): Promise<void> {
+		await props.gotoHinzufuegenRoute(true)
+	}
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
 		const map = new Map<string, boolean>();
@@ -119,8 +130,8 @@
 	]
 
 	watch(() => props.schuelerListeManager().filtered(), async (neu) => {
-		if (props.schuelerListeManager().hasDaten() && neu.contains(props.schuelerListeManager().auswahl()) === false)
-			await props.gotoSchueler(neu.isEmpty() ? null : neu.get(0));
+		if (props.schuelerListeManager().hasDaten() && !neu.contains(props.schuelerListeManager().auswahl()))
+			await props.gotoDefaultRoute(neu.isEmpty() ? null : neu.get(0).id);
 	})
 
 	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {
@@ -229,20 +240,20 @@
 		return `${kurs.kuerzel} (${jahrgaenge})`;
 	}
 
-	function find(items: Iterable<JahrgangsDaten | KlassenDaten>, search: string) {
-		const list = [];
-		for (const i of items)
-			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-				list.push(i);
-		return list;
+	function find(klassen: Iterable<JahrgangsDaten | KlassenDaten>, search: string) {
+		const matchedKlassen = [];
+		for (const klasse of klassen)
+			if ((klasse.kuerzel !== null) && klasse.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				matchedKlassen.push(klasse);
+		return matchedKlassen;
 	}
 
-	function findKurs(items: Iterable<KursDaten>, search: string) {
-		const list = [];
-		for (const i of items)
-			if (i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
-				list.push(i);
-		return list;
+	function findKurs(kurse: Iterable<KursDaten>, search: string) {
+		const matchedKurse = [];
+		for (const kurs of kurse)
+			if (kurs.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				matchedKurse.push(kurs);
+		return matchedKurse;
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
@@ -251,40 +262,23 @@
 
 	const selectedItems = shallowRef<SchuelerListeEintrag[]>([]);
 
-	function setAuswahl(items : SchuelerListeEintrag[]) {
-		const schuelerauswahl = props.schuelerListeManager().liste;
-		for (const vorhanden of [ ... schuelerauswahl.auswahl() ])
-			if (!items.includes(vorhanden))
-				schuelerauswahl.auswahlRemove(vorhanden);
-		for (const item of items)
-			schuelerauswahl.auswahlAdd(item);
-		selectedItems.value = [ ... schuelerauswahl.auswahl() ];
+	async function setAuswahl(schuelerEintraege : SchuelerListeEintrag[]) {
+		props.schuelerListeManager().liste.auswahlClear();
+		for (const schueler of schuelerEintraege)
+			if (props.schuelerListeManager().liste.hasValue(schueler))
+				props.schuelerListeManager().liste.auswahlAdd(schueler);
+
+		if (props.schuelerListeManager().liste.auswahlExists())
+			await props.gotoGruppenprozessRoute(true);
+		else
+			await props.gotoDefaultRoute(props.schuelerListeManager().getVorherigeAuswahl()?.id);
 	}
 
-	function onAction(action: string, item: SchuelerListeEintrag) {
-		switch(action) {
-			case 'delete':
-				deleteSchueler(item);
-				break;
-			case 'copy':
-				copySchuelerEintrag(item);
-				break;
-		}
-	}
-
-	function copySchuelerEintrag(item: SchuelerListeEintrag) {
-		// TODO: Funktion implementieren
-		console.log('copy geklickt', item);
-	}
-
-	function deleteSchueler(item: SchuelerListeEintrag) {
-		// TODO delete Schueler
-		console.log("delete", item);
-	}
-
-	function addLine() {
-		// TODO: Funktion implementieren
-		console.log('addLine geklickt');
-	}
+	const clickedEintrag = computed(() => {
+		if ((props.activeRouteType !== RouteType.GRUPPENPROZESSE) && (props.activeRouteType !== RouteType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
+			return props.schuelerListeManager().auswahl();
+		else
+			return null;
+	});
 
 </script>

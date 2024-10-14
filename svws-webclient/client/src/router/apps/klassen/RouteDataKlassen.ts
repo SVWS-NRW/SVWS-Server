@@ -11,7 +11,7 @@ import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import type { RouteNode } from "~/router/RouteNode";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
-import { routeKlassenDatenNeu } from "~/router/apps/klassen/RouteKlassenDatenNeu";
+import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 
@@ -317,7 +317,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoCreationMode = async (navigate: boolean) => {
-		if (this._state.value.creationModeEnabled || (this._state.value.view === routeKlassenDatenNeu)) {
+		if (this._state.value.creationModeEnabled || (this._state.value.view === routeKlassenNeu)) {
 			this.commit();
 			return;
 		}
@@ -327,12 +327,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
-			const result = await RouteManager.doRoute(routeKlassenDatenNeu.getRoute());
+			const result = await RouteManager.doRoute(routeKlassenNeu.getRoute());
 			if (result === RoutingStatus.SUCCESS)
 				this.klassenListeManager.liste.auswahlClear();
 		}
 
-		this._state.value.view = routeKlassenDatenNeu;
+		this._state.value.view = routeKlassenNeu;
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
 		this.klassenListeManager.setDaten(null);
 		this.commit();

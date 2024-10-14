@@ -2,6 +2,7 @@ package de.svws_nrw.api.server;
 
 import java.io.InputStream;
 
+import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.betrieb.BetriebStammdaten;
 import de.svws_nrw.core.data.erzieher.ErzieherStammdaten;
 import de.svws_nrw.core.data.kataloge.KatalogEintrag;
@@ -216,6 +217,34 @@ public class APISchueler {
 				request, ServerMode.STABLE,
 				BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN);
 	}
+
+	/**
+	 * Die OpenAPI-Methode für das Entfernen mehrerer Schüler.
+	 *
+	 * @param schema    das Datenbankschema
+	 * @param is        der InputStream, mit der Liste von zu löschenden IDs
+	 * @param request   die Informationen zur HTTP-Anfrage
+	 *
+	 * @return die HTTP-Antwort mit dem Status der Lösch-Operationen
+	 */
+	@DELETE
+	@Path("/delete/multiple")
+	@Operation(summary = "Entfernt mehrere Schüler durch setzen eines Löschvermerks.",
+			description = "Entfernt mehrere Schüler durch setzen eines Löschvermerks. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernen"
+					+ "der Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.")
+	@ApiResponse(responseCode = "200", description = "Die Lösch-Operationen wurden ausgeführt.",
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SimpleOperationResponse.class))))
+	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.")
+	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
+	public Response deleteSchueler(@PathParam("schema") final String schema, @RequestBody(description = "Die IDs der zu löschenden Schüler", required = true,
+			content = @Content(mediaType = MediaType.APPLICATION_JSON,
+					array = @ArraySchema(schema = @Schema(implementation = Long.class)))) final InputStream is,
+			@Context final HttpServletRequest request) {
+		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataSchuelerStammdaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
+				request, ServerMode.STABLE,
+				BenutzerKompetenz.SCHUELER_LOESCHEN);
+	}
+
 
 
 

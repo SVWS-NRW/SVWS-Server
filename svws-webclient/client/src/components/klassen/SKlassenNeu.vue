@@ -41,11 +41,11 @@
 
 <script setup lang="ts">
 	import { ref, computed, onMounted, watch } from "vue";
-	import type { KlassenDatenNeuProps } from "~/components/klassen/daten/SKlassenDatenNeuProps";
+	import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 	import type { KlassenDaten, JahrgangsDaten, List } from '@core';
 	import { AllgemeinbildendOrganisationsformen, Klassenart, Schulgliederung, ArrayList } from "@core";
 
-	const props = defineProps<KlassenDatenNeuProps>();
+	const props = defineProps<KlassenNeuProps>();
 
 	const schulform = computed(() => props.schulform);
 	const schuljahr = computed(() => props.klassenListeManager().getSchuljahr());
