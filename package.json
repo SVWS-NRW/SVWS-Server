@@ -2,7 +2,7 @@
 	"author": "MSB NRW",
 	"name": "svws-monorepo",
 	"description": "SVWS-Server-Projekt: Monorepo-Workspace",
-	"version": "0.9.3-SNAPSHOT",
+	"version": "0.9.3",
 	"license": "BSD-3-Clause",
 	"type": "module",
 	"dependencies": {
