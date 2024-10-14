@@ -19,6 +19,7 @@ import { routeGostKlausurplanungRaumzeit } from "./RouteGostKlausurplanungRaumze
 import type { DownloadPDFTypen } from "~/components/gost/klausurplanung/DownloadPDFTypen";
 import { routeGostKlausurplanungSchienen } from "./RouteGostKlausurplanungSchienen";
 import { routeGostKlausurplanungNachschreiber } from "./RouteGostKlausurplanungNachschreiber";
+import type { RouteParams } from "vue-router";
 
 interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -47,6 +48,20 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	public constructor() {
 		super(defaultState);
+	}
+
+	get params() {
+		const paramsJson = api.config.getValue("gost.klausurplan.routeparams");
+		if (paramsJson.length === 0)
+			return undefined;
+		const params = JSON.parse(paramsJson) as RouteParams;
+		return params;
+	}
+
+	set params(value) {
+		if (value && this._state.value.view)
+			value.view = this._state.value.view.name;
+		void api.config.setValue("gost.klausurplan.routeparams", JSON.stringify(value));
 	}
 
 	public get hatAbiturjahr(): boolean {

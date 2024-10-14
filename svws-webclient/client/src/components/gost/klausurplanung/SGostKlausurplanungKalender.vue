@@ -360,7 +360,11 @@
 	}
 
 	.svws-ui-stundenplan {
-		@apply overflow-visible h-auto pb-8;
+		@apply overflow-visible h-auto pb-8 w-full;
+
+		.svws-ui-stundenplan--unterricht {
+			@apply flex px-1 py-0 border-none;
+		}
 	}
 }
 </style>

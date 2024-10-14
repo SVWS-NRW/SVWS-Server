@@ -54,6 +54,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 		];
 		super.defaultChild = routeGostKlausurplanungVorgaben;
 		api.config.addElements([
+			new ConfigElement("gost.klausurplan.routeparams", "user", ""),
 			new ConfigElement("gost.klausurplan.quartal", "user", "0"),
 			new ConfigElement("gost.klausurplan.zeigeAlleJahrgaenge", "user", "false"),
 			new ConfigElement("gost.klausurplan.raumblockung_regel_optimiere_blocke_in_moeglichst_wenig_raeume", "user", "true"),
@@ -91,8 +92,23 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { abiturjahr, halbjahr: halbjahrId, idtermin, kw } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin", "kw"]);
+			const { abiturjahr, halbjahr: halbjahrId, idtermin, kw } = RouteNode.getIntParams(to_params, [ "abiturjahr", "halbjahr", "idtermin", "kw" ]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			if (isEntering) {
+				const temp = this.data.params;
+				if (temp !== undefined) {
+					const { view } = RouteNode.getStringParams(temp, [ "view" ]);
+					delete temp.view;
+					const { abiturjahr: tempAbiturjahr, halbjahr: tempHalbjahr } = RouteNode.getIntParams(temp, [ "abiturjahr", "halbjahr" ]);
+					if ((view !== this.data.view.name) || ((view === this._defaultChild!.name) && (tempHalbjahr !== halbjahrId))) {
+						this.data.setView(RouteNode.getNodeByName(view) ?? this._defaultChild!, this.children);
+						if (tempAbiturjahr === abiturjahr)
+							return { name: view, params: temp };
+						if ((tempAbiturjahr !== abiturjahr) && ((view !== this._defaultChild!.name) || (tempHalbjahr === halbjahrId)))
+							return { name: view, params: to_params };
+					}
+				}
+			}
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
@@ -123,7 +139,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-		this.data.reset(); // Hiermit geht auch die Information verloren, welches die letzte ausgewählte Sub-Route war. Dies könnte ggf. über das Sichern der view vermieden werden
+		this.data.params = from_params;
+		this.data.reset();
 	}
 
 	public getRoute(abiturjahr: number, halbjahr?: number) : RouteLocationRaw {
