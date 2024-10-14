@@ -103,6 +103,19 @@ export class Config {
 
 
 	/**
+	 * Gibt zurück, ob das Konfigurationselement mit dem angegebenen Schlüssel bereits
+	 * existiert oder nicht.
+	 *
+	 * @param key   der Schlüssel des Konfigurationselements
+	 *
+	 * @returns true, falls existent, und ansonsten false
+	 */
+	public hasElement(key: string): boolean {
+		return this._mapElements.has(key);
+	}
+
+
+	/**
 	 * Fügt ein neues Konfigurationselement zu der Konfiguration hinzu.
 	 *
 	 * @param elem   das hinzuzufügende Konfigurationselement

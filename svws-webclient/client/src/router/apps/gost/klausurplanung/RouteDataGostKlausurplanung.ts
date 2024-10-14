@@ -50,18 +50,21 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		super(defaultState);
 	}
 
-	get params() {
-		const paramsJson = api.config.getValue("gost.klausurplan.routeparams");
+	public getParams(abiturjahr: number) {
+		const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
+		const paramsJson = api.config.getValue("gost.klausurplan.routeparams." + strAbiturjahr);
 		if (paramsJson.length === 0)
 			return undefined;
 		const params = JSON.parse(paramsJson) as RouteParams;
 		return params;
 	}
 
-	set params(value) {
-		if (value && this._state.value.view)
-			value.view = this._state.value.view.name;
-		void api.config.setValue("gost.klausurplan.routeparams", JSON.stringify(value));
+	public setParams(abiturjahr: number, params: RouteParams): void {
+		if (this._state.value.view === undefined)
+			return;
+		const strAbiturjahr = (abiturjahr < 0) ? "vorlage" : ("abi" + abiturjahr);
+		params.view = this._state.value.view.name;
+		void api.config.setValue("gost.klausurplan.routeparams." + strAbiturjahr, JSON.stringify(params));
 	}
 
 	public get hatAbiturjahr(): boolean {
