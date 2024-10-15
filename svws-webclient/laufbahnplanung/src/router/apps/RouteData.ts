@@ -376,16 +376,24 @@ export class RouteData {
 		return { data, name };
 	}
 
-	importLaufbahnplanung = async (formData: FormData) => {
+	importLaufbahnplanung = async (formData: FormData) : Promise<string | null> => {
 		this.reader.readAll();
 		const gzData = formData.get("data");
 		if (!(gzData instanceof File))
-			return;
+			return "Es wurde keine gültige Datei angegeben";
 		const ds = new DecompressionStream("gzip");
-		const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
-		const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
-		await this.ladeDaten(laufbahnplanungsdaten);
-		await RouteManager.doRoute(routeLaufbahnplanung.name);
+		try {
+			const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
+			const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
+			const revRequired = 1;
+			if (laufbahnplanungsdaten.lpRevision !== revRequired)
+				return "Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired;
+			await this.ladeDaten(laufbahnplanungsdaten);
+			await RouteManager.doRoute(routeLaufbahnplanung.name);
+			return null; // Kein Fehler
+		} catch (e) {
+			return "Fehler beim Laden der Laufbahnplanungsdatei." + ((e instanceof Error) ? ": " + e.message : "");
+		}
 	}
 
 	get zwischenspeicher(): Abiturdaten | undefined {

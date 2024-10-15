@@ -129,8 +129,8 @@
 	}
 
 	async function import_laufbahnplanung(formData: FormData) {
-		await props.importLaufbahnplanung(formData);
-		return true;
+		const result = await props.importLaufbahnplanung(formData);
+		return (result === null);
 	}
 
 </script>
