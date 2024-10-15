@@ -2054,7 +2054,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2096,7 +2096,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2211,7 +2211,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2253,7 +2253,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!a) {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;

@@ -118,7 +118,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		result += '"tooltip" : ' + JSON.stringify(obj.tooltip) + ',';
 		if (!obj.nurSchulformen) {
-			result += '"nurSchulformen" : null';
+			result += '"nurSchulformen" : null' + ',';
 		} else {
 			result += '"nurSchulformen" : [ ';
 			for (let i = 0; i < obj.nurSchulformen.size(); i++) {
@@ -150,7 +150,7 @@ export class BenutzerKompetenzKatalogEintrag extends JavaObject {
 		}
 		if (obj.nurSchulformen !== undefined) {
 			if (!obj.nurSchulformen) {
-				result += '"nurSchulformen" : null';
+				result += '"nurSchulformen" : null' + ',';
 			} else {
 				result += '"nurSchulformen" : [ ';
 				for (let i = 0; i < obj.nurSchulformen.size(); i++) {

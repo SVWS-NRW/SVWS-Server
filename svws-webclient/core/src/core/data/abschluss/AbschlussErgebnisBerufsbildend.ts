@@ -74,7 +74,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
 		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		if (!obj.log) {
-			result += '"log" : null';
+			result += '"log" : null' + ',';
 		} else {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
@@ -106,7 +106,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {
-				result += '"log" : null';
+				result += '"log" : null' + ',';
 			} else {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {

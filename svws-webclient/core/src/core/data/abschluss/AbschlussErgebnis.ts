@@ -71,7 +71,7 @@ export class AbschlussErgebnis extends JavaObject {
 		result += '"erworben" : ' + obj.erworben.toString() + ',';
 		result += '"abschluss" : ' + ((!obj.abschluss) ? 'null' : JSON.stringify(obj.abschluss)) + ',';
 		if (!obj.npFaecher) {
-			result += '"npFaecher" : null';
+			result += '"npFaecher" : null' + ',';
 		} else {
 			result += '"npFaecher" : [ ';
 			for (let i = 0; i < obj.npFaecher.size(); i++) {
@@ -83,7 +83,7 @@ export class AbschlussErgebnis extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (!obj.log) {
-			result += '"log" : null';
+			result += '"log" : null' + ',';
 		} else {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
@@ -109,7 +109,7 @@ export class AbschlussErgebnis extends JavaObject {
 		}
 		if (obj.npFaecher !== undefined) {
 			if (!obj.npFaecher) {
-				result += '"npFaecher" : null';
+				result += '"npFaecher" : null' + ',';
 			} else {
 				result += '"npFaecher" : [ ';
 				for (let i = 0; i < obj.npFaecher.size(); i++) {
@@ -123,7 +123,7 @@ export class AbschlussErgebnis extends JavaObject {
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {
-				result += '"log" : null';
+				result += '"log" : null' + ',';
 			} else {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {
