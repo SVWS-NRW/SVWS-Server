@@ -32,89 +32,89 @@ export class BenutzerKompetenzGruppe extends JavaEnum<BenutzerKompetenzGruppe> {
 	public static readonly SCHUELER_LEISTUNGSDATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHUELER_LEISTUNGSDATEN", 3, new BenutzerKompetenzGruppenKatalogEintrag(200, "Schüler Leistungsdaten", 1, 2));
 
 	/**
-	 * Gruppe für Rechte für Berichte.
+	 * Gruppe für Rechte bezüglich Lehrerdaten.
 	 */
-	public static readonly BERICHTE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("BERICHTE", 4, new BenutzerKompetenzGruppenKatalogEintrag(300, "Berichte", 2, 3));
-
-	/**
-	 * Gruppe für Rechte für den Import/Export von Daten.
-	 */
-	public static readonly IMPORT_EXPORT : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("IMPORT_EXPORT", 5, new BenutzerKompetenzGruppenKatalogEintrag(400, "Import/Export", 3, 1));
-
-	/**
-	 * Gruppe für Rechte bei Block-Operationen.
-	 */
-	public static readonly BLOCK_OPERATIONEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("BLOCK_OPERATIONEN", 6, new BenutzerKompetenzGruppenKatalogEintrag(500, "Blockoperationen", 3, 2));
-
-	/**
-	 * Gruppe für Rechte bezüglich Schulbezogenener Daten.
-	 */
-	public static readonly SCHULBEZOGENE_DATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULBEZOGENE_DATEN", 7, new BenutzerKompetenzGruppenKatalogEintrag(600, "Schulbezogene Daten", 3, 3));
-
-	/**
-	 * Gruppe für Rechte für spezielle Operationen.
-	 */
-	public static readonly EXTRAS : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("EXTRAS", 8, new BenutzerKompetenzGruppenKatalogEintrag(700, "Extras", 3, 4));
+	public static readonly LEHRERDATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("LEHRERDATEN", 4, new BenutzerKompetenzGruppenKatalogEintrag(900, "Lehrerdaten", 2, 2));
 
 	/**
 	 * Gruppe für Rechte bezüglich Kataloge.
 	 */
-	public static readonly KATALOG_EINTRAEGE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("KATALOG_EINTRAEGE", 9, new BenutzerKompetenzGruppenKatalogEintrag(800, "Katalog-Einträge", 1, 3));
+	public static readonly KATALOG_EINTRAEGE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("KATALOG_EINTRAEGE", 5, new BenutzerKompetenzGruppenKatalogEintrag(800, "Katalog-Einträge", 1, 3));
 
 	/**
-	 * Gruppe für Rechte bezüglich Lehrerdaten.
+	 * Gruppe für Rechte bezüglich Schulbezogenener Daten.
 	 */
-	public static readonly LEHRERDATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("LEHRERDATEN", 10, new BenutzerKompetenzGruppenKatalogEintrag(900, "Lehrerdaten", 2, 2));
+	public static readonly SCHULBEZOGENE_DATEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULBEZOGENE_DATEN", 6, new BenutzerKompetenzGruppenKatalogEintrag(600, "Schulbezogene Daten", 3, 3));
 
 	/**
-	 * Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichtverletzung.
+	 * Gruppe für Rechte für Berichte.
 	 */
-	public static readonly SCHULPFLICHTVERLETZUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULPFLICHTVERLETZUNG", 11, new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
+	public static readonly BERICHTE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("BERICHTE", 7, new BenutzerKompetenzGruppenKatalogEintrag(300, "Berichte", 2, 3));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Unterrichtsverteilung
 	 */
-	public static readonly UNTERRICHTSVERTEILUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("UNTERRICHTSVERTEILUNG", 12, new BenutzerKompetenzGruppenKatalogEintrag(1050, "Unterrichtsverteilung", 2, 3));
+	public static readonly UNTERRICHTSVERTEILUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("UNTERRICHTSVERTEILUNG", 8, new BenutzerKompetenzGruppenKatalogEintrag(1050, "Unterrichtsverteilung", 2, 3));
 
 	/**
 	 * Gruppe für Rechte bezüglich der Stundenplanung.
 	 */
-	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 13, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
-
-	/**
-	 * Gruppe für Rechte bezüglich des externen Notenmoduls.
-	 */
-	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 14, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2));
-
-	/**
-	 * Gruppe für Rechte bezüglich des Datenbank-Managements.
-	 */
-	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 15, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3));
-
-	/**
-	 * Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe.
-	 */
-	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 16, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe", 5, 1));
-
-	/**
-	 * Gruppe für Rechte bezüglich des Adressbuchs.
-	 */
-	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 17, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
-
-	/**
-	 * Gruppe für Rechte bezüglich der Kalender.
-	 */
-	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 18, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
+	public static readonly STUNDENPLANUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("STUNDENPLANUNG", 9, new BenutzerKompetenzGruppenKatalogEintrag(1100, "Stundenplanung", 4, 1));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung in der Sekundarstufe I.
 	 */
-	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 19, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
+	public static readonly ABSCHLUSS_SEKI : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_SEKI", 10, new BenutzerKompetenzGruppenKatalogEintrag(4000, "Abschlussberechnung Sek I", 2, 1));
+
+	/**
+	 * Gruppe für Rechte bezüglich der Laufbahnplanung der Gymnasialen Oberstufe.
+	 */
+	public static readonly OBERSTUFE : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("OBERSTUFE", 11, new BenutzerKompetenzGruppenKatalogEintrag(1600, "Oberstufe", 5, 1));
 
 	/**
 	 * Gruppe für Rechte für die Abschlussberechnung an berufsbildenden Schulen.
 	 */
-	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 20, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
+	public static readonly ABSCHLUSS_BK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("ABSCHLUSS_BK", 12, new BenutzerKompetenzGruppenKatalogEintrag(5000, "Abschlussberechnung berufsbildende Schule", 2, 2));
+
+	/**
+	 * Gruppe für Rechte bezüglich des Adressbuchs.
+	 */
+	public static readonly CARDDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CARDDAV", 13, new BenutzerKompetenzGruppenKatalogEintrag(2000, "Addressbuch (CardDAV)", 1, 4));
+
+	/**
+	 * Gruppe für Rechte bezüglich der Kalender.
+	 */
+	public static readonly CALDAV : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("CALDAV", 14, new BenutzerKompetenzGruppenKatalogEintrag(3000, "Kalender (CalDAV)", 1, 5));
+
+	/**
+	 * Gruppe für Rechte bezüglich des externen Notenmoduls.
+	 */
+	public static readonly NOTENMODUL : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("NOTENMODUL", 15, new BenutzerKompetenzGruppenKatalogEintrag(1300, "Notenmodul", 4, 2));
+
+	/**
+	 * Gruppe für Rechte für den Import/Export von Daten.
+	 */
+	public static readonly IMPORT_EXPORT : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("IMPORT_EXPORT", 16, new BenutzerKompetenzGruppenKatalogEintrag(400, "Import/Export", 3, 1));
+
+	/**
+	 * Gruppe für Rechte bezüglich des Datenbank-Managements.
+	 */
+	public static readonly DATENBANK : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("DATENBANK", 17, new BenutzerKompetenzGruppenKatalogEintrag(1400, "Datenbank-Management", 4, 3));
+
+	/**
+	 * Gruppe für Rechte bei Block-Operationen.
+	 */
+	public static readonly BLOCK_OPERATIONEN : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("BLOCK_OPERATIONEN", 18, new BenutzerKompetenzGruppenKatalogEintrag(500, "Blockoperationen", 3, 2));
+
+	/**
+	 * Gruppe für Rechte für spezielle Operationen.
+	 */
+	public static readonly EXTRAS : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("EXTRAS", 19, new BenutzerKompetenzGruppenKatalogEintrag(700, "Extras", 3, 4));
+
+	/**
+	 * Gruppe für Rechte bezüglich des Verfahrens zur Schulpflichtverletzung.
+	 */
+	public static readonly SCHULPFLICHTVERLETZUNG : BenutzerKompetenzGruppe = new BenutzerKompetenzGruppe("SCHULPFLICHTVERLETZUNG", 20, new BenutzerKompetenzGruppenKatalogEintrag(1000, "Verfahren Schulpflichtverletzung", 2, 3));
 
 	/**
 	 * Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können.
