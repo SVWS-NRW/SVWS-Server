@@ -104,8 +104,6 @@ public class Tabelle_EnmLeistungsdaten extends SchemaTabelle {
 			""",
 			Schema.tab_SchuelerLeistungsdaten, Schema.tab_EnmLeistungsdaten);
 
-	// TODO Trigger für SQLite
-
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle EnmLeistungsdaten.

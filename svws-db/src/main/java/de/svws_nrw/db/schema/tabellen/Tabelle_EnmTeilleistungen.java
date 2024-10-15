@@ -95,8 +95,6 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_EnmTeilleistungen);
 
-	// TODO Trigger für SQLite
-
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle EnmTeilleistungen.

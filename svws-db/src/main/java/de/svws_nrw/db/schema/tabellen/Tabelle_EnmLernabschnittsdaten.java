@@ -117,9 +117,6 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_EnmLernabschnittsdaten);
 
 
-	// TODO Trigger für SQLite
-
-
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle EnmLernabschnittsdaten.
 	 */
