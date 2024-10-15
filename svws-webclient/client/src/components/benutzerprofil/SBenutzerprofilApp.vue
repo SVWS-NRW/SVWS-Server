@@ -38,7 +38,7 @@
 						<svws-ui-radio-option value="large" v-model="fontSize" name="fontSize" label="Größer" @click="updateFontSize('large')" />
 					</svws-ui-radio-group>
 				</div>
-				<div class="flex flex-col gap-2 text-left">
+				<div v-if="mode !== ServerMode.STABLE" class="flex flex-col gap-2 text-left">
 					<span class="font-bold">Theme</span>
 					<svws-ui-radio-group :row="true">
 						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light" @click="updateTheme('light')" />
@@ -60,6 +60,7 @@
 
 	import { computed, ref, watch } from "vue";
 	import type { BenutzerprofilAppProps } from "./SBenutzerprofilAppProps";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<BenutzerprofilAppProps>();
 

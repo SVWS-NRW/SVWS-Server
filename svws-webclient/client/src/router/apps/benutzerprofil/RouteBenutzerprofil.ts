@@ -36,6 +36,7 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 	public getProps(to: RouteLocationNormalized): BenutzerprofilAppProps {
 		return {
 			benutzer: () => this.data.benutzer,
+			mode: api.mode,
 			patch: this.data.patch,
 			benutzerEMailDaten: () => this.data.benutzerEMailDaten,
 			patchBenutzerEMailDaten: this.data.patchBenutzerEMailDaten,

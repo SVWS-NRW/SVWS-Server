@@ -1,7 +1,8 @@
-import type { BenutzerDaten, BenutzerEMailDaten } from "@core";
+import type { BenutzerDaten, BenutzerEMailDaten, ServerMode } from "@core";
 import type { AES } from "~/utils/crypto/aes";
 
 export interface BenutzerprofilAppProps {
+	mode: ServerMode;
 	benutzer: () => BenutzerDaten;
 	benutzerEMailDaten: () => BenutzerEMailDaten;
 	patchBenutzerEMailDaten: (data: Partial<BenutzerEMailDaten>) => Promise<void>;
