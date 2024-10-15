@@ -34,16 +34,16 @@
 							</svws-ui-tooltip>
 							<template v-else-if="zeigeSchienenbezeichnungen()">
 								<div>
-									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': istVorlage && hatUpdateKompetenz }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center"
-										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="istVorlage && hatUpdateKompetenz && (edit_schienenname = s.id)">
+									<span style="writing-mode: vertical-lr;" :class="{ 'border-l border-dotted hover:border-transparent': hatUpdateKompetenz }" class="cursor-text rotate-180 normal-nums min-h-[1.5ch] w-full inline-flex justify-center"
+										:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">
 										{{ s.bezeichnung }}
 									</span>
 									<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 								</div>
 							</template>
 							<template v-else>
-								<span :class="{ 'border-b border-dotted hover:border-transparent': istVorlage && hatUpdateKompetenz }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
-									:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="istVorlage && hatUpdateKompetenz && (edit_schienenname = s.id)">{{ s.nummer }}</span>
+								<span :class="{ 'border-b border-dotted hover:border-transparent': hatUpdateKompetenz }" class="cursor-text normal-nums min-w-[1.5ch] h-full inline-flex items-center justify-center"
+									:title="'Namen bearbeiten (' + s.bezeichnung + ')'" @click="hatUpdateKompetenz && (edit_schienenname = s.id)">{{ s.nummer }}</span>
 								<span v-if="allow_del_schiene(s)" @click="del_schiene(s)" class="icon-sm inline-block i-ri-delete-bin-line cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-px opacity-50 hover:opacity-100 hover:icon-error" />
 							</template>
 						</div>
