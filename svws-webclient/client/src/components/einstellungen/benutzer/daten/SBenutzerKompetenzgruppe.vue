@@ -13,12 +13,13 @@
 				</svws-ui-checkbox>
 			</div>
 		</div>
+		<div class="svws-ui-td" role="cell" />
 		<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td text-black/50 dark:text-white/50" role="cell">
 			<span class="line-clamp-1 break-all leading-tight -my-0.5" :title="getTopLevelGruppen4Kompetenz">{{ getTopLevelGruppen4Kompetenz }}</span>
 		</div>
 		<template v-if="hatSubKompetenzen">
 			<div v-for="kompetenz in benutzerKompetenzen(kompetenzgruppe)" :key="kompetenz.daten.id" class="svws-ui-tr" v-show="!collapsed">
-				<s-benutzer-kompetenz :kompetenz :get-benutzer-manager :add-kompetenz :remove-kompetenz />
+				<s-benutzer-kompetenz :kompetenz :show-info :get-benutzer-manager :add-kompetenz :remove-kompetenz />
 			</div>
 		</template>
 	</div>
@@ -32,6 +33,7 @@
 
 	const props = defineProps<{
 		kompetenzgruppe: BenutzerKompetenzGruppe;
+		showInfo: boolean;
 		getBenutzerManager: () => BenutzerManager;
 		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
@@ -79,7 +81,7 @@
 <style scoped lang="postcss">
 
 	.svws-ui-tr {
-		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr);
+		grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);
 	}
 
 </style>

@@ -4,6 +4,16 @@
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
 	</div>
+	<div class="svws-ui-td" role="cell">
+		<template v-if="showInfo">
+			<svws-ui-tooltip>
+				<span class="icon i-ri-information-line" />
+				<template #content>
+					{{ kompetenz.daten.tooltip }}
+				</template>
+			</svws-ui-tooltip>
+		</template>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -13,6 +23,7 @@
 
 	const props = defineProps<{
 		getBenutzergruppenManager: () => BenutzergruppenManager;
+		showInfo: boolean;
 		kompetenz: BenutzerKompetenz;
 		istAdmin: boolean;
 		addKompetenz : (kompetenz: BenutzerKompetenz) => Promise<boolean>;

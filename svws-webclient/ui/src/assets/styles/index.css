@@ -193,6 +193,7 @@ hr {
 .i-ri-pushpin-fill {@apply bg-[url(remixicon/icons/Map/pushpin-fill.svg)] bg-no-repeat bg-center }
 .i-ri-pushpin-line {@apply bg-[url(remixicon/icons/Map/pushpin-line.svg)] bg-no-repeat bg-center }
 .i-ri-question-line {@apply bg-[url(remixicon/icons/System/question-line.svg)] bg-no-repeat bg-center }
+.i-ri-question-fill {@apply bg-[url(remixicon/icons/System/question-fill.svg)] bg-no-repeat bg-center }
 .i-ri-refresh-line {@apply bg-[url(remixicon/icons/System/refresh-line.svg)] bg-no-repeat bg-center }
 .i-ri-restart-line {@apply bg-[url(remixicon/icons/Device/restart-line.svg)] bg-no-repeat bg-center }
 .i-ri-save-3-line {@apply bg-[url(remixicon/icons/Device/save-3-line.svg)] bg-no-repeat bg-center }

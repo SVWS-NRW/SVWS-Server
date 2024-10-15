@@ -4,6 +4,16 @@
 			{{ kompetenz.daten.bezeichnung }}
 		</svws-ui-checkbox>
 	</div>
+	<div class="svws-ui-td" role="cell">
+		<template v-if="showInfo">
+			<svws-ui-tooltip>
+				<span class="icon i-ri-information-line" />
+				<template #content>
+					{{ kompetenz.daten.tooltip }}
+				</template>
+			</svws-ui-tooltip>
+		</template>
+	</div>
 	<div class="svws-ui-td" :title="getBenutzerManager().getBenutzerGruppenString(kompetenz)" role="cell">
 		<!-- TODO Die Methode in Manager auslagern. -->
 		<template v-if="!getBenutzerManager().istAdmin()">
@@ -19,6 +29,7 @@
 
 	const props = defineProps<{
 		getBenutzerManager: () => BenutzerManager;
+		showInfo: boolean;
 		kompetenz: BenutzerKompetenz;
 		addKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;
 		removeKompetenz : (kompetenz : BenutzerKompetenz) => Promise<boolean>;

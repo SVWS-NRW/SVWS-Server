@@ -17,12 +17,15 @@
 			<template #header>
 				<div class="svws-ui-tr" role="row">
 					<div class="svws-ui-td" role="columnheader" :class="{'col-span-2': getBenutzerManager().istAdmin()}">Kompetenz</div>
+					<div class="svws-ui-td" role="columnheader">
+						<span class="icon cursor-pointer" :class="{ 'i-ri-question-line': !showInfo, 'i-ri-question-fill': showInfo }" @click="toggleShowInfo" />
+					</div>
 					<div v-if="!getBenutzerManager().istAdmin()" class="svws-ui-td !pl-1 text-black/50 dark:text-white/50" role="columnheader">Übernommen aus der Gruppe</div>
 				</div>
 			</template>
 			<template #body>
 				<template v-for="(kompetenzgruppe, index) in kompetenzgruppen" :key="index">
-					<s-benutzer-kompetenzgruppe :kompetenzgruppe :get-benutzer-manager :add-kompetenz :remove-kompetenz :add-benutzer-kompetenz-gruppe :remove-benutzer-kompetenz-gruppe :benutzer-kompetenzen />
+					<s-benutzer-kompetenzgruppe :kompetenzgruppe :show-info :get-benutzer-manager :add-kompetenz :remove-kompetenz :add-benutzer-kompetenz-gruppe :remove-benutzer-kompetenz-gruppe :benutzer-kompetenzen />
 				</template>
 			</template>
 		</svws-ui-table>
@@ -31,7 +34,7 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, shallowRef } from "vue";
 	import type { BenutzerKompetenz, BenutzerManager, List } from "@core";
 	import { BenutzerKompetenzGruppe } from "@core";
 
@@ -55,12 +58,18 @@
 			void props.setIstAdmin(value);
 		}
 	});
+
+	const showInfo = shallowRef<boolean>(false);
+	function toggleShowInfo() {
+		showInfo.value = !showInfo.value;
+	}
+
 </script>
 
 <style scoped lang="postcss">
 
 	.svws-ui-tr {
-		grid-template-columns: minmax(4rem, 2fr) minmax(4rem, 1fr);
+		grid-template-columns: minmax(4rem, 2fr) 0.15fr minmax(4rem, 1fr);
 	}
 
 </style>
