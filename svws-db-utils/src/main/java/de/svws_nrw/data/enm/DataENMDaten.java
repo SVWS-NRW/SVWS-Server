@@ -528,7 +528,7 @@ public final class DataENMDaten extends DataManager<Long> {
 	 * @param mapJahrgaenge   eine Map mit den jeweiligen Jahrgängen
 	 */
 	private static void getFloskeln(final DBEntityManager conn, final ENMDatenManager manager, final Map<Long, DTOJahrgang> mapJahrgaenge) {
-		final Map<String, DTOJahrgang> mapJG = mapJahrgaenge.values().stream().collect(Collectors.toMap(j -> j.ASDJahrgang, j -> j));
+		final Map<String, List<DTOJahrgang>> mapJG = mapJahrgaenge.values().stream().collect(Collectors.groupingBy(j -> j.ASDJahrgang));
 		final List<DTOFloskelgruppen> dtoFloskelgruppen = conn.queryAll(DTOFloskelgruppen.class);
 		final HashMap<String, ENMFloskelgruppe> map = new HashMap<>();
 		for (final DTOFloskelgruppen dto : dtoFloskelgruppen) {
@@ -541,23 +541,36 @@ public final class DataENMDaten extends DataManager<Long> {
 		}
 		final List<DTOFloskeln> dtoFloskeln = conn.queryAll(DTOFloskeln.class);
 		for (final DTOFloskeln dto : dtoFloskeln) {
-			final ENMFach fach = manager.getFachByKuerzel(dto.FloskelFach);
-			final ENMFloskel enmFl = new ENMFloskel();
-			enmFl.kuerzel = dto.Kuerzel;
-			enmFl.text = dto.FloskelText;
-			enmFl.fachID = (fach == null) ? null : fach.id;
-			try {
-				enmFl.niveau = Long.parseLong(dto.FloskelNiveau);
-			} catch (@SuppressWarnings("unused") final NumberFormatException e) {
-				enmFl.niveau = null;
-			}
-			final DTOJahrgang jg = mapJG.get(dto.FloskelJahrgang);
-			enmFl.jahrgangID = (jg == null) ? null : jg.ID;
 			final ENMFloskelgruppe enmFG = map.get(dto.FloskelGruppe);
-			if (enmFG != null) {
-				enmFG.floskeln.add(enmFl);
+			if (enmFG == null) // TODO alternativ Fehlerbehandlung: Wie ordnet man die Floskel zu? -> allgemein ?
+				continue;
+			final ENMFach fach = manager.getFachByKuerzel(dto.FloskelFach);
+			final List<DTOJahrgang> jahrgaenge = mapJG.get(dto.FloskelJahrgang);
+			Long niveau;
+			try {
+				niveau = Long.parseLong(dto.FloskelNiveau);
+			} catch (@SuppressWarnings("unused") final NumberFormatException e) {
+				niveau = null;
 			}
-			// TODO else ... Fehlerbehandlung: Wie ordnet man die Floskel zu? -> allgemein
+			if ((jahrgaenge == null) || jahrgaenge.isEmpty()) {
+				final ENMFloskel enmFl = new ENMFloskel();
+				enmFl.kuerzel = dto.Kuerzel;
+				enmFl.text = dto.FloskelText;
+				enmFl.fachID = (fach == null) ? null : fach.id;
+				enmFl.niveau = niveau;
+				enmFl.jahrgangID = null;
+				enmFG.floskeln.add(enmFl);
+			} else {
+				for (final DTOJahrgang jg : jahrgaenge) {
+					final ENMFloskel enmFl = new ENMFloskel();
+					enmFl.kuerzel = dto.Kuerzel;
+					enmFl.text = dto.FloskelText;
+					enmFl.fachID = (fach == null) ? null : fach.id;
+					enmFl.niveau = niveau;
+					enmFl.jahrgangID = jg.ID;
+					enmFG.floskeln.add(enmFl);
+				}
+			}
 		}
 	}
 
