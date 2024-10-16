@@ -1,5 +1,6 @@
-import type {KlassenListeManager, ServerMode} from "@core";
+import type { KlassenListeManager, ServerMode } from "@core";
 import type { AbschnittAuswahlDaten } from "@comp";
+import type { RouteType } from "~/router/RouteType";
 
 export interface KlassenAuswahlProps {
 	serverMode: ServerMode;
@@ -10,5 +11,5 @@ export interface KlassenAuswahlProps {
 	gotoCreationMode: (navigate: boolean) => Promise<void>;
 	setFilter: () => Promise<void>;
 	setzeDefaultSortierung: () => Promise<void>;
-	creationModeEnabled: boolean;
+	activeRouteType: RouteType;
 }

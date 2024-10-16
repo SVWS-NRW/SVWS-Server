@@ -1,5 +1,5 @@
 
-import type { KlassenDaten, Schueler, LehrerListeEintrag } from "@core";
+import type { KlassenDaten, Schueler, List, LehrerListeEintrag } from "@core";
 import { ArrayList, DeveloperNotificationException, KlassenListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -14,7 +14,7 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
-
+import { RouteType } from "~/router/RouteType";
 
 interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
@@ -22,8 +22,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
-	gruppenprozesseEnabled: boolean;
-	creationModeEnabled: boolean;
+	activeRouteType: RouteType;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -33,8 +32,7 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
-	gruppenprozesseEnabled: false,
-	creationModeEnabled: false
+	activeRouteType: RouteType.DEFAULT
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -57,12 +55,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
 	}
 
-	get gruppenprozesseEnabled(): boolean {
-		return this._state.value.gruppenprozesseEnabled;
-	}
-
-	get creationModeEnabled(): boolean {
-		return this._state.value.creationModeEnabled;
+	get activeRouteType(): RouteType {
+		return this._state.value.activeRouteType;
 	}
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -94,10 +88,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		}
 
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt,
-			gruppenprozesseEnabled: this._state.value.gruppenprozesseEnabled,
-			creationModeEnabled: this._state.value.creationModeEnabled
-		});
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeRouteType: this.activeRouteType });
 		return this.klassenListeManager.auswahlID();
 	}
 
@@ -133,8 +124,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		this.commit();
 	}
 
-	public deleteKlassenCheck = (): [boolean, ArrayList<string>] => {
-		const errorLog: ArrayList<string> = new ArrayList();
+	public deleteKlassenCheck = (): [boolean, List<string>] => {
+		const errorLog: List<string> = new ArrayList<string>();
 		if (!this.klassenListeManager.liste.auswahlExists())
 			errorLog.add('Es wurde keine Klasse zum Löschen ausgewählt.')
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
@@ -143,7 +134,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return [errorLog.isEmpty(), errorLog];
 	}
 
-	public deleteKlassen = async (): Promise<[boolean, ArrayList<string | null>]> => {
+	public deleteKlassen = async (): Promise<[boolean, List<string>]> => {
 		const ids = new ArrayList<number>();
 		for (const klasse of this.klassenListeManager.liste.auswahlSorted())
 			ids.add(klasse.id);
@@ -151,7 +142,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const operationResponses = await api.server.deleteKlassen(ids, api.schema);
 
 		const klassenToRemove = new ArrayList<KlassenDaten>();
-		const logMessages = new ArrayList<string | null>();
+		const logMessages: List<string> = new ArrayList<string>();
 		let status = true;
 		for (const response of operationResponses) {
 			if (response.success && response.id !== null) {
@@ -274,8 +265,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	private setDefaults() {
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
-		this._state.value.gruppenprozesseEnabled = false;
-		this._state.value.creationModeEnabled = false;
+		this._state.value.activeRouteType = RouteType.DEFAULT;
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKlassenDaten;
 	}
 
@@ -317,13 +307,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoCreationMode = async (navigate: boolean) => {
-		if (this._state.value.creationModeEnabled || (this._state.value.view === routeKlassenNeu)) {
+		if (this._state.value.activeRouteType === RouteType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.creationModeEnabled = true;
-		this._state.value.gruppenprozesseEnabled = false;
+		this._state.value.activeRouteType = RouteType.HINZUFUEGEN;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
@@ -339,13 +328,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoGruppenprozess = async (navigate: boolean) => {
-		if (this._state.value.gruppenprozesseEnabled || (this._state.value.view === routeKlasseGruppenprozesse)) {
+		if (this._state.value.activeRouteType === RouteType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.gruppenprozesseEnabled = true;
-		this._state.value.creationModeEnabled = false;
+		this._state.value.activeRouteType = RouteType.GRUPPENPROZESSE;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate)

@@ -106,25 +106,16 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			gotoGruppenprozess: this.data.gotoGruppenprozess,
 			gotoCreationMode: this.data.gotoCreationMode,
 			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
-			creationModeEnabled: this.data.creationModeEnabled,
+			activeRouteType: this.data.activeRouteType,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
-			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
-			creationModeEnabled: this.data.creationModeEnabled,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeRouteType),
+			activeRouteType: this.data.activeRouteType,
 		};
-	}
-
-	private getType() : RouteType {
-		if (this.data.gruppenprozesseEnabled)
-			return RouteType.GRUPPENPROZESSE;
-		if (this.data.creationModeEnabled)
-			return RouteType.HINZUFUEGEN;
-		return RouteType.DEFAULT;
 	}
 
 	private setTab = async (value: TabData) => {

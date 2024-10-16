@@ -1,5 +1,5 @@
 <template>
-	<div v-if="schuelerListeManager().hasDaten() || activeRouteType !== RouteType.DEFAULT" class="page--flex">
+	<div v-if="(schuelerListeManager().hasDaten() && (activeRouteType === RouteType.DEFAULT)) || (activeRouteType !== RouteType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeRouteType === RouteType.DEFAULT">

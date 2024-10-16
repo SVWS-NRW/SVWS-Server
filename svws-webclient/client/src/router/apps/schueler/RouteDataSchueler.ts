@@ -69,7 +69,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			schuelerListeManager: manager,
-			activeRouteType: this._state.value.activeRouteType,
+			activeRouteType: this.activeRouteType,
 			view: view,
 		});
 

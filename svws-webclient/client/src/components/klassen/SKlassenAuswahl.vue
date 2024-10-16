@@ -52,6 +52,7 @@
 	import { computed, ref } from "vue";
 	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
+	import { RouteType } from "~/router/RouteType";
 
 	const props = defineProps<KlassenAuswahlProps>();
 
@@ -134,7 +135,7 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => (props.klassenListeManager().liste.auswahlExists() || props.creationModeEnabled) ? null
+	const clickedEintrag = computed(() => ((props.activeRouteType === RouteType.GRUPPENPROZESSE) || (props.activeRouteType === RouteType.HINZUFUEGEN)) ? null
 		: (props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null));
 
 	async function setAuswahl(items : KlassenDaten[]) {

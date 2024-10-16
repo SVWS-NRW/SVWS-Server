@@ -1,16 +1,9 @@
 <template>
-	<template v-if="klassenListeManager().hasDaten() || props.gruppenprozesseEnabled || props.creationModeEnabled">
+	<div v-if="(klassenListeManager().hasDaten() && (activeRouteType === RouteType.DEFAULT)) || (activeRouteType !== RouteType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<template v-if="props.gruppenprozesseEnabled">
-						<h2 class="svws-headline"> Gruppenprozesse </h2>
-						<span class="svws-subline">{{ selectedKlassen }}</span>
-					</template>
-					<template v-else-if="props.creationModeEnabled">
-						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
-					</template>
-					<template v-else>
+					<template v-if="activeRouteType === RouteType.DEFAULT">
 						<h2 class="svws-headline">
 							<span>
 								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
@@ -23,14 +16,22 @@
 							{{ lehrerkuerzel }}
 						</span>
 					</template>
+					<template v-else-if="activeRouteType === RouteType.HINZUFUEGEN">
+						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
+					</template>
+					<template v-else-if="activeRouteType === RouteType.GRUPPENPROZESSE">
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<span class="svws-subline">{{ klassenSubline }}</span>
+					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
+
 		<svws-ui-tab-bar :tab-manager>
 			<router-view />
 		</svws-ui-tab-bar>
-	</template>
+	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-team-line" />
 	</div>
@@ -40,16 +41,26 @@
 
 	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import { computed } from "vue";
+	import { RouteType } from "~/router/RouteType";
 
 	const props = defineProps<KlassenAppProps>();
 
-	const selectedKlassen = computed<string>(() => {
-		const selectedKlassen = props.klassenListeManager().liste.auswahlSorted();
-		let selectedKlassenStr = '';
-		for (const klasse of selectedKlassen)
-			selectedKlassenStr += (selectedKlassenStr.length > 0) ? `, ${klasse.kuerzel}` : klasse.kuerzel;
-		return selectedKlassenStr;
-	});
+	const klassenSubline = computed(() => {
+		const auswahlKlassenList = props.klassenListeManager().liste.auswahlSorted();
+		const leadingKlassenList = [];
+		for (let index = 0; index < auswahlKlassenList.size(); index++) {
+			if (index > 4)
+				break;
+
+			leadingKlassenList.push(auswahlKlassenList.get(index).kuerzel);
+		}
+
+		let subline = leadingKlassenList.join(', ');
+		if (auswahlKlassenList.size() > 5)
+			subline += ` und ${auswahlKlassenList.size() - 5} Weitere`;
+
+		return subline;
+	})
 
 	const lehrerkuerzel = computed<string>(() => {
 		if (!props.klassenListeManager().hasDaten())
