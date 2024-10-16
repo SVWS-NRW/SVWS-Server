@@ -12,7 +12,7 @@
 								{{ schuelerListeManager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ inputKlasse === null ? '–' : inputKlasse }}</span>
+						<span class="svws-subline">{{ inputKlasse === null ? '—' : inputKlasse }}</span>
 					</div>
 					<div v-if="schuelerListeManager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
@@ -30,9 +30,8 @@
 
 				<template v-else-if="activeRouteType === RouteType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
-						<h2 class="svws-headline">
-							<span>Gruppenprozesse</span>
-						</h2>
+						<h2 class="svws-headline">Gruppenprozesse</h2>
+						<span class="svws-subline">{{ schuelerSubline }}</span>
 					</div>
 				</template>
 			</div>
@@ -56,6 +55,23 @@
 	import { RouteType } from "~/router/RouteType";
 
 	const props = defineProps<SchuelerAppProps>();
+
+	const schuelerSubline = computed(() => {
+		const auswahlSchuelerList = props.schuelerListeManager().liste.auswahl();
+		const leadingSchuelerList = [];
+		for (let index = 0; index < auswahlSchuelerList.size(); index++) {
+			if (index > 2)
+				break;
+
+			leadingSchuelerList.push(`${auswahlSchuelerList.get(index).vorname} ${auswahlSchuelerList.get(index).nachname}`);
+		}
+
+		let subline = leadingSchuelerList.join(', ');
+		if (auswahlSchuelerList.size() > 3)
+			subline += ` und ${auswahlSchuelerList.size() - 3} Weitere`;
+
+		return subline;
+	})
 
 	const foto = computed<string | undefined>(() => {
 		return props.schuelerListeManager().daten().foto ?? undefined;

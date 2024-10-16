@@ -1,5 +1,5 @@
-import type { SchuelerListeEintrag, SchuelerStammdaten } from "@core";
-import { ArrayList, DeveloperNotificationException, SchuelerListe, SchuelerListeManager, SchuelerStatus } from "@core";
+import type { List, SchuelerListeEintrag, SchuelerStammdaten } from "@core";
+import { BenutzerKompetenz, ArrayList, DeveloperNotificationException, SchuelerListe, SchuelerListeManager, SchuelerStatus } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
@@ -16,9 +16,6 @@ interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	schuelerListeManager: SchuelerListeManager | undefined;
 	activeRouteType: RouteType;
-	oldView?: RouteNode<any, any>;
-	gruppenprozesseEnabled: boolean;
-	creationModeEnabled: boolean;
 }
 
 const defaultState = <RouteStateSchueler> {
@@ -26,23 +23,12 @@ const defaultState = <RouteStateSchueler> {
 	schuelerListeManager: undefined,
 	view: routeSchuelerIndividualdaten,
 	activeRouteType: RouteType.DEFAULT,
-	oldView: undefined,
-	gruppenprozesseEnabled: false,
-	creationModeEnabled: false,
 };
 
 export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
 	public constructor() {
 		super(defaultState);
-	}
-
-	get gruppenprozesseEnabled(): boolean {
-		return this._state.value.gruppenprozesseEnabled;
-	}
-
-	get creationModeEnabled(): boolean {
-		return this._state.value.creationModeEnabled;
 	}
 
 	public async setSchuljahresabschnitt(idSchuljahresabschnitt : number, isEntering: boolean) : Promise<number | null> {
@@ -54,9 +40,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	/**
 	 * Setzt die Daten zum ausgewählten Schuljahresabschnitt und Schülers und triggert damit das Laden der Defaults für diesen Abschnitt
 	 *
-	 * @param {number} idSchuljahresabschnitt   die ID des Schuljahresabschnitts
-	 * @param {number | undefined} idSchueler   die ID des Schülers
-	 * @param {boolean} isEntering              gibt an, ob die Route neu betreten wird
+	 * @param idSchuljahresabschnitt   die ID des Schuljahresabschnitts
 	 */
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
 		// Erzeuge neuen SchuelerListeManager, wenn die Route neu betreten wird oder der Schuljahresabschnitt geändert wird
@@ -112,32 +96,10 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	 * @returns aktuelle View oder Default View
 	 */
 	private getCurrentViewOrDefault(schuelerManager: SchuelerListeManager): RouteNode<any, any> | undefined {
-		if (schuelerManager.hasDaten()) {
+		if (schuelerManager.hasDaten())
 			return this._state.value.view;
-		} else {
+		else
 			return routeSchuelerIndividualdaten;
-		}
-	}
-
-	/**
-	 * Liefert den aktuell ausgewählten {@link SchuelerListeEintrag} oder <code>null</code> falls kein Schüler ausgewählt ist.
-	 *
-	 * @param {number | undefined} idSchueler          ID des Schülers
-	 * @param {SchuelerListeManager} schuelerManager   SchuelerListeManager
-	 * @param {boolean} isEntering                     gibt an ob die Route das erste mal betreten wird
-	 *
-	 * @returns den ausgewählten {@link SchuelerListeEintrag} oder <code>null</code>
-	 */
-	private async getSchuelerAuswahl(idSchueler: number | undefined, schuelerManager: SchuelerListeManager, isEntering: boolean): Promise<SchuelerListeEintrag | null> {
-		if (schuelerManager.filtered().isEmpty())
-			return null;
-
-		// Wenn keine Schüler-ID ausgewählt ist, dann gebe null zurück oder beim Einsteigen in die Route den ersten Schüler der gefilterten Liste
-		if (idSchueler === undefined)
-			return (isEntering) ? schuelerManager.filtered().get(0) : null;
-
-		// Wenn ein Schüler ausgewählt ist, wird dieser zurückgegeben, falls keine Auswahl vorliegt, wird der erste Eintrag aus der gefilterten Schülerliste zurückgegeben
-		return schuelerManager.liste.get(idSchueler) !== null ? schuelerManager.liste.get(idSchueler) : schuelerManager.filtered().get(0);
 	}
 
 	/**
@@ -187,7 +149,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const schuelerToRemove = new ArrayList<SchuelerListeEintrag>();
 		const logMessages = new ArrayList<string | null>();
 		let status = true;
-		for (const response of operationResponses) {
+		for (const response of operationResponses)
 			if (response.success && response.id !== null) {
 				const schueler = this.schuelerListeManager.liste.get(response.id);
 				logMessages.add(`Schüler ${(schueler?.vorname ?? '???') + ' ' + (schueler?.nachname ?? '???')} (ID: ${response.id.toString()}) wurde erfolgreich gelöscht.`);
@@ -196,8 +158,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 				status = false;
 				logMessages.addAll(response.log);
 			}
-		}
-
 		if (!schuelerToRemove.isEmpty()) {
 			this.schuelerListeManager.liste.auswahlClear();
 			this.schuelerListeManager.setDaten(null);
@@ -207,8 +167,15 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		return [status, logMessages];
 	}
 
-	public deleteSchuelerCheck = (): [boolean, ArrayList<string>] => {
-		return [true, new ArrayList()]; // aktuell gibt es keine Vorbedingungen um einen Schüler auf "gelöscht" zu setzen
+	public deleteSchuelerCheck = (): [boolean, List<string>] => {
+		const errorLog = new ArrayList<string>();
+		if (!api.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN))
+			errorLog.add('Es liegt keine Berechtigung zum Löschen von Schülern vor.');
+
+		if (!this.schuelerListeManager.liste.auswahlExists())
+			errorLog.add('Es wurde kein Schüler zum Löschen ausgewählt.');
+
+		return [errorLog.isEmpty(), errorLog];
 	}
 
 	public async setDaten(schueler: SchuelerListeEintrag | null) {
@@ -239,7 +206,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	gotoDefaultRoute = async (idSchueler?: number | null) => {
-		this._state.value.oldView = this._state.value.view;
 		if ((idSchueler !== null) && (idSchueler !== undefined) && this.schuelerListeManager.liste.has(idSchueler)) {
 			const route = (this.view !== routeSchuelerNeu && this.view !== routeSchuelerGruppenprozesse) ? this.view.getRoute(idSchueler) : routeSchuelerIndividualdaten.getRoute(idSchueler);
 			const result = await RouteManager.doRoute(route);
@@ -281,7 +247,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		}
 
 		this._state.value.activeRouteType = RouteType.GRUPPENPROZESSE;
-		// this._state.value.oldView = this._state.value.view;
 
 		if (navigate)
 			await RouteManager.doRoute(routeSchuelerGruppenprozesse.getRoute());
@@ -298,7 +263,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		}
 
 		this._state.value.activeRouteType = RouteType.HINZUFUEGEN;
-		// this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
 			const result = await RouteManager.doRoute(routeSchuelerNeu.getRoute());

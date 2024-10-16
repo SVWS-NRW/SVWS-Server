@@ -1,10 +1,10 @@
 <template>
 	<div class="page--content">
 		<div class="flex flex-col gap-y-16 lg:gap-y-16">
-			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Ausgewählte Schüler werden gelöscht." icon="i-ri-delete-bin-line"
+			<svws-ui-action-button v-if="hatKompetenzLoeschen" title="Löschen" description="Bei den ausgewählten Schülern wird ein Löschvermerk gesetzt." icon="i-ri-delete-bin-line"
 				:action-function="entferneSchueler" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteSchueler">
-				<span v-if="preConditionCheck[0] === true">Alle ausgewählten Schüler sind bereit zum Löschen.</span>
+				<span v-if="preConditionCheck[0]">Alle ausgewählten Schüler sind bereit zum Löschen.</span>
 				<template v-else v-for="message in preConditionCheck[1]" :key="message">
 					<span class="text-error"> {{ message }} <br> </span>
 				</template>
@@ -34,12 +34,9 @@
 	const hatKompetenzLoeschen = computed(() => props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LOESCHEN));
 
 	const preConditionCheck = computed(() => {
-		if (!hatKompetenzLoeschen.value)
-			return [false, new ArrayList<string>()];
-
 		if (currentAction.value === 'delete')
 			return props.deleteSchuelerCheck();
-		return [false, new ArrayList<string>()];
+		return [true, new ArrayList<string>()];
 	})
 
 	function toggleDeleteSchueler() {
@@ -55,9 +52,7 @@
 	async function entferneSchueler() {
 		loading.value = true;
 
-		const [delStatus, logMessages] = await props.deleteSchueler();
-		logs.value = logMessages;
-		status.value = delStatus;
+		[status.value, logs.value] = await props.deleteSchueler();
 		currentAction.value = '';
 
 		loading.value = false;

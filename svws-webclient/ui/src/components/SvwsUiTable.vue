@@ -492,7 +492,6 @@
 				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
 			else if(!isInView(clickedElementHtml))
 				clickedElementHtml.scrollIntoView(scrollOptions);
-			clickedElementHtml?.focus();
 		}
 	}
 
@@ -526,9 +525,7 @@
 		return false;
 	});
 
-	onMounted(() => {
-		scrollToClickedElement();
-	})
+	onMounted(() => itemRefs.value.get(clickedItemIndex.value)?.focus());
 
 </script>
 
