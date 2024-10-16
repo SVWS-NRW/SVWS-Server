@@ -22,7 +22,7 @@
 
 	<svws-ui-button type="trash" v-if="showDeleteIcon" @click="deleteBenutzerAllgemein" />
 
-	<svws-ui-button type="icon" @click="showModal().value = true">
+	<svws-ui-button type="icon" @click="showModal().value = true" :hasFocus="hasFocus">
 		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
@@ -35,8 +35,10 @@
 		showDeleteIcon?: boolean;
 		createBenutzerAllgemein: (anmeldename: string, benutzername: string, passwort: string) => Promise<void>;
 		deleteBenutzerAllgemein: () => Promise<void>;
+		hasFocus?: boolean;
 	}>(), {
 		showDeleteIcon: false,
+		hasFocus: false,
 	});
 
 	const _showModal = ref<boolean>(false);

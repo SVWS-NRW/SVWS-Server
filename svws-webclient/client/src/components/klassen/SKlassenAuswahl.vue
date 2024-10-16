@@ -33,7 +33,7 @@
 							</svws-ui-tooltip>
 						</s-klassen-auswahl-sortierung-modal>
 						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon" @click="startCreationMode">
+							<svws-ui-button type="icon" @click="startCreationMode" :hasFocus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>

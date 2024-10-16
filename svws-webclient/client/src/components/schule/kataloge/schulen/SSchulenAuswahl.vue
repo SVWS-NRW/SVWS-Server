@@ -15,7 +15,7 @@
 				<template #actions>
 					<svws-ui-button @click="remove" type="trash" :disabled="liste.length === 0" />
 					<s-schulen-neu-modal v-slot="{ openModal }" :add-eintrag>
-						<svws-ui-button type="icon" @click="openModal()">
+						<svws-ui-button type="icon" @click="openModal()" :hasFocus="schulen.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 					</s-schulen-neu-modal>

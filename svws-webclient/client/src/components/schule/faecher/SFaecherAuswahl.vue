@@ -19,6 +19,7 @@
 						</s-faecher-auswahl-sortierung-sek-i-i-modal>
 					</template>
 				</template>
+				<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>

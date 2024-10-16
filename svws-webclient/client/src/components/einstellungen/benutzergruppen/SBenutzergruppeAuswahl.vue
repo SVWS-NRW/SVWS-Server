@@ -14,7 +14,7 @@
 				</template>
 				<template #actions>
 					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
-						:delete-benutzergruppen="deleteMultipleGroup" />
+						:delete-benutzergruppen="deleteMultipleGroup" :hasFocus="rowsFiltered.size === 0" />
 				</template>
 			</svws-ui-table>
 		</template>

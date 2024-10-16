@@ -23,7 +23,9 @@
 				</template>
 				<template #actions v-if="hatUpdateKompetenz">
 					<svws-ui-tooltip v-if="mapJahrgaengeOhneAbiJahrgang().size > 0" position="bottom">
-						<svws-ui-button type="icon" @click="gotoCreationMode"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+						<svws-ui-button type="icon" @click="gotoCreationMode" :hasFocus="items.length === 0">
+							<span class="icon i-ri-add-line" />
+						</svws-ui-button>
 						<template #content>Abiturjahr hinzufügen</template>
 					</svws-ui-tooltip>
 				</template>

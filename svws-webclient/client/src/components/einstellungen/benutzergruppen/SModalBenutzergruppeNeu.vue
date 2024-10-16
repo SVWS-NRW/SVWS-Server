@@ -19,7 +19,7 @@
 
 	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppen" />
 
-	<svws-ui-button type="icon" @click="showModal().value = true">
+	<svws-ui-button type="icon" @click="showModal().value = true" :hasFocus="hasFocus">
 		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>
@@ -28,11 +28,14 @@
 
 	import { ref } from "vue";
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		showDeleteIcon: boolean;
 		createBenutzergruppe : (bezeichnung: string, istAdmin: boolean) => Promise<void>;
 		deleteBenutzergruppen : () => Promise<void>;
-	}>();
+		hasFocus?: boolean;
+	}>(), {
+		hasFocus: false,
+	});
 
 	const _showModal = ref<boolean>(false);
 	function showModal() {

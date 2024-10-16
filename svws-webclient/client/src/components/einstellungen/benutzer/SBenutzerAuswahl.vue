@@ -14,7 +14,7 @@
 				</template>
 				<template #actions>
 					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
-						:delete-benutzer-allgemein="deleteMultipleUser" />
+						:delete-benutzer-allgemein="deleteMultipleUser" :hasFocus="rowsFiltered.size === 0" />
 				</template>
 			</svws-ui-table>
 		</template>
