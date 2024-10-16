@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "KEINER",
 		"idHistorie": 1,
@@ -10,6 +10,14 @@
 			"schluessel": "**",
 			"schulformen": ["BK", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "V", "WB"],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 1,
+			"kuerzel": "**",
+			"text": "kein Förderschwerpunkt",
+			"schluessel": "**",
+			"schulformen": ["BK", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "V", "WB"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -22,6 +30,14 @@
 			"schluessel": "BL",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 1001,
+			"kuerzel": "BL",
+			"text": "Sehen (Blinde)",
+			"schluessel": "BL",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -34,6 +50,14 @@
 			"schluessel": "EZ",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 2001,
+			"kuerzel": "EZ",
+			"text": "Emotionale und soziale Entwicklung",
+			"schluessel": "EZ",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -46,6 +70,14 @@
 			"schluessel": "GB",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 3001,
+			"kuerzel": "GB",
+			"text": "Geistige Entwicklung",
+			"schluessel": "GB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -58,6 +90,14 @@
 			"schluessel": "GH",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SR", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 4001,
+			"kuerzel": "GH",
+			"text": "Hören und Kommunikation (Gehörlose)",
+			"schluessel": "GH",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "SR", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -70,6 +110,14 @@
 			"schluessel": "KB",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SG", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 5001,
+			"kuerzel": "KB",
+			"text": "Körperliche und motorische Entwicklung",
+			"schluessel": "KB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "SG", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -94,6 +142,14 @@
 			"schluessel": "LB",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 7001,
+			"kuerzel": "LB",
+			"text": "Lernen",
+			"schluessel": "LB",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -154,6 +210,14 @@
 			"schluessel": "SB",
 			"schulformen": ["FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 12001,
+			"kuerzel": "SB",
+			"text": "Sprache",
+			"schluessel": "SB",
+			"schulformen": ["FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -166,6 +230,14 @@
 			"schluessel": "SG",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "SR", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 13001,
+			"kuerzel": "SG",
+			"text": "Hören und Kommunikation (Schwerhörige)",
+			"schluessel": "SG",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "SR", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -178,6 +250,14 @@
 			"schluessel": "SH",
 			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GM", "GY", "H", "R", "S", "KS", "V"],
 			"gueltigVon": 2011,
+			"gueltigBis": 2022
+		}, {
+			"id": 14001,
+			"kuerzel": "SH",
+			"text": "Sehen (Sehbehinderte)",
+			"schluessel": "SH",
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "R", "S", "KS", "V"],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {

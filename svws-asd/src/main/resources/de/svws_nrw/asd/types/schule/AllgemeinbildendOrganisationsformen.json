@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "NICHT_ZUGEORDNET",
 		"idHistorie": 1,
@@ -42,6 +42,30 @@
 				"V"
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3001001,
+			"schluessel": "1",
+			"kuerzel": "1", 
+			"text": "Halbtagsunterricht",
+			"schulformen": [
+				"FW", 
+				"HI", 
+				"WF",
+				"G",
+				"GE",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S", 
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {	
@@ -71,6 +95,30 @@
 				"V"
 			],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3002001,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Teilnahme am gebundenen Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"G",
+				"GE",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S",
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {	
