@@ -10,15 +10,15 @@
 			{{ DateUtils.getStringOfUhrzeitFromMinuten(value) }}
 		</template>
 		<template #actions>
-			<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
+			<svws-ui-button @click="doDeleteEintraege" type="trash" :disabled="selected.length === 0" />
 			<svws-ui-button type="transparent" title="Pausenzeiten exportieren" @click="export_pausenzeiten" :disabled="selected.length === 0"><span class="icon-sm i-ri-upload-2-line" /></svws-ui-button>
 			<s-pausenzeit-import-modal v-slot="{ openModal }" :set-katalog-pausenzeiten-import-j-s-o-n>
-				<svws-ui-button type="icon" @click="openModal()">
+				<svws-ui-button type="icon" @click="openModal">
 					<span class="icon-sm i-ri-download-2-line" />
 				</svws-ui-button>
 			</s-pausenzeit-import-modal>
 			<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
-				<svws-ui-button type="icon" @click="openModal()">
+				<svws-ui-button type="icon" @click="openModal">
 					<span class="icon i-ri-add-line" />
 				</svws-ui-button>
 			</s-pausenzeit-neu-modal>
@@ -28,10 +28,10 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { PausenzeitenAuswahlProps } from "./SPausenzeitenAuswahlProps";
 	import { StundenplanPausenzeit } from "@core";
 	import { Wochentag , DateUtils } from "@core";
-	import { ref } from "vue";
 
 	const props = defineProps<PausenzeitenAuswahlProps>();
 	const selected = ref<StundenplanPausenzeit[]>([]);

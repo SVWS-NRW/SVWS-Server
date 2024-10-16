@@ -4,7 +4,7 @@
 		<template #modalTitle>Pausenzeit hinzufügen</template>
 		<template #modalContent>
 			<div class="flex justify-center flex-wrap items-center gap-2">
-				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" />
+				<svws-ui-multi-select v-model="wochentage" :items="Wochentag.values()" :item-text="i => i.beschreibung" required placeholder="Wochentage" title="Wochentage" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" @change="patchBeginn" required placeholder="Beginn" :valid="() => !disabled" />
 				<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" @change="patchEnde" placeholder="Ende" :valid="() => !disabled" />
 				<svws-ui-multi-select v-model="klassen" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager?.().klasseGetByIdOrException(klasse).kuerzel || ''" />
@@ -30,7 +30,8 @@
 
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
-	const wochentage = computed<Wochentag[]>(() => props.stundenplanManager().pausenzeitGetWochentageAlsEnumRange());
+	const wochentage = ref<Wochentag[]>(props.stundenplanManager().zeitrasterGetWochentageAlsEnumRange());
+
 	const klassen = ref<number[]>([]);
 
 	const item = ref<Partial<StundenplanPausenzeit>>({ beginn: 620, ende: 645, bezeichnung: 'Pause' });

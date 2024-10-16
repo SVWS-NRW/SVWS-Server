@@ -1,8 +1,8 @@
 <template>
 	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless,
 		'svws-statistik': statistics, 'svws-danger': danger, 'svws-readonly': readonly, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
-		<div v-if="!headless && selectedItemList.size" class="svws-tags">
-			<span v-for="(item, index) in selectedItemList" :key="index" class="svws-tag">
+		<div v-if="!headless && (data.size > 0)" class="svws-tags">
+			<span v-for="(item, index) in data" :key="index" class="svws-tag">
 				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
 				<button v-if="!readonly" role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
 					<span class="icon i-ri-close-line -my-0.5" />
@@ -11,7 +11,7 @@
 		</div>
 		<div class="flex-grow">
 			<svws-ui-text-input ref="inputEl"
-				:model-value="headless ? dynModelValue : (selectedItemList.size ? ' ' : '')"
+				:model-value="headless ? dynModelValue : (data.size ? ' ' : '')"
 				:readonly="!autocomplete || readonly"
 				:is-select-input="!readonly"
 				:placeholder="label || title"
@@ -42,12 +42,12 @@
 				@keydown.tab="onTab" />
 		</div>
 		<button v-if="!readonly" role="button" class="svws-dropdown-icon" @keydown.enter="toggleListBox" @keydown.down="toggleListBox">
-			<span class="icon i-ri-expand-up-down-line my-0.5" v-if="headless" />
-			<span class="icon i-ri-expand-up-down-fill" :class="selectedItemList.size ? ['my-1']:['my-0.5']" v-else />
+			<div class="icon i-ri-expand-up-down-line" v-if="headless" />
+			<div class="icon i-ri-expand-up-down-fill" v-else />
 		</button>
 	</div>
 	<Teleport to="body" v-if="isMounted">
-		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list :select-item ref="refList" />
+		<svws-ui-dropdown-list v-if="showList" :statistics :filtered-list :item-text :strategy :floating-left :floating-top :selected-item-list="data" :select-item ref="refList" />
 	</Teleport>
 </template>
 
@@ -55,11 +55,10 @@
 <script setup lang="ts" generic="Item">
 
 	import type { ComputedRef, Ref } from "vue";
-	import { computed, nextTick, ref, shallowRef, watch, onMounted } from "vue";
+	import { computed, nextTick, ref, watch, onMounted, shallowRef, toRaw, useId } from "vue";
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { genId } from "../utils";
 	import type TextInput from "./SvwsUiTextInput.vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
@@ -102,7 +101,7 @@
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
 
 	const showList = ref(false);
-	const listIdPrefix = genId();
+	const listIdPrefix = useId();
 
 	const inputEl = ref(null);
 	const inputElTags = ref(null);
@@ -138,15 +137,22 @@
 	});
 
 	function generateInputText() {
-		return [...selectedItemList.value].map(item => props.itemText(item)).join(", ");
+		return [...data.value].map(item => props.itemText(item)).join(", ");
 	}
 
-	const data = shallowRef<Set<Item>>(new Set(props.modelValue));
+	const rawModelValues = computed(() => {
+		const set = new Set<Item>();
+		for (const item of props.modelValue)
+			set.add(toRaw(item));
+		return set;
+	})
 
-	watch(() => props.modelValue, (value) => updateData(new Set(value)), { immediate: false });
+	const data = shallowRef(new Set(rawModelValues.value));
+
+	watch(rawModelValues, (value) => updateData(new Set(value)), { immediate: false });
 
 	function updateData(value: Set<Item>) {
-		const a = data.value;
+		const a = rawModelValues.value;
 		const b = value;
 		if (a.size === b.size) {
 			let diff : boolean = false;
@@ -165,20 +171,19 @@
 
 	const selectedItem = computed({
 		get: () => {
-			const [ e ] = data.value.keys()
+			const [ e ] = data.value.keys();
 			return e;
 		},
 		set: (item) => {
 			if (item !== null && item !== undefined)
-				if (selectedItemList.value.has(item))
-					selectedItemList.value.delete(item);
+				if (data.value.has(item))
+					data.value.delete(item);
 				else
-					selectedItemList.value.add(item);
-			updateData(new Set<Item>(selectedItemList.value));
+					data.value.add(item);
+			updateData(data.value);
 		}
 	});
 
-	const selectedItemList = computed(() => new Set(data.value));
 
 	function hasSelected(): boolean {
 		return (selectedItem.value !== null) && (selectedItem.value !== undefined);
@@ -192,7 +197,7 @@
 	}
 
 	function removeTag(item: Item) {
-		if (selectedItemList.value.has(item))
+		if (data.value.has(item))
 			selectedItem.value = item;
 	}
 
@@ -341,7 +346,7 @@
 		}
 
 		&.svws-ui-select .svws-dropdown-icon {
-			height: calc(100% - 0.5rem);
+			@apply items-center;
 		}
 
 		&.svws-open.svws-autocomplete .svws-tags {
@@ -369,7 +374,7 @@
 		}
 
 		.svws-tags {
-			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pt-2 pb-1 pr-7 pointer-events-none;
+			@apply relative z-10 flex flex-wrap gap-0.5 pl-1 pr-7 pointer-events-none;
 
 			.svws-remove {
 				@apply relative top-0 left-0 w-auto h-auto pointer-events-auto;
@@ -381,7 +386,7 @@
 		}
 
 		.svws-tag {
-			@apply inline-flex items-center gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
+			@apply inline-flex items-center mt-2 gap-0.5 border border-black/10 rounded leading-none py-[0.2rem] pl-2 pr-1 text-base bg-white dark:bg-black;
 		}
 
 		&.svws-disabled {

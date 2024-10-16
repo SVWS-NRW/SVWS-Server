@@ -23,7 +23,7 @@
 					<svws-ui-multi-select v-model="filterKlassen" title="Klasse" :items="schuelerListeManager().klassen.list()" :item-text="klasse => klasse.kuerzel ?? ''" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterJahrgaenge" title="Jahrgang" :items="schuelerListeManager().jahrgaenge.list()" :item-text="jahrgang => jahrgang.kuerzel ?? ''" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterKurse" title="Kurs" :items="schuelerListeManager().kurse.list()" :item-text="textKurs" :item-filter="findKurs" />
-					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
+					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="schuelerListeManager().schulgliederungen.list()" :item-text="textSchulgliederung" />
 					<!--					<svws-ui-button type="transparent" class="justify-center">
 						<span class="icon i-ri-filter-line" />
 						Erweiterte Filter
@@ -156,6 +156,7 @@
 	const filterStatus = computed<SchuelerStatus[]>({
 		get: () => [...props.schuelerListeManager().schuelerstatus.auswahl()],
 		set: (value) => {
+			console.log(value)
 			props.schuelerListeManager().schuelerstatus.auswahlClear();
 			for (const v of value)
 				props.schuelerListeManager().schuelerstatus.auswahlAdd(v);
@@ -256,7 +257,7 @@
 		return matchedKurse;
 	}
 
-	function text_schulgliederung(schulgliederung: Schulgliederung): string {
+	function textSchulgliederung(schulgliederung: Schulgliederung): string {
 		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
