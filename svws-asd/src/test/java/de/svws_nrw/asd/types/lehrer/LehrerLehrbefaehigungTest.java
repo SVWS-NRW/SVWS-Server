@@ -33,7 +33,7 @@ class LehrerLehrbefaehigungTest {
 	@Test
 	@DisplayName("Prüfe die Anzahl der Anlagen am LehrerLehrbefaehigung.")
 	void testLehrerLehrbefaehigung() {
-		assertEquals(110, LehrerLehrbefaehigung.data().getWerte().size());
+		assertEquals(118, LehrerLehrbefaehigung.data().getWerte().size());
 	}
 
 	/**

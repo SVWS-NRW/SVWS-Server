@@ -129,6 +129,9 @@ public enum LehrerLehramt implements @NotNull CoreType<LehrerLehramtKatalogEintr
 	/** Alltagshelfer/-in */
 	ID_65,
 
+	/** Studierende */
+	ID_90,
+
 	/** Lehramt 'Lehrer, der eine Qualifikation erworben hat, die der 1. Staatsprüfung entspricht (z.B. Diplom, sofern nicht Schlüssel 98)' */
 	ID_96,
 

@@ -210,54 +210,59 @@ export class LehrerLehramt extends JavaEnum<LehrerLehramt> implements CoreType<L
 	public static readonly ID_65 : LehrerLehramt = new LehrerLehramt("ID_65", 38, );
 
 	/**
+	 * Studierende
+	 */
+	public static readonly ID_90 : LehrerLehramt = new LehrerLehramt("ID_90", 39, );
+
+	/**
 	 * Lehramt 'Lehrer, der eine Qualifikation erworben hat, die der 1. Staatsprüfung entspricht (z.B. Diplom, sofern nicht Schlüssel 98)'
 	 */
-	public static readonly ID_96 : LehrerLehramt = new LehrerLehramt("ID_96", 39, );
+	public static readonly ID_96 : LehrerLehramt = new LehrerLehramt("ID_96", 40, );
 
 	/**
 	 * Lehramt 'Lehrer, der außerhalb des Geltungsbereichs des Grundgesetzes seine Qualifikation erworben hat'
 	 */
-	public static readonly ID_97 : LehrerLehramt = new LehrerLehramt("ID_97", 40, );
+	public static readonly ID_97 : LehrerLehramt = new LehrerLehramt("ID_97", 41, );
 
 	/**
 	 * Lehramt 'Lehramtsanwärter/Studienreferendar'
 	 */
-	public static readonly ID_98 : LehrerLehramt = new LehrerLehramt("ID_98", 41, );
+	public static readonly ID_98 : LehrerLehramt = new LehrerLehramt("ID_98", 42, );
 
 	/**
 	 * Lehramt 'Sonstiger Lehrer (Gymnastik-, Werk-, Hauswirtschaftslehrer, Übungsleiter)'
 	 */
-	public static readonly ID_99 : LehrerLehramt = new LehrerLehramt("ID_99", 42, );
+	public static readonly ID_99 : LehrerLehramt = new LehrerLehramt("ID_99", 43, );
 
 	/**
 	 * Lehramt 'Schulverwaltungsassistent'
 	 */
-	public static readonly ID_70 : LehrerLehramt = new LehrerLehramt("ID_70", 43, );
+	public static readonly ID_70 : LehrerLehramt = new LehrerLehramt("ID_70", 44, );
 
 	/**
 	 * Lehramt 'Grundschule'
 	 */
-	public static readonly ID_04 : LehrerLehramt = new LehrerLehramt("ID_04", 44, );
+	public static readonly ID_04 : LehrerLehramt = new LehrerLehramt("ID_04", 45, );
 
 	/**
 	 * Lehramt 'Haupt-, Real- und  Gesamtschule'
 	 */
-	public static readonly ID_17 : LehrerLehramt = new LehrerLehramt("ID_17", 45, );
+	public static readonly ID_17 : LehrerLehramt = new LehrerLehramt("ID_17", 46, );
 
 	/**
 	 * Lehramt 'Sonderpädagogische Förderung'
 	 */
-	public static readonly ID_08 : LehrerLehramt = new LehrerLehramt("ID_08", 46, );
+	public static readonly ID_08 : LehrerLehramt = new LehrerLehramt("ID_08", 47, );
 
 	/**
 	 * Lehramt 'Haupt-, Real-, Sekundar- und Gesamtschule'
 	 */
-	public static readonly ID_18 : LehrerLehramt = new LehrerLehramt("ID_18", 47, );
+	public static readonly ID_18 : LehrerLehramt = new LehrerLehramt("ID_18", 48, );
 
 	/**
 	 * Lehramt 'Berufskolleg mit einer beruflichen Fachrichtung (§ 59 LVO)'
 	 */
-	public static readonly ID_49 : LehrerLehramt = new LehrerLehramt("ID_49", 48, );
+	public static readonly ID_49 : LehrerLehramt = new LehrerLehramt("ID_49", 49, );
 
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);

@@ -602,6 +602,81 @@ public enum Herkunftsarten {
 			), null, null)
 	}),
 
+	/**
+	 * Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))
+	 */
+	UBERGANG_VON_DEUTSCHFOEDERUNG(new HerkunftsartKatalogEintrag[] {
+			new HerkunftsartKatalogEintrag(91000L, "91", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))")
+			), null, null)
+	}),
+
+	/**
+	 * Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))
+	 */
+	VERBLEIB_DEUTSCHFOEDERUNG(new HerkunftsartKatalogEintrag[] {
+			new HerkunftsartKatalogEintrag(91000L, "91", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Verbleib in Deutschförderung",
+							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))")
+			), null, null)
+	}),
 
 	/**
 	 * Schüler, die aus dem Ausland zugezogen sind
@@ -693,6 +768,12 @@ public enum Herkunftsarten {
 	 */
 	HA9(new HerkunftsartKatalogEintrag[] {
 			new HerkunftsartKatalogEintrag(3000000L, "C", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "HA9-10B",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Mittlerer Abschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "HA9-10B",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Mittlerer Abschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "HA9-10B",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Mittlerer Abschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "HA9-10B",
 							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Mittlerer Abschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "HA9-10B",
@@ -701,6 +782,12 @@ public enum Herkunftsarten {
 							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Gleichstellung zum Hauptschulabschluss nach Klasse 10")
 			), null, 2022),
 			new HerkunftsartKatalogEintrag(3000001L, "C", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-10B",
 							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-10B",
@@ -800,6 +887,12 @@ public enum Herkunftsarten {
 	 */
 	MSA_Q1(new HerkunftsartKatalogEintrag[] {
 			new HerkunftsartKatalogEintrag(9000000L, "I", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "MSA-Q1",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "MSA-Q1",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "MSA-Q1",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "MSA-Q1",
 							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "MSA-Q1",
@@ -900,6 +993,12 @@ public enum Herkunftsarten {
 	 */
 	HA9_Q(new HerkunftsartKatalogEintrag[] {
 			new HerkunftsartKatalogEintrag(15000000L, "O", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "HA-Q",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "HA-Q",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "HA-Q",
+							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "HA-Q",
 							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "HA-Q",
@@ -908,6 +1007,12 @@ public enum Herkunftsarten {
 							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl. 9 des Gymnasiums)")
 			), null, 2022),
 			new HerkunftsartKatalogEintrag(15000000L, "O", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-Q",
 							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-Q",
@@ -943,6 +1048,20 @@ public enum Herkunftsarten {
 
 
 	/**
+	 * Kein Abschluss, kommt aus der Deutschförderung
+	 */
+	KEIN_ABSCHLUSS_AUS_DEUTSCHFOERDERUNG(new HerkunftsartKatalogEintrag[] {
+			new HerkunftsartKatalogEintrag(18000000L, "R", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "FGHR", "Ohne Abschluss, kommt aus der Deutschförderung")
+			), null, null)
+	}),
+
+	/**
 	 * Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)
 	 */
 	HA9_FOE(new HerkunftsartKatalogEintrag[] {
@@ -950,12 +1069,16 @@ public enum Herkunftsarten {
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "HA-IntFö",
 							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "HA-IntFö",
+							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA-IntFö",
 							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)")
 			), null, 2022),
 			new HerkunftsartKatalogEintrag(19000000L, "S", Arrays.asList(
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-IntFö",
 							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-IntFö",
+							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "ESA-IntFö",
 							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)")
 			), 2023, null)
 	}),
@@ -1024,7 +1147,7 @@ public enum Herkunftsarten {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 3;
+	public static final long VERSION = 4;
 
 	/** Der aktuellen Daten der Herkunftsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsartKatalogEintrag daten;

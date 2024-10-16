@@ -20,6 +20,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Arabisch (Muttersprachl. Unterricht)' */
 	AM,
 
+	/** Lehrbefähigung 'Aramäisch (Herkunftssprache)'*/
+	AN,
+
 	/** Lehrbefähigung 'Arbeitslehre / Schwerpunkt Technik' */
 	AT,
 
@@ -44,6 +47,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Kroatisch (Muttersprachl. Unterricht)' */
 	CM,
 
+	/** Lehrbefähigung 'Chinesisch (Herkunftssprache)'*/
+	CN,
+
 	/** Lehrbefähigung 'Deutsch' */
 	D,
 
@@ -61,6 +67,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 
 	/** Lehrbefähigung 'Französisch' */
 	F,
+
+	/** Lehrbefähigung 'Französisch (Herkunftssprache)'*/
+	FM,
 
 	/** Lehrbefähigung 'Fachpraxis' */
 	FP,
@@ -107,6 +116,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Islamkunde' */
 	IR,
 
+	/** Lehrbefähigung 'Japanisch (Herkunftssprache)'*/
+	JM,
+
 	/** Lehrbefähigung 'Japanisch' */
 	K,
 
@@ -142,6 +154,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 
 	/** Lehrbefähigung 'Makedonisch (Muttersprachl. Unterricht)' */
 	MM,
+
+	/** Lehrbefähigung 'Ungarisch (Herkunftssprache)'*/
+	MN,
 
 	/** Lehrbefähigung 'Maschinenschreiben' */
 	MS,
@@ -194,6 +209,9 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Russisch (Muttersprachl. Unterricht)' */
 	RM,
 
+	/** Lehrbefähigung 'Romanes (Herkunftssprache)'*/
+	RN,
+
 	/** Lehrbefähigung 'Rechtswissenschaft' */
 	RW,
 
@@ -239,8 +257,14 @@ public enum LehrerLehrbefaehigung implements @NotNull CoreType<LehrerLehrbefaehi
 	/** Lehrbefähigung 'Türkisch (Muttersprachl. Unterricht)' */
 	TM,
 
+	/** Lehrbefähigung 'Thai(Herkunftssprache)'*/
+	TN,
+
 	/** Lehrbefähigung 'Textilgestaltung' */
 	TX,
+
+	/** Lehrbefähigung 'Ukrainisch (Herkunftssprache)'*/
+	UN,
 
 	/** Lehrbefähigung 'Unterweisung' */
 	UW,

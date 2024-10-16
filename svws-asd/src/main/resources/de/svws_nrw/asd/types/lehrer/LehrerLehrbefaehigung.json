@@ -1210,5 +1210,93 @@
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
+	}, {
+		"bezeichner": "AN",
+		"idHistorie": 111,
+		"historie": [ {
+			"id": 284,
+			"schluessel": "AN",
+			"kuerzel": "AN",
+			"text": "Aramäisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "CN",
+		"idHistorie": 112,
+		"historie": [ {
+			"id": 285,
+			"schluessel": "CN",
+			"kuerzel": "CN",
+			"text": "Chinesisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FM",
+		"idHistorie": 113,
+		"historie": [ {
+			"id": 286,
+			"schluessel": "FM",
+			"kuerzel": "FM",
+			"text": "Französisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "JM",
+		"idHistorie": 114,
+		"historie": [ {
+			"id": 287,
+			"schluessel": "JM",
+			"kuerzel": "JM",
+			"text": "Japanisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MN",
+		"idHistorie": 115,
+		"historie": [ {
+			"id": 288,
+			"schluessel": "MN",
+			"kuerzel": "MN",
+			"text": "Ungarisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "RN",
+		"idHistorie": 116,
+		"historie": [ {
+			"id": 289,
+			"schluessel": "RN",
+			"kuerzel": "RN",
+			"text": "Romanes (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TN",
+		"idHistorie": 117,
+		"historie": [ {
+			"id": 290,
+			"schluessel": "TN",
+			"kuerzel": "TN",
+			"text": "Thai (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UN",
+		"idHistorie": 118,
+		"historie": [ {
+			"id": 291,
+			"schluessel": "UN",
+			"kuerzel": "UN",
+			"text": "Ukrainisch (Herkunftssprache)",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
 	} ]
 }

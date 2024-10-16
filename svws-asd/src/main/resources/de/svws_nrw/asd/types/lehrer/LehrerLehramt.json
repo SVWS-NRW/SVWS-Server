@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "ID_00",
 		"idHistorie": 1,
@@ -537,6 +537,17 @@
 			"kuerzel": "65",
 			"text": "Alltagshelfer/-in",
 			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_90",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 131,
+			"schluessel": "90",
+			"kuerzel": "90",
+			"text": "Studierende",
+			"gueltigVon": 2024,
 			"gueltigBis": null
 		} ]
 	} ]
