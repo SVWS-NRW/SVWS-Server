@@ -1,10 +1,12 @@
 <template>
 	<div v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit h-full flex flex-col">
-		<div class="content-card--header mb-2 w-fit h-fit flex flex-row">
-			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
-				<span class="icon i-ri-link" />
-			</svws-ui-button>
-			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
+		<div class="content-card--header mb-2 w-fit h-fit">
+			<div class="flex flex-row">
+				<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
+					<span class="icon i-ri-link" />
+				</svws-ui-button>
+				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
+			</div>
 		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
 		<div class="flex gap-12 pr-7 overflow-y-auto h-full" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
