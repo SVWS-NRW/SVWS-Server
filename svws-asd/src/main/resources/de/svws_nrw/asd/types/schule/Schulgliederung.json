@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "DEFAULT",
 		"idHistorie": 1,
@@ -316,7 +316,7 @@
 				"SB"
 			],
 			"istAuslaufend": true,
-			"istAusgelaufen": false,
+			"istAusgelaufen": true,
 			"text": "Berufsabschluss/Mittlerer Schulabschluss (BKAZVO) (BAB/FOR; VZ)",
 			"bkAnlage": "A",
 			"bkTyp": "10",
@@ -349,7 +349,7 @@
 				"SB"
 			],
 			"istAuslaufend": true,
-			"istAusgelaufen": false,
+			"istAusgelaufen": true,
 			"text": "Berufsabschluss/Fachhochschulreife (BKAZVO) (BAB/FHR; VZ)",
 			"bkAnlage": "A",
 			"bkTyp": "11",
@@ -548,6 +548,28 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2021
+		},  {
+			"id": 90001001,
+			"kuerzel": "AB",
+			"schluessel": "AB",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Klinikschule: Allgemeinbildend",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -887,8 +909,8 @@
 				"BK",
 				"SB"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (BK/HSA10; 1j. VZ)",
 			"bkAnlage": "B",
 			"bkTyp": "06",
@@ -967,8 +989,8 @@
 				"BK",
 				"SB"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 2j. VZ)",
 			"bkAnlage": "B",
 			"bkTyp": "08",
@@ -1029,8 +1051,8 @@
 				"BK",
 				"SB"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 3j. TZ)",
 			"bkAnlage": "B",
 			"bkTyp": "09",
@@ -1091,8 +1113,8 @@
 				"BK",
 				"SB"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Berufsabschl./Hauptschulab.Kl. 10 oder mittl. Schulab. (BAB/HSA10-FOR, 4j. TZ)",
 			"bkAnlage": "B",
 			"bkTyp": "10",
@@ -1153,8 +1175,8 @@
 				"BK",
 				"SB"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Berufsab./HSA Kl. 10 oder mittl. Schulabschluss 3j. in TZ berufsbegleitend (BAB/HSA10-FOR, 3j. TZ)",
 			"bkAnlage": "B",
 			"bkTyp": "11",
@@ -1198,6 +1220,28 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2021
+		},  {
+			"id": 90002001,
+			"kuerzel": "BT",
+			"schluessel": "BT",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Klinikschule: Berufsbildend (Teilzeit)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		}]
 	}, {
@@ -1224,6 +1268,28 @@
 			"istVZ": true,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2021
+		},  {
+			"id": 90003001,
+			"kuerzel": "BV",
+			"schluessel": "BV",
+			"istBK": false,
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Klinikschule: Berufsbildend (Vollzeit)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": true,
+			"abschluesse": [ ],
+			"gueltigVon": 2022,
 			"gueltigBis": null
 		}]
 	}, {
@@ -2901,7 +2967,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2014,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2924,6 +2990,24 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2020
+		},  {
+			"id": 80001001,
+			"kuerzel": "EVB",
+			"schluessel": "EVB",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "angeschlossene evangelische Bekenntnisschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2021,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2979,7 +3063,7 @@
 			"schluessel": "GGS",
 			"istBK": false,
 			"schulformen": [
-				"GE"
+				"GE", "SK"
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
@@ -2989,7 +3073,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2017,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3001,7 +3085,7 @@
 			"schluessel": "GGY",
 			"istBK": false,
 			"schulformen": [
-				"GE"
+				"GE", "SK"
 			],
 			"istAuslaufend": true,
 			"istAusgelaufen": false,
@@ -3011,7 +3095,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2017,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3034,6 +3118,24 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2020
+		}, {
+			"id": 80002001,
+			"kuerzel": "GMS",
+			"schluessel": "GMS",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "angeschlossene Gemeinschaftsschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2021,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3045,7 +3147,6 @@
 			"schluessel": "GR",
 			"istBK": false,
 			"schulformen": [
-				"GE",
 				"SK"
 			],
 			"istAuslaufend": false,
@@ -3056,7 +3157,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2014,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3078,7 +3179,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2017,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3092,16 +3193,16 @@
 			"schulformen": [
 				"GM"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
-			"text": "integrierte Form (Binnendifferenzierung)",
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
+			"text": "integrierte Form",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigVon": 2011,
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "GY",
@@ -3112,8 +3213,82 @@
 			"schluessel": "GY",
 			"istBK": false,
 			"schulformen": [
+				"GE"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Gymnasium (nur Verbundschulen im SI-Bereich)",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2012
+		}, {
+			"id": 15005001,
+			"kuerzel": "GY",
+			"schluessel": "GY",
+			"istBK": false,
+			"schulformen": [
+				"GE",
+				"GM"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Kooperative Form: Gymnasialbildungsgang",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2013,
+			"gueltigBis": 2013
+		}, {
+			"id": 15005002,
+			"kuerzel": "GY",
+			"schluessel": "GY",
+			"istBK": false,
+			"schulformen": [
 				"GE",
 				"GM",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Kooperative Form: Gymnasialbildungsgang",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2014,
+			"gueltigBis": 2018
+		}, {
+			"id": 15005003,
+			"kuerzel": "GY",
+			"schluessel": "GY",
+			"istBK": false,
+			"schulformen": [
+				"GM",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Kooperative Form: Gymnasialbildungsgang",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2019,
+			"gueltigBis": 2022
+		}, {
+			"id": 15005004,
+			"kuerzel": "GY",
+			"schluessel": "GY",
+			"istBK": false,
+			"schulformen": [
 				"SK"
 			],
 			"istAuslaufend": false,
@@ -3124,7 +3299,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3141,14 +3316,14 @@
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Bildungsgang G8-Gymnasium",
+			"text": "Gymnasialer Bildungsgang G8",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
-			"gueltigBis": 2022
+			"gueltigBis": 2023
 		}, {
 			"id": 60002001,
 			"kuerzel": "GY8",
@@ -3159,13 +3334,13 @@
             ],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Bildungsgang G8-Gymnasium",
+			"text": "Gymnasialer Bildungsgang G8",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": 2023,
+			"gueltigVon": 2024,
 			"gueltigBis": null
  		} ]
 	}, {
@@ -3182,7 +3357,7 @@
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Bildungsgang G9-Gymnasium",
+			"text": "Gymnasialer Bildungsgang G9",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3200,6 +3375,43 @@
 			"schluessel": "H",
 			"istBK": false,
 			"schulformen": [
+				"R"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Hauptschule",
+			"bkAnlage": null,
+			"bkTyp": "  ",
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		}, {
+			"id": 10001001,
+			"kuerzel": "H",
+			"schluessel": "H",
+			"istBK": false,
+			"schulformen": [
+				"GM",
+				"R"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Hauptschule",
+			"bkAnlage": null,
+			"bkTyp": "  ",
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 10001002,
+			"kuerzel": "H",
+			"schluessel": "H",
+			"istBK": false,
+			"schulformen": [
 				"GM",
 				"R",
 				"SK"
@@ -3212,7 +3424,26 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2012,
+			"gueltigBis": 2022
+		}, {
+			"id": 10001003,
+			"kuerzel": "H",
+			"schluessel": "H",
+			"istBK": false,
+			"schulformen": [
+				"R",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Hauptschule",
+			"bkAnlage": null,
+			"bkTyp": "  ",
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3224,9 +3455,7 @@
 			"schluessel": "H01",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
-				"WF"
+				"HI"
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
@@ -3248,9 +3477,7 @@
 			"schluessel": "H02",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
-				"WF"
+				"HI"
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
@@ -3272,14 +3499,11 @@
 			"schluessel": "K02",
 			"istBK": false,
 			"schulformen": [
-				"FW",
-				"HI",
-				"WF",
-				"WB"
+				"HI"
 			],
 			"istAuslaufend": false,
 			"istAusgelaufen": false,
-			"text": "Bildungsgang Kolleg",
+			"text": "Hiberniakolleg Semester 1-6",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
@@ -3297,6 +3521,43 @@
 			"schluessel": "R",
 			"istBK": false,
 			"schulformen": [
+				"H"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Realschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2010
+		}, {
+			"id": 10002001,
+			"kuerzel": "R",
+			"schluessel": "R",
+			"istBK": false,
+			"schulformen": [
+				"GM",
+				"H"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Realschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2011,
+			"gueltigBis": 2011
+		}, {
+			"id": 10002002,
+			"kuerzel": "R",
+			"schluessel": "R",
+			"istBK": false,
+			"schulformen": [
 				"GM",
 				"H",
 				"SK"
@@ -3309,7 +3570,26 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2012,
+			"gueltigBis": 2022
+		}, {
+			"id": 10002003,
+			"kuerzel": "R",
+			"schluessel": "R",
+			"istBK": false,
+			"schulformen": [
+				"H",
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Bildungsgang Realschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3333,6 +3613,25 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2012
+		},  {
+			"id": 10003001,
+			"kuerzel": "R00",
+			"schluessel": "R00",
+			"istBK": false,
+			"schulformen": [
+				"KS",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Realschulzweig",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2013,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3340,6 +3639,26 @@
 		"idHistorie": 82,
 		"historie": [ {
 			"id": 10004000,
+			"kuerzel": "R01",
+			"schluessel": "R01",
+			"istBK": false,
+			"schulformen": [
+				"KS",
+				"R",
+				"S"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "Aufbaurealschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": null,
+			"gueltigBis": 2009
+		}, {
+			"id": 10004001,
 			"kuerzel": "R01",
 			"schluessel": "R01",
 			"istBK": false,
@@ -3354,7 +3673,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2010,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3388,7 +3707,6 @@
 			"schluessel": "RH",
 			"istBK": false,
 			"schulformen": [
-				"GE",
 				"GM",
 				"SK"
 			],
@@ -3400,7 +3718,25 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2013,
+			"gueltigBis": 2022
+		}, {
+			"id": 10005001,
+			"kuerzel": "RH",
+			"schluessel": "RH",
+			"istBK": false,
+			"schulformen": [
+				"SK"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "teilintegrierte Form",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3423,6 +3759,24 @@
 			"istVZ": false,
 			"abschluesse": [ ],
 			"gueltigVon": null,
+			"gueltigBis": 2020
+		}, {
+			"id": 80003001,
+			"kuerzel": "RKB",
+			"schluessel": "RKB",
+			"istBK": false,
+			"schulformen": [
+				"G"
+			],
+			"istAuslaufend": false,
+			"istAusgelaufen": false,
+			"text": "angeschlossene katholische  Bekenntnisschule",
+			"bkAnlage": null,
+			"bkTyp": null,
+			"bkIndex": null,
+			"istVZ": false,
+			"abschluesse": [ ],
+			"gueltigVon": 2021,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3444,7 +3798,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2017,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3466,7 +3820,7 @@
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
+			"gueltigVon": 2017,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3480,16 +3834,16 @@
 			"schulformen": [
 				"GE"
 			],
-			"istAuslaufend": false,
-			"istAusgelaufen": false,
+			"istAuslaufend": true,
+			"istAusgelaufen": true,
 			"text": "Lehrplan G8",
 			"bkAnlage": null,
 			"bkTyp": null,
 			"bkIndex": null,
 			"istVZ": false,
 			"abschluesse": [ ],
-			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigVon": 2011,
+			"gueltigBis": 2021
 		} ]
 	} ]
 }

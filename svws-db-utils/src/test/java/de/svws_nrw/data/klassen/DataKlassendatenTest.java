@@ -126,7 +126,7 @@ class DataKlassendatenTest {
 
 	@Test
 	@DisplayName("getSchulgliederungIdByKlasseAndSchulform | Es wird eine Klasse und die Schulform 'GY' übergeben => Die Schulgliederung zu 'GY' mit "
-			+ "der ID 15005000")
+			+ "der ID 15005004")
 	void getSchulgliederungIdByKlasseAndSchulform_Found() {
 		final Schulform schulform = Schulform.GY;
 
@@ -146,7 +146,7 @@ class DataKlassendatenTest {
 
 			final Long result = cut.getSchulgliederungIdByKlasseAndSchulform(dtoKlasse, schulform);
 
-			assertThat(result).isEqualTo(15005000);
+			assertThat(result).isEqualTo(15005004);
 		}
 	}
 

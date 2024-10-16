@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "ENGLISCH",
 		"idHistorie": 1,
@@ -8,7 +8,7 @@
 			"kuerzel": "E",
 			"text": "Englisch",
 			"schluessel": "E",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -16,7 +16,7 @@
 			"kuerzel": "E",
 			"text": "Englisch",
 			"schluessel": "E",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -28,7 +28,7 @@
 			"kuerzel": "F",
 			"text": "Französisch",
 			"schluessel": "F",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -36,7 +36,7 @@
 			"kuerzel": "F",
 			"text": "Französisch",
 			"schluessel": "F",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -48,7 +48,7 @@
 			"kuerzel": "I",
 			"text": "Italienisch",
 			"schluessel": "I",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -56,7 +56,7 @@
 			"kuerzel": "I",
 			"text": "Italienisch",
 			"schluessel": "I",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -68,7 +68,7 @@
 			"kuerzel": "N",
 			"text": "Niederländisch",
 			"schluessel": "N",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -76,7 +76,7 @@
 			"kuerzel": "N",
 			"text": "Niederländisch",
 			"schluessel": "N",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -88,7 +88,7 @@
 			"kuerzel": "S",
 			"text": "Spanisch",
 			"schluessel": "S",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -96,7 +96,7 @@
 			"kuerzel": "S",
 			"text": "Spanisch",
 			"schluessel": "S",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -108,7 +108,7 @@
 			"kuerzel": "T",
 			"text": "Türkisch",
 			"schluessel": "T",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -116,7 +116,7 @@
 			"kuerzel": "T",
 			"text": "Türkisch",
 			"schluessel": "T",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -128,7 +128,7 @@
 			"kuerzel": "Z",
 			"text": "Neugriechisch",
 			"schluessel": "Z",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": null,
 			"gueltigBis": 2022
 		}, {
@@ -136,7 +136,7 @@
 			"kuerzel": "Z",
 			"text": "Neugriechisch",
 			"schluessel": "Z",
-			"schulformen": ["BK", "SB", "G", "GE", "GY", "R", "SG", "SK", "SR"],
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]

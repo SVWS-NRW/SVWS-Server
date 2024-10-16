@@ -34,7 +34,7 @@ class TestCoreTypeSchulgliederung {
 	@DisplayName("Teste ob die Schulformen mindestens eine Schulgliederungen haben")
 	void testSchulformMindestensEineSchulgliederung() {
 		for (final Schulform sf : Schulform.values()) {
-			if (Schulgliederung.getBySchuljahrAndSchulform(2024, sf).size() <= 0)
+			if (Schulgliederung.getBySchuljahrAndSchulform(2022, sf).size() <= 0)
 				fail("Keine Schulgliederungen für die Schulform " + sf.name() + " gefunden.");
 		}
 	}

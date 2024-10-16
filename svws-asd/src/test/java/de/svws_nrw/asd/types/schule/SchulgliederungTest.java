@@ -35,7 +35,7 @@ class SchulgliederungTest {
     @DisplayName("Prüfe die Anzahl der Schulgliederungen.")
     void testSchulform() {
     	assertEquals(89, Schulgliederung.data().getWerte().size());
-    	assertEquals(65, Schulgliederung.data().getWerteBySchuljahr(2023).size());
+    	assertEquals(63, Schulgliederung.data().getWerteBySchuljahr(2023).size());
    }
 
 }
