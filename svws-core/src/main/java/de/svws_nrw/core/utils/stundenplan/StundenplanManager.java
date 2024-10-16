@@ -21,6 +21,7 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKalenderwochenzuordnung;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKlassenunterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanKomplett;
+import de.svws_nrw.core.data.stundenplan.StundenplanKonfiguration;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanPausenaufsicht;
@@ -413,15 +414,7 @@ public class StundenplanManager {
 	private final @NotNull String _stundenplanBezeichnung;
 
 	// Default-Werte
-	private int _stundenplanDefaultUnterrichtsbeginn = -1;
-	private int _stundenplanDefaultStundendauer = -1;
-	private int _stundenplanDefaultPausenzeitFuerRaumwechsel = -1;
-	private int _stundenplanDefaultVormittagspause1Nach = -1;
-	private int _stundenplanDefaultVormittagspause1Dauer = -1;
-	private int _stundenplanDefaultVormittagspause2Nach = -1;
-	private int _stundenplanDefaultVormittagspause2Dauer = -1;
-	private int _stundenplanDefaultMittagspauseNach = -1;
-	private int _stundenplanDefaultMittagspauseDauer = -1;
+	private @NotNull StundenplanKonfiguration _stundenplanKonfig = new StundenplanKonfiguration();
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
@@ -4603,9 +4596,9 @@ public class StundenplanManager {
 
 		for (int wochentag = tagVon; wochentag <= tagBis; wochentag++) {
 			// 1. Vormittagspause
-			if (_stundenplanDefaultVormittagspause1Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanDefaultVormittagspause1Nach);
-				int ende = beginn + _stundenplanDefaultVormittagspause1Dauer;
+			if (_stundenplanKonfig.defaultVormittagspause1Dauer > 0) {
+				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause1Nach);
+				int ende = beginn + _stundenplanKonfig.defaultVormittagspause1Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4618,9 +4611,9 @@ public class StundenplanManager {
 				}
 			}
 			// 2. Vormittagspause
-			if (_stundenplanDefaultVormittagspause2Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanDefaultVormittagspause2Nach);
-				int ende = beginn + _stundenplanDefaultVormittagspause2Dauer;
+			if (_stundenplanKonfig.defaultVormittagspause2Dauer > 0) {
+				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause2Nach);
+				int ende = beginn + _stundenplanKonfig.defaultVormittagspause2Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4633,9 +4626,9 @@ public class StundenplanManager {
 				}
 			}
 			// Mittagspause
-			if (_stundenplanDefaultMittagspauseDauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanDefaultMittagspauseNach);
-				int ende = beginn + _stundenplanDefaultMittagspauseDauer;
+			if (_stundenplanKonfig.defaultMittagspauseDauer > 0) {
+				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultMittagspauseNach);
+				int ende = beginn + _stundenplanKonfig.defaultMittagspauseDauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -5578,9 +5571,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
 	 */
 	public int stundenplanGetDefaultUnterrichtsbeginn() {
-		if (_stundenplanDefaultUnterrichtsbeginn < 0)
-			_stundenplanDefaultUnterrichtsbeginn = 8 * 60; // 8:00 Uhr
-		return _stundenplanDefaultUnterrichtsbeginn;
+		return _stundenplanKonfig.defaultUnterrichtsbeginn;
 	}
 
 	/**
@@ -5590,7 +5581,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultUnterrichtsbeginn(final int defaultUnterrichtsbeginn) {
 		DeveloperNotificationException.ifTrue("'defaultUnterrichtsbeginn' muss >= 0 sein!", defaultUnterrichtsbeginn < 0);
-		_stundenplanDefaultUnterrichtsbeginn = defaultUnterrichtsbeginn;
+		_stundenplanKonfig.defaultUnterrichtsbeginn = defaultUnterrichtsbeginn;
 	}
 
 	/**
@@ -5599,9 +5590,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
 	 */
 	public int stundenplanGetDefaultStundendauer() {
-		if (_stundenplanDefaultStundendauer < 0)
-			_stundenplanDefaultStundendauer = 45; // 45 Minuten
-		return _stundenplanDefaultStundendauer;
+		return _stundenplanKonfig.defaultStundendauer;
 	}
 
 	/**
@@ -5611,7 +5600,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultStundendauer(final int defaultStundendauer) {
 		DeveloperNotificationException.ifTrue("'defaultStundendauer' muss > 0 sein!", defaultStundendauer <= 0);
-		_stundenplanDefaultStundendauer = defaultStundendauer;
+		_stundenplanKonfig.defaultStundendauer = defaultStundendauer;
 	}
 
 	/**
@@ -5620,9 +5609,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
 	 */
 	public int stundenplanGetDefaultPausenzeitFuerRaumwechsel() {
-		if (_stundenplanDefaultPausenzeitFuerRaumwechsel < 0)
-			_stundenplanDefaultPausenzeitFuerRaumwechsel = 5;  // 5 Minuten
-		return _stundenplanDefaultPausenzeitFuerRaumwechsel;
+		return _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 	}
 
 	/**
@@ -5632,7 +5619,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultPausenzeitFuerRaumwechsel(final int defaultPausenzeitFuerRaumwechsel) {
 		DeveloperNotificationException.ifTrue("'defaultPausenzeitFuerRaumwechsel' muss >= 0 sein!", defaultPausenzeitFuerRaumwechsel < 0);
-		_stundenplanDefaultPausenzeitFuerRaumwechsel = defaultPausenzeitFuerRaumwechsel;
+		_stundenplanKonfig.defaultPausenzeitFuerRaumwechsel = defaultPausenzeitFuerRaumwechsel;
 	}
 
 	/**
@@ -5641,9 +5628,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die 1. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public int stundenplanGetDefaultVormittagspause1Nach() {
-		if (_stundenplanDefaultVormittagspause1Nach < 0)
-			_stundenplanDefaultVormittagspause1Nach = 2;  // Die 1. Pause ist nach der 2. Stunde
-		return _stundenplanDefaultVormittagspause1Nach;
+		return _stundenplanKonfig.defaultVormittagspause1Nach;
 	}
 
 	/**
@@ -5653,7 +5638,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultVormittagspause1Nach(final int defaultVormittagspause1Nach) {
 		DeveloperNotificationException.ifTrue("'defaultVormittagspause1Nach' muss >= 0 sein!", defaultVormittagspause1Nach < 0);
-		_stundenplanDefaultVormittagspause1Nach = defaultVormittagspause1Nach;
+		_stundenplanKonfig.defaultVormittagspause1Nach = defaultVormittagspause1Nach;
 	}
 
 	/**
@@ -5662,9 +5647,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Dauer der 1. Vormittagspause.
 	 */
 	public int stundenplanGetDefaultVormittagspause1Dauer() {
-		if (_stundenplanDefaultVormittagspause1Dauer < 0)
-			_stundenplanDefaultVormittagspause1Dauer = 25; // Die 1. Pause dauert 25 Minuten.
-		return _stundenplanDefaultVormittagspause1Dauer;
+		return _stundenplanKonfig.defaultVormittagspause1Dauer;
 	}
 
 	/**
@@ -5674,7 +5657,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultVormittagspause1Dauer(final int defaultVormittagspause1Dauer) {
 		DeveloperNotificationException.ifTrue("'defaultVormittagspause1Nach' muss >= 0 sein!", defaultVormittagspause1Dauer < 0);
-		_stundenplanDefaultVormittagspause1Dauer = defaultVormittagspause1Dauer;
+		_stundenplanKonfig.defaultVormittagspause1Dauer = defaultVormittagspause1Dauer;
 	}
 
 	/**
@@ -5683,9 +5666,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die 2. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public int stundenplanGetDefaultVormittagspause2Nach() {
-		if (_stundenplanDefaultVormittagspause2Nach < 0)
-			_stundenplanDefaultVormittagspause2Nach = 4;  // Die 2. Pause ist nach der 4. Stunde
-		return _stundenplanDefaultVormittagspause2Nach;
+		return _stundenplanKonfig.defaultVormittagspause2Nach;
 	}
 
 	/**
@@ -5695,7 +5676,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultVormittagspause2Nach(final int defaultVormittagspause2Nach) {
 		DeveloperNotificationException.ifTrue("'defaultVormittagspause2Nach' muss >= 0 sein!", defaultVormittagspause2Nach < 0);
-		_stundenplanDefaultVormittagspause2Nach = defaultVormittagspause2Nach;
+		_stundenplanKonfig.defaultVormittagspause2Nach = defaultVormittagspause2Nach;
 	}
 
 	/**
@@ -5704,9 +5685,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Dauer der 2. Vormittagspause.
 	 */
 	public int stundenplanGetDefaultVormittagspause2Dauer() {
-		if (_stundenplanDefaultVormittagspause2Dauer < 0)
-			_stundenplanDefaultVormittagspause2Dauer = 25; // Die 2. Pause dauert 25 Minuten.
-		return _stundenplanDefaultVormittagspause2Dauer;
+		return _stundenplanKonfig.defaultVormittagspause2Dauer;
 	}
 
 	/**
@@ -5716,7 +5695,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultVormittagspause2Dauer(final int defaultVormittagspause2Dauer) {
 		DeveloperNotificationException.ifTrue("'defaultVormittagspause2Dauer' muss >= 0 sein!", defaultVormittagspause2Dauer < 0);
-		_stundenplanDefaultVormittagspause2Dauer = defaultVormittagspause2Dauer;
+		_stundenplanKonfig.defaultVormittagspause2Dauer = defaultVormittagspause2Dauer;
 	}
 
 	/**
@@ -5725,9 +5704,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Mittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public int stundenplanGetDefaultMittagspauseNach() {
-		if (_stundenplanDefaultMittagspauseNach < 0)
-			_stundenplanDefaultMittagspauseNach = 6;  // Die Mittagspause ist nach der 6. Stunde
-		return _stundenplanDefaultMittagspauseNach;
+		return _stundenplanKonfig.defaultMittagspauseNach;
 	}
 
 	/**
@@ -5737,7 +5714,7 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultMittagspauseNach(final int defaultMittagspauseNach) {
 		DeveloperNotificationException.ifTrue("'defaultMittagspauseNach' muss >= 0 sein!", defaultMittagspauseNach < 0);
-		_stundenplanDefaultMittagspauseNach = defaultMittagspauseNach;
+		_stundenplanKonfig.defaultMittagspauseNach = defaultMittagspauseNach;
 	}
 
 	/**
@@ -5746,9 +5723,7 @@ public class StundenplanManager {
 	 * @return den Default-Wert für die Dauer der Mittagspause.
 	 */
 	public int stundenplanGetDefaultMittagspauseDauer() {
-		if (_stundenplanDefaultMittagspauseDauer < 0)
-			_stundenplanDefaultMittagspauseDauer = 60; // Die Mittagspause dauert 60 Minuten.
-		return _stundenplanDefaultMittagspauseDauer;
+		return _stundenplanKonfig.defaultMittagspauseDauer;
 	}
 
 	/**
@@ -5758,7 +5733,25 @@ public class StundenplanManager {
 	 */
 	public void stundenplanSetDefaultMittagspauseDauer(final int defaultMittagspauseDauer) {
 		DeveloperNotificationException.ifTrue("'defaultMittagspauseDauer' muss >= 0 sein!", defaultMittagspauseDauer < 0);
-		_stundenplanDefaultMittagspauseDauer = defaultMittagspauseDauer;
+		_stundenplanKonfig.defaultMittagspauseDauer = defaultMittagspauseDauer;
+	}
+
+	/**
+	 * Setzt das {@link StundenplanKonfiguration}-Objekt.
+	 *
+	 * @param stundenplanKonfig  Das {@link StundenplanKonfiguration}-Objekt.
+	 */
+	public void stundenplanKonfigSet(final @NotNull StundenplanKonfiguration stundenplanKonfig) {
+		_stundenplanKonfig = stundenplanKonfig;
+	}
+
+	/**
+	 * Liefert das aktuelle {@link StundenplanKonfiguration}-Objekt.
+	 *
+	 * @return das aktuelle {@link StundenplanKonfiguration}-Objekt.
+	 */
+	public @NotNull StundenplanKonfiguration stundenplanKonfigGet() {
+		return _stundenplanKonfig;
 	}
 
 	// #####################################################################
@@ -6907,16 +6900,16 @@ public class StundenplanManager {
 	public int zeitrasterGetDefaultStundenbeginnByStunde(final int stunde) throws DeveloperNotificationException {
 		DeveloperNotificationException.ifTrue("zeitrasterGetDefaultStundenbeginnByStunde: stunde < 0", stunde < 0);
 
-		int start = _stundenplanDefaultUnterrichtsbeginn + ((stunde - 1) * (_stundenplanDefaultStundendauer + _stundenplanDefaultPausenzeitFuerRaumwechsel));
+		int start = _stundenplanKonfig.defaultUnterrichtsbeginn + ((stunde - 1) * (_stundenplanKonfig.defaultStundendauer +  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel));
 
-		if ((stunde > _stundenplanDefaultVormittagspause1Nach) && (_stundenplanDefaultVormittagspause1Dauer > 0))
-			start += _stundenplanDefaultVormittagspause1Dauer - _stundenplanDefaultPausenzeitFuerRaumwechsel;
+		if ((stunde >  _stundenplanKonfig.defaultVormittagspause1Nach) && (_stundenplanKonfig.defaultVormittagspause1Dauer > 0))
+			start +=  _stundenplanKonfig.defaultVormittagspause1Dauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
-		if ((stunde > _stundenplanDefaultVormittagspause2Nach) && (_stundenplanDefaultVormittagspause2Dauer > 0))
-			start += _stundenplanDefaultVormittagspause2Dauer - _stundenplanDefaultPausenzeitFuerRaumwechsel;
+		if ((stunde >  _stundenplanKonfig.defaultVormittagspause2Nach) && (_stundenplanKonfig.defaultVormittagspause2Dauer > 0))
+			start +=  _stundenplanKonfig.defaultVormittagspause2Dauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
-		if ((stunde > _stundenplanDefaultMittagspauseNach) && (_stundenplanDefaultMittagspauseDauer > 0))
-			start += _stundenplanDefaultMittagspauseDauer - _stundenplanDefaultPausenzeitFuerRaumwechsel;
+		if ((stunde >  _stundenplanKonfig.defaultMittagspauseNach) && (_stundenplanKonfig.defaultMittagspauseDauer > 0))
+			start +=  _stundenplanKonfig.defaultMittagspauseDauer -  _stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 
 		return start;
 	}
@@ -6930,7 +6923,7 @@ public class StundenplanManager {
 	 * @return das Default-Stundenende (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
 	 */
 	public int zeitrasterGetDefaultStundenendeByStunde(final int stunde) {
-		return zeitrasterGetDefaultStundenbeginnByStunde(stunde) + _stundenplanDefaultStundendauer;
+		return zeitrasterGetDefaultStundenbeginnByStunde(stunde) + _stundenplanKonfig.defaultStundendauer;
 	}
 
 	/**

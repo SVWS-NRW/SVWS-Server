@@ -527,6 +527,7 @@ export { StundenplanKalenderwochenzuordnung } from './core/data/stundenplan/Stun
 export { StundenplanKlasse } from './core/data/stundenplan/StundenplanKlasse';
 export { StundenplanKlassenunterricht } from './core/data/stundenplan/StundenplanKlassenunterricht';
 export { StundenplanKomplett } from './core/data/stundenplan/StundenplanKomplett';
+export { StundenplanKonfiguration } from './core/data/stundenplan/StundenplanKonfiguration';
 export { StundenplanKurs } from './core/data/stundenplan/StundenplanKurs';
 export { StundenplanLehrer } from './core/data/stundenplan/StundenplanLehrer';
 export { StundenplanListeEintrag } from './core/data/stundenplan/StundenplanListeEintrag';
