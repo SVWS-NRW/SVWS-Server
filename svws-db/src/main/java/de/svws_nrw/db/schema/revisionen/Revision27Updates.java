@@ -48,12 +48,12 @@ public final class Revision27Updates extends SchemaRevisionUpdateSQL {
 		final List<String> rowsSchulformKrz = conn.queryNative("SELECT SchulformKrz FROM EigeneSchule");
 		if ((rowsSchulformKrz.size() != 1) || (rowsSchulformKrz.get(0) == null)) {
 			logger.logLn("Konnte die Schulform der Schule nicht bestimmen.");
-			return false;
+			return true;
 		}
 		final String schulformKrz = rowsSchulformKrz.get(0);
 		if (schulformKrz == null) {
 			logger.logLn("Konnte die Schulform der Schule nicht bestimmen.");
-			return false;
+			return true;
 		}
 		// Die folgenden Korrektur sind nur für die Schulform WB vorgesehen...
 		if (!schulformKrz.equals("WB"))
