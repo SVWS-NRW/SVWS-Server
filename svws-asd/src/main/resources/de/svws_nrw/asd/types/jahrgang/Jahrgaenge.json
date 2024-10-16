@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {	
 		"bezeichner": "HAUSFRUEERZIEHUNG",
 		"idHistorie": 27,
@@ -114,6 +114,14 @@
 			"text": "5. Jahrgang",
 			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 5000001,
+			"schluessel": "05",
+			"kuerzel": "05",
+			"text": "5. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -126,6 +134,14 @@
 			"text": "6. Jahrgang",
 			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 6000001,
+			"schluessel": "06",
+			"kuerzel": "06",
+			"text": "6. Jahrgang",
+			"schulformen": [ "BK", "SB", "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -138,6 +154,14 @@
 			"text": "7. Jahrgang",
 			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 7000001,
+			"schluessel": "07",
+			"kuerzel": "07",
+			"text": "7. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -150,6 +174,14 @@
 			"text": "8. Jahrgang",
 			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 8000001,
+			"schluessel": "08",
+			"kuerzel": "08",
+			"text": "8. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -162,6 +194,14 @@
 			"text": "9. Jahrgang",
 			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 9000001,
+			"schluessel": "09",
+			"kuerzel": "09",
+			"text": "9. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -174,6 +214,14 @@
 			"text": "10. Jahrgang",
 			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GM", "GY", "H", "R", "SG", "SK", "SR" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 10000001,
+			"schluessel": "10",
+			"kuerzel": "10",
+			"text": "10. Jahrgang",
+			"schulformen": [ "FW", "HI", "WF", "PS", "S", "KS", "V", "GE", "GY", "H", "R", "SG", "SK", "SR" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -246,6 +294,14 @@
 			"text": "Einführungsphase",
 			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 21000001,
+			"schluessel": "EF",
+			"kuerzel": "EF",
+			"text": "Einführungsphase",
+			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -258,6 +314,14 @@
 			"text": "Qualifikationsphase 1. Jahr",
 			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 22000001,
+			"schluessel": "Q1",
+			"kuerzel": "Q1",
+			"text": "Qualifikationsphase 1. Jahr",
+			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -270,6 +334,14 @@
 			"text": "Qualifikationsphase 2. Jahr",
 			"schulformen": [ "GE", "GM", "GY", "PS", "SG" ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 23000001,
+			"schluessel": "Q2",
+			"kuerzel": "Q2",
+			"text": "Qualifikationsphase 2. Jahr",
+			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {

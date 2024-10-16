@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idHistorie": 1,
@@ -3995,7 +3995,21 @@
 			"istKonfKoop": false,
 			"nurSII": false,
 			"exportASD": true,
-			"zulaessig": [  {"schulform": "G", "gliederung": null}],
+			"zulaessig": [  { "schulform": "BK", "gliederung": null },
+							{ "schulform": "G", "gliederung": null },
+							{ "schulform": "GE", "gliederung": null },
+							{ "schulform": "GY", "gliederung": null },
+							{ "schulform": "H", "gliederung": null },
+							{ "schulform": "PS", "gliederung": null },
+							{ "schulform": "R", "gliederung": null },
+							{ "schulform": "KS", "gliederung": null },
+							{ "schulform": "S", "gliederung": null },
+							{ "schulform": "SB", "gliederung": null },
+							{ "schulform": "SG", "gliederung": null },
+							{ "schulform": "SK", "gliederung": null },
+							{ "schulform": "SR", "gliederung": null },
+							{ "schulform": "V", "gliederung": null },
+							{ "schulform": "WB", "gliederung": null } ],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
