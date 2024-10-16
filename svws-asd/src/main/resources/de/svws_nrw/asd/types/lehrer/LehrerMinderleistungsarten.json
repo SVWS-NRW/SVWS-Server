@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "ID_200",
 		"idHistorie": 1,
@@ -196,17 +196,6 @@
 			"kuerzel": "380",
 			"text": "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes",
 			"gueltigVon": null,
-			"gueltigBis": null
-		} ]
-	},{
-		"bezeichner": "ID_265",
-		"idHistorie": 19,
-		"historie": [ {
-			"id": 55,
-			"schluessel": "265",
-			"kuerzel": "265",
-			"text": "Abwesenheit aufgrund eines ärztlichen Beschäftigungsverbots",
-			"gueltigVon": 2022,
 			"gueltigBis": null
 		} ]
 	} ]
