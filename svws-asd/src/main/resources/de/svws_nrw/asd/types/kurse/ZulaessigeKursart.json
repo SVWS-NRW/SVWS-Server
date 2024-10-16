@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "AB3",
 		"idHistorie": 1,
@@ -1516,7 +1516,7 @@
 			"id": 42000,
 			"kuerzel": "MEU",
 			"nummer": "84",
-			"text": "Unterricht in der Herkunftssprache (Muttersprachlicher Unterricht)",
+			"text": "Unterricht in der Herkunftssprache",
 			"schluessel": "MEU",
 			"bemerkungen": null,
 			"kuerzelAllg": null,
@@ -2124,7 +2124,7 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "VSU",

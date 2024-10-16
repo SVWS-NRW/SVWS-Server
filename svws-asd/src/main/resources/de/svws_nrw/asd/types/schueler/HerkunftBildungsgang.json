@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "A01",
 		"idHistorie": 1,
@@ -63,7 +63,7 @@
 			"id": 5000,
 			"schluessel": "A10",
 			"kuerzel": "A10",
-			"text": "Berufsfachschule, Berufsabschluss/mittlerer Schulabschluss (nach BKAZVO, BBiG/HwO/ in Vollzeit)",
+			"text": "Berufsfachschule, Berufsabschluss/Mittlerer Schulabschluss (nach BKAZVO, BBiG/HwO/ in Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
@@ -217,11 +217,21 @@
 			"id": 24000,
 			"schluessel": "B06",
 			"kuerzel": "B06",
-			"text": "Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)",
+			"text": "Berufsfachschule, Berufliche Kenntnisse/Hauptschulabschluss Kl. 10 (1-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 24001,
+			"schluessel": "B06",
+			"kuerzel": "B06",
+			"text": "Berufsfachschule, Berufliche Kenntnisse/Erweiterter Erster Schulabschluss (1-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -245,11 +255,21 @@
 			"id": 26000,
 			"schluessel": "B08",
 			"kuerzel": "B08",
-			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
+			"text": "Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 26001,
+			"schluessel": "B08",
+			"kuerzel": "B08",
+			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (2-jährig, Vollzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -259,11 +279,21 @@
 			"id": 27000,
 			"schluessel": "B09",
 			"kuerzel": "B09",
-			"text": "Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
+			"text": "Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 27001,
+			"schluessel": "B09",
+			"kuerzel": "B09",
+			"text": "Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (3-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -273,11 +303,21 @@
 			"id": 28000,
 			"schluessel": "B10",
 			"kuerzel": "B10",
-			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
+			"text": "Berufsfachschule, Berufsabschluss/Hauptschulabschluss Kl. 10 oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
 			"zulaessig": [
 				{"schulform": "BK", "gliederung": null},
 				{"schulform": "SB", "gliederung": null} ], 
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 28001,
+			"schluessel": "B10",
+			"kuerzel": "B10",
+			"text": "Berufsfachschule, Berufsabschluss/Erweiterter Erster Schulabschluss oder Mittlerer Schulabschluss (4-jährig, Teilzeit)",
+			"zulaessig": [
+				{"schulform": "BK", "gliederung": null},
+				{"schulform": "SB", "gliederung": null} ], 
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {

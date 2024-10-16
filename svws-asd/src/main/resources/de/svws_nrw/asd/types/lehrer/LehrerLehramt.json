@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ID_00",
 		"idHistorie": 1,
@@ -337,7 +337,7 @@
 			"id": 112,
 			"schluessel": "57",
 			"kuerzel": "57",
-			"text": "ohne sonderpäd. Zusatzausbildung:Sozialarbeiter, Sozialpädagoge, Jugendleiter",
+			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplompädagoge/-in (ohne sonderpädagogische Zusatzausbildung)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -370,7 +370,7 @@
 			"id": 115,
 			"schluessel": "60",
 			"kuerzel": "60",
-			"text": "mit sonderpäd. Zusatzausbildung:Sozialarbeiter, Sozialpädagoge, Jugendleiter",
+			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplompädagoge/-in (mit sonderpädagogische Zusatzausbildung)",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -403,7 +403,7 @@
 			"id": 118,
 			"schluessel": "96",
 			"kuerzel": "96",
-			"text": "Lehrer, der eine Qualifikation erworben hat, die der 1. Staatsprüfung entspricht (z.B. Diplom, sofern nicht Schlüssel 98)",
+			"text": "Qualifikation mit Hohschulabschluss ohne 2. Staatsprüfung",
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]
@@ -492,7 +492,7 @@
 			"schluessel": "18",
 			"kuerzel": "18",
 			"text": "Haupt-, Real-, Sekundar- und Gesamtschule",
-			"gueltigVon": null,
+			"gueltigVon": 2019,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -502,8 +502,41 @@
 			"id": 127,
 			"schluessel": "49",
 			"kuerzel": "49",
-			"text": "Berufskolleg mit einer beruflichen Fachrichtung (§ 59 LVO)",
-			"gueltigVon": null,
+			"text": "Berufskolleg mit einer beruflichen Fachrichtung (§ 40 LVO)",
+			"gueltigVon": 2019,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_63",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 128,
+			"schluessel": "63",
+			"kuerzel": "63",
+			"text": "Heilpädagoge/-in",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_64",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 129,
+			"schluessel": "64",
+			"kuerzel": "64",
+			"text": "Handwerksmeister/-in",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_65",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 130,
+			"schluessel": "65",
+			"kuerzel": "65",
+			"text": "Alltagshelfer/-in",
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	} ]

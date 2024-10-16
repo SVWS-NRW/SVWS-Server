@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idHistorie": 1,
@@ -398,7 +398,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "BI",
@@ -1058,7 +1058,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "DM",
@@ -1226,7 +1226,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "EK",
@@ -2076,7 +2076,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "GL",
@@ -2519,7 +2519,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "HQ",
@@ -2999,7 +2999,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "IK",
@@ -3187,7 +3187,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "K",
@@ -3846,7 +3846,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "LI",
@@ -3983,7 +3983,7 @@
 		"historie": [ {
 			"id": 142000000,
 			"schluessel": "MB",
-			"text": "Religionsunterricht der mennonitischen Brüdergemeinden in NRW als Schulversuch",
+			"text": "Religionsunterricht der mennonitischen Brüdergemeinden in NRW",
 			"kuerzel": "MB",
 			"aufgabenfeld": null,
 			"fachgruppe": null,
@@ -4075,7 +4075,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "MM",
@@ -4494,7 +4494,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "NM",
@@ -4840,7 +4840,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "OL",
@@ -5338,7 +5338,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "QM",
@@ -5654,7 +5654,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "RK",
@@ -6146,7 +6146,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "SI",
@@ -6734,7 +6734,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "TI",
@@ -6931,7 +6931,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "UM",
@@ -7107,7 +7107,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "VK",
@@ -7530,7 +7530,7 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "SR", "gliederung": null}],
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	}, {
 		"bezeichner": "XM",

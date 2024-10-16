@@ -673,7 +673,18 @@ public enum Herkunftsarten {
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "HA9", "Hauptschulabschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA9",
 							"Hauptschulabschluss / Abgangszeugnis mit Gleichstellung zum Hauptschulabschluss / Hauptschulabschluss der Schule für Lernbehinderte")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(2000001L, "B", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA",
+							"Erster Schulabschluss / Abgangszeugnis zum Ersten Schulabschluss / Erster Schulabschluss der Schule für Lernbehinderte"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA",
+							"Erster Schulabschluss / Abgangszeugnis zum Ersten Schulabschluss / Erster Schulabschluss der Schule für Lernbehinderte"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "ESA", "Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "ESA", "Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "ESA", "Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "ESA",
+							"Erster Schulabschluss / Abgangszeugnis zum Ersten Schulabschluss / Erster Schulabschluss der Schule für Lernbehinderte")
+			), 2023, null)
 	}),
 
 
@@ -688,7 +699,15 @@ public enum Herkunftsarten {
 							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Mittlerer Abschluss"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA9-10B",
 							"Hauptschulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Gleichstellung zum Hauptschulabschluss nach Klasse 10")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(3000001L, "C", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "ESA-10B",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der Klasse 10, Typ B / Abgangszeugnis aus Klasse 10 ohne Erweiterten Ersten Schulabschluss")
+			), 2023, null)
 	}),
 
 
@@ -704,7 +723,18 @@ public enum Herkunftsarten {
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "HA10", "Sekundarabschluss I (Hauptschulabschluss nach Klasse 10)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA10",
 							"Hauptschulabschluss nach Klasse 10 / Abgangszeugnis mit Gleichstellung zum Hauptschulabschluss nach Klasse 10")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(4000001L, "D", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "EESA",
+							"Erweiterter Erster Schulabschluss / Abgangszeugnis zum Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "EESA",
+							"Erweiterter Erster Schulabschluss / Abgangszeugnis zum Erweiterten Ersten Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "EESA", "Erweiterter Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "EESA", "Erweiterter Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "EESA", "Erweiterter Erster Schulabschluss"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "EESA",
+							"Erweiterter Erster Schulabschluss / Abgangszeugnis zum Erweiterten Ersten Schulabschluss")
+			), 2023, null)
 	}),
 
 
@@ -717,10 +747,14 @@ public enum Herkunftsarten {
 							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "MSA",
 							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "MSA", "Sekundarabschluss I ohne Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "MSA", "Sekundarabschluss I ohne Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "MSA", "Sekundarabschluss I ohne Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA", "Fachoberschulreife ohne Versetzungsvermerk")
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "MSA",
+							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "MSA",
+							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "MSA",
+							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA",
+							"Mittlerer Abschluss, Fachoberschulreife ohne Berechtigung zum Besuch der gymnasialen Oberstufe")
 			), null, null)
 	}),
 
@@ -731,13 +765,17 @@ public enum Herkunftsarten {
 	MSA_Q(new HerkunftsartKatalogEintrag[] {
 			new HerkunftsartKatalogEintrag(7000000L, "G", Arrays.asList(
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "MSA-Q",
-							"Mittlerer Abschluss, Fachoberschulreife mit  Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "MSA-Q",
-							"Mittlerer Abschluss, Fachoberschulreife mit  Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "MSA-Q", "Sekundarabschluss I mit Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "MSA-Q", "Sekundarabschluss I mit Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "MSA-Q", "Sekundarabschluss I mit Versetzungsvermerk"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA-Q", "Fachoberschulreife mit  Versetzungsvermerk")
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "MSA-Q",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "MSA-Q",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "MSA-Q",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA-Q",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der gymnasialen Oberstufe (Einführungsphase)")
 			), null, null)
 	}),
 
@@ -763,10 +801,11 @@ public enum Herkunftsarten {
 	MSA_Q1(new HerkunftsartKatalogEintrag[] {
 			new HerkunftsartKatalogEintrag(9000000L, "I", Arrays.asList(
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "MSA-Q1",
-							"Mittlerer Abschluss, Fachoberschulreife mit  Berechtigung zum Besuch der Qualifikationsphase 1"),
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "MSA-Q1",
-							"Mittlerer Abschluss, Fachoberschulreife mit  Berechtigung zum Besuch der Qualifikationsphase 1"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA-Q1", "Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase")
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "MSA-Q1",
+							"Mittlerer Abschluss, Fachoberschulreife mit Berechtigung zum Besuch der Qualifikationsphase 1")
 			), null, null)
 	}),
 
@@ -821,7 +860,15 @@ public enum Herkunftsarten {
 							"Abschlusszeugnis (Förderschule, Förderschwerpunkt geistige Entwicklung)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "Abschlusszeugnis Förderschule (geistige Entwicklung)",
 							"Abschlusszeugnis (Förderschule, Förderschwerpunkt geistige Entwicklung)")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(13000001L, "M", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "Abschluss Bildungsgang Geistige Entwicklung",
+							"Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "Abschluss Bildungsgang Geistige Entwicklung",
+							"Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "Abschluss Bildungsgang Geistige Entwicklung",
+							"Abschlusszeugnis im zieldifferenten Bildungsgang Geistige Entwicklung")
+			), 2023, null)
 	}),
 
 
@@ -836,7 +883,15 @@ public enum Herkunftsarten {
 							"Abschlusszeugnis (Förderschule, Förderschwerpunkt Lernen)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "Abschlusszeugnis Förderschule (Lernen)",
 							"Abschlusszeugnis (Förderschule, Förderschwerpunkt Lernen)")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(14000001L, "N", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "Abschluss Bildungsgang Lernen",
+							"Abschluss des zieldifferenten Bildungsgangs Lernen"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "Abschluss Bildungsgang Lernen",
+							"Abschluss des zieldifferenten Bildungsgangs Lernen"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "Abschluss Bildungsgang Lernen",
+							"Abschluss des zieldifferenten Bildungsgangs Lernen")
+			), 2023, null)
 	}),
 
 
@@ -851,7 +906,15 @@ public enum Herkunftsarten {
 							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA-Q",
 							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl. 9 des Gymnasiums)")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(15000000L, "O", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "ESA-Q",
+							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)")
+			), 2023, null)
 	}),
 
 
@@ -888,7 +951,13 @@ public enum Herkunftsarten {
 							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "HA-IntFö",
 							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)")
-			), null, null)
+			), null, 2022),
+			new HerkunftsartKatalogEintrag(19000000L, "S", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-IntFö",
+							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-IntFö",
+							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)")
+			), 2023, null)
 	}),
 
 
@@ -955,7 +1024,7 @@ public enum Herkunftsarten {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 2;
+	public static final long VERSION = 3;
 
 	/** Der aktuellen Daten der Herkunftsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsartKatalogEintrag daten;

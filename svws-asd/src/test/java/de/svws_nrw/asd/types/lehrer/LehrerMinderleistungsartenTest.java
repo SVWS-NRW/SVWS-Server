@@ -1,18 +1,29 @@
-package de.svws_nrw.core.types.statkue;
+package de.svws_nrw.asd.types.lehrer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import de.svws_nrw.asd.types.lehrer.LehrerMinderleistungsarten;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 
 
 /**
  * Diese Klasse enthält die Testroutinen für den Core-Type LehrerMinderleistungsarten.
  */
 @DisplayName("Teste den Core-Type LehrerMinderleistungsarten")
-class TestCoreTypeLehrerMinderleistungsarten {
+class LehrerMinderleistungsartenTest {
+
+	/**
+	 * Initialisiert die Core-Types, damit die Tests ausgeführt werden können.
+	 * Beim Laden der Core-Type-Daten werden die JSON-Dateien auf Plausibilität
+	 * geprüft.
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	/**
 	 * Führt grundlegende Tests zu dem Core-Type LehrerMinderleistungsarten aus.
@@ -44,13 +55,11 @@ class TestCoreTypeLehrerMinderleistungsarten {
 				("Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("360").daten(2024).text,
 				("Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)"));
-		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("365").daten(2024).text, ("Unterschreitung der Pflichtstundenzahl wegen COVID-19"));
+		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("365").daten(2022).text, ("Unterschreitung der Pflichtstundenzahl wegen COVID-19"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("370").daten(2024).text,
 				("Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite"));
 		assertEquals(LehrerMinderleistungsarten.data().getWertByKuerzel("380").daten(2024).text,
 				("Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes"));
 	}
-
-	// TODO add additional tests
 
 }

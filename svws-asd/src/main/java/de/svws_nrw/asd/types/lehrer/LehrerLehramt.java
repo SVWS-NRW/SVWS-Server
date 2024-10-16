@@ -120,6 +120,15 @@ public enum LehrerLehramt implements @NotNull CoreType<LehrerLehramtKatalogEintr
 	/** Lehramt 'mit sonderpäd. Zusatzausbildung:Sonstige pädagogische Unterrichtshilfe' */
 	ID_62,
 
+	/** Heilpädagoge/-in */
+	ID_63,
+
+	/** Handwerksmeister/-in */
+	ID_64,
+
+	/** Alltagshelfer/-in */
+	ID_65,
+
 	/** Lehramt 'Lehrer, der eine Qualifikation erworben hat, die der 1. Staatsprüfung entspricht (z.B. Diplom, sofern nicht Schlüssel 98)' */
 	ID_96,
 

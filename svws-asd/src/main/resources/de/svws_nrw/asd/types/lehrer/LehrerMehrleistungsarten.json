@@ -1,5 +1,5 @@
 {
-	"version": 1,
+	"version": 2,
 	"daten": [ {
 		"bezeichner": "ID_100",
 		"idHistorie": 1,
@@ -53,7 +53,7 @@
 			"kuerzel": "165",
 			"text": "Überschreitung der Pflichtstundenzahl wegen COVID-19",
 			"gueltigVon": null,
-			"gueltigBis": null
+			"gueltigBis": 2022
 		} ]
 	},{
 		"bezeichner": "ID_170",
