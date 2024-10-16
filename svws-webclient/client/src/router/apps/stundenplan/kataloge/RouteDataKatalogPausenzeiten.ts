@@ -34,12 +34,14 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 
 	public async ladeListe() {
 		const listKatalogeintraege = await api.server.getPausenzeiten(api.schema);
+		const listZeitraster = await api.server.getZeitraster(api.schema);
 		const auswahl = listKatalogeintraege.size() > 0 ? listKatalogeintraege.get(0) : undefined;
 		const stundenplanKomplett = new StundenplanKomplett();
 		stundenplanKomplett.daten.gueltigAb = '1999-01-01';
 		stundenplanKomplett.daten.gueltigBis = '2999-01-01';
 		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
 		stundenplanManager.pausenzeitAddAll(listKatalogeintraege);
+		stundenplanManager.zeitrasterAddAll(listZeitraster);
 		this.setPatchedDefaultState({ auswahl, stundenplanManager })
 	}
 

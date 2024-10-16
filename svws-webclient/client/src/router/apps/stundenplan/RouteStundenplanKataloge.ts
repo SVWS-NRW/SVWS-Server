@@ -33,10 +33,10 @@ export class RouteStundenplanKataloge extends RouteNode<RouteDataStundenplanKata
 		super.text = "Kataloge";
 		super.setView("liste", SStundenplanAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKatalogAufsichtsbereiche,
-			routeKatalogPausenzeiten,
-			routeKatalogRaeume,
 			routeKatalogZeitraster,
+			routeKatalogPausenzeiten,
+			routeKatalogAufsichtsbereiche,
+			routeKatalogRaeume,
 		];
 		super.defaultChild = routeKatalogAufsichtsbereiche;
 	}

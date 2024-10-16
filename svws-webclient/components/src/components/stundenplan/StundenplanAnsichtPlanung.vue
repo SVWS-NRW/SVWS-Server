@@ -69,10 +69,24 @@
 					<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 				</svws-ui-button>
 			</div>
-			<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
-				<span class="icon i-ri-calendar-event-line" />
-				<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
-			</svws-ui-button>
+			<svws-ui-action-button title="Alle Zeitraster erstellen" :is-active="actionZeitraster" @click="()=>actionZeitraster = !actionZeitraster" icon="i-ri-add-line">
+				<svws-ui-input-wrapper>
+					Voreinstellungen:
+					<svws-ui-text-input placeholder="Unterrichtsbeginn" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(manager().stundenplanGetDefaultUnterrichtsbeginn())" @change="start => (start !== null) && manager().stundenplanSetDefaultUnterrichtsbeginn(DateUtils.gibMinutenOfZeitAsString(start))" />
+					<svws-ui-input-number placeholder="Stundendauer" :model-value="manager().stundenplanGetDefaultStundendauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultStundendauer(dauer)" :min="5" :max="1440" />
+					<svws-ui-input-number placeholder="Pausenzeit Für Raumwechsel" :model-value="manager().stundenplanGetDefaultPausenzeitFuerRaumwechsel()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultPausenzeitFuerRaumwechsel(dauer)" :min="0" :max="1440" />
+					<svws-ui-input-number placeholder="1. Pause nach Stunde" :model-value="manager().stundenplanGetDefaultVormittagspause1Nach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultVormittagspause1Nach(nach)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="1. Pause Dauer" :model-value="manager().stundenplanGetDefaultVormittagspause1Dauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultVormittagspause1Dauer(dauer)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="manager().stundenplanGetDefaultVormittagspause2Nach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultVormittagspause2Nach(nach)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="manager().stundenplanGetDefaultVormittagspause2Dauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultVormittagspause2Dauer(dauer)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="Mittagsause nach Stunde" :model-value="manager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="Mittagsause Dauer" :model-value="manager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
+					<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
+						<span class="icon i-ri-calendar-event-line" />
+						<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
+					</svws-ui-button>
+				</svws-ui-input-wrapper>
+			</svws-ui-action-button>
 			<template v-if="importZeitraster !== undefined">
 				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
 					<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
@@ -85,16 +99,17 @@
 
 <script setup lang="ts">
 
-	import { computed } from "vue";
+	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
+	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
+	import { DateUtils } from "../../../../core/src";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
-
 	const showZeitachse = true;
+	const actionZeitraster = ref<boolean>(false);
 
 	const emit = defineEmits<{
 		'selected:updated': [item: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined];

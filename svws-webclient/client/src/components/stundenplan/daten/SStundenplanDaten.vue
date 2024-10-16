@@ -47,30 +47,50 @@
 		</div>
 		<div class="page--content-flex-column">
 			<svws-ui-action-button title="Pausenzeiten" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-archive-line">
-				<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" :count="pausenzeitenSorted.length > 0" v-model:sort-by-and-order="sortByAndOrder">
-					<template #cell(wochentag)="{ rowData }">
-						<svws-ui-select :disabled="!hatUpdateKompetenz" :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
-					</template>
-					<template #cell(beginn)="{ rowData }">
-						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => beginn && patchPausenBeginn(beginn, rowData.id)" headless />
-					</template>
-					<template #cell(ende)="{ rowData }">
-						<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => ende && patchPausenEnde(ende, rowData.id)" headless />
-					</template>
-					<template #cell(klassen)="{ rowData }">
-						<svws-ui-multi-select :disabled="!hatUpdateKompetenz" :model-value="[...rowData.klassen].sort()" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
-					</template>
-					<template #actions v-if="hatUpdateKompetenz">
-						<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
-						<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten :list-pausenzeiten="listPausenzeiten()">
-							<svws-ui-button @click="openModal" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
-						</s-card-stundenplan-import-pausenzeiten-modal>
-						<svws-ui-button @click="delPausenzeiten" type="trash" :disabled="!selectedPausenzeiten.length" />
-						<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
-							<svws-ui-button @click="openModal" type="icon" title="Pausenzeit hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
-						</s-pausenzeit-neu-modal>
-					</template>
-				</svws-ui-table>
+				<div class="flex flex-col gap-4">
+					<svws-ui-table :columns="colsPausenzeiten" :items="pausenzeitenSorted" v-model:clicked="zeit" :selectable="hatUpdateKompetenz" v-model="selectedPausenzeiten" :count="pausenzeitenSorted.length > 0" v-model:sort-by-and-order="sortByAndOrder">
+						<template #cell(wochentag)="{ rowData }">
+							<svws-ui-select :disabled="!hatUpdateKompetenz" :model-value="Wochentag.fromIDorException(rowData.wochentag)" @update:model-value="wochentag => patchPausenzeit({wochentag: Number(wochentag?.id || -1)}, rowData.id)" :items="Wochentag.values()" :item-text="i=>i.beschreibung" headless />
+						</template>
+						<template #cell(beginn)="{ rowData }">
+							<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.beginn ?? 0)" @change="beginn => beginn && patchPausenBeginn(beginn, rowData.id)" headless />
+						</template>
+						<template #cell(ende)="{ rowData }">
+							<svws-ui-text-input :disabled="!hatUpdateKompetenz" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(rowData.ende ?? 0)" @change="ende => ende && patchPausenEnde(ende, rowData.id)" headless />
+						</template>
+						<template #cell(klassen)="{ rowData }">
+							<svws-ui-multi-select :disabled="!hatUpdateKompetenz" :model-value="[...rowData.klassen].sort()" @update:model-value="klassen => patchPausenKlassen(klassen, rowData.id)" title="Klassen" :items="[...stundenplanManager().klasseGetMengeAsList()].map(k=>k.id)" :item-text="klasse => stundenplanManager().klasseGetByIdOrException(klasse).kuerzel" headless />
+						</template>
+						<template #actions v-if="hatUpdateKompetenz">
+							<svws-ui-button @click="gotoKatalog('pausenzeiten')" type="transparent" title="Pausenzeiten im Katalog bearbeiten"><span class="icon i-ri-link" /> Katalog bearbeiten</svws-ui-button>
+							<s-card-stundenplan-import-pausenzeiten-modal v-slot="{ openModal }" :import-pausenzeiten :list-pausenzeiten="listPausenzeiten()">
+								<svws-ui-button @click="openModal" type="transparent" title="Pausenzeiten importieren"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
+							</s-card-stundenplan-import-pausenzeiten-modal>
+							<svws-ui-button @click="delPausenzeiten" type="trash" :disabled="!selectedPausenzeiten.length" />
+							<s-pausenzeit-neu-modal v-slot="{ openModal }" :add-pausenzeiten :stundenplan-manager>
+								<svws-ui-button @click="openModal" type="icon" title="Pausenzeit hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+							</s-pausenzeit-neu-modal>
+						</template>
+					</svws-ui-table>
+					<svws-ui-action-button title="Alle Pausenzeiten erstellen" :is-active="subActionPausenzeiten" @click="()=>subActionPausenzeiten = !subActionPausenzeiten" icon="i-ri-add-line">
+						<svws-ui-input-wrapper>
+							Voreinstellungen:
+							<svws-ui-text-input placeholder="Unterrichtsbeginn" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(stundenplanManager().stundenplanGetDefaultUnterrichtsbeginn())" @change="start => (start !== null) && stundenplanManager().stundenplanSetDefaultUnterrichtsbeginn(DateUtils.gibMinutenOfZeitAsString(start))" />
+							<svws-ui-input-number placeholder="Stundendauer" :model-value="stundenplanManager().stundenplanGetDefaultStundendauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultStundendauer(dauer)" :min="5" :max="1440" />
+							<svws-ui-input-number placeholder="Pausenzeit Für Raumwechsel" :model-value="stundenplanManager().stundenplanGetDefaultPausenzeitFuerRaumwechsel()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultPausenzeitFuerRaumwechsel(dauer)" :min="0" :max="1440" />
+							<svws-ui-input-number placeholder="1. Pause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause1Nach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause1Nach(nach)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="1. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause1Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause1Dauer(dauer)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Nach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Nach(nach)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Dauer(dauer)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="Mittagsause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="Mittagsause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
+							<svws-ui-button type="secondary" @click="addBlock" title="Alle Pausenzeiten erstellen">
+								<span class="icon i-ri-calendar-event-line" />
+								<span class="icon i-ri-add-line -ml-1" />Alle Pausenzeiten erstellen
+							</svws-ui-button>
+						</svws-ui-input-wrapper>
+					</svws-ui-action-button>
+				</div>
 			</svws-ui-action-button>
 			<svws-ui-action-button title="Aufsichtsbereiche" :is-active="actionAufsichtsbereiche" @click="()=>actionAufsichtsbereiche = !actionAufsichtsbereiche" icon="i-ri-archive-line">
 				<svws-ui-table :columns="colsAufsichtsbereiche" :items="listAufsichtsbereiche" v-model:clicked="bereich" :selectable="hatUpdateKompetenz" v-model="selectedAufsichtsbereiche" :count="listAufsichtsbereiche.length > 0">
@@ -108,6 +128,7 @@
 
 	const props = defineProps<StundenplanDatenProps>();
 	const select = ref<ComponentExposed<typeof SvwsUiSelect<typeof wochenTypModell>>>();
+	const subActionPausenzeiten = ref<boolean>(false);
 
 	const cols: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Jahrgang", sortable: true, defaultSort: "asc", span: 0.25 },
@@ -216,6 +237,11 @@
 	async function delPausenzeiten() {
 		await props.removePausenzeiten(selectedPausenzeiten.value);
 		selectedPausenzeiten.value = [];
+	}
+
+	async function addBlock() {
+		const list = props.stundenplanManager().pausenzeitGetDummyListe(props.stundenplanManager().zeitrasterGetWochentagMin(), props.stundenplanManager().zeitrasterGetWochentagMax());
+		await props.addPausenzeiten(list);
 	}
 
 	const listPausenzeitenRest = computed(() => {

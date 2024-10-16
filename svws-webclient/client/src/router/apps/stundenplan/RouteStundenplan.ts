@@ -110,7 +110,6 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 		return {
 			auswahl: this.data.auswahl,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
-
 		};
 	}
 
