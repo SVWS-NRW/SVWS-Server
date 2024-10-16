@@ -68,7 +68,7 @@
 
 		let subline = leadingSchuelerList.join(', ');
 		if (auswahlSchuelerList.size() > 3)
-			subline += ` und ${auswahlSchuelerList.size() - 3} Weitere`;
+			subline += ` und ${auswahlSchuelerList.size() - 3} Weiter${(auswahlSchuelerList.size() - 3) === 1 ? 'er' : 'e'}`;
 
 		return subline;
 	})

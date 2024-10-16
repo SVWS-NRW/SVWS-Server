@@ -79,8 +79,8 @@
 					<svws-ui-input-number placeholder="1. Pause Dauer" :model-value="manager().stundenplanGetDefaultVormittagspause1Dauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultVormittagspause1Dauer(dauer)" :min="0" :max="99" />
 					<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="manager().stundenplanGetDefaultVormittagspause2Nach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultVormittagspause2Nach(nach)" :min="0" :max="99" />
 					<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="manager().stundenplanGetDefaultVormittagspause2Dauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultVormittagspause2Dauer(dauer)" :min="0" :max="99" />
-					<svws-ui-input-number placeholder="Mittagsause nach Stunde" :model-value="manager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
-					<svws-ui-input-number placeholder="Mittagsause Dauer" :model-value="manager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="Mittagspause nach Stunde" :model-value="manager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && manager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
+					<svws-ui-input-number placeholder="Mittagspause Dauer" :model-value="manager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && manager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
 					<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
 						<span class="icon i-ri-calendar-event-line" />
 						<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen

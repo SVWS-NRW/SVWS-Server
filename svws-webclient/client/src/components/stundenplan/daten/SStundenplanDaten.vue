@@ -82,8 +82,8 @@
 							<svws-ui-input-number placeholder="1. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause1Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause1Dauer(dauer)" :min="0" :max="99" />
 							<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Nach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Nach(nach)" :min="0" :max="99" />
 							<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Dauer(dauer)" :min="0" :max="99" />
-							<svws-ui-input-number placeholder="Mittagsause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
-							<svws-ui-input-number placeholder="Mittagsause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="Mittagspause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
+							<svws-ui-input-number placeholder="Mittagspause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
 							<svws-ui-button type="secondary" @click="addBlock" title="Alle Pausenzeiten erstellen">
 								<span class="icon i-ri-calendar-event-line" />
 								<span class="icon i-ri-add-line -ml-1" />Alle Pausenzeiten erstellen
