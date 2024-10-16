@@ -510,23 +510,23 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanBezeichnung : string;
 
-	private _stundenplanDefaultUnterrichtsbeginn : number = 0;
+	private _stundenplanDefaultUnterrichtsbeginn : number = -1;
 
-	private _stundenplanDefaultStundendauer : number = 0;
+	private _stundenplanDefaultStundendauer : number = -1;
 
-	private _stundenplanDefaultPausenzeitFuerRaumwechsel : number = 0;
+	private _stundenplanDefaultPausenzeitFuerRaumwechsel : number = -1;
 
-	private _stundenplanDefaultVormittagspause1Nach : number = 0;
+	private _stundenplanDefaultVormittagspause1Nach : number = -1;
 
-	private _stundenplanDefaultVormittagspause1Dauer : number = 0;
+	private _stundenplanDefaultVormittagspause1Dauer : number = -1;
 
-	private _stundenplanDefaultVormittagspause2Nach : number = 0;
+	private _stundenplanDefaultVormittagspause2Nach : number = -1;
 
-	private _stundenplanDefaultVormittagspause2Dauer : number = 0;
+	private _stundenplanDefaultVormittagspause2Dauer : number = -1;
 
-	private _stundenplanDefaultMittagspauseNach : number = 0;
+	private _stundenplanDefaultMittagspauseNach : number = -1;
 
-	private _stundenplanDefaultMittagspauseDauer : number = 0;
+	private _stundenplanDefaultMittagspauseDauer : number = -1;
 
 
 	/**
@@ -566,15 +566,6 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
-			this._stundenplanDefaultUnterrichtsbeginn = 8 * 60;
-			this._stundenplanDefaultStundendauer = 45;
-			this._stundenplanDefaultPausenzeitFuerRaumwechsel = 5;
-			this._stundenplanDefaultVormittagspause1Nach = 3;
-			this._stundenplanDefaultVormittagspause1Dauer = 25;
-			this._stundenplanDefaultVormittagspause2Nach = 0;
-			this._stundenplanDefaultVormittagspause2Dauer = 0;
-			this._stundenplanDefaultMittagspauseNach = 6;
-			this._stundenplanDefaultMittagspauseDauer = 60;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
 				uv = new StundenplanUnterrichtsverteilung();
@@ -5097,6 +5088,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
 	 */
 	public stundenplanGetDefaultUnterrichtsbeginn() : number {
+		if (this._stundenplanDefaultUnterrichtsbeginn < 0)
+			this._stundenplanDefaultUnterrichtsbeginn = 8 * 60;
 		return this._stundenplanDefaultUnterrichtsbeginn;
 	}
 
@@ -5116,6 +5109,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
 	 */
 	public stundenplanGetDefaultStundendauer() : number {
+		if (this._stundenplanDefaultStundendauer < 0)
+			this._stundenplanDefaultStundendauer = 45;
 		return this._stundenplanDefaultStundendauer;
 	}
 
@@ -5135,6 +5130,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
 	 */
 	public stundenplanGetDefaultPausenzeitFuerRaumwechsel() : number {
+		if (this._stundenplanDefaultPausenzeitFuerRaumwechsel < 0)
+			this._stundenplanDefaultPausenzeitFuerRaumwechsel = 5;
 		return this._stundenplanDefaultPausenzeitFuerRaumwechsel;
 	}
 
@@ -5154,6 +5151,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die 1. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public stundenplanGetDefaultVormittagspause1Nach() : number {
+		if (this._stundenplanDefaultVormittagspause1Nach < 0)
+			this._stundenplanDefaultVormittagspause1Nach = 2;
 		return this._stundenplanDefaultVormittagspause1Nach;
 	}
 
@@ -5173,6 +5172,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Dauer der 1. Vormittagspause.
 	 */
 	public stundenplanGetDefaultVormittagspause1Dauer() : number {
+		if (this._stundenplanDefaultVormittagspause1Dauer < 0)
+			this._stundenplanDefaultVormittagspause1Dauer = 25;
 		return this._stundenplanDefaultVormittagspause1Dauer;
 	}
 
@@ -5192,6 +5193,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die 2. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public stundenplanGetDefaultVormittagspause2Nach() : number {
+		if (this._stundenplanDefaultVormittagspause2Nach < 0)
+			this._stundenplanDefaultVormittagspause2Nach = 4;
 		return this._stundenplanDefaultVormittagspause2Nach;
 	}
 
@@ -5211,6 +5214,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Dauer der 2. Vormittagspause.
 	 */
 	public stundenplanGetDefaultVormittagspause2Dauer() : number {
+		if (this._stundenplanDefaultVormittagspause2Dauer < 0)
+			this._stundenplanDefaultVormittagspause2Dauer = 25;
 		return this._stundenplanDefaultVormittagspause2Dauer;
 	}
 
@@ -5230,6 +5235,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Mittagspause nach welcher welcher Stunde diese beginnt.
 	 */
 	public stundenplanGetDefaultMittagspauseNach() : number {
+		if (this._stundenplanDefaultMittagspauseNach < 0)
+			this._stundenplanDefaultMittagspauseNach = 6;
 		return this._stundenplanDefaultMittagspauseNach;
 	}
 
@@ -5249,6 +5256,8 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Dauer der Mittagspause.
 	 */
 	public stundenplanGetDefaultMittagspauseDauer() : number {
+		if (this._stundenplanDefaultMittagspauseDauer < 0)
+			this._stundenplanDefaultMittagspauseDauer = 60;
 		return this._stundenplanDefaultMittagspauseDauer;
 	}
 
