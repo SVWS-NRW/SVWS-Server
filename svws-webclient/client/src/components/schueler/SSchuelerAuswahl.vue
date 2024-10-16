@@ -156,7 +156,6 @@
 	const filterStatus = computed<SchuelerStatus[]>({
 		get: () => [...props.schuelerListeManager().schuelerstatus.auswahl()],
 		set: (value) => {
-			console.log(value)
 			props.schuelerListeManager().schuelerstatus.auswahlClear();
 			for (const v of value)
 				props.schuelerListeManager().schuelerstatus.auswahlAdd(v);
