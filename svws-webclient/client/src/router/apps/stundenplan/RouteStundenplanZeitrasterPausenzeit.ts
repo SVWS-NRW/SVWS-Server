@@ -41,6 +41,7 @@ export class RouteStundenplanZeitrasterPausenzeit extends RouteNode<any, RouteSt
 			importZeitraster: routeStundenplan.data.importZeitraster,
 			selected: routeStundenplan.data.selected,
 			setSelection: routeStundenplan.data.setSelection,
+			setSettingsDefaults: routeStundenplan.data.setSettingsDefaults,
 		};
 	}
 

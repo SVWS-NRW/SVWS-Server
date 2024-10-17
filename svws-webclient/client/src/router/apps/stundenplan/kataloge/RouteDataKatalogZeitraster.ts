@@ -3,6 +3,7 @@ import { ArrayList, DeveloperNotificationException, Stundenplan, StundenplanMana
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
+import { routeStundenplan } from "../RouteStundenplan";
 
 interface RouteStateKatalogZeitraster extends RouteStateInterface {
 	listKatalogeintraege: List<StundenplanZeitraster>;
@@ -44,6 +45,8 @@ export class RouteDataKatalogZeitraster extends RouteData<RouteStateKatalogZeitr
 		stundenplan.gueltigAb = "1979-07-10";
 		stundenplan.gueltigBis = "2050-09-29";
 		const stundenplanManager = new StundenplanManager(stundenplan, new ArrayList(), new ArrayList(), null);
+		const defaults = routeStundenplan.data.settingsDefaults;
+		stundenplanManager.stundenplanKonfigSet(defaults);
 		this.setPatchedDefaultState({ stundenplanManager });
 		api.status.stop();
 	}

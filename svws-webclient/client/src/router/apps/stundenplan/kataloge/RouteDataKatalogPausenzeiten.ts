@@ -5,6 +5,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 
 import { routeKatalogPausenzeiten } from "./RouteKatalogPausenzeiten";
+import { routeStundenplan } from "../RouteStundenplan";
 
 interface RouteStateKatalogPausenzeiten extends RouteStateInterface {
 	auswahl: StundenplanPausenzeit | undefined;
@@ -42,6 +43,8 @@ export class RouteDataKatalogPausenzeiten extends RouteData<RouteStateKatalogPau
 		const stundenplanManager = new StundenplanManager(stundenplanKomplett);
 		stundenplanManager.pausenzeitAddAll(listKatalogeintraege);
 		stundenplanManager.zeitrasterAddAll(listZeitraster);
+		const defaults = routeStundenplan.data.settingsDefaults;
+		stundenplanManager.stundenplanKonfigSet(defaults);
 		this.setPatchedDefaultState({ auswahl, stundenplanManager })
 	}
 

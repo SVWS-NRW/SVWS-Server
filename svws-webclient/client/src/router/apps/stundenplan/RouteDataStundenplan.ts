@@ -1,5 +1,5 @@
 import type { List, Raum, Stundenplan, JahrgangsDaten, LehrerListeEintrag, StundenplanPausenaufsichtBereichUpdate, StundenplanKalenderwochenzuordnung} from "@core";
-import { StundenplanListeEintrag} from "@core";
+import { StundenplanKonfiguration, StundenplanListeEintrag} from "@core";
 import { StundenplanPausenaufsicht, Wochentag, StundenplanRaum, StundenplanAufsichtsbereich, StundenplanPausenzeit, StundenplanUnterricht, StundenplanZeitraster, StundenplanManager, DeveloperNotificationException, ArrayList, StundenplanJahrgang, UserNotificationException, StundenplanUnterrichtListeManager } from "@core";
 
 import { api } from "~/router/Api";
@@ -104,6 +104,17 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	get selected(): Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined {
 		return this._state.value.selected;
 	}
+
+	get settingsDefaults(): StundenplanKonfiguration {
+		const json = api.config.getValue("stundenplan.settings.defaults");
+		return StundenplanKonfiguration.transpilerFromJSON(json);
+	}
+
+	setSettingsDefaults = async (value: StundenplanKonfiguration) => {
+		const json = StundenplanKonfiguration.transpilerToJSON(value);
+		await api.config.setValue('stundenplan.settings.defaults', json);
+	}
+
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<void> {
 		api.status.start();
@@ -610,6 +621,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, auswahl.id);
 		const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, auswahl.id);
 		const stundenplanManager = new StundenplanManager(daten, unterrichtsdaten, pausenaufsichten, unterrichtsverteilung);
+		stundenplanManager.stundenplanKonfigSet(this.settingsDefaults);
 		const stundenplanUnterrichtListeManager = new StundenplanUnterrichtListeManager(api.schulform, stundenplanManager, api.schuleStammdaten.abschnitte, daten.idSchuljahresabschnitt);
 		return { daten, stundenplanManager, stundenplanUnterrichtListeManager };
 	}
@@ -639,7 +651,7 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	addEintrag = async () => {
 		api.status.start();
 		const eintrag = await api.server.addStundenplan(api.schema, routeApp.data.idSchuljahresabschnitt);
-		this.mapKatalogeintraege.set(eintrag.id, eintrag)
+		this.mapKatalogeintraege.set(eintrag.id, eintrag);
 		api.status.stop();
 		await this.gotoEintrag(eintrag);
 	}

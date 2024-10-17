@@ -1,4 +1,4 @@
-import type { StundenplanPausenzeit, StundenplanManager } from "@core";
+import type { StundenplanPausenzeit, StundenplanManager, StundenplanKonfiguration } from "@core";
 import type { AbschnittAuswahlDaten } from "@comp";
 import type { RoutingStatus } from "~/router/RoutingStatus";
 
@@ -10,4 +10,5 @@ export interface PausenzeitenAuswahlProps {
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
 	setKatalogPausenzeitenImportJSON: (formData: FormData) => Promise<void>;
 	stundenplanManager: () => StundenplanManager;
+	setSettingsDefaults: (value: StundenplanKonfiguration) => Promise<void>;
 }

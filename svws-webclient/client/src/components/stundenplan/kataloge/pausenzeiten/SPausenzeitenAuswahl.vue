@@ -26,22 +26,12 @@
 			</template>
 		</svws-ui-table>
 		<svws-ui-action-button title="Alle Pausenzeiten erstellen" :is-active="actionPausenzeiten" @click="()=>actionPausenzeiten = !actionPausenzeiten" icon="i-ri-add-line">
-			<svws-ui-input-wrapper>
-				Voreinstellungen:
-				<svws-ui-text-input placeholder="Unterrichtsbeginn" :model-value="DateUtils.getStringOfUhrzeitFromMinuten(stundenplanManager().stundenplanGetDefaultUnterrichtsbeginn())" @change="start => (start !== null) && stundenplanManager().stundenplanSetDefaultUnterrichtsbeginn(DateUtils.gibMinutenOfZeitAsString(start))" />
-				<svws-ui-input-number placeholder="Stundendauer" :model-value="stundenplanManager().stundenplanGetDefaultStundendauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultStundendauer(dauer)" :min="5" :max="1440" />
-				<svws-ui-input-number placeholder="Pausenzeit Für Raumwechsel" :model-value="stundenplanManager().stundenplanGetDefaultPausenzeitFuerRaumwechsel()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultPausenzeitFuerRaumwechsel(dauer)" :min="0" :max="1440" />
-				<svws-ui-input-number placeholder="1. Pause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause1Nach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause1Nach(nach)" :min="0" :max="99" />
-				<svws-ui-input-number placeholder="1. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause1Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause1Dauer(dauer)" :min="0" :max="99" />
-				<svws-ui-input-number placeholder="2. Pause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Nach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Nach(nach)" :min="0" :max="99" />
-				<svws-ui-input-number placeholder="2. Pause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultVormittagspause2Dauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultVormittagspause2Dauer(dauer)" :min="0" :max="99" />
-				<svws-ui-input-number placeholder="Mittagspause nach Stunde" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseNach()" @change="nach => (nach !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseNach(nach)" :min="0" :max="99" />
-				<svws-ui-input-number placeholder="Mittagspause Dauer" :model-value="stundenplanManager().stundenplanGetDefaultMittagspauseDauer()" @change="dauer => (dauer !== null) && stundenplanManager().stundenplanSetDefaultMittagspauseDauer(dauer)" :min="0" :max="99" />
+			<stundenplan-zeitraster-einstellungen :manager="stundenplanManager" :set-settings-defaults>
 				<svws-ui-button type="secondary" @click="addBlock" title="Alle Pausenzeiten erstellen">
 					<span class="icon i-ri-calendar-event-line" />
 					<span class="icon i-ri-add-line -ml-1" />Alle Pausenzeiten erstellen
 				</svws-ui-button>
-			</svws-ui-input-wrapper>
+			</stundenplan-zeitraster-einstellungen>
 		</svws-ui-action-button>
 	</div>
 </template>

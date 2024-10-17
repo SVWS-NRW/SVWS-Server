@@ -4,7 +4,7 @@ import type { TabData } from "@ui";
 import type { StundenplanAuswahlProps } from "~/components/stundenplan/SStundenplanAuswahlProps";
 import type { StundenplanAppProps } from "~/components/stundenplan/SStundenplanAppProps";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode, StundenplanKonfiguration } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -22,6 +22,7 @@ import { RouteDataStundenplan } from "~/router/apps/stundenplan/RouteDataStunden
 import { routeError } from "~/router/error/RouteError";
 import { routeStundenplanKataloge } from "./RouteStundenplanKataloge";
 import { routeStundenplanRaum } from "./RouteStundenplanRaum";
+import { ConfigElement } from "~/components/Config";
 
 const SStundenplanAuswahl = () => import("~/components/stundenplan/SStundenplanAuswahl.vue")
 const SStundenplanApp = () => import("~/components/stundenplan/SStundenplanApp.vue")
@@ -47,6 +48,10 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 			routeStundenplanRaum,
 		];
 		super.defaultChild = routeStundenplanDaten;
+		const stundenplanConfig = new StundenplanKonfiguration();
+		api.config.addElements([
+			new ConfigElement("stundenplan.settings.defaults", "user", StundenplanKonfiguration.transpilerToJSON(stundenplanConfig)),
+		]);
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {

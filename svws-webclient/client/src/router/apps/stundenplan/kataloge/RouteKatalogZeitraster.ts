@@ -8,6 +8,7 @@ import { routeApp } from "../../RouteApp";
 import { RouteDataKatalogZeitraster } from "./RouteDataKatalogZeitraster";
 import type { StundenplanZeitrasterPausenzeitProps } from "~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeitProps";
 import { api } from "~/router/Api";
+import { routeStundenplan } from "../RouteStundenplan";
 
 const SZeitrasterAuswahl = () => import("~/components/stundenplan/kataloge/zeitraster/SZeitrasterAuswahl.vue")
 const SStundenplanZeitrasterPausenzeit = () => import("~/components/stundenplan/zeitrasterPausenzeit/SStundenplanZeitrasterPausenzeit.vue");
@@ -51,6 +52,7 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 			importZeitraster: undefined, // this.data.importZeitraster,
 			selected: this.data.selected,
 			setSelection: this.data.setSelection,
+			setSettingsDefaults: routeStundenplan.data.setSettingsDefaults,
 		};
 	}
 
