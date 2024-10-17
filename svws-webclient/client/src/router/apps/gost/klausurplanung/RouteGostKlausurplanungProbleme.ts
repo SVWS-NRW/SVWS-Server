@@ -29,6 +29,7 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 		return {
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
+			abschnitt: routeGostKlausurplanung.data.abschnitt,
 			kMan: () => routeGostKlausurplanung.data.manager,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			erzeugeSchuelerklausuren: routeGostKlausurplanung.data.erzeugeSchuelerklausuren,
@@ -36,7 +37,7 @@ export class RouteGostKlausurplanungProbleme extends RouteNode<any, RouteGostKla
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
 			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
 			gotoSchienen: routeGostKlausurplanung.data.gotoSchienen,
-			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
 		}

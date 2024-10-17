@@ -1,5 +1,7 @@
 package de.svws_nrw.core.utils;
 
+import java.util.ArrayList;
+
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import jakarta.validation.constraints.NotNull;
 
@@ -498,5 +500,71 @@ public final class DateUtils {
 		s.append(ms);
 		return s.toString();
 	}
+
+	/**
+	 * Liefert die Tage zwischen zwei Datumsangaben als String-Array im ISO8601-Format.
+	 *
+	 * @param startDate   das Startdatum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param endDate     das Enddatum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Tage zwischen zwei Datumsangaben als String-Array im ISO8601-Format.
+	 */
+	public static @NotNull String[] gibTageAlsDatumZwischen(final @NotNull String startDate, final @NotNull String endDate) {
+        // Zerlege die Start- und Enddaten in Jahr, Monat und Tag
+		final @NotNull int[] startDateArray = extractFromDateISO8601(startDate);
+		final @NotNull int[] endDateArray = extractFromDateISO8601(endDate);
+
+        // Liste, um die Daten zu speichern
+		final @NotNull ArrayList<String> dateList = new ArrayList<>();
+
+        // Schleife über jedes Datum bis zum Enddatum
+        while (startDateArray[0] < endDateArray[0] || (startDateArray[0] == endDateArray[0] && (startDateArray[1] < endDateArray[1] || (startDateArray[1] == endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
+            // Füge das aktuelle Datum zur Liste hinzu
+            dateList.add(String.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
+
+            // Inkrementiere das Datum
+            startDateArray[2]++;
+
+            // Überprüfe, ob der Tag das Monatsende überschritten hat
+            if (startDateArray[2] > daysInMonth(startDateArray[0], startDateArray[1])) {
+                startDateArray[2] = 1; // Setze den Tag auf 1
+                startDateArray[1]++; // Inkrementiere den Monat
+
+                // Überprüfe, ob der Monat das Jahresende überschritten hat
+                if (startDateArray[1] > 12) {
+                    startDateArray[1] = 1; // Setze den Monat auf Januar
+                    startDateArray[0]++; // Inkrementiere das Jahr
+                }
+            }
+        }
+
+        // Konvertiere die ArrayList in ein String-Array und gib es zurück
+        return dateList.toArray(new String[0]);
+    }
+
+    // Hilfsmethode, um die Anzahl der Tage in einem Monat zu bestimmen
+    private static int daysInMonth(final int year, final int month) {
+        switch (month) {
+            case 4: case 6: case 9: case 11:
+                return 30;
+            case 2:
+                // Schaltjahrüberprüfung
+                if (istSchaltjahr(year))
+                    return 29;
+                return 28;
+            default:
+                return 31;
+        }
+    }
+
+    // Hilfsmethode, um zu prüfen, ob ein Jahr ein Schaltjahr ist
+    private static boolean istSchaltjahr(final int year) {
+        if (year % 4 == 0) {
+            if (year % 100 == 0)
+                return year % 400 == 0;
+            return true;
+        }
+        return false;
+    }
 
 }

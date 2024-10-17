@@ -29,7 +29,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.manager.getStundenplanManagerOrNull())
+		if (!routeGostKlausurplanung.data.abschnitt || !routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id))
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
 		return false;
 	}
@@ -52,7 +52,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			if (idtermin !== undefined) {
 				const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrException(idtermin);
 				// routeGostKlausurplanung.data.terminSelected.value = termin;
-				await routeGostKlausurplanung.data.setRaumTermin(termin);
+				routeGostKlausurplanung.data.setRaumTermin(termin);
 			}
 		} catch (e) {
 			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
@@ -64,6 +64,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
+			abschnitt: routeGostKlausurplanung.data.abschnitt,
 			gotoTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			kMan: () => routeGostKlausurplanung.data.manager,
 			createKlausurraum: routeGostKlausurplanung.data.createKlausurraum,
@@ -78,7 +79,7 @@ export class RouteGostKlausurplanungRaumzeit extends RouteNode<any, RouteGostKla
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 			setConfigValue: routeGostKlausurplanung.data.setConfigValue,
 			getConfigValue: routeGostKlausurplanung.data.getConfigValue,
-			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 		}
 	}
 

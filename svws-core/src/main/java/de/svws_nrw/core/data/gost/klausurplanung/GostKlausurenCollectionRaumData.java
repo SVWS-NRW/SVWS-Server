@@ -35,18 +35,6 @@ public class GostKlausurenCollectionRaumData {
 	public @NotNull List<Long> idsKlausurtermine = new ArrayList<>();
 
 	/**
-	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
-	 *
-	 * @param addData die Daten, die hinzugefügt werden sollen
-	 */
-	public void addAll(final @NotNull GostKlausurenCollectionRaumData addData) {
-		raeume.addAll(addData.raeume);
-		raumstunden.addAll(addData.raumstunden);
-		sktRaumstunden.addAll(addData.sktRaumstunden);
-		idsKlausurtermine.addAll(addData.idsKlausurtermine);
-	}
-
-	/**
 	 * Default-Konstruktor
 	 */
 	public GostKlausurenCollectionRaumData() {

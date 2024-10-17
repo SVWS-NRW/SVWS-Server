@@ -407,6 +407,8 @@ export { GostSchuelerFachwahl } from './core/data/gost/GostSchuelerFachwahl';
 export { GostStatistikFachwahl } from './core/data/gost/GostStatistikFachwahl';
 export { GostStatistikFachwahlHalbjahr } from './core/data/gost/GostStatistikFachwahlHalbjahr';
 export { GostKlausurenCollectionAllData } from './core/data/gost/klausurplanung/GostKlausurenCollectionAllData';
+export { GostKlausurenCollectionData } from './core/data/gost/klausurplanung/GostKlausurenCollectionData';
+export { GostKlausurenCollectionHjData } from './core/data/gost/klausurplanung/GostKlausurenCollectionHjData';
 export { GostKlausurenCollectionMetaData } from './core/data/gost/klausurplanung/GostKlausurenCollectionMetaData';
 export { GostKlausurenCollectionRaumData } from './core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
 export { GostKlausurenCollectionSkrsKrsData } from './core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';

@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.asd.types.schueler.SchuelerStatus;
-import de.svws_nrw.core.data.gost.GostJahrgang;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurtermin;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -21,10 +21,8 @@ import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.gost.DBUtilsGost;
 import de.svws_nrw.data.gost.DataGostFaecher;
 import de.svws_nrw.data.gost.DataGostJahrgangSchuelerliste;
-import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.kurse.DataKursliste;
 import de.svws_nrw.data.lehrer.DataLehrerliste;
 import de.svws_nrw.data.schueler.DataSchuelerliste;
@@ -65,51 +63,48 @@ public final class DataGostKlausuren {
 	 * Sammelt alle Daten, die für die Klausurplanung der gesamten Oberstufe nötig sind.
 	 *
 	 * @param conn       die Datenbank-Verbindung für den Datenbankzugriff
-	 * @param selection das Jahr, in welchem der Jahrgang Abitur machen wird
+	 * @param jgs Liste von GostKlausurenCollectionHjData-Objekten, für die die Daten gesammelt werden sollen
 	 *
 	 * @return die DataCollection
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionAllData getAllData(final DBEntityManager conn, final List<Pair<Integer, Integer>> selection)
+	public static GostKlausurenCollectionAllData getAllData(final DBEntityManager conn, final List<GostKlausurenCollectionHjData> jgs)
 			throws ApiOperationException {
 
-		// Pair<Abiturjahr, GostHalbjahr (-1 für alle Halbjahre)>
-		final List<Pair<Integer, Integer>> jgs = new ArrayList<>();
-		if (selection == null) {
-			for (final GostJahrgang jg : DataGostJahrgangsliste.getGostJahrgangsliste(conn, conn.getUser().schuleGetSchuljahresabschnitt()))
-				jgs.add(new Pair<>(jg.abiturjahr, -1));
-		} else
-			jgs.addAll(selection);
-
 		final GostKlausurenCollectionAllData data = new GostKlausurenCollectionAllData();
-		for (final Pair<Integer, Integer> jg : jgs) {
-			final GostKlausurenCollectionAllData klausuren = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(jg.a, jg.b, true);
-			klausuren.metadata.faecher = DataGostFaecher.getFaecherManager(conn, jg.a).faecher();
 
-			if (jg.a != -1) {
-				klausuren.metadata.schueler.addAll(new DataGostJahrgangSchuelerliste(conn, jg.a).getAllSchueler());
-				// Schüler nachladen, die in der Klausurplanung vorkommen, aber zu keinem Oberstufenjahrgang gehören
-				final List<Long> missingSchuelerIds = klausuren.schuelerklausuren.stream().map(sk -> sk.idSchueler)
-						.filter(item -> !klausuren.metadata.schueler.stream().map(s -> s.id).toList().contains(item)).toList();
-				klausuren.metadata.schueler.addAll(ladeSchuelerByIds(jg.a - 1, conn, missingSchuelerIds));
+		final List<SchuelerListeEintrag> schuelerNichtSenden = new ArrayList<>();
 
-				for (final GostHalbjahr gj : GostHalbjahr.values()) {
-					final Schuljahresabschnitt sja =
-							DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.a), gj.halbjahr);
-					if (sja != null) {
-						klausuren.metadata.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
-					}
-				}
+		for (final GostKlausurenCollectionHjData jg : jgs) {
+			jg.data = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(jg.abiturjahrgang, jg.gostHalbjahr, false);
+
+			final List<SchuelerListeEintrag> schuelerJahrgang = new DataGostJahrgangSchuelerliste(conn, jg.abiturjahrgang).getAllSchueler();
+			schuelerNichtSenden.addAll(schuelerJahrgang);
+			if (jg.schueler != null)
+				jg.schueler = schuelerJahrgang;
+			if (jg.faecher != null)
+				jg.faecher = DataGostFaecher.getFaecherManager(conn, jg.abiturjahrgang).faecher();
+
+			GostHalbjahr gj = GostHalbjahr.fromID(jg.gostHalbjahr);
+			final Schuljahresabschnitt sja =
+					DataSchuljahresabschnitte.getFromSchuljahrUndAbschnitt(conn, gj.getSchuljahrFromAbiturjahr(jg.abiturjahrgang), gj.halbjahr);
+			if (sja != null) {
+				jg.schuljahresabschnitt = sja.id;
+				jg.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, sja.id, true));
 			}
-
-			data.addAll(klausuren);
-
+			jg.raumdata =
+					new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(jg.data.termine.stream().map(t -> t.id).toList());
+			data.datacontained.add(jg);
 		}
 
-		data.metadata.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
-		data.raumdata =
-				new DataGostKlausurenSchuelerklausurraumstunde(conn).getSchuelerklausurraumstundenByTerminids(data.termine.stream().map(t -> t.id).toList());
+		// Schüler nachladen, die in der Klausurplanung vorkommen, aber zu keinem Oberstufenjahrgang gehören
+		final List<Long> missingSchuelerIds = jgs.stream().flatMap(jg -> jg.data.schuelerklausuren.stream()).map(sk -> sk.idSchueler)
+				.filter(item -> !schuelerNichtSenden.stream().map(s -> s.id).distinct().toList().contains(item)).toList();
+		if (!missingSchuelerIds.isEmpty())
+			jgs.getFirst().schueler.addAll(ladeSchuelerByIds(-1, conn, missingSchuelerIds));
+
+		data.lehrer.addAll(DataLehrerliste.getLehrerListe(conn));
 		return data;
 	}
 
@@ -131,15 +126,14 @@ public final class DataGostKlausuren {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionAllData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
-		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, _abiturjahr);
+	public GostKlausurenCollectionData createKlausuren(final int hj, final int quartal) throws ApiOperationException {
 		final GostHalbjahr halbjahr = GostHalbjahr.fromID(hj);
 
 		final List<GostKlausurvorgabe> vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(_abiturjahr, hj, false);
 		if (vorgaben.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Klausurvorgaben für dieses Halbjahr definiert.");
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahr, vorgaben);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(vorgaben);
 
 		final List<GostKursklausur> existingKlausuren = new DataGostKlausurenKursklausur(conn).getKursklausurenZuVorgaben(vorgaben);
 		final Map<Long, Map<Long, GostKursklausur>> mapKursidVorgabeIdKursklausur = existingKlausuren.stream()
@@ -167,7 +161,7 @@ public final class DataGostKlausuren {
 		long idNextKursklausur = conn.transactionGetNextID(DTOGostKlausurenKursklausuren.class);
 
 		for (final DTOKurs kurs : kurse) {
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, manager.getSchuljahr(), kurs);
+			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, sja.Jahr, kurs);
 			final List<GostKlausurvorgabe> listKursVorgaben = manager.vorgabeGetMengeByHalbjahrAndQuartalAndKursartallgAndFachid(_abiturjahr, halbjahr, quartal,
 					GostKursart.fromKuerzelOrException(kurs.KursartAllg), kurs.Fach_ID);
 			if (listKursVorgaben.isEmpty() && !laDaten.isEmpty())
@@ -198,7 +192,7 @@ public final class DataGostKlausuren {
 
 		if (!conn.transactionPersistAll(kursklausuren) || !conn.transactionPersistAll(schuelerklausuren) || !conn.transactionPersistAll(sktermine))
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
-		final GostKlausurenCollectionAllData retKlausuren = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionData retKlausuren = new GostKlausurenCollectionData();
 		retKlausuren.kursklausuren = new DataGostKlausurenKursklausur(conn).mapList(kursklausuren);
 		retKlausuren.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).mapList(schuelerklausuren);
 		retKlausuren.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).mapList(sktermine);
@@ -253,7 +247,7 @@ public final class DataGostKlausuren {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Response getFehlendDataGZip(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {
-		return JSONMapper.gzipFileResponseFromObject(getFehlendData(conn, abijahr, halbjahr), "klausurdatenfehlend.json.gz");
+		return JSONMapper.gzipFileResponseFromObject(getFehlendData(conn, abijahr, halbjahr), "klausurdatenfehlend_%d-%d.json.gz".formatted(abijahr, halbjahr.id));
 	}
 
 	static Schuljahresabschnitt getSchuljahresabschnittFromAbijahrUndHalbjahr(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr) {
@@ -272,15 +266,15 @@ public final class DataGostKlausuren {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static GostKlausurenCollectionAllData getFehlendData(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {
-		final GostKlausurenCollectionAllData klausuren = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(abijahr, halbjahr.id, true);
+	public static GostKlausurenCollectionHjData getFehlendData(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr) throws ApiOperationException {
+		final GostKlausurenCollectionData klausuren = new DataGostKlausurenKursklausur(conn).getKlausurDataCollection(abijahr, halbjahr.id, true);
 		return getFehlendeKlausuren(conn, abijahr, halbjahr, getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, abijahr, halbjahr), klausuren);
 	}
 
-	private static GostKlausurenCollectionAllData getFehlendeKlausuren(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr, final Schuljahresabschnitt sja,
-			final GostKlausurenCollectionAllData allData) {
+	private static GostKlausurenCollectionHjData getFehlendeKlausuren(final DBEntityManager conn, final int abijahr, final GostHalbjahr halbjahr, final Schuljahresabschnitt sja,
+			final GostKlausurenCollectionData allData) {
 
-		final GostKlausurenCollectionAllData fehlendData = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionHjData fehlendData = new GostKlausurenCollectionHjData(abijahr, halbjahr.id);
 
 		// Kurse ermitteln
 		final List<DTOKurs> kurse =
@@ -289,11 +283,11 @@ public final class DataGostKlausuren {
 						.setParameter("sja", sja.id)
 						.getResultList();
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(abijahr - 1, allData);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(allData);
 
 		for (final DTOKurs kurs : kurse) {
 			final GostKursart kursart = GostKursart.fromKuerzelOrException(kurs.KursartAllg);
-			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, manager.getSchuljahr(), kurs);
+			final List<DTOSchuelerLernabschnittsdaten> laDaten = getLernabschnittsdatenZuKurs(conn, sja.schuljahr, kurs);
 
 			for (final int quartal : new int[] { 1, 2 }) {
 				final GostKlausurvorgabe vorgabe =
@@ -302,7 +296,7 @@ public final class DataGostKlausuren {
 					if (vorgabe != null) {
 						final GostKursklausur kursklausur = manager.kursklausurByVorgabeAndKursid(vorgabe, kurs.ID);
 						if (kursklausur != null) {
-							fehlendData.kursklausuren.add(kursklausur);
+							fehlendData.data.kursklausuren.add(kursklausur);
 							manager.kursklausurfehlendAdd(kursklausur);
 						}
 					}
@@ -315,7 +309,7 @@ public final class DataGostKlausuren {
 						vorgabeFehlend.idFach = kurs.Fach_ID;
 						vorgabeFehlend.kursart = kurs.KursartAllg;
 						vorgabeFehlend.quartal = quartal;
-						fehlendData.vorgaben.add(vorgabeFehlend);
+						fehlendData.data.vorgaben.add(vorgabeFehlend);
 						manager.vorgabefehlendAdd(vorgabeFehlend);
 					}
 					if (vorgabe != null) {
@@ -324,7 +318,7 @@ public final class DataGostKlausuren {
 							final GostKursklausur kursklausurFehlend = new GostKursklausur();
 							kursklausurFehlend.idKurs = kurs.ID;
 							kursklausurFehlend.idVorgabe = vorgabe.idVorgabe;
-							fehlendData.kursklausuren.add(kursklausurFehlend);
+							fehlendData.data.kursklausuren.add(kursklausurFehlend);
 						} else {
 							final Map<Long, GostSchuelerklausur> mapSks =
 									manager.schuelerklausurGetMengeByKursklausur(kursklausur).stream().collect(Collectors.toMap(sk -> sk.idSchueler, sk -> sk));
@@ -333,12 +327,12 @@ public final class DataGostKlausuren {
 									final GostSchuelerklausur schuelerklausurFehlend = new GostSchuelerklausur();
 									schuelerklausurFehlend.idKursklausur = kursklausur.id;
 									schuelerklausurFehlend.idSchueler = lad.Schueler_ID;
-									fehlendData.schuelerklausuren.add(schuelerklausurFehlend);
+									fehlendData.data.schuelerklausuren.add(schuelerklausurFehlend);
 								} else {
 									mapSks.remove(lad.Schueler_ID);
 								}
 							}
-							fehlendData.schuelerklausuren.addAll(mapSks.values());
+							fehlendData.data.schuelerklausuren.addAll(mapSks.values());
 						}
 					}
 				}

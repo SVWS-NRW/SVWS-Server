@@ -66,7 +66,7 @@ export class RouteGostKlausurplanungNachschreiber extends RouteNode<any, RouteGo
 			zeigeAlleJahrgaenge: () => routeGostKlausurplanung.data.zeigeAlleJahrgaenge,
 			setZeigeAlleJahrgaenge: routeGostKlausurplanung.data.setZeigeAlleJahrgaenge,
 			gotoNachschreiber: routeGostKlausurplanung.data.gotoNachschreiber,
-			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 		}
 	}

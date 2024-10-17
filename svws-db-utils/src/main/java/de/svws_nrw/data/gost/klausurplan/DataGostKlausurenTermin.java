@@ -216,7 +216,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 	 */
 	public List<GostKlausurtermin> getKlausurtermine(final int abiturjahr, final int halbjahr, final boolean ganzesSchuljahr, final List<Long> plusTerminIds)
 			throws ApiOperationException {
-		final GostHalbjahr ghj = (halbjahr <= 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
+		final GostHalbjahr ghj = (halbjahr < 0) ? null : DataGostKlausurenVorgabe.checkHalbjahr(halbjahr);
 
 		final String plusHJ = (ghj == null ? "" : " AND t.Halbjahr IN :hj");
 		final String plusTermine = ((plusTerminIds == null || plusTerminIds.isEmpty()) ? "" : " OR t.ID IN :plusIds");
@@ -312,9 +312,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 		final List<GostSchuelerklausurTermin> skts = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuTerminIds(terminIDs);
 		final List<GostSchuelerklausur> sks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(skts);
 		final List<GostKursklausur> kks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(sks);
-		final Schuljahresabschnitt schuljahresabschnitt = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
-		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.schuljahr,
-				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kks),
+		final GostKlausurplanManager manager = new GostKlausurplanManager(new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(kks),
 				kks,
 				termine,
 				sks,
@@ -353,6 +351,7 @@ public final class DataGostKlausurenTermin extends DataManagerRevised<Long, DTOG
 			}
 		}
 		if (!raumListeNeu.isEmpty()) {
+			final Schuljahresabschnitt schuljahresabschnitt = DataGostKlausuren.getSchuljahresabschnittFromAbijahrUndHalbjahr(conn, termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr));
 			raumDataChanged.raumdata = new DataGostKlausurenSchuelerklausurraumstunde(conn).transactionSetzeRaumZuSchuelerklausuren(raumListeNeu, schuljahresabschnitt).raumdata;
 			raumDataChanged.raumdata.raeume = raumListe;
 		}

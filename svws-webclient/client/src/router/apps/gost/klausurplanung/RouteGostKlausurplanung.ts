@@ -91,7 +91,8 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { abiturjahr, halbjahr: halbjahrId, idtermin, kw } = RouteNode.getIntParams(to_params, [ "abiturjahr", "halbjahr", "idtermin", "kw" ]);
+			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, [ "abiturjahr", "halbjahr", "idtermin" ]);
+			const { datum } = RouteNode.getStringParams(to_params, ["datum"]);
 			// Prüfe das Abiturjahr
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Das Abiturjahr darf an dieser Stelle nicht undefined sein.");
@@ -132,7 +133,7 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 				if (this.data.view.name === "gost.klausurplanung.raumzeit" && idtermin !== undefined)
 					return this.data.view.getRoute(abiturjahr, halbjahr.id, idtermin);
 				if (this.data.view.name === "gost.klausurplanung.kalender")
-					return this.data.view.getRoute(abiturjahr, halbjahr.id, kw, idtermin);
+					return this.data.view.getRoute(abiturjahr, halbjahr.id, datum, idtermin);
 				return this.data.view.getRoute(abiturjahr, halbjahr.id);
 			}
 		} catch(e) {

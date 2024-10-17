@@ -9,7 +9,7 @@
 		<svws-ui-content-card title="Klausurvorgaben">
 			<svws-ui-table id="vorgabenTable" :items="vorgaben()" :columns="cols" v-model:clicked="selectedVorgabeRow" :clickable="hatKompetenzUpdate" @click="startEdit" :no-data="vorgaben().isEmpty()" :no-data-text="'Keine ' + (jahrgangsdaten?.abiturjahr === -1 ? 'Vorlagen für ' : '') + 'Klausurvorgaben für das ' + (quartalsauswahl.value !== 0 ? quartalsauswahl.value + '. Quartal im' : '') + ' Halbjahr ' + halbjahr.kuerzel + ' vorhanden.'">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}.
@@ -113,8 +113,6 @@
 
 	const props = defineProps<GostKlausurplanungVorgabenProps>();
 
-	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
-
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const vorgaben = () => props.kMan().vorgabeGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -127,7 +125,7 @@
 	const formQuartale = computed(() => [1, 2]);
 	const inputVorgabeFach: WritableComputedRef<GostFach | undefined> = computed({
 		get() {
-			const fach = props.kMan().getFaecherManager().get(activeVorgabe.value.idFach);
+			const fach = props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).get(activeVorgabe.value.idFach);
 			return fach === null ? undefined : fach;
 		},
 		set(val) {
@@ -137,7 +135,7 @@
 	});
 
 	const faecherSortiert = computed(() => {
-		const f = new ArrayList(props.kMan().getFaecherManager().faecher());
+		const f = new ArrayList(props.kMan().getFaecherManager(props.jahrgangsdaten!.abiturjahr).faecher());
 		//		f.sort({ compare: (a: GostFach, b: GostFach) => a.bezeichnung.localeCompare(b.bezeichnung) });
 		return f;
 	});
@@ -204,7 +202,7 @@
 	function getBgColor(kuerzel: string | null) {
 		if (kuerzel === null)
 			return 'rgb(220,220,220)';
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr-1, 1.0);
 	}
 
 	window.addEventListener('click', function(e) {

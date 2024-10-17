@@ -28,6 +28,6 @@ export interface GostKlausurplanungSchienenProps {
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
 	gotoSchienen: (termin: GostKlausurtermin | undefined) => Promise<void>;
 	gotoVorgaben: () => Promise<void>;
-	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

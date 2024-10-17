@@ -3,11 +3,9 @@ import { KursDaten } from '../../../../core/data/kurse/KursDaten';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { SchuelerListeEintrag } from '../../../../core/data/schueler/SchuelerListeEintrag';
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
-import type { JavaSet } from '../../../../java/util/JavaSet';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { Class } from '../../../../java/lang/Class';
-import { HashSet } from '../../../../java/util/HashSet';
 
 export class GostKlausurenCollectionMetaData extends JavaObject {
 
@@ -37,20 +35,6 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 	 */
 	public constructor() {
 		super();
-	}
-
-	/**
-	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
-	 *
-	 * @param addData die Daten, die hinzugefügt werden sollen
-	 */
-	public addAll(addData : GostKlausurenCollectionMetaData) : void {
-		this.faecher.addAll(addData.faecher);
-		const schuelerMenge : JavaSet<SchuelerListeEintrag> | null = new HashSet<SchuelerListeEintrag>(this.schueler);
-		schuelerMenge.addAll(addData.schueler);
-		this.schueler = new ArrayList(schuelerMenge);
-		this.lehrer.addAll(addData.lehrer);
-		this.kurse.addAll(addData.kurse);
 	}
 
 	transpilerCanonicalName(): string {

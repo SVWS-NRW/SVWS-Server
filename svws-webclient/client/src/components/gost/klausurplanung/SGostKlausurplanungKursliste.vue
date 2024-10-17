@@ -17,18 +17,18 @@
 	<table>
 		<tr v-for="s in kMan().schuelerklausurterminGetMengeByKursklausur(kursklausur)" :key="s.id">
 			<td>
-				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin)">
+				<template v-if="termin !== undefined && !kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)">
 					<span class="line-through text-red-500">
-						{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).vorname }}
+						{{ kMan().schuelerGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(s).vorname }}
 					</span>
 					<span class="italic"> ({{ (s.bemerkung !== null && s.bemerkung.trim().length > 0) ? s.bemerkung : "kein Grund" }})</span>
 				</template>
 				<span v-else>
-					{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).vorname }}
+					{{ kMan().schuelerGetBySchuelerklausurtermin(s).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(s).vorname }}
 				</span>
 			</td>
 			<td v-if="patchKlausur && createSchuelerklausurTermin">
-				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerlisteeintragGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; showModalTerminGrund().value = true">
+				<svws-ui-button v-if="termin !== undefined && kMan().schuelerSchreibtKlausurtermin(kMan().schuelerGetBySchuelerklausurtermin(s).id, termin)" @click="terminSelected = s; showModalTerminGrund().value = true">
 					<svws-ui-tooltip>
 						<template #content>
 							Klausur nicht mitgeschrieben

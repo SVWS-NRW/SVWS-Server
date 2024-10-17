@@ -1,5 +1,5 @@
 <template>
-	<template v-if="kMan().getStundenplanManagerOrNull()">
+	<template v-if="props.kMan().stundenplanManagerGeladenByAbschnitt(props.abschnitt!.id)">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -38,7 +38,7 @@
 							:klausur-css-classes="calculatCssClassesKlausur"
 							:compact-with-date="terminSelected.value === undefined || terminSelected.value.id !== termin.id"
 							:show-kursklausuren-nachschreiber="true"
-							:goto-kalenderwoche
+							:goto-kalenderdatum
 							:goto-raumzeit-termin="gotoTermin"
 							:hide-button-raeume-planen="true">
 							<template #main v-if="terminSelected.value === undefined || terminSelected.value.id !== termin.id"><template /></template>
@@ -86,7 +86,7 @@
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const chooseTermin = async (termin: GostKlausurtermin) => {
-		await props.setRaumTermin(termin);
+		props.setRaumTermin(termin);
 		await props.gotoTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id);
 	}
 

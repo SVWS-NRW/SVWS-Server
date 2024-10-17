@@ -8,7 +8,7 @@
 		<nav class="svws-ui-secondary-tabs">
 			<svws-ui-tab-bar :tab-manager secondary>
 				<template #badge="{ tab }">
-					<template v-if="(tab.name === 'gost_klausurplanung_probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
+					<template v-if="(tab.name === 'gost.klausurplanung.probleme') && kMan().hasFehlenddatenZuAbijahrUndHalbjahr(props.jahrgangsdaten!.abiturjahr, halbjahr)">
 						<div class="font-bold text-white bg-error rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numErrors">{{ numErrors }}</div>
 						<div class="font-bold text-black bg-yellow-200 rounded-full shadow h-5 ml-1 -mt-3 px-1.5 pt-0.5" v-if="numWarnings">{{ numWarnings }}</div>
 					</template>

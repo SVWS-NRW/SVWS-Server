@@ -4,12 +4,12 @@
 		<div class="svws-ui-stundenplan--head">
 			<slot name="kwAuswahl">
 				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
-					KW {{ kalenderwoche.value.kw || '–' }}
+					KW {{ kalenderwoche().kw || '–' }}
 				</div>
 			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
-				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag)) }}
+				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag)) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -73,7 +73,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +
@@ -107,7 +107,7 @@
 										<s-gost-klausurplanung-termin :termin
 											:benutzer-kompetenzen
 											in-tooltip
-											:goto-kalenderwoche
+											:goto-kalenderdatum
 											:goto-raumzeit-termin
 											:k-man>
 											<template #datum><span /></template>
@@ -140,8 +140,6 @@
 		useDragAndDrop: false,
 		dragData: () => undefined,
 	});
-
-	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
 
 	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
@@ -283,7 +281,7 @@
 			return "#f2f4f5";
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
-		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0));
+		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr-1, 1.0));
 
 		let gradient = '';
 

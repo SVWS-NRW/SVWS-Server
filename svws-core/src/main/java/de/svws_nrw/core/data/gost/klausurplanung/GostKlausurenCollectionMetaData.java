@@ -1,9 +1,7 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.kurse.KursDaten;
@@ -39,20 +37,6 @@ public class GostKlausurenCollectionMetaData {
 	/** Ein Array mit den Daten der Kurse. */
 	@ArraySchema(schema = @Schema(implementation = KursDaten.class, description = "Ein Array mit den Daten der Kurse."))
 	public @NotNull List<KursDaten> kurse = new ArrayList<>();
-
-	/**
-	 * Fügt den Datensammlungen in dieser Klasse die im übergebenen Objekt enthaltenen Daten hinzu.
-	 *
-	 * @param addData die Daten, die hinzugefügt werden sollen
-	 */
-	public void addAll(final @NotNull GostKlausurenCollectionMetaData addData) {
-		faecher.addAll(addData.faecher);
-		final Set<SchuelerListeEintrag> schuelerMenge = new HashSet<>(schueler);
-		schuelerMenge.addAll(addData.schueler);
-		schueler = new ArrayList<>(schuelerMenge);
-		lehrer.addAll(addData.lehrer);
-		kurse.addAll(addData.kurse);
-	}
 
 	/**
 	 * Default-Konstruktor

@@ -228,7 +228,7 @@ public class DeveloperNotificationException extends RuntimeException {
 			final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull V value) throws DeveloperNotificationException {
 		if (map.contains(key1, key2))
 			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits "
-					+ map.getOrException(key1, key2) + " zugeordnet ist!");
+					+ map.getOrNull(key1, key2) + " zugeordnet ist!");
 		map.put(key1, key2, value);
 	}
 

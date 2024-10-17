@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionSkrsKrsData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungDaten;
@@ -33,8 +33,6 @@ import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerkl
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenVorgaben;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -317,9 +315,9 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionAllData getKlausurDataCollection(final int abiturjahr, final int halbjahr,
+	public GostKlausurenCollectionData getKlausurDataCollection(final int abiturjahr, final int halbjahr,
 			final boolean ganzesSchuljahr) throws ApiOperationException {
-		final GostKlausurenCollectionAllData data = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionData data = new GostKlausurenCollectionData();
 		data.vorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgaben(abiturjahr, halbjahr, ganzesSchuljahr);
 		data.kursklausuren = getKursklausurenZuVorgaben(data.vorgaben);
 		data.schuelerklausuren = new DataGostKlausurenSchuelerklausur(conn).getSchuelerKlausurenZuKursklausuren(data.kursklausuren);
@@ -338,33 +336,26 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionAllData blocken(final GostKlausurterminblockungDaten blockungDaten)
+	public GostKlausurenCollectionData blocken(final GostKlausurterminblockungDaten blockungDaten)
 			throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-
-		final GostKlausurenCollectionAllData blockung = new GostKlausurenCollectionAllData();
-		blockungDaten.richKlausuren = enrichKursklausuren(schuljahresabschnitt.Jahr, conn, blockungDaten.klausuren);
+		final GostKlausurenCollectionData blockung = new GostKlausurenCollectionData();
+		blockungDaten.richKlausuren = enrichKursklausuren(conn, blockungDaten.klausuren);
 		final GostKlausurterminblockungErgebnis ergebnis = new KlausurterminblockungAlgorithmus().apply(blockungDaten);
 
 		long idNextTermin = conn.transactionGetNextID(DTOGostKlausurenTermine.class);
 
 		for (final GostKlausurterminblockungErgebnisTermin ergebnisTermin : ergebnis.termine) {
-			bearbeiteTermin(schuljahresabschnitt.Jahr, ergebnisTermin, idNextTermin++, blockung);
+			bearbeiteTermin(ergebnisTermin, idNextTermin++, blockung);
 		}
 		return blockung;
 	}
 
-	private void bearbeiteTermin(final int schuljahr, final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId,
-			final GostKlausurenCollectionAllData blockung) throws ApiOperationException {
+	private void bearbeiteTermin(final GostKlausurterminblockungErgebnisTermin ergebnisTermin, final long terminId,
+			final GostKlausurenCollectionData blockung) throws ApiOperationException {
 		DTOGostKlausurenTermine termin = null;
 		final List<DTOGostKlausurenKursklausuren> listKlausuren = getKursklausurenDTOsZuIds(conn, ergebnisTermin.kursklausuren);
 		final List<GostKlausurvorgabe> listVorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausurDTOs(listKlausuren);
-		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahr, listVorgaben);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(listVorgaben);
 		for (final DTOGostKlausurenKursklausuren klausur : listKlausuren) {
 			final GostKlausurvorgabe vorgabe = manager.vorgabeGetByIdOrException(klausur.Vorgabe_ID);
 			if (termin == null) {
@@ -386,7 +377,6 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	/**
 	 * Erzeugt eine Liste von GostKursklausurRich-Objekten, die für die Klausurblockung benötigte Informationen anreichert.
 	 *
-	 * @param schuljahr       das schuljahr
 	 * @param conn            Connection
 	 * @param kursklausuren   die Liste der anzureichernden GostKursklausur-Objekte
 	 *
@@ -394,7 +384,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static List<GostKursklausurRich> enrichKursklausuren(final int schuljahr, final DBEntityManager conn, final List<GostKursklausur> kursklausuren)
+	public static List<GostKursklausurRich> enrichKursklausuren(final DBEntityManager conn, final List<GostKursklausur> kursklausuren)
 			throws ApiOperationException {
 		final List<GostKursklausurRich> richKlausuren = new ArrayList<>();
 		if (kursklausuren.isEmpty())
@@ -404,7 +394,7 @@ public final class DataGostKlausurenKursklausur extends DataManagerRevised<Long,
 		if (listVorgaben.isEmpty())
 			return new ArrayList<>();
 
-		final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahr, listVorgaben);
+		final GostKlausurplanManager manager = new GostKlausurplanManager(listVorgaben);
 
 		final Map<Long, List<DTOGostKlausurenSchuelerklausuren>> mapSchuelerklausuren = conn.queryList(
 				DTOGostKlausurenSchuelerklausuren.QUERY_LIST_BY_KURSKLAUSUR_ID, DTOGostKlausurenSchuelerklausuren.class,

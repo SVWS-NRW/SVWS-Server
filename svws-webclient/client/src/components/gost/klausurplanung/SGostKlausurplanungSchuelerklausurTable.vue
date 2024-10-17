@@ -19,9 +19,9 @@
 				<div class="svws-ui-td" role="cell">
 					<span v-if="draggable(schuelertermin, termin!)" class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" />
 					<svws-ui-checkbox v-if="selectedItems !== undefined" :model-value="selectedItems.contains(schuelertermin)" @update:model-value="selectedItems.contains(schuelertermin) ? selectedItems.remove(schuelertermin) : selectedItems.add(schuelertermin)" />
-					{{ kMan().getSchuelerMap().get(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
+					{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.nachname }}
 				</div>
-				<div class="svws-ui-td" role="cell">{{ kMan().getSchuelerMap().get(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
+				<div class="svws-ui-td" role="cell">{{ kMan().schuelerGetByIdOrException(kMan().schuelerklausurGetByIdOrException(schuelertermin.idSchuelerklausur).idSchueler)?.vorname }}</div>
 				<div class="svws-ui-td" role="cell">
 					{{ GostHalbjahr.fromIDorException(kMan().vorgabeBySchuelerklausurTermin(schuelertermin).halbjahr).jahrgang }}
 				</div>

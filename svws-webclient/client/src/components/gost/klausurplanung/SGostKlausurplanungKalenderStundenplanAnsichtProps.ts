@@ -10,7 +10,7 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	halbjahr: GostHalbjahr;
 	ignoreEmpty?: boolean;
 	id: number;
-	kalenderwoche: WritableComputedRef<StundenplanKalenderwochenzuordnung>;
+	kalenderwoche: () => StundenplanKalenderwochenzuordnung;
 	manager: () => StundenplanManager;
 	kMan: () => GostKlausurplanManager;
 	wochentyp: () => number;
@@ -24,6 +24,6 @@ export interface SGostKlausurplanungKalenderStundenplanAnsichtProps {
 	checkDropZoneZeitraster: (event: DragEvent, zeitraster: StundenplanZeitraster | undefined) => void;
 	zeigeAlleJahrgaenge: () => boolean;
 	kursklausurMouseOver: () => GostKursklausur | undefined;
-	gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

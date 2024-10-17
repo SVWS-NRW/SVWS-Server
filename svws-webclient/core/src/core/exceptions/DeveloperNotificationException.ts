@@ -203,7 +203,7 @@ export class DeveloperNotificationException extends RuntimeException {
 	 */
 	public static ifMap2DPutOverwrites<K1, K2, V>(map : HashMap2D<K1, K2, V>, key1 : K1, key2 : K2, value : V) : void {
 		if (map.contains(key1, key2))
-			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrException(key1, key2) + " zugeordnet ist!")
+			throw new DeveloperNotificationException("PUT von (" + key1 + ", " + key2 + ") --> " + value + " fehlgeschlagen, da bereits " + map.getOrNull(key1, key2) + " zugeordnet ist!")
 		map.put(key1, key2, value);
 	}
 

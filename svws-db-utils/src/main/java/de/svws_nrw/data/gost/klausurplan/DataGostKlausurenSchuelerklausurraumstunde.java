@@ -289,7 +289,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 
 			// Manager erzeugen
 			final List<GostKlausurvorgabe> listVorgaben = new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKursklausuren);
-			final GostKlausurplanManager manager = new GostKlausurplanManager(schuljahresabschnitt.schuljahr, listVorgaben, listKursklausuren, listTermine,
+			final GostKlausurplanManager manager = new GostKlausurplanManager(listVorgaben, listKursklausuren, listTermine,
 					listSchuelerklausuren, listSchuelerklausurtermine);
 			manager.raumAdd(raum);
 			manager.raumstundeAddAll(listRaumstunden);
@@ -299,7 +299,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					new StundenplanManager(DataStundenplan.getStundenplan(conn, sle.id), DataStundenplanUnterricht.getUnterrichte(conn, sle.id),
 							DataStundenplanPausenaufsichten.getAufsichten(conn, sle.id),
 							DataStundenplanUnterrichtsverteilung.getUnterrichtsverteilung(conn, sle.id));
-			manager.setStundenplanManager(stundenplanManager);
+			manager.stundenplanManagerAdd(stundenplanManager);
 
 			// Zeitraster_min und _max ermitteln
 			// TODO: durch Manager ersetzen
@@ -393,7 +393,7 @@ public final class DataGostKlausurenSchuelerklausurraumstunde extends DataManage
 					: (((sk.folgeNr == 0) && (kk.startzeit != null)) ? kk.startzeit
 							: manager.terminOrExceptionBySchuelerklausurTermin(sk).startzeit);
 			final List<StundenplanZeitraster> zeitrasterSk =
-					manager.getStundenplanManager().getZeitrasterByWochentagStartVerstrichen(
+					manager.stundenplanManagerGetByTerminOrException(termin).getZeitrasterByWochentagStartVerstrichen(
 							Wochentag.fromIDorException(klausurdatum.getDayOfWeek().getValue()),
 							startzeit, v.dauer);
 			if (zeitrasterSk.isEmpty())

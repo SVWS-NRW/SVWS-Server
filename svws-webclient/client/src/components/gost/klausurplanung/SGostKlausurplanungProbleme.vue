@@ -17,7 +17,7 @@
 			icon="i-ri-draft-line">
 			<svws-ui-table :items="vorgaben()" :columns="colsVorgaben">
 				<template #cell(idFach)="{ value }">
-					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager().get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager().get(value)?.bezeichnung }}</span>
+					<span class="svws-ui-badge" :style="{ '--background-color': getBgColor(kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.kuerzel || null) }">{{ kMan().getFaecherManager(jahrgangsdaten!.abiturjahr-1).get(value)?.bezeichnung }}</span>
 				</template>
 				<template #cell(quartal)="{value}">
 					{{ value }}
@@ -63,7 +63,7 @@
 					<svws-ui-button v-else type="transparent" @click="loescheSchuelerklausuren(ListUtils.create1(rowData))" title="löschen"><span class="icon i-ri-delete-bin-line" /> löschen</svws-ui-button>
 				</template>
 				<template #cell(name)="{rowData}">
-					{{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausur(rowData).vorname }}
+					{{ kMan().schuelerGetBySchuelerklausur(rowData).nachname }}, {{ kMan().schuelerGetBySchuelerklausur(rowData).vorname }}
 				</template>
 				<template #cell(kurs)="{rowData}">
 					{{ kMan().kursdatenBySchuelerklausur(rowData).kuerzel }}
@@ -108,7 +108,7 @@
 			<svws-ui-table :items="termineOhneDatum()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="gotoKalenderwoche(rowData)" title="Datum setzen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> datieren</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(rowData)" title="Datum setzen" size="small" :disabled="!kMan().stundenplanManagerExistsByAbschnitt(props.abschnitt!.id)"><span class="icon i-ri-link" /> datieren</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -130,7 +130,7 @@
 			<svws-ui-table :items="termineMitKonflikten()"
 				:columns="addStatusColumn(colsTermine)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button type="transparent" @click="gotoSchienen(rowData)" title="Schiene anzeigen" size="small" :disabled="kMan().getStundenplanManagerOrNull() === null"><span class="icon i-ri-link" /> anzeigen</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoSchienen(rowData)" title="Schiene anzeigen" size="small"><span class="icon i-ri-link" /> anzeigen</svws-ui-button>
 				</template>
 				<template #cell(kurse)="{rowData}">
 					{{ terminBezeichnung(rowData) }}
@@ -197,7 +197,7 @@
 			<svws-ui-table :items="nachschreibklausurenNichtZugewiesen()"
 				:columns="colsSchuelerklausuren">
 				<template #cell(name)="{rowData}">
-					<span>{{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).nachname }}, {{ kMan().schuelerlisteeintragGetBySchuelerklausurtermin(rowData).vorname }}</span>
+					<span>{{ kMan().schuelerGetBySchuelerklausurtermin(rowData).nachname }}, {{ kMan().schuelerGetBySchuelerklausurtermin(rowData).vorname }}</span>
 				</template>
 				<template #cell(kurs)="{rowData}">
 					{{ kMan().kursdatenBySchuelerklausurTermin(rowData).kuerzel }}
@@ -220,10 +220,10 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="gotoKalenderwoche(parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
-					{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}
+					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}
 				</template>
 				<template #cell(klausuren)="{rowData}">
 					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
@@ -246,10 +246,10 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="gotoKalenderwoche(parseInt(kMan().getStundenplanManager().kalenderwochenzuordnungGetByDatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!).jahr.toString() + rowData.a.a.toString()))" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
-					<span>{{ kMan().getSchuelerMap().get(rowData.a.b)?.nachname }}, {{ kMan().getSchuelerMap().get(rowData.a.b)?.vorname }}</span>
+					<span>{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}</span>
 				</template>
 				<template #cell(klausuren)="{rowData}">
 					<span v-for="klausur in rowData.b" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
@@ -276,7 +276,6 @@
 
 	const props = defineProps<GostKlausurplanungProblemeProps>();
 
-	const schuljahr = computed<number>(() => props.kMan().getSchuljahr());
 	const vorgaben = () => props.kMan().vorgabefehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const kursklausuren = () => props.kMan().kursklausurfehlendGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
 	const kursklausurenNichtVerteilt = () => props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten === undefined ? -1 : props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -338,7 +337,7 @@
 	function getBgColor(kuerzel: string | null) {
 		if (kuerzel === null)
 			return 'rgb(220,220,220)';
-		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+		return Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten!.abiturjahr - 1, 1.0);
 	}
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {

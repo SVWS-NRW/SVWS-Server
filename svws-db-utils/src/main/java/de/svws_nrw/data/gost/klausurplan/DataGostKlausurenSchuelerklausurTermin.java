@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.asd.adt.Pair;
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumstunde;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
@@ -25,8 +25,6 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermine;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenSchuelerklausurenTermineRaumstunden;
 import de.svws_nrw.db.dto.current.gost.klausurplanung.DTOGostKlausurenTermine;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
@@ -307,14 +305,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionAllData blocken(final GostNachschreibterminblockungKonfiguration config) throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
-		if (schuljahresabschnitt == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
-
+	public GostKlausurenCollectionData blocken(final GostNachschreibterminblockungKonfiguration config) throws ApiOperationException {
 		final List<GostSchuelerklausurTermin> listSktsManager = new ArrayList<>();
 		listSktsManager.addAll(config.schuelerklausurtermine);
 		listSktsManager
@@ -323,8 +314,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 		final List<GostSchuelerklausur> listSks = new DataGostKlausurenSchuelerklausur(conn).getSchuelerklausurenZuSchuelerklausurterminen(listSktsManager);
 		final List<GostKursklausur> listKks = new DataGostKlausurenKursklausur(conn).getKursklausurenZuSchuelerklausuren(listSks);
 
-		final GostKlausurplanManager kMan = new GostKlausurplanManager(schuljahresabschnitt.Jahr,
-				new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKks), listKks, config.termine, listSks, listSktsManager);
+		final GostKlausurplanManager kMan = new GostKlausurplanManager(new DataGostKlausurenVorgabe(conn).getKlausurvorgabenZuKursklausuren(listKks), listKks, config.termine, listSks, listSktsManager);
 
 		final KlausurblockungNachschreiberAlgorithmus blockAlgo = new KlausurblockungNachschreiberAlgorithmus();
 
@@ -358,7 +348,7 @@ public final class DataGostKlausurenSchuelerklausurTermin
 		}
 		conn.transactionPersistAll(mapNachschreiber.values());
 
-		final GostKlausurenCollectionAllData blockungsDaten = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionData blockungsDaten = new GostKlausurenCollectionData();
 		blockungsDaten.schuelerklausurtermine = mapList(mapNachschreiber.values());
 		blockungsDaten.termine = new DataGostKlausurenTermin(conn).mapList(mapNeueTermine.values());
 		return blockungsDaten;

@@ -104,7 +104,7 @@
 						:klausur-css-classes
 						:create-schuelerklausur-termin
 						:patch-klausur
-						:goto-kalenderwoche
+						:goto-kalenderdatum
 						:goto-raumzeit-termin />
 				</template>
 				<template v-else>
@@ -139,7 +139,7 @@
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
 						<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
 						<div class="leading-tight">
-							{{ [...klausur.getValue()].map(sid => kMan().getSchuelerMap().get(sid)?.vorname + ' ' + kMan().getSchuelerMap().get(sid)?.nachname).join(", ") }}
+							{{ [...klausur.getValue()].map(sid => kMan().schuelerGetByIdOrException(sid)?.vorname + ' ' + kMan().schuelerGetByIdOrException(sid)?.nachname).join(", ") }}
 						</div>
 					</li>
 				</ul>
@@ -151,7 +151,7 @@
 				</div>
 				<ul class="flex flex-col gap-4">
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
-						<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
+						<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 								<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>

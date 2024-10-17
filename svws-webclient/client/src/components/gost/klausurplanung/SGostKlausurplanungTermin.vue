@@ -34,7 +34,7 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderwoche( termin )" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
+									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderdatum( termin )" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<template v-else>
@@ -171,7 +171,7 @@
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		inTooltip?: boolean;
-		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		klausurCssClasses: undefined,

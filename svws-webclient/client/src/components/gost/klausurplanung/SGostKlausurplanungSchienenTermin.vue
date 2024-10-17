@@ -16,7 +16,7 @@
 			:klausur-css-classes
 			:show-schuelerklausuren
 			:patch-klausur
-			:goto-kalenderwoche
+			:goto-kalenderdatum
 			:goto-raumzeit-termin
 			:create-schuelerklausur-termin>
 			<template #title>
@@ -67,7 +67,7 @@
 		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
-		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,

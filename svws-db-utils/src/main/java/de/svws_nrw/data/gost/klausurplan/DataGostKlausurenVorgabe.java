@@ -211,7 +211,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 	 */
 	public List<GostKlausurvorgabe> getKlausurvorgaben(final int abiturjahr, final int halbjahr,
 			final boolean ganzesSchuljahr) throws ApiOperationException {
-		final List<DTOGostKlausurenVorgaben> vorgaben = (halbjahr <= 0)
+		final List<DTOGostKlausurenVorgaben> vorgaben = (halbjahr < 0)
 				? conn.query("SELECT v FROM DTOGostKlausurenVorgaben v WHERE v.Abi_Jahrgang = :jgid", DTOGostKlausurenVorgaben.class)
 						.setParameter("jgid", abiturjahr)
 						.getResultList()
@@ -388,8 +388,7 @@ public final class DataGostKlausurenVorgabe extends DataManagerRevised<Long, DTO
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR);
 		final EnumMap<GostHalbjahr, GostKlausurplanManager> manager = new EnumMap<>(GostHalbjahr.class);
 		for (final GostHalbjahr hj : GostHalbjahr.values())
-			manager.put(hj, new GostKlausurplanManager(schuljahresabschnitt.Jahr,
-					mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList())));
+			manager.put(hj, new GostKlausurplanManager(mapList(vorgabenVorlage.stream().filter(v -> v.Halbjahr == hj).toList())));
 		final List<GostFach> faecher = DBUtilsFaecherGost.getFaecherManager(schuljahresabschnitt.Jahr, conn, null).getFaecherSchriftlichMoeglich();
 		final List<DTOGostKlausurenVorgaben> neueVorgaben = new ArrayList<>();
 		// Bestimme die ID, für welche der Datensatz eingefügt wird

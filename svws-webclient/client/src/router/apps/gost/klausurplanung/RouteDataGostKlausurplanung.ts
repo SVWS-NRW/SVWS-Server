@@ -1,6 +1,6 @@
 
 import type { GostJahrgangsdaten, GostKlausurvorgabe, GostKlausurraum, Schuljahresabschnitt, GostKlausurterminblockungDaten, GostNachschreibterminblockungKonfiguration, GostKlausurenUpdate, List, GostKlausurraumRich, ApiFile, GostSchuelerklausur} from "@core";
-import { GostKlausurenCollectionAllData, ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
+import { GostKlausurenCollectionAllData, GostKlausurenCollectionHjData, ReportingParameter, ReportingReportvorlage, StundenplanKalenderwochenzuordnung} from "@core";
 import { GostSchuelerklausurTermin } from "@core";
 import { GostKlausurenCollectionSkrsKrsData, GostKursklausur } from "@core";
 import type { RouteNode } from "~/router/RouteNode";
@@ -28,7 +28,7 @@ interface RouteStateGostKlausurplanung extends RouteStateInterface {
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	halbjahr: GostHalbjahr;
 	manager: GostKlausurplanManager;
-	kalenderwoche: StundenplanKalenderwochenzuordnung;
+	kalenderdatum: string | undefined;
 	termin: GostKlausurtermin | undefined;
 }
 
@@ -37,9 +37,9 @@ const defaultState = <RouteStateGostKlausurplanung> {
 	abschnitt: undefined,
 	jahrgangsdaten: undefined,
 	halbjahr: GostHalbjahr.EF1,
-	manager: new GostKlausurplanManager(-1),
+	manager: new GostKlausurplanManager(),
 	view: routeGostKlausurplanungVorgaben,
-	kalenderwoche: new StundenplanKalenderwochenzuordnung(),
+	kalenderdatum: undefined,
 	termin: undefined,
 };
 
@@ -75,6 +75,10 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return (this._state.value.abiturjahr !== undefined) && (this._state.value.abiturjahr === -1);
 	}
 
+	public get abschnitt() : Schuljahresabschnitt | undefined {
+		return this._state.value.abschnitt;
+	}
+
 	public get abiturjahr() : number {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es wurde noch kein Abiturjahrgang geladen.");
@@ -104,8 +108,9 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				jahrgangsdaten: jahrgangsdaten,
 				halbjahr: this._state.value.halbjahr,
 				view: view,
+				abschnitt: this._state.value.abschnitt
 			}
-			Object.assign(result, {manager: this._state.value.manager, kalenderwoche: this._state.value.kalenderwoche});
+			Object.assign(result, {manager: this._state.value.manager, kalenderdatum: this._state.value.kalenderdatum});
 			// Setze den State neu
 			this.setPatchedDefaultState(result);
 		} finally {
@@ -144,7 +149,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 					this.manager.vorgabeAddAll(listKlausurvorgaben);
 					const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, -1);
 					const faecherManager = new GostFaecherManager(api.abschnitt.schuljahr, listFaecher);
-					this.manager.setFaecherManager(faecherManager);
+					this.manager.setFaecherManager(-1, faecherManager);
 				}
 				this.setPatchedState(result);
 				return true;
@@ -156,29 +161,27 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 				return true;
 			}
 			Object.assign(result, {abschnitt});
-			if (!this.manager.isKlausurenInitialized()) {
-				const klausurdatenGzip = await api.server.getGostKlausurenCollectionAlldataGZip(api.schema, this.abiturjahr, halbjahr.id);
+			this.setPatchedState(result);
+			const missingKlausurData = this.manager.getMissingHjKlausurdata(this.abiturjahr, halbjahr.id);
+			if (!missingKlausurData.isEmpty()) {
+				const klausurdatenGzip = await api.server.getGostKlausurenCollectionAlldataGZip(missingKlausurData, api.schema);
 				const klausurdatenBlob = await new Response(klausurdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 				const klausurdaten = GostKlausurenCollectionAllData.transpilerFromJSON(await klausurdatenBlob.text());
-				const manager = new GostKlausurplanManager(this._state.value.abiturjahr - 1, klausurdaten);
-				Object.assign(result, {	manager });
+				this.manager.addAllData(klausurdaten);
 				this.setPatchedState(result);
 			}
-			if (!this.manager.getStundenplanManagerOrNull()) {
+			if (!this.manager.stundenplanManagerGeladenByAbschnitt(abschnitt.id)) {
 				const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, abschnitt.id);
-				if (!listStundenplaene.isEmpty()) {
-					const stundenplan = StundenplanListUtils.get(listStundenplaene, new Date().toISOString().substring(0, 10));
-					if (stundenplan === null)
-						throw new DeveloperNotificationException("Es konnte kein aktiver Stundenplan gefunden werden.");
+				const listStundenplanManager = new ArrayList<StundenplanManager>();
+				for (const stundenplan of listStundenplaene) {
 					const stundenplandaten = await api.server.getStundenplan(api.schema, stundenplan.id);
 					const unterrichte = await api.server.getStundenplanUnterrichte(api.schema, stundenplan.id);
 					const pausenaufsichten = await api.server.getStundenplanPausenaufsichten(api.schema, stundenplan.id);
 					const unterrichtsverteilung = await api.server.getStundenplanUnterrichtsverteilung(api.schema, stundenplan.id);
 					const stundenplanmanager = new StundenplanManager(stundenplandaten, unterrichte, pausenaufsichten, unterrichtsverteilung);
-					this.manager.setStundenplanManager(stundenplanmanager);
-					if (this.kalenderwoche.value.jahr === -1)
-						this.kalenderwoche.value = stundenplanmanager.kalenderwochenzuordnungGetByDatum(new Date().toISOString());
+					listStundenplanManager.add(stundenplanmanager);
 				}
+				this.manager.stundenplanManagerAddAllBySchuljahresabschnittsid(abschnitt.id, listStundenplanManager);
 			}
 			this.setPatchedState(result);
 			if (!this.manager.hasFehlenddatenZuAbijahrUndHalbjahr(this.abiturjahr, this._state.value.halbjahr)) {
@@ -200,7 +203,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await api.config.setValue('gost.klausurplan.' + key, value);
 	}
 
-	setRaumTermin = async (termin: GostKlausurtermin | null) => {
+	setRaumTermin = (termin: GostKlausurtermin | null) => {
 		if (termin !== null && (this.terminSelected.value === undefined || !this.terminSelected.value.equals(termin))) {
 			this.terminSelected.value = termin;
 		}
@@ -223,16 +226,16 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	reloadFehlendData = async () => {
 		const fehlendDataGzip = await api.server.getGostKlausurenCollectionAllIssuesGZip(api.schema, this.abiturjahr, this._state.value.halbjahr.id);
 		const fehlendDataBlob = await new Response(fehlendDataGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
-		const fehlendData = GostKlausurenCollectionAllData.transpilerFromJSON(await fehlendDataBlob.text());
-		this.manager.setKlausurDataFehlend(this.abiturjahr, this._state.value.halbjahr, fehlendData);
+		const fehlendData = GostKlausurenCollectionHjData.transpilerFromJSON(await fehlendDataBlob.text());
+		this.manager.setKlausurDataFehlend(fehlendData);
 		this.commit();
 	}
 
-	kalenderwoche = computed<StundenplanKalenderwochenzuordnung>({
-		get: () => this._state.value.kalenderwoche,
+	kalenderdatum = computed<string | undefined>({
+		get: () => this._state.value.kalenderdatum,
 		set: (value) => {
-			if (this._state.value.kalenderwoche !== value) {
-				this._state.value.kalenderwoche = value;
+			if (this._state.value.kalenderdatum !== value) {
+				this._state.value.kalenderdatum = value;
 				this.commit();
 			}
 		}
@@ -256,13 +259,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined } });
 	}
 
-	gotoKalenderwoche = async (kw: StundenplanKalenderwochenzuordnung | number | GostKlausurtermin) => {
-		if (kw instanceof GostKlausurtermin)
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(kw.abijahr, kw.halbjahr, undefined, kw.id ))
-		else if (kw instanceof StundenplanKalenderwochenzuordnung)
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+	gotoKalenderdatum = async (goto: string | GostKlausurtermin) => {
+		if (goto instanceof GostKlausurtermin)
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(goto.abijahr, goto.halbjahr, undefined, goto.id ))
+		// else if (goto instanceof StundenplanKalenderwochenzuordnung)
+		// 	await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 		else
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, kw, undefined ));
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, goto, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {

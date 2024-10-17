@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionData;
 import de.svws_nrw.core.data.gost.klausurplanung.GostKursklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur;
 import de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin;
@@ -116,7 +116,7 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 */
 	@Override
 	public Response addMultipleAsResponse(final InputStream is) throws ApiOperationException {
-		final GostKlausurenCollectionAllData ergebnis = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionData ergebnis = new GostKlausurenCollectionData();
 		ergebnis.schuelerklausuren.addAll(addMultiple(is));
 		final Map<String, Object> initAttributes = new HashMap<>();
 		initAttributes.put("folgeNr", 0);
@@ -125,54 +125,6 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 			ergebnis.schuelerklausurtermine.add(new DataGostKlausurenSchuelerklausurTermin(conn).add(initAttributes));
 		}
 		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(ergebnis).build();
-	}
-
-	/**
-	 * Gibt die Liste der Schülerklausuren einer Jahrgangsstufe im übergebenen
-	 * Gost-Halbjahr zurück, die eine Nachschreibklausur beinhalten.
-	 *
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr   das Gost-Halbjahr
-	 *
-	 * @return die Liste der Schülerklausuren
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public GostKlausurenCollectionAllData getCollectionSkSktNachschreiber(final int abiturjahr, final GostHalbjahr halbjahr)
-			throws ApiOperationException {
-		final GostKlausurenCollectionAllData ergebnis = new GostKlausurenCollectionAllData();
-		final List<GostKursklausur> kursKlausuren = new DataGostKlausurenKursklausur(conn).getKursKlausuren(abiturjahr, halbjahr.id, false);
-		if (!kursKlausuren.isEmpty()) {
-			final List<DTOGostKlausurenSchuelerklausuren> schuelerKlausurDTOs = conn.query(
-					"SELECT DISTINCT sk FROM DTOGostKlausurenSchuelerklausuren sk JOIN DTOGostKlausurenSchuelerklausurenTermine skt ON sk.ID = skt.Schuelerklausur_ID AND sk.Kursklausur_ID IN :kkids WHERE skt.Folge_Nr > 0",
-					DTOGostKlausurenSchuelerklausuren.class).setParameter("kkids", kursKlausuren.stream().map(kk -> kk.id).toList()).getResultList();
-			ergebnis.schuelerklausuren = mapList(schuelerKlausurDTOs);
-			ergebnis.schuelerklausurtermine =
-					new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(ergebnis.schuelerklausuren);
-		}
-		return ergebnis;
-	}
-
-
-	/**
-	 * Gibt die Liste der Schülerklausuren einer Jahrgangsstufe im übergebenen
-	 * Gost-Halbjahr zurück, die eine Nachschreibklausur beinhalten.
-	 *
-	 * @param abiturjahr das Jahr, in welchem der Jahrgang Abitur machen wird
-	 * @param halbjahr   das Gost-Halbjahr
-	 * @param ganzesSchuljahr true, um Klausuren für das gesamte Schuljahr zu erhalten, false nur für das übergeben Halbjahr
-	 *
-	 * @return die Liste der Schülerklausuren
-	 *
-	 * @throws ApiOperationException   im Fehlerfall
-	 */
-	public GostKlausurenCollectionAllData getCollectionSkSkt(final int abiturjahr, final GostHalbjahr halbjahr,
-			final boolean ganzesSchuljahr) throws ApiOperationException {
-		final GostKlausurenCollectionAllData ergebnis = new GostKlausurenCollectionAllData();
-		final List<GostKursklausur> kursKlausuren = new DataGostKlausurenKursklausur(conn).getKursKlausuren(abiturjahr, halbjahr.id, ganzesSchuljahr);
-		ergebnis.schuelerklausuren = getSchuelerKlausurenZuKursklausuren(kursKlausuren);
-		ergebnis.schuelerklausurtermine = new DataGostKlausurenSchuelerklausurTermin(conn).getSchuelerklausurtermineZuSchuelerklausuren(ergebnis.schuelerklausuren);
-		return ergebnis;
 	}
 
 	/**
@@ -225,9 +177,9 @@ public final class DataGostKlausurenSchuelerklausur extends DataManagerRevised<L
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public GostKlausurenCollectionAllData getGostKlausurenCollectionBySchuelerid(final long idSchueler, final int abiturjahr,
+	public GostKlausurenCollectionData getGostKlausurenCollectionBySchuelerid(final long idSchueler, final int abiturjahr,
 			final int halbjahr) throws ApiOperationException {
-		final GostKlausurenCollectionAllData result = new GostKlausurenCollectionAllData();
+		final GostKlausurenCollectionData result = new GostKlausurenCollectionData();
 
 		result.schuelerklausuren = mapList(
 				conn.query(

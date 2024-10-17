@@ -58,7 +58,7 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
 			terminSelected: routeGostKlausurplanung.data.terminSelected,
 			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
-			gotoKalenderwoche: routeGostKlausurplanung.data.gotoKalenderwoche,
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 			gotoSchienen: routeGostKlausurplanung.data.gotoSchienen,
 		}

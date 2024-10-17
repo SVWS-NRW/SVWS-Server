@@ -4,19 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
-import jakarta.ws.rs.core.Response;
 import org.thymeleaf.context.Context;
 
-import de.svws_nrw.asd.adt.Pair;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionAllData;
+import de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionHjData;
 import de.svws_nrw.core.utils.gost.klausurplanung.GostKlausurplanManager;
 import de.svws_nrw.data.gost.klausurplan.DataGostKlausuren;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.proxytypes.gost.klausurplanung.ProxyReportingGostKlausurplanungKlausurplan;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungKlausurplan;
+import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import jakarta.ws.rs.core.Response;
 
 
 /**
@@ -67,30 +68,30 @@ public final class HtmlContextGostKlausurplanungKlausurplan extends HtmlContext 
 		// In den idsHauptdaten der Reporting-Parameter werden im Wechsel das Abiturjahr und des GostHalbjahr (0 = EF.1 bis 5 = Q2.2) übergeben.
 		// Hier werden die Daten NICHT validiert. Die Daten aus den Parametern müssen vorab validiert worden sein (ReportingValidierung).
 		final List<Long> parameterDaten = reportingRepository.reportingParameter().idsHauptdaten.stream().filter(Objects::nonNull).toList();
-		final List<Pair<Integer, Integer>> selection = new ArrayList<>();
+		final List<GostKlausurenCollectionHjData> selection = new ArrayList<>();
 
 		if (!parameterDaten.isEmpty()) {
 			// Stelle die übergebenen Stufen und Halbjahre zusammen.
 			for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-				selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
+				selection.add(new GostKlausurenCollectionHjData(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 			}
 		} else {
 			// Es wurden keine Stufen übergeben. Erzeuge die Ausgabe für alle Stufen gemäß Schuljahresabschnitt im Client.
 			// EF:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 3,
+			selection.add(new GostKlausurenCollectionHjData(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 3,
 					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() - 1));
 			// Q1:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 2,
+			selection.add(new GostKlausurenCollectionHjData(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 2,
 					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() + 1));
 			// Q2:
-			selection.add(new Pair<>(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 1,
+			selection.add(new GostKlausurenCollectionHjData(reportingRepository.auswahlSchuljahresabschnitt().schuljahr() + 1,
 					reportingRepository.auswahlSchuljahresabschnitt().abschnitt() + 3));
 		}
 
 		try {
 			final GostKlausurenCollectionAllData allData = DataGostKlausuren.getAllData(reportingRepository.conn(), selection);
 			final GostKlausurplanManager gostKlausurManager =
-					new GostKlausurplanManager(reportingRepository.auswahlSchuljahresabschnitt().schuljahr(), allData);
+					new GostKlausurplanManager(allData);
 
 			this.gostKlausurplan = new ProxyReportingGostKlausurplanungKlausurplan(reportingRepository, gostKlausurManager, idsFilterSchueler);
 

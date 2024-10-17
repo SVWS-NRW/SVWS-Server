@@ -10,7 +10,7 @@
 			:klausur-css-classes
 			:patch-klausur
 			:show-schuelerklausuren
-			:goto-kalenderwoche
+			:goto-kalenderdatum
 			:goto-raumzeit-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
@@ -61,7 +61,7 @@
 		showSchuelerklausuren?: boolean;
 		patchKlausur: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
-		gotoKalenderwoche: (kw: number | GostKlausurtermin) => Promise<void>;
+		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 
 	}>(), {
