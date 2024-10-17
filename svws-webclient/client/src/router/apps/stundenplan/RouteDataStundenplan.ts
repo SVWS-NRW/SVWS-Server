@@ -632,16 +632,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	}
 
 	setEintrag = async (auswahl?: StundenplanListeEintrag) => {
-		if (auswahl?.id === -1) {
-			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
-			return;
-		}
 		api.status.start();
-		if (auswahl === undefined && this.mapKatalogeintraege.size > 0)
-			auswahl = this.mapKatalogeintraege.values().next().value;
-		if (auswahl === undefined)
+		if ((auswahl === undefined) || (auswahl.id === -1)) {
+			[auswahl] = this.mapKatalogeintraege.values();
 			this.setPatchedState({ auswahl, daten: undefined, stundenplanManager: undefined });
-		else {
+		} else {
 			const { daten, stundenplanManager, stundenplanUnterrichtListeManager } = await this.ladeEintrag(auswahl);
 			this.setPatchedState({ auswahl, daten, stundenplanManager, stundenplanUnterrichtListeManager });
 		}

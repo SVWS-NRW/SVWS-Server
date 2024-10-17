@@ -33,6 +33,7 @@ export class RouteError extends RouteNode<any, any> {
 	}
 
 	public getProps(): ErrorProps {
+		console.error(routerManager.error);
 		return {
 			code: routerManager.errorcode,
 			error: routerManager.error

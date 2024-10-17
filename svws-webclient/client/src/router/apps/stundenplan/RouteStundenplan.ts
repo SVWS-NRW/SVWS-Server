@@ -67,6 +67,8 @@ export class RouteStundenplan extends RouteNode<RouteDataStundenplan, RouteApp> 
 				if ((eintrag === undefined) && (this.data.auswahl !== undefined))
 					return this.getRoute(undefined);
 				await this.data.setEintrag(eintrag);
+				if ((this.data.auswahl !== undefined) && (this.data.auswahl.id === -1))
+					return routeStundenplanKataloge.getRoute();
 			}
 			if (to.name === this.name) {
 				if (this.data.auswahl === undefined)
