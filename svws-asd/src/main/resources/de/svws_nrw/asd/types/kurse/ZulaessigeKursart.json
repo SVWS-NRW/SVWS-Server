@@ -1,5 +1,5 @@
 {
-	"version": 2,
+	"version": 3,
 	"daten": [ {
 		"bezeichner": "AB3",
 		"idHistorie": 1,
@@ -39,6 +39,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 1,
+			"kuerzel": "AB3",
+			"nummer": "71",
+			"text": "3. Abiturfach",
+			"schluessel": "AB3",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -80,6 +111,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 1001,
+			"kuerzel": "AB4",
+			"nummer": "71",
+			"text": "4. Abiturfach",
+			"schluessel": "AB4",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -530,6 +592,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 13001,
+			"kuerzel": "EFSP",
+			"nummer": "71",
+			"text": "Ersatzfach für Sport als 4. Abiturfach",
+			"schluessel": "EFSP",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1225,6 +1318,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 35001,
+			"kuerzel": "GKM",
+			"nummer": "71",
+			"text": "Grundkurs mündlich",
+			"schluessel": "GKM",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1266,6 +1390,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 36001,
+			"kuerzel": "GKS",
+			"nummer": "71",
+			"text": "Grundkurs schriftlich",
+			"schluessel": "GKS",
+			"bemerkungen": null,
+			"kuerzelAllg": "GK",
+			"bezeichnungAllg": "Grundkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1410,6 +1565,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 39001,
+			"kuerzel": "LK1",
+			"nummer": "72",
+			"text": "Leistungskurs I",
+			"schluessel": "LK1",
+			"bemerkungen": null,
+			"kuerzelAllg": "LK",
+			"bezeichnungAllg": "Leistungskurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1451,6 +1637,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 40001,
+			"kuerzel": "LK2",
+			"nummer": "72",
+			"text": "Leistungskurs II",
+			"schluessel": "LK2",
+			"bemerkungen": null,
+			"kuerzelAllg": "LK",
+			"bezeichnungAllg": "Leistungskurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1680,6 +1897,34 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 45001,
+			"kuerzel": "PJK",
+			"nummer": "78",
+			"text": "Projektkurs",
+			"schluessel": "PJK",
+			"bemerkungen": "gemäß § 11 Abs. 8  APO - GOSt",
+			"kuerzelAllg": "PJK",
+			"bezeichnungAllg": "Projektkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2194,6 +2439,37 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 59001,
+			"kuerzel": "VTF",
+			"nummer": "77",
+			"text": "Vertiefungsfach",
+			"schluessel": "VTF",
+			"bemerkungen": "gemäß § 8, 11  APO - GOSt",
+			"kuerzelAllg": "VTF",
+			"bezeichnungAllg": "Vertiefungskurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				}, {
+					"schulform": "WB",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2637,6 +2913,34 @@
 					"gliederung": null
 				} ],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 72001,
+			"kuerzel": "ZK",
+			"nummer": "76",
+			"text": "Zusatzkurs",
+			"schluessel": "ZK",
+			"bemerkungen": "gemäß § 12 APO-GOSt",
+			"kuerzelAllg": "ZK",
+			"bezeichnungAllg": "Zusatzkurs",
+			"erlaubtGOSt": true,
+			"zulaessig": [ {
+					"schulform": "BK",
+					"gliederung": null
+				}, {
+					"schulform": "GE",
+					"gliederung": null
+				}, {
+					"schulform": "GY",
+					"gliederung": null
+				}, {
+					"schulform": "SB",
+					"gliederung": null
+				}, {
+					"schulform": "SG",
+					"gliederung": null
+				} ],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {

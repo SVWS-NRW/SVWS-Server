@@ -1,5 +1,5 @@
 {
-	"version": 4,
+	"version": 5,
 	"daten": [ {
 		"bezeichner": "AB",
 		"idHistorie": 1,
@@ -701,6 +701,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 27000001,
+			"schluessel": "C0",
+			"text": "Chinesisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "C",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1291,6 +1311,29 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "SK", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 47000001,
+			"schluessel": "EL",
+			"text": "Ernährungslehre",
+			"kuerzel": "EL",
+			"aufgabenfeld": null,
+			"fachgruppe": "FG_WN",
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "BK", "gliederung": null},
+							{"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SB", "gliederung": null},
+							{"schulform": "SG", "gliederung": null},
+							{"schulform": "SK", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1456,6 +1499,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 52000001,
+			"schluessel": "F0",
+			"text": "Französisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "F",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -1802,6 +1865,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 65000001,
+			"schluessel": "G0",
+			"text": "Griechisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "G",
+			"aufgabenfeld": null,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2327,6 +2410,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 85000001,
+			"schluessel": "H0",
+			"text": "Hebräisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "H",
+			"aufgabenfeld": null,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -2730,6 +2833,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 99000001,
+			"schluessel": "I0",
+			"text": "Italienisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "I",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3237,6 +3360,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 116000001,
+			"schluessel": "K0",
+			"text": "Japanisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "K",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3644,6 +3787,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 130000001,
+			"schluessel": "L0",
+			"text": "Lateinisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "L",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -3875,6 +4038,29 @@
 							{"schulform": "SG", "gliederung": null},
 							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 138000001,
+			"schluessel": "LI",
+			"text": "Literatur",
+			"kuerzel": "LI",
+			"aufgabenfeld": null,
+			"fachgruppe": "FG_ME",
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "BK", "gliederung": null},
+							{"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SB", "gliederung": null},
+							{"schulform": "SG", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -4306,6 +4492,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 153000001,
+			"schluessel": "N0",
+			"text": "Niederländisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "N",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -4652,6 +4858,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 165000001,
+			"schluessel": "O0",
+			"text": "Portugiesisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "O",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -5030,9 +5256,7 @@
 			"exportASD": true,
 			"zulaessig": [  {"schulform": "BK", "gliederung": null},
 							{"schulform": "GE", "gliederung": null},
-							{"schulform": "GM", "gliederung": null},
 							{"schulform": "GY", "gliederung": null},
-							{"schulform": "PS", "gliederung": null},
 							{"schulform": "KS", "gliederung": null},
 							{"schulform": "S", "gliederung": null},
 							{"schulform": "SB", "gliederung": null},
@@ -5145,6 +5369,32 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 180000001,
+			"schluessel": "PL",
+			"text": "Philosophie",
+			"kuerzel": "PL",
+			"aufgabenfeld": 2,
+			"fachgruppe": "FG_PL",
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "BK", "gliederung": null},
+							{"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "KS", "gliederung": null},
+							{"schulform": "S", "gliederung": null},
+							{"schulform": "SB", "gliederung": null},
+							{"schulform": "SG", "gliederung": null},
+							{"schulform": "SK", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -5501,6 +5751,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 191000001,
+			"schluessel": "R0",
+			"text": "Russisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "R",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -5891,6 +6161,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 205000001,
+			"schluessel": "S0",
+			"text": "Spanisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "S",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -6467,6 +6757,36 @@
 							{"schulform": "V", "gliederung": null},
 							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 224000001,
+			"schluessel": "SW",
+			"text": "Sozialwissenschaften",
+			"kuerzel": "SW",
+			"aufgabenfeld": 2,
+			"fachgruppe": "FG_GS",
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "BK", "gliederung": null},
+							{"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "H", "gliederung": null},
+							{"schulform": "R", "gliederung": null},
+							{"schulform": "KS", "gliederung": null},
+							{"schulform": "S", "gliederung": null},
+							{"schulform": "SB", "gliederung": null},
+							{"schulform": "SG", "gliederung": null},
+							{"schulform": "SK", "gliederung": null},
+							{"schulform": "SR", "gliederung": null},
+							{"schulform": "V", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -6495,6 +6815,28 @@
 							{"schulform": "SK", "gliederung": null},
 							{"schulform": "WB", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 225000001,
+			"schluessel": "SZ",
+			"text": "Sozialwissenschaften/Wirtschaft",
+			"kuerzel": "SZ",
+			"aufgabenfeld": null,
+			"fachgruppe": null,
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null},
+							{"schulform": "SK", "gliederung": null},
+							{"schulform": "WB", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -6542,11 +6884,29 @@
 			"nurSII": true,
 			"exportASD": true,
 			"zulaessig": [  {"schulform": "GE", "gliederung": null},
-							{"schulform": "GM", "gliederung": null},
 							{"schulform": "GY", "gliederung": null},
-							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 227000001,
+			"schluessel": "T0",
+			"text": "Türkisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "T",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -7263,6 +7623,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 252000001,
+			"schluessel": "VO",
+			"text": "vokalpraktischer Grundkurs",
+			"kuerzel": "VO",
+			"aufgabenfeld": null,
+			"fachgruppe": "FG_ME",
+			"abJahrgang": null,
+			"istFremdsprache": false,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": false,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
@@ -7814,6 +8194,26 @@
 							{"schulform": "PS", "gliederung": null},
 							{"schulform": "SG", "gliederung": null}],
 			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 272000001,
+			"schluessel": "Z0",
+			"text": "Neugriechisch, regulärer Beginn in der Einführungsphase",
+			"kuerzel": "Z",
+			"aufgabenfeld": 1,
+			"fachgruppe": "FG_FS",
+			"abJahrgang": "EF",
+			"istFremdsprache": true,
+			"istHKFS": false,
+			"istAusRegUFach": false,
+			"istErsatzPflichtFS": false,
+			"istKonfKoop": false,
+			"nurSII": true,
+			"exportASD": true,
+			"zulaessig": [  {"schulform": "GE", "gliederung": null},
+							{"schulform": "GY", "gliederung": null},
+							{"schulform": "SG", "gliederung": null}],
+			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
 	}, {
