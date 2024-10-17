@@ -300,7 +300,7 @@
 			"schluessel": "EF",
 			"kuerzel": "EF",
 			"text": "Einführungsphase",
-			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"schulformen": [ "GE", "GY", "SG" ],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -320,7 +320,7 @@
 			"schluessel": "Q1",
 			"kuerzel": "Q1",
 			"text": "Qualifikationsphase 1. Jahr",
-			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"schulformen": [ "GE", "GY", "SG" ],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
@@ -340,7 +340,7 @@
 			"schluessel": "Q2",
 			"kuerzel": "Q2",
 			"text": "Qualifikationsphase 2. Jahr",
-			"schulformen": [ "GE", "GY", "PS", "SG" ],
+			"schulformen": [ "GE", "GY", "SG" ],
 			"gueltigVon": 2023,
 			"gueltigBis": null
 		} ]
