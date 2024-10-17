@@ -49,24 +49,29 @@ export class Klassenart extends JavaEnum<Klassenart> implements CoreType<Klassen
 	public static readonly AM : Klassenart = new Klassenart("AM", 4, );
 
 	/**
+	 * Klassenart: Deutschförderung (ohne Bildungsgangzuordnung, BASS 13-63 Nr. 3)
+	 */
+	public static readonly DF : Klassenart = new Klassenart("DF", 5, );
+
+	/**
 	 * Klassenart: Frühförderung: SKG (Präsenzgruppe)
 	 */
-	public static readonly PG : Klassenart = new Klassenart("PG", 5, );
+	public static readonly PG : Klassenart = new Klassenart("PG", 6, );
 
 	/**
 	 * Klassenart: Profilklasse (gemäß § 21 Abs. 3 APO-S I)
 	 */
-	public static readonly PK : Klassenart = new Klassenart("PK", 6, );
+	public static readonly PK : Klassenart = new Klassenart("PK", 7, );
 
 	/**
 	 * Klassenart: Regelklasse
 	 */
-	public static readonly RK : Klassenart = new Klassenart("RK", 7, );
+	public static readonly RK : Klassenart = new Klassenart("RK", 8, );
 
 	/**
 	 * Klassenart: Deutschförderklasse (gemäß BASS 13-63 Nr. 3, Nummer 3.5.1)
 	 */
-	public static readonly SG : Klassenart = new Klassenart("SG", 8, );
+	public static readonly SG : Klassenart = new Klassenart("SG", 9, );
 
 	/**
 	 * Die Menge der Schulformen. Diese ist nach der Initialisierung nicht leer.

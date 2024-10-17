@@ -34,6 +34,9 @@ public enum Klassenart implements CoreType<KlassenartKatalogEintrag, Klassenart>
 	/** Klassenart: Frühförderung: SKG (Ambulante Maßnahmen für blinde, gehörlose, sehbeh. und schwerh. Kinder) */
 	AM,
 
+	/** Klassenart: Deutschförderung (ohne Bildungsgangzuordnung, BASS 13-63 Nr. 3) */
+	DF,
+
 	/** Klassenart: Frühförderung: SKG (Präsenzgruppe) */
 	PG,
 

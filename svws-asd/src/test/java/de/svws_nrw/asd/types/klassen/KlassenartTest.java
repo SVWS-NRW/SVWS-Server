@@ -33,7 +33,7 @@ class KlassenartTest {
 	@Test
 	@DisplayName("Prüfe die Anzahl der Anlagen am Klassenart.")
 	void testKlassenart() {
-		assertEquals(9, Klassenart.data().getWerte().size());
+		assertEquals(10, Klassenart.data().getWerte().size());
 	}
 
 	/**
