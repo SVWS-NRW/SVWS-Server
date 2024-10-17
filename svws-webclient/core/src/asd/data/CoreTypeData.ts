@@ -40,6 +40,15 @@ export class CoreTypeData extends JavaObject {
 		super();
 	}
 
+	/**
+	 * Gibt die Daten als String zurück.
+	 *
+	 * @return die Daten als String
+	 */
+	public toString() : string | null {
+		return "CoreTypeData [id=" + this.id + ", schluessel=" + this.schluessel! + ", kuerzel=" + this.kuerzel! + ", text=" + this.text! + ", gueltigVon=" + this.gueltigVon! + ", gueltigBis=" + this.gueltigBis! + "]";
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.asd.data.CoreTypeData';
 	}

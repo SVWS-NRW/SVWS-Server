@@ -45,4 +45,16 @@ public class CoreTypeData {
 	@Schema(description = "gibt an, bis zu welchem Schuljahr der Eintrag gültig ist. Ist kein Schuljahr bekannt, so ist null gesetzt", example = "2025")
 	public Integer gueltigBis = null;
 
+
+	/**
+	 * Gibt die Daten als String zurück.
+	 *
+	 * @return die Daten als String
+	 */
+	@Override
+	public String toString() {
+		return "CoreTypeData [id=" + id + ", schluessel=" + schluessel + ", kuerzel=" + kuerzel + ", text=" + text + ", gueltigVon=" + gueltigVon
+				+ ", gueltigBis=" + gueltigBis + "]";
+	}
+
 }
