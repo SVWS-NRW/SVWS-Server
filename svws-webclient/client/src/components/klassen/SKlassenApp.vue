@@ -1,9 +1,9 @@
 <template>
-	<div v-if="(klassenListeManager().hasDaten() && (activeRouteType === RouteType.DEFAULT)) || (activeRouteType !== RouteType.DEFAULT)" class="page--flex">
+	<div v-if="(klassenListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<template v-if="activeRouteType === RouteType.DEFAULT">
+					<template v-if="activeRouteType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
 							<span>
 								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
@@ -16,10 +16,10 @@
 							{{ lehrerkuerzel }}
 						</span>
 					</template>
-					<template v-else-if="activeRouteType === RouteType.HINZUFUEGEN">
+					<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
 					</template>
-					<template v-else-if="activeRouteType === RouteType.GRUPPENPROZESSE">
+					<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
 						<span class="svws-subline">{{ klassenSubline }}</span>
 					</template>
@@ -41,7 +41,7 @@
 
 	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import { computed } from "vue";
-	import { RouteType } from "~/router/RouteType";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<KlassenAppProps>();
 

@@ -1,9 +1,8 @@
 import type { SchuelerListeManager } from "@core";
-import type { TabManager } from "@ui";
-import type { RouteType } from "~/router/RouteType";
+import type { TabManager, ViewType } from "@ui";
 
 export interface SchuelerAppProps {
 	schuelerListeManager: () => SchuelerListeManager;
 	tabManager: () => TabManager;
-	activeRouteType: RouteType;
+	activeRouteType: ViewType;
 }

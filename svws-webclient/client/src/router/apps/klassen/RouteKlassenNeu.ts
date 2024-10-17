@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKlassen, type RouteKlassen } from "~/router/apps/klassen/RouteKlassen";
 import { routeApp } from "../RouteApp";
 import { api } from "~/router/Api";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { KlassenNeuProps } from "~/components/klassen/SKlassenNeuProps";
 
@@ -16,7 +16,7 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "klassen.neu", "neu", SKlassenNeu);
-		super.types = new Set([ RouteType.HINZUFUEGEN ]);
+		super.types = new Set([ ViewType.HINZUFUEGEN ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klasse Neu";

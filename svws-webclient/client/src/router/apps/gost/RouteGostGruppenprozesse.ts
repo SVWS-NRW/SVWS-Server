@@ -4,7 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../RouteApp";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import type { RouteGost } from "./RouteGost";
 import { routeGost } from "./RouteGost";
 import type { GostGruppenprozesseProps } from "~/components/gost/gruppenprozesse/SGostGruppenprozesseProps";
@@ -15,7 +15,7 @@ export class RoutegostGruppenprozesse extends RouteNode<any, RouteGost> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.OBERSTUFE_ABITURJAHRGAENGE_VERWALTEN ], "gost.gruppenprozesse", "gruppenprozesse", SGostGruppenprozesse);
-		super.types = new Set([ RouteType.GRUPPENPROZESSE ]);
+		super.types = new Set([ ViewType.GRUPPENPROZESSE ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Gruppenprozesse";

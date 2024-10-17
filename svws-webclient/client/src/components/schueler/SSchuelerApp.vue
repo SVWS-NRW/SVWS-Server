@@ -1,8 +1,8 @@
 <template>
-	<div v-if="(schuelerListeManager().hasDaten() && (activeRouteType === RouteType.DEFAULT)) || (activeRouteType !== RouteType.DEFAULT)" class="page--flex">
+	<div v-if="(schuelerListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="activeRouteType === RouteType.DEFAULT">
+				<template v-if="activeRouteType === ViewType.DEFAULT">
 					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
 					<div v-if="schuelerListeManager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
@@ -20,7 +20,7 @@
 					</div>
 				</template>
 
-				<template v-else-if="activeRouteType === RouteType.HINZUFUEGEN">
+				<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>Neuen Schüler anlegen...</span>
@@ -28,7 +28,7 @@
 					</div>
 				</template>
 
-				<template v-else-if="activeRouteType === RouteType.GRUPPENPROZESSE">
+				<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">Gruppenprozesse</h2>
 						<span class="svws-subline">{{ schuelerSubline }}</span>
@@ -52,7 +52,7 @@
 
 	import { computed } from "vue";
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
-	import { RouteType } from "~/router/RouteType";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<SchuelerAppProps>();
 

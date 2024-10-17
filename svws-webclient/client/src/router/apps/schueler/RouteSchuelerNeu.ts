@@ -4,7 +4,7 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteSchueler } from "~/router/apps/schueler/RouteSchueler";
 import type { SchuelerNeuProps } from "~/components/schueler/SSchuelerNeuProps";
@@ -15,7 +15,7 @@ export class RouteSchuelerNeu extends RouteNode<any, RouteSchueler> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.SCHUELER_INDIVIDUALDATEN_AENDERN ], "schueler.neu", "neu", SSchuelerNeu);
-		super.types = new Set([ RouteType.HINZUFUEGEN ]);
+		super.types = new Set([ ViewType.HINZUFUEGEN ]);
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schüler Neu";

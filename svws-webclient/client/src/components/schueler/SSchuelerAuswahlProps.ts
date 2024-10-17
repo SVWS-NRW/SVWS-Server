@@ -1,6 +1,6 @@
 import type { SchuelerListeManager, ServerMode } from "@core";
 import type { AbschnittAuswahlDaten } from "@comp";
-import type { RouteType } from "~/router/RouteType";
+import type { ViewType } from "@ui";
 
 export interface SchuelerAuswahlProps {
 	serverMode: ServerMode;
@@ -10,6 +10,6 @@ export interface SchuelerAuswahlProps {
 	gotoHinzufuegenRoute: (navigate: boolean) => Promise<void>;
 	gotoGruppenprozessRoute: (navigate: boolean) => Promise<void>;
 	setFilter: () => Promise<void>;
-	activeRouteType: RouteType;
+	activeRouteType: ViewType;
 }
 

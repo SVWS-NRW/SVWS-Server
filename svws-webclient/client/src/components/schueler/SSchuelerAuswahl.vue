@@ -77,11 +77,10 @@
 
 	import { computed, ref, shallowRef, watch } from "vue";
 	import type { SchuelerListeEintrag, JahrgangsDaten, KlassenDaten, Schulgliederung, KursDaten } from "@core";
-	import { ServerMode } from "@core";
-	import { SchuelerStatus } from "@core";
+	import { ServerMode, SchuelerStatus } from "@core";
 	import type { SortByAndOrder } from "@ui";
+	import { ViewType } from "@ui";
 	import type { SchuelerAuswahlProps } from "./SSchuelerAuswahlProps";
-	import { RouteType } from "~/router/RouteType";
 
 	const props = defineProps<SchuelerAuswahlProps>();
 
@@ -275,7 +274,7 @@
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeRouteType !== RouteType.GRUPPENPROZESSE) && (props.activeRouteType !== RouteType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
+		if ((props.activeRouteType !== ViewType.GRUPPENPROZESSE) && (props.activeRouteType !== ViewType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
 			return props.schuelerListeManager().auswahl();
 		else
 			return null;

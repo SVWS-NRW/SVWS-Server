@@ -16,7 +16,7 @@ import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlPr
 import { routeError } from "~/router/error/RouteError";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
 import { RoutingStatus } from "~/router/RoutingStatus";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import { routeKlassenNeu } from "./RouteKlassenNeu";
 
 
@@ -46,7 +46,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 
-			if (isEntering && (to.types.has(RouteType.GRUPPENPROZESSE) || to.types.has(RouteType.HINZUFUEGEN)))
+			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.data.view.getRoute(id);
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
@@ -54,14 +54,14 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 				return routeKlassenDaten.getRoute(idNeu);
 
 			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-			if (to.types.has(RouteType.GRUPPENPROZESSE) && (id !== undefined))
+			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
 				return routeKlasseGruppenprozesse.getRoute();
-			else if (to.types.has(RouteType.HINZUFUEGEN) && (id !== undefined))
+			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
 				return routeKlassenNeu.getRoute();
 
-			if (to.types.has(RouteType.GRUPPENPROZESSE))
+			if (to.types.has(ViewType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozess(false);
-			else if (to.types.has(RouteType.HINZUFUEGEN))
+			else if (to.types.has(ViewType.HINZUFUEGEN))
 				await this.data.gotoCreationMode(false);
 			else
 				await this.data.gotoEintrag(id);

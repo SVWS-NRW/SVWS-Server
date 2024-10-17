@@ -54,3 +54,6 @@ export type { TabData } from "./components/App/TabData";
 // Class exports
 export { TabManager } from "./components/App/TabManager";
 export { Checkpoint } from "./components/Checkpoint";
+
+// Enums
+export { ViewType } from "./components/ViewType";

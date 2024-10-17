@@ -6,7 +6,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerIndividualdaten } from "~/router/apps/schueler/individualdaten/RouteSchuelerIndividualdaten";
 import type { RouteNode } from "~/router/RouteNode";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import { routeSchuelerNeu } from "~/router/apps/schueler/RouteSchuelerNeu";
 import { RoutingStatus } from "~/router/RoutingStatus";
 import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
@@ -15,14 +15,14 @@ import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuel
 interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	schuelerListeManager: SchuelerListeManager | undefined;
-	activeRouteType: RouteType;
+	activeRouteType: ViewType;
 }
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
 	schuelerListeManager: undefined,
 	view: routeSchuelerIndividualdaten,
-	activeRouteType: RouteType.DEFAULT,
+	activeRouteType: ViewType.DEFAULT,
 };
 
 export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
@@ -132,7 +132,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		return this._state.value.schuelerListeManager;
 	}
 
-	get activeRouteType(): RouteType {
+	get activeRouteType(): ViewType {
 		return this._state.value.activeRouteType;
 	}
 
@@ -243,18 +243,18 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	private setDefaults() {
-		this._state.value.activeRouteType = RouteType.DEFAULT
+		this._state.value.activeRouteType = ViewType.DEFAULT
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeSchuelerIndividualdaten;
 		this.commit();
 	}
 
 	gotoGruppenprozessRoute = async (navigate: boolean) => {
-		if ((this._state.value.activeRouteType === RouteType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
+		if ((this._state.value.activeRouteType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = RouteType.GRUPPENPROZESSE;
+		this._state.value.activeRouteType = ViewType.GRUPPENPROZESSE;
 
 		if (navigate)
 			await RouteManager.doRoute(routeSchuelerGruppenprozesse.getRoute());
@@ -265,12 +265,12 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	gotoHinzufuegenRoute = async (navigate: boolean) => {
-		if ((this._state.value.activeRouteType === RouteType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
+		if ((this._state.value.activeRouteType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = RouteType.HINZUFUEGEN;
+		this._state.value.activeRouteType = ViewType.HINZUFUEGEN;
 
 		if (navigate) {
 			const result = await RouteManager.doRoute(routeSchuelerNeu.getRoute());

@@ -6,7 +6,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../RouteApp";
 import { routeGost, type RouteGost } from "./RouteGost";
 import type { GostAbiturjahrgangNeuProps } from "~/components/gost/SGostAbiturjahrgangNeuProps";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 
 const SGostAbiturjahrgangNeu = () => import("~/components/gost/SGostAbiturjahrgangNeu.vue");
 
@@ -14,7 +14,7 @@ export class RouteGostAbiturjahrNeu extends RouteNode<any, RouteGost> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN ], "gost.abiturjahrNeu", "neu", SGostAbiturjahrgangNeu);
-		super.types = new Set([ RouteType.HINZUFUEGEN ]);
+		super.types = new Set([ ViewType.HINZUFUEGEN ]);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Abiturjahr anlegen";

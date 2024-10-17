@@ -20,12 +20,11 @@ import { routeSchuelerVermerke } from "~/router/apps/schueler/vermerke/RouteSchu
 
 import { RouteDataSchueler } from "~/router/apps/schueler/RouteDataSchueler";
 
-import { type TabData } from "@ui";
+import { type TabData, ViewType } from "@ui";
 import type { SchuelerAppProps } from "~/components/schueler/SSchuelerAppProps";
 import type { SchuelerAuswahlProps } from "~/components/schueler/SSchuelerAuswahlProps";
 import { routeSchuelerSprachen } from "./sprachen/RouteSchuelerSprachen";
 import { routeSchuelerAbschluesse } from "./abschluesse/RouteSchuelerAbschluesse";
-import { RouteType } from "~/router/RouteType";
 import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuelerGruppenprozesse";
 import { routeSchuelerNeu } from "./RouteSchuelerNeu";
 
@@ -65,21 +64,21 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			if (isEntering && (to.types.has(RouteType.GRUPPENPROZESSE) || to.types.has(RouteType.HINZUFUEGEN)))
+			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.data.view.getRoute(id);
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
 			if ((idNeu !== null) && (idNeu !== id))
 				return routeSchuelerIndividualdaten.getRoute(idNeu);
 			// Wenn die Route für Gruppenprozesse/Hinzufügen aufgerufen wird, wird hier sichergestellt, dass die Schüler ID nicht gesetzt ist
-			if (to.types.has(RouteType.GRUPPENPROZESSE) && (id !== undefined))
+			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
 				return routeSchuelerGruppenprozesse.getRoute();
-			else if (to.types.has(RouteType.HINZUFUEGEN) && (id !== undefined))
+			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
 				return routeSchuelerNeu.getRoute();
 
-			if (to.types.has(RouteType.GRUPPENPROZESSE))
+			if (to.types.has(ViewType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozessRoute(false);
-			else if (to.types.has(RouteType.HINZUFUEGEN))
+			else if (to.types.has(ViewType.HINZUFUEGEN))
 				await this.data.gotoHinzufuegenRoute(false);
 			else
 				await this.data.gotoDefaultRoute(id);

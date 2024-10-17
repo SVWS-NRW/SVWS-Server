@@ -6,12 +6,11 @@ import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
 import type { TabData } from "@ui";
-import { TabManager, Checkpoint } from "@ui";
+import { TabManager, Checkpoint, ViewType } from "@ui";
 
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
 import type { RouteData } from "./RouteData";
-import { RouteType } from "./RouteType";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -63,7 +62,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected _defaultChild: RouteNode<any, any> | undefined = undefined;
 
 	/** Gibt den bzw. die Typen der Route an */
-	protected _types: Set<RouteType>;
+	protected _types: Set<ViewType>;
 
 	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
 	private _mode: ServerMode = ServerMode.DEV;
@@ -101,7 +100,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		this._menu = [];
 		this._hasData = (data !== undefined);
 		this._data = (data !== undefined) ? data : {} as TRouteData;
-		this._types = new Set([ RouteType.DEFAULT ]);
+		this._types = new Set([ ViewType.DEFAULT ]);
 		// Setze die erlaubten Schulformen
 		for (const sf of schulformen)
 			this._schulformenErlaubt.add(sf);
@@ -216,14 +215,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/**
 	 * Gibt die Routen-Typen zurück, welche der Route zugeordnet sind.
 	 */
-	public get types() : Set<RouteType> {
+	public get types() : Set<ViewType> {
 		return this._types;
 	}
 
 	/**
 	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
 	 */
-	protected set types(types : Set<RouteType>) {
+	protected set types(types : Set<ViewType>) {
 		this._types = types;
 	}
 
@@ -378,7 +377,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname       der Name des ausgewählten Tabs
 	 * @param setTab        die Callback-Methode
 	 */
-	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
+	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const node of nodes) {
@@ -406,7 +405,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname   der Name des ausgewählten Tabs
 	 * @param setTab    die Callback-Methode
 	 */
-	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
+	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
 		return this.createTabManager(this.children, this.children_hidden().value, tabname, setTab, type);
 	}
 
@@ -417,7 +416,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname   der Name des ausgewählten Tabs
 	 * @param setTab    die Callback-Methode
 	 */
-	public createTabManagerByMenu(tabname : string, setTab: (value: TabData) => Promise<void>, type : RouteType = RouteType.DEFAULT) {
+	public createTabManagerByMenu(tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
 		return this.createTabManager(this.menu, this.menu_hidden().value, tabname, setTab, type);
 	}
 

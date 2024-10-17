@@ -23,7 +23,7 @@ import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
 import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
@@ -137,12 +137,12 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		};
 	}
 
-	private getType() : RouteType {
+	private getType() : ViewType {
 		if (this.data.gruppenprozesseEnabled)
-			return RouteType.GRUPPENPROZESSE;
+			return ViewType.GRUPPENPROZESSE;
 		if (this.data.creationModeEnabled)
-			return RouteType.HINZUFUEGEN;
-		return RouteType.DEFAULT;
+			return ViewType.HINZUFUEGEN;
+		return ViewType.DEFAULT;
 	}
 
 	private setTab = async (value: TabData) => {

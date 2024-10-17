@@ -14,7 +14,7 @@ import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassenNeu } from "~/router/apps/klassen/RouteKlassenNeu";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
-import { RouteType } from "~/router/RouteType";
+import { ViewType } from "@ui";
 
 interface RouteStateKlassen extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
@@ -22,7 +22,7 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
-	activeRouteType: RouteType;
+	activeRouteType: ViewType;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -32,7 +32,7 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
-	activeRouteType: RouteType.DEFAULT
+	activeRouteType: ViewType.DEFAULT
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -55,7 +55,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
 	}
 
-	get activeRouteType(): RouteType {
+	get activeRouteType(): ViewType {
 		return this._state.value.activeRouteType;
 	}
 
@@ -271,7 +271,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	private setDefaults() {
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
-		this._state.value.activeRouteType = RouteType.DEFAULT;
+		this._state.value.activeRouteType = ViewType.DEFAULT;
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKlassenDaten;
 	}
 
@@ -313,12 +313,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoCreationMode = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === RouteType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
+		if (this._state.value.activeRouteType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = RouteType.HINZUFUEGEN;
+		this._state.value.activeRouteType = ViewType.HINZUFUEGEN;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
@@ -334,12 +334,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoGruppenprozess = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === RouteType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
+		if (this._state.value.activeRouteType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = RouteType.GRUPPENPROZESSE;
+		this._state.value.activeRouteType = ViewType.GRUPPENPROZESSE;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate)
