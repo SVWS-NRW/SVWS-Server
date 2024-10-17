@@ -35,7 +35,7 @@ class FachTest {
 	@Test
 	@DisplayName("Prüfe die Anzahl der Fächer.")
 	void testFach() {
-		assertEquals(283, Fach.data().getWerte().size());
+		assertEquals(292, Fach.data().getWerte().size());
 	}
 
 }

@@ -32,6 +32,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Unterricht in der Herkunftssprache - Arabisch */
 	AM,
 
+	/** Fach Unterricht in der Herkunftssprache - Aramäisch */
+	AN,
+
 	/** Fach Alevitische Religionslehre nach den Grundsätzen des AABF */
 	AR,
 
@@ -122,6 +125,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Unterricht in der Herkunftssprache - Kroatisch */
 	CM,
 
+	/** Fach Unterricht in der Herkunftssprache - Chinesisch */
+	CN,
+
 	/** Fach Chinesisch, außerhalb des regulären Fachunterrichts */
 	CQ,
 
@@ -196,6 +202,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Fremdsprachliche Kommunikation */
 	FK,
+
+	/** Fach Unterricht in der Herkunftssprache - Französisch */
+	FM,
 
 	/** Fach Fachpraxis */
 	FP,
@@ -338,6 +347,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Informatik */
 	IF,
 
+	/** Fach Ingenieurwissenschaften / Ingenieurtechnik */
+	IG,
+
 	/** Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Italienisch */
 	IH,
 
@@ -358,6 +370,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Herkunftssprache anstelle einer Pflichtfremdsprache - Niederländisch */
 	JH,
+
+	/** Fach Unterricht in der Herkunftssprache - Japanisch */
+	JM,
 
 	/** Fach Japanisch */
 	K,
@@ -454,6 +469,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Unterricht in der Herkunftssprache - Mazedonisch */
 	MM,
+
+	/** Fach Unterricht in der Herkunftssprache - Ungarisch */
+	MN,
 
 	/** Fach Meß- und Prüftechnik */
 	MP,
@@ -620,6 +638,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Unterricht in der Herkunftssprache - Russisch */
 	RM,
 
+	/** Fach Unterricht in der Herkunftssprache - Romanes */
+	RN,
+
 	/** Fach Russisch, außerhalb des regulären Fachunterrichts */
 	RQ,
 
@@ -731,6 +752,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 	/** Fach Unterricht in der Herkunftssprache - Türkisch */
 	TM,
 
+	/** Fach Unterricht in der Herkunftssprache - Thai */
+	TN,
+
 	/** Fach Türkisch, außerhalb des regulären Fachunterrichts */
 	TQ,
 
@@ -748,6 +772,9 @@ public enum Fach implements CoreType<FachKatalogEintrag, Fach> {
 
 	/** Fach Unterricht in der Herkunftssprache - Rumänisch */
 	UM,
+
+	/** Fach Unterricht in der Herkunftssprache - Ukrainisch */
+	UN,
 
 	/** Fach fächerübergreifender Unterricht (Sprache/Sachunt./Mathematik/Förderunt.) */
 	UU,
