@@ -192,7 +192,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	/**
 	 * Setzt die Filtereinstellung auf nur sichtbare Klassen.
 	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 * @param value   true, wenn der Filter aktiviert werden soll und ansonsten false
 	 */
 	public void setFilterNurSichtbar(final boolean value) {
 		this._filterNurSichtbar = value;
@@ -206,7 +206,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	 * @param a   der erste Eintrag
 	 * @param b   der zweite Eintrag
 	 *
-	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
+	 * @return das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull KlassenDaten a, final @NotNull KlassenDaten b) {
@@ -309,7 +309,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 	/**
 	 * Erhöht, bzw. senkt die Position der Klassenleitung mit der angegebenen Lehrer-ID auf der lokalen Klassenleitungs-Liste.
-	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächst-höher-stehenden (bzw. nächst-tiefer-stehenden) Eintrag
+	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächstgrößeren (bzw. nächskleineren) Eintrag
 	 * und dem angegebenen Eintrag getauscht.
 	 *
 	 * @param klassenleitungen   die Liste der Klassenleitungen
@@ -317,7 +317,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	 * @param erhoehe            true, falls die Klassenleitung eine höhere Position auf der Klassenleitungs-Liste haben soll,
 	 *                           false, wenn sie eine tiefere Position auf der Klassenleitungs-Liste haben soll.
 	 *
-	 * @return true, falls Änderungen durchgeführt wurden, und ansonsten false
+	 * @return true, falls Änderungen durchgeführt wurden und ansonsten false
 	 *
 	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
 	 */
@@ -333,7 +333,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 			throw new DeveloperNotificationException("Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden.");
 
 		if (erhoehe) {
-			// Prüfe, ob die Klassenleitung bereits an oberster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+			// Prüfe, ob die Klassenleitung bereits an oberster Stelle steht. Ist dies der Fall, so ist keine Änderung nötig...
 			if (posLehrer == 0)
 				return false;
 
@@ -345,7 +345,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 		}
 
-		// Prüfe, ob die Klassenleitung bereits an unterster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+		// Prüfe, ob die Klassenleitung bereits an unterster Stelle steht. Ist dies der Fall, so ist keine Änderung nötig...
 		if ((posLehrer + 1) >= klassenleitungen.size())
 			return false;
 
@@ -397,6 +397,17 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	 */
 	public boolean validateSortierung(final Integer sortierung) {
 		return (sortierung != null) && (sortierung >= 0);
+	}
+
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KlassenListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public void useFilter(final @NotNull KlassenListeManager srcManager) {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
 	}
 
 }

@@ -77,15 +77,23 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const klassenListeManager = new KlassenListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listKlassen, listSchueler, listJahrgaenge, listLehrer);
-		klassenListeManager.setFilterAuswahlPermitted(true);
-		klassenListeManager.setFilterNurSichtbar(false);
+
+		if (this._state.value.klassenListeManager === undefined) {
+			klassenListeManager.setFilterAuswahlPermitted(true);
+			klassenListeManager.setFilterNurSichtbar(false);
+		} else {
+			klassenListeManager.useFilter(this._state.value.klassenListeManager);
+		}
 
 		// Versuche die ausgewählte Klasse von vorher zu laden
-		const vorherigeAuswahl = ((this._state.value.klassenListeManager !== undefined) && this.klassenListeManager.hasDaten()) ? this.klassenListeManager.auswahl() : null;
+		let vorherigeAuswahl = ((this._state.value.klassenListeManager !== undefined) && this.klassenListeManager.hasDaten()) ? this.klassenListeManager.auswahl() : null;
 		if ((vorherigeAuswahl !== null) && (vorherigeAuswahl.kuerzel !== null)) {
-			const auswahl = this.klassenListeManager.getByKuerzelOrNull(vorherigeAuswahl.kuerzel);
-			this.klassenListeManager.setDaten(auswahl ?? klassenListeManager.liste.list().get(0));
+			vorherigeAuswahl = this.klassenListeManager.getByKuerzelOrNull(vorherigeAuswahl.kuerzel);
+			this.klassenListeManager.setDaten(vorherigeAuswahl ?? klassenListeManager.liste.list().get(0));
 		}
+
+		// stellt die ursprünglich gefilterte Liste wieder her
+		klassenListeManager.filtered();
 
 		// Aktualisiere den State
 		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeRouteType: this.activeRouteType });
@@ -238,15 +246,13 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	setFilter = async () => {
-		if (!this.klassenListeManager.hasDaten()) {
+		if (!this.klassenListeManager.hasDaten() && (this.activeRouteType === RouteType.DEFAULT)) {
 			const listFiltered = this.klassenListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
-				await this.gotoEintrag(listFiltered.get(0).id);
-				return;
+				return await this.gotoEintrag(listFiltered.get(0).id);
 			}
 		}
-		const klassenListeManager = this.klassenListeManager;
-		this.setPatchedState({ klassenListeManager });
+		this.commit();
 	}
 
 	setzeDefaultSortierung = async () => {

@@ -371,6 +371,7 @@ export class SchuelerListeManager extends AuswahlManager<number, SchuelerListeEi
 	 * @param srcManager Manager aus dem die Filterinformationen übernommen werden
 	 */
 	public useFilter(srcManager : SchuelerListeManager) : void {
+		this.schuelerstatus.setAuswahl(srcManager.schuelerstatus);
 		this.klassen.setAuswahl(srcManager.klassen);
 		this.kurse.setAuswahl(srcManager.kurse);
 		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);

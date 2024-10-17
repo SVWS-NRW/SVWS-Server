@@ -47,22 +47,30 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const schuelerListe: SchuelerListe = await this.loadSchuelerListe(idSchuljahresabschnitt);
 
 		const manager = new SchuelerListeManager(api.schulform, schuelerListe, api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt);
-		manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
-		manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
-		// Problem: Filter müsste entsprechend der Schuljahresauswahl angepasst werden, sonst wird der Schüler nicht geufunden.
-		// if (this._state.value.schuelerListeManager !== undefined)
-		// 	manager.useFilter(this._state.value.schuelerListeManager);
+		if (this._state.value.schuelerListeManager === undefined) {
+			manager.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
+			manager.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
+		} else {
+			manager.useFilter(this._state.value.schuelerListeManager);
+		}
+
+		// Funktioniert aktuell nicht, zudem muss überlegt werden anhand welcher eindeutigen Kriterien der Schüler im neuen Abschnitt
+		//  zugeordnet/gefunden werden kann ggf. über Geburtsdatum + Name
+		//  (Und wenn es dann tatsächlich immer noch > 1 zutreffenden Schüler geben sollte wird keiner selektiert)?
 
 		// Lade und setze Schüler Stammdaten falls ein Schüler ausgewählt ist und dieser im neuen Manager vorhanden ist
-		const vorherigeAuswahl = ((this._state.value.schuelerListeManager !== undefined) && this.schuelerListeManager.hasDaten()) ? this.schuelerListeManager.auswahl() : null;
-		if (vorherigeAuswahl !== null) {
-			const auswahl = this.schuelerListeManager.liste.get(vorherigeAuswahl.id);
-			let schuelerStammdaten = await this.loadSchuelerStammdaten(auswahl);
-			if (schuelerStammdaten === null)
-				schuelerStammdaten = await this.loadSchuelerStammdaten(manager.liste.list().get(0));
+		// const vorherigeAuswahl = ((this._state.value.schuelerListeManager !== undefined) && this.schuelerListeManager.hasDaten()) ? this.schuelerListeManager.auswahl() : null;
+		// if (vorherigeAuswahl !== null) {
+		// 	const auswahl = this.schuelerListeManager.liste.get(vorherigeAuswahl.id);
+		// 	let schuelerStammdaten = await this.loadSchuelerStammdaten(auswahl);
+		// 	if (schuelerStammdaten === null)
+		// 		schuelerStammdaten = await this.loadSchuelerStammdaten(manager.liste.list().get(0));
+		//
+		// 	this.schuelerListeManager.setDaten(schuelerStammdaten);
+		// }
 
-			this.schuelerListeManager.setDaten(schuelerStammdaten);
-		}
+		// stellt die ursprünglich gefilterte Liste wieder her
+		manager.filtered();
 
 		const view = this.getCurrentViewOrDefault(manager);
 
@@ -276,14 +284,13 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	setFilter = async () => {
-		if (!this.schuelerListeManager.hasDaten()) {
+		if (!this.schuelerListeManager.hasDaten() && (this.activeRouteType === RouteType.DEFAULT)) {
 			const listFiltered = this.schuelerListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
-				await this.gotoDefaultRoute(listFiltered.get(0).id);
-				return;
+				return await this.gotoDefaultRoute(listFiltered.get(0).id);
 			}
 		}
-		this.setPatchedState({ schuelerListeManager: this.schuelerListeManager });
+		this.commit();
 	}
 
 }
