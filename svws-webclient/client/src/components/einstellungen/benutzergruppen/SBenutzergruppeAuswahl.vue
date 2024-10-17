@@ -13,8 +13,8 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
-					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe="createBenutzergruppe"
-						:delete-benutzergruppen="deleteMultipleGroup" :hasFocus="rowsFiltered.size === 0" />
+					<s-modal-benutzergruppe-neu :show-delete-icon="selectedItems.length > 0" :create-benutzergruppe
+						:delete-benutzergruppen="deleteMultipleGroup" :has-focus="rowsFiltered.size === 0" />
 				</template>
 			</svws-ui-table>
 		</template>

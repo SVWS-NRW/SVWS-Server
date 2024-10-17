@@ -13,7 +13,7 @@
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="selected.length === 0" />
 						<s-einwilligungsarten-neu-modal v-slot="{ openModal }" :add-eintrag :map-katalogeintraege>
-							<svws-ui-button type="icon" @click="openModal()" :hasFocus="mapKatalogeintraege.size === 0">
+							<svws-ui-button type="icon" @click="openModal()" :has-focus="mapKatalogeintraege.size === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 						</s-einwilligungsarten-neu-modal>

@@ -13,8 +13,8 @@
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suchen" removable />
 				</template>
 				<template #actions>
-					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein="createBenutzerAllgemein"
-						:delete-benutzer-allgemein="deleteMultipleUser" :hasFocus="rowsFiltered.size === 0" />
+					<s-modal-benutzer-neu :show-delete-icon="selectedItems.length > 0" :create-benutzer-allgemein
+						:delete-benutzer-allgemein :has-focus="rowsFiltered.size === 0" />
 				</template>
 			</svws-ui-table>
 		</template>
@@ -51,7 +51,7 @@
 		return result;
 	});
 
-	async function deleteMultipleUser() {
+	async function deleteBenutzerAllgemein() {
 		const items = selectedItems.value;
 		selectedItems.value = [];
 		await props.deleteBenutzerMenge(items);

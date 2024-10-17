@@ -3,25 +3,16 @@
 		<div class="svws-ui-stundenplan--auswahl">
 			<div class="flex-grow">
 				<h3 class="text-headline-md">{{ stundenplan.bezeichnung }}</h3>
-				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '–' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '–' + toKW(stundenplan.gueltigBis) + ')' }}</div>
+				<div class="text-headline-md opacity-50">{{ toDateStr(stundenplan.gueltigAb) + '—' + toDateStr(stundenplan.gueltigBis) + ' (KW ' + toKW(stundenplan.gueltigAb) + '—' + toKW(stundenplan.gueltigBis) + ')' }}</div>
 			</div>
 			<div class="svws-ui-stundenplan--auswahl--wrapper">
 				<svws-ui-button type="secondary" @click.stop="ganzerStundenplanAuswahl = !ganzerStundenplanAuswahl" title="Ganzen Stundenplan anzeigen, auch leere Stunden" class="h-9">
 					<span class="flex-grow">{{ ganzerStundenplanAuswahl ? 'Keine leeren Stunden':'Alle Stunden' }}</span>
 				</svws-ui-button>
-				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()"
-					class="print:hidden"
-					:disabled="wochentypen().size() <= 0"
-					:item-text="(wt: number) => manager().stundenplanGetWochenTypAsString(wt)" />
-				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()"
-					:class="{'print:hidden': !kwAuswahl}"
-					removable
-					:disabled="wochentypen().size() <= 0"
-					:item-text="(kw: StundenplanKalenderwochenzuordnung | undefined) => getKalenderwochenString(kw)" />
-				<svws-ui-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()"
-					:disabled="mapStundenplaene.size <= 1"
-					class="print:hidden"
-					:item-text="(s: StundenplanListeEintrag) => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '–' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '–' + toKW(s.gueltigBis) + ')'" />
+				<svws-ui-select title="Wochentyp" v-model="wochentypAuswahl" :items="wochentypen()" class="print:hidden" :disabled="wochentypen().size() <= 0" :item-text="wt => manager().stundenplanGetWochenTypAsString(wt)" />
+				<svws-ui-select title="Kalenderwoche" v-model="kwAuswahl" :items="kalenderwochen()" :class="{'print:hidden': !kwAuswahl}" removable :disabled="wochentypen().size() <= 0" :item-text="kw => getKalenderwochenString(kw)" />
+				<svws-ui-select title="Stundenplan" v-model="stundenplan_auswahl" :items="mapStundenplaene.values()" :disabled="mapStundenplaene.size <= 1" class="print:hidden"
+					:item-text="s => s.bezeichnung.replace('Stundenplan ', '') + ': ' + toDateStr(s.gueltigAb) + '—' + toDateStr(s.gueltigBis) + ' (KW ' + toKW(s.gueltigAb) + '—' + toKW(s.gueltigBis) + ')'" />
 			</div>
 		</div>
 	</template>
@@ -54,12 +45,12 @@
 	}
 
 	const stundenplan_auswahl = computed<StundenplanListeEintrag>({
-		get: () : StundenplanListeEintrag => {
+		get: () => {
 			if (props.stundenplan === undefined)
 				throw new DeveloperNotificationException("Unerwarteter Fehler: Kein Stundenplan an dieser Stelle definiert.");
 			return props.stundenplan;
 		},
-		set: (value : StundenplanListeEintrag) => {
+		set: (value) => {
 			void props.gotoStundenplan(value);
 		}
 	});
@@ -75,13 +66,13 @@
 	}
 
 	const ganzerStundenplanAuswahl = computed<boolean>({
-		get: () : boolean => props.ganzerStundenplan(),
-		set: (value : boolean) => void props.setGanzerStundenplan(value),
+		get: () => props.ganzerStundenplan(),
+		set: (value) => void props.setGanzerStundenplan(value),
 	})
 
 	const wochentypAuswahl = computed<number>({
-		get: () : number => props.wochentyp(),
-		set: (value : number) => void props.gotoWochentyp(value),
+		get: () => props.wochentyp(),
+		set: (value ) => void props.gotoWochentyp(value),
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
@@ -95,8 +86,8 @@
 	}
 
 	const kwAuswahl = computed<StundenplanKalenderwochenzuordnung | undefined>({
-		get: () : StundenplanKalenderwochenzuordnung | undefined => props.kalenderwoche(),
-		set: (value : StundenplanKalenderwochenzuordnung | undefined) => void props.gotoKalenderwoche(value),
+		get: () => props.kalenderwoche(),
+		set: (value) => void props.gotoKalenderwoche(value),
 	});
 
 </script>

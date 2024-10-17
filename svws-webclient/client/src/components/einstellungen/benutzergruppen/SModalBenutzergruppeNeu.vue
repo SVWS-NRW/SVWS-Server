@@ -19,7 +19,7 @@
 
 	<svws-ui-button type="trash" :disabled="!showDeleteIcon" @click="deleteBenutzergruppen" />
 
-	<svws-ui-button type="icon" @click="showModal().value = true" :hasFocus="hasFocus">
+	<svws-ui-button type="icon" @click="showModal().value = true" :has-focus>
 		<span class="icon i-ri-add-line" />
 	</svws-ui-button>
 </template>

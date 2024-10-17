@@ -24,7 +24,7 @@
 					<template #actions>
 						<svws-ui-button @click="doDeleteEintraege()" type="trash" :disabled="[...props.vermerkartenManager().liste.auswahl()].length === 0 || deleteCandidates.length === 0" />
 						<s-vermerke-neu-modal v-slot="{ openModal }" :add-eintrag :vermerkarten-manager>
-							<svws-ui-button type="icon" @click="openModal()" :hasFocus="props.vermerkartenManager().liste.size() === 0">
+							<svws-ui-button type="icon" @click="openModal()" :has-focus="props.vermerkartenManager().liste.size() === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 						</s-vermerke-neu-modal>

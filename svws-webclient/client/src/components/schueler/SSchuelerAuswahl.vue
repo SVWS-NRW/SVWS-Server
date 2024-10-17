@@ -41,7 +41,7 @@
 
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="props.serverMode.checkServerMode(ServerMode.DEV)">
-						<svws-ui-button type="icon" @click="startCreationMode" :hasFocus="rowsFiltered.length === 0">
+						<svws-ui-button type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>

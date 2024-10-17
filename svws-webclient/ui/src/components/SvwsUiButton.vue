@@ -1,8 +1,8 @@
 <template>
 	<button class="button" :class="{
-		'button--primary': type === 'primary' || !type,
+		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
-		'button--danger': type === 'error' || type === 'danger',
+		'button--danger': (type === 'error') || (type === 'danger'),
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
 		'button--trash': type === 'trash',
@@ -25,7 +25,7 @@
 	import type { ButtonType } from '../types';
 	import { onMounted, ref } from "vue";
 
-	const addButton = ref();
+	const addButton = ref<HTMLButtonElement|null>(null);
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
@@ -40,7 +40,7 @@
 	});
 
 	onMounted(() => {
-		if(props.hasFocus)
+		if(props.hasFocus && (addButton.value !== null))
 			addButton.value.focus();
 	})
 
