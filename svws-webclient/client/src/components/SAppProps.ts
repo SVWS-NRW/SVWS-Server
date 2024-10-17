@@ -15,5 +15,4 @@ export interface AppProps {
 	apps: TabData[];
 	appsHidden: boolean[];
 	apiStatus: ApiStatus;
-	backticks: () => boolean;
 }

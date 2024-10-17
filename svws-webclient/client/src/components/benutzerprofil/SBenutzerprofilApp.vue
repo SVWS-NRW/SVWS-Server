@@ -16,9 +16,6 @@
 				{{ ok === true ? "Das Passwort wurde geändert, bitte melden Sie sich neu an" : ok === false ? 'Es gab einen Fehler bei der Passwortänderung' : '' }}
 			</svws-ui-input-wrapper>
 		</svws-ui-content-card>
-		<svws-ui-content-card title="Benutzereinstellungen">
-			<svws-ui-checkbox type="toggle" v-model="toggleBackticks">Fehlermeldungen mit Backticks kopieren</svws-ui-checkbox>
-		</svws-ui-content-card>
 		<svws-ui-content-card title="E-Mail-Benutzerdaten">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Name" :model-value="benutzerEMailDaten().name" @change="name => patchBenutzerEMailDaten({name: name ?? undefined})" type="text" />
@@ -80,11 +77,6 @@
 	async function password() {
 		ok.value = await props.patchPasswort(erstesPasswort.value, zweitesPasswort.value);
 	}
-
-	const toggleBackticks = computed<boolean>({
-		get: () => props.backticks(),
-		set: (value) => void props.setBackticks(value)
-	});
 
 	async function decryptSMTPPassword() {
 		try {

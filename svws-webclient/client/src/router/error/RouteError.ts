@@ -8,6 +8,7 @@ import { RouteNode } from "~/router/RouteNode";
 import SError from "~/components/error/SError.vue";
 import type { ErrorProps } from "~/components/error/SErrorProps";
 import { routerManager } from "~/router/RouteManager";
+import { api } from "../Api";
 
 
 export class RouteError extends RouteNode<any, any> {
@@ -36,7 +37,9 @@ export class RouteError extends RouteNode<any, any> {
 		console.error(routerManager.error);
 		return {
 			code: routerManager.errorcode,
-			error: routerManager.error
+			error: routerManager.error,
+			api: api,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 		}
 	}
 

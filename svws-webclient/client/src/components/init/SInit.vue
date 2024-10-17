@@ -80,7 +80,7 @@
 			</div>
 		</template>
 	</svws-ui-app-layout>
-	<s-notifications :backticks="() => true" />
+	<s-notifications />
 </template>
 
 <script setup lang="ts">

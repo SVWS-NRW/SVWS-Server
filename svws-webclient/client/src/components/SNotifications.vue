@@ -37,16 +37,12 @@
 		log: SimpleOperationResponse | null;
 	};
 
-	const props = defineProps<{
-		backticks: () => boolean;
-	}>();
-
 	const counter = ref(0);
 	const errors = ref<Map<number, CapturedError>>(new Map());
 
 	function copyString(error: CapturedError) {
-		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version, "Commit": api.githash }, error }, null, 2);
-		return props.backticks() ? "```json\n"+json+"\n```" : json;
+		const json = JSON.stringify({ env: { mode: api.mode.text, version: api.version, commit: api.githash }, error }, null, 2);
+		return "```json\n"+json+"\n```";
 	}
 
 	function errorHandler(event: ErrorEvent | PromiseRejectionEvent) {

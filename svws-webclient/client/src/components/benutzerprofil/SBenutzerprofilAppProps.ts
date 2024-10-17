@@ -9,7 +9,4 @@ export interface BenutzerprofilAppProps {
 	patch: (data: Partial<BenutzerDaten>) => Promise<void>;
 	patchPasswort: (eins: string, zwei: string) => Promise<boolean>;
 	aes: AES;
-	// Config
-	backticks: () => boolean;
-	setBackticks: (value: boolean) => Promise<void>;
 }
