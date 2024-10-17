@@ -283,10 +283,13 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmSchueler.bemerkungen.ZB = schuelerabschnitt.zeugnisBemerkungen;
 				enmSchueler.bemerkungen.tsZB = schuelerabschnitt.tsZeugnisBemerkungen;
 				enmSchueler.bemerkungen.LELS = schuelerabschnitt.LELS;
+				enmSchueler.bemerkungen.tsLELS = schuelerabschnitt.tsLELS;
 				enmSchueler.bemerkungen.schulformEmpf = schuelerabschnitt.ESF;
+				enmSchueler.bemerkungen.tsSchulformEmpf = schuelerabschnitt.tsESF;
 				enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
 				enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
 				enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;
+				enmSchueler.bemerkungen.tsFoerderbemerkungen = schuelerabschnitt.tsBemerkungFSP;
 
 				// Ankreuzkompetenzen hinzufügen und deren Katalog-Einträge hinzufügen
 				final List<DTOSchuelerAnkreuzfloskeln> ankreuzkompetenzen = mapAnkreuzkompetenzen.get(schuelerabschnitt.abschnittID);

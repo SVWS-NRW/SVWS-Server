@@ -68,6 +68,11 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	 */
 	public foerderbemerkungen : string | null = null;
 
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu den Förderbemerkungen
+	 */
+	public tsFoerderbemerkungen : string | null = null;
+
 
 	public constructor() {
 		super();
@@ -99,6 +104,7 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		result.individuelleVersetzungsbemerkungen = (obj.individuelleVersetzungsbemerkungen === undefined) ? null : obj.individuelleVersetzungsbemerkungen === null ? null : obj.individuelleVersetzungsbemerkungen;
 		result.tsIndividuelleVersetzungsbemerkungen = (obj.tsIndividuelleVersetzungsbemerkungen === undefined) ? null : obj.tsIndividuelleVersetzungsbemerkungen === null ? null : obj.tsIndividuelleVersetzungsbemerkungen;
 		result.foerderbemerkungen = (obj.foerderbemerkungen === undefined) ? null : obj.foerderbemerkungen === null ? null : obj.foerderbemerkungen;
+		result.tsFoerderbemerkungen = (obj.tsFoerderbemerkungen === undefined) ? null : obj.tsFoerderbemerkungen === null ? null : obj.tsFoerderbemerkungen;
 		return result;
 	}
 
@@ -117,6 +123,7 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
 		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
 		result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
+		result += '"tsFoerderbemerkungen" : ' + ((!obj.tsFoerderbemerkungen) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -162,6 +169,9 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		}
 		if (obj.foerderbemerkungen !== undefined) {
 			result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
+		}
+		if (obj.tsFoerderbemerkungen !== undefined) {
+			result += '"tsFoerderbemerkungen" : ' + ((!obj.tsFoerderbemerkungen) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

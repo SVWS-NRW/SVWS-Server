@@ -68,4 +68,8 @@ public class ENMLeistungBemerkungen {
 	@Schema(description = "Förderbemerkungen.", example = "Text zum Förderschwerpunkt")
 	public String foerderbemerkungen;
 
+	/** Der Zeitstempel mit den letzten Änderungen zu den Förderbemerkungen */
+	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zu den Förderbemerkungen.", example = "2013-11-14 13:12:48.774")
+	public String tsFoerderbemerkungen;
+
 }
