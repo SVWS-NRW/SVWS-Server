@@ -21,6 +21,7 @@ import de.svws_nrw.db.schema.revisionen.Revision25Updates;
 import de.svws_nrw.db.schema.revisionen.Revision26Updates;
 import de.svws_nrw.db.schema.revisionen.Revision27Updates;
 import de.svws_nrw.db.schema.revisionen.Revision28Updates;
+import de.svws_nrw.db.schema.revisionen.Revision29Updates;
 import de.svws_nrw.db.schema.revisionen.Revision2Updates;
 import de.svws_nrw.db.schema.revisionen.Revision3Updates;
 import de.svws_nrw.db.schema.revisionen.Revision4Updates;
@@ -186,7 +187,10 @@ public enum SchemaRevisionen {
 	REV_27(27, "2024-10-13"),
 
 	/** Korrektur: Entfernen von Triggern, die in Revision 25 hätten entfernt werden müssen */
-	REV_28(28, "2024-10-15");
+	REV_28(28, "2024-10-15"),
+
+	/** Ergänzen weitere Zeitstempel-Informationen für die Tabelle SchuelerLD_PSFachBem */
+	REV_29(29, "2024-10-17");
 
 
 	/**
@@ -194,14 +198,14 @@ public enum SchemaRevisionen {
 	 * bis zu welcher alle Schema-Revision als stabil gelten und ab Version 1.0 des SVWS-Servers
 	 * nicht mehr verändert werden.
 	 */
-	public static final SchemaRevisionen maxRevision = REV_28;
+	public static final SchemaRevisionen maxRevision = REV_29;
 
 	/**
 	 * Gibt die größte Revisions-Nummer an, welche in diese Enumeration definiert wurde.
 	 * Dies dient dazu Revisionen als Entwickler-Revisionen zu kennzeichnen, die noch nicht
 	 * stabil sind. Dieser Wert ist also größer oder gleich {@link SchemaRevisionen#maxRevision}.
 	 */
-	public static final SchemaRevisionen maxDeveloperRevision = REV_28;
+	public static final SchemaRevisionen maxDeveloperRevision = REV_29;
 
 	/** Eine Map, welche von der Revisionsnummer auf das Objekt der Aufzählung abbildet. */
 	private static Map<Long, SchemaRevisionen> _mapByNumber = null;
@@ -282,6 +286,7 @@ public enum SchemaRevisionen {
 				case REV_26 -> new Revision26Updates();
 				case REV_27 -> new Revision27Updates();
 				case REV_28 -> new Revision28Updates();
+				case REV_29 -> new Revision29Updates();
 				default -> new RevisionNoUpdates(this);
 			};
 		}

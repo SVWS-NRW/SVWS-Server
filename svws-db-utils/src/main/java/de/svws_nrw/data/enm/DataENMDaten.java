@@ -283,7 +283,7 @@ public final class DataENMDaten extends DataManager<Long> {
 				enmSchueler.bemerkungen.ZB = schuelerabschnitt.zeugnisBemerkungen;
 				enmSchueler.bemerkungen.tsZB = schuelerabschnitt.tsZeugnisBemerkungen;
 				enmSchueler.bemerkungen.LELS = schuelerabschnitt.LELS;
-				// TODO Schulform-Empfehlung enmSchueler.bemerkungen.schulformEmpf = ...
+				enmSchueler.bemerkungen.schulformEmpf = schuelerabschnitt.ESF;
 				enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen = schuelerabschnitt.bemerkungVersetzung;
 				enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen = schuelerabschnitt.tsBemerkungVersetzung;
 				enmSchueler.bemerkungen.foerderbemerkungen = schuelerabschnitt.bemerkungFSP;

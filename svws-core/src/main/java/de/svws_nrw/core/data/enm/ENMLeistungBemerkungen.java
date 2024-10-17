@@ -43,9 +43,18 @@ public class ENMLeistungBemerkungen {
 	@Schema(description = "Bemerkungen zur Lern und Leistungsentwicklung (LELS) in den Fächern.", example = "Text zum LELS")
 	public String LELS;
 
+	/** Der Zeitstempel mit den letzten Änderungen zur Lern und Leistungsentwicklung (LELS) in den Fächern */
+	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zur Lern und Leistungsentwicklung (LELS) in den Fächern.",
+			example = "2013-11-14 13:12:48.774")
+	public String tsLELS;
+
 	/** Schulform-Empfehlungen */
 	@Schema(description = "Schulform-Empfehlungen.", example = "R")
 	public String schulformEmpf;
+
+	/** Der Zeitstempel mit den letzten Änderungen zu den Schulform-Empfehlungen*/
+	@Schema(description = "Der Zeitstempel mit den letzten Änderungen zu den Schulform-Empfehlungen.", example = "2013-11-14 13:12:48.774")
+	public String tsSchulformEmpf;
 
 	/** Individuelle Bemerkungen zur Versetzung */
 	@Schema(description = "Individuelle Bemerkungen zur Versetzung.", example = "Text zur Versetzung")

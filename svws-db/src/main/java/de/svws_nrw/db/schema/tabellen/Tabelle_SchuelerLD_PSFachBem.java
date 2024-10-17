@@ -47,7 +47,7 @@ public class Tabelle_SchuelerLD_PSFachBem extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte BemerkungVersetzung */
 	public SchemaTabelleSpalte col_BemerkungVersetzung = add("BemerkungVersetzung", SchemaDatentypen.TEXT, false)
-			.setJavaComment("Text für Verstungsentscheidung");
+			.setJavaComment("Text für Versetzungsentscheidung");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)

@@ -39,9 +39,19 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	public LELS : string | null = null;
 
 	/**
+	 * Der Zeitstempel mit den letzten Änderungen zur Lern und Leistungsentwicklung (LELS) in den Fächern
+	 */
+	public tsLELS : string | null = null;
+
+	/**
 	 * Schulform-Empfehlungen
 	 */
 	public schulformEmpf : string | null = null;
+
+	/**
+	 * Der Zeitstempel mit den letzten Änderungen zu den Schulform-Empfehlungen
+	 */
+	public tsSchulformEmpf : string | null = null;
 
 	/**
 	 * Individuelle Bemerkungen zur Versetzung
@@ -83,7 +93,9 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		result.ZB = (obj.ZB === undefined) ? null : obj.ZB === null ? null : obj.ZB;
 		result.tsZB = (obj.tsZB === undefined) ? null : obj.tsZB === null ? null : obj.tsZB;
 		result.LELS = (obj.LELS === undefined) ? null : obj.LELS === null ? null : obj.LELS;
+		result.tsLELS = (obj.tsLELS === undefined) ? null : obj.tsLELS === null ? null : obj.tsLELS;
 		result.schulformEmpf = (obj.schulformEmpf === undefined) ? null : obj.schulformEmpf === null ? null : obj.schulformEmpf;
+		result.tsSchulformEmpf = (obj.tsSchulformEmpf === undefined) ? null : obj.tsSchulformEmpf === null ? null : obj.tsSchulformEmpf;
 		result.individuelleVersetzungsbemerkungen = (obj.individuelleVersetzungsbemerkungen === undefined) ? null : obj.individuelleVersetzungsbemerkungen === null ? null : obj.individuelleVersetzungsbemerkungen;
 		result.tsIndividuelleVersetzungsbemerkungen = (obj.tsIndividuelleVersetzungsbemerkungen === undefined) ? null : obj.tsIndividuelleVersetzungsbemerkungen === null ? null : obj.tsIndividuelleVersetzungsbemerkungen;
 		result.foerderbemerkungen = (obj.foerderbemerkungen === undefined) ? null : obj.foerderbemerkungen === null ? null : obj.foerderbemerkungen;
@@ -99,7 +111,9 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		result += '"ZB" : ' + ((!obj.ZB) ? 'null' : JSON.stringify(obj.ZB)) + ',';
 		result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
 		result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
+		result += '"tsLELS" : ' + ((!obj.tsLELS) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
 		result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
+		result += '"tsSchulformEmpf" : ' + ((!obj.tsSchulformEmpf) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
 		result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
 		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
 		result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
@@ -131,8 +145,14 @@ export class ENMLeistungBemerkungen extends JavaObject {
 		if (obj.LELS !== undefined) {
 			result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
 		}
+		if (obj.tsLELS !== undefined) {
+			result += '"tsLELS" : ' + ((!obj.tsLELS) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
+		}
 		if (obj.schulformEmpf !== undefined) {
 			result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
+		}
+		if (obj.tsSchulformEmpf !== undefined) {
+			result += '"tsSchulformEmpf" : ' + ((!obj.tsSchulformEmpf) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
 		}
 		if (obj.individuelleVersetzungsbemerkungen !== undefined) {
 			result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';

@@ -140,6 +140,9 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Die LELS-Bemerkungen */
 	public String LELS;
 
+	/** Der Zeitstempel mit den letzten Änderungen zu der Lern und Leistungsentwicklung (LELS) in den Fächern */
+	public String tsLELS;
+
 	/** Die Bemerkungen zum außerunterrichtlichen Engagement */
 	public String AUE;
 
@@ -149,8 +152,14 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Die ESF-Bemerkungen */
 	public String ESF;
 
+	/** Der Zeitstempel mit den letzten Änderungen an der \"Empfehlung der Schulform\" beim Übergang von Primar- nach SekI */
+	public String tsESF;
+
 	/** Die Bemerkungen zu den Förderschwerpunkten */
 	public String bemerkungFSP;
+
+	/** Der Zeitstempel mit den letzten Änderungen an der Förderschwerpunktbemerkung */
+	public String tsBemerkungFSP;
 
 	/** Die Bemerkungen zur Versetzung */
 	public String bemerkungVersetzung;
@@ -201,10 +210,13 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.ASV as ASV,
 				    enmla.tsASV as tsASV,
 				    bem.LELS as LELS,
+				    enmla.tsLELS as tsLELS,
 				    bem.AUE as AUE,
 				    enmla.tsAUE as tsAUE,
 				    bem.ESF as ESF,
-				    bem.bemerkungFSP as bemerkungFSP,
+				    enmla.tsESF as tsESF,
+				    bem.BemerkungFSP as bemerkungFSP,
+				    enmla.tsBemerkungFSP as tsBemerkungFSP,
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,
@@ -281,10 +293,13 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.ASV as ASV,
 				    enmla.tsASV as tsASV,
 				    bem.LELS as LELS,
+				    enmla.tsLELS as tsLELS,
 				    bem.AUE as AUE,
 				    enmla.tsAUE as tsAUE,
 				    bem.ESF as ESF,
-				    bem.bemerkungFSP as bemerkungFSP,
+				    enmla.tsESF as tsESF,
+				    bem.BemerkungFSP as bemerkungFSP,
+				    enmla.tsBemerkungFSP as tsBemerkungFSP,
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,

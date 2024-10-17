@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "TimestampsSchuelerLernabschnittsdaten")
-@JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsBemerkungVersetzung"})
+@JsonPropertyOrder({"ID", "tsSumFehlStd", "tsSumFehlStdU", "tsZeugnisBem", "tsASV", "tsAUE", "tsLELS", "tsESF", "tsBemerkungFSP", "tsBemerkungVersetzung"})
 public final class DTOTimestampsSchuelerLernabschnittsdaten {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -69,6 +69,24 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsAUE */
 	public static final String QUERY_LIST_BY_TSAUE = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsAUE IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsLELS */
+	public static final String QUERY_BY_TSLELS = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsLELS = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsLELS */
+	public static final String QUERY_LIST_BY_TSLELS = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsLELS IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsESF */
+	public static final String QUERY_BY_TSESF = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsESF = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsESF */
+	public static final String QUERY_LIST_BY_TSESF = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsESF IN ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand des Attributes tsBemerkungFSP */
+	public static final String QUERY_BY_TSBEMERKUNGFSP = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsBemerkungFSP = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes tsBemerkungFSP */
+	public static final String QUERY_LIST_BY_TSBEMERKUNGFSP = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsBemerkungFSP IN ?1";
+
 	/** Die Datenbankabfrage für DTOs anhand des Attributes tsBemerkungVersetzung */
 	public static final String QUERY_BY_TSBEMERKUNGVERSETZUNG = "SELECT e FROM DTOTimestampsSchuelerLernabschnittsdaten e WHERE e.tsBemerkungVersetzung = ?1";
 
@@ -106,6 +124,21 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 	@JsonProperty
 	public String tsAUE;
 
+	/** Der Zeitstempel der letzten Änderung zu der Lern und Leistungsentwicklung (LELS) in den Fächern. */
+	@Column(name = "tsLELS")
+	@JsonProperty
+	public String tsLELS;
+
+	/** Der Zeitstempel der letzten Änderung an der "Empfehlung der Schulform" beim Übergang von Primar- nach SekI. */
+	@Column(name = "tsESF")
+	@JsonProperty
+	public String tsESF;
+
+	/** Der Zeitstempel der letzten Änderung an der Förderschwerpunktbemerkung. */
+	@Column(name = "tsBemerkungFSP")
+	@JsonProperty
+	public String tsBemerkungFSP;
+
 	/** Der Zeitstempel der letzten Änderung an den Bemerkungen zur Versetzung. */
 	@Column(name = "tsBemerkungVersetzung")
 	@JsonProperty
@@ -126,9 +159,12 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 	 * @param tsZeugnisBem   der Wert für das Attribut tsZeugnisBem
 	 * @param tsASV   der Wert für das Attribut tsASV
 	 * @param tsAUE   der Wert für das Attribut tsAUE
+	 * @param tsLELS   der Wert für das Attribut tsLELS
+	 * @param tsESF   der Wert für das Attribut tsESF
+	 * @param tsBemerkungFSP   der Wert für das Attribut tsBemerkungFSP
 	 * @param tsBemerkungVersetzung   der Wert für das Attribut tsBemerkungVersetzung
 	 */
-	public DTOTimestampsSchuelerLernabschnittsdaten(final long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsBemerkungVersetzung) {
+	public DTOTimestampsSchuelerLernabschnittsdaten(final long ID, final String tsSumFehlStd, final String tsSumFehlStdU, final String tsZeugnisBem, final String tsASV, final String tsAUE, final String tsLELS, final String tsESF, final String tsBemerkungFSP, final String tsBemerkungVersetzung) {
 		this.ID = ID;
 		if (tsSumFehlStd == null) {
 			throw new NullPointerException("tsSumFehlStd must not be null");
@@ -150,6 +186,18 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 			throw new NullPointerException("tsAUE must not be null");
 		}
 		this.tsAUE = tsAUE;
+		if (tsLELS == null) {
+			throw new NullPointerException("tsLELS must not be null");
+		}
+		this.tsLELS = tsLELS;
+		if (tsESF == null) {
+			throw new NullPointerException("tsESF must not be null");
+		}
+		this.tsESF = tsESF;
+		if (tsBemerkungFSP == null) {
+			throw new NullPointerException("tsBemerkungFSP must not be null");
+		}
+		this.tsBemerkungFSP = tsBemerkungFSP;
 		if (tsBemerkungVersetzung == null) {
 			throw new NullPointerException("tsBemerkungVersetzung must not be null");
 		}
@@ -185,7 +233,7 @@ public final class DTOTimestampsSchuelerLernabschnittsdaten {
 	 */
 	@Override
 	public String toString() {
-		return "DTOTimestampsSchuelerLernabschnittsdaten(ID=" + this.ID + ", tsSumFehlStd=" + this.tsSumFehlStd + ", tsSumFehlStdU=" + this.tsSumFehlStdU + ", tsZeugnisBem=" + this.tsZeugnisBem + ", tsASV=" + this.tsASV + ", tsAUE=" + this.tsAUE + ", tsBemerkungVersetzung=" + this.tsBemerkungVersetzung + ")";
+		return "DTOTimestampsSchuelerLernabschnittsdaten(ID=" + this.ID + ", tsSumFehlStd=" + this.tsSumFehlStd + ", tsSumFehlStdU=" + this.tsSumFehlStdU + ", tsZeugnisBem=" + this.tsZeugnisBem + ", tsASV=" + this.tsASV + ", tsAUE=" + this.tsAUE + ", tsLELS=" + this.tsLELS + ", tsESF=" + this.tsESF + ", tsBemerkungFSP=" + this.tsBemerkungFSP + ", tsBemerkungVersetzung=" + this.tsBemerkungVersetzung + ")";
 	}
 
 }
