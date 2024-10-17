@@ -859,6 +859,21 @@ public final class DataENMDaten extends DataManager<Long> {
 				lernabschnittTS.tsAUE = enmSchueler.bemerkungen.tsAUE;
 				updatedBemerkungen = true;
 			}
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsLELS, lernabschnittTS.tsLELS)) {
+				lernabschnittsbemerkungen.LELS = enmSchueler.bemerkungen.LELS;
+				lernabschnittTS.tsLELS = enmSchueler.bemerkungen.tsLELS;
+				updatedBemerkungen = true;
+			}
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsSchulformEmpf, lernabschnittTS.tsESF)) {
+				lernabschnittsbemerkungen.ESF = enmSchueler.bemerkungen.schulformEmpf;
+				lernabschnittTS.tsESF = enmSchueler.bemerkungen.tsSchulformEmpf;
+				updatedBemerkungen = true;
+			}
+			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsFoerderbemerkungen, lernabschnittTS.tsBemerkungFSP)) {
+				lernabschnittsbemerkungen.BemerkungFSP = enmSchueler.bemerkungen.foerderbemerkungen;
+				lernabschnittTS.tsBemerkungFSP = enmSchueler.bemerkungen.tsFoerderbemerkungen;
+				updatedBemerkungen = true;
+			}
 			if (neuBemerkungen || isTimestampAfter(enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen, lernabschnittTS.tsBemerkungVersetzung)) {
 				lernabschnittsbemerkungen.BemerkungVersetzung = enmSchueler.bemerkungen.individuelleVersetzungsbemerkungen;
 				lernabschnittTS.tsBemerkungVersetzung = enmSchueler.bemerkungen.tsIndividuelleVersetzungsbemerkungen;
