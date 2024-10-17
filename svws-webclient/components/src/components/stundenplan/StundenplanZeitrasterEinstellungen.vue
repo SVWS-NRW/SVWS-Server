@@ -31,11 +31,12 @@
 	async function updateSettings(action: string, value: number | null): Promise<void> {
 		if (value === null)
 			return;
+		console.log(action)
 		switch (action) {
 			case 'Unterrichtsbeginn':
 				props.manager().stundenplanSetDefaultUnterrichtsbeginn(value);
 				break;
-			case 'stundendauer':
+			case 'Stundendauer':
 				props.manager().stundenplanSetDefaultStundendauer(value);
 				break;
 			case 'PausenzeitFuerRaumwechsel':
