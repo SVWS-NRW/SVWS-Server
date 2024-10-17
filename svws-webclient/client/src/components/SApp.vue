@@ -8,6 +8,7 @@
 					<svws-ui-menu-header :user="username" :schule="schulname" :schema="schemaname" @click="setApp(benutzerprofilApp)" class="cursor-pointer" />
 				</template>
 				<template #default>
+					<div :ref="el => (el !== null) && sectionRefs.set(0, <HTMLElement>el)" tabindex="-1" />
 					<template v-for="item in apps" :key="item.name">
 						<template v-if="item.name !== 'einstellungen'">
 							<svws-ui-menu-item :active="is_active(item)" @click="startSetApp(item)">
@@ -92,15 +93,17 @@
 				</svws-ui-secondary-menu>
 			</template>
 			<template v-else>
+				<div :ref="el => (el !== null) && sectionRefs.set(1, <HTMLElement>el)" tabindex="-1" />
 				<router-view :key="app.name" name="liste" />
 			</template>
 		</template>
 		<template #main>
-			<div class="app--page" :class="app.name">
+			<main class="app--page" :class="app.name" role="main">
+				<div :ref="el => (el !== null) && sectionRefs.set(2, <HTMLElement>el)" tabindex="-1" />
 				<div v-show="pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<svws-ui-header>
 						<div class="flex items-center">
-							<div class="w-20 mr-6" v-if="app.name === 'schueler' || app.name === 'lehrer'">
+							<div class="w-20 mr-6" v-if="(app.name === 'schueler') || (app.name === 'lehrer')">
 								<div class="inline-block h-20 rounded-xl animate-pulse w-20 bg-black/5 dark:bg-white/5" />
 							</div>
 							<div>
@@ -114,7 +117,7 @@
 				<div v-show="!pendingSetApp" class="page--wrapper" :class="{'svws-api--pending': apiStatus.pending}">
 					<router-view :key="app.name" />
 				</div>
-			</div>
+			</main>
 		</template>
 	</svws-ui-app-layout>
 	<svws-ui-notifications v-if="errors.size > 0">
@@ -145,12 +148,15 @@
 	import type { TabData } from "@ui";
 	import type { AppProps } from './SAppProps';
 	import type { SimpleOperationResponse } from '@core';
+	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { githash } from '../../githash';
 	import { version } from '../../version';
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { api } from '~/router/Api';
 
 	const props = defineProps<AppProps>();
+
+	const nextFocusSection = ref(0);
+	const sectionRefs = ref<Map<number, HTMLElement>>(new Map());
 
 	const schulname = computed<string>(() => {
 		const name = props.schuleStammdaten.bezeichnung1;
@@ -159,6 +165,7 @@
 
 	const pendingSetApp = ref('');
 	const copied = ref<boolean|null>(null);
+
 	async function copyToClipboard() {
 		try {
 			await navigator.clipboard.writeText(`${version} ${githash}`);
@@ -169,21 +176,21 @@
 	}
 
 	const showSubmenus = new Set<string>([
-		"schule", "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge", "schule.vermerkarten",
-		"schule.religionen", "schule.schulen",
-		"schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung",
-		"schule.datenaustausch.wenom",
-		"einstellungen", "einstellungen.benutzer", "einstellungen.benutzergruppen"
+		"schule", "schule.stammdaten", "schule.betriebe", "schule.einwilligungsarten", "schule.faecher", "schule.foerderschwerpunkte", "schule.jahrgaenge",
+		"schule.vermerkarten", "schule.religionen", "schule.schulen", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
+		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom", "einstellungen", "einstellungen.benutzer",
+		"einstellungen.benutzergruppen",
 	]);
+
 	function showSubmenu() : boolean {
 		return showSubmenus.has(props.selectedChild.name);
 	}
 
 	const hideAuswahlliste = new Set<string>([ "statistik", "einstellungen",
-		"schule", "schule.stammdaten",
-		"schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm", "schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung",
-		"schule.datenaustausch.wenom"
+		"schule", "schule.stammdaten", "schule.datenaustausch.kurs42", "schule.datenaustausch.untis", "schule.datenaustausch.enm",
+		"schule.datenaustausch.laufbahnplanung", "schule.datenaustausch.schulbewerbung", "schule.datenaustausch.wenom"
 	]);
+
 	function showAuswahlliste() : boolean {
 		return !hideAuswahlliste.has(props.selectedChild.name);
 	}
@@ -192,7 +199,7 @@
 		const routename = props.app.name.split('.')[0];
 		const title = current.text + " - " + schulname.value;
 
-		if ((props.app.name === 'benutzer' || props.app.name === 'benutzergruppen') && current.name === 'schule')
+		if (((props.app.name === 'benutzer') || (props.app.name === 'benutzergruppen')) && (current.name === 'schule'))
 			return true;
 		if (routename !== current.name)
 			return false;
@@ -214,6 +221,7 @@
 		await props.logout();
 		document.title = "SVWS NRW";
 	}
+
 	//* Fehlerbehandlung */
 	type CapturedError = {
 		id: number;
@@ -285,15 +293,21 @@
 				} catch(e) { void e }
 			}
 		}
-		const newError: CapturedError = {
-			id: counter.value,
-			name,
-			message,
-			stack: reason.stack?.split("\n") || '',
-			log,
-		}
+		const newError: CapturedError = { id: counter.value, name, message, stack: reason.stack?.split("\n") || '', log }
 		errors.value.set(newError.id, newError);
 	}
+
+	window.addEventListener("keydown", switchFocus);
+
+	function switchFocus(event: KeyboardEvent) {
+		if (!event.repeat && event.ctrlKey && event.altKey && ((event.key === "PageUp") || (event.key === "PageDown"))) {
+			nextFocusSection.value = event.key === "PageUp"
+				? ((nextFocusSection.value + 1) % sectionRefs.value.size)
+				: (nextFocusSection.value === 0 ) ? (sectionRefs.value.size - 1) : (nextFocusSection.value - 1);
+			sectionRefs.value.get(nextFocusSection.value)?.focus();
+		}
+	}
+
 </script>
 
 <style lang="postcss">
