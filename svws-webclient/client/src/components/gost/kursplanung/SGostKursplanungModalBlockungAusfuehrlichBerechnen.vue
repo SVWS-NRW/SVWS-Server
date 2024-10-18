@@ -5,8 +5,8 @@
 		<template #hilfe>
 			Zum Start auf „Berechnung starten“ klicken. Sobald die Bedingungen erfüllt sind,
 			<br>mit denen die Berechnung durchgeführt wird, wird die Berechnung abgebrochen.
-			<br>Alternativ kann die Berechnung durch das Anklicken des Berechnung pausieren“ Knopfes unterbrochen werden.
-			<br>Die Ergebnisse können anschließend auf Wunsch in die Datenbank importiert werden.
+			<br>Alternativ kann die Berechnung durch das Anklicken des „Berechnung pausieren“ Knopfes unterbrochen werden.
+			<br>Die ausgewählten Ergebnisse können anschließend in die Datenbank importiert werden.
 			<br>Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
 		</template>
 		<template #modalDescription>

@@ -27,14 +27,14 @@
 						<template v-if="hatUpdateKompetenz && ((auswahlBlockung !== undefined) && !isPending(auswahlBlockung.id)) && (blockung === auswahlBlockung)">
 							<template v-if="allow_berechne_blockung">
 								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :map-core-type-name-json-data :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
-									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
-										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
+									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white mr-4">
+										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Blocken…
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button>
+								<!-- <svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button> -->
 							</template>
 							<svws-ui-tooltip position="top" v-else>
-								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Berechnen</svws-ui-button>
+								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Blocken…</svws-ui-button>
 								<template #content>
 									<div class="normal-case text-base rich-text">
 										Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
