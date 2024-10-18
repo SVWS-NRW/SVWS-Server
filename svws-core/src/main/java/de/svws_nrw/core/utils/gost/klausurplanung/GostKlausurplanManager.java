@@ -674,7 +674,9 @@ public class GostKlausurplanManager {
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
 	public void stundenplanManagerAddByAbschnittAndDatum(final long idSchuljahresabschnitt, final @NotNull String datum, final @NotNull StundenplanManager stundenplanManager) {
-		DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
+		// TODO: so muss es sein, wenn Stundenpläne sich nicht mehr überscheiden dürfen:
+		// DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
+		_stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
 		int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
 		int kw = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {

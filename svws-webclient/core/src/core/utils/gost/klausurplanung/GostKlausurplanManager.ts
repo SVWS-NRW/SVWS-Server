@@ -696,7 +696,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @param stundenplanManager der {@link StundenplanManager}
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
-		DeveloperNotificationException.ifMap2DPutOverwrites(this._stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
+		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
 		let kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
 		let kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
