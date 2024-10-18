@@ -262,8 +262,6 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	gotoKalenderdatum = async (goto: string | GostKlausurtermin) => {
 		if (goto instanceof GostKlausurtermin)
 			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(goto.abijahr, goto.halbjahr, undefined, goto.id ))
-		// else if (goto instanceof StundenplanKalenderwochenzuordnung)
-		// 	await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, parseInt(kw.jahr.toString() + (kw.kw <= 9 ? "0" : "") + kw.kw.toString()), this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 		else
 			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, goto, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
 	}

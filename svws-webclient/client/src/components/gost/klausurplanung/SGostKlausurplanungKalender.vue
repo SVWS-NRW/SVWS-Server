@@ -184,12 +184,12 @@
 			return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
 		},
 		set: (value) => {
-			props.kalenderdatum.value = DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche( value.jahr, value.kw);
+			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw));
 		}
 	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
-		return stundenplanManager().kalenderwochenzuordnungGetMengeAsList();
+		return props.kMan().stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(props.abschnitt!.id);
 	}
 
 	const modalKlausurHatRaeume = ref<boolean>(false);
@@ -231,7 +231,7 @@
 	const berechneKwzDatum = (by: number) => {
 		const datum = new Date(props.kalenderdatum.value!);
 		datum.setDate(datum.getDate() + by);
-		const datumStr = datum.toISOString().slice(0, 10);
+		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');// datum.toLocaleDateString("de-DE").slice(0, 10);
 		const stundenplan = by > 0 ? props.kMan().stundenplanManagerGetByAbschnittAndDatumOrAfterOrNull(props.abschnitt!.id, datumStr) : props.kMan().stundenplanManagerGetByAbschnittAndDatumOrBeforeOrNull(props.abschnitt!.id, datumStr);
 		if (stundenplan === null)
 			return undefined;
@@ -253,16 +253,16 @@
 		event.preventDefault();
 	}
 
-	function kurseGefiltert(day: Wochentag, stunde: number) {
+	function kurseGefiltert(datum: string, day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value))
 				kursIds.add(klausur.idKurs);
-		return stundenplanManager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche().wochentyp, day, stunde);
+		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche().wochentyp, day, stunde);
 	}
 
-	function sumSchreiber(day: Wochentag, stunde: number) {
-		const kurse = kurseGefiltert(day, stunde);
+	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
+		const kurse = kurseGefiltert(datum, day, stunde);
 		let summe = 0;
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of kurse)

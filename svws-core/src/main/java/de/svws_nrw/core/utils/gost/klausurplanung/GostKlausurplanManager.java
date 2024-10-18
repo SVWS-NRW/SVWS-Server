@@ -747,13 +747,28 @@ public class GostKlausurplanManager {
 			return null;
 		if (stundenplanManagerList.size() == 1 && stundenplanManagerList.getFirst().getGueltigBis().compareTo(datum) < 0)
 			return stundenplanManagerList.getFirst();
-		@NotNull StundenplanManager lastManager = stundenplanManagerList.getFirst();
+		StundenplanManager lastManager = null;
 		for (final @NotNull StundenplanManager manager : stundenplanManagerList) {
 			if (manager.getGueltigAb().compareTo(datum) > 0)
 				return lastManager;
 			lastManager = manager;
 		}
 		return null;
+	}
+
+	/**
+	 * Liefert eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
+	 *
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 *
+	 * @return eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
+	 */
+	public @NotNull List<StundenplanKalenderwochenzuordnung> stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(final long idSchuljahresabschnitt) {
+		final @NotNull List<StundenplanKalenderwochenzuordnung> kwzAll = new ArrayList<>();
+		for (@NotNull StundenplanManager manager : DeveloperNotificationException.ifNull("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d".formatted(idSchuljahresabschnitt), _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
+		}
+		return kwzAll;
 	}
 
 	/**

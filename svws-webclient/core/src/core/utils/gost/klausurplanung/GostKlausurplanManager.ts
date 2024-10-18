@@ -39,6 +39,7 @@ import { KursManager } from '../../../../core/utils/KursManager';
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
 import { GostKlausurenCollectionData, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurenCollectionData } from '../../../../core/data/gost/klausurplanung/GostKlausurenCollectionData';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { StundenplanKalenderwochenzuordnung } from '../../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { HashMap3D } from '../../../../core/adt/map/HashMap3D';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { StundenplanManager } from '../../../../core/utils/stundenplan/StundenplanManager';
@@ -760,13 +761,28 @@ export class GostKlausurplanManager extends JavaObject {
 			return null;
 		if (stundenplanManagerList.size() === 1 && JavaString.compareTo(stundenplanManagerList.getFirst().getGueltigBis(), datum) < 0)
 			return stundenplanManagerList.getFirst();
-		let lastManager : StundenplanManager = stundenplanManagerList.getFirst();
+		let lastManager : StundenplanManager | null = null;
 		for (const manager of stundenplanManagerList) {
 			if (JavaString.compareTo(manager.getGueltigAb(), datum) > 0)
 				return lastManager;
 			lastManager = manager;
 		}
 		return null;
+	}
+
+	/**
+	 * Liefert eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
+	 *
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 *
+	 * @return eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
+	 */
+	public stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(idSchuljahresabschnitt : number) : List<StundenplanKalenderwochenzuordnung> {
+		const kwzAll : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+		for (let manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
+		}
+		return kwzAll;
 	}
 
 	/**
