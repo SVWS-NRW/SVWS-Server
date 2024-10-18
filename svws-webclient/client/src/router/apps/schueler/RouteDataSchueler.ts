@@ -284,7 +284,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	setFilter = async () => {
-		if (!this.schuelerListeManager.hasDaten() && (this.activeRouteType === RouteType.DEFAULT)) {
+		if (!this.schuelerListeManager.hasDaten() && (this.activeRouteType === ViewType.DEFAULT)) {
 			const listFiltered = this.schuelerListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
 				return await this.gotoDefaultRoute(listFiltered.get(0).id);

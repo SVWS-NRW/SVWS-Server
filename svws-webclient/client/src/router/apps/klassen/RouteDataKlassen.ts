@@ -246,7 +246,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	setFilter = async () => {
-		if (!this.klassenListeManager.hasDaten() && (this.activeRouteType === RouteType.DEFAULT)) {
+		if (!this.klassenListeManager.hasDaten() && (this.activeRouteType === ViewType.DEFAULT)) {
 			const listFiltered = this.klassenListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
 				return await this.gotoEintrag(listFiltered.get(0).id);
