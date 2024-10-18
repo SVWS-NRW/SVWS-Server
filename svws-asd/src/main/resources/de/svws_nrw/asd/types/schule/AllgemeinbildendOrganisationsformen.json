@@ -1,0 +1,166 @@
+{
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "NICHT_ZUGEORDNET",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 3000000,
+			"schluessel": "0",
+			"kuerzel": "*",
+			"text": "Nicht zuordbar (Früherziehung für Hör- und Sehgeschädigte, Ambulante Maßnahmen)",
+			"schulformen": [ 
+				"S", 
+				"KS" 
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "HALBTAG",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 3001000,
+			"schluessel": "1",
+			"kuerzel": "1", 
+			"text": "Halbtagsunterricht",
+			"schulformen": [
+				"FW", 
+				"HI", 
+				"WF",
+				"G",
+				"GE",
+				"GM",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S", 
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3001001,
+			"schluessel": "1",
+			"kuerzel": "1", 
+			"text": "Halbtagsunterricht",
+			"schulformen": [
+				"FW", 
+				"HI", 
+				"WF",
+				"G",
+				"GE",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S", 
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "GANZTAG",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3002000,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Teilnahme am gebundenen Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"G",
+				"GE",
+				"GM",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S",
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3002001,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Teilnahme am gebundenen Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"G",
+				"GE",
+				"GY",
+				"H",
+				"PS",
+				"R",
+				"S",
+				"KS",
+				"SG",
+				"SK",
+				"SR",
+				"V"
+			],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "GANZTAG_ERWEITERT",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 3003000,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "Teilnahme am erweiterten Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"H",
+				"R",
+				"S",
+				"KS",
+				"SK"
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "GANZTAG_OFFEN",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 3004000,
+			"schluessel": "4",
+			"kuerzel": "4",
+			"text": "Teilnahme am offenen Ganztag",
+			"schulformen": [
+				"FW",
+				"HI",
+				"WF",
+				"G",
+				"PS",
+				"S",
+				"KS"
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}			

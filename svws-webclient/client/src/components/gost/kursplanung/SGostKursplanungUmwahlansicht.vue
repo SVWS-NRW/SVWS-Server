@@ -1,11 +1,15 @@
 <template>
-	<svws-ui-content-card v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit" overflow-scroll>
-		<template #title>
-			<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname + ' ' + schueler.nachname}`" size="small" class="-ml-3 mr-0.5"><span class="icon i-ri-link" /></svws-ui-button>
-			<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
-		</template>
+	<div v-if="hatBlockung && hatErgebnis && (schueler !== undefined)" class="min-w-[42rem] w-fit h-full flex flex-col">
+		<div class="content-card--header mb-2 w-fit h-fit">
+			<div class="flex flex-row">
+				<svws-ui-button type="icon" @click="routeLaufbahnplanung()" :title="`Zur Laufbahnplanung von ${schueler.vorname} ${schueler.nachname}`" size="small" class="mr-0.5 mt-0.5">
+					<span class="icon i-ri-link" />
+				</svws-ui-button>
+				<span class="text-headline-md">{{ schueler.vorname }} {{ schueler.nachname }}</span>
+			</div>
+		</div>
 		<!-- Anzeige der Umwahlansicht, falls Fächer belegt wurden ... -->
-		<div class="flex gap-12 overflow-y-auto pr-7" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
+		<div class="flex gap-12 pr-7 overflow-y-auto h-full" v-if="fachbelegungen.size() > 0" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
 			<!-- Übersicht über die Fachwahlen des Schülers -->
 			<div class="w-1/6 min-w-[10rem]">
 				<!-- der Drop-Bereich für den Mülleimer von Kurs-Schülerzuordnung - dieser umfasst auch die Fachwahlliste -->
@@ -16,15 +20,15 @@
 							<template #body>
 								<div v-for="fach in fachbelegungen" :key="fach.fachID" role="row" class="svws-ui-tr !w-full" :class="{ 'font-medium': (fachwahlKurszuordnungen.get(fach.fachID) === undefined) }">
 									<div role="cell"
-										:draggable="(fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
+										:draggable="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined)"
 										@dragstart="drag_started(fachwahlKurszuordnungen.get(fach.fachID)?.id, fach.fachID, fachwahlKursarten.get(fach.fachID)!.id)"
 										@dragend="drag_ended()"
 										class="select-none svws-ui-td svws-no-padding group -my-1 !py-0.5"
-										:class="fachwahlKurszuordnungen.get(fach.fachID) === undefined ? 'cursor-grab' : 'opacity-50'"
+										:class="hatUpdateKompetenz && (fachwahlKurszuordnungen.get(fach.fachID) === undefined) ? 'cursor-grab' : 'opacity-50'"
 										:style="{ '--background-color': bgColorFachwahl(fach.fachID) }">
 										<div class="svws-ui-badge w-auto flex-grow -mx-3 py-0.5 !my-0 !h-full items-center">
 											<div class="flex flex-row flex-grow">
-												<template v-if="fachwahlKurszuordnungen.get(fach.fachID) === undefined">
+												<template v-if="(fachwahlKurszuordnungen.get(fach.fachID) === undefined) && hatUpdateKompetenz">
 													<span class="icon-sm i-ri-draggable opacity-50 group-hover:opacity-100 rounded-sm group-hover:bg-white/50" />
 												</template>
 												<template v-else>
@@ -46,17 +50,19 @@
 							</template>
 						</svws-ui-table>
 						<!-- Ein Knopf zum Verwerfen der alten Verteilung beim Schüler und für eine Neuzuordnung des Schülers zu den Kursen -->
-						<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><span class="icon i-ri-sparkling-line" />Verteilen</svws-ui-button>
-						<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
-						<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
-							<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
-								<span class="icon i-ri-delete-bin-line text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
-								<span class="text-sm w-2/3">
-									<template v-if="dragAndDropData === undefined">Kurse hier zum<br>Löschen ablegen</template>
-									<template v-else>Kurs-Zuordnung<br>aufheben</template>
-								</span>
+						<template v-if="hatUpdateKompetenz">
+							<svws-ui-button type="secondary" @click="auto_verteilen" :disabled="apiStatus.pending" title="Automatisch verteilen und aktuelle Zuordnung verwerfen" class="mt-2 w-full"><span class="icon i-ri-sparkling-line" />Verteilen</svws-ui-button>
+							<!-- Der "Mülleimer für das Ablegen von Kursen, bei denen die Kurs-Schüler-Zuordnung aufgehoben werden soll. " -->
+							<div class="mt-5 py-4 border-2 rounded-xl border-dashed border-black/10 dark:border-white/10" :class="[dragAndDropData === undefined ? 'border-black/10 dark:border-white/10' : 'border-error ring-4 ring-error/10']">
+								<div class="flex items-center gap-2 justify-center" :class="[dragAndDropData === undefined ? 'opacity-25' : 'opacity-100']">
+									<span class="icon i-ri-delete-bin-line text-headline flex-shrink-0" :class="[dragAndDropData === undefined ? 'opacity-50' : 'text-error']" />
+									<span class="text-sm w-2/3">
+										<template v-if="dragAndDropData === undefined">Kurse hier zum<br>Löschen ablegen</template>
+										<template v-else>Kurs-Zuordnung<br>aufheben</template>
+									</span>
+								</div>
 							</div>
-						</div>
+						</template>
 					</div>
 				</div>
 			</div>
@@ -100,7 +106,7 @@
 											class="opacity-75 text-sm">
 											AB{{ getDatenmanager().schuelerGetOfFachFachwahl(schueler.id, kurs.fachID).abiturfach }}
 										</span>
-										<template v-if="(allow_regeln && fach_gewaehlt(kurs))">
+										<template v-if="fach_gewaehlt(kurs)">
 											<span class="cursor-pointer" @click.stop="verbieten_regel_toggle(kurs.id)" :title="verbieten_regel(kurs.id) ? 'Verboten' : 'Verbieten'">
 												<span class="icon i-ri-forbid-fill inline-block" v-if="verbieten_regel(kurs.id)" />
 												<span class="icon i-ri-prohibited-line inline-block opacity-75" v-if="!verbieten_regel(kurs.id) && !fixier_regel(kurs.id) && !getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(schueler.id, kurs.id)" />
@@ -132,7 +138,7 @@
 		<div v-else class="opacity-50">
 			Keine Fachbelegungen vorhanden.
 		</div>
-	</svws-ui-content-card>
+	</div>
 </template>
 
 
@@ -142,17 +148,23 @@
 	import type { DataTableColumn } from "@ui";
 	import type { GostKursplanungUmwahlansichtProps } from "./SGostKursplanungUmwahlansichtProps";
 	import type { GostBlockungRegel, GostBlockungsergebnisKurs, GostFachwahl, GostKursart, List } from "@core";
-	import { DTOUtils, GostBlockungRegelUpdate, SetUtils, ZulaessigesFach } from "@core";
+	import { BenutzerKompetenz, DTOUtils, GostBlockungRegelUpdate, SetUtils, Fach } from "@core";
 
 	type DndData = { id: number | undefined, fachID: number, kursart: number };
 
 	const props = defineProps<GostKursplanungUmwahlansichtProps>();
 
+	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
+
 	const idSchueler = computed<number>(() => props.schueler === undefined ? -1 : props.schueler.id);
 
-	const dragAndDropData = ref<DndData | undefined>(undefined);
+	const hatUpdateKompetenz = computed<boolean>(() => {
+		return props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN)
+			|| (props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN)
+				&& props.benutzerKompetenzenAbiturjahrgaenge.has(props.getDatenmanager().daten().abijahrgang))
+	});
 
-	const allow_regeln = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1);
+	const dragAndDropData = ref<DndData | undefined>(undefined);
 
 	const leereZellen = (id: number) => computed<number>(() => {
 		const diff = props.getErgebnismanager().getOfSchieneMaxKursanzahl() - props.getErgebnismanager().getOfSchieneKursmengeSortiert(id).size();
@@ -192,7 +204,7 @@
 	});
 
 	const is_draggable = (idKurs: number) => computed<boolean>(() => {
-		if (props.apiStatus.pending)
+		if (props.apiStatus.pending || !hatUpdateKompetenz.value)
 			return false;
 		return props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs) && !props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler.value, idKurs);
 	});
@@ -240,8 +252,8 @@
 		if (props.getErgebnismanager().getOfSchuelerOfKursIstZugeordnet(idSchueler.value, idKurs)) {
 			const k = props.getDatenmanager().kursGet(idKurs);
 			const f = props.getDatenmanager().faecherManager().get(k.fach_id);
-			const zf = ZulaessigesFach.getByKuerzelASD(f?.kuerzel || null)
-			return zf.getHMTLFarbeRGB();
+			const zf = (f === null) ? null : Fach.getBySchluesselOrDefault(f.kuerzel);
+			return zf?.getHMTLFarbeRGB(schuljahr.value) ?? 'rgb(220,220,220)';
 		}
 		return "";
 	}
@@ -310,7 +322,7 @@
 		if (fwKurszuordnung !== undefined)
 			return "white";
 		const f = props.getErgebnismanager().getFach(idFach);
-		return ZulaessigesFach.getByKuerzelASD(f.kuerzel).getHMTLFarbeRGB();
+		return Fach.getBySchluesselOrDefault(f.kuerzel).getHMTLFarbeRGB(schuljahr.value);
 	}
 
 	function getFachwahlKursname(idFach: number): string {

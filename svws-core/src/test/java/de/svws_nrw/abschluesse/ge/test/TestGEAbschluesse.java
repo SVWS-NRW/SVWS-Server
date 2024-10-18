@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.abschluss.AbschlussManager;
 import de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10;
@@ -41,6 +42,7 @@ class TestGEAbschluesse {
 	 */
 	@BeforeAll
 	static void setup() throws IOException {
+		ASDCoreTypeUtils.initAll();
 		System.out.println(" - Lade Notenbilder aus den JSON-Resourcen...");
 		notenBilder = ResourceUtils.json2Classes("de.svws_nrw.abschluesse.ge.test", "geabschlusstest_", GEAbschlussTestfall.class);
 		if ((notenBilder == null) || (notenBilder.size() == 0))

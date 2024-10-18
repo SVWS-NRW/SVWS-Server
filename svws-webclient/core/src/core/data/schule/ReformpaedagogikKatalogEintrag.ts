@@ -1,8 +1,9 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { cast_java_util_List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class ReformpaedagogikKatalogEintrag extends JavaObject {
 
@@ -72,7 +73,8 @@ export class ReformpaedagogikKatalogEintrag extends JavaObject {
 			this.kuerzel = kuerzel;
 			this.bezeichnung = bezeichnung;
 			for (const schulform of schulformen)
-				this.schulformen.add(schulform.daten.kuerzel);
+				if (!this.schulformen.contains(schulform.name()))
+					this.schulformen.add(schulform.name());
 			this.gueltigVon = gueltigVon;
 			this.gueltigBis = gueltigBis;
 		} else throw new Error('invalid method overload');
@@ -85,6 +87,8 @@ export class ReformpaedagogikKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<ReformpaedagogikKatalogEintrag>('de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): ReformpaedagogikKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<ReformpaedagogikKatalogEintrag>;

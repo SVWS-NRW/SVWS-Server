@@ -2,10 +2,8 @@ package de.svws_nrw.db.dto.current.schild.schueler.abitur;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte;
 import de.svws_nrw.db.converter.current.gost.GOStBesondereLernleistungConverter;
 
-import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 
 
@@ -22,8 +20,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteDeserializer;
 import de.svws_nrw.csv.converter.current.gost.GOStBesondereLernleistungConverterSerializer;
 import de.svws_nrw.csv.converter.current.gost.GOStBesondereLernleistungConverterDeserializer;
 
@@ -329,10 +325,7 @@ public final class DTOSchuelerAbitur {
 	/** Besondere Lernleistung: Die Notenpunkte, welche bei der besonderen Lernleistung erreicht wurden – einfach gewichtet */
 	@Column(name = "BLL_Punkte")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkte.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteDeserializer.class)
-	public Note BesondereLernleistungNotenpunkte;
+	public Integer BesondereLernleistungNotenpunkte;
 
 	/** Besondere Lernleistung: Das Thema der besonderen Lernleistung */
 	@Column(name = "Thema_BLL")

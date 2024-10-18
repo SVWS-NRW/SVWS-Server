@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -16,6 +17,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 
 
@@ -70,6 +72,7 @@ public class ImportDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -125,13 +128,13 @@ public class ImportDB {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false, 0, 0);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false);
 
 			// Lese den Namen für die SQLite-Datenbank ein
 			final String filename = cmdLine.getValue("f", "svws_export.sqlite");
 
 			logger.log("-> Verbinde zur SQLite-Import-Datenbank " + filename + "...");
-			final DBConfig srcConfig = new DBConfig(DBDriver.SQLITE, filename, null, false, null, null, true, false, 0, 0);
+			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, DBDriver.SQLITE, filename, null, false, null, null, true, false);
 			final Benutzer srcUser = Benutzer.create(srcConfig);
 			try (DBEntityManager srcConn = srcUser.getEntityManager()) {
 				if (srcConn == null) {
@@ -144,7 +147,7 @@ public class ImportDB {
 				logger.log(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', location='"
 						+ srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
 
-				final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+				final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 
 				// Führe die Migration mithilfe des Schema-Managers durch.
 				logger.modifyIndent(2);

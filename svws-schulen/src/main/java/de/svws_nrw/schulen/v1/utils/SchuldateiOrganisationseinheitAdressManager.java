@@ -52,26 +52,26 @@ public class SchuldateiOrganisationseinheitAdressManager {
 		this._adresse = adresse;
 
 		// Prüfe, ob die Schulnummer passend zur Organisationseinheit ist
-		if (this._managerOrganisationseinheit.getSchulnummer() != _adresse.schulnummer)
+		if (!this._managerOrganisationseinheit.getSchulnummer().equals(_adresse.schulnummer))
 			throw new IllegalArgumentException("Die Schulnummer " + _adresse.schulnummer + " bei der Adresse mit der ID " + _adresse.id
 					+ " passt nicht zu der Schulnummer der Organisationseinheit " + this._managerOrganisationseinheit.getSchulnummer() + ".");
 
 		// Prüfe das Feld qualitaetverortung - Hier wird noch ein Katalog ergänzt
-		if (!_managerSchuldatei.katalogQualitaetenVerortung.hatEintrag(_adresse.qualitaetverortung))
+		if (!_managerSchuldatei.katalogQualitaetenVerortung.hasEintragInZeitraum(_adresse, _adresse.qualitaetverortung))
 			throw new IllegalArgumentException("Der Wert von QualitätVerortung '" + _adresse.qualitaetverortung + "' bei der Adresse mit der ID " + _adresse.id
 					+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
 					+ " ist im zugehörigen Katalog nicht vorhanden.");
 
 		// Prüfe, ob die Art der Adresse (bzw. adresstypid) im Katalog existiert
 		this._artDerAdresse = (_adresse.adresstypeid == null) ? "" : ("" + _adresse.adresstypeid);
-		if (!_managerSchuldatei.katalogAddressarten.hatEintrag(this._artDerAdresse))
+		if (!_managerSchuldatei.katalogAddressarten.hasEintragInZeitraum(_adresse, this._artDerAdresse))
 			throw new IllegalArgumentException("Die Art der Adresse '" + this._artDerAdresse + "' bei der Adresse mit der ID " + _adresse.id
 					+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
 					+ " ist im zugehörigen Katalog nicht vorhanden.");
 
 		// Prüfe, ob der Wert von hauptstandortadresse bei dieser Adresse gültig ist
 		// hauptstandortadresse 1->ja (Sitz), 0->nein (kein Sitz) - Hier wird noch ein Katalog ergänzt
-		if (!_managerSchuldatei.katalogHauptstandort.hatEintrag(_adresse.hauptstandortadresse))
+		if (!_managerSchuldatei.katalogHauptstandort.hasEintragInZeitraum(_adresse, _adresse.hauptstandortadresse))
 			throw new IllegalArgumentException(
 					"Der Wert von Hauptstandortadresse '" + _adresse.hauptstandortadresse + "' bei der Adresse mit der ID " + _adresse.id
 							+ " der Organisationseinheit mit der Schulnummer " + this._managerOrganisationseinheit.getSchulnummer()
@@ -107,7 +107,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 *
 	 * @return die Schulnummer der Organisationseinheit
 	 */
-	public int getSchulnummer() {
+	public @NotNull String getSchulnummer() {
 		return this._adresse.schulnummer;
 	}
 
@@ -207,7 +207,7 @@ public class SchuldateiOrganisationseinheitAdressManager {
 	 *
 	 * @return das Standortkennzeichen des Teilstandorts
 	 */
-	public int getStandortkennzeichen() {
+	public @NotNull String getStandortkennzeichen() {
 		return this._adresse.standortkennzeichen;
 	}
 

@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class PersonTyp extends JavaEnum<PersonTyp> {
 
@@ -130,6 +131,8 @@ export class PersonTyp extends JavaEnum<PersonTyp> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.PersonTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<PersonTyp>('de.svws_nrw.core.types.schule.PersonTyp');
 
 }
 

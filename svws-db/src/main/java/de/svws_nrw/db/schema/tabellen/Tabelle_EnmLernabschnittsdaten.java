@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -117,9 +117,6 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 			Schema.tab_SchuelerLD_PSFachBem, Schema.tab_EnmLernabschnittsdaten);
 
 
-	// TODO Trigger für SQLite
-
-
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle EnmLernabschnittsdaten.
 	 */
@@ -131,6 +128,7 @@ public class Tabelle_EnmLernabschnittsdaten extends SchemaTabelle {
 		setJavaClassName("DTOEnmLernabschnittsdaten");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
 				+ "der Datenbanktabelle für Lernabschnittsdaten Änderungen vorgenommen wurden.");
+		setVeraltet(SchemaRevisionen.REV_25);
 	}
 
 }

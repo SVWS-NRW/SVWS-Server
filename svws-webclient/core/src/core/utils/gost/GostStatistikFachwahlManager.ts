@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { GostStatistikFachwahl } from '../../../core/data/gost/GostStatistikFachwahl';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../java/lang/Class';
 import { GostStatistikFachwahlHalbjahr } from '../../../core/data/gost/GostStatistikFachwahlHalbjahr';
 
 export class GostStatistikFachwahlManager extends JavaObject {
@@ -38,6 +39,8 @@ export class GostStatistikFachwahlManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager'].includes(name);
 	}
+
+	public static class = new Class<GostStatistikFachwahlManager>('de.svws_nrw.core.utils.gost.GostStatistikFachwahlManager');
 
 }
 

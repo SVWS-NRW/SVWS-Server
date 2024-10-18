@@ -8,7 +8,11 @@
 		<template #unterricht="{ unterricht }">
 			<div class="font-bold flex place-items-center group" title="Unterricht">
 				<span v-if="useDragAndDrop" class="icon i-ri-draggable inline-block icon-dark -ml-1 opacity-60 group-hover:opacity-100 group-hover:icon-dark" />
-				<span>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
+				<svws-ui-tooltip v-if="unterricht.schienen.size() > 0">
+					<span class="break-keep">{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}&nbsp;({{ schienennummer(unterricht.schienen) }})</span>
+					<template #content>{{ schienenbezeichnung(unterricht.schienen) }}</template>
+				</svws-ui-tooltip>
+				<span v-else>{{ manager().unterrichtGetByIDStringOfFachOderKursKuerzel(unterricht.id) }}</span>
 			</div>
 			<div class="text-center">{{ unterricht.idKurs ? [...manager().kursGetByIdOrException(unterricht.idKurs).jahrgaenge].map(j => manager().jahrgangGetByIdOrException(j).kuerzel).join(', ') : [...unterricht.klassen].map(k => manager().klasseGetByIdOrException(k).kuerzel).join(', ') }}</div>
 			<div class="text-center" title="Lehrkraft"> {{ manager().unterrichtGetByIDLehrerFirstAsStringOrEmpty(unterricht.id) }} </div>
@@ -23,11 +27,11 @@
 	import type { StundenplanFachProps } from "./StundenplanFachProps";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
 	import type { List } from "../../../../core/src/java/util/List";
-	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 	import type { StundenplanPausenaufsicht } from "../../../../core/src/core/data/stundenplan/StundenplanPausenaufsicht";
 	import type { StundenplanUnterricht } from "../../../../core/src/core/data/stundenplan/StundenplanUnterricht";
 	import type { StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
-	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
+	import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
+	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 
 	const props = withDefaults(defineProps<StundenplanFachProps>(), {
 		mode: 'schueler',
@@ -41,24 +45,24 @@
 		onDrop: (zone: StundenplanAnsichtDropZone, wochentyp?: number) => {},
 	});
 
+	function schienenbezeichnung(ids: List<number>) {
+		return (ids.toArray() as number[]).map(s => props.manager().schieneGetByIdOrException(s).bezeichnung).join(', ');
+	}
+
+	function schienennummer(ids: List<number>) {
+		return (ids.toArray() as number[]).map(s => props.manager().schieneGetByIdOrException(s).nummer).join(', ');
+	}
+
 	function getSchienen(wochentag: number, stunde: number, wochentyp: number) : List<StundenplanSchiene> {
 		throw new DeveloperNotificationException("Die Anzeige von Schienen wird beim der Fachansicht nicht unterstützt.");
 	}
 
 	function getUnterricht(wochentag: number, stunde: number, wochentyp: number, schiene: number | null) : List<StundenplanUnterricht> {
-		const unterricht = props.manager().unterrichtGetMengeAsList()
-		const list: List<StundenplanUnterricht> = new ArrayList();
-		const zeitraster = props.manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag, stunde);
-		if (zeitraster !== null)
-			for (const u of unterricht)
-				if ((u.idFach === props.id) && (u.wochentyp === wochentyp) && (u.idZeitraster === zeitraster.id))
-					list.add(u);
-		return list;
+		return props.manager().unterrichtGetMengeByFachIdAndWochentagAndStundeAndWochentypAndSchieneAndInklusiveOrEmptyList(props.id, wochentag, stunde, wochentyp, schiene ?? -2, false);
 	}
 
 	function zeitrasterHatUnterrichtMitWochentyp(wochentag: number, stunde: number): boolean {
-		//TODO
-		return false//props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(props.id, wochentag, stunde);
+		return props.manager().zeitrasterHatUnterrichtMitWochentyp1BisNByFachIdWochentagAndStunde(props.id, Wochentag.fromIDorException(wochentag), stunde);
 	}
 
 	function getPausenzeiten() : List<StundenplanPausenzeit> {

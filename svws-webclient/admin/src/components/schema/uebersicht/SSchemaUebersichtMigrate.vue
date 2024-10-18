@@ -36,12 +36,13 @@
 
 <script setup lang="ts">
 
-	import type { List, SimpleOperationResponse } from "@core";
 	import { type ShallowRef, shallowRef } from "vue";
 	import type { SchemaMigrationQuelle } from "../SchemaMigrationQuelle";
+	import type { List } from "../../../../../core/src/java/util/List";
+	import type { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
 
 	const props = defineProps<{
-		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
+		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		targetSchema?: string;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
@@ -72,7 +73,7 @@
 			formData.append("database", file.value);
 			formData.append('databasePassword', props.migrationQuellinformationen().password);
 		}
-		formData.append('schema', props.targetSchema || zielSchema.value);
+		formData.append('schema', props.targetSchema ?? zielSchema.value);
 		formData.append('db', props.migrationQuellinformationen().dbms);
 		formData.append('srcUsername', props.migrationQuellinformationen().user);
 		formData.append('srcPassword', props.migrationQuellinformationen().password);
@@ -99,9 +100,8 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files)
 			file.value = target.files[0];
-		}
 		clear();
 	}
 

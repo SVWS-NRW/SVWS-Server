@@ -17,6 +17,7 @@ import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusSZufaellig } from '../../core/kursblockung/KursblockungAlgorithmusSZufaellig';
 import { KursblockungAlgorithmusK } from '../../core/kursblockung/KursblockungAlgorithmusK';
+import { Class } from '../../java/lang/Class';
 
 export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, ArrayList<GostBlockungsergebnisManager>> {
 
@@ -77,6 +78,8 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmus>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmus');
 
 }
 

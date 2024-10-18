@@ -2,11 +2,16 @@ package de.svws_nrw.db;
 
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Diese Klasse repräsentiert die Datenbank-Konfiguration für den Zugriff auf eine
  * SVWS-Datenbank.
  */
 public final class DBConfig {
+
+	/** Die Persistence-Unit, welche als Default genommen wird */
+	private static final PersistenceUnits DEFAULT_PERSISTENCE_UNIT = PersistenceUnits.SVWS_DB;
 
 	/** Der Datenbank-Treiber, der als Default genommen wird */
 	private static final DBDriver DEFAULT_DB_DRIVER = DBDriver.MARIA_DB;
@@ -14,6 +19,9 @@ public final class DBConfig {
 	/** Der Standard Ort für die Datenbank, falls kein gültiger angegeben wird */
 	private static final String DEFAULT_DB_LOCATION = "localhost";
 
+
+	/** Die zu verwendende Persistence-Unit */
+	private final @NotNull PersistenceUnits persistenceUnit;
 
 	/** Der Datenbank-Treiber */
 	private final DBDriver db_driver;
@@ -40,16 +48,11 @@ public final class DBConfig {
 	 * soll, falls zuvor keine Datei vorhanden war */
 	private final boolean create_db_file;
 
-	/** Gibt an, wieviele wiederholte Verbindungsversuche zur Datenbank stattfinden */
-	private final int connectionRetries;
-
-	/** Gibt an, in welchem zeitlichen Abstand wiederholte Verbindungsversuche stattfinden */
-	private final long retryTimeout;
-
 
 	/**
 	 * Erstellt eine Datenbank-Konfiguration mit den angegebenen Parametern
 	 *
+	 * @param persistenceUnit   die Persistence-Unit, die für den Datenbankzugriff genutzt werden soll
 	 * @param dbDriver          der Typ des DBMS für den Datenbankzugriff
 	 * @param dbLocation        der Ort, an dem sich die Datenbank befindet
 	 * @param dbSchema          das Schema in der Datenbank, das verwendet
@@ -65,15 +68,10 @@ public final class DBConfig {
 	 *                          automatisch eine neue Datenbankdatei erzeugt
 	 *                          werden soll, falls zuvor keine Datei vorhanden
 	 *                          war
-	 * @param connectionRetries gibt an, wieviele wiederholte Verbindungsversuche
-	 *                          zur Datenbank stattfinden sollen
-	 * @param retryTimeout      gibt an, wie hoch die Wartezeit zwischen zwei
-	 *                          wiederholten Verbindungsversuchen in
-	 *                          Millisekunden sein soll
-	 *
 	 */
-	public DBConfig(final DBDriver dbDriver, final String dbLocation, final String dbSchema, final boolean useDBLogin, final String username,
-			final String password, final boolean useDBLogging, final boolean createDBFile, final int connectionRetries, final long retryTimeout) {
+	public DBConfig(final PersistenceUnits persistenceUnit, final DBDriver dbDriver, final String dbLocation, final String dbSchema,
+			final boolean useDBLogin, final String username, final String password, final boolean useDBLogging, final boolean createDBFile) {
+		this.persistenceUnit = (persistenceUnit == null) ? DEFAULT_PERSISTENCE_UNIT : persistenceUnit;
 		this.db_driver = (dbDriver == null) ? DEFAULT_DB_DRIVER : dbDriver;
 		this.db_location = ((dbLocation == null) || "".equals(dbLocation.trim())) ? DEFAULT_DB_LOCATION : dbLocation;
 		switch (this.db_driver) {
@@ -91,8 +89,16 @@ public final class DBConfig {
 		this.username = username;
 		this.password = password;
 		this.use_db_logging = useDBLogging;
-		this.connectionRetries = connectionRetries;
-		this.retryTimeout = retryTimeout;
+	}
+
+
+	/**
+	 * Gibt die zu verwendende Persistence-Unit zurück.
+	 *
+	 * @return die zu verwendende Persistence-Unis
+	 */
+	public @NotNull PersistenceUnits getPersistenceUnit() {
+		return persistenceUnit;
 	}
 
 
@@ -156,24 +162,6 @@ public final class DBConfig {
 	}
 
 	/**
-	 * Gibt die Zeit in Millisekunden zwischen zwei wiederholten Verbindungsversuchen für die Datenbankverbindung zurück
-	 *
-	 * @return Zeit in Millisekunden zwischen zwei wiederholten Verbindungsversuchen
-	 */
-	public long getRetryTimeout() {
-		return this.retryTimeout;
-	}
-
-	/**
-	 * Gibt die Anzahl an wiederholten Verbindungsversuchen für die Datenbankverbindung zurück
-	 *
-	 * @return anzahl an wiederholten Verbindungsversuchen
-	 */
-	public int getConnectionRetries() {
-		return this.connectionRetries;
-	}
-
-	/**
 	 * Gibt zurück, ob der Datenbankzugriff geloggt werden soll oder nicht
 	 *
 	 * @return true, falls der Datenbankzugriff geloggt werden soll und ansonsten false
@@ -197,13 +185,15 @@ public final class DBConfig {
 
 	/**
 	 * Erstellt eine Kopie von dieser Konfiguration, tauscht dabei aber die Benutzerangaben aus.
+	 *
+	 * @param pu         die zu verwendende Persistence-Unit
 	 * @param username   der neue Benutzername
 	 * @param password   das neue Kennwort
+	 *
 	 * @return  eine Kopie der Konfiguration mit den neuen Benutzerinformationen
 	 */
-	public DBConfig switchUser(final String username, final String password) {
-		return new DBConfig(db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries,
-				retryTimeout);
+	public DBConfig switchUser(final PersistenceUnits pu, final String username, final String password) {
+		return new DBConfig(pu, db_driver, db_location, db_schema, use_db_login, username, password, use_db_logging, create_db_file);
 	}
 
 
@@ -211,21 +201,21 @@ public final class DBConfig {
 	 * Erstellt eine Kopie von dieser Konfiguration, tauscht dabei aber
 	 * den Namen des Schemas aus.
 	 *
+	 * @param pu         die zu verwendende Persistence-Unit
 	 * @param dbSchema    der Name des neu ausgewählten Schemas
 	 *
 	 * @return die Kopie der Konfiguration mit dem neu ausgewählten Schema-Namen.
 	 */
-	public DBConfig switchSchema(final String dbSchema) {
-		return new DBConfig(db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file, connectionRetries,
-				retryTimeout);
+	public DBConfig switchSchema(final PersistenceUnits pu, final String dbSchema) {
+		return new DBConfig(pu, db_driver, db_location, dbSchema, use_db_login, username, password, use_db_logging, create_db_file);
 	}
 
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username, connectionRetries,
-				retryTimeout);
+		return Objects.hash(persistenceUnit, create_db_file, db_driver, db_location, db_schema, password, use_db_logging, use_db_login, username);
 	}
+
 
 	@Override
 	public boolean equals(final Object obj) {
@@ -236,11 +226,10 @@ public final class DBConfig {
 		if (getClass() != obj.getClass())
 			return false;
 		final DBConfig other = (DBConfig) obj;
-		return (create_db_file == other.create_db_file) && (db_driver == other.db_driver)
+		return (create_db_file == other.create_db_file) && (persistenceUnit == other.persistenceUnit) && (db_driver == other.db_driver)
 				&& Objects.equals(db_location, other.db_location) && Objects.equals(db_schema, other.db_schema)
 				&& Objects.equals(password, other.password) && (use_db_logging == other.use_db_logging)
-				&& (use_db_login == other.use_db_login) && Objects.equals(username, other.username)
-				&& (connectionRetries == other.connectionRetries) && (retryTimeout == other.retryTimeout);
+				&& (use_db_login == other.use_db_login) && Objects.equals(username, other.username);
 	}
 
 }

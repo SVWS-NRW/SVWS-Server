@@ -4,7 +4,7 @@
 		<template #modalTitle>Lehrkraft als Klassenleitung hinzufügen</template>
 		<template #modalContent>
 			<div style="height:250pt">
-				<svws-ui-table clickable v-model:clicked="clickedRow" :items="rowsFiltered.values()" :columns="cols" count scroll-into-view scroll>
+				<svws-ui-table clickable v-model:clicked="clickedRow" :items="rowsFiltered.values()" :columns="cols" count scroll>
 					<template #search>
 						<svws-ui-text-input type="search" placeholder="Lehrkraft suchen" v-model="search" />
 					</template>
@@ -25,24 +25,8 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { List, LehrerListeEintrag} from "@core";
+	import type { List, LehrerListeEintrag } from "@core";
 	import type { SKlassenDatenLehrerZuweisungModalProps } from "~/components/klassen/daten/SKlassenDatenLehrerZuweisungModalProps";
-
-	const _showModal = ref<boolean>(false);
-	const showModal = () => {
-		// Benötigt damit der X Button oben das Modal zurücksetzt
-		if (_showModal.value === false) {
-			search.value = "";
-			clickedRow.value = undefined;
-		}
-		return _showModal
-	};
-
-	const closeModal = () => {
-		search.value = "";
-		clickedRow.value = undefined;
-		_showModal.value = false;
-	}
 
 	const props = defineProps<SKlassenDatenLehrerZuweisungModalProps>();
 
@@ -66,6 +50,23 @@
 	});
 
 	const auswaehlenDeaktiviert = computed<boolean>(() => clickedRow.value === undefined)
+
+	const _showModal = ref<boolean>(false);
+
+	function showModal() {
+		// Benötigt damit der X Button oben das Modal zurücksetzt
+		if (_showModal.value === false) {
+			search.value = "";
+			clickedRow.value = undefined;
+		}
+		return _showModal;
+	}
+
+	function closeModal() {
+		search.value = "";
+		clickedRow.value = undefined;
+		_showModal.value = false;
+	}
 
 	async function add() {
 		const klassenId = props.klassenListeManager().auswahl().id;

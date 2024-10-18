@@ -31,17 +31,17 @@
 <script setup lang="ts">
 
 	import { type ShallowRef, shallowRef } from "vue";
-	import type { List, SimpleOperationResponse } from "@core";
-	import type { InputDataType } from "@ui";
 	import { type SchemaMigrationQuelle } from "../schema/SchemaMigrationQuelle";
+	import type { List } from "../../../../core/src/java/util/List";
+	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
 
 	const props = defineProps<{
-		migrateSchema:  (formData: FormData) => Promise<SimpleOperationResponse>;
+		migrateSchema: (formData: FormData) => Promise<SimpleOperationResponse>;
 		migrationQuellinformationen: () => SchemaMigrationQuelle;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
-		validatorUsername: (username: InputDataType) => boolean;
+		validatorUsername: (username: string | null) => boolean;
 		isActive: boolean;
 	}>();
 
@@ -90,7 +90,7 @@
 
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if (target && target.files) {
+		if (target.files) {
 			file.value = target.files[0];
 		}
 	}

@@ -614,6 +614,10 @@ public final class TranspilerUnit {
 				} else {
 					if ((elem.getKind() == ElementKind.CLASS) && (path.getParentPath().getLeaf() instanceof ConstantCaseLabelTree))
 						continue;
+					if (transpiler.isParentAnnotationType(node)) {
+						allAnnotations.put(node, getPackageName(node, path, false));
+						continue;
+					}
 					switch (elem.getKind()) {
 						case CLASS, ENUM, INTERFACE -> allImports.put(node, getPackageName(node, path, true));
 						case ANNOTATION_TYPE -> allAnnotations.put(node, getPackageName(node, path, false));
@@ -701,8 +705,12 @@ public final class TranspilerUnit {
 
 		// check annotations
 		final String annotationPackageName = annotations.get(nodeName);
-		if (annotationPackageName != null)
-			return ExpressionClassType.getExpressionClassType(transpiler, transpiler.getTypeElement(annotationPackageName + "." + nodeName));
+		if (annotationPackageName != null) {
+			final TypeElement te = transpiler.getTypeElement(annotationPackageName + "." + nodeName);
+			if (te != null)
+				return ExpressionClassType.getExpressionClassType(transpiler, te);
+			return ExpressionClassType.getExpressionAnnotationType(importPackageName, annotationPackageName);
+		}
 
 		// return class type for specific known classes
 		final String canonicalNodeName = switch (nodeName) {
@@ -729,12 +737,13 @@ public final class TranspilerUnit {
 				return getIdentifierType(it);
 		}
 
-
-		// TODO check for annotation identifier types
 		final Element element = transpiler.getElement(node);
-		if ((element != null) && (element instanceof final ExecutableElement ee))
-			return ExpressionClassType.getExpressionClassType(transpiler, ee.getReturnType());
-
+		if (element != null) {
+			if (element instanceof final ExecutableElement ee)
+				return ExpressionClassType.getExpressionClassType(transpiler, ee.getReturnType());
+			if (element instanceof final VariableElement ve)
+				return ExpressionClassType.getExpressionClassType(transpiler, ve.asType());
+		}
 
 		// check whether the identifier ist the first part of the full class name (i.e. the first part of the package)
 		final ExpressionClassType ect = ExpressionClassType.getExpressionClassType(transpiler, node);
@@ -800,7 +809,8 @@ public final class TranspilerUnit {
 		ExpressionType type =
 				"this".equals(name) ? ExpressionClassType.getExpressionClassType(transpiler, classElement) : allExpressionTypes.get(node.getExpression());
 		if ((type == null) && (transpiler.getElement(node.getExpression()).getKind() == ElementKind.PACKAGE)) {
-			if ((transpiler.getElement(node).getKind() == ElementKind.CLASS) || ((transpiler.getElement(node).getKind() == ElementKind.INTERFACE))) {
+			if ((transpiler.getElement(node).getKind() == ElementKind.CLASS) || (transpiler.getElement(node).getKind() == ElementKind.ENUM)
+					|| (transpiler.getElement(node).getKind() == ElementKind.INTERFACE)) {
 				return ExpressionClassType.getExpressionClassType(transpiler, node);
 			}
 			throw new TranspilerException("Transpiler Error: Element kind %s not yet supported here.".formatted(transpiler.getElement(node).getKind()));

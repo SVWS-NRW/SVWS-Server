@@ -1,11 +1,10 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 
-import de.svws_nrw.core.data.schule.SchuelerstatusKatalogEintrag;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -14,12 +13,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link SchuelerstatusKatalogEintrag}.
+ * Core-DTO {@link SchuelerStatusKatalogEintrag}.
  */
 public final class DataSchuelerStatus extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerstatusKatalogEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link SchuelerStatusKatalogEintrag}.
 	 */
 	public DataSchuelerStatus() {
 		super(null);
@@ -27,16 +26,10 @@ public final class DataSchuelerStatus extends DataManager<Long> {
 
 	@Override
 	public Response getAll() throws ApiOperationException {
-		final List<SchuelerstatusKatalogEintrag> katalog = Arrays.stream(SchuelerStatus.values()).map(s -> {
-			final var eintrag = new SchuelerstatusKatalogEintrag();
-			eintrag.StatusNr = s.id;
-			eintrag.Bezeichnung = s.bezeichnung;
-			eintrag.Sortierung = s.ordinal();
-			return eintrag;
-		}).toList();
-		if (katalog == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(katalog).build();
+		final ArrayList<SchuelerStatusKatalogEintrag> daten = new ArrayList<>();
+		for (final SchuelerStatus status : SchuelerStatus.values())
+			daten.addAll(status.historie());
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
 	@Override

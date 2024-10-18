@@ -4,7 +4,6 @@ import java.util.List;
 
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.schema.DBSchemaViews;
@@ -154,8 +153,10 @@ public class DBUpdater {
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 *
 	 * @return true, falls das schema aktuell ist, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUptodate(final long maxUpdateRevision, final boolean devMode) {
+	public boolean isUptodate(final long maxUpdateRevision, final boolean devMode) throws DBException {
 		status.update();
 		final DBSchemaVersion currentVersion = status.getVersion();
 		if (currentVersion == null) {
@@ -196,8 +197,10 @@ public class DBUpdater {
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 *
 	 * @return true, falls eine Aktualisierung möglich ist, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUpdatable(final long maxUpdateRevision, final boolean devMode) {
+	public boolean isUpdatable(final long maxUpdateRevision, final boolean devMode) throws DBException {
 		// Prüfe zunächst, ob ein Update möglich ist
 		status.update();
 		final DBSchemaVersion currentVersion = status.getVersion();
@@ -222,7 +225,7 @@ public class DBUpdater {
 	/**
 	 * Aktualisiert das Schema schrittweise auf die angegebene Revision
 	 *
-	 * @param user                der Benutzer für die Datenbank-Verbindung
+	 * @param conn                die Datenbank-Verbindung
 	 * @param maxUpdateRevision   die maximale Revision auf die aktualisiert wird, -1 für die neueste Revision
 	 * @param devMode             gibt an, ob auch Schema-Revision erlaubt werden, die nur für Entwickler zur Verfügung stehen
 	 * @param lockSchema          gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
@@ -230,7 +233,7 @@ public class DBUpdater {
 	 *
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(final Benutzer user, final long maxUpdateRevision, final boolean devMode, final boolean lockSchema) {
+	public boolean update(final DBEntityManager conn, final long maxUpdateRevision, final boolean devMode, final boolean lockSchema) {
 		// Sperre ggf. das Datenbankschema
 		if ((lockSchema) && (!SVWSKonfiguration.get().lockSchema(schemaManager.getSchemaStatus().schemaName))) {
 			logger.logLn("-> Update fehlgeschlagen! (Schema ist aktuell gesperrt und kann daher nicht aktualisiert werden)");
@@ -238,48 +241,46 @@ public class DBUpdater {
 		}
 
 		boolean success = true;
-		try (DBEntityManager conn = user.getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				// Prüfe zunächst, ob ein Update möglich ist
-				status.update(conn);
-				final DBSchemaVersion currentVersion = status.getVersion();
-				long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
-				if ((currentVersion == null) || (max_revision < 0))
-					return false;
-				if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
-					max_revision = maxUpdateRevision;
+		try {
+			conn.transactionBegin();
+			// Prüfe zunächst, ob ein Update möglich ist
+			status.update(conn);
+			final DBSchemaVersion currentVersion = status.getVersion();
+			long max_revision = devMode ? SchemaRevisionen.maxDeveloperRevision.revision : SchemaRevisionen.maxRevision.revision;
+			if ((currentVersion == null) || (max_revision < 0))
+				return false;
+			if ((maxUpdateRevision >= 0) && (maxUpdateRevision < max_revision))
+				max_revision = maxUpdateRevision;
 
-				// Ist kein Update nötig, so war die Aktualisierung erfolgreich
-				if (max_revision <= currentVersion.getRevisionOrDefault(0))
-					return true;
+			// Ist kein Update nötig, so war die Aktualisierung erfolgreich
+			if (max_revision <= currentVersion.getRevisionOrDefault(0))
+				return true;
 
-				// Ermittle die nächste Revision, auf die aktualisiert werden soll
-				for (long neue_revision = currentVersion.getRevisionOrDefault(0) + 1; neue_revision <= max_revision; neue_revision++) {
-					logger.logLn("* Aktualisiere auf Revision " + neue_revision);
-					logger.modifyIndent(2);
-					success = performUpdate(conn, neue_revision);
-					logger.modifyIndent(-2);
-					if (!success)
-						break;
-				}
-
-				if (success && (!conn.transactionCommit()))
-					success = false;
-			} catch (final Exception e) {
-				e.printStackTrace();
-				success = false;
-			} finally {
-				// Perform a rollback if necessary
-				conn.transactionRollback();
+			// Ermittle die nächste Revision, auf die aktualisiert werden soll
+			for (long neue_revision = currentVersion.getRevisionOrDefault(0) + 1; neue_revision <= max_revision; neue_revision++) {
+				logger.logLn("* Aktualisiere auf Revision " + neue_revision);
+				logger.modifyIndent(2);
+				success = performUpdate(conn, neue_revision);
+				logger.modifyIndent(-2);
+				if (!success)
+					break;
 			}
-		}
 
-		// Entsperre ggf. das Datenbankschema
-		if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
-			logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas."
-					+ " Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
-			return false;
+			if (success && (!conn.transactionCommit()))
+				success = false;
+		} catch (final Exception e) {
+			e.printStackTrace();
+			success = false;
+		} finally {
+			// Perform a rollback if necessary
+			conn.transactionRollback();
+
+			// Entsperre ggf. das Datenbankschema
+			if ((lockSchema) && (!SVWSKonfiguration.get().unlockSchema(schemaManager.getSchemaStatus().schemaName))) {
+				logger.logLn("-> Update evtl. fehlgeschlagen! (Fehler beim Freigeben des Datenbank-Schemas."
+						+ " Schema ist nicht gesperrt - dies wird an dieser Stelle nicht erwartet!)");
+				success = false;
+			}
 		}
 		return success;
 	}

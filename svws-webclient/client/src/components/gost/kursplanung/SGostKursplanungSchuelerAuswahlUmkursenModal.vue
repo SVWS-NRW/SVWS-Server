@@ -20,25 +20,22 @@
 							</div>
 							<div v-else @click="toggleFixierRegelAlleKursSchueler">
 								<template v-if="kursSchuelerFixierungen === true">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
 								</template>
 								<template v-else-if="kursSchuelerFixierungen === null">
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
-								</template>
-								<template v-else-if="allowRegeln">
-									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 hover:opacity-50" />
 								</template>
 								<template v-else>
-									&nbsp;
+									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
 						</template>
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(schuelerFilter().kurs?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelKurs(rowData.id).value">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
 								</template>
-								<template v-else-if="allowRegeln">
+								<template v-else>
 									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
@@ -67,9 +64,9 @@
 						<template #cell(pin)="{ rowData }">
 							<div @click="toggleFixierRegelKursSchueler(andererKurs(rowData.id).value?.id ?? null, rowData.id)">
 								<template v-if="hatFixierRegelAndererKurs(rowData.id).value">
-									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5" :class="{ 'hover:opacity-50': allowRegeln }" />
+									<span class="icon-sm inline-block i-ri-pushpin-fill -my-0.5 hover:opacity-50" />
 								</template>
-								<template v-else-if="allowRegeln && (getKurs(rowData) !== undefined)">
+								<template v-else-if="getKurs(rowData) !== undefined">
 									<span class="icon-sm inline-block i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" />
 								</template>
 							</div>
@@ -103,8 +100,8 @@
 						</div>
 					</div>
 					<div class="flex flex-col gap-2">
-						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben {{ allowRegeln ? 'und Fixierung entfernen':'' }}</svws-ui-checkbox>
-						<svws-ui-checkbox :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren" :disabled="!allowRegeln">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
+						<svws-ui-checkbox :model-value="fixierteVerschieben()" @update:model-value="setFixierteVerschieben">auch fixierte Schüler verschieben und Fixierung entfernen</svws-ui-checkbox>
+						<svws-ui-checkbox :model-value="inZielkursFixieren()" @update:model-value="setInZielkursFixieren">Schüler in Ziel-Kursen fixieren</svws-ui-checkbox>
 						<svws-ui-checkbox v-model="zielkurseLeeren">Zielkurse leeren</svws-ui-checkbox>
 					</div>
 				</div>
@@ -127,7 +124,6 @@
 	const props = defineProps<{
 		updateKursSchuelerZuordnungen: (update: GostBlockungsergebnisKursSchuelerZuordnungUpdate) => Promise<boolean>;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
-		allowRegeln: boolean;
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		schuelerFilter: () => GostKursplanungSchuelerFilter;
@@ -217,7 +213,7 @@
 		if (kurs === undefined)
 			return '—';
 		const fach = props.getErgebnismanager().getFach(kurs.fach_id);
-		return fach.bezeichnung || '—';
+		return fach.bezeichnung ?? '—';
 	});
 
 	const fachwahlschueler = computed(() => {
@@ -298,7 +294,7 @@
 	const openModal = () => showModal().value = true;
 
 	async function toggleFixierRegelKursSchueler(idKurs: number | null, idSchueler: number) : Promise<void> {
-		if ((!props.allowRegeln) || (idKurs === null) || (props.apiStatus.pending))
+		if ((idKurs === null) || (props.apiStatus.pending))
 			return;
 		let update = new GostBlockungRegelUpdate();
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
@@ -316,9 +312,9 @@
 		const setSchueler = new HashSet<number>();
 		for (const s of kursSchueler)
 			setSchueler.add(s.id);
-		const update = !kursSchuelerFixierungen.value
-			? props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
-			: props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
+		const update = (kursSchuelerFixierungen.value === true)
+			? props.getErgebnismanager().regelupdateRemove_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
+			: props.getErgebnismanager().regelupdateCreate_04_SCHUELER_FIXIEREN_IN_KURS(setSchueler, SetUtils.create1(kurs.id))
 		await props.regelnUpdate(update);
 	}
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostLeistungenFachwahl } from '../../../core/data/gost/GostLeistungenFachwahl';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class GostLeistungen extends JavaObject {
@@ -68,6 +69,8 @@ export class GostLeistungen extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLeistungen'].includes(name);
 	}
+
+	public static class = new Class<GostLeistungen>('de.svws_nrw.core.data.gost.GostLeistungen');
 
 	public static transpilerFromJSON(json : string): GostLeistungen {
 		const obj = JSON.parse(json) as Partial<GostLeistungen>;

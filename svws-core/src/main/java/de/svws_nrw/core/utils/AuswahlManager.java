@@ -6,10 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import de.svws_nrw.core.adt.Pair;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils;
 import jakarta.validation.constraints.NotNull;
 
@@ -410,8 +410,21 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	 *
 	 * @return der Schuljahresabschnitt der Schule
 	 */
-	public Schuljahresabschnitt getSchuljahresabschnittSchule() {
-		return this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+	public @NotNull Schuljahresabschnitt getSchuljahresabschnittSchule() {
+		final Schuljahresabschnitt result = this.schuljahresabschnitte.get(this._schuljahresabschnittSchule);
+		if (result == null)
+			throw new DeveloperNotificationException("Der Schuljahresabschnitt der Schule ist nicht verfügbar.");
+		return result;
+	}
+
+
+	/**
+	 * Gibt das Schuljahr des Schuljahresabschnitts der Schule zurück.
+	 *
+	 * @return das Schuljahr
+	 */
+	public int getSchuljahr() {
+		return this.getSchuljahresabschnittSchule().schuljahr;
 	}
 
 
@@ -424,7 +437,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	public boolean istSchuljahresabschnittAktuell() {
 		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
 		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+		if (abschnittAuswahl == null)
 			return false;
 		return (abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt == abschnittSchule.abschnitt);
 	}
@@ -440,7 +453,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	public boolean istSchuljahresabschnittPlanung() {
 		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
 		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+		if (abschnittAuswahl == null)
 			return false;
 		return (abschnittAuswahl.schuljahr > abschnittSchule.schuljahr)
 				|| ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt > abschnittSchule.abschnitt));
@@ -457,7 +470,7 @@ public abstract class AuswahlManager<TID, TAuswahl, TDaten> {
 	public boolean istSchuljahresabschnittVergangenheit() {
 		final Schuljahresabschnitt abschnittAuswahl = this.getSchuljahresabschnittAuswahl();
 		final Schuljahresabschnitt abschnittSchule = this.getSchuljahresabschnittSchule();
-		if ((abschnittAuswahl == null) || (abschnittSchule == null))
+		if (abschnittAuswahl == null)
 			return false;
 		return (abschnittAuswahl.schuljahr < abschnittSchule.schuljahr)
 				|| ((abschnittAuswahl.schuljahr == abschnittSchule.schuljahr) && (abschnittAuswahl.abschnitt < abschnittSchule.abschnitt));

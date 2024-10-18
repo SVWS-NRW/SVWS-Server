@@ -1,0 +1,15 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINE",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "",
+			"text": "keine",
+			"schluessel": "",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

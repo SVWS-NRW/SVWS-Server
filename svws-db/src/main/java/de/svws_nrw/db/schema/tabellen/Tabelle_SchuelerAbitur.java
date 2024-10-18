@@ -1,8 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte;
 import de.svws_nrw.db.converter.current.gost.GOStBesondereLernleistungConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -199,8 +198,6 @@ public class Tabelle_SchuelerAbitur extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte BLL_Punkte */
 	public SchemaTabelleSpalte col_BLL_Punkte = add("BLL_Punkte", SchemaDatentypen.INT, false)
 			.setJavaName("BesondereLernleistungNotenpunkte")
-			.setConverter(NoteConverterFromNotenpunkte.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Besondere Lernleistung: Die Notenpunkte, welche bei der besonderen Lernleistung erreicht wurden – einfach gewichtet");
 
 	/** Die Definition der Tabellenspalte Thema_BLL */

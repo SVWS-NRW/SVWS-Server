@@ -37,17 +37,20 @@
 
 <script setup lang="ts">
 
-	import { ref } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import type { SchuleDatenaustauschUntisStundenplanProps } from './SSchuleDatenaustauschUntisStundenplanProps';
-	import { type List, type Schuljahresabschnitt, StundenplanListeEintragMinimal } from "@core";
+	import type { List, Schuljahresabschnitt} from "@core";
+	import { StundenplanListeEintragMinimal } from "@core";
 
 	const props = defineProps<SchuleDatenaustauschUntisStundenplanProps>();
 
 	const bezeichnung = ref<string>(`Import ${new Date().toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin', hour: 'numeric', minute: 'numeric'})}`);
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const gueltigAb = ref<string>(getGueltigAb(props.schuljahresabschnittsauswahl().aktuell));
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const abschnitt = ref<Schuljahresabschnitt>(props.schuljahresabschnittsauswahl().aktuell);
+	const gueltigAb = ref<string | null>(null);
+
+	onMounted(() => {
+		gueltigAb.value = getGueltigAb(props.schuljahresabschnittsauswahl().aktuell);
+	});
+
 	const file = ref<File | null>(null);
 	const ignoreMissing = ref<boolean>(true);
 
@@ -56,8 +59,8 @@
 	const logs = ref<List<string | null> | undefined>();
 
 	function onFileChanged(event: Event) {
-		const target = event.target as HTMLInputElement;
-		if (target && target.files)
+		const target = <HTMLInputElement>event.currentTarget;
+		if (target.files !== null)
 			file.value = target.files[0];
 	}
 
@@ -67,20 +70,15 @@
 		return a === 1 ? `${s}-08-01` : `${s+1}-02-01`
 	}
 
-	function setAbschnitt(a: Schuljahresabschnitt) {
-		gueltigAb.value = getGueltigAb(a);
-		abschnitt.value = a;
-	}
-
 	async function import_file() {
-		if (!file.value || abschnitt.value === undefined || bezeichnung.value.length < 1)
+		if ((file.value === null) || (bezeichnung.value.length < 1))
 			return;
 		status.value = undefined;
 		loading.value = true;
 		const entry = new StundenplanListeEintragMinimal();
 		entry.bezeichnung = bezeichnung.value;
-		entry.idSchuljahresabschnitt = abschnitt.value.id;
-		entry.gueltigAb = gueltigAb.value;
+		entry.idSchuljahresabschnitt = props.schuljahresabschnittsauswahl().aktuell.id;
+		entry.gueltigAb = gueltigAb.value ?? getGueltigAb(props.schuljahresabschnittsauswahl().aktuell);
 		const formData = new FormData();
 		formData.append('entry', StundenplanListeEintragMinimal.transpilerToJSON(entry));
 		formData.append("data", file.value);
@@ -88,9 +86,8 @@
 		logs.value = result.log;
 		status.value = result.success;
 		loading.value = false;
-		gueltigAb.value = '';
+		gueltigAb.value = null;
 		bezeichnung.value = '';
-		abschnitt.value = props.schuljahresabschnittsauswahl().aktuell;
 		file.value = null;
 	}
 

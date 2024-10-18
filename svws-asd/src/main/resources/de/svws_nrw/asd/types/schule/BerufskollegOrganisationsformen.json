@@ -1,0 +1,208 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "TEILZEIT",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1001000,
+			"schluessel": "1",
+			"kuerzel": "T",
+			"text": "Teilzeitunterricht (außerhalb der TZ-Berufsschule)",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TEILZEIT_NORMALKLASSE",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1002000,
+			"schluessel": "2",
+			"kuerzel": "A",
+			"text": "Teilzeitunterricht ohne Blockunterricht (Normalklasse) TZ-Berufsschule",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TEILZEIT_BEZIRKSFACHKLASSE",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 1003000,
+			"schluessel": "3",
+			"kuerzel": "C",
+			"text": "Teilzeitunterricht ohne Blockunterricht (Bezirksfachklasse) TZ-Berufsschule",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TEILZEIT_LANDESFACHKLASSE",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 1004000,
+			"schluessel": "4",
+			"kuerzel": "I",
+			"text": "Teilzeitunterricht ohne Blockunterricht (Landesfachklasse) TZ-Berufsschule",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VOLLZEIT",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 1005000,
+			"schluessel": "5",
+			"kuerzel": "V",
+			"text": "Vollzeitunterricht",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 1006000,
+			"schluessel": "6",
+			"kuerzel": "B",
+			"text": "Blockunterricht z.Zt. im Unterricht (Normalklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 1007000,
+			"schluessel": "7",
+			"kuerzel": "E",
+			"text": "Blockunterricht z.Zt. nicht im Unterricht (Normalklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 1008000,
+			"schluessel": "8",
+			"kuerzel": "G",
+			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Normalklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_GANZTAG",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 1000,
+			"schluessel": "0",
+			"kuerzel": "K",
+			"text": "Ganztagsunterricht (Normalklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 1009000,
+			"schluessel": "9",
+			"kuerzel": "D",
+			"text": "Blockunterricht z.Zt. im Unterricht (Bezirksfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 1010000,
+			"schluessel": "10",
+			"kuerzel": "F",
+			"text": "Blockunterricht z.Zt. nicht im Unterricht (Bezirksfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_BEZIRKSFACHKLASSE",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 1011000,
+			"schluessel": "11",
+			"kuerzel": "H",
+			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Bezirksfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_GANZTAG_BEZIRKSFACHKLASSE",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 1012000,
+			"schluessel": "12",
+			"kuerzel": "L",
+			"text": "Ganztagsunterricht (Bezirksfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+	"bezeichner": "DUAL_BLOCK_IM_UNTERRICHT_LANDESFACHKLASSE",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 1013000,
+			"schluessel": "13",
+			"kuerzel": "O",
+			"text": "Blockunterricht z.Zt. im Unterricht (Landesfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_NICHT_IM_UNTERRICHT_LANDESFACHKLASSE",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 1014000,
+			"schluessel": "14",
+			"kuerzel": "P",
+			"text": "Blockunterricht z.Zt. nicht im Unterricht (Landesfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_BLOCK_TEILZEIT_IM_UNTERRICHT_LANDESFACHKLASSE",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 1015000,
+			"schluessel": "15",
+			"kuerzel": "U",
+			"text": "Block- und Teilzeitunterr. z.Zt. im Block- oder TZ-Unterricht (Landesfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "DUAL_GANZTAG_LANDESFACHKLASSE",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 1016000,
+			"schluessel": "16",
+			"kuerzel": "M",
+			"text": "Ganztagsunterricht (Landesfachklasse) im dualen System",
+			"schulformen": [ "BK", "SB" ],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]	
+}

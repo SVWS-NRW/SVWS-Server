@@ -6,27 +6,27 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu dem Stundenplan eines Schülers.
+ * Sie liefert die Informationen zu einer Gost-Schülerklausur.
  */
 @XmlRootElement
-@Schema(description = "der Stundenplan eines Schülers.")
+@Schema(description = "die Informationen zu einer Gost-Schülerklausur.")
 @TranspilerDTO
 public class GostSchuelerklausur {
 
-	/** Die ID des Stundenplans. */
-	@Schema(description = "die ID des Stundenplans", example = "815")
+	/** Die ID der Schülerklausur. */
+	@Schema(description = "die ID der Schülerklausur.", example = "815")
 	public long id = -1;
 
-	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
+	/** Die ID der zugehörigen Kursklausur. */
+	@Schema(description = "die ID der zugehörigen Kursklausur.", example = "4711")
 	public long idKursklausur = -1;
 
-	/** Das Zeitraster des Stundenplans. */
-	@Schema(description = "das Zeitraster des Stundenplans")
+	/** Die ID des zugehörigen Schülers. */
+	@Schema(description = "die ID des zugehörigen Schülers.", example = "2242")
 	public long idSchueler = -1;
 
 	/** Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden. */
-	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Zentrale Vergleichsklausur")
+	@Schema(description = "die textuelle Bemerkung zur Schülerklausur, sofern vorhanden", example = "Nachteilsausgleich!")
 	public String bemerkung = null;
 
 	/**
@@ -37,7 +37,7 @@ public class GostSchuelerklausur {
 	 */
 	@Override
 	public boolean equals(final Object another) {
-		return (another != null) && (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
+		return (another instanceof GostSchuelerklausur) && (this.id == ((GostSchuelerklausur) another).id);
 	}
 
 	/**
@@ -48,6 +48,13 @@ public class GostSchuelerklausur {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(id);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostSchuelerklausur() {
+		super();
 	}
 
 }

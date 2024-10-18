@@ -3,10 +3,7 @@ package de.svws_nrw.module.reporting.types.schueler.gost.kursplanung;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungKurs;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKursbelegung.</p>
- * <p>Sie enthält die Daten zur Belegung eines Kurses durch einen Schüler im Rahmen der Kursplanung der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- *  einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungKurs.
  */
 public class ReportingSchuelerGostKursplanungKursbelegung {
 
@@ -30,7 +27,8 @@ public class ReportingSchuelerGostKursplanungKursbelegung {
 	 * @param istSchriftlich		Angabe, ob der Kurs schriftlich belegt ist.
 	 * @param kurs 					Der Kurs, der vom Schüler belegt wird.
 	 */
-	public ReportingSchuelerGostKursplanungKursbelegung(final String abiturfach, final boolean hatGueltigeFachwahl, final boolean istSchriftlich, final ReportingGostKursplanungKurs kurs) {
+	public ReportingSchuelerGostKursplanungKursbelegung(final String abiturfach, final boolean hatGueltigeFachwahl, final boolean istSchriftlich,
+			final ReportingGostKursplanungKurs kurs) {
 		this.abiturfach = abiturfach;
 		this.hatGueltigeFachwahl = hatGueltigeFachwahl;
 		this.istSchriftlich = istSchriftlich;

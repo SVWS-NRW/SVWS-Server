@@ -2,15 +2,12 @@ package de.svws_nrw.db.dto.current.schild.schueler.abitur;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkte;
-import de.svws_nrw.db.converter.current.NoteConverterFromNotenpunkteString;
 import de.svws_nrw.db.converter.current.gost.AbiturBelegungsartConverter;
 import de.svws_nrw.db.converter.current.gost.AbiturKursMarkierungConverter;
 import de.svws_nrw.db.converter.current.gost.GOStAbiturFachConverter;
 import de.svws_nrw.db.converter.current.gost.GOStKursartConverter;
 
 import de.svws_nrw.core.data.gost.AbiturKursMarkierung;
-import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.gost.AbiturBelegungsart;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -29,10 +26,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterSerializer;
 import de.svws_nrw.csv.converter.current.BooleanPlusMinusDefaultMinusConverterDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteStringSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromNotenpunkteStringDeserializer;
 import de.svws_nrw.csv.converter.current.gost.AbiturBelegungsartConverterSerializer;
 import de.svws_nrw.csv.converter.current.gost.AbiturBelegungsartConverterDeserializer;
 import de.svws_nrw.csv.converter.current.gost.AbiturKursMarkierungConverterSerializer;
@@ -366,10 +359,7 @@ public final class DTOSchuelerAbiturFach {
 	/** EF, 1. HJ: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P11_1")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note EF_HJ1_Notenpunkte;
+	public String EF_HJ1_Notenpunkte;
 
 	/** EF, 1. HJ: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich) */
 	@Column(name = "S11_1")
@@ -382,10 +372,7 @@ public final class DTOSchuelerAbiturFach {
 	/** EF, 2. HJ: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P11_2")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note EF_HJ2_Notenpunkte;
+	public String EF_HJ2_Notenpunkte;
 
 	/** EF, 2. HJ: Gibt die Art und Schriftlichkeit des Kurses an (-: nicht belegt, M: GK mündlich, S: GK schriftlich) */
 	@Column(name = "S11_2")
@@ -398,10 +385,7 @@ public final class DTOSchuelerAbiturFach {
 	/** BK: eingebrachte Facharbeit – Notenpunkte */
 	@Column(name = "P_FA")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note Facharbeit_Notenpunkte;
+	public String Facharbeit_Notenpunkte;
 
 	/** BK: eingebrachte Facharbeit – Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt) */
 	@Column(name = "R_FA")
@@ -419,10 +403,7 @@ public final class DTOSchuelerAbiturFach {
 	/** Q1, 1. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P12_1")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note Q1_HJ1_Notenpunkte;
+	public String Q1_HJ1_Notenpunkte;
 
 	/** Q1, 1. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt) */
 	@Column(name = "R12_1")
@@ -448,10 +429,7 @@ public final class DTOSchuelerAbiturFach {
 	/** Q1, 2. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P12_2")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note Q1_HJ2_Notenpunkte;
+	public String Q1_HJ2_Notenpunkte;
 
 	/** Q1, 2. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt) */
 	@Column(name = "R12_2")
@@ -477,10 +455,7 @@ public final class DTOSchuelerAbiturFach {
 	/** Q2, 1. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P13_1")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note Q2_HJ1_Notenpunkte;
+	public String Q2_HJ1_Notenpunkte;
 
 	/** Q2, 1. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt) */
 	@Column(name = "R13_1")
@@ -506,10 +481,7 @@ public final class DTOSchuelerAbiturFach {
 	/** Q2, 2. Hj: Die Notenpunkte für das Fach, NULL falls das Fach in dieserm Halbjahr nicht belegt wurde */
 	@Column(name = "P13_2")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkteString.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteStringSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteStringDeserializer.class)
-	public Note Q2_HJ2_Notenpunkte;
+	public String Q2_HJ2_Notenpunkte;
 
 	/** Q2, 2. Hj: Gibt an, ob die Notenpunkte bei der Abiturberechnung genutzt werden, d.h. zur Nutzung markiert wurden. (+: Nutze für Berechnung, -: Nutze nicht für die Berechnung; /: Für die Nutzung zur Berechnung gesperrt) */
 	@Column(name = "R13_2")
@@ -540,10 +512,7 @@ public final class DTOSchuelerAbiturFach {
 	/** Die Notenpunkte aus der Abiturprüfung, falls das Fach eines der vier Abiturfächer ist */
 	@Column(name = "AbiPruefErgebnis")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkte.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteDeserializer.class)
-	public Note PruefungNotenpunkte;
+	public Integer PruefungNotenpunkte;
 
 	/** Die Notenpunkte aus der Abiturprüfung multipliziert mit dem entsprechenden Faktor, falls das Fach eines der vier Abiturfächer ist (hier wird z.B. die besondere Lernleistung berücksichtigt */
 	@Column(name = "Zwischenstand")
@@ -577,10 +546,7 @@ public final class DTOSchuelerAbiturFach {
 	/** enthält die Notenpunkte aus der mündlichen Abiturprüfung in einem der ersten drei Abiturfächer, falls diese durchgeführt wird, ansonsten NULL */
 	@Column(name = "MdlPruefErgebnis")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromNotenpunkte.class)
-	@JsonSerialize(using = NoteConverterFromNotenpunkteSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromNotenpunkteDeserializer.class)
-	public Note PruefungMuendlichNotenpunkte;
+	public Integer PruefungMuendlichNotenpunkte;
 
 	/** enthält die Reihenfolge für mündliche Prüfungen in den ersten drei Abiturfächern, falls mehrere angesetzt werden (1, 2, 3) */
 	@Column(name = "MdlPruefFolge")

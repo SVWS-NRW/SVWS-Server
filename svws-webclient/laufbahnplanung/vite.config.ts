@@ -27,6 +27,7 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
+			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		}
 	},
 	build: {

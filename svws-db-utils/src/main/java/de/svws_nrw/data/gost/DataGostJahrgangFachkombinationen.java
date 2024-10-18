@@ -212,14 +212,14 @@ public final class DataGostJahrgangFachkombinationen extends DataManager<Long> {
 	 */
 	public Response add(final int typ) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final int schuljahr = DBUtilsGost.pruefeSchuleMitGOStAndGetSchuljahr(conn, abijahrgang);
 		// Prüfe ob der Typ der Regel korrekt ist
 		final GostLaufbahnplanungFachkombinationTyp kombityp = GostLaufbahnplanungFachkombinationTyp.fromValue(typ);
 		// Bestimme die ID für die neue Regel
 		final DTOSchemaAutoInkremente dbID = conn.queryByKey(DTOSchemaAutoInkremente.class, Schema.tab_Gost_Jahrgang_Fachkombinationen.name());
 		final long id = (dbID == null) ? 1 : (dbID.MaxID + 1);
 		// Bestimme die Fächer der gymnasialen Oberstufe, um zwei Default-Fächer zu bestimmen
-		final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherManager(conn, abijahrgang);
+		final GostFaecherManager fachmanager = DBUtilsFaecherGost.getFaecherManager(schuljahr, conn, abijahrgang);
 		final List<GostFach> faecher = fachmanager.faecher();
 		if (faecher.size() < 2)
 			throw new ApiOperationException(Status.NOT_FOUND, "Nicht genügend Fächer für den Abiturjahrgang definiert.");

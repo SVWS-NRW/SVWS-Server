@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class DatenbankVerbindungsdaten extends JavaObject {
 
@@ -34,6 +35,8 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten'].includes(name);
 	}
+
+	public static class = new Class<DatenbankVerbindungsdaten>('de.svws_nrw.core.data.schema.DatenbankVerbindungsdaten');
 
 	public static transpilerFromJSON(json : string): DatenbankVerbindungsdaten {
 		const obj = JSON.parse(json) as Partial<DatenbankVerbindungsdaten>;

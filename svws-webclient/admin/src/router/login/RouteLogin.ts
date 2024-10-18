@@ -1,8 +1,5 @@
-import type { Ref} from "vue";
 import { ref } from "vue";
 import type { RouteLocationRaw } from "vue-router";
-
-import { ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
@@ -10,6 +7,7 @@ import { api } from "~/router/Api";
 
 import SLogin from "~/components/SLogin.vue";
 import type { LoginProps } from "~/components/SLoginProps";
+import { ServerMode } from "../../../../core/src/core/types/ServerMode";
 
 export class RouteLogin extends RouteNode<unknown, any> {
 
@@ -18,7 +16,7 @@ export class RouteLogin extends RouteNode<unknown, any> {
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
 	public redirect = '';
-	protected schema: Ref<string | null> = ref(null);
+	protected schema = ref<string | null>(null);
 
 	public constructor() {
 		super("login", "/login/:schemaname?", SLogin);

@@ -7,6 +7,7 @@ import { StundenplanFach } from '../../../core/data/stundenplan/StundenplanFach'
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { StundenplanKurs } from '../../../core/data/stundenplan/StundenplanKurs';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanUnterrichtsverteilung extends JavaObject {
 
@@ -57,6 +58,8 @@ export class StundenplanUnterrichtsverteilung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung'].includes(name);
 	}
+
+	public static class = new Class<StundenplanUnterrichtsverteilung>('de.svws_nrw.core.data.stundenplan.StundenplanUnterrichtsverteilung');
 
 	public static transpilerFromJSON(json : string): StundenplanUnterrichtsverteilung {
 		const obj = JSON.parse(json) as Partial<StundenplanUnterrichtsverteilung>;

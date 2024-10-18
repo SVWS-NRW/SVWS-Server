@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +37,7 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	protected String bezeichnung;
 
 	/** Map mit den Fachwahlstatistiken des GOSt-Halbjahres des Blockungsergebnisses zur Fach-ID */
-	protected Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik = new HashMap<>();
+	protected Map<Long, ReportingGostKursplanungFachwahlstatistik> fachwahlstatistik;
 
 	/** Das Halbjahr der gymnasialen Oberstufe des Blockungsergebnisses */
 	protected GostHalbjahr gostHalbjahr;
@@ -48,13 +46,13 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	protected long id;
 
 	/** Eine Liste vom Typ Kurs, die alle Kurse des Blockungsergebnisses beinhaltet. */
-	protected List<ReportingGostKursplanungKurs> kurse = new ArrayList<>();
+	protected List<ReportingGostKursplanungKurs> kurse;
 
 	/** Eine Liste vom Typ Schiene, die alle Schienen des Blockungsergebnisses beinhaltet. */
-	protected List<ReportingGostKursplanungSchiene> schienen = new ArrayList<>();
+	protected List<ReportingGostKursplanungSchiene> schienen;
 
 	/** Eine Liste vom Typ Schüler, die alle Schüler des Blockungsergebnisses beinhaltet. */
-	protected List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler;
 
 
 
@@ -102,17 +100,17 @@ public class ReportingGostKursplanungBlockungsergebnis {
 	 * @return Die Liste der Kurse, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
-	public List<ReportingGostKursplanungKurs> getKurseGefiltert(final List<Long> idsKurseFilter) {
+	public List<ReportingGostKursplanungKurs> kurseGefiltert(final List<Long> idsKurseFilter) {
 		return kurse.stream().filter(k -> idsKurseFilter.contains(k.id())).toList();
 	}
 
 	/**
-	 * Gibt eine Liste mit Kursen zurück, deren IDs in der Filterliste enthalten sind.
+	 * Gibt eine Liste mit Schülern zurück, deren IDs in der Filterliste enthalten sind.
 	 * @param idsSchuelerFilter Die IDs der Schüler, die zurückgegebenen werden sollen.
 	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren.
 	 */
 	@JsonIgnore
-	public List<ReportingSchueler> getSchuelerFiltert(final List<Long> idsSchuelerFilter) {
+	public List<ReportingSchueler> schuelerGefiltert(final List<Long> idsSchuelerFilter) {
 		return schueler.stream().filter(s -> idsSchuelerFilter.contains(s.id())).toList();
 	}
 

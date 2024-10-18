@@ -59,7 +59,7 @@ public class APISchema {
 		// Akzeptiere nur einen Datenbankzugriff als Administrator in Bezug auf Updates ...
 		return DBBenutzerUtils.runWithoutTransaction(conn -> {
 			// ... führe das Update aus ...
-			final LogConsumerList log = DBUtilsSchema.updateSchema(conn.getUser(), revision);
+			final LogConsumerList log = DBUtilsSchema.updateSchema(conn, revision);
 			// ... und gebe den Log zurück
 			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(log.getStrings()).build();
 		}, request, ServerMode.STABLE, BenutzerKompetenz.ADMIN);

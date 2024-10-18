@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { HashMap3D } from '../../core/adt/map/HashMap3D';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -90,6 +91,8 @@ export class Map3DUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map3DUtils'].includes(name);
 	}
+
+	public static class = new Class<Map3DUtils>('de.svws_nrw.core.utils.Map3DUtils');
 
 }
 

@@ -1,4 +1,5 @@
 import { RuntimeException } from '../../java/lang/RuntimeException';
+import { Class } from '../../java/lang/Class';
 
 export class UserNotificationException extends RuntimeException {
 
@@ -32,6 +33,8 @@ export class UserNotificationException extends RuntimeException {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Throwable', 'java.lang.RuntimeException', 'java.lang.Exception', 'de.svws_nrw.core.exceptions.UserNotificationException', 'java.io.Serializable'].includes(name);
 	}
+
+	public static class = new Class<UserNotificationException>('de.svws_nrw.core.exceptions.UserNotificationException');
 
 }
 

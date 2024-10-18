@@ -1,0 +1,92 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "NEUAUFNAHME",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"schluessel": "0",
+			"kuerzel": "0",
+			"text": "Neuaufnahme",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WARTELISTE",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "1",
+			"kuerzel": "1",
+			"text": "Warteliste",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AKTIV",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "2",
+			"kuerzel": "2",
+			"text": "Aktiv",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BEURLAUBT",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "3",
+			"kuerzel": "3",
+			"text": "Beurlaubt",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EXTERN",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 6,
+			"schluessel": "6",
+			"kuerzel": "6",
+			"text": "Extern",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ABSCHLUSS",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 8,
+			"schluessel": "8",
+			"kuerzel": "8",
+			"text": "Abschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ABGANG",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 9,
+			"schluessel": "9",
+			"kuerzel": "9",
+			"text": "Abgang",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "EHEMALIGE",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 10,
+			"schluessel": "10",
+			"kuerzel": "10",
+			"text": "Ehemalige",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

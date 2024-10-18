@@ -7,11 +7,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.gost.Abiturdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
-import de.svws_nrw.core.data.schueler.SchuelerStammdaten;
+import de.svws_nrw.asd.data.schueler.SchuelerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.gost.DBUtilsGostAbitur;
 import de.svws_nrw.data.schueler.DataSchuelerLernabschnittsdaten;
@@ -30,35 +30,17 @@ import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchue
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
 /**
- *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schüler und erweitert die Klasse {@link ReportingSchueler}.</p>
- *
- *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
- *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
- *  greift die Proxy-Klassen an verschiedenen Stellen auf die Datenbank zu.</p>
- *
- *  <ul>
- *      <li>Die Proxy-Klasse stellt in der Regel einen zusätzlichen Constructor zur Verfügung, um Reporting-Objekte
- *  		aus Stammdatenobjekten (aus dem Package core.data) erstellen zu können. Darin werden Felder, die Reporting-Objekte
- *  		zurückgegeben und nicht im Stammdatenobjekt enthalten sind, mit null initialisiert.</li>
- * 		<li>Die Proxy-Klasse überschreibt einzelne Getter der Super-Klasse (beispielsweise bei Felder, die mit null initialisiert wurden)
- *  		und lädt dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
- *  		halten.</li>
- * 		<li>Die Proxy-Klasse können zudem auf das Repository {@link ReportingRepository} zugreifen. Dieses
- * 			enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte
- * 			wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert werden. So sollen Datenbankzugriffe minimiert werden. Werden in der
- * 			Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
- *  </ul>
+ * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ Schüler und erweitert die Klasse {@link ReportingSchueler}.
  */
 public class ProxyReportingSchueler extends ReportingSchueler {
 
-	/** Repository für die Reporting */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
 
-
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis eines Stammdaten-Objektes.
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchueler}.
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param schuelerStammdaten Stammdaten-Objekt aus der DB.
 	 */
@@ -84,6 +66,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				Geschlecht.fromValue(schuelerStammdaten.geschlecht),
 				null,
 				new ArrayList<>(),
+				new ArrayList<>(),
 				null,
 				schuelerStammdaten.haltestelleID,
 				schuelerStammdaten.hatMasernimpfnachweis,
@@ -104,7 +87,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				null,
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeitID),
 				Nationalitaeten.getByDESTATIS(schuelerStammdaten.staatsangehoerigkeit2ID),
-				SchuelerStatus.fromID(schuelerStammdaten.status),
+				SchuelerStatus.data().getWertByKuerzel("" + schuelerStammdaten.status),
 				schuelerStammdaten.strassenname,
 				schuelerStammdaten.telefon,
 				schuelerStammdaten.telefonMobil,
@@ -132,7 +115,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	}
 
 
-
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
@@ -140,7 +122,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 	public ReportingRepository reportingRepository() {
 		return reportingRepository;
 	}
-
 
 
 	/**
@@ -157,7 +138,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				if (!lernabschnitte().isEmpty()) {
 					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
 							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
 					if (!tmpListAbschnitte.isEmpty())
 						super.aktuellerLernabschnitt = tmpListAbschnitte.getFirst();
 				}
@@ -180,7 +161,7 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 				if (!lernabschnitte().isEmpty()) {
 					final List<ReportingSchuelerLernabschnitt> tmpListAbschnitte =
 							lernabschnitte().stream().filter(a -> a.wechselNr() == 0)
-									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+									.filter(a -> a.schuljahresabschnitt().id() == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
 					if (!tmpListAbschnitte.isEmpty())
 						super.auswahlLernabschnitt = tmpListAbschnitte.getFirst();
 				}
@@ -217,7 +198,6 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 
 	/**
 	 * Stellt die Daten der GOSt-Laufbahnplanung des Schülers zur Verfügung.
-	 *
 	 * @return Daten der GOSt-Laufbahnplanung
 	 */
 	@Override
@@ -268,10 +248,10 @@ public class ProxyReportingSchueler extends ReportingSchueler {
 			} else {
 				final List<SchuelerLernabschnittsdaten> tmpListAktuell =
 						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id).toList();
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.aktuellerSchuljahresabschnitt().id()).toList();
 				final List<SchuelerLernabschnittsdaten> tmpListAuswahl =
 						schuelerLernabschnittsdaten.stream().filter(a -> a.wechselNr == 0)
-								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id).toList();
+								.filter(a -> a.schuljahresabschnitt == this.reportingRepository.auswahlSchuljahresabschnitt().id()).toList();
 				if (!tmpListAktuell.isEmpty())
 					this.reportingRepository.mapAktuelleLernabschnittsdaten().computeIfAbsent(super.id(), l -> tmpListAktuell.getFirst());
 				if (!tmpListAuswahl.isEmpty())

@@ -6,6 +6,7 @@ import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 
@@ -78,6 +79,8 @@ export class GostBlockungsdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsdaten'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsdaten>('de.svws_nrw.core.data.gost.GostBlockungsdaten');
 
 	public static transpilerFromJSON(json : string): GostBlockungsdaten {
 		const obj = JSON.parse(json) as Partial<GostBlockungsdaten>;

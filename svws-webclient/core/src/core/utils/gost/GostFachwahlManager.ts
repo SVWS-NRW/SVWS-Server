@@ -5,6 +5,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashSet } from '../../../java/util/HashSet';
@@ -146,6 +147,8 @@ export class GostFachwahlManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostFachwahlManager'].includes(name);
 	}
+
+	public static class = new Class<GostFachwahlManager>('de.svws_nrw.core.utils.gost.GostFachwahlManager');
 
 }
 

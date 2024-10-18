@@ -32,7 +32,7 @@ export class RouteDataSchuelerAbschluesse extends RouteData<RouteStateSchuelerAb
 	public async auswahlSchueler(auswahl: SchuelerListeEintrag | null) {
 		if (auswahl === this._state.value.auswahl)
 			return;
-		if ((auswahl === null) || (auswahl === undefined)) {
+		if (auswahl === null) {
 			this.setPatchedDefaultState({});
 			return;
 		}

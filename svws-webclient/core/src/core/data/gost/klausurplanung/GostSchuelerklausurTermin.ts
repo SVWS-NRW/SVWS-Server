@@ -1,25 +1,26 @@
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostSchuelerklausurTermin extends JavaObject {
 
 	/**
-	 * Die ID des Stundenplans.
+	 * Die ID des Schülerklausurtermins.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die ID der zugehörigen Schülerklausur.
 	 */
 	public idSchuelerklausur : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die Folgenummer der Schülerklausur, 0 falls es sich um den Haupttermin handelt, 1 der erste Nachschreibtermin ...
 	 */
 	public folgeNr : number = -1;
 
 	/**
-	 * Das Zeitraster des Stundenplans.
+	 * Die ID des Klausurtermins, falls schon gesetzt.
 	 */
 	public idTermin : number | null = null;
 
@@ -34,6 +35,9 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -45,7 +49,7 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin(another)).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausurTermin(another)).id);
 	}
 
 	/**
@@ -64,6 +68,8 @@ export class GostSchuelerklausurTermin extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin'].includes(name);
 	}
+
+	public static class = new Class<GostSchuelerklausurTermin>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurTermin');
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurTermin {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausurTermin>;

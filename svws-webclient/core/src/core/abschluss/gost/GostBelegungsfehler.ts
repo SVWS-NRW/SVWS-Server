@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBelegpruefungsArt } from '../../../core/abschluss/gost/GostBelegpruefungsArt';
+import { Class } from '../../../java/lang/Class';
 import { GostBelegungsfehlerArt } from '../../../core/abschluss/gost/GostBelegungsfehlerArt';
 
 export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
@@ -686,6 +687,8 @@ export class GostBelegungsfehler extends JavaEnum<GostBelegungsfehler> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehler', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostBelegungsfehler>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehler');
 
 }
 

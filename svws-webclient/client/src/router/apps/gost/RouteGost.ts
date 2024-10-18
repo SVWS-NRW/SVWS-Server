@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
@@ -17,10 +17,15 @@ import { routeGostLaufbahnfehler } from "~/router/apps/gost/laufbahnfehler/Route
 
 import { RouteDataGost } from "~/router/apps/gost/RouteDataGost";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { GostAppProps } from "~/components/gost/SGostAppProps";
 import type { GostAuswahlProps } from "~/components/gost/SGostAuswahlProps";
 import { ConfigElement } from "~/components/Config";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
+import { ViewType } from "@ui";
+import { routeGostAbiturjahrNeu } from "./RouteGostAbiturjahrNeu";
+import { routeGostGruppenprozesse } from "./RouteGostGruppenprozesse";
 
 const SGostAuswahl = () => import("~/components/gost/SGostAuswahl.vue")
 const SGostApp = () => import("~/components/gost/SGostApp.vue")
@@ -28,7 +33,7 @@ const SGostApp = () => import("~/components/gost/SGostApp.vue")
 export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -48,7 +53,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			routeGostLaufbahnfehler,
 			routeGostFachwahlen,
 			routeGostKursplanung,
-			routeGostKlausurplanung
+			routeGostKlausurplanung,
+			routeGostAbiturjahrNeu,
+			routeGostGruppenprozesse,
 		];
 		super.defaultChild = routeGostFaecher;
 		api.config.addElements([
@@ -61,25 +68,27 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
-		if (to_params.abiturjahr instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		let cur: RouteNode<any, any> = to;
-		while (cur.parent !== this)
-			cur = cur.parent;
-		if (cur !== this.data.view)
-			this.data.setView(cur, this.children);
-		const abiturjahr = !to_params.abiturjahr ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined)
-			return this.getRoute();
-		const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
-		await this.data.setAbiturjahrgang(eintrag, isEntering);
-		if (this.name !== to.name)
-			return;
-		const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: String(abiturjahr) }))
-			return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: String(abiturjahr) }};
+		try {
+			if (isEntering || (this.data.idSchuljahresabschnitt !== routeApp.data.aktAbschnitt.value.id))
+				await this.data.setSchuljahresabschnitt(routeApp.data.aktAbschnitt.value.id);
+			let cur: RouteNode<any, any> = to;
+			while (cur.parent !== this)
+				cur = cur.parent;
+			if (cur !== this.data.view)
+				this.data.setView(cur, this.children);
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (abiturjahr === undefined)
+				return this.getRoute();
+			const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
+			await this.data.setAbiturjahrgang(eintrag, isEntering);
+			if (this.name !== to.name)
+				return;
+			const redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
+			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false)
+				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -89,14 +98,16 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 
 	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
 		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: String(abiturjahr || -1) }))
+		if (redirect.hidden({ abiturjahr: (abiturjahr ?? -1).toString() }) !== false)
 			redirect = this.defaultChild!;
-		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr || -1 }};
+		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: (abiturjahr ?? -1) }};
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
 		return {
+			schulform: api.schulform,
 			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			auswahl: this.data.auswahl,
 			jahrgangsdaten: () => this.data.auswahl === undefined ? undefined : this.data.jahrgangsdaten,
 			mapAbiturjahrgaenge: () => this.data.mapAbiturjahrgaenge,
@@ -106,45 +117,41 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			addAbiturjahrgang: this.data.addAbiturjahrgang,
 			gotoAbiturjahrgang: this.data.gotoAbiturjahrgang,
 			getAbiturjahrFuerJahrgang: this.data.getAbiturjahrFuerJahrgang,
-			removeAbiturjahrgang: this.data.removeAbiturjahrgang,
 			filterNurAktuelle: () => this.data.filterNurAktuelle,
 			setFilterNurAktuelle: this.data.setFilterNurAktuelle,
+			gotoCreationMode: this.data.gotoCreationMode,
+			gotoGruppenprozess: this.data.gotoGruppenprozess,
+			selected: () => this.data.selected,
+			setSelected: this.data.setSelected,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostAppProps {
 		return {
+			schuljahresabschnitt: () => routeApp.data.aktAbschnitt.value,
 			auswahl: this.data.auswahl,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.getType()),
+			creationModeEnabled: this.data.creationModeEnabled,
+			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
+			selected: () => this.data.selected,
 		};
 	}
 
-	private getTab(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
+	private getType() : ViewType {
+		if (this.data.gruppenprozesseEnabled)
+			return ViewType.GRUPPENPROZESSE;
+		if (this.data.creationModeEnabled)
+			return ViewType.HINZUFUEGEN;
+		return ViewType.DEFAULT;
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		let list = super.menu;
-		if (list.length < 1)
-			list = super.children;
-		for (const c of list)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
-	}
-
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr || -1 } });
+		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr ?? -1 } });
 		this.data.setView(node, this.children);
 	}
 

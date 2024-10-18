@@ -1,16 +1,16 @@
 package de.svws_nrw.core.types.gost;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -19,31 +19,31 @@ import jakarta.validation.constraints.NotNull;
  */
 public enum GostFachbereich {
 	/** Fachbereich deutsch */
-	DEUTSCH(null, ZulaessigesFach.D),
+	DEUTSCH(null, Fach.D),
 
 	/** Fachbereich fremdsprachlich */
 	FREMDSPRACHE(null,
-			ZulaessigesFach.E,
-			ZulaessigesFach.C, ZulaessigesFach.C0, ZulaessigesFach.C5, ZulaessigesFach.C6, ZulaessigesFach.C7, ZulaessigesFach.C8, ZulaessigesFach.C9,
-			ZulaessigesFach.F, ZulaessigesFach.F0, ZulaessigesFach.F5, ZulaessigesFach.F6, ZulaessigesFach.F7, ZulaessigesFach.F8, ZulaessigesFach.F9,
-			ZulaessigesFach.G, ZulaessigesFach.G0, ZulaessigesFach.G5, ZulaessigesFach.G6, ZulaessigesFach.G7, ZulaessigesFach.G8, ZulaessigesFach.G9,
-			ZulaessigesFach.H, ZulaessigesFach.H0, ZulaessigesFach.H5, ZulaessigesFach.H6, ZulaessigesFach.H7, ZulaessigesFach.H8, ZulaessigesFach.H9,
-			ZulaessigesFach.I, ZulaessigesFach.I0, ZulaessigesFach.I5, ZulaessigesFach.I6, ZulaessigesFach.I7, ZulaessigesFach.I8, ZulaessigesFach.I9,
-			ZulaessigesFach.K, ZulaessigesFach.K0, ZulaessigesFach.K5, ZulaessigesFach.K6, ZulaessigesFach.K7, ZulaessigesFach.K8, ZulaessigesFach.K9,
-			ZulaessigesFach.L, ZulaessigesFach.L0, ZulaessigesFach.L5, ZulaessigesFach.L6, ZulaessigesFach.L7, ZulaessigesFach.L8, ZulaessigesFach.L9,
-			ZulaessigesFach.N, ZulaessigesFach.N0, ZulaessigesFach.N5, ZulaessigesFach.N6, ZulaessigesFach.N7, ZulaessigesFach.N8, ZulaessigesFach.N9,
-			ZulaessigesFach.O, ZulaessigesFach.O0, ZulaessigesFach.O5, ZulaessigesFach.O6, ZulaessigesFach.O7, ZulaessigesFach.O8, ZulaessigesFach.O9,
-			ZulaessigesFach.R, ZulaessigesFach.R0, ZulaessigesFach.R5, ZulaessigesFach.R6, ZulaessigesFach.R7, ZulaessigesFach.R8, ZulaessigesFach.R9,
-			ZulaessigesFach.S, ZulaessigesFach.S0, ZulaessigesFach.S5, ZulaessigesFach.S6, ZulaessigesFach.S7, ZulaessigesFach.S8, ZulaessigesFach.S9,
-			ZulaessigesFach.T, ZulaessigesFach.T0, ZulaessigesFach.T5, ZulaessigesFach.T6, ZulaessigesFach.T7, ZulaessigesFach.T8, ZulaessigesFach.T9,
-			ZulaessigesFach.Z, ZulaessigesFach.Z0, ZulaessigesFach.Z5, ZulaessigesFach.Z6, ZulaessigesFach.Z7, ZulaessigesFach.Z8, ZulaessigesFach.Z9
+			Fach.E,
+			Fach.C, Fach.C0, Fach.C5, Fach.C6, Fach.C7, Fach.C8, Fach.C9,
+			Fach.F, Fach.F0, Fach.F5, Fach.F6, Fach.F7, Fach.F8, Fach.F9,
+			Fach.G, Fach.G0, Fach.G5, Fach.G6, Fach.G7, Fach.G8, Fach.G9,
+			Fach.H, Fach.H0, Fach.H5, Fach.H6, Fach.H7, Fach.H8, Fach.H9,
+			Fach.I, Fach.I0, Fach.I5, Fach.I6, Fach.I7, Fach.I8, Fach.I9,
+			Fach.K, Fach.K0, Fach.K5, Fach.K6, Fach.K7, Fach.K8, Fach.K9,
+			Fach.L, Fach.L0, Fach.L5, Fach.L6, Fach.L7, Fach.L8, Fach.L9,
+			Fach.N, Fach.N0, Fach.N5, Fach.N6, Fach.N7, Fach.N8, Fach.N9,
+			Fach.O, Fach.O0, Fach.O5, Fach.O6, Fach.O7, Fach.O8, Fach.O9,
+			Fach.R, Fach.R0, Fach.R5, Fach.R6, Fach.R7, Fach.R8, Fach.R9,
+			Fach.S, Fach.S0, Fach.S5, Fach.S6, Fach.S7, Fach.S8, Fach.S9,
+			Fach.T, Fach.T0, Fach.T5, Fach.T6, Fach.T7, Fach.T8, Fach.T9,
+			Fach.Z, Fach.Z0, Fach.Z5, Fach.Z6, Fach.Z7, Fach.Z8, Fach.Z9
 	),
 
 	/** Fachbereich künstlerisch musikalisch */
-	KUNST_MUSIK(null, ZulaessigesFach.KU, ZulaessigesFach.MU),
+	KUNST_MUSIK(null, Fach.KU, Fach.MU),
 
 	/** Fachbereich Ersatz für literarisch künstlerisch */
-	LITERARISCH_KUENSTLERISCH_ERSATZ(null, ZulaessigesFach.LI, ZulaessigesFach.IN, ZulaessigesFach.VO),
+	LITERARISCH_KUENSTLERISCH_ERSATZ(null, Fach.LI, Fach.IN, Fach.VO),
 
 	/** Fachbereich literarisch künstlerisch */
 	LITERARISCH_KUENSTLERISCH(Arrays.asList(KUNST_MUSIK, LITERARISCH_KUENSTLERISCH_ERSATZ)),
@@ -52,34 +52,34 @@ public enum GostFachbereich {
 	SPRACHLICH_LITERARISCH_KUENSTLERISCH(Arrays.asList(DEUTSCH, FREMDSPRACHE, KUNST_MUSIK, LITERARISCH_KUENSTLERISCH_ERSATZ)),
 
 	/** Fachbereich geschichtlich */
-	GESCHICHTE(null, ZulaessigesFach.GE),
+	GESCHICHTE(null, Fach.GE),
 
 	/** Fachbereich sozialwissenschaftlich */
-	SOZIALWISSENSCHAFTEN(null, ZulaessigesFach.SW),
+	SOZIALWISSENSCHAFTEN(null, Fach.SW),
 
 	/** Fachbereich philosophisch */
-	PHILOSOPHIE(null, ZulaessigesFach.PL),
+	PHILOSOPHIE(null, Fach.PL),
 
 	/** Fachbereich Sonstige gesellschaftswissenschaftliche */
-	GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE(null, ZulaessigesFach.EK, ZulaessigesFach.PA, ZulaessigesFach.PS, ZulaessigesFach.RK),
+	GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE(null, Fach.EK, Fach.PA, Fach.PS, Fach.RK),
 
 	/** Fachbereich gesellschaftswissenschaftlich */
 	GESELLSCHAFTSWISSENSCHAFTLICH(Arrays.asList(GESCHICHTE, SOZIALWISSENSCHAFTEN, PHILOSOPHIE, GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE)),
 
 	/** Fachbereich Religion */
-	RELIGION(null, ZulaessigesFach.HR, ZulaessigesFach.OR, ZulaessigesFach.YR, ZulaessigesFach.ER, ZulaessigesFach.KR, ZulaessigesFach.IL),
+	RELIGION(null, Fach.HR, Fach.OR, Fach.YR, Fach.ER, Fach.KR, Fach.IL),
 
 	/** Fachbereich gesellschaftswissenschaftlich mit Religion */
 	GESELLSCHAFTSWISSENSCHAFTLICH_MIT_RELIGION(Arrays.asList(GESCHICHTE, SOZIALWISSENSCHAFTEN, PHILOSOPHIE, GESELLSCHAFTSWISSENSCHAFTLICH_SONSTIGE, RELIGION)),
 
 	/** Fachbereich mathematisch */
-	MATHEMATIK(null, ZulaessigesFach.M),
+	MATHEMATIK(null, Fach.M),
 
 	/** Fachbereich klassisch naturwissenschaftlich */
-	NATURWISSENSCHAFTLICH_KLASSISCH(null, ZulaessigesFach.BI, ZulaessigesFach.CH, ZulaessigesFach.PH),
+	NATURWISSENSCHAFTLICH_KLASSISCH(null, Fach.BI, Fach.CH, Fach.PH),
 
 	/** Fachbereich naturwissenschaftlich neueinsetzend */
-	NATURWISSENSCHAFTLICH_NEU_EINSETZEND(null, ZulaessigesFach.EL, ZulaessigesFach.IF, ZulaessigesFach.TC),
+	NATURWISSENSCHAFTLICH_NEU_EINSETZEND(null, Fach.EL, Fach.IF, Fach.TC),
 
 	/** Fachbereich naturwissenschaftlich */
 	NATURWISSENSCHAFTLICH(Arrays.asList(NATURWISSENSCHAFTLICH_KLASSISCH, NATURWISSENSCHAFTLICH_NEU_EINSETZEND)),
@@ -88,28 +88,28 @@ public enum GostFachbereich {
 	MATHEMATISCH_NATURWISSENSCHAFTLICH(Arrays.asList(MATHEMATIK, NATURWISSENSCHAFTLICH_KLASSISCH, NATURWISSENSCHAFTLICH_NEU_EINSETZEND)),
 
 	/** Fachbereich sportlich */
-	SPORT(null, ZulaessigesFach.SP),
+	SPORT(null, Fach.SP),
 
 	/** Pseudo-Fachbereich Vertiefungskurse */
-	VERTIEFUNGSKURSE(null, ZulaessigesFach.VX),
+	VERTIEFUNGSKURSE(null, Fach.VX),
 
 	/** Pseudo-Fachbereich Projektkurse */
-	PROJEKTKURSE(null, ZulaessigesFach.PX);
+	PROJEKTKURSE(null, Fach.PX);
 
 
 	/** Eine Map mit allen Statistik-Fächern, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. Die Map verweist auf einen Long-Wert für die Sortierung der Fächer */
-	private static final @NotNull Map<ZulaessigesFach, Integer> _mapAlleFaecher = new HashMap<ZulaessigesFach, Integer>();
+	private static final @NotNull Map<Fach, Integer> _mapAlleFaecher = new HashMap<Fach, Integer>();
 
 	/** Eine Liste mit allen Statistik-Fächern in einer Standard-Sortierung, die einem Fachbereich der gymnasialen Oberstufe zugeordnet sind. */
-	private static final @NotNull List<ZulaessigesFach> _listAlleFaecher = new ArrayList<ZulaessigesFach>();
+	private static final @NotNull List<Fach> _listAlleFaecher = new ArrayList<Fach>();
 
 	/** Eine Map, welche dem zulässigen Fach alle seine Fachbereiche zuordnet. */
-	private static final @NotNull Map<ZulaessigesFach, List<GostFachbereich>> _mapFachbereichByFach =
-			new ArrayMap<>(ZulaessigesFach.values());
+	private static final @NotNull Map<Fach, List<GostFachbereich>> _mapFachbereichByFach =
+			new ArrayMap<>(Fach.values());
 
 
 	/** Eine Liste der Fächern dieses Fachbereichs */
-	private final @NotNull ArrayList<ZulaessigesFach> faecher = new ArrayList<>();
+	private final @NotNull ArrayList<Fach> faecher = new ArrayList<>();
 	/** Eine Liste der Fächerkürzel dieses Fachbereichs */
 	private final @NotNull ArrayList<String> kuerzel = new ArrayList<>();
 
@@ -121,18 +121,18 @@ public enum GostFachbereich {
 	 * @param fachbereiche   die Fachbereiche
 	 * @param faecher        die Fächer des Fachbereichs
 	 */
-	GostFachbereich(final List<GostFachbereich> fachbereiche, final @NotNull ZulaessigesFach... faecher) {
+	GostFachbereich(final List<GostFachbereich> fachbereiche, final @NotNull Fach... faecher) {
 		if (fachbereiche != null) {
 			for (final GostFachbereich fb : fachbereiche) {
-				for (final ZulaessigesFach fach : fb.faecher) {
+				for (final Fach fach : fb.faecher) {
 					this.faecher.add(fach);
-					this.kuerzel.add(fach.daten.kuerzelASD);
+					this.kuerzel.add(fach.name());
 				}
 			}
 		}
-		for (final ZulaessigesFach fach : faecher) {
+		for (final Fach fach : faecher) {
 			this.faecher.add(fach);
-			this.kuerzel.add(fach.daten.kuerzelASD);
+			this.kuerzel.add(fach.name());
 		}
 	}
 
@@ -143,10 +143,10 @@ public enum GostFachbereich {
 	 *
 	 * @return die Map von den Fächern auf die zugehörigen Fachbereiche
 	 */
-	private static @NotNull Map<ZulaessigesFach, List<GostFachbereich>> getMapFachbereichByFach() {
+	private static @NotNull Map<Fach, List<GostFachbereich>> getMapFachbereichByFach() {
 		if (_mapFachbereichByFach.size() == 0) {
 			for (final @NotNull GostFachbereich fb : GostFachbereich.values()) {
-				for (final ZulaessigesFach fach : fb.faecher) {
+				for (final Fach fach : fb.faecher) {
 					List<GostFachbereich> listFachbereichByFach = _mapFachbereichByFach.get(fach);
 					if (listFachbereichByFach == null) {
 						listFachbereichByFach = new ArrayList<>();
@@ -165,7 +165,7 @@ public enum GostFachbereich {
 	 *
 	 * @return die Liste der Fächer des Fachbereichs
 	 */
-	public @NotNull List<ZulaessigesFach> getFaecher() {
+	public @NotNull List<Fach> getFaecher() {
 		return this.faecher;
 	}
 
@@ -179,7 +179,7 @@ public enum GostFachbereich {
 	 */
 	@JsonIgnore
 	public boolean hat(final GostFach fach) {
-		return (fach != null) && hat(fach.kuerzel);
+		return (fach != null) && hatKuerzel(fach.kuerzel);
 	}
 
 
@@ -191,7 +191,7 @@ public enum GostFachbereich {
 	 * @return true, falls das Fach zu dem Fachbereich gehört, sonst false
 	 */
 	@JsonIgnore
-	public boolean hat(final String kuerzel) {
+	public boolean hatKuerzel(final String kuerzel) {
 		if (kuerzel == null)
 			return false;
 		return this.kuerzel.contains(kuerzel);
@@ -208,7 +208,7 @@ public enum GostFachbereich {
 	public static @NotNull List<GostFachbereich> getBereiche(final GostFach fach) {
 		if (fach == null)
 			return new ArrayList<>();
-		final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+		final @NotNull Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 		final List<GostFachbereich> bereiche = getMapFachbereichByFach().get(zulFach);
 		if (bereiche != null)
 			return bereiche;
@@ -223,11 +223,11 @@ public enum GostFachbereich {
 	 *
 	 * @return die Menge der Fächer
 	 */
-	public static @NotNull Map<ZulaessigesFach, Integer> getAlleFaecher() {
+	public static @NotNull Map<Fach, Integer> getAlleFaecher() {
 		if (_mapAlleFaecher.isEmpty()) {
-			final @NotNull List<ZulaessigesFach> alleFaecher = getAlleFaecherSortiert();
+			final @NotNull List<Fach> alleFaecher = getAlleFaecherSortiert();
 			for (int i = 0; i < alleFaecher.size(); i++) {
-				final @NotNull ZulaessigesFach fach = alleFaecher.get(i);
+				final @NotNull Fach fach = alleFaecher.get(i);
 				_mapAlleFaecher.put(fach, i);
 			}
 		}
@@ -244,7 +244,7 @@ public enum GostFachbereich {
 	 * @return der Integer-Wert für die Sortierreihenfolge des Faches und Integer-MAX_VALUE, falls
 	 *   das übergeben Fach kein Fach der Gymnasialen Oberstufe ist.
 	 */
-	public static int getSortierung(final @NotNull ZulaessigesFach fach) {
+	public static int getSortierung(final @NotNull Fach fach) {
 		final Integer sortierung = getAlleFaecher().get(fach);
 		if (sortierung == null)
 			return Integer.MAX_VALUE;
@@ -260,7 +260,7 @@ public enum GostFachbereich {
 	 *
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
-	public static int compareFach(final ZulaessigesFach fa, final ZulaessigesFach fb) {
+	public static int compareFach(final Fach fa, final Fach fb) {
 		// Prüfe zunächst auf null-Werte ...
 		if ((fa == null) && (fb == null))
 			return 0;
@@ -282,7 +282,7 @@ public enum GostFachbereich {
 	 * @return der int-wert für den Vergleich (siehe {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareFachByKuerzel(final String ka, final String kb) {
-		return compareFach(ZulaessigesFach.getByKuerzelASD(ka), ZulaessigesFach.getByKuerzelASD(kb));
+		return compareFach((ka == null) ? null : Fach.getBySchluesselOrDefault(ka), (kb == null) ? null : Fach.getBySchluesselOrDefault(kb));
 	}
 
 
@@ -318,7 +318,7 @@ public enum GostFachbereich {
 	 *
 	 * @return die Liste der Fächer
 	 */
-	public static @NotNull List<ZulaessigesFach> getAlleFaecherSortiert() {
+	public static @NotNull List<Fach> getAlleFaecherSortiert() {
 		if (_listAlleFaecher.isEmpty()) {
 			_listAlleFaecher.addAll(GostFachbereich.SPRACHLICH_LITERARISCH_KUENSTLERISCH.getFaecher());
 			_listAlleFaecher.addAll(GostFachbereich.GESCHICHTE.getFaecher());

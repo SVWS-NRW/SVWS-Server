@@ -10,14 +10,8 @@
 		</div>
 		<div class="sidebar--menu--footer">
 			<slot name="footer" />
-			<div class="app--appearance-settings">
-				<svws-ui-menu-item subline="" @click="showModalEinstellungen().value = true">
-					<template #label>Ansicht</template>
-					<template #icon><span class="icon-lg i-ri-palette-line inline-block" /></template>
-				</svws-ui-menu-item>
-			</div>
 			<div class="sidebar--menu--footer-credits flex flex-col items-center opacity-25 dark:opacity-50">
-				<div class="text-sm mb-2 text-center">Powered by<br>SVWS NRW</div>
+				<div class="text-sm mt-2 mb-2 text-center">Powered by<br>SVWS NRW</div>
 				<button role="link" @click="showModalInfo().value = true"
 					class="mb-1 hover:opacity-100 underline hover:no-underline text-sm">
 					Client Info
@@ -25,50 +19,6 @@
 			</div>
 		</div>
 	</div>
-	<svws-ui-modal :show="showModalEinstellungen" size="small">
-		<template #modalTitle>
-			Einstellungen
-		</template>
-		<template #modalContent>
-			<div class="flex flex-col gap-5">
-				<div class="flex flex-col gap-2 text-left">
-					<span class="font-bold text-sm">Skalierung</span>
-					<svws-ui-radio-group :row="true">
-						<svws-ui-radio-option value="small" v-model="fontSize" name="fontSize" label="Kleiner"
-							@click="updateFontSize('small')">
-							<span class="icon i-ri-zoom-out-line" />
-						</svws-ui-radio-option>
-						<svws-ui-radio-option value="default" v-model="fontSize" name="fontSize" label="Normal"
-							@click="updateFontSize('default')" />
-						<svws-ui-radio-option value="large" v-model="fontSize" name="fontSize" label="Größer"
-							@click="updateFontSize('large')">
-							<span class="icon i-ri-zoom-in-line" />
-						</svws-ui-radio-option>
-					</svws-ui-radio-group>
-				</div>
-				<div class="flex flex-col gap-2 text-left">
-					<span class="font-bold text-sm">Theme</span>
-					<svws-ui-radio-group :row="true">
-						<!--<svws-ui-radio-option value="auto" v-model="themeRef" name="theme" label="System" @click="updateTheme('auto')" />-->
-						<svws-ui-radio-option value="light" v-model="themeRef" name="theme" label="Light"
-							@click="updateTheme('light')">
-							<span class="icon i-ri-sun-line" />
-						</svws-ui-radio-option>
-						<svws-ui-radio-option value="dark" v-model="themeRef" name="theme" label="Dark (In Entwicklung)"
-							@click="updateTheme('dark')">
-							<span class="icon i-ri-moon-line" />
-						</svws-ui-radio-option>
-					</svws-ui-radio-group>
-					<div v-if="themeRef === 'dark'" class="mt-2 text-white/50">
-						Achtung! Das Dark-Theme befindet sich gerade noch in der Entwicklung und ist noch nicht
-						vollständig umgesetzt.
-						<span
-							class="font-bold text-white">Es kann an einigen Stellen zu Darstellungsproblemen führen.</span>
-					</div>
-				</div>
-			</div>
-		</template>
-	</svws-ui-modal>
 	<svws-ui-modal :show="showModalInfo" size="small">
 		<template #modalTitle>
 			SVWS-Client
@@ -94,76 +44,49 @@
 
 <script setup lang="ts">
 
-	import {onMounted, onUnmounted, ref} from "vue";
-
-	const themeRef = ref<string>('light');
-	const fontSize = ref<string>('default');
-
-	const _showModalEinstellungen = ref<boolean>(false);
-	const showModalEinstellungen = () => _showModalEinstellungen;
+	import { ref } from "vue";
 
 	const _showModalInfo = ref<boolean>(false);
 	const showModalInfo = () => _showModalInfo;
 
-
-	const updateFontSize = (size: string) => {
-		document.documentElement.classList.remove('font-size-small', 'font-size-large');
-		if (size !== 'default') {
-			document.documentElement.classList.add(`font-size-${size}`);
-		}
-		localStorage.setItem('fontSize', size);
-	};
-
-	const updateTheme = (theme: string) => {
-		document.documentElement.classList.remove('light', 'dark');
-		if (theme !== 'auto') {
-			document.documentElement.classList.add(`${theme}`);
-		}
-		localStorage.setItem('theme', theme);
-		themeRef.value = theme;
-	};
-
-	if (localStorage.getItem('theme')) {
-		themeRef.value = localStorage.getItem('theme') as string;
-		updateTheme(themeRef.value);
-	}
-
-	if (localStorage.getItem('fontSize')) {
-		fontSize.value = localStorage.getItem('fontSize') as string;
-		updateFontSize(fontSize.value);
-	}
-
-	function handleBeforePrint() {
-		if (themeRef.value === 'dark') {
-			document.documentElement.classList.remove('dark');
-			document.documentElement.classList.add('light');
-		}
-	}
-
-	function handleAfterPrint() {
-		if (themeRef.value === 'dark') {
-			document.documentElement.classList.remove('light');
-			document.documentElement.classList.add('dark');
-		}
-	}
-
-	onMounted(() => {
-		window.addEventListener("beforeprint", handleBeforePrint);
-		window.addEventListener("afterprint", handleAfterPrint);
+	const props = withDefaults(defineProps<{
+		showEinstellungenDefaultApp? : boolean;
+	}>(), {
+		showEinstellungenDefaultApp: true,
 	});
 
-	onUnmounted(() => {
-		window.removeEventListener("beforeprint", handleBeforePrint);
-		window.removeEventListener("afterprint", handleAfterPrint);
-	});
+
+	// function handleBeforePrint() {
+	// 	if (themeRef.value === 'dark') {
+	// 		document.documentElement.classList.remove('dark');
+	// 		document.documentElement.classList.add('light');
+	// 	}
+	// }
+
+	// function handleAfterPrint() {
+	// 	if (themeRef.value === 'dark') {
+	// 		document.documentElement.classList.remove('light');
+	// 		document.documentElement.classList.add('dark');
+	// 	}
+	// }
+
+	// onMounted(() => {
+	// 	window.addEventListener("beforeprint", handleBeforePrint);
+	// 	window.addEventListener("afterprint", handleAfterPrint);
+	// });
+
+	// onUnmounted(() => {
+	// 	window.removeEventListener("beforeprint", handleBeforePrint);
+	// 	window.removeEventListener("afterprint", handleAfterPrint);
+	// });
 </script>
 
 <style lang="postcss">
 .sidebar--menu {
-	@apply flex min-h-full flex-1 flex-col w-full;
+	@apply flex min-h-full min-w-fit flex-1 flex-col w-full;
 
 	@media (orientation: portrait) {
-		@apply flex-row min-h-[unset] h-full gap-x-5;
+		@apply flex-row min-h-[unset] gap-x-5;
 	}
 }
 
@@ -210,6 +133,7 @@
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
 		-webkit-line-clamp: 1;
+		line-clamp: 1;
 		word-break: break-all;
 	}
 

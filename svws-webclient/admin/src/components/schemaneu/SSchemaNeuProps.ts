@@ -11,4 +11,5 @@ export interface SchemaNeuProps {
 	migrateSchema: (data: FormData) => Promise<SimpleOperationResponse>;
 	duplicateSchema: (formData: FormData, duplikat: string) => Promise<SimpleOperationResponse>;
 	migrationQuellinformationen: () => SchemaMigrationQuelle;
+	schema?: string;
 }

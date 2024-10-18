@@ -76,16 +76,16 @@ export class RouteDataSchuelerIndividualdaten extends RouteData<RouteStateDataSc
 		for (const schule of schulen) {
 			if (schule.kuerzel === null)
 				continue;
-			const sfEintrag : SchulformKatalogEintrag | null = schule.schulformID === null ? null : Schulform.getEintragByID(schule.schulformID);
-			const sf : Schulform | null = sfEintrag === null ? null : Schulform.getByNummer(sfEintrag.nummer);
+			const sfEintrag : SchulformKatalogEintrag | null = schule.schulformID === null ? null : Schulform.data().getEintragByID(schule.schulformID);
+			const sf : Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === api.schulform)
 				mapSchulen.put(schule.schulnummer, schule);
 		}
 		for (const schule of schulen) {
 			if (schule.kuerzel !== null)
 				continue;
-			const sfEintrag : SchulformKatalogEintrag | null = schule.schulformID === null ? null : Schulform.getEintragByID(schule.schulformID);
-			const sf : Schulform | null = sfEintrag === null ? null : Schulform.getByNummer(sfEintrag.nummer);
+			const sfEintrag : SchulformKatalogEintrag | null = schule.schulformID === null ? null : Schulform.data().getEintragByID(schule.schulformID);
+			const sf : Schulform | null = sfEintrag === null ? null : Schulform.data().getWertBySchluessel(sfEintrag.schluessel);
 			if (sf === api.schulform)
 				mapSchulen.put(schule.schulnummer, schule);
 		}

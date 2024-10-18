@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { AdressbuchEintrag } from '../../../core/data/adressbuch/AdressbuchEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class Adressbuch extends JavaObject {
 
@@ -47,6 +48,8 @@ export class Adressbuch extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.adressbuch.Adressbuch'].includes(name);
 	}
+
+	public static class = new Class<Adressbuch>('de.svws_nrw.core.data.adressbuch.Adressbuch');
 
 	public static transpilerFromJSON(json : string): Adressbuch {
 		const obj = JSON.parse(json) as Partial<Adressbuch>;

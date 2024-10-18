@@ -1,4 +1,5 @@
 import { Service } from '../../core/Service';
+import { Class } from '../../java/lang/Class';
 import { StundenplanblockungManager } from '../../core/utils/stundenplanblockung/StundenplanblockungManager';
 
 export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungManager, StundenplanblockungManager> {
@@ -19,6 +20,8 @@ export class StundenplanblockungAlgorithmus extends Service<StundenplanblockungM
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus', 'de.svws_nrw.core.Service'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungAlgorithmus>('de.svws_nrw.core.stundenplanblockung.StundenplanblockungAlgorithmus');
 
 }
 

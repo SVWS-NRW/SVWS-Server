@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../java/lang/JavaEnum';
+import { Class } from '../../java/lang/Class';
 
 export class LogLevel extends JavaEnum<LogLevel> {
 
@@ -84,6 +85,8 @@ export class LogLevel extends JavaEnum<LogLevel> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.logger.LogLevel', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<LogLevel>('de.svws_nrw.core.logger.LogLevel');
 
 }
 

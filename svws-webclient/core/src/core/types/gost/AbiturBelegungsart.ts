@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class AbiturBelegungsart extends JavaEnum<AbiturBelegungsart> {
 
@@ -105,6 +106,8 @@ export class AbiturBelegungsart extends JavaEnum<AbiturBelegungsart> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.AbiturBelegungsart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<AbiturBelegungsart>('de.svws_nrw.core.types.gost.AbiturBelegungsart');
 
 }
 

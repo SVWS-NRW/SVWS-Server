@@ -47,7 +47,7 @@ public final class DataStundenplanPausenzeiten extends DataManagerRevised<Long, 
 
 
 	@Override
-	protected void initDTO(final DTOStundenplanPausenzeit dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOStundenplanPausenzeit dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}

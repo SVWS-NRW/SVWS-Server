@@ -13,13 +13,13 @@ import { BenutzergruppeListeEintrag } from '../core/data/benutzer/Benutzergruppe
 import { BenutzerKompetenzGruppenKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzGruppenKatalogEintrag';
 import { BenutzerKompetenzKatalogEintrag } from '../core/data/benutzer/BenutzerKompetenzKatalogEintrag';
 import { BenutzerListeEintrag } from '../core/data/benutzer/BenutzerListeEintrag';
-import { BerufskollegAnlageKatalogEintrag } from '../core/data/schule/BerufskollegAnlageKatalogEintrag';
+import { BerufskollegAnlageKatalogEintrag } from '../asd/data/schule/BerufskollegAnlageKatalogEintrag';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { BerufskollegFachklassenKatalog } from '../core/data/schule/BerufskollegFachklassenKatalog';
 import { BetriebAnsprechpartner } from '../core/data/betrieb/BetriebAnsprechpartner';
 import { BetriebListeEintrag } from '../core/data/betrieb/BetriebListeEintrag';
 import { BetriebStammdaten } from '../core/data/betrieb/BetriebStammdaten';
-import { BilingualeSpracheKatalogEintrag } from '../core/data/fach/BilingualeSpracheKatalogEintrag';
+import { BilingualeSpracheKatalogEintrag } from '../asd/data/fach/BilingualeSpracheKatalogEintrag';
 import { DatenbankVerbindungsdaten } from '../core/data/schema/DatenbankVerbindungsdaten';
 import { DBSchemaListeEintrag } from '../core/data/db/DBSchemaListeEintrag';
 import { EinschulungsartKatalogEintrag } from '../core/data/schule/EinschulungsartKatalogEintrag';
@@ -29,10 +29,10 @@ import { Erzieherart } from '../core/data/erzieher/Erzieherart';
 import { ErzieherListeEintrag } from '../core/data/erzieher/ErzieherListeEintrag';
 import { ErzieherStammdaten } from '../core/data/erzieher/ErzieherStammdaten';
 import { FachDaten } from '../core/data/fach/FachDaten';
-import { FachgruppenKatalogEintrag } from '../core/data/fach/FachgruppenKatalogEintrag';
-import { FachKatalogEintrag } from '../core/data/fach/FachKatalogEintrag';
+import { FachgruppeKatalogEintrag } from '../asd/data/fach/FachgruppeKatalogEintrag';
+import { FachKatalogEintrag } from '../asd/data/fach/FachKatalogEintrag';
 import { FoerderschwerpunktEintrag } from '../core/data/schule/FoerderschwerpunktEintrag';
-import { FoerderschwerpunktKatalogEintrag } from '../core/data/schule/FoerderschwerpunktKatalogEintrag';
+import { FoerderschwerpunktKatalogEintrag } from '../asd/data/schule/FoerderschwerpunktKatalogEintrag';
 import { GEAbschlussFaecher } from '../core/data/abschluss/GEAbschlussFaecher';
 import { GostBelegpruefungErgebnis } from '../core/abschluss/gost/GostBelegpruefungErgebnis';
 import { GostBelegpruefungsErgebnisse } from '../core/data/gost/GostBelegpruefungsErgebnisse';
@@ -56,7 +56,8 @@ import { GostJahrgangFachwahlen } from '../core/data/gost/GostJahrgangFachwahlen
 import { GostJahrgangFachwahlenHalbjahr } from '../core/data/gost/GostJahrgangFachwahlenHalbjahr';
 import { GostJahrgangsdaten } from '../core/data/gost/GostJahrgangsdaten';
 import { GostKlausurenCollectionAllData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionAllData';
-import { GostKlausurenCollectionRaumData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionRaumData';
+import { GostKlausurenCollectionData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionData';
+import { GostKlausurenCollectionHjData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionHjData';
 import { GostKlausurenCollectionSkrsKrsData } from '../core/data/gost/klausurplanung/GostKlausurenCollectionSkrsKrsData';
 import { GostKlausurenUpdate } from '../core/data/gost/klausurplanung/GostKlausurenUpdate';
 import { GostKlausurraum } from '../core/data/gost/klausurplanung/GostKlausurraum';
@@ -76,54 +77,53 @@ import { GostStatistikFachwahl } from '../core/data/gost/GostStatistikFachwahl';
 import { HerkunftKatalogEintrag } from '../core/data/schule/HerkunftKatalogEintrag';
 import { HerkunftsartKatalogEintrag } from '../core/data/schule/HerkunftsartKatalogEintrag';
 import { HerkunftsschulnummerKatalogEintrag } from '../core/data/schule/HerkunftsschulnummerKatalogEintrag';
+import { JahrgaengeKatalogEintrag } from '../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { JahrgangsDaten } from '../core/data/jahrgang/JahrgangsDaten';
-import { JahrgangsKatalogEintrag } from '../core/data/jahrgang/JahrgangsKatalogEintrag';
-import { KAOAAnschlussoptionEintrag } from '../core/data/kaoa/KAOAAnschlussoptionEintrag';
-import { KAOABerufsfeldEintrag } from '../core/data/kaoa/KAOABerufsfeldEintrag';
-import { KAOAEbene4Eintrag } from '../core/data/kaoa/KAOAEbene4Eintrag';
-import { KAOAKategorieEintrag } from '../core/data/kaoa/KAOAKategorieEintrag';
-import { KAOAMerkmalEintrag } from '../core/data/kaoa/KAOAMerkmalEintrag';
-import { KAOAZusatzmerkmalEintrag } from '../core/data/kaoa/KAOAZusatzmerkmalEintrag';
+import { KAOAAnschlussoptionenKatalogEintrag } from '../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
+import { KAOABerufsfeldKatalogEintrag } from '../asd/data/kaoa/KAOABerufsfeldKatalogEintrag';
+import { KAOAEbene4KatalogEintrag } from '../asd/data/kaoa/KAOAEbene4KatalogEintrag';
+import { KAOAKategorieKatalogEintrag } from '../asd/data/kaoa/KAOAKategorieKatalogEintrag';
+import { KAOAMerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
+import { KAOAZusatzmerkmalKatalogEintrag } from '../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { KatalogEintrag } from '../core/data/kataloge/KatalogEintrag';
 import { KatalogEintragOrte } from '../core/data/kataloge/KatalogEintragOrte';
 import { KatalogEintragOrtsteile } from '../core/data/kataloge/KatalogEintragOrtsteile';
 import { KatalogEintragStrassen } from '../core/data/kataloge/KatalogEintragStrassen';
-import { KindergartenbesuchKatalogEintrag } from '../core/data/schule/KindergartenbesuchKatalogEintrag';
-import { KlassenartKatalogEintrag } from '../core/data/klassen/KlassenartKatalogEintrag';
+import { KindergartenbesuchKatalogEintrag } from '../asd/data/schule/KindergartenbesuchKatalogEintrag';
+import { KlassenartKatalogEintrag } from '../asd/data/klassen/KlassenartKatalogEintrag';
 import { KlassenDaten } from '../core/data/klassen/KlassenDaten';
-import { KursartKatalogEintrag } from '../core/data/kurse/KursartKatalogEintrag';
 import { KursDaten } from '../core/data/kurse/KursDaten';
-import { LehrerKatalogAbgangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAbgangsgrundEintrag';
-import { LehrerKatalogAnrechnungsgrundEintrag } from '../core/data/lehrer/LehrerKatalogAnrechnungsgrundEintrag';
-import { LehrerKatalogBeschaeftigungsartEintrag } from '../core/data/lehrer/LehrerKatalogBeschaeftigungsartEintrag';
-import { LehrerKatalogEinsatzstatusEintrag } from '../core/data/lehrer/LehrerKatalogEinsatzstatusEintrag';
-import { LehrerKatalogFachrichtungAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogFachrichtungAnerkennungEintrag';
-import { LehrerKatalogFachrichtungEintrag } from '../core/data/lehrer/LehrerKatalogFachrichtungEintrag';
-import { LehrerKatalogLehramtAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogLehramtAnerkennungEintrag';
-import { LehrerKatalogLehramtEintrag } from '../core/data/lehrer/LehrerKatalogLehramtEintrag';
-import { LehrerKatalogLehrbefaehigungAnerkennungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungAnerkennungEintrag';
-import { LehrerKatalogLehrbefaehigungEintrag } from '../core/data/lehrer/LehrerKatalogLehrbefaehigungEintrag';
-import { LehrerKatalogLeitungsfunktionenEintrag } from '../core/data/lehrer/LehrerKatalogLeitungsfunktionenEintrag';
-import { LehrerKatalogMehrleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMehrleistungsartEintrag';
-import { LehrerKatalogMinderleistungsartEintrag } from '../core/data/lehrer/LehrerKatalogMinderleistungsartEintrag';
-import { LehrerKatalogRechtsverhaeltnisEintrag } from '../core/data/lehrer/LehrerKatalogRechtsverhaeltnisEintrag';
-import { LehrerKatalogZugangsgrundEintrag } from '../core/data/lehrer/LehrerKatalogZugangsgrundEintrag';
+import { LehrerAbgangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAbgangsgrundKatalogEintrag';
+import { LehrerAnrechnungsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerAnrechnungsgrundKatalogEintrag';
+import { LehrerBeschaeftigungsartKatalogEintrag } from '../asd/data/lehrer/LehrerBeschaeftigungsartKatalogEintrag';
+import { LehrerEinsatzstatusKatalogEintrag } from '../asd/data/lehrer/LehrerEinsatzstatusKatalogEintrag';
+import { LehrerFachrichtungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungAnerkennungKatalogEintrag';
+import { LehrerFachrichtungKatalogEintrag } from '../asd/data/lehrer/LehrerFachrichtungKatalogEintrag';
+import { LehrerLehramtAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtAnerkennungKatalogEintrag';
+import { LehrerLehramtKatalogEintrag } from '../asd/data/lehrer/LehrerLehramtKatalogEintrag';
+import { LehrerLehrbefaehigungAnerkennungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungAnerkennungKatalogEintrag';
+import { LehrerLehrbefaehigungKatalogEintrag } from '../asd/data/lehrer/LehrerLehrbefaehigungKatalogEintrag';
+import { LehrerLeitungsfunktionKatalogEintrag } from '../asd/data/lehrer/LehrerLeitungsfunktionKatalogEintrag';
 import { LehrerListeEintrag } from '../core/data/lehrer/LehrerListeEintrag';
-import { LehrerPersonalabschnittsdaten } from '../core/data/lehrer/LehrerPersonalabschnittsdaten';
-import { LehrerPersonaldaten } from '../core/data/lehrer/LehrerPersonaldaten';
-import { LehrerStammdaten } from '../core/data/lehrer/LehrerStammdaten';
+import { LehrerMehrleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMehrleistungsartKatalogEintrag';
+import { LehrerMinderleistungsartKatalogEintrag } from '../asd/data/lehrer/LehrerMinderleistungsartKatalogEintrag';
+import { LehrerPersonalabschnittsdaten } from '../asd/data/lehrer/LehrerPersonalabschnittsdaten';
+import { LehrerPersonaldaten } from '../asd/data/lehrer/LehrerPersonaldaten';
+import { LehrerRechtsverhaeltnisKatalogEintrag } from '../asd/data/lehrer/LehrerRechtsverhaeltnisKatalogEintrag';
+import { LehrerStammdaten } from '../asd/data/lehrer/LehrerStammdaten';
+import { LehrerZugangsgrundKatalogEintrag } from '../asd/data/lehrer/LehrerZugangsgrundKatalogEintrag';
 import { List } from '../java/util/List';
 import { NationalitaetenKatalogEintrag } from '../core/data/schule/NationalitaetenKatalogEintrag';
-import { NotenKatalogEintrag } from '../core/data/schule/NotenKatalogEintrag';
+import { NoteKatalogEintrag } from '../asd/data/NoteKatalogEintrag';
 import { OAuth2ClientSecret } from '../core/data/oauth2/OAuth2ClientSecret';
-import { OrganisationsformKatalogEintrag } from '../core/data/schule/OrganisationsformKatalogEintrag';
+import { OrganisationsformKatalogEintrag } from '../asd/data/schule/OrganisationsformKatalogEintrag';
 import { OrtKatalogEintrag } from '../core/data/kataloge/OrtKatalogEintrag';
 import { OrtsteilKatalogEintrag } from '../core/data/kataloge/OrtsteilKatalogEintrag';
 import { PruefungsordnungKatalogEintrag } from '../core/data/schule/PruefungsordnungKatalogEintrag';
 import { Raum } from '../core/data/schule/Raum';
 import { ReformpaedagogikKatalogEintrag } from '../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { ReligionEintrag } from '../core/data/schule/ReligionEintrag';
-import { ReligionKatalogEintrag } from '../core/data/schule/ReligionKatalogEintrag';
+import { ReligionKatalogEintrag } from '../asd/data/schule/ReligionKatalogEintrag';
 import { ReportingParameter } from '../core/data/reporting/ReportingParameter';
 import { Schild3KatalogEintragAbiturInfos } from '../core/data/schild3/Schild3KatalogEintragAbiturInfos';
 import { Schild3KatalogEintragDatenart } from '../core/data/schild3/Schild3KatalogEintragDatenart';
@@ -143,26 +143,25 @@ import { SchuelerLernabschnittListeEintrag } from '../core/data/schueler/Schuele
 import { SchuelerLernabschnittsdaten } from '../core/data/schueler/SchuelerLernabschnittsdaten';
 import { SchuelerListeEintrag } from '../core/data/schueler/SchuelerListeEintrag';
 import { SchuelerSchulbesuchsdaten } from '../core/data/schueler/SchuelerSchulbesuchsdaten';
-import { SchuelerStammdaten } from '../core/data/schueler/SchuelerStammdaten';
-import { SchuelerstatusKatalogEintrag } from '../core/data/schule/SchuelerstatusKatalogEintrag';
+import { SchuelerStammdaten } from '../asd/data/schueler/SchuelerStammdaten';
+import { SchuelerStatusKatalogEintrag } from '../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { SchuelerVermerkartZusammenfassung } from '../core/data/schueler/SchuelerVermerkartZusammenfassung';
 import { SchuelerVermerke } from '../core/data/schueler/SchuelerVermerke';
-import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../core/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
-import { SchulabschlussBerufsbildendKatalogEintrag } from '../core/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
+import { SchulabschlussAllgemeinbildendKatalogEintrag } from '../asd/data/schule/SchulabschlussAllgemeinbildendKatalogEintrag';
+import { SchulabschlussBerufsbildendKatalogEintrag } from '../asd/data/schule/SchulabschlussBerufsbildendKatalogEintrag';
 import { SchulEintrag } from '../core/data/kataloge/SchulEintrag';
 import { SchulenKatalogEintrag } from '../core/data/schule/SchulenKatalogEintrag';
-import { SchuleStammdaten } from '../core/data/schule/SchuleStammdaten';
-import { SchulformKatalogEintrag } from '../core/data/schule/SchulformKatalogEintrag';
-import { SchulgliederungKatalogEintrag } from '../core/data/schule/SchulgliederungKatalogEintrag';
-import { Schulleitung } from '../core/data/schule/Schulleitung';
-import { SchulstufeKatalogEintrag } from '../core/data/schule/SchulstufeKatalogEintrag';
+import { SchuleStammdaten } from '../asd/data/schule/SchuleStammdaten';
+import { SchulformKatalogEintrag } from '../asd/data/schule/SchulformKatalogEintrag';
+import { SchulgliederungKatalogEintrag } from '../asd/data/schule/SchulgliederungKatalogEintrag';
+import { Schulleitung } from '../asd/data/schule/Schulleitung';
 import { SchultraegerKatalogEintrag } from '../core/data/schule/SchultraegerKatalogEintrag';
 import { SimpleOperationResponse } from '../core/data/SimpleOperationResponse';
 import { SMTPServerKonfiguration } from '../core/data/email/SMTPServerKonfiguration';
 import { Sprachbelegung } from '../core/data/schueler/Sprachbelegung';
 import { Sprachpruefung } from '../core/data/schueler/Sprachpruefung';
 import { SprachpruefungsniveauKatalogEintrag } from '../core/data/fach/SprachpruefungsniveauKatalogEintrag';
-import { SprachreferenzniveauKatalogEintrag } from '../core/data/fach/SprachreferenzniveauKatalogEintrag';
+import { SprachreferenzniveauKatalogEintrag } from '../asd/data/fach/SprachreferenzniveauKatalogEintrag';
 import { Stundenplan } from '../core/data/stundenplan/Stundenplan';
 import { StundenplanAufsichtsbereich } from '../core/data/stundenplan/StundenplanAufsichtsbereich';
 import { StundenplanKalenderwochenzuordnung } from '../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
@@ -178,9 +177,11 @@ import { StundenplanSchiene } from '../core/data/stundenplan/StundenplanSchiene'
 import { StundenplanUnterricht } from '../core/data/stundenplan/StundenplanUnterricht';
 import { StundenplanUnterrichtsverteilung } from '../core/data/stundenplan/StundenplanUnterrichtsverteilung';
 import { StundenplanZeitraster } from '../core/data/stundenplan/StundenplanZeitraster';
-import { UebergangsempfehlungKatalogEintrag } from '../core/data/schueler/UebergangsempfehlungKatalogEintrag';
+import { UebergangsempfehlungKatalogEintrag } from '../asd/data/schueler/UebergangsempfehlungKatalogEintrag';
 import { VerkehrsspracheKatalogEintrag } from '../core/data/schule/VerkehrsspracheKatalogEintrag';
 import { VermerkartEintrag } from '../core/data/schule/VermerkartEintrag';
+import { WiedervorlageEintrag } from '../core/data/schule/WiedervorlageEintrag';
+import { ZulaessigeKursartKatalogEintrag } from '../asd/data/kurse/ZulaessigeKursartKatalogEintrag';
 
 export class ApiServer extends BaseApi {
 
@@ -1915,6 +1916,75 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode generateENMLehrerCredentials für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/generate
+	 *
+	 * Generiert Initial-Kennwörter für Lehrer für das externe Notenmodul, sofern diese noch keine haben.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Die Kennwörter und die Password-Hashes wurden erzeugt oder es war nichts zu tun.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Erzeugen der Credentials.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 */
+	public async generateENMLehrerCredentials(schema : string) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/generate"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode resetENMLehrerPasswordToInitial für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/reset/{id : \d+}
+	 *
+	 * Setzt das Kennwort des Lehrers für das externe Notenmodul auf das Initial-Kennwort zurück. Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Initial-Kennwort wurde gesetzt.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async resetENMLehrerPasswordToInitial(schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/reset/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		await super.postJSON(path, null);
+		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setENMLehrerPassword für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/credentials/set/{id : \d+}
+	 *
+	 * Setzt das Kennwort des Lehrers für das externe Notenmodul auf das übergebene Kennwort. Ist noch kein Initialkennwort gesetzt, so wird ein neues erzeugt, allerdings das übergebene Kennwort gesetzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 204: Das Kennwort wurde gesetzt.
+	 *   Code 400: Das Kennwort ist leer oder entspricht nicht den Minimal-Anforderungen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte zum Setzen des Kennwortes.
+	 *   Code 404: Die ID des Lehrers ist in der DB nicht vorhanden.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string | null} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async setENMLehrerPassword(data : string | null, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/enm/credentials/set/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = JSON.stringify(data);
+		await super.postJSON(path, body);
+		return;
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode downloadENMDaten für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/download
 	 *
 	 * Importiert die Daten des Externen Notenmoduls und speichert diese in der Datenbank. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Notendaten besitzt.
@@ -1938,6 +2008,30 @@ export class ApiServer extends BaseApi {
 		const result : string = await super.getJSON(path);
 		const text = result;
 		return (text === "true");
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getENMDatenLeer für den Zugriff auf die URL https://{hostname}/db/{schema}/enm/empty
+	 *
+	 * Liefert leere Daten des Externen Notenmoduls (ENM).
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Daten des Externen Notenmoduls (ENM)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: ENMDaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um auf die API zuzugreifen.
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Daten des Externen Notenmoduls (ENM)
+	 */
+	public async getENMDatenLeer(schema : string) : Promise<ENMDaten> {
+		const path = "/db/{schema}/enm/empty"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return ENMDaten.transpilerFromJSON(text);
 	}
 
 
@@ -2342,7 +2436,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: FachgruppenKatalogEintrag
+	 *     - Rückgabe-Typ: FachgruppeKatalogEintrag
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Kein Fachgruppen-Katalog-Eintrag für die angegebene ID gefunden.
 	 *
@@ -2351,13 +2445,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Fachgruppen-Katalog-Eintrag für die angegebene ID.
 	 */
-	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppenKatalogEintrag> {
+	public async getKatalogFachgruppenEintrag(schema : string, id : number) : Promise<FachgruppeKatalogEintrag> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppe/{id : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return FachgruppenKatalogEintrag.transpilerFromJSON(text);
+		return FachgruppeKatalogEintrag.transpilerFromJSON(text);
 	}
 
 
@@ -2369,7 +2463,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Katalog aller Fachgruppen aller Schulformen.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<FachgruppeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Fachgruppen gefunden.
 	 *
@@ -2377,13 +2471,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog aller Fachgruppen aller Schulformen.
 	 */
-	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+	public async getKatalogFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/allgemein/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<FachgruppenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<FachgruppeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -2587,7 +2681,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Katalog der Fachgruppen für die Schulform dieser Schule.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<FachgruppenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<FachgruppeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Fachgruppen für die Schulform dieser Schule gefunden.
 	 *
@@ -2595,13 +2689,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Katalog der Fachgruppen für die Schulform dieser Schule.
 	 */
-	public async getFachgruppen(schema : string) : Promise<List<FachgruppenKatalogEintrag>> {
+	public async getFachgruppen(schema : string) : Promise<List<FachgruppeKatalogEintrag>> {
 		const path = "/db/{schema}/faecher/fachgruppen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<FachgruppenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<FachgruppeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(FachgruppeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -2755,6 +2849,35 @@ export class ApiServer extends BaseApi {
 	public async getGostAbiturjahrgaenge(schema : string) : Promise<List<GostJahrgang>> {
 		const path = "/db/{schema}/gost/abiturjahrgaenge"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<GostJahrgang>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(GostJahrgang.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostAbiturjahrgaengeFuerAbschnitt für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/abiturjahrgaenge/{idAbschnitt : \d+}
+	 *
+	 * Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Liste der Abiturjahrgänge.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<GostJahrgang>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Liste der Abiturjahrgänge auszulesen.
+	 *   Code 404: Kein Abiturjahrgang gefunden oder keine gymnasiale Oberstufe bei der Schulform vorhanden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} idAbschnitt - der Pfad-Parameter idAbschnitt
+	 *
+	 * @returns Die Liste der Abiturjahrgänge.
+	 */
+	public async getGostAbiturjahrgaengeFuerAbschnitt(schema : string, idAbschnitt : number) : Promise<List<GostJahrgang>> {
+		const path = "/db/{schema}/gost/abiturjahrgaenge/{idAbschnitt : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{idAbschnitt\s*(:[^{}]+({[^{}]+})*)?}/g, idAbschnitt.toString());
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<GostJahrgang>();
@@ -4869,26 +4992,27 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode blockenGostKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/blocken/kursklausuren
+	 * Implementierung der POST-Methode getGostKlausurenCollectionAlldata für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/alldata
 	 *
-	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 * Liefert alle zur Klausurplanung gehörenden Daten in einem GostKlausurenCollectionAllData-Objekt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 200: Das GostKlausurenCollectionAllData-Objekt mit den Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten auszulesen.
+	 *   Code 404: Der Abiturjahrgang oder das GostHalbjahr wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {GostKlausurterminblockungDaten} data - der Request-Body für die HTTP-Methode
+	 * @param {List<GostKlausurenCollectionHjData>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 * @returns Das GostKlausurenCollectionAllData-Objekt mit den Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenCollectionAllData> {
-		const path = "/db/{schema}/gost/klausuren/blocken/kursklausuren"
+	public async getGostKlausurenCollectionAlldata(data : List<GostKlausurenCollectionHjData>, schema : string) : Promise<GostKlausurenCollectionAllData> {
+		const path = "/db/{schema}/gost/klausuren/collection/alldata"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
+		const body : string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
 		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
@@ -4896,73 +5020,74 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode blockenGostSchuelerklausurtermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/blocken/schuelerklausurtermine
+	 * Implementierung der POST-Methode getGostKlausurenCollectionAlldataGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/alldata/gzip
 	 *
-	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {GostNachschreibterminblockungKonfiguration} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenCollectionAllData> {
-		const path = "/db/{schema}/gost/klausuren/blocken/schuelerklausurtermine"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der POST-Methode getGostKlausurenMetaCollectionOberstufe für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufe/
-	 *
-	 * Liest eine Liste der Schuelerklausuren zu einem Klausurtermin aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Liefert alle zur Klausurplanung gehörenden Daten in einem komprimierten GostKlausurenCollectionAllData-Objekt. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Daten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die Liste der Schuelerklausuren.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schuelerklausuren auszulesen.
-	 *   Code 404: Der Abiturjahrgang oder das Halbjahr wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Die Liste der Schuelerklausuren.
-	 */
-	public async getGostKlausurenMetaCollectionOberstufe(data : List<number>, schema : string) : Promise<GostKlausurenCollectionAllData> {
-		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufe/"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenMetaCollectionOberstufeGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/gzip
-	 *
-	 * Liest für die angegebene Blockung der gymnasialen Oberstufe die grundlegenden Daten aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 *   Code 200: Die GZip-komprimierten Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 *     - Mime-Type: application/octet-stream
 	 *     - Rückgabe-Typ: ApiFile
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Blockungsdaten der Gymnasialen Oberstufe auszulesen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurplanung der Gymnasialen Oberstufe auszulesen.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
-	 *   Code 404: Keine Blockung mit der angebenen ID gefunden.
+	 *   Code 500: Es ist ein unerwarteter interner Fehler aufgetreten.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {List<GostKlausurenCollectionHjData>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die GZip-komprimierten Daten der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
+	 */
+	public async getGostKlausurenCollectionAlldataGZip(data : List<GostKlausurenCollectionHjData>, schema : string) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/klausuren/collection/alldata/gzip"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<GostKlausurenCollectionHjData>).map(d => GostKlausurenCollectionHjData.transpilerToJSON(d)).join() + "]";
+		const result : ApiFile = await super.postJSONtoOctetStream(path, body);
+		return result;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenCollectionAllIssues für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/issues/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}
+	 *
+	 * Liefert alle zur Klausurplanung gehörenden Fehler und Probleme in einem GostKlausurenCollectionHjData-Objekt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das GostKlausurenCollectionAllData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionHjData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten auszulesen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
+	 *
+	 * @returns Das GostKlausurenCollectionAllData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
+	 */
+	public async getGostKlausurenCollectionAllIssues(schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionHjData> {
+		const path = "/db/{schema}/gost/klausuren/collection/issues/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return GostKlausurenCollectionHjData.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getGostKlausurenCollectionAllIssuesGZip für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/collection/issues/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/gzip
+	 *
+	 * Liefert alle zur Klausurplanung gehörenden Fehler und Probleme in einem komprimierten GostKlausurenCollectionHjData-Objekt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen der Blockungsdaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Das komprimierte GostKlausurenCollectionHjData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
+	 *     - Mime-Type: application/octet-stream
+	 *     - Rückgabe-Typ: ApiFile
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurdaten der Gymnasialen Oberstufe auszulesen.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: SimpleOperationResponse
 	 *   Code 500: Es ist ein unerwarteter interner Fehler aufgetreten.
@@ -4973,10 +5098,10 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
-	 * @returns Die GZip-komprimierten Blockungsdaten der gymnasialen Oberstfue für die angegebene ID
+	 * @returns Das komprimierte GostKlausurenCollectionHjData-Objekt mit den Fehlern und Problemen der Klausurplanung für den angegebenen Abiturjahrgang und das Halbjahr.
 	 */
-	public async getGostKlausurenMetaCollectionOberstufeGZip(schema : string, abiturjahr : number, halbjahr : number) : Promise<ApiFile> {
-		const path = "/db/{schema}/gost/klausuren/collection/metaoberstufe/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip"
+	public async getGostKlausurenCollectionAllIssuesGZip(schema : string, abiturjahr : number, halbjahr : number) : Promise<ApiFile> {
+		const path = "/db/{schema}/gost/klausuren/collection/issues/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/gzip"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
@@ -4986,9 +5111,9 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode patchGostKlausurenKursklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/{id : \d+}/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
 	 *
-	 * Patcht einen Gost-Kursklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
+	 * Patcht eine Gost-Kursklausur und gibt die daraufhin geänderten Raumdaten zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Kursklausur besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 201: Der Patch wurde erfolgreich in die Kursklausur integriert.
@@ -5003,15 +5128,17 @@ export class ApiServer extends BaseApi {
 	 * @param {Partial<GostKursklausur>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
 	 * @returns Der Patch wurde erfolgreich in die Kursklausur integriert.
 	 */
-	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
+	public async patchGostKlausurenKursklausur(data : Partial<GostKursklausur>, schema : string, id : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/{id : \\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
-			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const body : string = GostKursklausur.transpilerToJSONPatch(data);
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5020,14 +5147,43 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der POST-Methode blockenGostKursklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/blocken
+	 *
+	 * Startet den Kursklausur-Blockungsalgorithmus für die übergebenen GostKlausurterminblockungDaten.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Blocken besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Klausurblockung wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klausurblockung durchzuführen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SimpleOperationResponse
+	 *
+	 * @param {GostKlausurterminblockungDaten} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Klausurblockung wurde erfolgreich angelegt.
+	 */
+	public async blockenGostKursklausuren(data : GostKlausurterminblockungDaten, schema : string) : Promise<GostKlausurenCollectionData> {
+		const path = "/db/{schema}/gost/klausuren/kursklausuren/blocken"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = GostKlausurterminblockungDaten.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionData.transpilerFromJSON(text);
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode createGostKlausurenKursklausurenJahrgangHalbjahrQuartal für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : \d+}/quartal/{quartal : \d+}
 	 *
-	 * Liest eine Liste der Kursklausuren eines Abiturjahrgangs eines Halbjahres der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Erzeugt die Kursklausuren eines Abiturjahrgangs in einem bestimmten GostHalbjahr und Quartal der Gymnasialen Oberstufe. Schülerklausuren und Haupttermin-Schülerklausurtermine werden ebenfalls erzeugt.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Kursklausuren besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Kursklausuren.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
+	 *     - Rückgabe-Typ: GostKlausurenCollectionData
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
 	 *   Code 404: Keine Klausurvorgaben definiert oder der Schuljahresabschnitt wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
@@ -5039,7 +5195,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der Kursklausuren.
 	 */
-	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenCollectionAllData> {
+	public async createGostKlausurenKursklausurenJahrgangHalbjahrQuartal(schema : string, abiturjahr : number, halbjahr : number, quartal : number) : Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/kursklausuren/create/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : \\d+}/quartal/{quartal : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
@@ -5047,20 +5203,19 @@ export class ApiServer extends BaseApi {
 			.replace(/{quartal\s*(:[^{}]+({[^{}]+})*)?}/g, quartal.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
+		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
 
 
 	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/{id : \d+}
 	 *
-	 * Patcht einen Gost-Klausurraum.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurraums besitzt.
+	 * Patcht einen GostKlausurraum.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines GostKlausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in den Klausurraum integriert.
+	 *   Code 200: Der Patch wurde erfolgreich in den GostKlausurraum integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurräume zu ändern.
-	 *   Code 404: Kein Termin mit der übergebenen ID oder Stundenplanraum-Eintrag mit der angegebenen ID gefunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostKlausurräume zu ändern.
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -5107,20 +5262,20 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode createGostKlausurenRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raeume/new
 	 *
-	 * Erstellt einen neue Gost-Klausurraum und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurraums besitzt.
+	 * Erstellt einen neue GostKlausurraum und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines GostKlausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Gost-Klausurraum wurde erfolgreich angelegt.
+	 *   Code 201: GostKlausurraum wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurraum
 	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurraum anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen GostKlausurraum anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<GostKlausurraum>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Gost-Klausurraum wurde erfolgreich angelegt.
+	 * @returns GostKlausurraum wurde erfolgreich angelegt.
 	 */
 	public async createGostKlausurenRaum(data : Partial<GostKlausurraum>, schema : string) : Promise<GostKlausurraum> {
 		const path = "/db/{schema}/gost/klausuren/raeume/new"
@@ -5133,72 +5288,16 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode getGostKlausurenSchuelerraumstundenSktids für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden
-	 *
-	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
-	 *   Code 404: Der Termin-ID wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async getGostKlausurenSchuelerraumstundenSktids(data : List<number>, schema : string) : Promise<GostKlausurenCollectionRaumData> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getGostKlausurenSchuelerraumstundenTermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/raumstunden/{termin : -?\d+}
-	 *
-	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionRaumData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
-	 *   Code 404: Der Termin-ID wurde nicht gefunden.
-	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} termin - der Pfad-Parameter termin
-	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
-	 */
-	public async getGostKlausurenSchuelerraumstundenTermin(schema : string, termin : number) : Promise<GostKlausurenCollectionRaumData> {
-		const path = "/db/{schema}/gost/klausuren/raumstunden/{termin : -?\\d+}"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{termin\s*(:[^{}]+({[^{}]+})*)?}/g, termin.toString());
-		const result : string = await super.getJSON(path);
-		const text = result;
-		return GostKlausurenCollectionRaumData.transpilerFromJSON(text);
-	}
-
-
-	/**
 	 * Implementierung der GET-Methode getGostKlausurenCollectionBySchuelerid für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schueler/{sid : -?\d+}/abiturjahrgang/{abiturjahr : -?\d+}/schuljahr/{halbjahr : \d+}
 	 *
-	 * Liest eine Liste der Klausurraumstunden eines Gost-Klausurtermins aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Fragt die Klausurdaten eines Schülers ab.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 200: Abfrage war erfolgreich.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: GostKlausurenCollectionAllData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurraumstunden auszulesen.
-	 *   Code 404: Der Termin-ID wurde nicht gefunden.
+	 *     - Rückgabe-Typ: GostKlausurenCollectionData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Daten auszulesen.
+	 *   Code 404: Der Schüler-ID wurde nicht gefunden.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -5206,9 +5305,9 @@ export class ApiServer extends BaseApi {
 	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
 	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 * @returns Abfrage war erfolgreich.
 	 */
-	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionAllData> {
+	public async getGostKlausurenCollectionBySchuelerid(schema : string, sid : number, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionData> {
 		const path = "/db/{schema}/gost/klausuren/schueler/{sid : -?\\d+}/abiturjahrgang/{abiturjahr : -?\\d+}/schuljahr/{halbjahr : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{sid\s*(:[^{}]+({[^{}]+})*)?}/g, sid.toString())
@@ -5216,14 +5315,14 @@ export class ApiServer extends BaseApi {
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const result : string = await super.getJSON(path);
 		const text = result;
-		return GostKlausurenCollectionAllData.transpilerFromJSON(text);
+		return GostKlausurenCollectionData.transpilerFromJSON(text);
 	}
 
 
 	/**
 	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausur für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/{id : \d+}
 	 *
-	 * Patcht einen Gost-Schuelerklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Schuelerklausur besitzt.
+	 * Patcht eine Gost-Schuelerklausur.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen einer Gost-Schuelerklausur besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Patch wurde erfolgreich in die Schuelerklausur integriert.
@@ -5249,19 +5348,19 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der POST-Methode loescheGostSchuelerklausurenAusRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/ausraum
 	 *
-	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 * Löscht die Raumzuweisungen für alle in den GostKlausurraumRich-Objekten übergebene GostSchuelerklausurTermin-IDsDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer Raumzuweisung besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 200: Die Raumzuweisungen wurde erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Raumzuweisungen zu löschen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 * @returns Die Raumzuweisungen wurde erfolgreich gelöscht.
 	 */
 	public async loescheGostSchuelerklausurenAusRaum(data : List<GostKlausurraumRich>, schema : string) : Promise<GostKlausurenCollectionSkrsKrsData> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/ausraum"
@@ -5274,15 +5373,72 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \d+}
+	 * Implementierung der DELETE-Methode deleteGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/delete
 	 *
-	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
+	 * Löscht mehrere GostSchuelerklausuren.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen einer GostSchuelerklausur besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in den Klausurtermin integriert.
+	 *   Code 200: Die Schülerklausuren für die angegebenen IDs wurden erfolgreich gelöscht.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<Long>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine GostSchuelerklausur zu löschen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Schülerklausuren für die angegebenen IDs wurden erfolgreich gelöscht.
+	 */
+	public async deleteGostKlausurenSchuelerklausuren(data : List<number>, schema : string) : Promise<List<number>> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/delete"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<number>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(parseFloat(JSON.parse(text))); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode createGostKlausurenSchuelerklausuren für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/new
+	 *
+	 * Erstellt mehrere neue GostSchuelerklausuren inklusive der zugehörigen GostSchuelerklausurTermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen der Daten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Daten wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionData
+	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostSchuelerklausuren anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<Partial<GostSchuelerklausur>>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Daten wurde erfolgreich angelegt.
+	 */
+	public async createGostKlausurenSchuelerklausuren(data : List<Partial<GostSchuelerklausur>>, schema : string) : Promise<GostKlausurenCollectionData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/new"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<GostSchuelerklausur>).map(d => GostSchuelerklausur.transpilerToJSONPatch(d)).join() + "]";
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionData.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/{id : \d+}
+	 *
+	 * Patcht einen GostSchuelerklausurTermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines GostSchuelerklausurTermin besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in den GostSchuelerklausurTermin integriert.
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.
-	 *   Code 404: Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostSchuelerklausurTermine zu ändern.
+	 *   Code 404: Kein GostSchuelerklausurTermin-Eintrag mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
@@ -5300,21 +5456,48 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/delete/{id : \d+}
+	 * Implementierung der POST-Methode blockenGostSchuelerklausurtermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/blocken
 	 *
-	 * Löscht Gost-Schülerklausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Schülerklausurtermins besitzt.
+	 * Startet den Nachschreiber-Blockungsalgorithmus für die übergebenen GostNachschreibterminblockungKonfiguration.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Blocken besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Schülerklausurtermin wurde erfolgreich angelegt.
+	 *   Code 200: Klausurblockung wurde erfolgreich angelegt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionData
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um eine Klausurblockung durchzuführen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {GostNachschreibterminblockungKonfiguration} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Klausurblockung wurde erfolgreich angelegt.
+	 */
+	public async blockenGostSchuelerklausurtermine(data : GostNachschreibterminblockungKonfiguration, schema : string) : Promise<GostKlausurenCollectionData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/blocken"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = GostNachschreibterminblockungKonfiguration.transpilerToJSON(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionData.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/delete/{id : \d+}
+	 *
+	 * Löscht einen GostSchuelerklausurTermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines GostSchuelerklausurTermins besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: GostSchuelerklausurTermin wurde erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: Boolean
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Schülerklausurtermin zu löschen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen GostSchuelerklausurTermin zu löschen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Gost-Schülerklausurtermin wurde erfolgreich angelegt.
+	 * @returns GostSchuelerklausurTermin wurde erfolgreich gelöscht.
 	 */
 	public async deleteGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<boolean | null> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/delete/{id : \\d+}"
@@ -5329,20 +5512,20 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode createGostKlausurenSchuelerklausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \d+}
 	 *
-	 * Erstellt einen neuen Gost-Klausurtermin und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 * Erstellt einen neuen GostSchuelerklausurTermin für die als ID übergebene GostSchuelerklausur und gibt ihn zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines GostSchuelerklausurTermins besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 201: Gost-Klausurtermin wurde erfolgreich angelegt.
+	 *   Code 201: GostSchuelerklausurTermin wurde erfolgreich angelegt.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostSchuelerklausurTermin
 	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen GostSchuelerklausurTermin anzulegen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 *
-	 * @returns Gost-Klausurtermin wurde erfolgreich angelegt.
+	 * @returns GostSchuelerklausurTermin wurde erfolgreich angelegt.
 	 */
 	public async createGostKlausurenSchuelerklausurtermin(schema : string, id : number) : Promise<GostSchuelerklausurTermin> {
 		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/termine/new/{id : \\d+}"
@@ -5355,27 +5538,29 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\d+}
+	 * Implementierung der POST-Methode setzeGostSchuelerklausurenZuRaum für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}
 	 *
-	 * Weist die angegebenen Schülerklausuren dem Klausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
+	 * Weist die in den GostKlausurraumRich-Objekten übergebenen IDs der GostSchuelerklausurTermine dem jeweiligen GostKlausurraum zu.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Zuweisen eines Klausurraums besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 *   Code 200: Die Raumzuweisungen wurden erfolgreich übernommen.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einer Gost-Klausurraumstunde anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Räume zuzuweisen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<GostKlausurraumRich>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 * @param {number} abiturjahr - der Pfad-Parameter abiturjahr
+	 * @param {number} halbjahr - der Pfad-Parameter halbjahr
 	 *
-	 * @returns Gost-Klausurraumstunde wurde erfolgreich angelegt.
+	 * @returns Die Raumzuweisungen wurden erfolgreich übernommen.
 	 */
-	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
-		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abschnitt/{abschnittid : -?\\d+}"
+	public async setzeGostSchuelerklausurenZuRaum(data : List<GostKlausurraumRich>, schema : string, abiturjahr : number, halbjahr : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/schuelerklausuren/zuraum/abiturjahrgang/{abiturjahr : -?\\d+}/halbjahr/{halbjahr : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
+			.replace(/{abiturjahr\s*(:[^{}]+({[^{}]+})*)?}/g, abiturjahr.toString())
+			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString());
 		const body : string = "[" + (data.toArray() as Array<GostKlausurraumRich>).map(d => GostKlausurraumRich.transpilerToJSON(d)).join() + "]";
 		const result : string = await super.postJSON(path, body);
 		const text = result;
@@ -5384,47 +5569,55 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der PATCH-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}
+	 * Implementierung der POST-Methode patchGostKlausurenKlausurtermin für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/{id : \d+}/abschnitt/{abschnittid : -?\d+}
 	 *
-	 * Patcht einen Gost-Klausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines Gost-Klausurtermins besitzt.
+	 * Patcht einen GostKlausurtermin.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Patchen eines GostKlausurtermins besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Patch wurde erfolgreich in den Klausurtermin integriert.
+	 *   Code 201: Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: GostKlausurenCollectionSkrsKrsData
 	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Klausurtermine zu ändern.
-	 *   Code 404: Kein Klausurtermin-Eintrag mit der angegebenen ID gefunden
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um GostKlausurtermine zu ändern.
+	 *   Code 404: Kein Kursklausur-Eintrag mit der angegebenen ID gefunden
 	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {Partial<GostKlausurtermin>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
+	 * @param {number} abschnittid - der Pfad-Parameter abschnittid
+	 *
+	 * @returns Der Patch wurde erfolgreich in den GostKlausurtermin integriert.
 	 */
-	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number) : Promise<void> {
-		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}"
+	public async patchGostKlausurenKlausurtermin(data : Partial<GostKlausurtermin>, schema : string, id : number, abschnittid : number) : Promise<GostKlausurenCollectionSkrsKrsData> {
+		const path = "/db/{schema}/gost/klausuren/termine/{id : \\d+}/abschnitt/{abschnittid : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
+			.replace(/{abschnittid\s*(:[^{}]+({[^{}]+})*)?}/g, abschnittid.toString());
 		const body : string = GostKlausurtermin.transpilerToJSONPatch(data);
-		return super.patchJSON(path, body);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return GostKlausurenCollectionSkrsKrsData.transpilerFromJSON(text);
 	}
 
 
 	/**
 	 * Implementierung der DELETE-Methode deleteGostKlausurenKlausurtermine für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/termine/delete
 	 *
-	 * Löscht Gost-Klausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen eines Gost-Klausurtermins besitzt.
+	 * Löscht mehrere GostKlausurtermine.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Löschen eines GostKlausurtermins besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 *   Code 200: Die Klausurtermine für die angegebenen IDs wurden erfolgreich gelöscht.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<Long>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen Gost-Klausurtermin anzulegen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um einen GostKlausurtermin zu löschen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 *
-	 * @returns Der Klausurtermin für die angegebene ID wurden erfolgreich gelöscht.
+	 * @returns Die Klausurtermine für die angegebenen IDs wurden erfolgreich gelöscht.
 	 */
 	public async deleteGostKlausurenKlausurtermine(data : List<number>, schema : string) : Promise<List<number>> {
 		const path = "/db/{schema}/gost/klausuren/termine/delete"
@@ -5517,14 +5710,14 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode getGostKlausurenVorgabenJahrgang für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/abiturjahrgang/{abiturjahr : -?\d+}
 	 *
-	 * Liest eine Liste der Klausurvorgaben eines Abiturjahrgangs der Gymnasialen Oberstufe aus. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
+	 * Liefert die Klausurvorgaben eines Abiturjahrgangs der gymnasialen Oberstufe. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der Klausurvorgaben.
 	 *     - Mime-Type: application/json
 	 *     - Rückgabe-Typ: List<GostKlausurvorgabe>
 	 *   Code 400: Die Daten sind fehlerhaft aufgebaut.
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Kursklausuren auszulesen.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Klausurvorgaben auszulesen.
 	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
 	 * @param {string} schema - der Pfad-Parameter schema
@@ -5547,7 +5740,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode copyGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/copyVorlagen/abiturjahrgang/{abiturjahr : -?\d+}/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
-	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
+	 * Kopiert die Klausurvorgabe-Vorlagen in einen konkreten Abiturjahrgang und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Anlegen der Gost-Klausurvorgaben besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der neuen Klausurvorgaben.
@@ -5581,7 +5774,7 @@ export class ApiServer extends BaseApi {
 	/**
 	 * Implementierung der GET-Methode createDefaultGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
-	 * Erstellt eine neue Gost-Klausurvorgabe und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
+	 * Legt die Default-Klausurvorgaben im Vorlagen-Jahrgang an und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Die Liste der neuen Klausurvorgaben.
@@ -6487,7 +6680,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Jahrgangs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<JahrgangsKatalogEintrag>
+	 *     - Rückgabe-Typ: List<JahrgaengeKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Jahrgangs-Katalog-Einträge gefunden
 	 *
@@ -6495,13 +6688,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Jahrgangs-Katalog-Einträgen
 	 */
-	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgangsKatalogEintrag>> {
+	public async getKatalogJahrgaenge(schema : string) : Promise<List<JahrgaengeKatalogEintrag>> {
 		const path = "/db/{schema}/jahrgaenge/allgemein/jahrgaenge"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<JahrgangsKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgangsKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<JahrgaengeKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(JahrgaengeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6573,7 +6766,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAAnschlussoptionEintrag>
+	 *     - Rückgabe-Typ: List<KAOAAnschlussoptionenKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6581,13 +6774,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Anschlussoptionen
 	 */
-	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionEintrag>> {
+	public async getKatalogKAoAAnschlussoptionen(schema : string) : Promise<List<KAOAAnschlussoptionenKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/anschlussoptionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAAnschlussoptionEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAAnschlussoptionenKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6600,7 +6793,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOABerufsfeldEintrag>
+	 *     - Rückgabe-Typ: List<KAOABerufsfeldKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6608,13 +6801,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Berufsfelder
 	 */
-	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldEintrag>> {
+	public async getKatalogKAoABerufsfelder(schema : string) : Promise<List<KAOABerufsfeldKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/berufsfelder"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOABerufsfeldEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOABerufsfeldKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOABerufsfeldKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6627,7 +6820,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAEbene4Eintrag>
+	 *     - Rückgabe-Typ: List<KAOAEbene4KatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6635,13 +6828,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Einträge der SBO Ebene 4
 	 */
-	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4Eintrag>> {
+	public async getKatalogKAoAEbene4(schema : string) : Promise<List<KAOAEbene4KatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/ebene4"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAEbene4Eintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4Eintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAEbene4KatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAEbene4KatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6654,7 +6847,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAKategorieEintrag>
+	 *     - Rückgabe-Typ: List<KAOAKategorieKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6662,13 +6855,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Kategorien
 	 */
-	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieEintrag>> {
+	public async getKatalogKAoAKategorien(schema : string) : Promise<List<KAOAKategorieKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/kategorien"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAKategorieEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAKategorieKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAKategorieKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6681,7 +6874,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAMerkmalEintrag>
+	 *     - Rückgabe-Typ: List<KAOAMerkmalKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6689,13 +6882,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Merkmale
 	 */
-	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalEintrag>> {
+	public async getKatalogKAoAMerkmale(schema : string) : Promise<List<KAOAMerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/merkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAMerkmalEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAMerkmalKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAMerkmalKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -6708,7 +6901,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KAOAZusatzmerkmalEintrag>
+	 *     - Rückgabe-Typ: List<KAOAZusatzmerkmalKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -6716,13 +6909,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den KAoA-Katalog Zusatzmerkmale
 	 */
-	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalEintrag>> {
+	public async getKatalogKAoAZusatzmerkmale(schema : string) : Promise<List<KAOAZusatzmerkmalKatalogEintrag>> {
 		const path = "/db/{schema}/kaoa/allgemein/zusatzmerkmale"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KAOAZusatzmerkmalEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KAOAZusatzmerkmalKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7080,7 +7273,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Kursart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<KursartKatalogEintrag>
+	 *     - Rückgabe-Typ: List<ZulaessigeKursartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Kursart-Katalog-Einträge gefunden
 	 *
@@ -7088,13 +7281,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Kursart-Katalog-Einträgen
 	 */
-	public async getKatalogKursarten(schema : string) : Promise<List<KursartKatalogEintrag>> {
+	public async getKatalogKursarten(schema : string) : Promise<List<ZulaessigeKursartKatalogEintrag>> {
 		const path = "/db/{schema}/kurse/allgemein/kursarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<KursartKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(KursartKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<ZulaessigeKursartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(ZulaessigeKursartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7268,7 +7461,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogAbgangsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerAbgangsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerabgangsgrund-Katalog-Einträge gefunden
 	 *
@@ -7276,13 +7469,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerabgangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerKatalogAbgangsgrundEintrag>> {
+	public async getLehrerAbgangsgruende(schema : string) : Promise<List<LehrerAbgangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/abgangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogAbgangsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAbgangsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerAbgangsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAbgangsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7295,7 +7488,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogAnrechnungsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerAnrechnungsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -7303,13 +7496,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einträgen für Gründe von Anrechnungsstunden von Lehrern
 	 */
-	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerKatalogAnrechnungsgrundEintrag>> {
+	public async getLehrerAnrechnungsgruende(schema : string) : Promise<List<LehrerAnrechnungsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/anrechnungsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogAnrechnungsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogAnrechnungsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerAnrechnungsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerAnrechnungsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7322,7 +7515,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogBeschaeftigungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerBeschaeftigungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Beschäftigungsart-Katalog-Einträge gefunden
 	 *
@@ -7330,13 +7523,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Beschäftigungsart-Katalog-Einträgen
 	 */
-	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerKatalogBeschaeftigungsartEintrag>> {
+	public async getLehrerBeschaeftigungsarten(schema : string) : Promise<List<LehrerBeschaeftigungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/beschaeftigungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogBeschaeftigungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogBeschaeftigungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerBeschaeftigungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerBeschaeftigungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7349,7 +7542,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogEinsatzstatusEintrag>
+	 *     - Rückgabe-Typ: List<LehrerEinsatzstatusKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Einsatzstatus-Katalog-Einträge gefunden
 	 *
@@ -7357,13 +7550,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerKatalogEinsatzstatusEintrag>> {
+	public async getLehrerEinsatzstatus(schema : string) : Promise<List<LehrerEinsatzstatusKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/einsatzstatus"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogEinsatzstatusEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogEinsatzstatusEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerEinsatzstatusKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerEinsatzstatusKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7376,7 +7569,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogFachrichtungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Fachrichtungs-Katalog-Einträge gefunden
 	 *
@@ -7384,13 +7577,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Fachrichtungens-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerKatalogFachrichtungEintrag>> {
+	public async getLehrerFachrichtungen(schema : string) : Promise<List<LehrerFachrichtungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogFachrichtungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerFachrichtungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7403,7 +7596,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Anerkennungs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogFachrichtungAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerFachrichtungAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7411,13 +7604,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerKatalogFachrichtungAnerkennungEintrag>> {
+	public async getLehrerFachrichtungAnerkennungen(schema : string) : Promise<List<LehrerFachrichtungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/fachrichtungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogFachrichtungAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerFachrichtungAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerFachrichtungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7430,7 +7623,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehramt-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehramtEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehramtKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehramt-Katalog-Einträge gefunden
 	 *
@@ -7438,13 +7631,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehramt-Katalog-Einträgen
 	 */
-	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerKatalogLehramtEintrag>> {
+	public async getLehrerLehraemter(schema : string) : Promise<List<LehrerLehramtKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehramtEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehramtKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7457,7 +7650,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Anerkennungs-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehramtAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehramtAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7465,13 +7658,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Anerkennungs-Katalog-Einträgen
 	 */
-	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehramtAnerkennungEintrag>> {
+	public async getLehrerLehramtAnerkennungen(schema : string) : Promise<List<LehrerLehramtAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehraemter_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehramtAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehramtAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehramtAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehramtAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7484,7 +7677,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehrbefaehigungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehrbefaehigungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrbefähigung-Katalog-Einträge gefunden
 	 *
@@ -7492,13 +7685,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrbefähigung-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungEintrag>> {
+	public async getLehrerLehrbefaehigungen(schema : string) : Promise<List<LehrerLehrbefaehigungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehrbefaehigungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehrbefaehigungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7511,7 +7704,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLehrbefaehigungAnerkennungEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Anerkennungs-Katalog-Einträge gefunden
 	 *
@@ -7519,13 +7712,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Einsatzstatus-Katalog-Einträgen
 	 */
-	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerKatalogLehrbefaehigungAnerkennungEintrag>> {
+	public async getLehrerLehrbefaehigungenAnerkennungen(schema : string) : Promise<List<LehrerLehrbefaehigungAnerkennungKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/lehrbefaehigungen_anerkennungen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLehrbefaehigungAnerkennungEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLehrbefaehigungAnerkennungEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLehrbefaehigungAnerkennungKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLehrbefaehigungAnerkennungKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7538,7 +7731,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogMehrleistungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerMehrleistungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Mehrleistungsart-Katalog-Einträge gefunden
 	 *
@@ -7546,13 +7739,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Mehrleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerKatalogMehrleistungsartEintrag>> {
+	public async getLehrerMehrleistungsarten(schema : string) : Promise<List<LehrerMehrleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/mehrleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogMehrleistungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMehrleistungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerMehrleistungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMehrleistungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7565,7 +7758,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogMinderleistungsartEintrag>
+	 *     - Rückgabe-Typ: List<LehrerMinderleistungsartKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Minderleistungsart-Katalog-Einträge gefunden
 	 *
@@ -7573,13 +7766,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Minderleistungsart-Katalog-Einträgen
 	 */
-	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerKatalogMinderleistungsartEintrag>> {
+	public async getLehrerMinderleistungsarten(schema : string) : Promise<List<LehrerMinderleistungsartKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/minderleistungsarten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogMinderleistungsartEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogMinderleistungsartEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerMinderleistungsartKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerMinderleistungsartKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7592,7 +7785,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogRechtsverhaeltnisEintrag>
+	 *     - Rückgabe-Typ: List<LehrerRechtsverhaeltnisKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Rechtsverhältnis-Katalog-Einträge gefunden
 	 *
@@ -7600,13 +7793,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Rechtsverhältnis-Katalog-Einträgen
 	 */
-	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerKatalogRechtsverhaeltnisEintrag>> {
+	public async getLehrerRechtsverhaeltnisse(schema : string) : Promise<List<LehrerRechtsverhaeltnisKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/rechtsverhaeltnisse"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogRechtsverhaeltnisEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogRechtsverhaeltnisEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerRechtsverhaeltnisKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerRechtsverhaeltnisKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7619,7 +7812,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogZugangsgrundEintrag>
+	 *     - Rückgabe-Typ: List<LehrerZugangsgrundKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerzugangsgrund-Katalog-Einträge gefunden
 	 *
@@ -7627,13 +7820,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerzugangsgrund-Katalog-Einträgen
 	 */
-	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerKatalogZugangsgrundEintrag>> {
+	public async getLehrerZugangsgruende(schema : string) : Promise<List<LehrerZugangsgrundKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/allgemein/zugangsgruende"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogZugangsgrundEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogZugangsgrundEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerZugangsgrundKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerZugangsgrundKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -7646,7 +7839,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<LehrerKatalogLeitungsfunktionenEintrag>
+	 *     - Rückgabe-Typ: List<LehrerLeitungsfunktionKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Lehrerleitungsfunktion-Katalog-Einträge gefunden
 	 *
@@ -7654,13 +7847,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Lehrerleitungsfunktion-Katalog-Einträgen
 	 */
-	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerKatalogLeitungsfunktionenEintrag>> {
+	public async getLehrerLeitungsfunktionen(schema : string) : Promise<List<LehrerLeitungsfunktionKatalogEintrag>> {
 		const path = "/db/{schema}/lehrer/leitungsfunktionen"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<LehrerKatalogLeitungsfunktionenEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerKatalogLeitungsfunktionenEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<LehrerLeitungsfunktionKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(LehrerLeitungsfunktionKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -8563,7 +8756,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode getKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
+	 * Implementierung der GET-Methode getKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
 	 *
 	 * Liest die KAOADaten des Schülers zu der angegebenen ID aus der Datenbank und liefert diese zurück. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Schülerdaten besitzt.
 	 *
@@ -8579,7 +8772,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die KAOADaten des Schülers
 	 */
-	public async getKAOAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
+	public async getKAoAdaten(schema : string, id : number) : Promise<List<SchuelerKAoADaten>> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
@@ -8592,62 +8785,35 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der POST-Methode createKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa
-	 *
-	 * Erstellt einen neuen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die KAOADaten des Schülers
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: SchuelerKAoADaten
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
-	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
-	 *
-	 * @param {SchuelerKAoADaten} data - der Request-Body für die HTTP-Methode
-	 * @param {string} schema - der Pfad-Parameter schema
-	 * @param {number} id - der Pfad-Parameter id
-	 *
-	 * @returns Die KAOADaten des Schülers
-	 */
-	public async createKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number) : Promise<SchuelerKAoADaten> {
-		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
-			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
-		const result : string = await super.postJSON(path, body);
-		const text = result;
-		return SchuelerKAoADaten.transpilerFromJSON(text);
-	}
-
-
-	/**
-	 * Implementierung der PUT-Methode putKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
+	 * Implementierung der PATCH-Methode patchKAoADaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
 	 *
 	 * Ändert einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
 	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Die KAOADaten des Schülers
+	 *   Code 204: Die KAOADaten des Schülers wurden erfolgreich gepatcht
 	 *   Code 400: Fehler bei der Datenvalidierung
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
 	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
 	 *
-	 * @param {SchuelerKAoADaten} data - der Request-Body für die HTTP-Methode
+	 * @param {Partial<SchuelerKAoADaten>} data - der Request-Body für die HTTP-Methode
 	 * @param {string} schema - der Pfad-Parameter schema
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async putKAOAdaten(data : SchuelerKAoADaten, schema : string, id : number, skid : number) : Promise<void> {
+	public async patchKAoADaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
-		const body : string = SchuelerKAoADaten.transpilerToJSON(data);
-		return super.putJSON(path, body);
+		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
 	}
 
 
 	/**
-	 * Implementierung der DELETE-Methode deleteKAOAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
+	 * Implementierung der DELETE-Methode deleteKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/{skid : \d+}
 	 *
 	 * Löscht einen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
 	 *
@@ -8660,13 +8826,42 @@ export class ApiServer extends BaseApi {
 	 * @param {number} id - der Pfad-Parameter id
 	 * @param {number} skid - der Pfad-Parameter skid
 	 */
-	public async deleteKAOAdaten(schema : string, id : number, skid : number) : Promise<void> {
+	public async deleteKAoAdaten(schema : string, id : number, skid : number) : Promise<void> {
 		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/{skid : \\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString())
 			.replace(/{skid\s*(:[^{}]+({[^{}]+})*)?}/g, skid.toString());
 		await super.deleteJSON(path, null);
 		return;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addKAoAdaten für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/{id : \d+}/kaoa/create
+	 *
+	 * Erstellt einen neuen SchuelerKAoADaten EintragDabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ändern von SchülerKAoADaten besitzt.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Die KAOADaten des Schülers
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: SchuelerKAoADaten
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Schülerdaten anzulegen.
+	 *   Code 404: Kein Schüler-KAoA-Eintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {Partial<SchuelerKAoADaten>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Die KAOADaten des Schülers
+	 */
+	public async addKAoAdaten(data : Partial<SchuelerKAoADaten>, schema : string, id : number) : Promise<SchuelerKAoADaten> {
+		const path = "/db/{schema}/schueler/{id : \\d+}/kaoa/create"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = SchuelerKAoADaten.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return SchuelerKAoADaten.transpilerFromJSON(text);
 	}
 
 
@@ -9311,6 +9506,35 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<UebergangsempfehlungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(UebergangsempfehlungKatalogEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteSchueler für den Zugriff auf die URL https://{hostname}/db/{schema}/schueler/delete/multiple
+	 *
+	 * Entfernt mehrere Schüler durch setzen eines Löschvermerks. Dabei wird geprüft, ob alle Vorbedingungen zum Entfernender Schüler erfüllt sind und der SVWS-Benutzer die notwendige Berechtigung hat.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Lösch-Operationen wurden ausgeführt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<SimpleOperationResponse>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Schüler zu entfernen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Lösch-Operationen wurden ausgeführt.
+	 */
+	public async deleteSchueler(data : List<number>, schema : string) : Promise<List<SimpleOperationResponse>> {
+		const path = "/db/{schema}/schueler/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<SimpleOperationResponse>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SimpleOperationResponse.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -9972,7 +10196,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Der Noten-Katalog.
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<NotenKatalogEintrag>
+	 *     - Rückgabe-Typ: List<NoteKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine gültige Anmeldung.
 	 *   Code 404: Keine Noten-Einträge gefunden.
 	 *
@@ -9980,13 +10204,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Der Noten-Katalog.
 	 */
-	public async getKatalogNoten(schema : string) : Promise<List<NotenKatalogEintrag>> {
+	public async getKatalogNoten(schema : string) : Promise<List<NoteKatalogEintrag>> {
 		const path = "/db/{schema}/schule/allgemein/noten"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<NotenKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NotenKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<NoteKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(NoteKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -10284,33 +10508,6 @@ export class ApiServer extends BaseApi {
 		const obj = JSON.parse(result);
 		const ret = new ArrayList<SchulgliederungKatalogEintrag>();
 		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulgliederungKatalogEintrag.transpilerFromJSON(text)); });
-		return ret;
-	}
-
-
-	/**
-	 * Implementierung der GET-Methode getSchulstufen für den Zugriff auf die URL https://{hostname}/db/{schema}/schule/allgemein/schulstufen
-	 *
-	 * Erstellt eine Liste aller in dem Katalog vorhanden gültigen Schulstufen. Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.
-	 *
-	 * Mögliche HTTP-Antworten:
-	 *   Code 200: Eine Liste von Schulstufen-Katalog-Einträgen
-	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchulstufeKatalogEintrag>
-	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
-	 *   Code 404: Keine Katalog-Einträge gefunden
-	 *
-	 * @param {string} schema - der Pfad-Parameter schema
-	 *
-	 * @returns Eine Liste von Schulstufen-Katalog-Einträgen
-	 */
-	public async getSchulstufen(schema : string) : Promise<List<SchulstufeKatalogEintrag>> {
-		const path = "/db/{schema}/schule/allgemein/schulstufen"
-			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
-		const result : string = await super.getJSON(path);
-		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchulstufeKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchulstufeKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -11658,7 +11855,7 @@ export class ApiServer extends BaseApi {
 	 * Mögliche HTTP-Antworten:
 	 *   Code 200: Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
 	 *     - Mime-Type: application/json
-	 *     - Rückgabe-Typ: List<SchuelerstatusKatalogEintrag>
+	 *     - Rückgabe-Typ: List<SchuelerStatusKatalogEintrag>
 	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.
 	 *   Code 404: Keine Katalog-Einträge gefunden
 	 *
@@ -11666,13 +11863,13 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Eine Liste von Katalog-Einträgen für den Katalog Schüler-Status
 	 */
-	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerstatusKatalogEintrag>> {
+	public async getKatalogSchuelerStatus(schema : string) : Promise<List<SchuelerStatusKatalogEintrag>> {
 		const path = "/db/{schema}/schule/schueler/status"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const result : string = await super.getJSON(path);
 		const obj = JSON.parse(result);
-		const ret = new ArrayList<SchuelerstatusKatalogEintrag>();
-		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerstatusKatalogEintrag.transpilerFromJSON(text)); });
+		const ret = new ArrayList<SchuelerStatusKatalogEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(SchuelerStatusKatalogEintrag.transpilerFromJSON(text)); });
 		return ret;
 	}
 
@@ -14126,6 +14323,198 @@ export class ApiServer extends BaseApi {
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
 		const body : string = "[" + (data.toArray() as Array<StundenplanZeitraster>).map(d => StundenplanZeitraster.transpilerToJSONPatch(d)).join() + "]";
 		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Liefert zu der ID den zugehörigen Wiedervorlage-Eintrag. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den WiedervorlageEintrag anzusehen.
+	 *   Code 404: Kein WiedervorlageEintrag mit der angegebenen ID gefunden
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async getWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der PATCH-Methode patchWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Passt den Wiedervorlage-Eintrag mit der angegebenen ID an. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Patch wurde erfolgreich in den Wiedervorlage-Eintrag integriert.
+	 *   Code 400: Der Patch ist fehlerhaft aufgebaut.
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag zu ändern.
+	 *   Code 404: Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden
+	 *   Code 409: Der Patch ist fehlerhaft, da zumindest eine Rahmenbedingung für einen Wert nicht erfüllt wurde (z.B. eine negative ID)
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<WiedervorlageEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 */
+	public async patchWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string, id : number) : Promise<void> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		return super.patchJSON(path, body);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}
+	 *
+	 * Entfernt einen Wiedervorlage-Eintrag. Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um dem Wiedervorlage-Eintrag zu löschen.
+	 *   Code 404: Kein Wiedervorlage-Eintrag mit der angegebenen ID gefunden.
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag wurde erfolgreich entfernt.
+	 */
+	public async deleteWiedervorlageEintrag(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.deleteJSON(path, null);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode setWiedervorlageEintragErledigt für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/{id : \d+}/erledigt
+	 *
+	 * Markiert den Wiedervorlage-Eintrag mit der angegebenen ID als erledigt.Dabei wird geprüft, ob der Benutzer auf den Eintrag zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag als erledigt zu markieren.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 * @param {number} id - der Pfad-Parameter id
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async setWiedervorlageEintragErledigt(schema : string, id : number) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/{id : \\d+}/erledigt"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
+			.replace(/{id\s*(:[^{}]+({[^{}]+})*)?}/g, id.toString());
+		const result : string = await super.postJSON(path, null);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
+	}
+
+
+	/**
+	 * Implementierung der DELETE-Methode deleteWiedervorlageEintraege für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/delete/multiple
+	 *
+	 * Entfernt mehrere Wiedervorlage-Einträge. Dabei wird geprüft, ob der Benutzer auf die Einträge zugreifen darf.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<WiedervorlageEintrag>
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um die Wiedervorlage-Einträge zu entfernen.
+	 *   Code 404: Wiedervorlage-Eintrag nicht vorhanden
+	 *   Code 409: Die übergebenen Daten sind fehlerhaft
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {List<number>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Die Wiedervorlage-Einträge wurden erfolgreich entfernt.
+	 */
+	public async deleteWiedervorlageEintraege(data : List<number>, schema : string) : Promise<List<WiedervorlageEintrag>> {
+		const path = "/db/{schema}/wiedervorlage/delete/multiple"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = "[" + (data.toArray() as Array<number>).map(d => JSON.stringify(d)).join() + "]";
+		const result : string = await super.deleteJSON(path, body);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<WiedervorlageEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der GET-Methode getWiedervorlageListe für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/liste
+	 *
+	 * Gibt die Liste der Wiedervorlage des angemeldeteten Benutzers zurück. Dabei werden auch die Einträge berücksichtigt, wo der angemeldete Benutzer in einer zugeordeten Benutzergruppe des Wiedervorlage-Eintrags enthalten ist.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Eine Liste mit den Einträgen der Wiedervorlage.
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: List<WiedervorlageEintrag>
+	 *
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Eine Liste mit den Einträgen der Wiedervorlage.
+	 */
+	public async getWiedervorlageListe(schema : string) : Promise<List<WiedervorlageEintrag>> {
+		const path = "/db/{schema}/wiedervorlage/liste"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const result : string = await super.getJSON(path);
+		const obj = JSON.parse(result);
+		const ret = new ArrayList<WiedervorlageEintrag>();
+		obj.forEach((elem: any) => { const text : string = JSON.stringify(elem); ret.add(WiedervorlageEintrag.transpilerFromJSON(text)); });
+		return ret;
+	}
+
+
+	/**
+	 * Implementierung der POST-Methode addWiedervorlageEintrag für den Zugriff auf die URL https://{hostname}/db/{schema}/wiedervorlage/neu
+	 *
+	 * Erstellt einen Wiedervorlage-Eintrag.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 201: Der Wiedervorlage-Eintrag
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: WiedervorlageEintrag
+	 *   Code 403: Der SVWS-Benutzer hat keine Rechte, um den Wiedervorlage-Eintrag anzulegen.
+	 *   Code 500: Unspezifizierter Fehler (z.B. beim Datenbankzugriff)
+	 *
+	 * @param {Partial<WiedervorlageEintrag>} data - der Request-Body für die HTTP-Methode
+	 * @param {string} schema - der Pfad-Parameter schema
+	 *
+	 * @returns Der Wiedervorlage-Eintrag
+	 */
+	public async addWiedervorlageEintrag(data : Partial<WiedervorlageEintrag>, schema : string) : Promise<WiedervorlageEintrag> {
+		const path = "/db/{schema}/wiedervorlage/neu"
+			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema);
+		const body : string = WiedervorlageEintrag.transpilerToJSONPatch(data);
+		const result : string = await super.postJSON(path, body);
+		const text = result;
+		return WiedervorlageEintrag.transpilerFromJSON(text);
 	}
 
 

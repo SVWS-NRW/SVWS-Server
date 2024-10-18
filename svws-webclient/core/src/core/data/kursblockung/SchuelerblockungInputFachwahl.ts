@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerblockungInputFachwahl extends JavaObject {
 
@@ -35,6 +36,8 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungInputFachwahl'].includes(name);
 	}
+
+	public static class = new Class<SchuelerblockungInputFachwahl>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInputFachwahl');
 
 	public static transpilerFromJSON(json : string): SchuelerblockungInputFachwahl {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungInputFachwahl>;

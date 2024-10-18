@@ -1,10 +1,10 @@
 <template>
 	<router-view />
 	<svws-ui-notifications v-if="errors.size > 0">
-		<template v-if="errors.size > 1">
+		<div v-if="errors.size > 1" class="bg-white">
 			<svws-ui-button @click="errors.clear()" type="transparent" class="pointer-events-auto ml-auto rounded-lg bg-white border-light fixed right-6 left-0 top-5 z-50 w-[29rem] max-w-[75vw] justify-center">Alle {{ errors.size }} Meldungen schließen</svws-ui-button>
 			<div class="min-h-[1.85rem]" />
-		</template>
+		</div>
 		<template v-for="error of [...errors.values()].reverse().slice(0, 20)" :key="error.id">
 			<svws-ui-notification type="error" :id="error.id" @click="id => errors.delete(id)" :to-copy="copyString(error)">
 				<template #header>
@@ -25,9 +25,11 @@
 <script setup lang="ts">
 
 	import { onErrorCaptured, ref } from 'vue';
-	import type { SimpleOperationResponse } from '@core';
-	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from '@core';
 	import { api } from '../router/Api'
+	import type { SimpleOperationResponse } from '../../../core/src/core/data/SimpleOperationResponse';
+	import { DeveloperNotificationException } from '../../../core/src/core/exceptions/DeveloperNotificationException';
+	import { UserNotificationException } from '../../../core/src/core/exceptions/UserNotificationException';
+	import { OpenApiError } from '../../../core/src/api/OpenApiError';
 
 	type CapturedError = {
 		id: number;

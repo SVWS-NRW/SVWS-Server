@@ -1,0 +1,147 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "A1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "1",
+			"kuerzel": "A1",
+			"text": "A1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A1P",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "2",
+			"kuerzel": "A1+",
+			"text": "A1+",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A1A2",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "3",
+			"kuerzel": "A1/A2",
+			"text": "A1/A2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A2",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "4",
+			"kuerzel": "A2",
+			"text": "A2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A2P",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "5",
+			"kuerzel": "A2+",
+			"text": "A2+",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A2B1",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"schluessel": "6",
+			"kuerzel": "A2/B1",
+			"text": "A2/B1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B1",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7,
+			"schluessel": "7",
+			"kuerzel": "B1",
+			"text": "B1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B1P",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8,
+			"schluessel": "8",
+			"kuerzel": "B1+",
+			"text": "B1+",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B1B2",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9,
+			"schluessel": "9",
+			"kuerzel": "B1/B2",
+			"text": "B1/B2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B2",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10,
+			"schluessel": "10",
+			"kuerzel": "B2",
+			"text": "B2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B2C1",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11,
+			"schluessel": "11",
+			"kuerzel": "B2/C1",
+			"text": "B2/C1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C1",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12,
+			"schluessel": "12",
+			"kuerzel": "C1",
+			"text": "C1",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C2",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13,
+			"schluessel": "13",
+			"kuerzel": "C2",
+			"text": "C2",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

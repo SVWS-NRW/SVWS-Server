@@ -8,23 +8,23 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu dem Stundenplan eines Schülers.
+ * Sie liefert die mit zur Blockung benötigten Daten angereicherten Informationen zu einem Gost-Schülerklausurtermin.
  */
 @XmlRootElement
-@Schema(description = "der Stundenplan eines Schülers.")
+@Schema(description = "die mit zur Blockung benötigten Daten angereicherten Informationen zu einem Gost-Schülerklausurtermin.")
 @TranspilerDTO
 public class GostSchuelerklausurTerminRich {
 
-	/** Die ID des Stundenplans. */
-	@Schema(description = "die ID des Stundenplans", example = "815")
+	/** Die ID des Schülerklausurtermins. */
+	@Schema(description = "die ID des Schülerklausurtermins.", example = "815")
 	public long id = -1;
 
 	/** Die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins. */
 	@Schema(description = "die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins", example = "540")
 	public int startzeit = -1;
 
-	/** Die textuelle Beschreibung des Stundenplans. */
-	@Schema(description = "die textuelle Beschreibung des Stundenplans", example = "Stundenplan zum Schuljahresanfang")
+	/** Die ID der zugehörigen Kursklausur. */
+	@Schema(description = "die ID der zugehörigen Kursklausur.", example = "4711")
 	public long idKursklausur = -1;
 
 	/** Die ID des Faches. */
@@ -44,23 +44,22 @@ public class GostSchuelerklausurTerminRich {
 	public int auswahlzeit = 0;
 
 	/** Die Information, ob es sich um eine mündliche Prüfung handelt. */
-	@Schema(description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob es sich um eine mündliche Prüfung handelt", example = "false")
 	public boolean istMdlPruefung = false;
 
 	/** Die Information, ob Audioequipment nötig ist, z.B. für Klausuren mit Hörverstehensanteilen. */
-	@Schema(description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob Audioequipment nötig ist, z.B. für Klasuren mit Hörverstehensanteilen", example = "false")
 	public boolean istAudioNotwendig = false;
 
 	/** Die Information, ob Videoequipment nötig ist, z.B. für Klausuren mit Videoanalyse. */
-	@Schema(description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
+	@Schema(defaultValue = "false", description = "die Information, ob Videoequipment nötig ist, z.B. für Klasuren mit Videoanalyse", example = "false")
 	public boolean istVideoNotwendig = false;
 
 	/**
 	 * Konstruktor zur Erstellung des Rich-Objekts.
 	 *
-	 * @param termin     das zu vergleichende Objekt
-	 * @param manager
-	 *
+	 * @param termin     das {@link GostSchuelerklausurTermin}-Objekt
+	 * @param manager    der {@link GostKlausurplanManager} für die Klausurplanung
 	 */
 	public GostSchuelerklausurTerminRich(final GostSchuelerklausurTermin termin, final GostKlausurplanManager manager) {
 		id = termin.id;
@@ -78,7 +77,7 @@ public class GostSchuelerklausurTerminRich {
 	}
 
 	/**
-	 * Konstruktor für Transpiler.
+	 * Default-Konstruktor
 	 */
 	public GostSchuelerklausurTerminRich() {
 	}

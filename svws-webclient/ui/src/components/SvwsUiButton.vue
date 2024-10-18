@@ -1,14 +1,14 @@
 <template>
 	<button class="button" :class="{
-		'button--primary': type === 'primary' || !type,
+		'button--primary': type === 'primary',
 		'button--secondary': type === 'secondary',
-		'button--danger': type === 'error' || type === 'danger',
+		'button--danger': (type === 'error') || (type === 'danger'),
 		'button--transparent': type === 'transparent',
 		'button--icon': type === 'icon',
 		'button--trash': type === 'trash',
 		'button--small': size === 'small',
 		'button--big': size === 'big',
-	}" :disabled="disabled" @click="onClick">
+	}" :disabled="disabled" ref="addButton">
 		<slot v-if="type !== 'trash'" />
 		<span v-if="type === 'trash'" class="button--trash-icon">
 			<span class="inline-block icon i-ri-delete-bin-line icon--line" />
@@ -23,26 +23,27 @@
 <script lang="ts" setup>
 
 	import type { ButtonType } from '../types';
+	import { onMounted, ref } from "vue";
+
+	const addButton = ref<HTMLButtonElement|null>(null);
 
 	const props = withDefaults(defineProps<{
 		type?: ButtonType;
 		disabled?: boolean;
-		size?: 'small' | 'normal' | 'big'
+		size?: 'small' | 'normal' | 'big';
+		hasFocus?: boolean;
 	}>(),{
 		type: 'primary',
 		disabled: false,
-		size: 'normal'
+		size: 'normal',
+		hasFocus: false
 	});
 
-	const emit = defineEmits<{
-		(e: 'click', event: MouseEvent): void;
-	}>();
+	onMounted(() => {
+		if(props.hasFocus && (addButton.value !== null))
+			addButton.value.focus();
+	})
 
-	function onClick(event: MouseEvent) {
-		if (!props.disabled) {
-			emit("click", event);
-		}
-	}
 </script>
 
 <style lang="postcss">

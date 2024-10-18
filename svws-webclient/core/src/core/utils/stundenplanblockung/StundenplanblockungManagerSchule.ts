@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanblockungManagerSchule extends JavaObject {
 
@@ -38,6 +39,8 @@ export class StundenplanblockungManagerSchule extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerSchule>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerSchule');
 
 }
 

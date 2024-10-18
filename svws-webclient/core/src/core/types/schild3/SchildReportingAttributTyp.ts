@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class SchildReportingAttributTyp extends JavaEnum<SchildReportingAttributTyp> {
 
@@ -87,6 +88,8 @@ export class SchildReportingAttributTyp extends JavaEnum<SchildReportingAttribut
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schild3.SchildReportingAttributTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<SchildReportingAttributTyp>('de.svws_nrw.core.types.schild3.SchildReportingAttributTyp');
 
 }
 

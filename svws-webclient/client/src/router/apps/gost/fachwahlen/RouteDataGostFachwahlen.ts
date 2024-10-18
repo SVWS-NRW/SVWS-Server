@@ -74,7 +74,7 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const mapSchueler = new Map<number, SchuelerListeEintrag>();
 		for (const s of listSchueler) {
-			const status = SchuelerStatus.fromID(s.status);
+			const status = SchuelerStatus.data().getWertByKuerzel("" + s.status);
 			if ((status !== null) && ([SchuelerStatus.AKTIV, SchuelerStatus.EXTERN, SchuelerStatus.ABSCHLUSS, SchuelerStatus.BEURLAUBT, SchuelerStatus.NEUAUFNAHME].includes(status)))
 				mapSchueler.set(s.id, s);
 		}
@@ -86,29 +86,27 @@ export class RouteDataGostFachwahlen extends RouteData<RouteStateDataGostFachwah
 
 	doSelect = async (idFach: number | undefined, bereich: string | undefined, halbjahr?: GostHalbjahr) : Promise<void> => {
 		// Setze die Auswahl
-		this.auswahl = { idFach, bereich: bereich || 'Fach' };
+		this.auswahl = { idFach, bereich: bereich ?? 'Fach' };
 		// Ermittle die Route, die aufgrund der Auswahl genutzt werden soll
 		let route : RouteLocationRaw | undefined;
 		if (idFach === undefined) {
-			if (bereich === undefined) {
+			if (bereich === undefined)
 				route = routeGostFachwahlenAllgemein.getRoute(this.abiturjahr);
-			} else if ((bereich === "Halbjahr") && (halbjahr !== undefined)) {
+			else if ((bereich === "Halbjahr") && (halbjahr !== undefined))
 				route = routeGostFachwahlenHalbjahr.getRoute(this.abiturjahr, halbjahr);
-			} else if (bereich === "ZK") {
+			else if (bereich === "ZK")
 				route = routeGostFachwahlenZusatzkurse.getRoute(this.abiturjahr);
-			} else if (bereich === "LK") {
+			else if (bereich === "LK")
 				route = routeGostFachwahlenLeistungskurse.getRoute(this.abiturjahr);
-			} else if (bereich === "Abi") {
+			else if (bereich === "Abi")
 				route = routeGostFachwahlenAbitur.getRoute(this.abiturjahr);
-			}
 		} else {
-			if (bereich === undefined) {
+			if (bereich === undefined)
 				route = routeGostFachwahlenFach.getRoute(this.abiturjahr, idFach);
-			} else if ((bereich === "Halbjahr") && (halbjahr !== undefined)) {
+			else if ((bereich === "Halbjahr") && (halbjahr !== undefined))
 				route = routeGostFachwahlenFachHalbjahr.getRoute(this.abiturjahr, idFach, halbjahr);
-			} else if (bereich === "Abi") {
+			else if (bereich === "Abi")
 				route = routeGostFachwahlenAbiturFach.getRoute(this.abiturjahr, idFach);
-			}
 		}
 		// Wähle ggf. die Default-Route, um Fehler abzufangen...
 		if (route === undefined)

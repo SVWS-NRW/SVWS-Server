@@ -1,14 +1,13 @@
 package de.svws_nrw.data.schild3.reporting;
 
-import de.svws_nrw.base.annotations.SchildReportingDate;
-import de.svws_nrw.base.annotations.SchildReportingMemo;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingDate;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelle;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingDatenquelleAttribut;
+import de.svws_nrw.core.data.schild3.reporting.SchildReportingMemo;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -299,12 +298,10 @@ public abstract class DataSchildReportingDatenquelle<DTO, JMT> {
 	 */
 	public static Response getDatenquellen(final DBEntityManager conn) throws ApiOperationException {
 		final var datenquellen = getMapDatenquellen();
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Kein gültiger Eintrag für die Schule in der Datenbank vorhanden");
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
 		final ArrayList<SchildReportingDatenquelle> result = new ArrayList<>();
 		for (final var datenquelle : datenquellen.values()) {
-			if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schule.Schulform)))
+			if ((datenquelle.schulformen.isEmpty()) || (datenquelle.schulformen.contains(schulform)))
 				result.add(datenquelle.datenquelle);
 		}
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(result).build();

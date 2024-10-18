@@ -1,17 +1,14 @@
 package de.svws_nrw.module.reporting.types.schueler.gost.abitur;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.module.reporting.types.gost.abitur.ReportingGostAbiturFachbelegung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturdaten.</p>
- * <p>Sie enthält die Daten eines Schüler zum ABitur in der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- *  einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostAbiturdaten.
  */
 public class ReportingSchuelerGostAbitur {
 
@@ -73,7 +70,7 @@ public class ReportingSchuelerGostAbitur {
 	protected Integer block2PunktSumme;
 
 	/** Die Liste mit den Fachbelegungen in der Oberstufe. */
-	protected List<ReportingGostAbiturFachbelegung> fachbelegungen = new ArrayList<>();
+	protected List<ReportingGostAbiturFachbelegung> fachbelegungen;
 
 	/** Die Angabe, ob freiwillig von der Abiturprüfung zurückgetreten wurde. */
 	protected boolean freiwilligerRuecktritt;
@@ -182,7 +179,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean projektkursVorhanden() {
 		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && "PX".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.filter(f -> ((f != null) && (Fachgruppe.FG_PX == f.fach().fachgruppe())))
 				.toList()
 				.isEmpty();
 	}
@@ -194,7 +191,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean religionVorhanden() {
 		return !this.fachbelegungen.stream()
-				.filter(f -> ((f != null) && "RE".equals(f.fach().fachgruppe().daten.kuerzel)))
+				.filter(f -> ((f != null) && (Fachgruppe.FG_RE == f.fach().fachgruppe())))
 				.toList()
 				.isEmpty();
 	}
@@ -206,7 +203,7 @@ public class ReportingSchuelerGostAbitur {
 	@JsonIgnore
 	public boolean vertiefungskursVorhanden() {
 		final List<ReportingGostAbiturFachbelegung> listVertiefungskurse =
-				this.fachbelegungen.stream().filter(f -> "VX".equals(f.fach().fachgruppe().daten.kuerzel)).toList();
+				this.fachbelegungen.stream().filter(f -> (Fachgruppe.FG_VX == f.fach().fachgruppe())).toList();
 		if (listVertiefungskurse.isEmpty())
 			return false;
 

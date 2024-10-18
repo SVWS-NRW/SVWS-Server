@@ -20,7 +20,7 @@ import org.thymeleaf.exceptions.TemplateProcessingException;
 
 /**
  * Diese Klasse beinhaltet den Code zur Erstellung verschiedener Fehlerausgaben und Fehler-Responses für das Reporting.
- * Dabei werden neben den Daten er Exception auch Daten der Logging ausgegeben.
+ * Dabei werden neben den Daten der Exception auch Daten des Logging ausgegeben.
  */
 public final class ReportingExceptionUtils {
 
@@ -31,7 +31,7 @@ public final class ReportingExceptionUtils {
 	/**
 	 * Erzeugt eine Fehlerausgabe (als {@link SimpleOperationResponse}) mit den Daten der Exception und des übergebenen Logs.
 	 * @param exception 	Die Exception, die geworfen wurde.
-	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat
+	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat.
 	 * @param log 			Liste, die Einträge aus dem Logger gesammelt hat.
 	 * @return 				Die SimpleOperationResponse mit der Fehlerdaten.
 	 */
@@ -93,7 +93,7 @@ public final class ReportingExceptionUtils {
 	/**
 	 * Erzeugt eine Fehlerausgabe (als Response einer {@link SimpleOperationResponse}) mit den Daten der Exception und des übergebenen Logs.
 	 * @param exception 	Die Exception, die geworfen wurde.
-	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat
+	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat.
 	 * @param log 			Liste, die Einträge aus dem Logger gesammelt hat.
 	 * @return Die Response der SimpleOperationResponse mit den Fehlerdaten.
 	 */

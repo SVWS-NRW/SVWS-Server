@@ -1,6 +1,6 @@
 {
 	"index": 100,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "Assistent für Betriebsinformatik",
 				"bezeichnungW": "Assistentin für Betriebsinformatik",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "Bautechnischer Assistent",
 				"bezeichnungW": "Bautechnische Assistentin",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "102",
@@ -50,7 +50,7 @@
 				"bezeichnung": "Bautechnische/-r Assistent/-in - Denkmalpflege",
 				"bezeichnungM": "Bautechnischer Assistent - Denkmalpflege",
 				"bezeichnungW": "Bautechnische Assistentin - Denkmalpflege",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -67,7 +67,7 @@
 				"bezeichnung": "Bautechnische/-r Assistent/-in - Hoch-/Tiefbau",
 				"bezeichnungM": "Bautechnischer Assistent - Hoch-/Tiefbau",
 				"bezeichnungW": "Bautechnische Assistentin - Hoch-/Tiefbau",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -153,7 +153,7 @@
 				"bezeichnungM": "Diätassistent",
 				"bezeichnungW": "Diätassistentin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "108",
@@ -170,7 +170,7 @@
 				"bezeichnungM": "Elektronikassistent",
 				"bezeichnungW": "Elektronikassistentin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "109",
@@ -204,7 +204,7 @@
 				"bezeichnungM": "Erzieher",
 				"bezeichnungW": "Erzieherin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2005
 			} ]
 		}, {
 			"schluessel": "111",
@@ -221,7 +221,7 @@
 				"bezeichnungM": "Freizeitsportleiter",
 				"bezeichnungW": "Freizeitsportleiterin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "112",
@@ -238,7 +238,7 @@
 				"bezeichnungM": "Fremdsprachensekretär",
 				"bezeichnungW": "Fremdsprachensekretärin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "113",
@@ -255,7 +255,7 @@
 				"bezeichnungM": "Gestaltungstechnischer Assistent - Grafik",
 				"bezeichnungW": "Gestaltungstechnische Assistentin - Grafik",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2008
 			} ]
 		}, {
 			"schluessel": "113",
@@ -289,7 +289,7 @@
 				"bezeichnungM": "Gestaltungstechnischer Assistent - Produkt/Design",
 				"bezeichnungW": "Gestaltungstechnische Assistentin - Produkt/Design",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2007
 			} ]
 		}, {
 			"schluessel": "113",
@@ -306,7 +306,7 @@
 				"bezeichnungM": "Gestaltungstechnischer Assistent - Digital-, Print- und audiovisuelle Medien",
 				"bezeichnungW": "Gestaltungstechnische Assistentin - Digital-, Print- und audiovisuelle Medien",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2007
 			} ]
 		}, {
 			"schluessel": "113",
@@ -322,7 +322,7 @@
 				"bezeichnung": "Gestaltungstechnische/-r Assistent/-in - Grafikdesign und Objektdesign",
 				"bezeichnungM": "Gestaltungstechnischer Assistent - Grafikdesign und Objektdesign",
 				"bezeichnungW": "Gestaltungstechnische Assistentin - Grafikdesign und Objektdesign",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -357,7 +357,7 @@
 				"bezeichnungM": "Hauswirtschaftlich-technischer Assistent",
 				"bezeichnungW": "Hauswirtschaftlich-technische Assistentin",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "116",
@@ -408,7 +408,7 @@
 				"bezeichnungM": "Kaufmännischer Assistent f. Bürowirtschaft",
 				"bezeichnungW": "Kaufmännische Assistentin f. Bürowirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "117",
@@ -458,7 +458,7 @@
 				"bezeichnung": "Kaufmännische/-r Assistent/-in - Betriebsinformatik",
 				"bezeichnungM": "Kaufmännischer Assistent - Betriebsinformatik",
 				"bezeichnungW": "Kaufmännische Assistentin - Betriebsinformatik",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -476,7 +476,7 @@
 				"bezeichnungM": "Kinderpfleger",
 				"bezeichnungW": "Kinderpflegerin",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "119",
@@ -493,7 +493,7 @@
 				"bezeichnungM": "Konstruktions- und Fertigungstechnischer Assistent",
 				"bezeichnungW": "Konstruktions- und Fertigungstechnische Assistentin",
 				"gueltigVon": null,
-				"gueltigBis": 2017
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "120",
@@ -560,8 +560,8 @@
 				"bezeichnung": "Medizinisch-technische/-r Assistent/-in",
 				"bezeichnungM": "Medizinisch-technischer Assistent",
 				"bezeichnungW": "Medizinisch-technische Assistentin",
-				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigVon": 2004,
+				"gueltigBis": 2008
 			} ]
 		}, {
 			"schluessel": "124",
@@ -594,7 +594,7 @@
 				"bezeichnung": "Physikalisch-technische/-r Assistent/-in - Metallografie und Werkstoffkunde",
 				"bezeichnungM": "Physikalisch-technischer Assistent - Metallografie und Werkstoffkunde",
 				"bezeichnungW": "Physikalisch-technische Assistentin - Metallografie und Werkstoffkunde",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -663,7 +663,7 @@
 				"bezeichnungM": "Technischer Assistent für Metallografie und Werkstoffkunde",
 				"bezeichnungW": "Technische Assistentin für Metallografie und Werkstoffkunde",
 				"gueltigVon": null,
-				"gueltigBis": 2016
+				"gueltigBis": 2015
 			} ]
 		}, {
 			"schluessel": "127",
@@ -680,7 +680,7 @@
 				"bezeichnungM": "Technischer Assistent / Kosmetik",
 				"bezeichnungW": "Technische Assistentin / Kosmetik",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "128",
@@ -731,7 +731,7 @@
 				"bezeichnungM": "Wirtschaftassistent (kaufmännischer Assistent)",
 				"bezeichnungW": "Wirtschaftassistentin (kaufmännischer Assistentin)",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "131",
@@ -747,8 +747,8 @@
 				"bezeichnung": "Informatiker/-in",
 				"bezeichnungM": "Informatiker",
 				"bezeichnungW": "Informatikerin",
-				"gueltigVon": null,
-				"gueltigBis": 2017
+				"gueltigVon": 2013,
+				"gueltigBis": 2016
 			} ]
 		}, {
 			"schluessel": "131",
@@ -764,7 +764,7 @@
 				"bezeichnung": "Informatiker/-in - Medizinökonomie",
 				"bezeichnungM": "Informatiker - Medizinökonomie",
 				"bezeichnungW": "Informatikerin - Medizinökonomie",
-				"gueltigVon": null,
+				"gueltigVon": 2008,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -781,7 +781,7 @@
 				"bezeichnung": "Informatiker/-in - Multimedia",
 				"bezeichnungM": "Informatiker - Multimedia",
 				"bezeichnungW": "Informatikerin - Multimedia",
-				"gueltigVon": null,
+				"gueltigVon": 2008,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -798,7 +798,7 @@
 				"bezeichnung": "Informatiker/-in - Softwareentwicklung",
 				"bezeichnungM": "Informatiker - Softwareentwicklung",
 				"bezeichnungW": "Informatikerin - Softwareentwicklung",
-				"gueltigVon": null,
+				"gueltigVon": 2008,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -815,7 +815,7 @@
 				"bezeichnung": "Informatiker/-in - Wirtschaft",
 				"bezeichnungM": "Informatiker - Wirtschaft",
 				"bezeichnungW": "Informatikerin - Wirtschaft",
-				"gueltigVon": null,
+				"gueltigVon": 2008,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -832,7 +832,7 @@
 				"bezeichnung": "Technische/-r Assistent/-in für regenerative Energietechnik und Energiemanagement",
 				"bezeichnungM": "Technischer Assistent für regenerative Energietechnik und Energiemanagement",
 				"bezeichnungW": "Technische Assistentin für regenerative Energietechnik und Energiemanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -849,7 +849,7 @@
 				"bezeichnung": "Assistent/-in für Ernährung und Versorgung - Technik",
 				"bezeichnungM": "Assistent für Ernährung und Versorgung - Technik",
 				"bezeichnungW": "Assistentin für Ernährung und Versorgung - Technik",
-				"gueltigVon": null,
+				"gueltigVon": 2014,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -868,23 +868,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1087000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2014
 			} ]
 		}
 	]

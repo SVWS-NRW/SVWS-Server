@@ -109,7 +109,7 @@ public final class DataGostAbiturjahrgangFachwahlen extends DataManager<Long> {
 					statfw.id = wahl.fachID;
 					statfw.kuerzel = fach.Kuerzel;
 					statfw.bezeichnung = fach.Bezeichnung;
-					statfw.kuerzelStatistik = fach.StatistikFach.daten.kuerzelASD;
+					statfw.kuerzelStatistik = fach.StatistikKuerzel;
 					for (final GostHalbjahr hj : GostHalbjahr.values())
 						statfw.fachwahlen[hj.id] = new GostStatistikFachwahlHalbjahr();
 					matrixFachwahlen.put(statfw.id, statfw);

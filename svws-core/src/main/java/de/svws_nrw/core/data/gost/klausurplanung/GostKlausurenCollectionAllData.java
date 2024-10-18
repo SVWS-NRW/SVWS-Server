@@ -3,46 +3,35 @@ package de.svws_nrw.core.data.gost.klausurplanung;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert eine Sammlung von Gost-Klausurvorgaben, Kursklausuren und Schülerklausuren.
+ * Sie liefert eine Sammlung aller zu einer Klausurplanung gehörigen Daten.
  */
 @XmlRootElement
-@Schema(description = "die Sammlung von Gost-Klausurvorgaben, Kursklausuren und Schülerklausuren")
+@Schema(description = "die Sammlung aller zu einer Klausurplanung gehörigen Daten.")
 @TranspilerDTO
 public class GostKlausurenCollectionAllData {
 
-	/** Die Liste der Klausurvorgaben. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<GostKlausurvorgabe> vorgaben = new ArrayList<>();
+	/** Ein Array mit Paaren der enthaltenen Abiturjahrgänge / GostHalbjahre.*/
+	@ArraySchema(schema = @Schema(implementation = GostKlausurenCollectionHjData.class, description = "Ein Array mit Paaren der enthaltenen Abiturjahrgänge / GostHalbjahre."))
+	public @NotNull List<GostKlausurenCollectionHjData> datacontained = new ArrayList<>();
 
-	/** Die Liste der Kursklausuren. */
-	@Schema(description = "die ID der Schülerklausur", example = "")
-	public @NotNull List<GostKursklausur> kursklausuren = new ArrayList<>();
+	/** Ein Array mit den Daten der Lehrer. */
+	@ArraySchema(schema = @Schema(implementation = LehrerListeEintrag.class, description = "Ein Array mit den Daten der Lehrer."))
+	public @NotNull List<LehrerListeEintrag> lehrer = new ArrayList<>();
 
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<GostSchuelerklausur> schuelerklausuren = new ArrayList<>();
-
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<GostSchuelerklausurTermin> schuelerklausurtermine = new ArrayList<>();
-
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull List<GostKlausurtermin> termine = new ArrayList<>();
-
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull GostKlausurenCollectionMetaData metadata = new GostKlausurenCollectionMetaData();
-
-	/** Die Liste der Schülerklausuren. */
-	@Schema(description = "die ID der Klausurraumstunde", example = "")
-	public @NotNull GostKlausurenCollectionRaumData raumdata = new GostKlausurenCollectionRaumData();
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurenCollectionAllData() {
+		super();
+	}
 
 }

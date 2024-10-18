@@ -7,8 +7,8 @@
 		<template #content>
 			<svws-ui-table clickable :clicked="kursListeManager().hasDaten() ? kursListeManager().auswahl() : null" @update:clicked="gotoEintrag"
 				:items="rowsFiltered" :model-value="selectedItems" @update:model-value="items => setAuswahl(items)"
-				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
-				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti">
+				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll
+				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi allow-arrow-key-selection>
 				<template #search>
 					<svws-ui-text-input v-model="search" type="search" placeholder="Suche nach Kurs" removable />
 				</template>
@@ -23,6 +23,7 @@
 				<template #cell(lehrer)="{ value }"> {{ getLehrerKuerzel(value) }} </template>
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
+				<!-- TODO: Beim Implementieren des '+'-Buttons zum Hinfügen eines Eintrags die property hasFocus auf die svws-ui-button-Komponente setzen. true, wenn Liste leer, sonst false (z.B. :hasFocus="rowsFiltered.length === 0") -->
 			</svws-ui-table>
 		</template>
 	</svws-ui-secondary-menu>
@@ -37,7 +38,9 @@
 
 	const props = defineProps<KurseAuswahlProps>();
 
-	const cols: DataTableColumn[] = [
+	const schuljahr = computed<number>(() => props.schuljahresabschnittsauswahl().aktuell.schuljahr);
+
+	const columns: DataTableColumn[] = [
 		{ key: "kuerzel", label: "Kürzel", sortable: true, defaultSort: "asc"},
 		{ key: "lehrer", label: "Fachlehrer", sortable: true },
 		{ key: "idJahrgaenge", label: "JG", tooltip: "Jahrgang", sortable: true, span: 0.5 },
@@ -77,7 +80,7 @@
 	const find = (items: Iterable<LehrerListeEintrag | JahrgangsDaten | FachDaten>, search: string) => {
 		const list = [];
 		for (const i of items)
-			if (i.kuerzel?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+			if ((i.kuerzel !== null) && i.kuerzel.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
 				list.push(i);
 		return list;
 	}
@@ -95,7 +98,7 @@
 	}
 
 	function text_schulgliederung(schulgliederung: Schulgliederung): string {
-		return schulgliederung.daten.kuerzel;
+		return schulgliederung.daten(schuljahr.value)?.kuerzel ?? '—';
 	}
 
 	const filterNurSichtbare = computed<boolean>({

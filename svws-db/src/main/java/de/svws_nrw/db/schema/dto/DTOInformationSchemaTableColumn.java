@@ -146,22 +146,23 @@ public final class DTOInformationSchemaTableColumn {
 	/**
 	 * Stellt eine Anfrage nach allen Spalten einer Datenbank-Tabelle.
 	 *
-	 * @param conn   die Datenbankverbindung
-	 * @param tabname   der Name der Datenbank-Tabelle
+	 * @param conn         die Datenbankverbindung
+	 * @param tabname      der Name der Datenbank-Tabelle
+	 * @param schemaname   der Name des Datenbank-Schemas
 	 *
 	 * @return die Map mit den Spalten-DTOs, welche den Tabellen-Namen in Kleinschreibung (!) zugeordnet sind.
 	 */
-	public static Map<String, DTOInformationSchemaTableColumn> query(final DBEntityManager conn, final String tabname) {
+	public static Map<String, DTOInformationSchemaTableColumn> query(final DBEntityManager conn, final String schemaname, final String tabname) {
 		final List<DTOInformationSchemaTableColumn> results = switch (conn.getDBDriver()) {
 			case MARIA_DB, MYSQL -> conn.queryNamed("DTOInformationSchemaTableColumn.mysql", DTOInformationSchemaTableColumn.class)
-					.setParameter(1, conn.getDBSchema())
+					.setParameter(1, schemaname)
 					.setParameter(2, tabname)
 					.getResultList();
 			case MDB -> conn.queryNamed("DTOInformationSchemaTableColumn.mdb", DTOInformationSchemaTableColumn.class)
 					.setParameter(1, tabname.toUpperCase())
 					.getResultList();
 			case MSSQL -> conn.queryNamed("DTOInformationSchemaTableColumn.mssql", DTOInformationSchemaTableColumn.class)
-					.setParameter(1, conn.getDBSchema())
+					.setParameter(1, schemaname)
 					.setParameter(2, tabname)
 					.getResultList();
 			case SQLITE -> conn.queryNamed("DTOInformationSchemaTableColumn.sqlite", DTOInformationSchemaTableColumn.class)
@@ -172,6 +173,19 @@ public final class DTOInformationSchemaTableColumn {
 		};
 		// TODO Vereinheitlichung der Darstellung aus den Informations-Schemata der unterschiedlichen DBMS
 		return results.stream().collect(Collectors.toMap(e -> e.Name.toLowerCase(), e -> e, (first, duplicate) -> first));
+	}
+
+
+	/**
+	 * Stellt eine Anfrage nach allen Spalten einer Datenbank-Tabelle.
+	 *
+	 * @param conn   die Datenbankverbindung
+	 * @param tabname   der Name der Datenbank-Tabelle
+	 *
+	 * @return die Map mit den Spalten-DTOs, welche den Tabellen-Namen in Kleinschreibung (!) zugeordnet sind.
+	 */
+	public static Map<String, DTOInformationSchemaTableColumn> query(final DBEntityManager conn, final String tabname) {
+		return query(conn, conn.getDBSchema(), tabname);
 	}
 
 

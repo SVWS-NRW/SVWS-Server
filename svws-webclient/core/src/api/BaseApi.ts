@@ -29,11 +29,12 @@ export class BaseApi {
      * @param {string} username - der Benutzername für den API-Zugriff
      * @param {string} password - das Kennwort des Benutzers für den API-Zugriff
      */
-	protected constructor(url : string, username : string, password : string) {
+	public constructor(url : string, username : string, password : string) {
 		this.url = url;
 		this.username = username;
 		const tmp = (new TextEncoder()).encode(username + ":" + password);
-		this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
+		if (username !== '')
+			this.headers.Authorization = "Basic " + btoa(String.fromCodePoint(...tmp));
 	}
 
 

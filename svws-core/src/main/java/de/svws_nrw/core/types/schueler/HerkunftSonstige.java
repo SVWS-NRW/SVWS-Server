@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import de.svws_nrw.core.data.schule.HerkunftSonstigeKatalogEintrag;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -20,12 +20,12 @@ public enum HerkunftSonstige {
 					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
 					Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
 					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-			), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022),
+			), "Ausländische Schüler/-innen, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", null, 2022),
 			new HerkunftSonstigeKatalogEintrag(1001, "AS", Arrays.asList(
 					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
 					Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
 					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-			), "Ausländische Schüler, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)
+			), "Ausländische Schüler/-innen, die seit den letzten amtlichen Schuldaten aus dem Ausland zugezogen sind", 2023, null)
 	}),
 
 
@@ -91,12 +91,12 @@ public enum HerkunftSonstige {
 					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
 					Schulform.G, Schulform.GE, Schulform.GM, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
 					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", null, 2022),
+			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler/-innen", null, 2022),
 			new HerkunftSonstigeKatalogEintrag(10001, "XS", Arrays.asList(
 					Schulform.BK, Schulform.SB, Schulform.WB, Schulform.FW, Schulform.HI, Schulform.WF,
 					Schulform.G, Schulform.GE, Schulform.GY, Schulform.H, Schulform.PS, Schulform.R,
 					Schulform.KS, Schulform.S, Schulform.SG, Schulform.SK, Schulform.SR, Schulform.V
-			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler", 2023, null)
+			), "Sonstige Schule bzw. keine Schule, auch seit den letzten amtlichen Schuldaten aus dem Ausland zugezogene deutsche Schüler/-innen", 2023, null)
 	});
 
 

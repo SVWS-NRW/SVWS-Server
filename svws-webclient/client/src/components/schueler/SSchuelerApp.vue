@@ -1,29 +1,48 @@
 <template>
-	<div v-if="schuelerListeManager().hasDaten()" class="page--flex">
+	<div v-if="(schuelerListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
-				<div class="svws-headline-wrapper">
-					<h2 class="svws-headline">
-						<span>{{ vorname }} {{ nachname }}</span>
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							ID:
-							{{ schuelerListeManager().daten().id }}
-						</svws-ui-badge>
-					</h2>
-					<span class="svws-subline">{{ inputKlasse === null ? '–' : inputKlasse }}</span>
-				</div>
-				<div v-if="schuelerListeManager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
-					<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
-					<span class="text-error content-center"> Keine Auskunft an Dritte </span>
-				</div>
+				<template v-if="activeRouteType === ViewType.DEFAULT">
+					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
+					<div v-if="schuelerListeManager().hasDaten()" class="svws-headline-wrapper">
+						<h2 class="svws-headline">
+							<span>{{ vorname }} {{ nachname }}</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID:
+								{{ schuelerListeManager().daten().id }}
+							</svws-ui-badge>
+						</h2>
+						<span class="svws-subline">{{ inputKlasse === null ? '—' : inputKlasse }}</span>
+					</div>
+					<div v-if="schuelerListeManager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
+						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
+						<span class="text-error content-center"> Keine Auskunft an Dritte </span>
+					</div>
+				</template>
+
+				<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
+					<div class="svws-headline-wrapper">
+						<h2 class="svws-headline">
+							<span>Neuen Schüler anlegen...</span>
+						</h2>
+					</div>
+				</template>
+
+				<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
+					<div class="svws-headline-wrapper">
+						<h2 class="svws-headline">Gruppenprozesse</h2>
+						<span class="svws-subline">{{ schuelerSubline }}</span>
+					</div>
+				</template>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
+
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-group-line" />
 	</div>
@@ -32,10 +51,27 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-
 	import type { SchuelerAppProps } from "./SSchuelerAppProps";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<SchuelerAppProps>();
+
+	const schuelerSubline = computed(() => {
+		const auswahlSchuelerList = props.schuelerListeManager().liste.auswahl();
+		const leadingSchuelerList = [];
+		for (let index = 0; index < auswahlSchuelerList.size(); index++) {
+			if (index > 2)
+				break;
+
+			leadingSchuelerList.push(`${auswahlSchuelerList.get(index).vorname} ${auswahlSchuelerList.get(index).nachname}`);
+		}
+
+		let subline = leadingSchuelerList.join(', ');
+		if (auswahlSchuelerList.size() > 3)
+			subline += ` und ${auswahlSchuelerList.size() - 3} Weiter${(auswahlSchuelerList.size() - 3) === 1 ? 'er' : 'e'}`;
+
+		return subline;
+	})
 
 	const foto = computed<string | undefined>(() => {
 		return props.schuelerListeManager().daten().foto ?? undefined;

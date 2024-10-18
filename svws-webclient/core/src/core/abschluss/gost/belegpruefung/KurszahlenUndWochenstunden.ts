@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Fach } from '../../../../asd/types/fach/Fach';
 import { GostFach } from '../../../../core/data/gost/GostFach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
@@ -9,10 +10,10 @@ import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { Projektkurse, cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse } from '../../../../core/abschluss/gost/belegpruefung/Projektkurse';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { NullPointerException } from '../../../../java/lang/NullPointerException';
-import { Note } from '../../../../core/types/Note';
+import { Note } from '../../../../asd/types/Note';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class KurszahlenUndWochenstunden extends GostBelegpruefung {
@@ -70,7 +71,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		this.wochenstundenEinfuehrungsphase = 0;
 		this.wochenstundenQualifikationsphase = 0;
 		const projektkurse : Projektkurse = (cast_de_svws_nrw_core_abschluss_gost_belegpruefung_Projektkurse(this.pruefungen_vorher[0]));
-		const musik : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(ZulaessigesFach.MU.daten.kuerzel);
+		const musik : AbiturFachbelegung | null = this.manager.getFachbelegungByKuerzel(Fach.MU.name());
 		const blockIHatMusikLK : boolean = this.manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.LK, ...GostHalbjahr.getQualifikationsphase());
 		const blockIHatMusikGKAbitur : boolean = this.manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.GK, ...GostHalbjahr.getQualifikationsphase()) && (musik !== null) && ((musik.abiturFach !== null) && ((musik.abiturFach === 3) || (musik.abiturFach === 4)));
 		let blockIAnzahlMusik : number = 0;
@@ -95,7 +96,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			const fach : GostFach | null = this.manager.getFach(fachbelegung);
 			if ((fach === null) || (!fach.istPruefungsordnungsRelevant))
 				continue;
-			const zulFach : ZulaessigesFach | null = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			const zulFach : Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			let istLKFach : boolean = false;
 			for (const fachbelegungHalbjahr of fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr === null)
@@ -112,9 +113,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				let istAnrechenbar : boolean = true;
 				let istAnrechenbarHalbjahr : boolean = true;
 				let istNullPunkteBelegungInQPhase : boolean = false;
-				const istMusik : boolean = (zulFach as unknown === ZulaessigesFach.MU as unknown);
+				const istMusik : boolean = (zulFach as unknown === Fach.MU as unknown);
 				const istErsatzfach : boolean = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
-				const istMusikErsatzfach : boolean = istErsatzfach && ((zulFach as unknown === ZulaessigesFach.IN as unknown) || (zulFach as unknown === ZulaessigesFach.VO as unknown));
+				const istMusikErsatzfach : boolean = istErsatzfach && ((zulFach as unknown === Fach.IN as unknown) || (zulFach as unknown === Fach.VO as unknown));
 				if (halbjahr.istQualifikationsphase()) {
 					if (istMusik || istMusikErsatzfach) {
 						blockIAnzahlMusik++;
@@ -547,6 +548,8 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden'].includes(name);
 	}
+
+	public static class = new Class<KurszahlenUndWochenstunden>('de.svws_nrw.core.abschluss.gost.belegpruefung.KurszahlenUndWochenstunden');
 
 }
 

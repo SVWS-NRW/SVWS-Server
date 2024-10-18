@@ -1,7 +1,5 @@
 package de.svws_nrw.db;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,23 +7,18 @@ import java.sql.SQLInvalidAuthorizationSpecException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.eclipse.persistence.exceptions.DatabaseException;
 import org.eclipse.persistence.sessions.server.ConnectionPool;
 import org.eclipse.persistence.sessions.server.ServerSession;
 
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
-
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.constraints.NotNull;
+
 
 /**
  * Ein Manager für die Datenbank-Verbindungen der Anwendung.
@@ -33,201 +26,103 @@ import jakarta.validation.constraints.NotNull;
 public final class ConnectionManager {
 
 	/*
-	 * Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten
-	 * Datenbank-Verbindungen, d.h. die zugehörigen {@link EntityManagerFactory}
-	 * zu schließen.
+	 * Initialisiert den Shutdown-Hook, um alle nicht mehr benötigten Datenbank-Verbindungen
+	 * über die zugehörigen Factories zu schließen. (siehe auch {@link ConnectionFactory})
 	 */
 	static {
-		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager::closeAll));
+		instance = new ConnectionManager();
+		Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager.instance::closeAll));
 	}
 
-	/** Ein Zufallszahlen-Generator */
-	private static final Random random = new Random();
+	/** Eine HashMap für den schnellen Zugriff auf eine Connection-Factory anhand der Datenbank-Konfiguration */
+	private final HashMap<DBConfig, ConnectionFactory> mapFactories = new HashMap<>();
+
+	/** Die Instanz des Connectiion-Managers */
+	public static final ConnectionManager instance;
+
+	/** Ein Mutex, dass immer nur ein Thread den Zustand dieses Managers verändern kann. */
+	private final ReentrantLock mutex = new ReentrantLock();
+
+
 
 	/**
-	 * Eine HashMap für den Zugriff auf einen Connection-Manager, der einer
-	 * Datenbank-Konfiguration zugeordnet ist
+	 * Erzeugt einen neuen Connection-Manager.
 	 */
-	private static final HashMap<DBConfig, ConnectionManager> mapManager = new HashMap<>();
-
-	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
-	private final @NotNull DBConfig config;
-
-	/**
-	 * Die zum Erzeugen der {@link EntityManager} verwendete Instanz der
-	 * {@link EntityManagerFactory}
-	 */
-	private final @NotNull EntityManagerFactory emf;
-
-	/**
-	 * Erstellt einen neuen Connection-Manager
-	 *
-	 * @param config die Konfiguration für den Connection-Manager
-	 */
-	private ConnectionManager(final @NotNull DBConfig config) {
-		this.config = config;
-		this.emf = createEntityManagerFactory();
+	private ConnectionManager() {
+		// Empty Constructor
 	}
 
-	/**
-	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird
-	 * innerhalb dieses Packages vom DBEntityManager bei der Erneuerung der
-	 * Verbindung verwendet.
-	 *
-	 * @return der neue JPA {@link EntityManager}
-	 */
-	EntityManager getNewJPAEntityManager() {
-		return emf.createEntityManager();
-	}
 
 	/**
-	 * Gibt einen neuen JPA {@link EntityManager} zurück. Diese Methode wird
-	 * innerhalb dieses Packages vom DBEntityManager bei der Erneuerung der
-	 * Verbindung verwendet.
-	 * Bei dieser Variante werden mehrere Versuche für einen Verbindungsaufbau
-	 * durchgeführt. Zwischen den Versuchen wird eine angebene Zeit in Millisekunden
-	 * abgewartet.
+	 * Bestimmt für den angegebenen Benutzer die zugehörige Connection-Factory
+	 * und mit dieser dann eine neue Verbindung.
 	 *
-	 * @param connectionRetries   die Anzahl der Verbindungsversuche, bevor eine Exception weitergereicht wird
-	 * @param retryTimeout   die Zeit in Millisekunden
+	 * @param user   der Benutzer
 	 *
-	 * @return der neue JPA {@link EntityManager}
+	 * @return die Datenbank-Verbindung
+	 *
+	 * @throws DBException   bei Fehlern im Verbindungsaufbau
 	 */
-	EntityManager getNewJPAEntityManager(final int connectionRetries, final long retryTimeout) {
-		PersistenceException resultingException = null;
-		int triesLeft = connectionRetries + 1;
-		do {
-			triesLeft--;
+	DBEntityManager getConnection(final Benutzer user) throws DBException {
+		this.lock();
+		try {
+			final @NotNull ConnectionFactory factory = this.get(user.getConfig());
+			final @NotNull DBEntityManager conn = factory.connect(user);
+			return conn;
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
+	 * Gibt zurück, ob eine Factory für die übergebene Konfiguration existiert.
+	 *
+	 * @param config   die DB-Konfiguration
+	 *
+	 * @return true, falls eine Factory existiert und sonst false
+	 */
+	boolean hasFactory(final DBConfig config) {
+		return mapFactories.containsKey(config);
+	}
+
+
+	/**
+	 * Gibt die Connection-Factory passen für die übergebene Konfiguration zurück.
+	 * Sollt keine Factory existieren, so wird versucht eine neue zu erstellen.
+	 *
+	 * @param config   die Konfiguration der Datenbank-Verbindung
+	 *
+	 * @return die Factory
+	 *
+	 * @throws DBException   bei einem fehlerhaften Verbindungsaufbau, z.B. einer fehlschlagenen Authentifizierung
+	 */
+	private @NotNull ConnectionFactory get(final DBConfig config) throws DBException {
+		ConnectionFactory factory = mapFactories.get(config);
+		if ((factory != null) && (!factory.checkCredentials(config.getUsername(), config.getPassword()))) {
+			mapFactories.remove(config);
+			factory.close();
+			factory = null;
+		}
+		if (factory == null) {
+			factory = new ConnectionFactory(config);
 			try {
-				return getNewJPAEntityManager();
-			} catch (final PersistenceException e) {
-				resultingException = e;
-				if (triesLeft <= 0) {
-					throw resultingException;
+				try (EntityManager em = factory.getNewJPAEntityManager()) {
+					mapFactories.put(config, factory);
 				}
-				try {
-					Thread.sleep(retryTimeout);
-				} catch (@SuppressWarnings("unused") final InterruptedException ie) {
-					Thread.currentThread().interrupt();
-				}
-			}
-		} while (triesLeft > 0);
-		throw resultingException;
-	}
-
-	/**
-	 * Gibt die Datenbank-Konfiguration dieses Verbindungs-Managers zurück.
-	 *
-	 * @return die Datenbank-Konfiguration dieses Verbindungs-Managers
-	 */
-	public DBConfig getConfig() {
-		return this.config;
-	}
-
-	/**
-	 * Intern genutzte Methode, um eine {@link EntityManagerFactory} für diesen
-	 * {@link ConnectionManager} zu erstellen. Hierbei werden auch die
-	 * Standardeinstellungen für die Datenbankverbindung in Form der
-	 * Property-Map hinzugefügt (siehe
-	 * {@link Persistence#createEntityManagerFactory(String, java.util.Map)})
-	 *
-	 * @return die {@link EntityManagerFactory}
-	 */
-	private @NotNull EntityManagerFactory createEntityManagerFactory() {
-		final HashMap<String, Object> propertyMap = new HashMap<>();
-		propertyMap.put("jakarta.persistence.jdbc.driver", config.getDBDriver().getJDBCDriver());
-		final String username = config.getUsername();
-		String password = config.getPassword();
-		String url = config.getDBDriver().getJDBCUrl(config.getDBLocation(), config.getDBSchema());
-		if (config.getDBDriver() == DBDriver.MDB) {
-			try (Database db = DatabaseBuilder.open(new File(config.getDBLocation()))) {
-				password = db.getDatabasePassword();
-			} catch (@SuppressWarnings("unused") final IOException e) {
-				password = "";
-			}
-			if (config.createDBFile())
-				url += ";newdatabaseversion=V2000";
-		}
-		final String sessionName = "SVWSDB_url=" + url + "_user=" + config.getUsername() + "_random=" + random.ints(48, 123)  // from 0 to z
-				.filter(i -> ((i <= 57) || (i >= 65)) && ((i <= 90) || (i >= 97)))  // filter some unicode characters
-				.limit(40)
-				.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-				.toString();
-		propertyMap.put("jakarta.persistence.jdbc.url", url);
-		propertyMap.put("jakarta.persistence.jdbc.user", username);
-		propertyMap.put("jakarta.persistence.jdbc.password", password);
-		propertyMap.put("eclipselink.session-name", sessionName);
-		propertyMap.put("eclipselink.flush", "true");
-		propertyMap.put("eclipselink.persistence-context.flush-mode", "commit");
-		propertyMap.put("eclipselink.allow-zero-id", "true");
-		propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "WARNING" : "OFF");
-		// propertyMap.put("eclipselink.logging.level", config.useDBLogging() ? "INFO" : "OFF");
-		// propertyMap.put("eclipselink.logging.level", "ALL");
-		// propertyMap.put("eclipselink.logging.level.sql", "FINE");
-		// propertyMap.put("eclipselink.logging.parameters", "true");
-		// propertyMap.put("eclipselink.profiler","PerformanceProfiler");
-		propertyMap.put("eclipselink.cache.shared.default", "false");
-		// propertyMap.put("eclipselink.exception-handler",
-		// "de.svws_nrw.db.DBExceptionHandler");
-		if (config.getDBDriver() == DBDriver.SQLITE) {
-			propertyMap.put("eclipselink.target-database", "Database");
-			// Einstellungen des SQ-Lite-Treibers
-			// READWRITE (2) + CREATE (4) + OPEN_URI (64) = 70 bzw. READWRITE (2) + OPEN_URI (64) = 66
-			propertyMap.put("open_mode", (config.createDBFile()) ? "70" : "66");
-			propertyMap.put("foreign_keys", "true");
-		}
-		return Persistence.createEntityManagerFactory("SVWSDB", propertyMap);
-		// TODO avoid Persistence Unit "SVWSDB" as xml file
-	}
-
-
-	/**
-	 * Schließt den Verbindungs-Manager
-	 */
-	private void close() {
-		emf.close();
-	}
-
-	/**
-	 * Gibt den Manager für die Datenbank-Verbindung für die übergebene
-	 * Konfiguration zurück. Sollt keine Verbindung bestehen, so wird eine neue
-	 * Verbindung erzeugt.
-	 *
-	 * @param config die Konfiguration der Datenbank-Verbindung
-	 *
-	 * @return der Manager
-	 *
-	 * @throws DBException bei einer fehlschlagenden Authentifizierung
-	 */
-	public static @NotNull ConnectionManager get(final DBConfig config) throws DBException {
-		ConnectionManager man = mapManager.get(config);
-		if (man != null) {
-			final Map<String, Object> curProps = man.emf.getProperties();
-			final String curUser = (String) curProps.get("jakarta.persistence.jdbc.user");
-			final String curPassword = (String) curProps.get("jakarta.persistence.jdbc.password");
-			if (!config.getUsername().equals(curUser) || !config.getPassword().equals(curPassword)) {
-				mapManager.remove(config);
-				man.close();
-				man = null;
-			}
-		}
-		if (man == null) {
-			man = new ConnectionManager(config);
-			try {
-				try (EntityManager em = man.getNewJPAEntityManager()) {
-					mapManager.put(config, man);
-				}
+				Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) erzeugt."
+						.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie Benutzername und Kennwort.", ae);
 				}
 				if (pe.getCause() instanceof DatabaseException) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehler beim Aufbau der Verbindung. Überprüfen Sie die Verbindungsparameter.");
 				}
 				if (pe.getMessage().startsWith("java.lang.IllegalStateException: Could not determine FileFormat")) {
-					man.close();
+					factory.close();
 					throw new DBException("Fehlerhaftes oder zu altes MDB-Datei-Format.");
 				}
 				throw pe;
@@ -236,7 +131,7 @@ public final class ConnectionManager {
 			// Führe eine Dummy-DB-Abfrage aus, um Probleme mit der
 			// Server-seitigen Beendung einer Verbindung zu erkennen
 			try {
-				try (EntityManager em = man.getNewJPAEntityManager()) {
+				try (EntityManager em = factory.getNewJPAEntityManager()) {
 					try {
 						em.getTransaction().begin();
 						@SuppressWarnings("resource") final Connection conn = em.unwrap(Connection.class);
@@ -264,42 +159,74 @@ public final class ConnectionManager {
 				}
 			} catch (final PersistenceException pe) {
 				if ((pe.getCause() instanceof final DatabaseException de) && (de.getCause() instanceof final SQLInvalidAuthorizationSpecException ae)) {
-					mapManager.remove(config);
-					man.close();
+					mapFactories.remove(config);
+					factory.close();
 					throw new DBException(ae);
 				}
 				throw pe;
 			}
 		}
-		return man;
+		return factory;
 	}
 
+
 	/**
-	 * Schließt den Connection-Manager für die übergebene Config und entfernt
-	 * ihn aus der Liste der Manager
+	 * Schließt die Factory für die übergebene Config und entfernt sie aus der Map der Factories
 	 *
-	 * @param config die Konfiguration des zu schließenden Managers
+	 * @param config   die Konfiguration der zu schließenden Factory
 	 */
-	private static void closeSingle(final DBConfig config) {
-		final ConnectionManager manager = mapManager.get(config);
-		if (manager == null) {
-			Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen des Verbindungs-Managers zu %s (Schema: %s), Datenbank-Benutzer: %s"
-					.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
-			return;
+	void closeSingle(final DBConfig config) {
+		this.lock();
+		try {
+			final ConnectionFactory factory = mapFactories.get(config);
+			if (factory == null) {
+				Logger.global().logLn(LogLevel.ERROR, "Fehler beim Schließen der Factory für Verbindung(-en) zu %s (Schema: %s), Datenbank-Benutzer: %s"
+						.formatted(config.getDBLocation(), config.getDBSchema(), config.getUsername()));
+				return;
+			}
+			factory.close();
+			mapFactories.remove(config);
+			Logger.global().logLn(LogLevel.INFO, "Factory für Verbindung(-en) des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
+					.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
+		} finally {
+			this.unlock();
 		}
-		manager.close();
-		mapManager.remove(config);
-		Logger.global().logLn(LogLevel.INFO, "Verbindungs-Manager des Datenbank-Benutzers %s zu %s (Schema: %s) geschlossen."
-				.formatted(config.getUsername(), config.getDBLocation(), config.getDBSchema()));
 	}
 
+
 	/**
-	 * Schließt alle noch offenenen Datenbank-Verbindungen.
+	 * Schließt alle noch offenenen Factories.
 	 */
-	private static void closeAll() {
-		final List<DBConfig> configs = mapManager.keySet().stream().toList();
-		for (final DBConfig config : configs)
-			closeSingle(config);
+	private void closeAll() {
+		this.lock();
+		try {
+			final List<DBConfig> configs = mapFactories.keySet().stream().toList();
+			for (final DBConfig config : configs)
+				closeSingle(config);
+		} finally {
+			this.unlock();
+		}
+	}
+
+
+	/**
+	 * Nimmt den Lock für Connection-Manager für den aktuellen Thread in Besitz und
+	 * kehrt zurück, sofern dieser nicht im Besitz eines anderen Threads ist
+	 * (siehe {@link ReentrantLock#lock()}).
+	 */
+	public void lock() {
+		mutex.lock();
+	}
+
+
+	/**
+	 * Gibt den Lock für Connection-Manager wieder frei, sofern dieser Thread im Besitz
+	 * des Locks ist (siehe {@link ReentrantLock#isLocked()} und
+	 * {@link ReentrantLock#unlock()})
+	 */
+	public void unlock() {
+		if (mutex.isLocked() && mutex.isHeldByCurrentThread())
+			mutex.unlock();
 	}
 
 }

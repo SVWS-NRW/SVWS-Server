@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { FachDaten } from '../../../core/data/fach/FachDaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -31,6 +32,8 @@ export class FachUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.fach.FachUtils'].includes(name);
 	}
+
+	public static class = new Class<FachUtils>('de.svws_nrw.core.utils.fach.FachUtils');
 
 }
 

@@ -1,23 +1,10 @@
 import type { Abiturdaten, ApiFile, GostBlockungListeneintrag, GostBlockungsergebnis, GostLaufbahnplanungDaten, GostSchuelerFachwahl, LehrerListeEintrag, SchuelerListeEintrag } from "@core";
-import {
-	AbiturdatenManager,
-	BenutzerTyp,
-	GostBelegpruefungErgebnis,
-	GostBelegpruefungsArt,
-	GostFaecherManager,
-	GostJahrgang,
-	GostJahrgangsdaten,
-	GostLaufbahnplanungBeratungsdaten,
-	GostHalbjahr,
-	DeveloperNotificationException,
-	ArrayList,
-	ReportingAusgabeformat, ReportingReportvorlage, ReportingParameter
-} from "@core";
+import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpruefungsArt, GostFaecherManager, GostJahrgang, GostJahrgangsdaten, GostLaufbahnplanungBeratungsdaten, GostHalbjahr, DeveloperNotificationException, ArrayList, ReportingReportvorlage, ReportingParameter } from "@core";
 
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
-import {routeApp} from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 
 
 interface RouteStateSchuelerLaufbahnplanung extends RouteStateInterface {
@@ -37,7 +24,7 @@ const defaultState = <RouteStateSchuelerLaufbahnplanung> {
 	auswahl: undefined,
 	abiturdaten: undefined,
 	abiturdatenManager: undefined,
-	faecherManager: new GostFaecherManager(),
+	faecherManager: new GostFaecherManager(-1),
 	gostBelegpruefungErgebnis: new GostBelegpruefungErgebnis(),
 	gostJahrgang: new GostJahrgang(),
 	gostJahrgangsdaten: new GostJahrgangsdaten(),
@@ -54,11 +41,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 
 	public async clear() {
 		this.setPatchedDefaultState({});
-	}
-
-	public async ladeFachkombinationen() {
-		if (this._state.value.gostJahrgang === undefined)
-			return;
 	}
 
 	get auswahl(): SchuelerListeEintrag {
@@ -84,8 +66,6 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 	}
 
 	get faechermanager(): GostFaecherManager {
-		if (this._state.value.faecherManager === undefined)
-			throw new DeveloperNotificationException("Unerwarteter Fehler: Fächer-Manager nicht initialisiert");
 		return this._state.value.faecherManager;
 	}
 	set faecherManager(faecherManager: GostFaecherManager | undefined) {
@@ -145,7 +125,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		if (art === 'gesamt')
 			return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
 		const abiturdatenManager = new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
 		return new AbiturdatenManager(abiturdaten, this._state.value.gostJahrgangsdaten, this._state.value.faecherManager, GostBelegpruefungsArt.EF1);
 	}
@@ -253,7 +233,7 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 				const gostJahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, gostJahrgang.abiturjahr);
 				const gostLaufbahnBeratungsdaten = await api.server.getGostSchuelerLaufbahnplanungBeratungsdaten(api.schema, auswahl.id);
 				const listGostFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, gostJahrgang.abiturjahr);
-				const faecherManager = new GostFaecherManager(listGostFaecher);
+				const faecherManager = new GostFaecherManager(abiturdaten.schuljahrAbitur, listGostFaecher);
 				const listFachkombinationen	= await api.server.getGostAbiturjahrgangFachkombinationen(api.schema, gostJahrgang.abiturjahr);
 				faecherManager.addFachkombinationenAll(listFachkombinationen);
 				const listLehrer = await api.server.getLehrer(api.schema);

@@ -16,23 +16,22 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.config.SVWSKonfigurationException;
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.schule.SchulenKatalogEintrag;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.KursFortschreibungsart;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.core.types.SchuelerStatus;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AdressenUtils;
-import de.svws_nrw.data.schule.SchulUtils;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
@@ -40,6 +39,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.MigrationDTOs;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppe;
 import de.svws_nrw.db.dto.migration.schild.MigrationDTOSchuelerIndividuelleGruppeSchueler;
 import de.svws_nrw.db.dto.migration.schild.benutzer.MigrationDTOProtokollLogin;
@@ -94,7 +94,7 @@ import de.svws_nrw.db.schema.SchemaTabelleSpalte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.PersistenceException;
-import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse stellt Methoden zur Verfügung, um ein Schild2-Datenbankschema in
@@ -127,8 +127,14 @@ public final class DBMigrationManager {
 	// Die Schulform der Quelldatenbank, sofern sie schon eingelesen wurde
 	private Schulform schulform = null;
 
+	// Das Schuljahr der Schule in der Quelldatenbank, sofern es schon eingelesen wurde
+	private int schuljahr = -1;
+
 	// Eine Liste zum Zwischenspeichern der Schüler-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> schuelerIDs = new HashSet<>();
+
+	// Eine Menge der vorhanden GUIDs bei Schülern, um Duplikate vermeiden zu können. Bei Duplikaten werden dann neue GUIDs generiert
+	private final HashSet<String> schuelerGUIDs = new HashSet<>();
 
 	// Eine Liste zum Zwischenspeichern der User-IDs, um Datensätze direkt entfernen zu können, wenn sie nicht in der Datenbank vorhanden sind.
 	private final HashSet<Long> userIDs = new HashSet<>();
@@ -310,23 +316,22 @@ public final class DBMigrationManager {
 			return false;
 		}
 		// Leere das bestehende Schema der Zieldatenbank
-		final Benutzer tgtUser;
-		try {
-			logger.log("-> Verbinde zur Ziel-Datenbank... ");
-			tgtUser = Benutzer.create(tgtConfig);
+		logger.log("-> Verbinde zur Ziel-Datenbank... ");
+		final Benutzer tgtUser = Benutzer.create(tgtConfig);
+		try (DBEntityManager tgtConn = tgtUser.getEntityManager()) {
 			logger.logLn("[OK]");
+			final DBSchemaManager tgtManager = DBSchemaManager.create(tgtConn, true, logger);
+			if (!tgtManager.dropSVWSSchema())
+				return false;
+			final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
+			final boolean success = migrationManager.doMigrate();
+			logger.modifyIndent(-2);
+			return success;
 		} catch (final DBException e) {
 			logger.logLn("[Fehler]");
 			logger.logLn(2, e.getMessage());
 			return false;
 		}
-		final DBSchemaManager tgtManager = DBSchemaManager.create(tgtUser, true, logger);
-		if (!tgtManager.dropSVWSSchema())
-			return false;
-		final DBMigrationManager migrationManager = new DBMigrationManager(srcManager, tgtConfig, maxUpdateRevision, devMode, schulNr, logger);
-		final boolean success = migrationManager.doMigrate();
-		logger.modifyIndent(-2);
-		return success;
 	}
 
 
@@ -380,18 +385,17 @@ public final class DBMigrationManager {
 	 * @throws DBException falls ein Fehler beim Erstellen des Schema-Managers auftritt
 	 */
 	private static DBSchemaManager getSchemaManager(final DBConfig cfg, final Benutzer user, final boolean isSrc, final Logger logger) throws DBException {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			if (conn == null) {
-				logger.logLn(0, " " + strFehler);
-				logger.logLn(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='"
-						+ cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')");
-				throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
-			}
-			logger.logLn(0, " " + strOK);
-			logger.logLn(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation()
-					+ "', user='" + cfg.getUsername() + "')");
+		final DBEntityManager conn = user.getEntityManager();
+		if (conn == null) {
+			logger.logLn(0, " " + strFehler);
+			logger.logLn(LogLevel.ERROR, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + cfg.getDBDriver() + "', location='"
+					+ cfg.getDBLocation() + "', user='" + cfg.getUsername() + "')");
+			throw new DBException("Fehler beim Verbinden zur " + (isSrc ? "Quelldatenbank" : "Zieldatenbank"));
 		}
-		return DBSchemaManager.create(user, true, logger);
+		logger.logLn(0, " " + strOK);
+		logger.logLn(LogLevel.INFO, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + cfg.getDBDriver() + "', location='" + cfg.getDBLocation()
+				+ "', user='" + cfg.getUsername() + "')");
+		return DBSchemaManager.create(conn, true, logger);
 	}
 
 
@@ -427,7 +431,7 @@ public final class DBMigrationManager {
 			logger.logLn(strOK);
 
 			try {
-				tgtManager.createSVWSSchema(tgtManager.getUser(), 0, false, true);
+				tgtManager.createSVWSSchema(tgtManager.getConnection(), 0, false, true);
 
 				logger.logLn("-> Kopiere die Daten aus der Quell-DB in die Ziel-DB...");
 				logger.modifyIndent(2);
@@ -441,9 +445,7 @@ public final class DBMigrationManager {
 
 				logger.logLn("-> Lege ggf. weitere Schuljahresabschnitte an, falls Folgeklassen bei Schüler-Lernabschnitte angelegt sind...");
 				logger.modifyIndent(2);
-				try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
-					result = erstelleFolgeSchuljahresabschnitte(tgtConn);
-				}
+				result = erstelleFolgeSchuljahresabschnitte(tgtManager.getConnection());
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn(" " + strFehler);
@@ -492,7 +494,7 @@ public final class DBMigrationManager {
 				logger.logLn("-> Aktualisiere die Ziel-DB auf die " + ((maxUpdateRevision < 0) ? "neueste " : "") + "DB-Revision"
 						+ ((maxUpdateRevision > 0) ? " " + maxUpdateRevision : "") + "...");
 				logger.modifyIndent(2);
-				final boolean result = tgtManager.updater.update(tgtManager.getUser(), (maxUpdateRevision < 0) ? -1 : maxUpdateRevision, devMode, false);
+				final boolean result = tgtManager.updater.update(tgtManager.getConnection(), (maxUpdateRevision < 0) ? -1 : maxUpdateRevision, devMode, false);
 				logger.modifyIndent(-2);
 				if (!result) {
 					logger.logLn(strFehler);
@@ -511,7 +513,9 @@ public final class DBMigrationManager {
 			SVWSKonfiguration.get().deactivateSchema(SVWSKonfiguration.get().getSchemanameCaseConfig(tgtConfig.getDBSchema()));
 			success = false;
 		} finally {
+			tgtManager.getConnection().close();
 			tgtManager = null;
+			srcManager.getConnection().close();
 			srcManager = null;
 			System.gc();
 			if (!SVWSKonfiguration.get().unlockSchema(tgtSchema)) {
@@ -532,26 +536,29 @@ public final class DBMigrationManager {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	private boolean fixSchulform() throws ApiOperationException {
-		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
-			final @NotNull DTOEigeneSchule schule = SchulUtils.getDTOSchule(conn);
-			logger.logLn("- Schulnummer: " + schule.SchulNr);
-			logger.logLn("- Schulform: " + ((schule.Schulform == null) ? "???" : schule.Schulform.daten.kuerzel));
-			final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
-			final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.SchulNr)).findFirst().orElse(null);
-			if (dtoSchulver == null) {
-				logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
-				return false;
-			}
-
-			final Schulform statSchulform = Schulform.getByNummer(dtoSchulver.SF);
-			if (statSchulform != schule.Schulform) {
-				logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten.kuerzel);
-				logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
-				schule.Schulform = statSchulform;
-				conn.persist(schule);
-			}
-			return true;
+		final DBEntityManager conn = tgtManager.getConnection();
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Kein Eintrag für die eigene Schule in der Datenbank vorhanden.");
+		final Schulform tmpSchulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		logger.logLn("- Schulnummer: " + schule.SchulNr);
+		logger.logLn("- Schulform: " + ((tmpSchulform == null) ? "???" : tmpSchulform.daten(schuljahresabschnitt.Jahr).kuerzel));
+		final List<SchulenKatalogEintrag> katalogSchulen = CsvReader.fromResource("daten/csv/schulver/Schulen.csv", SchulenKatalogEintrag.class);
+		final SchulenKatalogEintrag dtoSchulver = katalogSchulen.stream().filter(s -> s.SchulNr.equals("" + schule.SchulNr)).findFirst().orElse(null);
+		if (dtoSchulver == null) {
+			logger.logLn("- Fehler: Schule konnte für die Schul-Nummer " + schule.SchulNr + " nicht im Verzeichnis der Schulen gefunden werden!");
+			return false;
 		}
+
+		final Schulform statSchulform = Schulform.data().getWertBySchluessel(dtoSchulver.SF);
+		if (statSchulform != tmpSchulform) {
+			logger.logLn("- Fehler: Schulform laut Schulverzeichnis: " + statSchulform.daten(schuljahresabschnitt.Jahr).kuerzel);
+			logger.logLn("- Korrigiere die Schulform in der SVWS-DB...");
+			schule.SchulformKuerzel = statSchulform.daten(schuljahresabschnitt.Jahr).kuerzel;
+			conn.persist(schule);
+		}
+		return true;
 	}
 
 
@@ -574,8 +581,10 @@ public final class DBMigrationManager {
 	 * @param tab   die einzulesende Tabelle
 	 *
 	 * @return eine Liste mit allen Entitäten der Tabelle
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private List<?> readAllData(final SchemaTabelle tab) {
+	private List<?> readAllData(final SchemaTabelle tab) throws DBException {
 		final Class<?> dtoClass = MigrationDTOs.getFromTableName(tab.name());
 		lastError = null;
 
@@ -599,14 +608,9 @@ public final class DBMigrationManager {
 		// Falls ja, dann kopiere direkt, sofern keine Schulnummer angegeben ist.
 		if ((filterSchulNummer == null) && (spaltenSoll.size() == spaltenIst.size())) {
 			// Lese alle Daten aus der Tabelle
-			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
-				if (!tab.pkSpalten().isEmpty())
-					srcConn.migrationQueryAll(dtoClass);
-				return srcConn.queryAll(dtoClass);
-			} catch (final PersistenceException e) {
-				lastError = e.getMessage();
-				return null;
-			}
+			if (!tab.pkSpalten().isEmpty())
+				srcManager.getConnection().migrationQueryAll(dtoClass);
+			return srcManager.getConnection().queryAll(dtoClass);
 		}
 
 		// Ansonsten muss ein angepasster SQL-String zusammengesetzt werden und die Daten müssen manuell in das DTO-Objekt übertragen werden...
@@ -645,25 +649,23 @@ public final class DBMigrationManager {
 					jpql += ")";
 				}
 			}
-			try (DBEntityManager srcConn = srcManager.getUser().getEntityManager()) {
-				final List<Object[]> entities = srcConn.query(jpql, Object[].class).getResultList();
-				final Constructor<?> constructor = dtoClass.getDeclaredConstructor();
-				constructor.setAccessible(true);
-				final ArrayList<Object> list = new ArrayList<>();
-				for (final Object[] obj : entities) {
-					final Object entity = constructor.newInstance();
-					int i = 0;
-					for (final Field f : fields)
-						f.set(entity, obj[i++]);
-					for (final Field f : missing_fields) {
-						final SchemaTabelleSpalte column =
-								tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
-						f.set(entity, (column == null) ? null : column.getDefaultWertConverted());
-					}
-					list.add(entity);
+			final List<Object[]> entities = srcManager.getConnection().query(jpql, Object[].class).getResultList();
+			final Constructor<?> constructor = dtoClass.getDeclaredConstructor();
+			constructor.setAccessible(true);
+			final ArrayList<Object> list = new ArrayList<>();
+			for (final Object[] obj : entities) {
+				final Object entity = constructor.newInstance();
+				int i = 0;
+				for (final Field f : fields)
+					f.set(entity, obj[i++]);
+				for (final Field f : missing_fields) {
+					final SchemaTabelleSpalte column =
+							tab.getSpalten(0).stream().filter(col -> col.javaAttributName().equals(f.getName())).findFirst().orElse(null);
+					f.set(entity, (column == null) ? null : column.getDefaultWertConverted());
 				}
-				return list;
+				list.add(entity);
 			}
+			return list;
 		} catch (PersistenceException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException e) {
 			lastError = e.getMessage();
@@ -679,57 +681,57 @@ public final class DBMigrationManager {
 	 * so lange versucht, bis einzelnen Entitäten nicht geschrieben werde können.
 	 *
 	 * @param entities   die zu schreibenden Entitäten
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private void write(final List<?> entities) {
-		try (DBEntityManager tgtConn = tgtManager.getUser().getEntityManager()) {
-			logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
-			logger.modifyIndent(2);
-			// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
-			int write_errors = 0;
-			final LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>();
-			for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
-				final int first = i * 10000;
-				int last = ((i + 1) * 10000) - 1;
-				if (last >= entities.size())
-					last = entities.size() - 1;
-				ranges.add(Map.entry(first, last));
-			}
-			while (!ranges.isEmpty()) {
-				final Map.Entry<Integer, Integer> range = ranges.removeFirst();
-				if (tgtConn.persistRange(entities, range.getKey(), range.getValue())) {
-					if (range.getKey().equals(range.getValue()))
-						logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
-								+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
-								+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
-								+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
-					else
-						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
-								+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
-								+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
-								+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+	private void write(final List<?> entities) throws DBException {
+		logger.logLn("- Schreibe " + entities.size() + " Datensätze: ");
+		logger.modifyIndent(2);
+		// Versuche zunächst in Blöcken von 10000 Datensätzen zu schreiben, diese werden je nach Erfolg später noch unterteilt...
+		int write_errors = 0;
+		final LinkedList<Map.Entry<Integer, Integer>> ranges = new LinkedList<>();
+		for (int i = 0; i <= ((entities.size() - 1) / 10000); i++) {
+			final int first = i * 10000;
+			int last = ((i + 1) * 10000) - 1;
+			if (last >= entities.size())
+				last = entities.size() - 1;
+			ranges.add(Map.entry(first, last));
+		}
+		while (!ranges.isEmpty()) {
+			final Map.Entry<Integer, Integer> range = ranges.removeFirst();
+			if (tgtManager.getConnection().persistRange(entities, range.getKey(), range.getValue())) {
+				if (range.getKey().equals(range.getValue()))
+					logger.logLn("Datensatz " + range.getKey() + " erfolgreich geschrieben. (Freier Speicher: "
+							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+				else
+					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue() + " erfolgreich geschrieben. (Freier Speicher: "
+							+ (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G/"
+							+ (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G)");
+			} else {
+				if (range.getKey().equals(range.getValue())) {
+					logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
+					logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
+					write_errors++;
 				} else {
-					if (range.getKey().equals(range.getValue())) {
-						logger.logLn(LogLevel.ERROR, "Datensatz " + range.getKey() + " konnte nicht geschrieben werden - Datensatz wird übersprungen.");
-						logger.logLn(LogLevel.ERROR, "[FEHLER] " + entities.get(range.getKey()));
-						write_errors++;
-					} else {
-						logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
-								+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
-						// Teile den Block auf
-						int step = ((range.getValue() - range.getKey()) + 1) / 10;
-						if (step < 1)
-							step = 1;
-						for (int last = range.getValue(); last >= range.getKey(); last -= step) {
-							final int first = (last - step) + 1;
-							ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
-						}
+					logger.logLn("Datensätze " + range.getKey() + "-" + range.getValue()
+							+ " konnten nicht geschrieben werden geschrieben - Teile den Block auf und versuche die Teilblöcke zu schreiben.");
+					// Teile den Block auf
+					int step = ((range.getValue() - range.getKey()) + 1) / 10;
+					if (step < 1)
+						step = 1;
+					for (int last = range.getValue(); last >= range.getKey(); last -= step) {
+						final int first = (last - step) + 1;
+						ranges.addFirst(Map.entry((first >= range.getKey()) ? first : range.getKey(), last));
 					}
 				}
 			}
-			logger.modifyIndent(-2);
-			logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
-			logger.modifyIndent(-2);
 		}
+		logger.modifyIndent(-2);
+		logger.logLn("" + (entities.size() - write_errors) + " Datensätze geschrieben, " + write_errors + " fehlerhafte Datensätze übersprungen.");
+		logger.modifyIndent(-2);
 	}
 
 
@@ -737,8 +739,10 @@ public final class DBMigrationManager {
 	 * Liest die Schulnummer aus der Quelldatenbank ein.
 	 *
 	 * @return true, falls die Schulnummer erfolgreich bestimmt wurde
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean readSchulnummer() {
+	private boolean readSchulnummer() throws DBException {
 		logger.logLn("Bestimme die Schulnummer aus EigeneSchule:");
 		logger.modifyIndent(2);
 		final List<?> tmpSchulen = readAllData(Schema.tab_EigeneSchule);
@@ -833,21 +837,22 @@ public final class DBMigrationManager {
 		}
 		final MigrationDTOEigeneSchule daten = entities.get(0);
 		// Passe ggf. das die Schulform an
-		if (daten.SchulformNr.equals(Schulform.PS.daten.nummer)) {
-			daten.Schulform = Schulform.PS.daten.kuerzel;
-			daten.SchulformBez = Schulform.PS.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.SK.daten.nummer)) {
-			daten.Schulform = Schulform.SK.daten.kuerzel;
-			daten.SchulformBez = Schulform.SK.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.GM.daten.nummer)) {
-			daten.Schulform = Schulform.GM.daten.kuerzel;
-			daten.SchulformBez = Schulform.GM.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.HI.daten.nummer)) {
-			daten.Schulform = Schulform.HI.daten.kuerzel;
-			daten.SchulformBez = Schulform.HI.daten.bezeichnung;
-		} else if (daten.SchulformNr.equals(Schulform.WF.daten.nummer)) {
-			daten.Schulform = Schulform.WF.daten.kuerzel;
-			daten.SchulformBez = Schulform.WF.daten.bezeichnung;
+		final Schulform schulformDB = Schulform.data().getWertBySchluessel(daten.SchulformNr);
+		if (schulformDB == Schulform.PS) {
+			daten.SchulformKuerzel = Schulform.PS.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.PS.daten(daten.Schuljahr).text;
+		} else if (schulformDB == Schulform.SK) {
+			daten.SchulformKuerzel = Schulform.SK.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.SK.daten(daten.Schuljahr).text;
+		} else if (schulformDB == Schulform.GM) {
+			daten.SchulformKuerzel = Schulform.GM.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.GM.daten(daten.Schuljahr).text;
+		} else if (schulformDB == Schulform.HI) {
+			daten.SchulformKuerzel = Schulform.HI.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.HI.daten(daten.Schuljahr).text;
+		} else if (schulformDB == Schulform.WF) {
+			daten.SchulformKuerzel = Schulform.WF.daten(daten.Schuljahr).kuerzel;
+			daten.SchulformBez = Schulform.WF.daten(daten.Schuljahr).text;
 		}
 		// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 		if (daten.Strasse != null) {
@@ -856,11 +861,12 @@ public final class DBMigrationManager {
 			daten.HausNr = aufgeteilt[1];
 			daten.HausNrZusatz = aufgeteilt[2];
 		}
-		if (daten.Schulform != null) {
-			schulform = Schulform.getByKuerzel(daten.Schulform);
+		if (daten.SchulformKuerzel != null) {
+			schulform = Schulform.data().getWertByKuerzel(daten.SchulformKuerzel);
+			schuljahr = daten.Schuljahr;
 		}
 		// Passe ggf. die Anzahl der Abschnitte bei WBKs an
-		if (daten.SchulformNr.equals(Schulform.WB.daten.nummer) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
+		if (daten.SchulformNr.equals(Schulform.WB.daten(daten.Schuljahr).schluessel) && (daten.AnzJGS_Jahr == 2) && (daten.AnzahlAbschnitte == 1)) {
 			logger.logLn(LogLevel.ERROR, "Passe die Anzahl der Abschnitte am Witerbildungskolleg an. Es gibt hier im Jahr 2 Abschnitte, wobei jeder"
 					+ " Abschnitt als Jahrgangsstufe zählt.");
 			daten.AnzahlAbschnitte = 2;
@@ -1230,8 +1236,8 @@ public final class DBMigrationManager {
 									.formatted(daten.ID));
 					daten.Schulgliederung = null;
 				} else {
-					final Schulgliederung sgl = Schulgliederung.getByKuerzel(daten.Schulgliederung);
-					if ((sgl == null) || (!sgl.hasSchulform(this.schulform))) {
+					final Schulgliederung sgl = Schulgliederung.data().getWertByKuerzel(daten.Schulgliederung);
+					if ((sgl == null) || (!sgl.hatSchulform(schuljahr, this.schulform))) {
 						logger.logLn(LogLevel.ERROR,
 								"Anpassung eines fehlerhaften Datensatzes(ID: %d): Die Lernabschnittsdaten haben einen ungültigen Schulgliederungs-Eintrag (%s). Dieser wird auf null gesetzt."
 										.formatted(daten.ID, daten.Schulgliederung));
@@ -1845,7 +1851,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchuelerLernplattform daten = entities.get(i);
 			if ((daten.SchuelerID == null) || (!schuelerIDs.contains(daten.SchuelerID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR,
+						"Entferne ungültigen Datensatz: Es gibt keinen Schüler mit der ID %d in der Datenbank.".formatted(daten.SchuelerID));
 				entities.remove(i);
 				continue;
 			}
@@ -1870,7 +1877,8 @@ public final class DBMigrationManager {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOErzieherLernplattform daten = entities.get(i);
 			if ((daten.ErzieherID == null) || (!erzieherIDs.contains(daten.ErzieherID))) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Es gibt keinen Erzieher mit der angebenen ID in der Datenbank.");
+				logger.logLn(LogLevel.ERROR,
+						"Entferne ungültigen Datensatz: Es gibt keinen Erzieher mit der ID %d in der Datenbank.".formatted(daten.ErzieherID));
 				entities.remove(i);
 				continue;
 			}
@@ -1895,19 +1903,40 @@ public final class DBMigrationManager {
 	private boolean checkSchueler(final List<MigrationDTOSchueler> entities) {
 		for (int i = entities.size() - 1; i >= 0; i--) {
 			final MigrationDTOSchueler daten = entities.get(i);
+			// Entferne Datensätze mit einer ungültigien ID
+			if (daten.ID < 1) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz: Die ID des Schüler muss größer als 0 sein, ist aber %d.".formatted(daten.ID));
+				entities.remove(i);
+				continue;
+			}
+//			// Schüler-Einträge ohne Namen sind unzulässig
+//			if (((daten.Nachname == null) || (daten.Nachname.isBlank())) && ((daten.Vorname == null) || (daten.Vorname.isBlank()))) {
+//				logger.logLn(LogLevel.ERROR,
+//						"Entferne ungültigen Datensatz: Der Schüler mit der ID %d hat weder Vor- noch Nachnamen gesetzt.".formatted(daten.ID));
+//				entities.remove(i);
+//				continue;
+//			}
 			// Füge GU_IDs zu der Tabelle Schueler hinzu falls diese NULL sind.
 			if ((daten.GU_ID == null) || ("".equals(daten.GU_ID)))
 				daten.GU_ID = "{" + UUID.randomUUID().toString() + "}";
+			if (schuelerGUIDs.contains(daten.GU_ID)) {
+				final String guid = "{" + UUID.randomUUID().toString() + "}";
+				logger.logLn(LogLevel.ERROR,
+						"Korrigiere Datensatz (ID %d): Der Schüler hat die GUID %s. Diese wird auch bei einem anderen Schüler verwendet und ist nicht eindeutig. Daher wird diese auf %s gesetzt."
+								.formatted(daten.ID, daten.GU_ID, guid));
+				daten.GU_ID = guid;
+			}
+			schuelerGUIDs.add(daten.GU_ID);
 			if ((daten.Fachklasse_ID != null) && (!fachklassenIDs.contains(daten.Fachklasse_ID))) {
 				logger.logLn(LogLevel.ERROR, "Korrigiere Datensatz (ID %d): Der Schüler hat eine ungültige Fachklassen-ID %d. Diese wird auf null gesetzt."
 						.formatted(daten.ID, daten.Fachklasse_ID));
 				daten.Fachklasse_ID = null;
 			}
-			if (!SchuelerStatus.isValidID(daten.Status)) {
+			if (SchuelerStatus.data().getWertBySchluessel("" + daten.idStatus) == null) {
 				logger.logLn(LogLevel.ERROR,
 						"Korrigiere Datensatz (ID %d): Der Schüler-Status (%d) is ungültig. Dieser wird auf Neuaufnahme gesetzt. Bitte überprüfen Sie die Neuaufnahmen nach der Migration."
-								.formatted(daten.ID, daten.Status));
-				daten.Status = SchuelerStatus.NEUAUFNAHME.id;
+								.formatted(daten.ID, daten.idStatus));
+				daten.idStatus = Integer.valueOf(SchuelerStatus.NEUAUFNAHME.daten(schuljahr).schluessel);
 			}
 			// Splitte die Strasseninformation in Name, Hausnummer und Zusatz
 			if (daten.Strasse != null) {
@@ -2010,19 +2039,19 @@ public final class DBMigrationManager {
 			if ((daten.Schueler_ID == null) || (!schuelerIDs.contains(daten.Schueler_ID))) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Schüler mit der angebenen ID (%d) in der Datenbank."
-								.formatted(daten.ID, daten.Schueler_ID));
+								.formatted(daten.id, daten.Schueler_ID));
 				entities.remove(i);
 				continue;
 			}
-			if ((daten.Abschnitt_ID == null) || (!schuelerLeistungsdatenIDs.contains(daten.Abschnitt_ID))) {
+			if ((daten.idLernabschnitt == null) || (!schuelerLeistungsdatenIDs.contains(daten.idLernabschnitt))) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Es gibt keinen Lernabschnitt mit der ID %d in der Datenbank."
-								.formatted(daten.ID, daten.Abschnitt_ID));
+								.formatted(daten.id, daten.idLernabschnitt));
 				entities.remove(i);
 				continue;
 			}
-			if (daten.KategorieID == null) {
-				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Kategorie muss zugeordnet sein.".formatted(daten.ID));
+			if (daten.idKategorie == null) {
+				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz in SchuelerKAoADaten (ID %d): Kategorie muss zugeordnet sein.".formatted(daten.id));
 				entities.remove(i);
 			}
 		}
@@ -2127,25 +2156,30 @@ public final class DBMigrationManager {
 			} else if (faecherIDs.contains(daten.ID)) {
 				logger.logLn(LogLevel.ERROR, "Entferne ungültigen Datensatz (ID %d): Doppelte Fächer-IDs sind unzulässig.".formatted(daten.ID));
 				entities.remove(i);
-			} else if (daten.StatistikFach == null) {
+			} else if (daten.StatistikKuerzel == null) {
 				logger.logLn(LogLevel.ERROR,
 						"Entferne ungültigen Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Dieses darf nicht null sein."
 								.formatted(daten.ID));
 				entities.remove(i);
 			} else {
-				if (Collator.getInstance().compare("E5", daten.StatistikFach) == 0) {
+				if (Collator.getInstance().compare("E5", daten.StatistikKuerzel) == 0) {
 					logger.logLn(LogLevel.ERROR,
 							"Korrigiere fehlerhaften Datensatz (ID %d): Ändere Das Statistik-Kürzel des Faches von E5 auf E.".formatted(daten.ID));
-					daten.StatistikFach = "E";
+					daten.StatistikKuerzel = "E";
 				}
-				final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(daten.StatistikFach);
+				if (Collator.getInstance().compare("CO", daten.StatistikKuerzel) == 0) {
+					logger.logLn(LogLevel.ERROR,
+							"Korrigiere fehlerhaften Datensatz (ID %d): Ändere Das Statistik-Kürzel des Faches von CO auf MU.".formatted(daten.ID));
+					daten.StatistikKuerzel = "MU";
+				}
+				final Fach zulFach = Fach.data().getWertBySchluessel(daten.StatistikKuerzel);
 				if (zulFach == null) {
 					logger.logLn(LogLevel.ERROR,
-							"Entferne ungültigen Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt."
-									.formatted(daten.ID, daten.StatistikFach));
-					entities.remove(i);
-				} else
-					faecherIDs.add(daten.ID);
+							"Korrigiere fehlerhaften Datensatz (ID %d): Ein Fach muss ein gültiges Statistik-Kürzel haben. Das Kürzel %s ist unbekannt. Setze stattdessen den Wert VF."
+									.formatted(daten.ID, daten.StatistikKuerzel));
+					daten.StatistikKuerzel = "VF";
+				}
+				faecherIDs.add(daten.ID);
 			}
 		}
 		for (int i = entities.size() - 1; i >= 0; i--) {
@@ -2320,8 +2354,10 @@ public final class DBMigrationManager {
 	 * Dies wird innerhalb dieser Klasse auch so angelegt.
 	 *
 	 * @return true, falls die Daten erfolgreich kopiert wurden und sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean copy() {
+	private boolean copy() throws DBException {
 		// Lese die Schulnummer aus
 		if (!readSchulnummer())
 			return false;
@@ -2373,46 +2409,46 @@ public final class DBMigrationManager {
 
 	/**
 	 * Konvertiert am Ende der Migration die Bilder in der Zieldatenbank in die Base64-Kodierung.
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private void convertImages() {
-		try (DBEntityManager conn = tgtManager.getUser().getEntityManager()) {
-			final String strLogBilderAnzahl = "%d Bilder";
-			logger.log("* Tabelle EigeneSchule...");
-			final List<MigrationDTOEigeneSchule> es_in = conn.queryAll(MigrationDTOEigeneSchule.class);
-			final List<MigrationDTOEigeneSchule> es_out = es_in.stream()
-					.filter(es -> {
-						if (es.SchulLogo == null)
-							return false;
-						es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
-						return true;
-					}).toList();
-			conn.persistAll(es_out);
-			logger.logLn(strLogBilderAnzahl.formatted(es_out.size()));
+	private void convertImages() throws DBException {
+		final String strLogBilderAnzahl = "%d Bilder";
+		logger.log("* Tabelle EigeneSchule...");
+		final List<MigrationDTOEigeneSchule> es_in = tgtManager.getConnection().queryAll(MigrationDTOEigeneSchule.class);
+		final List<MigrationDTOEigeneSchule> es_out = es_in.stream()
+				.filter(es -> {
+					if (es.SchulLogo == null)
+						return false;
+					es.SchulLogoBase64 = Base64.getEncoder().encodeToString(es.SchulLogo);
+					return true;
+				}).toList();
+		tgtManager.getConnection().persistAll(es_out);
+		logger.logLn(strLogBilderAnzahl.formatted(es_out.size()));
 
-			logger.log("* Tabelle LehrerFoto...");
-			final List<MigrationDTOLehrerFoto> lf_in = conn.queryAll(MigrationDTOLehrerFoto.class);
-			final List<MigrationDTOLehrerFoto> lf_out = lf_in.stream()
-					.filter(lf -> {
-						if (lf.Foto == null)
-							return false;
-						lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
-						return true;
-					}).toList();
-			conn.persistAll(lf_out);
-			logger.logLn(strLogBilderAnzahl.formatted(lf_out.size()));
+		logger.log("* Tabelle LehrerFoto...");
+		final List<MigrationDTOLehrerFoto> lf_in = tgtManager.getConnection().queryAll(MigrationDTOLehrerFoto.class);
+		final List<MigrationDTOLehrerFoto> lf_out = lf_in.stream()
+				.filter(lf -> {
+					if (lf.Foto == null)
+						return false;
+					lf.FotoBase64 = Base64.getEncoder().encodeToString(lf.Foto);
+					return true;
+				}).toList();
+		tgtManager.getConnection().persistAll(lf_out);
+		logger.logLn(strLogBilderAnzahl.formatted(lf_out.size()));
 
-			logger.log("* Tabelle SchuelerFoto...");
-			final List<MigrationDTOSchuelerFoto> sf_in = conn.queryAll(MigrationDTOSchuelerFoto.class);
-			final List<MigrationDTOSchuelerFoto> sf_out = sf_in.stream()
-					.filter(sf -> {
-						if (sf.Foto == null)
-							return false;
-						sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
-						return true;
-					}).toList();
-			conn.persistAll(sf_out);
-			logger.logLn(strLogBilderAnzahl.formatted(sf_out.size()));
-		}
+		logger.log("* Tabelle SchuelerFoto...");
+		final List<MigrationDTOSchuelerFoto> sf_in = tgtManager.getConnection().queryAll(MigrationDTOSchuelerFoto.class);
+		final List<MigrationDTOSchuelerFoto> sf_out = sf_in.stream()
+				.filter(sf -> {
+					if (sf.Foto == null)
+						return false;
+					sf.FotoBase64 = Base64.getEncoder().encodeToString(sf.Foto);
+					return true;
+				}).toList();
+		tgtManager.getConnection().persistAll(sf_out);
+		logger.logLn(strLogBilderAnzahl.formatted(sf_out.size()));
 	}
 
 }

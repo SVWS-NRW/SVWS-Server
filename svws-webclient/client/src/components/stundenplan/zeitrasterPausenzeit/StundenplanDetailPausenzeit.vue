@@ -1,15 +1,15 @@
 <template>
-	<svws-ui-content-card :title="`Pause am ${Wochentag.fromIDorException(item.wochentag)}`">
-		<div v-if="!item.klassen.isEmpty()" class="text-sm -mt-1 mb-3 opacity-70 font-bold">Klassen:  {{ [...item.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
+	<svws-ui-content-card :title="`Pause am ${Wochentag.fromIDorException(selected.wochentag)}`">
+		<div v-if="!selected.klassen.isEmpty()" class="text-sm -mt-1 mb-3 opacity-70 font-bold">Klassen:  {{ [...selected.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 		<svws-ui-input-wrapper :grid="2">
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.beginn ?? 0)" required placeholder="Pausenbeginn" @change="patchBeginn" />
-			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(item.ende ?? 0)" placeholder="Pausenende" @change="patchEnde" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(selected.beginn ?? 0)" required placeholder="Pausenbeginn" @change="patchBeginn" />
+			<svws-ui-text-input :model-value="DateUtils.getStringOfUhrzeitFromMinuten(selected.ende ?? 0)" placeholder="Pausenende" @change="patchEnde" />
 			<div class="col-span-full">
-				<svws-ui-button type="danger" @click="removePausenzeiten([item])"> Pause entfernen </svws-ui-button>
+				<svws-ui-button type="danger" @click="removePausenzeiten([selected])"> Pause entfernen </svws-ui-button>
 			</div>
 		</svws-ui-input-wrapper>
 		<svws-ui-spacing :size="2" />
-		<svws-ui-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(item.id)" :columns="getColumns()">
+		<svws-ui-table :items="stundenplanManager().pausenaufsichtGetMengeByPausenzeitId(selected.id)" :columns="getColumns()">
 			<template #cell(id)="{ rowData }">
 				{{ stundenplanManager().lehrerGetByIdOrException(rowData.idLehrer).kuerzel }}
 			</template>
@@ -27,16 +27,15 @@
 <script setup lang="ts">
 
 	import { computed } from "vue";
-	import type { LehrerListeEintrag, List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit } from "@core";
+	import type { LehrerListeEintrag, List, StundenplanManager, StundenplanPausenzeit } from "@core";
 	import { DateUtils, Wochentag } from "@core";
 
 	const props = defineProps<{
-		item: StundenplanPausenzeit;
+		selected: StundenplanPausenzeit;
 		stundenplanManager: () => StundenplanManager;
 		patchPausenzeit: (data: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 		removePausenzeiten: (multi: Iterable<StundenplanPausenzeit>) => Promise<void>;
 		listLehrer: List<LehrerListeEintrag>;
-		listAufsichtsbereiche: List<StundenplanAufsichtsbereich>;
 	}>();
 
 	const hatWochentypen = computed<boolean>(() => (props.stundenplanManager().getWochenTypModell() > 0));
@@ -51,18 +50,18 @@
 		return cols;
 	}
 
-	async function patchBeginn(event: string | number) {
-		if (typeof event === 'number')
+	async function patchBeginn(event: string | null) {
+		if (event === null)
 			return;
 		const beginn = DateUtils.gibMinutenOfZeitAsString(event);
-		await props.patchPausenzeit({beginn}, props.item.id);
+		await props.patchPausenzeit({ beginn }, props.selected.id);
 	}
 
-	async function patchEnde(event: string | number) {
-		if (typeof event === 'number')
+	async function patchEnde(event: string | null) {
+		if (event === null)
 			return;
 		const ende = DateUtils.gibMinutenOfZeitAsString(event);
-		await props.patchPausenzeit({ende}, props.item.id);
+		await props.patchPausenzeit({ ende }, props.selected.id);
 	}
 
 </script>

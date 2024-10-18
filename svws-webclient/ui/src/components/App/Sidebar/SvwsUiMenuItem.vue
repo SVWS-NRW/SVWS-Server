@@ -5,7 +5,7 @@
 		'sidebar--menu-item--disabled': disabled,
 		'sidebar--menu-item--statistik': hatlabel === 'Statistik' || statistik,
 	}" href="#" @click.prevent="onClick"
-		:title="disabled ? 'Nicht verfügbar' : hatlabel">
+		:title="disabled ? 'Nicht verfügbar' : hatlabel" ref="menuLink">
 		<span v-if="$slots.icon" class="sidebar--menu-item--icon">
 			<slot name="icon" />
 		</span>
@@ -19,7 +19,10 @@
 </template>
 
 <script setup lang='ts'>
-	import { computed, useSlots } from 'vue';
+
+	import { computed, useSlots, onMounted, ref, watch } from 'vue';
+
+	const menuLink = ref<HTMLElement>();
 
 	const props = withDefaults(defineProps<{
 		active?: boolean;
@@ -27,29 +30,42 @@
 		disabled?: boolean;
 		subline?: string;
 		statistik?: boolean;
+		focus?: boolean;
 	}>(), {
 		active: false,
 		collapsed: false,
 		disabled: false,
 		subline: '',
 		statistik: false,
+		focus: false,
 	});
 
 	const emit = defineEmits<{
 		(e: 'click', event: MouseEvent): void;
 	}>();
 
+	onMounted(() => doFocus());
+
+	watch(() => props.focus, () => doFocus());
+
+	function doFocus() {
+		if (props.focus && menuLink.value)
+			menuLink.value.focus();
+	}
+
 	function onClick(event: MouseEvent) {
 		emit("click", event);
 	}
 
 	const slots = useSlots();
-	const hatlabel = computed(()=> {
+
+	const hatlabel = computed(() => {
 		const label = slots.label?.()
-		if (label && label.length > 0 && label[0].children)
-			return label[0].children.toString();
+		if ((label !== undefined) && (label.length > 0) && (typeof label[0].children === 'string'))
+			return label[0].children;
 		return "";
-	})
+	});
+
 </script>
 
 <style lang="postcss">

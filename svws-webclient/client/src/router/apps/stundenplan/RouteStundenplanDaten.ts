@@ -6,13 +6,16 @@ import { routeStundenplan, type RouteStundenplan } from "~/router/apps/stundenpl
 
 import type { StundenplanDatenProps } from "~/components/stundenplan/daten/SStundenplanDatenProps";
 import { routeApp } from "../RouteApp";
+import { api } from "~/router/Api";
 
 const SStundenplanDaten = () => import("~/components/stundenplan/daten/SStundenplanDaten.vue");
 
 export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.daten", "daten", SStundenplanDaten);
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+		], "stundenplan.daten", "daten", SStundenplanDaten);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Grunddaten";
@@ -27,6 +30,9 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanDatenProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patch: routeStundenplan.data.patch,
 			patchRaum: routeStundenplan.data.patchRaum,
@@ -48,6 +54,7 @@ export class RouteStundenplanDaten extends RouteNode<any, RouteStundenplan> {
 			importAufsichtsbereiche: routeStundenplan.data.importAufsichtsbereiche,
 			listAufsichtsbereiche: () => routeStundenplan.data.listAufsichtsbereiche,
 			gotoKatalog: routeStundenplan.data.gotoKatalog,
+			setSettingsDefaults: routeStundenplan.data.setSettingsDefaults,
 		};
 	}
 

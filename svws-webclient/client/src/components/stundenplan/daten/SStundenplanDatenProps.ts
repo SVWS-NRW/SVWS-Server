@@ -1,6 +1,10 @@
-import type { JahrgangsDaten, List, Raum, Stundenplan, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
+import type { BenutzerKompetenz, JahrgangsDaten, List, Raum, Schulform, ServerMode, Stundenplan, StundenplanAufsichtsbereich, StundenplanKonfiguration, StundenplanManager, StundenplanPausenzeit, StundenplanRaum } from "@core";
+import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanDatenProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patch: (daten: Partial<Stundenplan>) => Promise<void>;
 	patchRaum: (daten: Partial<StundenplanRaum>, id: number) => Promise<void>;
@@ -21,5 +25,6 @@ export interface StundenplanDatenProps {
 	removeAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
 	importAufsichtsbereiche: (aufsichtsbereiche: StundenplanAufsichtsbereich[]) => Promise<void>;
 	listAufsichtsbereiche: () => List<StundenplanAufsichtsbereich>;
-	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
+	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<RoutingStatus>;
+	setSettingsDefaults: (value: StundenplanKonfiguration) => Promise<void>;
 }

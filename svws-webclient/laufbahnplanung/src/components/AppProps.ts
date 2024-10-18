@@ -1,8 +1,8 @@
-import type { AuswahlChildData } from "./AuswahlChildData";
+import type { TabData } from "../../../ui/src/components/App/TabData";
 
 export interface AppProps {
-	setApp:  (value: AuswahlChildData) => Promise<void>;
-	app: AuswahlChildData;
-	apps: AuswahlChildData[];
+	setApp: (value: TabData) => Promise<void>;
+	app: TabData;
+	apps: TabData[];
 	appsHidden: boolean[];
 }

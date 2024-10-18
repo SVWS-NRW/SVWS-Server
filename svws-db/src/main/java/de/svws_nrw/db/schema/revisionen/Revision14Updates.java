@@ -22,7 +22,7 @@ public class Revision14Updates extends SchemaRevisionUpdateSQL {
 	private void updateENMZeitstempel() {
 		add("Aktualisisere die Zeitstempel für die ENM-Teilleistungen",
 				"INSERT INTO " + Schema.tab_EnmTeilleistungen.name() + "(ID, tsDatum, tsLehrer_ID, tsArt_ID, tsBemerkung, tsNotenKrz)"
-						+ "SELECT id, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
+						+ "SELECT ID, CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3), CURTIME(3) FROM "
 						+ Schema.tab_SchuelerEinzelleistungen.name() + " WHERE ID NOT IN (SELECT ID FROM " + Schema.tab_EnmTeilleistungen.name() + ");",
 				Schema.tab_EnmTeilleistungen, Schema.tab_SchuelerEinzelleistungen
 		);

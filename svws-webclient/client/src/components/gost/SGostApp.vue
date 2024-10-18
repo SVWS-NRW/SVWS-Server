@@ -3,16 +3,31 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<h2 class="svws-headline">
-						<span>{{ bezeichnung_abiturjahr }}</span>
-					</h2>
+					<template v-if="props.gruppenprozesseEnabled">
+						<h2 class="svws-headline"> Gruppenprozesse für die Abiturjahrgänge </h2>
+						<span class="svws-subline"> {{ selected().map(jg => "" + jg.abiturjahr).join(", ") }}</span>
+					</template>
+					<template v-else-if="props.creationModeEnabled">
+						<h2 class="svws-headline"> Anlegen von Abiturjahrgängen... </h2>
+						<span class="svws-subline">&nbsp;</span>
+					</template>
+					<template v-else>
+						<template v-if="(auswahl === undefined) || (auswahl.abiturjahr < 0)">
+							<h2 class="svws-headline"> {{ bezeichnung_abiturjahr }} </h2>
+							<span class="svws-subline">&nbsp;</span>
+						</template>
+						<template v-else>
+							<h2 class="svws-headline"> Abiturjahrgang {{ auswahl.abiturjahr }} </h2>
+							<span class="svws-subline"> Jahrgang {{ auswahl.jahrgang }}, {{ schuljahresabschnitt().abschnitt }}.Halbjahr </span>
+						</template>
+					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab" :class="`router--tab--${tab.name} router--tab--${tab.name.replace('.', '_')}`">
+		<svws-ui-tab-bar :tab-manager :class="`router--tab--${tabManager().tab.name} router--tab--${tabManager().tab.name.replace('.', '_')}`">
 			<router-view />
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</template>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-graduation-cap-line" />
@@ -26,9 +41,7 @@
 
 	const props = defineProps<GostAppProps>();
 
-	const bezeichnung_abiturjahr = computed<string | undefined>(() => {
-		return props.auswahl?.bezeichnung ?? undefined;
-	});
+	const bezeichnung_abiturjahr = computed(() => props.auswahl?.bezeichnung);
 
 </script>
 

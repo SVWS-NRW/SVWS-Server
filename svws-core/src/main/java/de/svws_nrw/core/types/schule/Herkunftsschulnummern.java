@@ -3,7 +3,9 @@ package de.svws_nrw.core.types.schule;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.schule.HerkunftsschulnummerKatalogEintrag;
 import jakarta.validation.constraints.NotNull;
 

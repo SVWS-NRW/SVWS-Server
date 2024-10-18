@@ -2,32 +2,36 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostSchuelerklausurterminraumstunde } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurterminraumstunde';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 import { GostKlausurraumstunde } from '../../../../core/data/gost/klausurplanung/GostKlausurraumstunde';
 
 export class GostKlausurenCollectionRaumData extends JavaObject {
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Ein Array mit den Klausurräumen.
 	 */
 	public raeume : List<GostKlausurraum> = new ArrayList<GostKlausurraum>();
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Ein Array mit den Klausurraumstunden.
 	 */
 	public raumstunden : List<GostKlausurraumstunde> = new ArrayList<GostKlausurraumstunde>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Ein Array mit den Schülerklausurtermin-Raumstunden.
 	 */
 	public sktRaumstunden : List<GostSchuelerklausurterminraumstunde> = new ArrayList<GostSchuelerklausurterminraumstunde>();
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Ein Array mit den IDs der Klausurtermine, zu denen Raumdaten enthalten sind.
 	 */
 	public idsKlausurtermine : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -39,6 +43,8 @@ export class GostKlausurenCollectionRaumData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionRaumData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionRaumData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionRaumData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionRaumData>;

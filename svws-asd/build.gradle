@@ -1,0 +1,64 @@
+configurations {
+	implementation.extendsFrom(jackson, resteasy, validation, swagger)
+	transpiler
+} 
+
+dependencies {
+	implementation project(':svws-transpile')
+	
+	transpiler fileTree(dir: "$projectDir/src/main/java", includes: ['**/svws_nrw/asd/**/*.java' ],
+			excludes: ['**/svws_nrw/asd/utils/json/**/*.java', '**/svws_nrw/asd/utils/ASDCoreTypeUtils.java', '**/svws_nrw/asd/utils/CoreTypeRessource.java'] )
+}
+
+task cleanTranspiled(type: Delete) {
+	group "build"
+	delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
+}
+
+task prepareTranspile {
+	doLast {
+		file("$buildDir/transpiler-files.txt").text = configurations.transpiler.files.toString().replace("[", "").replace("]", "").trim()
+	}
+	group "build"
+	dependsOn compileJava
+	inputs.files configurations.transpiler
+	outputs.files "$buildDir/transpiler-files.txt"
+}
+
+task transpile(type: JavaExec) {
+	group "build"
+	dependsOn compileJava
+	dependsOn prepareTranspile
+	dependsOn project(':svws-transpile').tasks.assemble
+	doFirst {
+		delete fileTree(dir: "$buildDir/ts"), fileTree(dir: "$buildDir/tmp/transpiler/ts", includes: ["**/*.class"])
+	}
+	inputs.files "$buildDir/transpiler-files.txt", configurations.transpiler.files
+	outputs.dir "$buildDir/ts"
+	description = "Transpiliert den Java-Code nach Typescript"
+	classpath = sourceSets.main.runtimeClasspath.plus(project(":svws-transpile").sourceSets.main.runtimeClasspath)
+	mainClass = "de.svws_nrw.transpiler.app.TranspileTs"
+	args "--output", "$buildDir/ts",
+		"--ignore", "de.svws_nrw",
+		"--tmpdir", "$buildDir/tmp/transpiler/ts",
+		"--files", "$buildDir/transpiler-files.txt"
+	jvmArgs "--add-opens", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED"
+}
+
+assemble.dependsOn transpile
+
+
+apply from: "$rootDir/publish-helper.gradle"
+
+publishing {
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-asd'
+      pom {
+        name = 'SVWS ASD Library'
+        description = 'Diese Bibliothek stellt grundlegende Datenypen und Algorithmen für die Prüfung der amtlichen Schuldaten in NRW bereit'
+      }
+    }
+  }
+}
+

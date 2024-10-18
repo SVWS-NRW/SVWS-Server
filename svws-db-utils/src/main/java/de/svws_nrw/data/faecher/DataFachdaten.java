@@ -2,6 +2,7 @@ package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.ObjLongConsumer;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -43,7 +44,7 @@ public final class DataFachdaten extends DataManager<Long> {
 		final FachDaten daten = new FachDaten();
 		daten.id = f.ID;
 		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
-		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
+		daten.kuerzelStatistik = f.StatistikKuerzel;
 		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
 		daten.istOberstufenFach = f.IstOberstufenFach;
 		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
@@ -92,20 +93,41 @@ public final class DataFachdaten extends DataManager<Long> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Map<Long, FachDaten> getFaecherdaten() throws ApiOperationException {
+		return getFaecherdatenFromList(conn.queryAll(DTOFach.class));
+	}
+
+	/**
+	 * Erstellt eine Map auf Basis einer Liste mit Fach-DTO, die alle Fächer als Fachdaten-Objekte zur Fach-ID enthält.
+	 *
+	 * @param listFaecher Liste der Fach-DTOs, aus denen die Map erstellt werden soll.
+	 *
+	 * @return Map der Fachdaten zur Fach-ID.
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Map<Long, FachDaten> getFaecherdatenFromList(final List<DTOFach> listFaecher) throws ApiOperationException {
 		final Map<Long, FachDaten> mapFaecher = new HashMap<>();
-		for (final DTOFach f : conn.queryAll(DTOFach.class))
-			mapFaecher.put(f.ID, dtoMapperFach.apply(f));
+		if ((listFaecher != null) && !listFaecher.isEmpty()) {
+			for (final DTOFach f : listFaecher) {
+				if (f != null)
+					mapFaecher.put(f.ID, dtoMapperFach.apply(f));
+			}
+		}
 		return mapFaecher;
 	}
 
 	/**
 	 * Erstellt eine Map, die die GOSt-Daten aller Fach-Einträge der DB als GostFach-Objekte zur Fach-ID enthält.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches die Daten bestimmt werden sollen
+	 *
 	 * @return Map der GOSt-Daten aller Fächer der DB zur Fach-ID.
 	 */
-	public Map<Long, GostFach> getFaecherGostdaten() {
+	public Map<Long, GostFach> getFaecherGostdaten(final int schuljahr) {
 		final Map<Long, DTOFach> faecher = conn.queryAll(DTOFach.class).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
-		return faecher.values().stream().collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(f, faecher)));
+		return faecher.values().stream().collect(Collectors.toMap(f -> f.ID, f -> DBUtilsFaecherGost.mapFromDTOFach(schuljahr, f, faecher)));
 	}
+
 
 	private static final Map<String, DataBasicMapper<DTOFach>> patchMappings = Map.ofEntries(
 			Map.entry("id", (conn, dto, value, map) -> {
@@ -115,10 +137,11 @@ public final class DataFachdaten extends DataManager<Long> {
 			}),
 			Map.entry("kuerzel", (conn, dto, value, map) -> dto.Kuerzel = JSONMapper.convertToString(value, false, false, 20)),
 			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-				final ZulaessigesFach f = ZulaessigesFach.getByKuerzelASD(JSONMapper.convertToString(value, false, false, 2));
+				final String fachKuerzel = JSONMapper.convertToString(value, false, false, 2);
+				final Fach f = Fach.data().getWertBySchluessel(fachKuerzel);
 				if (f == null)
 					throw new ApiOperationException(Status.BAD_REQUEST);
-				dto.StatistikFach = f;
+				dto.StatistikKuerzel = fachKuerzel;
 			}),
 			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.Bezeichnung = JSONMapper.convertToString(value, false, true, 255)),
 			Map.entry("istPruefungsordnungsRelevant", (conn, dto, value, map) -> dto.IstPruefungsordnungsRelevant = JSONMapper.convertToBoolean(value, false)),

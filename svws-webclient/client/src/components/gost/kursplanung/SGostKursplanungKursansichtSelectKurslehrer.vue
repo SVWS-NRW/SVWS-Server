@@ -36,9 +36,7 @@
 	const kurslehrer = computed<List<LehrerListeEintrag>>(() => {
 		const liste = props.getDatenmanager().kursGetLehrkraefteSortiert(props.kurs.id);
 		const tmp = new ArrayList<GostBlockungKursLehrer>(liste);
-		tmp.sort({ compare(a : GostBlockungKursLehrer, b : GostBlockungKursLehrer) {
-			return a.reihenfolge - b.reihenfolge;
-		}});
+		tmp.sort({ compare: (a, b) => a.reihenfolge - b.reihenfolge });
 		const result = new ArrayList<LehrerListeEintrag>();
 		for (const l of tmp) {
 			const lehrer = props.mapLehrer.get(l.id);

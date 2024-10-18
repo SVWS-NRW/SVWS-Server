@@ -9,7 +9,7 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 
 import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
-import {api} from "~/router/Api";
+import { api } from "~/router/Api";
 
 const SStatistikAuswahl = () => import("~/components/statistik/SStatistikAuswahl.vue")
 const SStatistikApp = () => import("~/components/statistik/SStatistikApp.vue")

@@ -5,8 +5,8 @@
 		<template #hilfe>
 			Zum Start auf „Berechnung starten“ klicken. Sobald die Bedingungen erfüllt sind,
 			<br>mit denen die Berechnung durchgeführt wird, wird die Berechnung abgebrochen.
-			<br>Alternativ kann die Berechnung durch das Anklicken des Berechnung pausieren“ Knopfes unterbrochen werden.
-			<br>Die Ergebnisse können anschließend auf Wunsch in die Datenbank importiert werden.
+			<br>Alternativ kann die Berechnung durch das Anklicken des „Berechnung pausieren“ Knopfes unterbrochen werden.
+			<br>Die ausgewählten Ergebnisse können anschließend in die Datenbank importiert werden.
 			<br>Der „Abbrechen“ Knopf beendet und löscht alle Berechnungen.
 		</template>
 		<template #modalDescription>
@@ -28,7 +28,7 @@
 			<div class="text-left pb-4 flex flex-row">
 				<svws-ui-checkbox :model-value="ausfuehrlicheDarstellungKursdifferenz()" @update:model-value="setAusfuehrlicheDarstellungKursdifferenz">Ausführliche Darstellung für Kursdifferenz verwenden</svws-ui-checkbox>
 			</div>
-			<svws-ui-table clickable v-model="selected" :selectable="items.size() > 0 && !running" class="z-20 relative" :columns :items :count="!items.isEmpty()">
+			<svws-ui-table v-if="!items.isEmpty()" clickable v-model="selected" :selectable="!running" class="z-20 relative" :columns :items count>
 				<template #cell(wert1)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip v-if="listErgebnismanager.get(rowIndex).getOfBewertung1Wert() > 0" autosize>
@@ -54,14 +54,14 @@
 				<template #cell(wert3)="{ rowIndex }">
 					<div class="table-cell">
 						<svws-ui-tooltip autosize>
-							<template class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
+							<div class="svws-ui-badge min-w-[2.75rem] px-2 text-center " :class="ausfuehrlicheDarstellungKursdifferenz() ? ['justify-between flex gap-1']:['justify-center']" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode())}">
 								<template v-if="ausfuehrlicheDarstellungKursdifferenz()">
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_LK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_LK() }} </span>
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_GK())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_GK() }} </span>
 									<span class="svws-ui-badge min-w-12 text-center justify-center" :style="{'background-color': getBewertungColor(listErgebnismanager.get(rowIndex).getOfBewertung3Farbcode_nur_REST())}"> {{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert_nur_REST() }} </span>
 								</template>
 								<span v-else>{{ listErgebnismanager.get(rowIndex).getOfBewertung3Wert() }}</span>
-							</template>
+							</div>
 							<template #content>
 								<pre>{{ listErgebnismanager.get(rowIndex).regelGetTooltipFuerKursdifferenzen() }}</pre>
 							</template>
@@ -84,8 +84,9 @@
 				<template v-if="workerManager !== undefined">
 					<svws-ui-button v-if="!running" type="primary" @click="berechne">{{ (workerManager.isInitialized() === false) ? 'Berechnung starten' : 'Berechnung fortsetzen' }}</svws-ui-button>
 					<svws-ui-button v-else type="primary" @click="pause"><svws-ui-spinner spinning />&nbsp;Berechnung pausieren</svws-ui-button>
-					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="selected.length === 0">
-						<span class="icon i-ri-download-2-line" />
+					<svws-ui-button v-if="selected.length > 0" @click="ergebnisseUebernehmen" type="secondary" :disabled="(selected.length === 0) || pending">
+						<span v-if="!pending" class="icon i-ri-download-2-line" />
+						<svws-ui-spinner v-else spinning />
 						<span>{{ selected.length }} {{ selected.length !== 1 ? 'Ergebnisse' : 'Ergebnis' }} importieren und beenden</span>
 					</svws-ui-button>
 					<svws-ui-button v-if="!nachfragen" type="danger" @click="items.size() > 0 ? nachfragen = true : closeModal()">Abbrechen</svws-ui-button>
@@ -104,7 +105,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, shallowRef, watch } from 'vue';
+	import { computed, ref, shallowRef, toRaw, watch } from 'vue';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungsergebnis, List } from "@core";
 	import { ArrayList } from "@core";
 	import { WorkerManagerKursblockung } from './WorkerManagerKursblockung';
@@ -114,6 +115,7 @@
 		addErgebnisse: (ergebnisse: List<GostBlockungsergebnis>) => Promise<void>;
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
+		mapCoreTypeNameJsonData: () => Map<string, string>;
 	}>();
 
 	const columns = [
@@ -135,10 +137,11 @@
 			selected.value = [];
 		}
 		if (neu === true)
-			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager());
+			workerManager.value = new WorkerManagerKursblockung(props.getDatenmanager(), toRaw(props.mapCoreTypeNameJsonData()));
 	});
 
 	const selected = ref<GostBlockungsergebnis[]>([]);
+	const pending = ref<boolean>(false);
 
 	const running = computed<boolean>(() => workerManager.value?.isRunning() ?? false);
 
@@ -172,12 +175,12 @@
 	}
 
 	async function berechne() {
-		if (workerManager.value !== undefined) {
-			if (!workerManager.value.isInitialized())
-				workerManager.value.init();
-			workerManager.value.interval = 100;
-			workerManager.value.start();
-		}
+		if (workerManager.value === undefined)
+			return;
+		if (!workerManager.value.isInitialized())
+			workerManager.value.init();
+		workerManager.value.interval = 100;
+		workerManager.value.start();
 	}
 
 	async function pause() {
@@ -189,19 +192,27 @@
 	async function ergebnisseUebernehmen() {
 		if (selected.value.length === 0)
 			return;
+		pending.value = true;
 		const ergebnisse = new ArrayList<GostBlockungsergebnis>();
 		for (const ergebnis of selected.value)
 			ergebnisse.add(ergebnis);
 		await props.addErgebnisse(ergebnisse);
+		pending.value = false;
 		closeModal();
 	}
 
 	function getBewertungColor(farbcode: number) : string {
-		const h = Math.round((1 - (farbcode || 0)) * 120);
+		const h = Math.round((1 - farbcode) * 120);
 		return `hsl(${h},100%,75%)`;
 	}
 
-	const openModal = () => showModal().value = true;
-	const closeModal = () => (showModal().value = false) && (nachfragen.value = false);
+	function openModal() {
+		return showModal().value = true;
+	}
+
+	function closeModal() {
+		showModal().value = false;
+		nachfragen.value = false;
+	}
 
 </script>

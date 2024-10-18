@@ -1,21 +1,26 @@
 <html lang="de" xmlns:th="http://www.thymeleaf.org">
-	<head>
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
 		<title>Kurse mit Schülern</title>
-		<link rel="stylesheet" href="GostKursplanungKursMitKursschuelern.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
+		<link rel="stylesheet" th:href="@{gost/kursplanung/GostKursplanungKursMitKursschuelern.css}" href="../../gost/kursplanung/GostKursplanungKursMitKursschuelern.css" />
 	</head>
 
-	<body>
-		<div class="start-new-page" th:each="Kurs,itStatKurs : ${Blockungsergebnis.getKurseGefiltert(Parameter.idsDetaildaten)}">
+	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<div class="start-new-page" th:each="Kurs,iterationVarKurs : ${GostBlockungsergebnis.kurseGefiltert(Parameter.idsDetaildaten)}">
 			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
-			<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
-			<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung()} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefteAuflistung()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
-			<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
-			<div class="pageBottomRight"><span class="counter-print" th:text="'Gesamtdruck Kurs ' + ${itStatKurs.count} + '/' + ${#lists.size(Parameter.idsDetaildaten)}">Gesamtdruck Kurs 13/57</span></div>
+			<th:block th:if="${mediaPrint}">
+				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+				<div class="pageTopRight" th:utext="'Kurs: ' + ${Kurs.bezeichnung()} + '<br/>Lehrkräfte: ' + ${Kurs.lehrkraefteAuflistung()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Kurs: GE-GK2<br/><br/>Schulnummer: 123456</div>
+				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+				<div class="pageBottomRight"><span th:text="'Gesamtdruck Kurs ' + ${iterationVarKurs.count} + '/' + ${#lists.size(Parameter.idsDetaildaten)}">Gesamtdruck Kurs 13/57</span></div>
+			</th:block>
 			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
 
-			<table class="fixed-layout-100 no-space-pad">
+			<table class="fixed-100 p-0">
 				<colgroup>
 					<col style="width: 14%;" />
 					<col style="width: 2%;" />
@@ -34,51 +39,51 @@
 					<col style="width: 5%;" />
 				</colgroup>
 				<thead>
-					<tr>
-						<td colspan="15" class="bob-grey"><h2 th:text="'Kursplanung ' + ${Kurs.gostHalbjahr().kuerzel} + ' - Kursliste'">Kursplanung Q2.1 - Kursliste</h2></td>
-					</tr>
+				<tr>
+					<td colspan="15" class="bo-b-grey"><h2 th:text="'Kursplanung ' + ${Kurs.gostHalbjahr().kuerzel} + ' - Kursliste'">Kursplanung Q2.1 - Kursliste</h2></td>
+				</tr>
 				</thead>
 				<tbody>
-					<tr><td colspan="15" class="pad-top"></td></tr>
-					<tr>
-						<td class="f-bold" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
-						<td></td>
-						<td class="f-bold" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
-						<td></td>
-						<td class="f-bold" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
-						<td></td>
-						<td class="small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ext. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
-						<td></td>
-						<td class="small ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
-						<td></td>
-						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
-						<td></td>
-						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB3()}">5</td>
-						<td></td>
-						<td class="small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB4()}">3</td>
-					</tr>
-					<tr>
-						<td class="beschriftung">Kursbezeichnung</td>
-						<td></td>
-						<td class="beschriftung">Lehrkräfte</td>
-						<td></td>
-						<td class="beschriftung">Kursart</td>
-						<td></td>
-						<td class="beschriftung ta-c">Anzahl SuS.</td>
-						<td></td>
-						<td class="beschriftung ta-c">Klausurschr.</td>
-						<td></td>
-						<td class="beschriftung ta-c">AB1/2</td>
-						<td></td>
-						<td class="beschriftung ta-c">AB3</td>
-						<td></td>
-						<td class="beschriftung ta-c">AB4</td>
-					</tr>
-					<tr><td colspan="15" class="pad-bot"></td></tr>
+				<tr><td colspan="15" class="p-t-25of100"></td></tr>
+				<tr>
+					<td class="f-bold" th:text="${Kurs.bezeichnung()}">GE-GK2</td>
+					<td></td>
+					<td class="f-bold" th:text="${Kurs.lehrkraefteAuflistung()}">ABC</td>
+					<td></td>
+					<td class="f-bold" th:text="${Kurs.gostKursart().kuerzel}">GK</td>
+					<td></td>
+					<td class="f-small ta-c" th:text="(${Kurs.anzahlExterne()} == 0) ? ${Kurs.anzahlSchueler()} : ${Kurs.anzahlSchueler()} + ' (Ext. ' + ${Kurs.anzahlExterne()} + ')'">23 (Ext. 08)</td>
+					<td></td>
+					<td class="f-small ta-c" th:text="${Kurs.anzahlSchuelerSchriftlich()}">12</td>
+					<td></td>
+					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB12()}">0</td>
+					<td></td>
+					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB3()}">5</td>
+					<td></td>
+					<td class="f-small ta-c" th:text="${#strings.equalsIgnoreCase('E', Kurs.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kurs.anzahlAB4()}">3</td>
+				</tr>
+				<tr>
+					<td class="cell-small-grey">Kursbezeichnung</td>
+					<td></td>
+					<td class="cell-small-grey">Lehrkräfte</td>
+					<td></td>
+					<td class="cell-small-grey">Kursart</td>
+					<td></td>
+					<td class="cell-small-grey ta-c">Anzahl SuS.</td>
+					<td></td>
+					<td class="cell-small-grey ta-c">Klausurschr.</td>
+					<td></td>
+					<td class="cell-small-grey ta-c">AB1/2</td>
+					<td></td>
+					<td class="cell-small-grey ta-c">AB3</td>
+					<td></td>
+					<td class="cell-small-grey ta-c">AB4</td>
+				</tr>
+				<tr><td colspan="15" class="p-b-25of100"></td></tr>
 				</tbody>
 			</table>
 
-			<table class="fixed-layout-100 no-space-pad">
+			<table class="fixed-100 p-0">
 				<colgroup>
 					<col style="width: 5%;" />
 					<col th:style="(${Kurs.anzahlExterne()} != 0) ? 'width: 38%;' : 'width: 50%;'" />
@@ -89,27 +94,25 @@
 					<col style="width: 8%" />
 				</colgroup>
 				<thead>
-					<tr>
-						<th class="kursschueler ta-l">Nr.</th>
-						<th class="kursschueler ta-l">Name, Vorname</th>
-						<th th:if="(${Kurs.anzahlExterne()} != 0)" class="kursschueler ta-c">Ext. Schule</th>
-						<th class="kursschueler ta-c">Belegung</th>
-						<th class="kursschueler ta-c">Abiturfach</th>
-						<th class="kursschueler ta-c">Geburtsdatum</th>
-						<th class="kursschueler ta-c">Geschl.</th>
-					</tr>
+				<tr>
+					<th class="head-small-grey ta-l">Nr.</th>
+					<th class="head-small-grey ta-l">Name, Vorname</th>
+					<th th:if="(${Kurs.anzahlExterne()} != 0)" class="head-small-grey ta-c">Ext. Schule</th>
+					<th class="head-small-grey ta-c">Belegung</th>
+					<th class="head-small-grey ta-c">Abiturfach</th>
+					<th class="head-small-grey ta-c">Geburtsdatum</th>
+					<th class="head-small-grey ta-c">Geschl.</th>
+				</tr>
 				</thead>
-				<tbody>
-					<tr th:each="Kursschueler,iterStatSchueler : ${Kurs.schueler()}" th:classappend="${iterStatSchueler.odd} ? 'bg-lightgrey'">
-						<td class="bob-grey pad-1001 small tc-grey" th:text="${#numbers.formatInteger(iterStatSchueler.count,2)} + '.'">Nr.</td>
-						<td class="bob-grey pad-1001" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
-						<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', Blockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
-						<td class="bob-grey pad-1001 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
-					</tr>
-				</tbody>
+				<tr th:each="Kursschueler,iterationVarSchueler : ${Kurs.schueler()}" th:classappend="${iterationVarSchueler.odd} ? 'bg-lightgrey'">
+					<td class="bo-b-grey p-tb-0-lr-1 f-small c-grey" th:text="${#numbers.formatInteger(iterationVarSchueler.count,2)} + '.'">Nr.</td>
+					<td class="bo-b-grey p-tb-0-lr-1" th:text="${Kursschueler.nachname()} + ', ' + ${Kursschueler.vorname()}">Mustermann, Max</td>
+					<td th:if="(${Kurs.anzahlExterne()} != 0)" class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.externeSchulNr()}">123456</td>
+					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).istSchriftlich() ? 's' : 'm') : 'ungültig'}">s</td>
+					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).hatGueltigeFachwahl() ? (#strings.equalsIgnoreCase('E', GostBlockungsergebnis.gostHalbjahr().kuerzel.charAt(0)) ? '' : Kursschueler.getGostKursplanungKursbelegungById(Kurs.id()).abiturfach()) : 'ungültig'}">3</td>
+					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${#convert.toDateDE(Kursschueler.geburtsdatum())}">22.08.2008</td>
+					<td class="bo-b-grey p-tb-0-lr-1 ta-c" th:text="${Kursschueler.geschlecht().kuerzel}">w</td>
+				</tr>
 			</table>
 		</div>
 	</body>

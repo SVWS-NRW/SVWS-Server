@@ -3,7 +3,7 @@
 		<template #modalTitle>Lehrbefähigung hinzufügen</template>
 		<template #modalContent>
 			<svws-ui-input-wrapper>
-				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()" :item-text="(i: LehrerLehrbefaehigung) => i.daten.text" headless />
+				<svws-ui-select title="Lehrbefähigung" v-model="lehrbefaehigung" :items="LehrerLehrbefaehigung.values()" :item-text="i => i.daten(schuljahr)?.text ?? '—'" headless />
 			</svws-ui-input-wrapper>
 		</template>
 		<template #modalActions>
@@ -22,16 +22,18 @@
 		show: () => Ref<boolean>;
 		idLehrer: number,
 		addLehrbefaehigung: (eintrag: LehrerLehrbefaehigungEintrag) => Promise<void>;
+		schuljahr: number;
 	}>();
 
 	const lehrbefaehigung = ref<LehrerLehrbefaehigung | undefined>(undefined);
 
 	function add() {
-		if (lehrbefaehigung.value === undefined)
+		const daten = lehrbefaehigung.value?.daten(props.schuljahr) ?? null;
+		if (daten === null)
 			throw new DeveloperNotificationException("Die add-Methode darf nur aufgerufen werden, wenn ein gültiger Wert ausgewählt wurde.");
 		const l = new LehrerLehrbefaehigungEintrag();
 		l.id = props.idLehrer;
-		l.idLehrbefaehigung = lehrbefaehigung.value.daten.id;
+		l.idLehrbefaehigung = daten.id;
 		l.idAnerkennungsgrund = null;
 		void props.addLehrbefaehigung(l);
 		lehrbefaehigung.value = undefined;

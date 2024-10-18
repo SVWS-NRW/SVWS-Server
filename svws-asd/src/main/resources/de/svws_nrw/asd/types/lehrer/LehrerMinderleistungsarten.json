@@ -1,0 +1,202 @@
+{
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "ID_200",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 37,
+			"schluessel": "200",
+			"kuerzel": "200",
+			"text": "Pflichtstundenermäßigung aus Altersgründen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_210",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 38,
+			"schluessel": "210",
+			"kuerzel": "210",
+			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Regelanrechnung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_220",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 39,
+			"schluessel": "220",
+			"kuerzel": "220",
+			"text": "Pflichtstundenermäßigung wegen Schwerbehinderung (Erhöhung auf Antrag)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_230",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 40,
+			"schluessel": "230",
+			"kuerzel": "230",
+			"text": "Beurlaubung, Rückkehr im Laufe des Schuljahres",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_240",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 41,
+			"schluessel": "240",
+			"kuerzel": "240",
+			"text": "Langfristige Erkrankung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_250",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 42,
+			"schluessel": "250",
+			"kuerzel": "250",
+			"text": "Abwesend wegen Beschäftigungsverbot gem. § 3 MuSchG",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_255",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 53,
+			"schluessel": "255",
+			"kuerzel": "255",
+			"text": "Abwesend wegen Teilbeschäftigungsverbot gem. § 3 MuSchG",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_260",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 43,
+			"schluessel": "260",
+			"kuerzel": "260",
+			"text": "Wiedereingliederungsmaßnahme",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_270",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 44,
+			"schluessel": "270",
+			"kuerzel": "270",
+			"text": "Rückgabe vorgeleisteter Stunden wegen Nichtinanspruchnahme von Altersteilzeit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_275",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 51,
+			"schluessel": "275",
+			"kuerzel": "275",
+			"text": "Rückgabe der Vorgriffsstunden",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_280",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 45,
+			"schluessel": "280",
+			"kuerzel": "280",
+			"text": "Seiteneinsteigerentlastung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_290",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 46,
+			"schluessel": "290",
+			"kuerzel": "290",
+			"text": "Ermäßigungs-/Freistellungsphase \"Teilzeitbeschäftigung im Blockmodell\" (§ 65 LBG) (vormals Sabbatjahr)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_300",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 47,
+			"schluessel": "300",
+			"kuerzel": "300",
+			"text": "Sonstige Ermäßigungen aus besonderen persönlichen Gründen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_350",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 48,
+			"schluessel": "350",
+			"kuerzel": "350",
+			"text": "Abrundung der Pflichtstundenzahl wegen Aufrundung im vorhergehenden Schuljahr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_360",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 49,
+			"schluessel": "360",
+			"kuerzel": "360",
+			"text": "Unterschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_365",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 54,
+			"schluessel": "365",
+			"kuerzel": "365",
+			"text": "Unterschreitung der Pflichtstundenzahl wegen COVID-19",
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		} ]
+	},{
+		"bezeichner": "ID_370",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 50,
+			"schluessel": "370",
+			"kuerzel": "370",
+			"text": "Unterschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_380",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 52,
+			"schluessel": "380",
+			"kuerzel": "380",
+			"text": "Fortbildung: Nachträglicher Erwerb des sonderpädagogischen Lehramtes",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

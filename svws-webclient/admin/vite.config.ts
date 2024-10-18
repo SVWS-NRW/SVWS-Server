@@ -27,9 +27,6 @@ export default defineConfig({
 		alias: {
 			// Importe können durch ein vorangestelltes `~` absolut gefunden werden
 			"~": resolve(__dirname, "src"),
-			"@comp": resolve(__dirname, '../components/src/index.ts'),
-			"@ui": resolve(__dirname, '../ui/src/index.ts'),
-			"@core": resolve(__dirname, '../core/src/index.ts')
 		}
 	},
 	build: {

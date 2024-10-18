@@ -1,6 +1,7 @@
 import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungDynDaten } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungDynDaten';
 import { KlausurterminblockungAlgorithmusAbstract } from '../../../../core/utils/gost/klausurplanung/KlausurterminblockungAlgorithmusAbstract';
+import { Class } from '../../../../java/lang/Class';
 import { System } from '../../../../java/lang/System';
 
 export class KlausurterminblockungAlgorithmusGreedy2b extends KlausurterminblockungAlgorithmusAbstract {
@@ -41,6 +42,8 @@ export class KlausurterminblockungAlgorithmusGreedy2b extends Klausurterminblock
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusGreedy2b', 'de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusAbstract'].includes(name);
 	}
+
+	public static class = new Class<KlausurterminblockungAlgorithmusGreedy2b>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungAlgorithmusGreedy2b');
 
 }
 

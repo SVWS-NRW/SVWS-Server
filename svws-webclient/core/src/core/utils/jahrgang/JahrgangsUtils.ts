@@ -1,10 +1,11 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
-import { Jahrgaenge } from '../../../core/types/jahrgang/Jahrgaenge';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -41,7 +42,7 @@ export class JahrgangsUtils extends JavaObject {
 	 *
 	 * @return die restlichen Jahre oder null
 	 */
-	public static getRestlicheJahre(schulform : Schulform, gliederung : Schulgliederung, jahrgang : string) : number | null {
+	public static getRestlicheJahre(schulform : Schulform, gliederung : Schulgliederung | null, jahrgang : string | null) : number | null {
 		if (gliederung === null)
 			return null;
 		if ((schulform as unknown === Schulform.FW as unknown) || (schulform as unknown === Schulform.WB as unknown) || (schulform as unknown === Schulform.BK as unknown) || (schulform as unknown === Schulform.SB as unknown))
@@ -157,7 +158,25 @@ export class JahrgangsUtils extends JavaObject {
 	 * @return true, falls es sich um einen Sek I-Jahrgang handelt, und ansonsten false
 	 */
 	public static istSekI(jahrgang : string) : boolean {
-		return JavaObject.equalsTranspiler(Jahrgaenge.JG_05.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_06.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_07.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_08.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_09.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_10.daten.kuerzel, (jahrgang));
+		const jg : Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(jahrgang);
+		let _sevar_590951878 : any;
+		const _seexpr_590951878 = (jg);
+		if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_05) {
+			_sevar_590951878 = true;
+		} else if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_06) {
+			_sevar_590951878 = true;
+		} else if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_07) {
+			_sevar_590951878 = true;
+		} else if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_08) {
+			_sevar_590951878 = true;
+		} else if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_09) {
+			_sevar_590951878 = true;
+		} else if (_seexpr_590951878 === Jahrgaenge.JAHRGANG_10) {
+			_sevar_590951878 = true;
+		} else {
+			_sevar_590951878 = false;
+		}
+		return _sevar_590951878;
 	}
 
 	/**
@@ -168,7 +187,19 @@ export class JahrgangsUtils extends JavaObject {
 	 * @return true, falls es sich um einen Jahrgang der Gymnasialen Oberstufe handelt, und ansonsten false
 	 */
 	public static istGymOb(jahrgang : string) : boolean {
-		return JavaObject.equalsTranspiler(Jahrgaenge.JG_EF.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_Q1.daten.kuerzel, (jahrgang)) || JavaObject.equalsTranspiler(Jahrgaenge.JG_Q2.daten.kuerzel, (jahrgang));
+		const jg : Jahrgaenge | null = Jahrgaenge.data().getWertByKuerzel(jahrgang);
+		let _sevar_1826259116 : any;
+		const _seexpr_1826259116 = (jg);
+		if (_seexpr_1826259116 === Jahrgaenge.EF) {
+			_sevar_1826259116 = true;
+		} else if (_seexpr_1826259116 === Jahrgaenge.Q1) {
+			_sevar_1826259116 = true;
+		} else if (_seexpr_1826259116 === Jahrgaenge.Q2) {
+			_sevar_1826259116 = true;
+		} else {
+			_sevar_1826259116 = false;
+		}
+		return _sevar_1826259116;
 	}
 
 	transpilerCanonicalName(): string {
@@ -178,6 +209,8 @@ export class JahrgangsUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.jahrgang.JahrgangsUtils'].includes(name);
 	}
+
+	public static class = new Class<JahrgangsUtils>('de.svws_nrw.core.utils.jahrgang.JahrgangsUtils');
 
 }
 

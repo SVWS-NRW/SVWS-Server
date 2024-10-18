@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class BKLernfeld extends JavaObject {
 
@@ -41,6 +42,8 @@ export class BKLernfeld extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKLernfeld'].includes(name);
 	}
+
+	public static class = new Class<BKLernfeld>('de.svws_nrw.core.data.bk.BKLernfeld');
 
 	public static transpilerFromJSON(json : string): BKLernfeld {
 		const obj = JSON.parse(json) as Partial<BKLernfeld>;

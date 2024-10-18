@@ -1,11 +1,10 @@
 package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.lehrer.LehrerKatalogLehrbefaehigungAnerkennungEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigungAnerkennung;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag}.
+ * Core-DTO {@link LehrerLehrbefaehigungAnerkennungKatalogEintrag}.
  */
 public final class DataKatalogLehrerLehrbefaehigungAnerkennungen extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogLehrbefaehigungAnerkennungEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerLehrbefaehigungAnerkennungKatalogEintrag}.
 	 */
 	public DataKatalogLehrerLehrbefaehigungAnerkennungen() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKatalogLehrerLehrbefaehigungAnerkennungen extends DataMan
 
 	@Override
 	public Response getAll() {
-		final ArrayList<LehrerKatalogLehrbefaehigungAnerkennungEintrag> daten = new ArrayList<>();
+		final ArrayList<LehrerLehrbefaehigungAnerkennungKatalogEintrag> daten = new ArrayList<>();
 		for (final LehrerLehrbefaehigungAnerkennung status : LehrerLehrbefaehigungAnerkennung.values())
-			daten.addAll(Arrays.asList(status.historie));
+			daten.addAll(status.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

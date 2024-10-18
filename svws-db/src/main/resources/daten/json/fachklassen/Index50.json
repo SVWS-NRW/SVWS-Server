@@ -1,6 +1,6 @@
 {
 	"index": 50,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "Praktikanten mit FO-Reife für FS der Sozialpädagogik",
 				"bezeichnungW": "Praktikantinnen mit FO-Reife für FS der Sozialpädagogik",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2010
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "Praktikanten mit FO-Reife für FS der Ernährung u. Hauswirtschaft",
 				"bezeichnungW": "Praktikantinnen mit FO-Reife für FS der Ernährung u. Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2010
 			} ]
 		}, {
 			"schluessel": "999",
@@ -51,7 +51,7 @@
 				"bezeichnungM": "Praktikanten: Sonstiger Bildungsgang",
 				"bezeichnungW": "Praktikanten: Sonstiger Bildungsgang",
 				"gueltigVon": null,
-				"gueltigBis": 2014
+				"gueltigBis": 2010
 			} ]
 		}
 	]

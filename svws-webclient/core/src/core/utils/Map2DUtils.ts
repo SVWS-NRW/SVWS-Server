@@ -3,6 +3,7 @@ import { HashMap2D } from '../../core/adt/map/HashMap2D';
 import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -147,6 +148,8 @@ export class Map2DUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.Map2DUtils'].includes(name);
 	}
+
+	public static class = new Class<Map2DUtils>('de.svws_nrw.core.utils.Map2DUtils');
 
 }
 

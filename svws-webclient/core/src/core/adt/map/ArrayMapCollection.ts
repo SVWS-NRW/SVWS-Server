@@ -5,6 +5,7 @@ import type { Collection } from '../../../java/util/Collection';
 import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
 
 export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V> {
@@ -62,7 +63,7 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 		if ((__param0 === undefined)) {
 			return this.getValueList().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			return this.getValueList().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -107,6 +108,8 @@ export class ArrayMapCollection<K, V> extends JavaObject implements Collection<V
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapCollection', 'java.util.Collection', 'java.lang.Iterable'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapCollection<any, any>>('de.svws_nrw.core.adt.map.ArrayMapCollection');
 
 	public [Symbol.iterator](): Iterator<V> {
 		const iter : JavaIterator<V> = this.iterator();

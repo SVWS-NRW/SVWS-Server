@@ -95,7 +95,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	}
 
 	public async ladeAbiturjahrgaenge() {
-		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaenge(api.schema);
+		const listAbiturjahrgaenge = await api.server.getGostAbiturjahrgaengeFuerAbschnitt(api.schema, api.schuleStammdaten.idSchuljahresabschnitt);
 		const mapAbiturjahrgaenge = new Map<number, GostJahrgang>();
 		for (const l of listAbiturjahrgaenge)
 			mapAbiturjahrgaenge.set(l.abiturjahr, l);
@@ -147,7 +147,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			if (!map) {
 				const listBlockungen = await api.server.getGostAbiturjahrgangBlockungsliste(api.schema, abiturjahr, halbjahr.id);
 				const mapBlockungen: Map<number, GostBlockungListeneintrag> = new Map();
-				if (listBlockungen.size()) {
+				if (listBlockungen.size() > 0) {
 					blockung = listBlockungen.getFirst();
 					for (const b of listBlockungen) {
 						mapBlockungen.set(b.id, b);
@@ -157,7 +157,7 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 				}
 				mapAbiturjahr.set(halbjahr.id, mapBlockungen);
 			} else {
-				if (map.size) {
+				if (map.size > 0) {
 					blockung = map.values().next().value;
 					for (const b of map.values())
 						if (b.istAktiv)
@@ -181,14 +181,14 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 			const blockungsdatenBlob = await new Response(blockungsdatenGzip.data.stream().pipeThrough(new DecompressionStream("gzip"))).blob();
 			const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(await blockungsdatenBlob.text());
 			const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.abiturjahrgang.abiturjahr);
-			const faecherManager = new GostFaecherManager(listFaecher);
+			const faecherManager = new GostFaecherManager(this.abiturjahrgang.abiturjahr, listFaecher);
 			const getDatenmanager = new GostBlockungsdatenManager(blockungsdaten, faecherManager);
 			const ergebnisse = getDatenmanager.ergebnisGetListeSortiertNachBewertung();
 			this.mapErgebnisse.set(blockung.id, ergebnisse);
 			this.mapBlockung.set(blockung.id, blockungsdaten);
 		}
 		const ergebnisse = this.mapErgebnisse.get(blockung.id);
-		if (ergebnisse && ergebnisse.size()) {
+		if (ergebnisse && (ergebnisse.size() > 0)) {
 			ergebnis = ergebnisse.getFirst();
 			for (const e of ergebnisse) {
 				if (e.istAktiv)
@@ -228,8 +228,8 @@ export class RouteDataSchuleDatenaustauschUntis extends RouteData<RouteStateDate
 	}
 
 	exportUntisBlockungenZIP = async (formData: FormData): Promise<ApiFile> => {
-		const ergebnisID = formData.get('ergebnisID');
-		const unterrichtID = formData.get('unterrichtID');
+		const ergebnisID = formData.get('ergebnisID')?.toString();
+		const unterrichtID = formData.get('unterrichtID')?.toString();
 		if (typeof ergebnisID === 'string' && typeof unterrichtID === 'string')
 			return await api.server.exportUntisKursblockungAsZip(api.schema, parseInt(ergebnisID), parseInt(unterrichtID));
 		throw new DeveloperNotificationException(`Es konnte keine Exportdatei für die ergebnisID ${ergebnisID} und unterrichtID ${unterrichtID} erstellt werden`);

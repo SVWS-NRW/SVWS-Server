@@ -1,14 +1,11 @@
 package de.svws_nrw.module.reporting.types.fach;
 
-import de.svws_nrw.core.types.fach.Fachgruppe;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.</p>
- * <p>Sie enthält die Grunddaten eines Faches.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Fach.
  */
 public class ReportingFach {
 
@@ -142,8 +139,8 @@ public class ReportingFach {
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
-		return GostFachbereich.compareFach(ZulaessigesFach.getByKuerzelASD(fach1.statistikfach().kuerzelASD()),
-				ZulaessigesFach.getByKuerzelASD(fach2.statistikfach().kuerzelASD()));
+		return GostFachbereich.compareFach(Fach.getBySchluesselOrDefault(fach1.statistikfach().kuerzelASD()),
+				Fach.getBySchluesselOrDefault(fach2.statistikfach().kuerzelASD()));
 	}
 
 

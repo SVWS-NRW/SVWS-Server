@@ -3,6 +3,7 @@ import { AbiturFachbelegung } from '../../../core/data/gost/AbiturFachbelegung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostBesondereLernleistung } from '../../../core/types/gost/GostBesondereLernleistung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 
 export class Abiturdaten extends JavaObject {
@@ -199,6 +200,8 @@ export class Abiturdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.Abiturdaten'].includes(name);
 	}
+
+	public static class = new Class<Abiturdaten>('de.svws_nrw.core.data.gost.Abiturdaten');
 
 	public static transpilerFromJSON(json : string): Abiturdaten {
 		const obj = JSON.parse(json) as Partial<Abiturdaten>;

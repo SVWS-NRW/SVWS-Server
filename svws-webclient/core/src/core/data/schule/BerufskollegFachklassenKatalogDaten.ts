@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 
@@ -74,6 +75,8 @@ export class BerufskollegFachklassenKatalogDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten'].includes(name);
 	}
+
+	public static class = new Class<BerufskollegFachklassenKatalogDaten>('de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogDaten');
 
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogDaten {
 		const obj = JSON.parse(json) as Partial<BerufskollegFachklassenKatalogDaten>;

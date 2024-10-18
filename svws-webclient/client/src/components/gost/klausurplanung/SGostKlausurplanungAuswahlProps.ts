@@ -1,15 +1,7 @@
-import type { GostHalbjahr } from "@core";
-
-export interface GostKlausurplanungAuswahlChildData {
-	name: string,
-	text: string,
-}
+import type { GostHalbjahr, GostKlausurplanManager } from "@core";
 
 export interface GostKlausurplanungAuswahlProps {
+	kMan: () => GostKlausurplanManager;
 	gotoHalbjahr: (value: GostHalbjahr) => Promise<void>;
 	halbjahr: GostHalbjahr;
-	setChild: (value: GostKlausurplanungAuswahlChildData) => Promise<void>;
-	child: GostKlausurplanungAuswahlChildData;
-	children: GostKlausurplanungAuswahlChildData[];
-	childrenHidden: boolean[];
 }

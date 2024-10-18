@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanListeEintragMinimal extends JavaObject {
 
@@ -29,6 +30,8 @@ export class StundenplanListeEintragMinimal extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal'].includes(name);
 	}
+
+	public static class = new Class<StundenplanListeEintragMinimal>('de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal');
 
 	public static transpilerFromJSON(json : string): StundenplanListeEintragMinimal {
 		const obj = JSON.parse(json) as Partial<StundenplanListeEintragMinimal>;

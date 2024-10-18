@@ -1,7 +1,5 @@
 package de.svws_nrw.core.data.schild3.reporting;
 
-import de.svws_nrw.base.annotations.SchildReportingDate;
-import de.svws_nrw.base.annotations.SchildReportingMemo;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -33,7 +31,7 @@ public class SchildReportingSchuelerLernabschnitt {
 
 	/** Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.). */
 	@Schema(description = "eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitt in einem Schuljahresabschnitt vorliegen (z.B. Wechsel einer Klasse, 0=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.)",
-			example = "NULL")
+			example = "0")
 	public int wechselNr = 0;
 
 	/** Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht */
@@ -63,6 +61,7 @@ public class SchildReportingSchuelerLernabschnitt {
 	/** Die Statistik-Bezeichnung des Jahrgangs */
 	@Schema(description = "die Statistik-Bezeichnung des Jahrgangs", example = "EF")
 	public @NotNull String jahrgangStatistik = "";
+
 	/** Das Datum der Zeugniskonferenz */
 	@SchildReportingDate
 	@Schema(description = "Das Datum der Zeugniskonferenz", example = "2021-06-26")

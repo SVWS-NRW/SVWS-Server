@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class Sprachpruefung extends JavaObject {
 
@@ -79,6 +80,8 @@ export class Sprachpruefung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.Sprachpruefung'].includes(name);
 	}
+
+	public static class = new Class<Sprachpruefung>('de.svws_nrw.core.data.schueler.Sprachpruefung');
 
 	public static transpilerFromJSON(json : string): Sprachpruefung {
 		const obj = JSON.parse(json) as Partial<Sprachpruefung>;

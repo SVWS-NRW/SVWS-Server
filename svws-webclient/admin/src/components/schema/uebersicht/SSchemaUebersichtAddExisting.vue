@@ -11,7 +11,9 @@
 <script setup lang="ts">
 
 	import { type ShallowRef, ref } from "vue";
-	import { BenutzerKennwort, SimpleOperationResponse, type List } from "@core";
+	import { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
+	import type { List } from "../../../../../core/src/java/util/List";
+	import { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
 
 	const props = defineProps<{
 		addExistingSchemaToConfig: ((data: BenutzerKennwort, schema: string) => Promise<void>);
@@ -30,14 +32,13 @@
 		const data = new BenutzerKennwort();
 		data.user = user.value;
 		data.password = password.value;
-		let result = new SimpleOperationResponse();
+		const result = new SimpleOperationResponse();
 		result.success = true;
 		await props.addExistingSchemaToConfig(data, props.schema);
 		user.value = '';
 		password.value = '';
 		props.loadingFunction().value = false;
-		if (result.success)
-			clear();
+		clear();
 	}
 
 	function clear() {

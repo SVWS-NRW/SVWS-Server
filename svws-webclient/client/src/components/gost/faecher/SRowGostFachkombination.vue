@@ -1,39 +1,39 @@
 <template>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-select v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach1" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
 	<div class="svws-ui-td svws-divider" role="cell">
-		<svws-ui-select v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart1" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td" role="cell">
 		&nbsp;
 	</div>
 	<div class="svws-ui-td" role="cell">
-		<svws-ui-select v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="fach2" title="Fach" :items="faecher" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? ''" headless />
 	</div>
 	<div class="svws-ui-td svws-divider" role="cell">
-		<svws-ui-select v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
+		<svws-ui-select :disabled="!hatUpdateKompetenz" v-model="kursart2" title="Kursart" :items="kursarten" :item-text="(i: GostKursart) => i.kuerzel" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<svws-ui-checkbox v-model="gueltigEF1" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigEF1" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
-		<svws-ui-checkbox v-model="gueltigEF2" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigEF2" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<svws-ui-checkbox v-model="gueltigQ11" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigQ11" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
-		<svws-ui-checkbox v-model="gueltigQ12" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigQ12" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<svws-ui-checkbox v-model="gueltigQ21" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigQ21" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center svws-divider" role="cell">
-		<svws-ui-checkbox v-model="gueltigQ22" headless />
+		<svws-ui-checkbox :disabled="!hatUpdateKompetenz" v-model="gueltigQ22" headless />
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<s-row-gost-fachkombination-modal v-slot="{openModal}" :hinweistext="hinweistext" :kombination="kombination" :patch-fachkombination="patchFachkombination">
+		<s-row-gost-fachkombination-modal v-if="hatUpdateKompetenz" v-slot="{openModal}" :hinweistext :kombination :patch-fachkombination>
 			<svws-ui-tooltip position="top">
 				<button role="button" class="button button--icon"><span class="icon i-ri-edit-2-line" @click="openModal" /></button>
 				<template #content>"{{ kombination.hinweistext || hinweistext }}"<br><span class="opacity-50">Klicken, um den Text zu bearbeiten</span> </template>
@@ -41,7 +41,7 @@
 		</s-row-gost-fachkombination-modal>
 	</div>
 	<div class="svws-ui-td svws-align-center" role="cell">
-		<svws-ui-button type="trash" @click="del_fachkombi" />
+		<svws-ui-button v-if="hatUpdateKompetenz" type="trash" @click="removeFachkombination(kombination.id)" />
 	</div>
 </template>
 
@@ -57,6 +57,7 @@
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		kombination: GostJahrgangFachkombination;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	const faecher = computed<List<GostFach>>(() => props.faecherManager().faecher());
@@ -69,7 +70,7 @@
 
 	const kursart1 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart1),
-		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel || null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart1: value?.kuerzel ?? null }, props.kombination.id)
 	});
 
 	const fach2 = computed<GostFach | null>({
@@ -79,7 +80,7 @@
 
 	const kursart2 = computed<GostKursart | null>({
 		get: () => GostKursart.fromKuerzel(props.kombination.kursart2),
-		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel || null }, props.kombination.id)
+		set: (value) => void props.patchFachkombination({ kursart2: value?.kuerzel ?? null }, props.kombination.id)
 	});
 
 	const gueltigEF1 = computed<boolean>({
@@ -139,11 +140,9 @@
 	const hinweistext = computed<string>(() => {
 		const typ = (GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH.getValue() === props.kombination.typ)
 			? 'erfordert' : 'erlaubt kein'
-		return `${fach1.value?.kuerzel || ''} ${kursart1.value || ''} ${typ} ${fach2.value?.kuerzel || ''} ${kursart2.value || ''}`;
+		const k1 = kursart1.value?.kuerzel ?? '';
+		const k2 = kursart2.value?.kuerzel ?? '';
+		return `${fach1.value?.kuerzel ?? ''} ${k1} ${typ} ${fach2.value?.kuerzel ?? ''} ${k2}`;
 	})
-
-	const del_fachkombi = () => {
-		void props.removeFachkombination(props.kombination.id);
-	}
 
 </script>

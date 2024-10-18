@@ -3,7 +3,8 @@ import { HashMap } from '../../../java/util/HashMap';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import type { List } from '../../../java/util/List';
-import { ZulaessigeKursart } from '../../../core/types/kurse/ZulaessigeKursart';
+import { Class } from '../../../java/lang/Class';
+import { ZulaessigeKursart } from '../../../asd/types/kurse/ZulaessigeKursart';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -384,6 +385,8 @@ export class GostKursart extends JavaEnum<GostKursart> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostKursart>('de.svws_nrw.core.types.gost.GostKursart');
 
 }
 

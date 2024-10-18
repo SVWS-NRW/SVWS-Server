@@ -1,6 +1,5 @@
 
-import type { Ref} from "vue";
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import type { DownloadPDFTypen } from "~/components/gost/kursplanung/DownloadPDFTypen";
 import type { ApiPendingData } from "~/components/ApiStatus";
 import type { ApiFile, GostBlockungKurs, GostBlockungKursLehrer, GostBlockungListeneintrag, GostBlockungSchiene, GostBlockungsergebnisKurs, GostJahrgangsdaten,
@@ -15,7 +14,7 @@ import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { routeGostKursplanung } from "~/router/apps/gost/kursplanung/RouteGostKursplanung";
 import { routeGostKursplanungSchueler } from "~/router/apps/gost/kursplanung/RouteGostKursplanungSchueler";
 import { GostKursplanungSchuelerFilter } from "~/components/gost/kursplanung/GostKursplanungSchuelerFilter";
-import {routeApp} from "~/router/apps/RouteApp";
+import { routeApp } from "~/router/apps/RouteApp";
 
 interface RouteStateGostKursplanung extends RouteStateInterface {
 	// Daten nur abhängig von dem Abiturjahrgang
@@ -39,12 +38,13 @@ interface RouteStateGostKursplanung extends RouteStateInterface {
 	schuelerFilter: GostKursplanungSchuelerFilter | undefined;
 	// ... auch abhängig von dem ausgewählten Schüler
 	auswahlSchueler: Schueler | undefined;
+	kursauswahl: JavaSet<number>;
 }
 
 const defaultState: RouteStateGostKursplanung = {
 	abiturjahr: undefined,
 	jahrgangsdaten: undefined,
-	faecherManager: new GostFaecherManager(),
+	faecherManager: new GostFaecherManager(-1),
 	mapFachwahlStatistik: new Map(),
 	mapLehrer: new Map(),
 	halbjahr: GostHalbjahr.EF1,
@@ -57,6 +57,7 @@ const defaultState: RouteStateGostKursplanung = {
 	ergebnismanager: undefined,
 	schuelerFilter: undefined,
 	auswahlSchueler: undefined,
+	kursauswahl: new HashSet<number>(),
 };
 
 export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanung> {
@@ -64,8 +65,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	public constructor() {
 		super(defaultState);
 	}
-
-	private _kursauswahl = ref<JavaSet<number>>(new HashSet<number>());
 
 	public get hatAbiturjahr(): boolean {
 		return this._state.value.abiturjahr !== undefined;
@@ -81,8 +80,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.abiturjahr;
 	}
 
-	public setAbiturjahr = async (abiturjahr: number | undefined) => {
-		if (abiturjahr === this._state.value.abiturjahr)
+	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) => {
+		if ((abiturjahr === this._state.value.abiturjahr) && (!force))
 			return;
 		if (abiturjahr === undefined) {
 			this.setDefaultState();
@@ -91,9 +90,8 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
 		const jahrgangsdaten = await api.server.getGostAbiturjahrgang(api.schema, abiturjahr)
-		const listSchueler = await api.server.getGostAbiturjahrgangSchueler(api.schema, abiturjahr);
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, abiturjahr);
-		const faecherManager = new GostFaecherManager(listFaecher);
+		const faecherManager = new GostFaecherManager(abiturjahr - 1, listFaecher);
 		// Lade die Lehrerliste
 		const listLehrer = await api.server.getLehrer(api.schema);
 		const mapLehrer: Map<number, LehrerListeEintrag> = new Map();
@@ -222,7 +220,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const abschnitt : Schuljahresabschnitt | undefined = api.getAbschnittBySchuljahrUndHalbjahr(schuljahr, halbjahr.halbjahr);
 		const existiertSchuljahresabschnitt = (abschnitt !== undefined);
 		api.status.stop();
-		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			halbjahr,
 			halbjahrInitialisiert: true,
@@ -233,6 +230,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
+			kursauswahl: new HashSet<number>(),
 		});
 		return result;
 	}
@@ -276,10 +274,9 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 	public setAuswahlBlockung = async (value: GostBlockungListeneintrag | undefined, force?: boolean) => {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann keine Blockung ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (!force && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
+		if ((force !== true) && (this._state.value.auswahlBlockung?.id === value?.id) && (this._state.value.datenmanager !== undefined))
 			return;
 		if (value === undefined) {
-			this._kursauswahl.value.clear();
 			this.setPatchedState({
 				auswahlBlockung: undefined,
 				datenmanager: undefined,
@@ -287,6 +284,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				ergebnismanager: undefined,
 				schuelerFilter: undefined,
 				auswahlSchueler: undefined,
+				kursauswahl: new HashSet<number>(),
 			});
 			return;
 		}
@@ -297,13 +295,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, this.faecherManager);
 		const ergebnisse = datenmanager.ergebnisGetListeSortiertNachBewertung();
 		api.status.stop();
-		this._kursauswahl.value.clear();
 		this.setPatchedState({
 			auswahlBlockung: value,
 			datenmanager,
 			auswahlErgebnis: undefined,
 			ergebnismanager: undefined,
 			schuelerFilter: undefined,
+			kursauswahl: new HashSet<number>(),
 		});
 		let ergebnis : GostBlockungsergebnis | undefined = undefined;
 		if (ergebnisse.size() > 0) {
@@ -321,23 +319,21 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	public get datenmanager(): GostBlockungsdatenManager {
 		// Wurde bereits eine Blockung geladen, so dass kein Daten-Manager zur Verfügung steht?
-		if (this._state.value.datenmanager === undefined) {
-			// Wenn nicht, dann übergebe einen leeren Daten-Manager.
-			return new GostBlockungsdatenManager();
-		}
+		// Wenn nicht, dann übergebe einen leeren Daten-Manager.
+		if (this._state.value.datenmanager === undefined)
+			return new GostBlockungsdatenManager(new GostBlockungsdaten(), new GostFaecherManager(-1));
 		return this._state.value.datenmanager;
 	}
 
-	public get kursAuswahl(): Ref<JavaSet<number>> {
-		return this._kursauswahl;
+	public get kursAuswahl(): JavaSet<number> {
+		return this._state.value.kursauswahl;
 	}
 
 	public get ergebnismanager(): GostBlockungsergebnisManager {
 		// Prüfe, ob bereits ein Ergebnis ausgewählt wurde
-		if (this._state.value.ergebnismanager === undefined) {
-			// Wenn nicht, dann erstelle einen leeren Ergebnis-Manager
+		// Wenn nicht, dann erstelle einen leeren Ergebnis-Manager
+		if (this._state.value.ergebnismanager === undefined)
 			return new GostBlockungsergebnisManager(this.datenmanager, -1);
-		}
 		return this._state.value.ergebnismanager;
 	}
 
@@ -423,7 +419,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.mapBlockungen.set(result.id, result);
 		// Lade die Fächer des Abiturjahrgangs auch neu, da diese eventuell beim Wiederherstellen der Blockung angepasst wurden.
 		const listFaecher = await api.server.getGostAbiturjahrgangFaecher(api.schema, this.jahrgangsdaten.abiturjahr);
-		const faecherManager = new GostFaecherManager(listFaecher);
+		const faecherManager = new GostFaecherManager(this.jahrgangsdaten.abiturjahr - 1, listFaecher);
 		// Aktualisiere den State
 		this.setPatchedState({
 			faecherManager,
@@ -446,13 +442,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Blockung nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockung(data, api.schema, idBlockung);
-		if (data.name)
+		if (data.name !== undefined)
 			this.datenmanager.setName(data.name)
 		if (data.istAktiv !== undefined) {
-			if (data.istAktiv === true) {
+			if (data.istAktiv === true)
 				for (const blockung of this.mapBlockungen.values())
 					blockung.istAktiv = (blockung.id === idBlockung);
-			} else {
+			else {
 				const blockung = this.mapBlockungen.get(idBlockung);
 				if (blockung !== undefined)
 					blockung.istAktiv = false;
@@ -470,12 +466,11 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			throw new DeveloperNotificationException("Es wurde noch keine Blockung geladen, so dass die Ergebnisliste nicht angepasst werden kann.");
 		api.status.start();
 		await api.server.patchGostBlockungsergebnis(data, api.schema, idErgebnis);
-		if (data.istAktiv === true) {
+		if (data.istAktiv === true)
 			for (const ergebnis of this.datenmanager.ergebnisGetListeSortiertNachBewertung())
 				ergebnis.istAktiv = (ergebnis.id === idErgebnis);
-		} else if (data.istAktiv === false) {
+		else if (data.istAktiv === false)
 			this.datenmanager.ergebnisGet(idErgebnis).istAktiv = false;
-		}
 		api.status.stop();
 		this.commit();
 		return true;
@@ -509,29 +504,26 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		for (const id of ids)
 			list.add(id);
 		// prüfe, ob der Schülerfilter noch eine Referenz zum Kurs hat
-		if (this.schuelerFilter.kurs?.id !== undefined) {
-			if (list.contains(this.schuelerFilter.kurs.id))
-				this.schuelerFilter.reset();
-		}
+		if ((this.schuelerFilter.kurs?.id !== undefined) && list.contains(this.schuelerFilter.kurs.id))
+			this.schuelerFilter.reset();
 		// Prüfe, ob der Schülerfilter noch eine Referenz zum Fach des Kurses hat
 		else if (this.schuelerFilter.fach !== undefined) {
 			const listFachIDs = this.ergebnismanager.getOfFachKursmenge(this.schuelerFilter.fach);
-			for (const k of list) {
+			for (const k of list)
 				if (listFachIDs.contains(k)) {
 					this.schuelerFilter.reset();
 					break;
 				}
-			}
 		}
 		await api.server.deleteGostBlockungKurse(list, api.schema);
 		this.datenmanager.kurseRemoveByID(list);
 		this.ergebnismanager.setRemoveKurseByID(list);
+		this.kursAuswahl.removeAll(list);
 		this.commit();
-		this.kursAuswahl.value.removeAll(list);
 	});
 
 	combineKurs = api.call(async (kurs1: GostBlockungKurs, kurs2: GostBlockungKurs | GostBlockungsergebnisKurs | undefined | null) => {
-		if (kurs2 === undefined || kurs2 === null)
+		if ((kurs2 === undefined) || (kurs2 === null))
 			return;
 		await api.server.combineGostBlockungKurs(api.schema, kurs1.id, kurs2.id);
 		this.ergebnismanager.setMergeKurseByID(kurs1.id, kurs2.id);
@@ -540,7 +532,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	splitKurs = api.call(async (kurs: GostBlockungKurs) => {
 		const { kurs1, kurs2, schueler2 } = await api.server.splitGostBlockungKurs(api.schema, kurs.id);
-		this.ergebnismanager.setSplitKurs(kurs1, kurs2, <number[]>schueler2.toArray())
+		this.ergebnismanager.setSplitKurs(kurs1, kurs2, <number[]>schueler2.toArray());
 		this.commit();
 	});
 
@@ -594,7 +586,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			return;
 		const schiene = await api.server.addGostBlockungSchiene(api.schema, this.auswahlBlockung.id);
 		this.datenmanager.schieneAdd(schiene);
-		this.ergebnismanager.setAddSchieneByID(schiene.id)
+		this.ergebnismanager.setAddSchieneByID(schiene.id);
 		this.commit();
 		return schiene;
 	});
@@ -710,7 +702,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		if ((!this.hatBlockung) || (this._state.value.auswahlErgebnis === undefined))
 			return;
 		const abiturjahr = this.abiturjahr;
-		const halbjahr = this.halbjahr.next()?.id || this.halbjahr.id;
+		const halbjahr = this.halbjahr.next()?.id ?? this.halbjahr.id;
 		const result = await api.server.schreibeGostBlockungsErgebnisHoch(api.schema, this.auswahlErgebnis.id);
 		await RouteManager.doRoute(routeGostKursplanung.getRouteBlockung(abiturjahr, halbjahr, result.id));
 	});
@@ -767,13 +759,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		const list = new ArrayList<number>();
 		switch (title) {
 			case "Schülerliste markierte Kurse":
-				for (const kurs of this.kursAuswahl.value)
+				for (const kurs of this.kursAuswahl)
 					list.add(kurs);
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingParameter, api.schema);
 			case "Kurse mit Statistikwerten":
-				for (const kurs of this.kursAuswahl.value)
+				for (const kurs of this.kursAuswahl)
 					list.add(kurs);
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
@@ -803,9 +795,6 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 				reportingParameter.reportvorlage = ReportingReportvorlage.GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN.getBezeichnung();
 				reportingParameter.idsDetaildaten = list;
 				return await api.server.pdfReport(reportingParameter, api.schema);
-			default:
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				throw new DeveloperNotificationException(`"${title}" ist kein gültiger PDF Download-Typ`);
 		}
 	})
 
@@ -851,7 +840,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	protected getListeKursauswahl(): List<number> {
 		const result = new ArrayList<number>();
-		for (const idKurs of this.kursAuswahl.value)
+		for (const idKurs of this.kursAuswahl)
 			result.add(idKurs);
 		return result;
 	}
@@ -865,4 +854,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		this.commit();
 	}, {name: 'gost.regelnUpdate'})
 
+	setKursAuswahl = (kursauswahl: JavaSet<number>) => {
+		this.setPatchedState({ kursauswahl });
+	}
 }

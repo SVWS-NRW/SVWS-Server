@@ -2,6 +2,9 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { JavaInteger } from '../../java/lang/JavaInteger';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { StringUtils } from '../../core/utils/StringUtils';
+import { ArrayList } from '../../java/util/ArrayList';
+import { Class } from '../../java/lang/Class';
+import { JavaString } from '../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class DateUtils extends JavaObject {
@@ -478,6 +481,61 @@ export class DateUtils extends JavaObject {
 		return s.toString();
 	}
 
+	/**
+	 * Liefert die Tage zwischen zwei Datumsangaben als String-Array im ISO8601-Format.
+	 *
+	 * @param startDate   das Startdatum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 * @param endDate     das Enddatum im ISO8601-Format uuuu-MM-dd (z.B. 2014-03-14).
+	 *
+	 * @return die Tage zwischen zwei Datumsangaben als String-Array im ISO8601-Format.
+	 */
+	public static gibTageAlsDatumZwischen(startDate : string, endDate : string) : Array<string | null> {
+		const startDateArray : Array<number> = DateUtils.extractFromDateISO8601(startDate);
+		const endDateArray : Array<number> = DateUtils.extractFromDateISO8601(endDate);
+		const dateList : ArrayList<string> = new ArrayList<string>();
+		while (startDateArray[0] < endDateArray[0] || (startDateArray[0] === endDateArray[0] && (startDateArray[1] < endDateArray[1] || (startDateArray[1] === endDateArray[1] && startDateArray[2] <= endDateArray[2])))) {
+			dateList.add(JavaString.format("%04d-%02d-%02d", startDateArray[0], startDateArray[1], startDateArray[2]));
+			startDateArray[2]++;
+			if (startDateArray[2] > DateUtils.daysInMonth(startDateArray[0], startDateArray[1])) {
+				startDateArray[2] = 1;
+				startDateArray[1]++;
+				if (startDateArray[1] > 12) {
+					startDateArray[1] = 1;
+					startDateArray[0]++;
+				}
+			}
+		}
+		return dateList.toArray(Array(0).fill(null));
+	}
+
+	private static daysInMonth(year : number, month : number) : number {
+		switch (month) {
+			case 4:
+			case 6:
+			case 9:
+			case 11: {
+				return 30;
+			}
+			case 2: {
+				if (DateUtils.istSchaltjahr(year))
+					return 29;
+				return 28;
+			}
+			default: {
+				return 31;
+			}
+		}
+	}
+
+	private static istSchaltjahr(year : number) : boolean {
+		if (year % 4 === 0) {
+			if (year % 100 === 0)
+				return year % 400 === 0;
+			return true;
+		}
+		return false;
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.DateUtils';
 	}
@@ -485,6 +543,8 @@ export class DateUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.DateUtils'].includes(name);
 	}
+
+	public static class = new Class<DateUtils>('de.svws_nrw.core.utils.DateUtils');
 
 }
 

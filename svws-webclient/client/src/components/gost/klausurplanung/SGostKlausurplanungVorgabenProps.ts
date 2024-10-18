@@ -5,10 +5,12 @@ import type {
 	GostJahrgangsdaten,
 	GostKlausurvorgabe,
 	GostKlausurplanManager,
+	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungVorgabenProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten | undefined;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;

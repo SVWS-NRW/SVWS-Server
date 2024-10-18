@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
+import { Class } from '../../../java/lang/Class';
 import { PruefungsordnungKatalogEintrag } from '../../../core/data/schule/PruefungsordnungKatalogEintrag';
 
 export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
@@ -133,6 +134,8 @@ export class Pruefungsordnung extends JavaEnum<Pruefungsordnung> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Pruefungsordnung', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Pruefungsordnung>('de.svws_nrw.core.types.schule.Pruefungsordnung');
 
 }
 

@@ -1,11 +1,10 @@
 package de.svws_nrw.data.schueler;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.schueler.UebergangsempfehlungKatalogEintrag;
-import de.svws_nrw.core.types.schueler.Uebergangsempfehlung;
+import de.svws_nrw.asd.data.schueler.UebergangsempfehlungKatalogEintrag;
+import de.svws_nrw.asd.types.schueler.Uebergangsempfehlung;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,7 +27,7 @@ public final class DataKatalogUebergangsempfehlung extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<UebergangsempfehlungKatalogEintrag> daten = new ArrayList<>();
 		for (final Uebergangsempfehlung eintrag : Uebergangsempfehlung.values())
-			daten.addAll(Arrays.asList(eintrag.historie));
+			daten.addAll(eintrag.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

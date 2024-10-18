@@ -3,7 +3,7 @@ package de.svws_nrw.core.abschluss;
 import de.svws_nrw.core.abschluss.bk.a.BKAnlageAFach;
 import de.svws_nrw.core.abschluss.bk.a.BKAnlageAFaecher;
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import jakarta.validation.constraints.NotNull;
 
 /**

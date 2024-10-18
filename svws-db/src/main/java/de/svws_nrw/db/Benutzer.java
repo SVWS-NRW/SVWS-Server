@@ -3,8 +3,10 @@ package de.svws_nrw.db;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.crypto.SecretKey;
@@ -12,9 +14,16 @@ import javax.crypto.SecretKey;
 import de.svws_nrw.base.crypto.AES;
 import de.svws_nrw.base.crypto.AESAlgo;
 import de.svws_nrw.base.crypto.AESException;
+import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.data.schule.SchuleStammdaten;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.ext.jbcrypt.BCrypt;
+import jakarta.validation.constraints.NotNull;
 
 
 /**
@@ -39,12 +48,25 @@ public final class Benutzer {
 	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
 	private final DBConfig _config;
 
-	/** Der Manager für die Datenbank-Verbindungen */
-	public final ConnectionManager connectionManager;
-
 	/** Enthält bei einem Open-API-Zugriff die Datenbank-ID des zugehörigen Lehrers, falls der Benutzer ein Lehrer ist*/
 	private Long _idLehrer = null;
 
+
+	/**
+	 * Enthält nach der Anmeldung die grundlegenden Informationen zur Schule und den dortigen Schuljahresabschnitten.
+	 */
+	private SchuleStammdaten _stammdaten = null;
+
+	/**
+	 * Eine Map für den schnellen Zugriff auf die Schuljahresabschnitte aus den Stammdaten der Schule
+	 */
+	private final @NotNull Map<Long, Schuljahresabschnitt> _mapSchuljahresabschnitte = new HashMap<>();
+
+	/**
+	 * Eine Map für den schnellen Zugriff auf die Schuljahresabschnitte aus den Stammdaten der Schule anhand
+	 * des Schuljahres und des Halbjahres
+	 */
+	private final @NotNull HashMap2D<Integer, Integer, Schuljahresabschnitt> _mapSchuljahresabschnitteByJahrUndHalbjahr = new HashMap2D<>();
 
 	/**
 	 * Enthält die Information welche Kompetenzen der Benutzer in Bezug auf den Datenbankzugriff hat.
@@ -73,21 +95,24 @@ public final class Benutzer {
 	 */
 	private final Set<LehrerLeitungsfunktion> _leitungsfunktionen = new HashSet<>();
 
+	/**
+	 * Enthält die Abiturjahrgänge, in welchen der Benutzer, wenn es sich um einen Lehrer handelt,
+	 * als Beratungslehrer eingetragen ist.
+	 */
+	private final Set<Integer> _abiturjahrgaenge = new HashSet<>();
+
 
 	/**
 	 * Erzeugt einen neuen Datenbank-Benutzer, wobei die für den Datenbankzugriff zu
 	 * verwendende {@link DBConfig} angegeben wird.
 	 *
 	 * @param config   die Datenbank-Konfiguration
-	 *
-	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-	private Benutzer(final DBConfig config) throws DBException {
+	private Benutzer(final DBConfig config) {
 		this._username = "niemand";
 		this._password = "keines";
 		this._aes = null;
 		this._config = config;
-		this.connectionManager = ConnectionManager.get(config);
 	}
 
 
@@ -98,11 +123,19 @@ public final class Benutzer {
 	 * @param config   die Datenbank-Konfiguration.
 	 *
 	 * @return die neue Instanz des {@link Benutzer}
-	 *
-	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
-	public static Benutzer create(final DBConfig config) throws DBException {
+	public static Benutzer create(final DBConfig config) {
 		return new Benutzer(config);
+	}
+
+
+	/**
+	 * Gibt die Datenbank-Konfiguration dieses Benutzers zurück.
+	 *
+	 * @return die Datenbank-Konfiguration dieses Benutzer
+	 */
+	public DBConfig getConfig() {
+		return this._config;
 	}
 
 
@@ -111,14 +144,31 @@ public final class Benutzer {
 	 * einem anderen Schema.
 	 * Anmerkung: ein identischer Schema-Name wird als Sonderfall auch zugelassen.
 	 *
-	 * @param schema   der name des Schemas für die neue Verbindung
+	 * @param schema   der Name des Schemas für die neue Verbindung
 	 *
 	 * @return der Benutzer für den Datenbankzugriff, oder null im Fehlerfall
 	 *
 	 * @throws DBException wenn die Authentifizierung fehlschlägt
 	 */
 	public Benutzer connectTo(final String schema) throws DBException {
-		return create(_config.switchSchema(schema));
+		return connectTo(schema, _config.getPersistenceUnit());
+	}
+
+
+	/**
+	 * Erstellt eine neue Verbindung mit den gleichen Verbindungsinformationen, aber zu
+	 * einem anderen Schema.
+	 * Anmerkung: ein identischer Schema-Name wird als Sonderfall auch zugelassen.
+	 *
+	 * @param schema   der Name des Schemas für die neue Verbindung
+	 * @param pu       die zu verwendende Persistence-Unit
+	 *
+	 * @return der Benutzer für den Datenbankzugriff, oder null im Fehlerfall
+	 *
+	 * @throws DBException wenn die Authentifizierung fehlschlägt
+	 */
+	public Benutzer connectTo(final String schema, final PersistenceUnits pu) throws DBException {
+		return create(_config.switchSchema(pu, schema));
 	}
 
 
@@ -345,14 +395,170 @@ public final class Benutzer {
 	 * eine neue Verbindung.
 	 *
 	 * @return die Instanz des {@link DBEntityManager}
+	 *
+	 * @throws DBException   bei einem Fehler im Verbindungsaufbau
 	 */
-	public DBEntityManager getEntityManager() {
-		try {
-			return new DBEntityManager(this, _config);
-		} catch (@SuppressWarnings("unused") final IllegalStateException e) {
-			// TODO error handling
-			return null;
+	public DBEntityManager getEntityManager() throws DBException {
+		return ConnectionManager.instance.getConnection(this);
+	}
+
+
+	/**
+	 * Gibt die Stammdaten der Schule zurück.
+	 *
+	 * @return die Stammdaten der Schule
+	 */
+	public @NotNull SchuleStammdaten schuleGetStammdaten() {
+		if (_stammdaten == null)
+			throw new DeveloperNotificationException("Es wurde auf die Stammdaten der Schule zugegriffen, obwohl diese nicht geladen sind.");
+		return _stammdaten;
+	}
+
+
+	/**
+	 * Setzt die Stammdaten der Schule und initialisiert die Map für den Zugriff
+	 * auf die Schuljahresabschnitte.
+	 *
+	 * @param stammdaten   die neuen Stammdaten
+	 */
+	public void schuleSetStammdaten(final SchuleStammdaten stammdaten) {
+		_stammdaten = stammdaten;
+		this._mapSchuljahresabschnitte.clear();
+		if (_stammdaten != null) {
+			for (final @NotNull Schuljahresabschnitt abschnitt : _stammdaten.abschnitte) {
+				_mapSchuljahresabschnitte.put(abschnitt.id, abschnitt);
+				_mapSchuljahresabschnitteByJahrUndHalbjahr.put(abschnitt.schuljahr, abschnitt.abschnitt, abschnitt);
+			}
 		}
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt zu der ID zurück oder null, wenn keiner für die ID existiert.
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return der Schuljahresabschnitt oder null
+	 */
+	public Schuljahresabschnitt schuleGetAbschnittById(final long id) {
+		return _mapSchuljahresabschnitte.get(id);
+	}
+
+
+	/**
+	 * Gibt den Schuljahresabschnitt zu dem Schuljahr und dem Halbjahr zurück oder null, wenn keiner existiert.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param halbjahr    das Halbjar
+	 *
+	 * @return der Schuljahresabschnitt oder null
+	 */
+	public Schuljahresabschnitt schuleGetAbschnittBySchuljahrUndHalbjahr(final int schuljahr, final int halbjahr) {
+		return _mapSchuljahresabschnitteByJahrUndHalbjahr.getOrNull(schuljahr, halbjahr);
+	}
+
+
+	/**
+	 * Bestimmt die Liste der Schuljahresabschnitte zu den übergebenen Schuljahren
+	 *
+	 * @param schuljahre   die Schuljahre
+	 *
+	 * @return die Liste der Schuljahresabschnitte
+	 */
+	public @NotNull List<Schuljahresabschnitt> schuleGetAbschnitteBySchuljahre(final int... schuljahre) {
+		final List<Schuljahresabschnitt> result = new ArrayList<>();
+		for (final int schuljahr : schuljahre) {
+			final Map<Integer, Schuljahresabschnitt> mapHalbjahre = _mapSchuljahresabschnitteByJahrUndHalbjahr.getSubMapOrNull(schuljahr);
+			if (mapHalbjahre != null)
+				result.addAll(mapHalbjahre.values());
+		}
+		return result;
+	}
+
+
+	/**
+	 * Bestimmt den aktuellen Schuljahresabschnitt der Schule
+	 *
+	 * @return der aktuelle Schuljahresabschnitt der Schule
+	 */
+	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnitt() {
+		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(schuleGetStammdaten().idSchuljahresabschnitt);
+		if (result == null)
+			throw new DeveloperNotificationException("Der aktuelle Schuljahresabschnitt der Schule konnte nicht bestimmt werden.");
+		return result;
+	}
+
+
+	/**
+	 * Bestimmt den Schuljahresabschnitt für die angebene ID oder als alternative den der Schule
+	 *
+	 * @param id   die ID des Schuljahresabschnitts
+	 *
+	 * @return der Schuljahresabschnitt für ID oder der der Schule, falls die ID ungültig ist
+	 */
+	public @NotNull Schuljahresabschnitt schuleGetSchuljahresabschnittByIdOrDefault(final long id) {
+		final Schuljahresabschnitt result = _mapSchuljahresabschnitte.get(id);
+		if (result != null)
+			return result;
+		return schuleGetSchuljahresabschnitt();
+	}
+
+
+	/**
+	 * Gibt das aktuelle Schuljahr der Schule zurück.
+	 *
+	 * @return das aktuelle Schuljahr der Schule
+	 */
+	public int schuleGetSchuljahr() {
+		return schuleGetSchuljahresabschnitt().schuljahr;
+	}
+
+
+	/**
+	 * Gibt den aktuellen Abschnitt im Schuljahr der Schule zurück.
+	 *
+	 * @return der aktuelle Abschnitt
+	 */
+	public int schuleGetAbschnitt() {
+		return schuleGetSchuljahresabschnitt().abschnitt;
+	}
+
+
+	/**
+	 * Gibt die Schulform der Schule zurück.
+	 *
+	 * @return die Schulform der Schule
+	 */
+	public @NotNull Schulform schuleGetSchulform() {
+		final Schulform result = Schulform.data().getWertByKuerzel(schuleGetStammdaten().schulform);
+		if (result == null)
+			throw new DeveloperNotificationException("Die Schulform der Schule konnte nicht bestimmt werden.");
+		return result;
+	}
+
+
+	/**
+	 * Gibt den Katalog-Eintrag für die Schulform und das aktuelle Schuljahr der Schule zurück.
+	 *
+	 * @return der Schulform-Katalog-Eintrag
+	 */
+	public @NotNull SchulformKatalogEintrag schuleGetSchulformKatalogEintrag() {
+		final SchulformKatalogEintrag result = schuleGetSchulform().daten(schuleGetSchuljahresabschnitt().schuljahr);
+		if (result == null)
+			throw new DeveloperNotificationException(
+					"Der Schulform-Katalog-Eintrag für die Schulform der Schule konnte für das aktuelle Schuljahr %d nicht bestimmt werden."
+							.formatted(schuleGetSchuljahresabschnitt().schuljahr));
+		return result;
+	}
+
+
+	/**
+	 * Gibt zurück, ob die Schulform dieser Schule eine gymnasiale Oberstufe erlaubt oder nicht.
+	 *
+	 * @return true, wenn die Schule eine gymnasiale Oberstufe hat, und false, wenn nicht.
+	 */
+	public boolean schuleHatGymOb() {
+		return schuleGetSchulformKatalogEintrag().hatGymOb;
 	}
 
 
@@ -420,6 +626,27 @@ public final class Benutzer {
 	 */
 	public Set<LehrerLeitungsfunktion> getLeitungsfunktionen() {
 		return new HashSet<>(this._leitungsfunktionen);
+	}
+
+
+	/**
+	 * Setzt die Abiturjahrgänge, in welchen der Benutzer Beratungslehrer ist.
+	 *
+	 * @param abijahrgaenge   die Abiturjahrgänge
+	 */
+	public void setAbiturjahrgaenge(final Collection<Integer> abijahrgaenge) {
+		this._abiturjahrgaenge.clear();
+		this._abiturjahrgaenge.addAll(abijahrgaenge);
+	}
+
+
+	/**
+	 * Gibt die Abiturjahrgänge, in welchen der Benutzer Beratungslehrer ist.
+	 *
+	 * @return die Abiturjahrgänge
+	 */
+	public Set<Integer> getAbiturjahrgaenge() {
+		return new HashSet<>(this._abiturjahrgaenge);
 	}
 
 }

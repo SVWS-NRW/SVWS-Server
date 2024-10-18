@@ -117,7 +117,7 @@ public final class DTOSchuelerPSFachBemerkungen {
 	@JsonProperty
 	public String BemerkungFSP;
 
-	/** Text für Verstungsentscheidung */
+	/** Text für Versetzungsentscheidung */
 	@Column(name = "BemerkungVersetzung")
 	@JsonProperty
 	public String BemerkungVersetzung;

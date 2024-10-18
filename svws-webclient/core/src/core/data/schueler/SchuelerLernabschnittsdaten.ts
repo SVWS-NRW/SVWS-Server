@@ -3,6 +3,7 @@ import { SchuelerLeistungsdaten } from '../../../core/data/schueler/SchuelerLeis
 import { SchuelerLernabschnittNachpruefungsdaten } from '../../../core/data/schueler/SchuelerLernabschnittNachpruefungsdaten';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { SchuelerLernabschnittBemerkungen } from '../../../core/data/schueler/SchuelerLernabschnittBemerkungen';
 
 export class SchuelerLernabschnittsdaten extends JavaObject {
@@ -249,6 +250,8 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten'].includes(name);
 	}
+
+	public static class = new Class<SchuelerLernabschnittsdaten>('de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten');
 
 	public static transpilerFromJSON(json : string): SchuelerLernabschnittsdaten {
 		const obj = JSON.parse(json) as Partial<SchuelerLernabschnittsdaten>;

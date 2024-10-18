@@ -34,7 +34,7 @@
 	}
 
 	async function patch() {
-		const hinweistext = value.value ? value.value : props.hinweistext;
+		const hinweistext = value.value.length !== 0 ? value.value : props.hinweistext;
 		await props.patchFachkombination({ hinweistext }, props.kombination.id);
 	}
 

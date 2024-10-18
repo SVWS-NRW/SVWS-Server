@@ -16,11 +16,11 @@ public class SchuldateiOrganisationseinheitSchulform extends SchuldateiEintrag {
 
 	/** Die ID des Schulform-Eintrages. */
 	@Schema(description = "die ID des Schulform-Eintrages", example = "4711")
-	public Integer id;
+	public String id = null;
 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
-	public int schulnummer = 0;
+	public @NotNull String schulnummer = "";
 
 	/** Schulformcode */
 	@Schema(description = "Schulformcode", example = "Schulform")

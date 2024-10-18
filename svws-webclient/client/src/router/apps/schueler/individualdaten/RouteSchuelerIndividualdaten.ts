@@ -45,6 +45,7 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			schulform: api.schulform,
 			serverMode: api.mode,
 			benutzerKompetenzen: api.benutzerKompetenzen,
+			autofocus: routeSchueler.data.autofocus,
 		};
 	}
 

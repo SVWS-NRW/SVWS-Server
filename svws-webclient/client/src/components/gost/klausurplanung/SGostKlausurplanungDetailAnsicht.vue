@@ -7,6 +7,7 @@
 			<div v-if="kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() > 0" class="flex flex-col gap-20 mt-8">
 				<s-gost-klausurplanung-detail-ansicht-termin v-for="termin in kMan().terminHtMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 					:key="termin.id"
+					:abschnitt
 					:termin="termin"
 					:k-man="kMan" />
 			</div>

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
@@ -66,6 +67,8 @@ export class LinkedCollectionDescendingIterator<E> extends JavaObject implements
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator'].includes(name);
 	}
+
+	public static class = new Class<LinkedCollectionDescendingIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionDescendingIterator');
 
 }
 

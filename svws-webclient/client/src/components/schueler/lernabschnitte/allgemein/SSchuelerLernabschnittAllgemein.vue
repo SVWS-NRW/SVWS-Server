@@ -30,12 +30,12 @@
 				</div>
 				<svws-ui-spacing :size="2" />
 				<svws-ui-input-wrapper :grid="2">
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten.kuerzel} - ${i.daten.beschreibung}`" autocomplete statistics
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Schulgliederung" :items="gliederungen" :item-text="i => `${i.daten(schuljahr)?.kuerzel ?? '—'} - ${i.daten(schuljahr)?.text ?? '—'}`" autocomplete statistics
 						v-model="gliederung" />
 					<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Prüfungsordnung" :model-value="manager().lernabschnittGet().pruefungsOrdnung || undefined" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Organisationsform" :items="organisationsformen" :item-text="i => i.beschreibung" autocomplete statistics
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Organisationsform" :items="organisationsformen" :item-text="i => i.text" autocomplete statistics
 						v-model="organisationsform" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klassenart" :items="klassenarten" :item-text="i => i.daten.bezeichnung" autocomplete statistics
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klassenart" :items="klassenarten" :item-text="i => i.daten(schuljahr)?.text ?? '—'" autocomplete statistics
 						v-model="klassenart" />
 				</svws-ui-input-wrapper>
 				<svws-ui-spacing />
@@ -58,12 +58,13 @@
 
 	import { computed } from 'vue';
 	import type { FoerderschwerpunktEintrag, JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, OrganisationsformKatalogEintrag } from "@core";
-	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList,
-		WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
+	import { AllgemeinbildendOrganisationsformen, BerufskollegOrganisationsformen, Klassenart, Schulform, Schulgliederung, ArrayList, WeiterbildungskollegOrganisationsformen, DeveloperNotificationException, BenutzerKompetenz } from "@core";
 
 	import type { SchuelerLernabschnittAllgemeinProps } from "./SSchuelerLernabschnittAllgemeinProps";
 
 	const props = defineProps<SchuelerLernabschnittAllgemeinProps>();
+
+	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
 
 	const hatUpdateKompetenz = computed<boolean>(() => {
 		return (props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))
@@ -75,37 +76,37 @@
 		return `${lehrer.nachname}, ${lehrer.vorname} (${lehrer.kuerzel})`;
 	}
 
-	const klasse = computed<KlassenDaten | undefined>(() => {
+	const klasse = computed<KlassenDaten | null>(() => {
 		const id = props.manager().lernabschnittGet().klassenID;
 		if (id === null)
-			return undefined;
+			return null;
 		return props.manager().klasseGetByIdOrException(id);
 	});
 
-	const jahrgang = computed<JahrgangsDaten | undefined>(() => {
+	const jahrgang = computed<JahrgangsDaten | null>(() => {
 		const id = props.manager().lernabschnittGet().jahrgangID;
 		if (id === null)
-			return undefined;
+			return null;
 		return props.manager().jahrgangGetByIdOrException(id);
 	});
 
-	const sonderpaedagoge = computed<LehrerListeEintrag | undefined>(() => {
+	const sonderpaedagoge = computed<LehrerListeEintrag | null>(() => {
 		const id = props.manager().lernabschnittGet().sonderpaedagogeID;
 		if (id === null)
-			return undefined;
+			return null;
 		return props.manager().lehrerGetByIdOrException(id);
 	});
 
-	const tutor = computed<LehrerListeEintrag | undefined>(() => {
+	const tutor = computed<LehrerListeEintrag | null>(() => {
 		const id = props.manager().lernabschnittGet().tutorID;
 		if (id === null)
-			return undefined;
+			return null;
 		return props.manager().lehrerGetByIdOrException(id);
 	});
 
 	const klassenlehrer = computed<LehrerListeEintrag[]>(() => {
 		const k = klasse.value;
-		if (k === undefined)
+		if (k === null)
 			return [];
 		const result: LehrerListeEintrag[] = [];
 		for (const lid of k.klassenLeitungen)
@@ -113,24 +114,24 @@
 		return result;
 	});
 
-	const foerderschwerpunkt = computed<FoerderschwerpunktEintrag | undefined>({
+	const foerderschwerpunkt = computed<FoerderschwerpunktEintrag | null>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().foerderschwerpunkt1ID;
 			if (id === null)
-				return undefined;
+				return null;
 			return props.manager().foerderschwerpunktGetByIdOrException(id);
 		},
-		set: (value) => void props.patch({ foerderschwerpunkt1ID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ foerderschwerpunkt1ID: value?.id ?? null })
 	});
 
-	const foerderschwerpunkt2 = computed<FoerderschwerpunktEintrag | undefined>({
+	const foerderschwerpunkt2 = computed<FoerderschwerpunktEintrag | null>({
 		get: () => {
 			const id = props.manager().lernabschnittGet().foerderschwerpunkt2ID;
 			if (id === null)
-				return undefined;
+				return null;
 			return props.manager().foerderschwerpunktGetByIdOrException(id);
 		},
-		set: (value) => void props.patch({ foerderschwerpunkt2ID: value === undefined ? null : value.id })
+		set: (value) => void props.patch({ foerderschwerpunkt2ID: value?.id ?? null })
 	});
 
 	const aosf = computed<boolean>({
@@ -154,75 +155,73 @@
 	});
 
 	const klassenarten = computed<List<Klassenart>>(() => {
-		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
 		if (schulform === null)
 			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
-		return Klassenart.get(schulform);
+		return Klassenart.getBySchuljahrAndSchulform(schuljahr.value, schulform);
 	});
 
-	const klassenart = computed<Klassenart | undefined>({
+	const klassenart = computed<Klassenart | null>({
 		get: () => {
-			const art = Klassenart.getByKuerzel(props.manager().lernabschnittGet().Klassenart);
-			return (art === null) ? undefined : art;
+			const kuerzel = props.manager().lernabschnittGet().Klassenart;
+			return ((kuerzel === null) ? null : Klassenart.data().getWertByKuerzel(kuerzel)) ?? null;
 		},
-		set: (value) => void props.patch({ Klassenart: value === undefined ? null : value.daten.kuerzel })
+		set: (value) => void props.patch({ Klassenart: value?.daten(schuljahr.value)?.kuerzel ?? null })
 	});
 
 	const gliederungen = computed<List<Schulgliederung>>(() => {
-		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
 		if (schulform === null)
 			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
-		return Schulgliederung.get(schulform);
+		return Schulgliederung.getBySchuljahrAndSchulform(schuljahr.value, schulform);
 	});
 
-	const gliederung = computed<Schulgliederung | undefined>({
+	const gliederung = computed<Schulgliederung | null>({
 		get: () => {
 			if (props.manager().lernabschnittGet().schulgliederung === null)
-				return undefined;
-			const gliederung = Schulgliederung.getByKuerzel(props.manager().lernabschnittGet().schulgliederung);
-			return gliederung === null ? undefined : gliederung;
+				return null;
+			const kuerzel = props.manager().lernabschnittGet().schulgliederung;
+			return ((kuerzel === null) ? null : Schulgliederung.data().getWertByKuerzel(kuerzel));
 		},
-		set: (value) => void props.patch({ schulgliederung: (value === undefined) || (value === null) ? null : value.daten.kuerzel })
+		set: (value) => void props.patch({ schulgliederung: value?.daten(schuljahr.value)?.kuerzel ?? null })
 	});
 
 	const organisationsformen = computed<List<OrganisationsformKatalogEintrag>>(() => {
-		const schulform = Schulform.getByKuerzel(props.schule.schulform);
+		const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
 		if (schulform === null)
 			throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
 		const result = new ArrayList<OrganisationsformKatalogEintrag>();
 		if (schulform === Schulform.WB) {
 			for (const orgform of WeiterbildungskollegOrganisationsformen.values())
-				result.add(orgform.daten);
+				result.add(orgform.daten(schuljahr.value));
 		} else if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
 			for (const orgform of BerufskollegOrganisationsformen.values())
-				result.add(orgform.daten);
+				result.add(orgform.daten(schuljahr.value));
 		} else {
 			for (const orgform of AllgemeinbildendOrganisationsformen.values())
-				result.add(orgform.daten);
+				result.add(orgform.daten(schuljahr.value));
 		}
 		return result;
 	});
 
-	const organisationsform = computed<OrganisationsformKatalogEintrag | undefined>({
+	const organisationsform = computed<OrganisationsformKatalogEintrag | null>({
 		get: () => {
 			if (props.manager().lernabschnittGet().organisationsform === null)
-				return undefined;
-			const schulform = Schulform.getByKuerzel(props.schule.schulform);
+				return null;
+			const schulform = Schulform.data().getWertByKuerzel(props.schule.schulform);
 			if (schulform === null)
 				throw new DeveloperNotificationException("Keine gültige Schulform festgelegt");
+			const kuerzel = props.manager().lernabschnittGet().organisationsform;
 			if (schulform === Schulform.WB) {
-				const orgform = WeiterbildungskollegOrganisationsformen.getByKuerzel(props.manager().lernabschnittGet().organisationsform);
-				return orgform === null ? undefined : orgform.daten;
+				return ((kuerzel === null) ? null : WeiterbildungskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 			}
 			if ((schulform === Schulform.BK) || (schulform === Schulform.SB)) {
-				const orgform = BerufskollegOrganisationsformen.getByKuerzel(props.manager().lernabschnittGet().organisationsform);
-				return orgform === null ? undefined : orgform.daten;
+				return ((kuerzel === null) ? null : BerufskollegOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 			}
-			const orgform = AllgemeinbildendOrganisationsformen.getByKuerzel(props.manager().lernabschnittGet().organisationsform);
-			return orgform === null ? undefined : orgform.daten;
+			return ((kuerzel === null) ? null : AllgemeinbildendOrganisationsformen.data().getWertByKuerzel(kuerzel)?.daten(schuljahr.value) ?? null);
 		},
 		set: (value) => {
-			void props.patch({ organisationsform: value === undefined ? null : value.kuerzel });
+			void props.patch({ organisationsform: value?.kuerzel ?? null });
 		}
 	});
 

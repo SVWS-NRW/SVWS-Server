@@ -10,8 +10,8 @@ import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -94,7 +94,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		final @NotNull Projektkurse projektkurse = ((@NotNull Projektkurse) pruefungen_vorher[0]);
 
 		// ermittle, ob die Abiturbelegungsart von Musik und initialisiere die Zählung der Musikkurse bzw. der Ersatzfachkurse (siehe u.a. VV zu APO Gost §11.2.4)
-		final AbiturFachbelegung musik = manager.getFachbelegungByKuerzel(ZulaessigesFach.MU.daten.kuerzel);
+		final AbiturFachbelegung musik = manager.getFachbelegungByKuerzel(Fach.MU.name());
 		final boolean blockIHatMusikLK = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.LK, GostHalbjahr.getQualifikationsphase());
 		final boolean blockIHatMusikGKAbitur = manager.pruefeBelegungHatMindestensEinmalKursart(musik, GostKursart.GK, GostHalbjahr.getQualifikationsphase())
 				&& (musik != null) && ((musik.abiturFach != null) && ((musik.abiturFach == 3) || (musik.abiturFach == 4)));
@@ -124,7 +124,7 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 			final GostFach fach = manager.getFach(fachbelegung);
 			if ((fach == null) || (!fach.istPruefungsordnungsRelevant))
 				continue;
-			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			final Fach zulFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			boolean istLKFach = false;
 			for (final AbiturFachbelegungHalbjahr fachbelegungHalbjahr : fachbelegung.belegungen) {
 				if (fachbelegungHalbjahr == null)
@@ -149,9 +149,9 @@ public final class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				boolean istNullPunkteBelegungInQPhase = false;
 
 				// Prüfe die Sonderbedingungen für die musikalischen Fächer und die Ersatzfächer (APO Gost §11.2.4 und APO Gost §28.7, §28.8 und VVs)
-				final boolean istMusik = (zulFach == ZulaessigesFach.MU);
+				final boolean istMusik = (zulFach == Fach.MU);
 				final boolean istErsatzfach = GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach);
-				final boolean istMusikErsatzfach = istErsatzfach && ((zulFach == ZulaessigesFach.IN) || (zulFach == ZulaessigesFach.VO));
+				final boolean istMusikErsatzfach = istErsatzfach && ((zulFach == Fach.IN) || (zulFach == Fach.VO));
 				if (halbjahr.istQualifikationsphase()) {
 					if (istMusik || istMusikErsatzfach) {
 						blockIAnzahlMusik++;

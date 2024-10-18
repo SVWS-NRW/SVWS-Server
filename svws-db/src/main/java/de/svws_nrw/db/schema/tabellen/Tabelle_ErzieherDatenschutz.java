@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -31,6 +31,12 @@ public class Tabelle_ErzieherDatenschutz extends SchemaTabelle {
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment("Status des Datenschutz-Eintrags (true/false)");
+
+	/** Die Definition der Tabellenspalte SchulnrEigner */
+	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels ErzieherDatenschutz_Erzieher_FK */

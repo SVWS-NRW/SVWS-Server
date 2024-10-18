@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBelegungsfehlerArt extends JavaEnum<GostBelegungsfehlerArt> {
 
@@ -106,6 +107,8 @@ export class GostBelegungsfehlerArt extends JavaEnum<GostBelegungsfehlerArt> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostBelegungsfehlerArt>('de.svws_nrw.core.abschluss.gost.GostBelegungsfehlerArt');
 
 }
 

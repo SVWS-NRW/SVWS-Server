@@ -1,5 +1,5 @@
 <template>
-	<template v-if="kMan().getStundenplanManagerOrNull()">
+	<template v-if="kMan().stundenplanManagerExistsByAbschnitt(abschnitt!.id) && props.kMan().stundenplanManagerExistsByAbschnittAndKW(props.abschnitt!.id, kalenderwoche().jahr, kalenderwoche().kw)">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-kalender-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -12,7 +12,8 @@
 					<div v-if="jahrgangsdaten?.abiturjahr !== -1"
 						@drop="onDrop(undefined)"
 						@dragover="checkDropZoneTerminAuswahl"
-						class="h-full">
+						class="h-full"
+						:class="[(terminSelected.value !== undefined && terminSelected.value.datum !== null) ? 'p-4 border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
 						<div>
 							<div class="leading-tight flex flex-col gap-0.5" v-if="kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).isEmpty()">
 								<span>Aktuell keine Klausuren zu planen.</span>
@@ -21,6 +22,7 @@
 						</div>
 						<ul class="flex flex-col gap-0.5 -mx-3">
 							<li v-for="termin in kMan().terminOhneDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
+								:id="'termin' + termin.id"
 								:key="termin.id"
 								:data="termin"
 								:draggable="isDraggable(termin)"
@@ -31,11 +33,14 @@
 									'border bg-white dark:bg-black rounded-lg border-black/10 dark:border-white/10 my-3 cursor-grab': terminSelected.value !== undefined && terminSelected.value.id === termin.id,
 									'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 rounded-lg pb-1': terminSelected.value !== undefined && terminSelected.value.id !== termin.id || terminSelected.value === undefined,
 								}">
-								<s-gost-klausurplanung-termin :termin="termin"
-									:k-man="kMan"
+								<s-gost-klausurplanung-termin :termin
+									:benutzer-kompetenzen
+									:k-man
 									:compact="terminSelected.value?.id !== termin.id"
-									:quartalsauswahl="quartalsauswahl"
+									:quartalsauswahl
 									:show-last-klausurtermin="true"
+									:goto-kalenderdatum
+									:goto-raumzeit-termin
 									drag-icon>
 									<template #datum><span /></template>
 								</s-gost-klausurplanung-termin>
@@ -45,22 +50,38 @@
 				</div>
 			</svws-ui-content-card>
 			<svws-ui-content-card class="svws-card-stundenplan">
-				<template v-if="kalenderwoche.value">
-					<s-gost-klausurplanung-kalender-stundenplan-ansicht :id="33" :kalenderwoche :jahrgangsdaten :halbjahr
-						:manager="() => kMan().getStundenplanManager()" :k-man :wochentyp="() => 0" :kurse-gefiltert :sum-schreiber
-						:on-drop :on-drag :drag-data="() => terminSelected.value" :check-drop-zone-zeitraster :zeige-alle-jahrgaenge :kursklausur-mouse-over="() => kursklausurMouseOver">
+				<template v-if="kalenderdatum">
+					<s-gost-klausurplanung-kalender-stundenplan-ansicht :benutzer-kompetenzen
+						:id="33"
+						:kalenderdatum
+						:jahrgangsdaten
+						:halbjahr
+						:manager="() => stundenplanManager()"
+						:k-man
+						:wochentyp="() => 0"
+						:kurse-gefiltert
+						:sum-schreiber
+						:on-drop
+						:on-drag
+						:drag-data="() => terminSelected.value"
+						:check-drop-zone-zeitraster
+						:zeige-alle-jahrgaenge
+						:goto-kalenderdatum
+						:goto-raumzeit-termin
+						:kalenderwoche
+						:kursklausur-mouse-over="() => kursklausurMouseOver">
 						<template #kwAuswahl>
 							<div class="col-span-2 flex gap-0.5 my-auto">
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(-1)" :disabled="!kalenderwoche.value || !kMan().getStundenplanManager().kalenderwochenzuordnungGetPrevOrNull(kalenderwoche.value)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
-								<svws-ui-select class="flex-grow svws-kw-auswahl" title="Kalenderwoche" v-model="kalenderwoche.value" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => props.kMan().getStundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
-								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderwoche(+1)" :disabled="!kalenderwoche.value || !kMan().getStundenplanManager().kalenderwochenzuordnungGetNextOrNull(kalenderwoche.value)"><span class="icon i-ri-arrow-right-s-line -m-0.5" /></svws-ui-button>
+								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderdatum(-7)" :disabled="!berechneKwzDatum(-7)"><span class="icon i-ri-arrow-left-s-line -m-0.5" /></svws-ui-button>
+								<svws-ui-select class="flex-grow svws-kw-auswahl" title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()" :item-text="(kw: StundenplanKalenderwochenzuordnung) => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" headless />
+								<svws-ui-button type="icon" class="-my-1 w-7 h-7" @click="navKalenderdatum(+7)" :disabled="!berechneKwzDatum(+7)"><span class="icon i-ri-arrow-right-s-line -m-0.5" /></svws-ui-button>
 							</div>
 						</template>
 					</s-gost-klausurplanung-kalender-stundenplan-ansicht>
 				</template>
 				<template v-else>
-					<svws-ui-select title="Kalenderwoche" v-model="kalenderwoche.value" :items="kalenderwochen()"
-						:item-text="(kw: StundenplanKalenderwochenzuordnung) => props.kMan().getStundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
+					<svws-ui-select title="Kalenderwoche" v-model="kalenderwochenauswahl" :items="kalenderwochen()"
+						:item-text="(kw: StundenplanKalenderwochenzuordnung) => stundenplanManager().kalenderwochenzuordnungGetWocheAsString(kw)" />
 				</template>
 			</svws-ui-content-card>
 			<svws-ui-content-card>
@@ -87,11 +108,11 @@
 						</div>
 						<ul class="flex flex-col gap-3">
 							<li v-for="konflikt in anzahlProKwKonflikte(4, false, showMoreKonflikte)" :key="konflikt.getKey()">
-								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
+								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
-										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : kMan().getStundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche.value, zeitrasterSelected!)) }}</span>									</span>
+										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>									</span>
 								</div>
 							</li>
 							<li v-if="!showMoreKonflikte" class="font-bold opacity-50">+ {{ anzahlProKwKonflikte(4, false, true).length - 3 }} weitere</li>
@@ -119,11 +140,11 @@
 						</div>
 						<ul class="flex flex-col gap-3">
 							<li v-for="konflikt in anzahlProKwKonflikte(3, true, showMoreWarnungen)" :key="konflikt.getKey()">
-								<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
+								<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 								<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 									<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge text-center flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`" @mouseenter="kursklausurMouseOver = kMan().kursklausurBySchuelerklausurTermin(klausur)" @mouseleave="kursklausurMouseOver=undefined">
 										<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
-										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : kMan().getStundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche.value, zeitrasterSelected!)) }}</span>
+										<span class="text-sm font-medium">{{ DateUtils.gibDatumGermanFormat(kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum !== null ? kMan().terminOrExceptionBySchuelerklausurTermin(klausur).datum! : stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected!)) }}</span>
 									</span>
 								</div>
 							</li>
@@ -134,36 +155,71 @@
 			</svws-ui-content-card>
 		</div>
 	</template>
+	<s-gost-klausurplanung-modal :show="returnModalKlausurHatRaeume()" text="Der Klausurtermin ist Teil einer jahrgangsübergreifenden Raumplanung. Die Aktion hat daher Auswirkungen auf andere Termine." :weiter="verschiebeKlausurTrotzRaumzuweisung" />
 </template>
 
 <script setup lang="ts">
-	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
-	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { Ref } from "vue";
+	import { ref, onMounted, computed } from "vue";
 	import type { GostKlausurplanungKalenderProps } from "./SGostKlausurplanungKalenderProps";
-	import { GostKlausurtermin, StundenplanZeitraster, DateUtils, ArrayList} from "@core";
-	import { computed, ref, onMounted } from "vue";
+	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
+	import type { Wochentag, StundenplanKalenderwochenzuordnung, List, GostKursklausur, JavaMapEntry, JavaSet, GostSchuelerklausurTermin} from "@core";
+	import { StundenplanZeitraster} from "@core";
+	import { GostKlausurtermin, DateUtils, ArrayList, BenutzerKompetenz} from "@core";
 
 	const props = defineProps<GostKlausurplanungKalenderProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+
+	const kalenderwoche = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
+
+	const stundenplanManager = () => props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kalenderwoche().jahr, kalenderwoche().kw));
+
 	const showMoreKonflikte = ref(false);
 	const showMoreWarnungen = ref(false);
 	const kursklausurMouseOver = ref<GostKursklausur | undefined>(undefined);
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	//const kwAuswahl = ref<StundenplanKalenderwochenzuordnung>(props.stundenplanmanager().kalenderwochenzuordnungGetByDatum(new Date().toISOString()));
+	const kalenderwochenauswahl = computed<StundenplanKalenderwochenzuordnung>({
+		get: () => {
+			return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, props.kalenderdatum.value!).kalenderwochenzuordnungGetByDatum(props.kalenderdatum.value!);
+		},
+		set: (value) => {
+			void props.gotoKalenderdatum(DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(value.jahr, value.kw));
+		}
+	});
 
 	function kalenderwochen(): List<StundenplanKalenderwochenzuordnung> {
-		return props.kMan().getStundenplanManager().kalenderwochenzuordnungGetMengeAsList();
+		return props.kMan().stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(props.abschnitt!.id);
 	}
 
-	// const dragData = ref<GostKlausurplanungDragData>(undefined);
+	const modalKlausurHatRaeume = ref<boolean>(false);
+	function returnModalKlausurHatRaeume(): () => Ref<boolean> {
+		return () => modalKlausurHatRaeume;
+	}
+
+	let klausurMoveDragData: GostKlausurtermin | undefined = undefined;
+	let klausurMoveDropZone: GostKlausurplanungDropZone = undefined;
+
+	async function verschiebeKlausurTrotzRaumzuweisung() {
+		if (klausurMoveDragData)
+			if (klausurMoveDropZone === undefined)
+				await props.patchKlausurtermin(klausurMoveDragData.id, {datum: null, startzeit: null});
+			else if (klausurMoveDropZone instanceof StundenplanZeitraster) {
+				const date = stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), klausurMoveDropZone);
+				await props.patchKlausurtermin(klausurMoveDragData.id, {datum: date, startzeit: klausurMoveDropZone.stundenbeginn});
+			}
+		props.terminSelected.value = undefined;
+
+	}
+
 	const zeitrasterSelected = ref<StundenplanZeitraster | undefined>(undefined);
 
 	const anzahlProKwKonflikte2 = (threshold: number, thresholdOnly: boolean) => {
 		let konflikte: JavaSet<JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>> | null = null;
 		if (props.terminSelected.value !== undefined && zeitrasterSelected.value !== undefined)
-			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, props.kMan().getStundenplanManager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
+			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndDatumAndThreshold(props.terminSelected.value, stundenplanManager().datumGetByKwzAndZeitraster(kalenderwoche(), zeitrasterSelected.value), threshold, thresholdOnly).entrySet();
 		else
-			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(props.kalenderwoche.value.kw, props.jahrgangsdaten.abiturjahr, threshold, thresholdOnly).entrySet();
+			konflikte = props.kMan().klausurenProSchueleridExceedingKWThresholdByKwAndAbijahrAndThreshold(kalenderwoche().kw, props.jahrgangsdaten.abiturjahr, threshold, thresholdOnly).entrySet();
 		return konflikte.toArray() as JavaMapEntry<number, JavaSet<GostSchuelerklausurTermin>>[];
 	}
 
@@ -172,18 +228,19 @@
 		return showMore ? konflikte : konflikte.slice(0, 3);
 	}
 
-	async function navKalenderwoche(by: number) {
-		if (by > 0) {
-			const nextKw = props.kMan().getStundenplanManager().kalenderwochenzuordnungGetNextOrNull(props.kalenderwoche.value);
-			if (nextKw !== null)
-				props.kalenderwoche.value = nextKw;
-			await props.gotoKalenderwoche(props.kalenderwoche.value);
-		} else if (by < 0) {
-			const prevKw = props.kMan().getStundenplanManager().kalenderwochenzuordnungGetPrevOrNull(props.kalenderwoche.value);
-			if (prevKw !== null)
-				props.kalenderwoche.value = prevKw;
-			await props.gotoKalenderwoche(props.kalenderwoche.value);
-		}
+	const berechneKwzDatum = (by: number) => {
+		const datum = new Date(props.kalenderdatum.value!);
+		datum.setDate(datum.getDate() + by);
+		const datumStr = datum.getFullYear() + "-" + (datum.getMonth() + 1).toString().padStart(2, '0') + "-" + datum.getDate().toString().padStart(2, '0');// datum.toLocaleDateString("de-DE").slice(0, 10);
+		const stundenplan = by > 0 ? props.kMan().stundenplanManagerGetByAbschnittAndDatumOrAfterOrNull(props.abschnitt!.id, datumStr) : props.kMan().stundenplanManagerGetByAbschnittAndDatumOrBeforeOrNull(props.abschnitt!.id, datumStr);
+		if (stundenplan === null)
+			return undefined;
+		const kw = stundenplan.kalenderwochenzuordnungGetByDatum(datumStr);
+		return DateUtils.gibDatumDesMontagsOfJahrAndKalenderwoche(kw.jahr, kw.kw);
+	}
+
+	async function navKalenderdatum(by: number) {
+		await props.gotoKalenderdatum(berechneKwzDatum(by)!);
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
@@ -191,34 +248,21 @@
 			event.preventDefault();
 	}
 
-	function isDropZoneZeitraster(zeitraster: StundenplanZeitraster) : boolean {
-		return true;
-		// const data = props.dragData();
-		// if ((data === undefined) || (data instanceof StundenplanPausenaufsicht))
-		// 	return false;
-		// if ((data instanceof StundenplanKurs) || (data instanceof StundenplanKlassenunterricht))
-		// 	return true;
-		// const z = props.manager().zeitrasterGetByIdOrException(data.idZeitraster);
-		// return !((z.wochentag === wochentag.id) && (z.unterrichtstunde === stunde));
+	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster | undefined) : void {
+		zeitrasterSelected.value = zeitraster;
+		event.preventDefault();
 	}
 
-	function checkDropZoneZeitraster(event: DragEvent, zeitraster: StundenplanZeitraster) : void {
-		if (isDropZoneZeitraster(zeitraster)) {
-			zeitrasterSelected.value = zeitraster;
-			event.preventDefault();
-		}
-	}
-
-	function kurseGefiltert(day: Wochentag, stunde: number) {
+	function kurseGefiltert(datum: string, day: Wochentag, stunde: number) {
 		const kursIds = new ArrayList<number>();
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of props.kMan().kursklausurGetMengeByTermin(props.terminSelected.value))
 				kursIds.add(klausur.idKurs);
-		return props.kMan().getStundenplanManager().kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, props.kalenderwoche.value.wochentyp, day, stunde);
+		return props.kMan().stundenplanManagerGetByAbschnittAndDatumOrException(props.abschnitt!.id, datum).kursGetMengeGefiltertByWochentypAndWochentagAndStunde(kursIds, kalenderwoche().wochentyp, day, stunde);
 	}
 
-	function sumSchreiber(day: Wochentag, stunde: number) {
-		const kurse = kurseGefiltert(day, stunde);
+	function sumSchreiber(datum: string, day: Wochentag, stunde: number) {
+		const kurse = kurseGefiltert(datum, day, stunde);
 		let summe = 0;
 		if (props.terminSelected.value !== undefined)
 			for (const klausur of kurse)
@@ -227,7 +271,7 @@
 	}
 
 	function isDraggable(object: any) : boolean {
-		return true;
+		return hatKompetenzUpdate.value;
 	}
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
@@ -241,27 +285,24 @@
 	};
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
-		if (props.terminSelected.value !== undefined)
-			if (zone === undefined)
-				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: null, startzeit: null});
-			else if (zone instanceof StundenplanZeitraster) {
-				const date = props.kMan().getStundenplanManager().datumGetByKwzAndZeitraster(props.kalenderwoche.value, zone);
-				await props.patchKlausurtermin(props.terminSelected.value.id, {datum: date, startzeit: zone.stundenbeginn});
-			}
-		props.terminSelected.value = undefined;
+		if (props.terminSelected.value !== undefined) {
+			klausurMoveDropZone = zone;
+			klausurMoveDragData = props.terminSelected.value;
+			if (props.kMan().isKlausurenInFremdraeumenByTermin(props.terminSelected.value))
+				modalKlausurHatRaeume.value = true;
+			else
+				await verschiebeKlausurTrotzRaumzuweisung();
+		}
 	};
-
-	// const termineMit = computed(() => {
-	// 	const terms = props.kMan().terminGetMengeAsList();
-	// 	return (terms.toArray() as GostKlausurtermin[]).map(obj => ({
-	// 		...obj,
-	// 		startDate: obj.datum !== null ? new Date(obj.datum) : null,
-	// 	}));
-	// });
 
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+		}
 	});
 
 </script>
@@ -325,7 +366,11 @@
 	}
 
 	.svws-ui-stundenplan {
-		@apply overflow-visible h-auto pb-8;
+		@apply overflow-visible h-auto pb-8 w-full;
+
+		.svws-ui-stundenplan--unterricht {
+			@apply flex px-1 py-0 border-none;
+		}
 	}
 }
 </style>

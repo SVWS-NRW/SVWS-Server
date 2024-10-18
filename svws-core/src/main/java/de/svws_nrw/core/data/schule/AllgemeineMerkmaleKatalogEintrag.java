@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -86,7 +86,8 @@ public class AllgemeineMerkmaleKatalogEintrag {
 		this.beiSchueler = beiSchueler;
 		this.kuerzelASD = kuerzelASD;
 		for (final @NotNull Schulform sf : schulformen)
-			this.schulformen.add(sf.daten.kuerzel);
+			if (!this.schulformen.contains(sf.name()))
+				this.schulformen.add(sf.name());
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

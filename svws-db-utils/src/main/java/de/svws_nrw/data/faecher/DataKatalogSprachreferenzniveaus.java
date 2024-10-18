@@ -1,11 +1,10 @@
 package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.fach.SprachreferenzniveauKatalogEintrag;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
+import de.svws_nrw.asd.data.fach.SprachreferenzniveauKatalogEintrag;
+import de.svws_nrw.asd.types.fach.Sprachreferenzniveau;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -28,7 +27,7 @@ public final class DataKatalogSprachreferenzniveaus extends DataManager<Long> {
 	public Response getAll() {
 		final ArrayList<SprachreferenzniveauKatalogEintrag> daten = new ArrayList<>();
 		for (final Sprachreferenzniveau ref : Sprachreferenzniveau.values())
-			daten.addAll(Arrays.asList(ref.historie));
+			daten.addAll(ref.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

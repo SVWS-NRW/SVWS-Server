@@ -2,6 +2,7 @@ package de.svws_nrw.db.utils.app;
 
 import java.util.Scanner;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -14,6 +15,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 
 
@@ -68,6 +70,7 @@ public class ExportDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -110,7 +113,7 @@ public class ExportDB {
 			final String srcDB = cmdLine.getValue("ss", "svwsdb");
 			final String srcUsername = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false, 0, 0);
+			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, srcDrv, srcLoc, srcDB, false, srcUsername, srcPwd, true, false);
 
 			// Lese den Namen für die SQLite-Datenbank ein
 			final String filename = cmdLine.getValue("f", "svws_export.sqlite");
@@ -130,7 +133,7 @@ public class ExportDB {
 						"Datenbank-Verbindung erfolgreich aufgebaut (driver='" + srcConfig.getDBDriver() + "', schema='" + srcConfig.getDBSchema()
 								+ "', location='" + srcConfig.getDBLocation() + "', user='" + srcConfig.getUsername() + "')" + System.lineSeparator());
 
-				final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+				final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 
 				// Führe den Export mithilfe des Schema-Managers durch.
 				logger.modifyIndent(2);

@@ -51,7 +51,7 @@ export class RouteInit extends RouteNode<any, any> {
 			return this.importSQLite(formData);
 		const db = this.db.value;
 		if (!db) return false;
-		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
+		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '');
 		const data = new DatenbankVerbindungsdaten();
 		data.location = formData.get('location')?.toString() || null;
 		data.schema = formData.get('schema')?.toString() || null;
@@ -60,22 +60,25 @@ export class RouteInit extends RouteNode<any, any> {
 		try {
 			switch (db) {
 				case 'mariadb':
-					schulnummer
-						? await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer)
-						: await api.server.migrateMariaDB(data, api.schema)
+					if (schulnummer)
+						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMariaDB(data, api.schema);
 					break;
 				case 'mysql':
-					schulnummer
-						? await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer)
-						: await api.server.migrateMySql(data, api.schema)
+					if (schulnummer)
+						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMySql(data, api.schema);
 					break;
 				case 'mssql':
-					schulnummer
-						? await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer)
-						: await api.server.migrateMsSqlServer(data, api.schema)
+					if (schulnummer)
+						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
+					else
+						await api.server.migrateMsSqlServer(data, api.schema);
 					break;
 				case 'mdb':
-					await api.server.migrateMDB(formData, api.schema)
+					await api.server.migrateMDB(formData, api.schema);
 					break;
 			}
 		} catch(error) {

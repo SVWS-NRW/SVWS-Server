@@ -27,6 +27,7 @@ import { StundenplanRaum } from '../../../core/data/stundenplan/StundenplanRaum'
 import { StundenplanSchiene } from '../../../core/data/stundenplan/StundenplanSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { Collection } from '../../../java/util/Collection';
+import { Class } from '../../../java/lang/Class';
 import { Wochentag } from '../../../core/types/Wochentag';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { StundenplanKomplett, cast_de_svws_nrw_core_data_stundenplan_StundenplanKomplett } from '../../../core/data/stundenplan/StundenplanKomplett';
@@ -40,6 +41,7 @@ import { StundenplanUnterricht, cast_de_svws_nrw_core_data_stundenplan_Stundenpl
 import { StundenplanKalenderwochenzuordnung } from '../../../core/data/stundenplan/StundenplanKalenderwochenzuordnung';
 import { HashMap3D } from '../../../core/adt/map/HashMap3D';
 import { AVLSet } from '../../../core/adt/set/AVLSet';
+import { StundenplanKonfiguration } from '../../../core/data/stundenplan/StundenplanKonfiguration';
 import { StundenplanZeitraster } from '../../../core/data/stundenplan/StundenplanZeitraster';
 import { StundenplanPausenzeit } from '../../../core/data/stundenplan/StundenplanPausenzeit';
 import { Exception } from '../../../java/lang/Exception';
@@ -433,7 +435,7 @@ export class StundenplanManager extends JavaObject {
 
 	private _unterrichtmenge_by_idKlasse_and_idFach : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
-	private _unterrichtmenge_by_idZeitraster_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
+	private _unterrichtmenge_by_idZeitraster_and_wochentyp : HashMap2D<number, number, List<StundenplanUnterricht>> = new HashMap2D<number, number, List<StundenplanUnterricht>>();
 
 	private _unterrichtmenge_by_idZeitraster_wochentyp_fach : HashMap3D<number, number, number, List<StundenplanUnterricht>> = new HashMap3D<number, number, number, List<StundenplanUnterricht>>();
 
@@ -499,37 +501,33 @@ export class StundenplanManager extends JavaObject {
 
 	private readonly _stundenplanSchuljahresAbschnittID : number;
 
+	private readonly _stundenplanSchuljahr : number;
+
+	private readonly _stundenplanAbschnitt : number;
+
 	private readonly _stundenplanGueltigAb : string;
 
 	private readonly _stundenplanGueltigBis : string;
 
 	private readonly _stundenplanBezeichnung : string;
 
-	private _stundenplanDefaultUnterrichtsbeginn : number = 0;
-
-	private _stundenplanDefaultStundendauer : number = 0;
-
-	private _stundenplanDefaultPausenzeitFuerRaumwechsel : number = 0;
-
-	private _stundenplanDefaultVormittagspause : number = 0;
-
-	private _stundenplanDefaultMittagspause : number = 0;
+	private _stundenplanKonfig : StundenplanKonfiguration = new StundenplanKonfiguration();
 
 
 	/**
 	 * Der {@link StundenplanManager} benötigt vier data-Objekte und baut damit eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param daten                 liefert die Grund-Daten des Stundenplanes.
-	 * @param unterrichte           liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
-	 * @param pausenaufsichten      liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
-	 * @param unterrichtsverteilung liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
+	 * @param daten                  liefert die Grund-Daten des Stundenplanes.
+	 * @param unterrichte            liefert die Informationen zu allen {@link StundenplanUnterricht} im Stundenplan. Die Liste darf leer sein.
+	 * @param pausenaufsichten       liefert die Informationen zu allen {@link StundenplanPausenaufsicht} im Stundenplan. Die Liste darf leer sein.
+	 * @param unterrichtsverteilung  liefert die Informationen zu der Unterrichtsverteilung eines Stundenplans. Darf NULL sein.
 	 */
 	public constructor(daten : Stundenplan, unterrichte : List<StundenplanUnterricht>, pausenaufsichten : List<StundenplanPausenaufsicht>, unterrichtsverteilung : StundenplanUnterrichtsverteilung | null);
 
 	/**
 	 * Dieser Manager baut mit Hilfe des {@link StundenplanKomplett}-Objektes eine Datenstruktur für schnelle Zugriffe auf.
 	 *
-	 * @param stundenplanKomplett  Beinhaltet alle relevanten Daten für einen Stundenplan.
+	 * @param stundenplanKomplett    Beinhaltet alle relevanten Daten für einen Stundenplan.
 	 */
 	public constructor(stundenplanKomplett : StundenplanKomplett);
 
@@ -548,14 +546,11 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanID = daten.id;
 			this._stundenplanWochenTypModell = daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = daten.idSchuljahresabschnitt;
+			this._stundenplanSchuljahr = daten.schuljahr;
+			this._stundenplanAbschnitt = daten.abschnitt;
 			this._stundenplanGueltigAb = daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(daten.gueltigAb, daten.gueltigBis);
 			this._stundenplanBezeichnung = daten.bezeichnungStundenplan;
-			this._stundenplanDefaultUnterrichtsbeginn = 8 * 60;
-			this._stundenplanDefaultStundendauer = 45;
-			this._stundenplanDefaultPausenzeitFuerRaumwechsel = 5;
-			this._stundenplanDefaultVormittagspause = 20;
-			this._stundenplanDefaultMittagspause = 60;
 			let uv : StundenplanUnterrichtsverteilung | null = unterrichtsverteilung;
 			if (uv === null) {
 				uv = new StundenplanUnterrichtsverteilung();
@@ -570,6 +565,8 @@ export class StundenplanManager extends JavaObject {
 			this._stundenplanID = stundenplanKomplett.daten.id;
 			this._stundenplanWochenTypModell = stundenplanKomplett.daten.wochenTypModell;
 			this._stundenplanSchuljahresAbschnittID = stundenplanKomplett.daten.idSchuljahresabschnitt;
+			this._stundenplanSchuljahr = stundenplanKomplett.daten.schuljahr;
+			this._stundenplanAbschnitt = stundenplanKomplett.daten.abschnitt;
 			this._stundenplanGueltigAb = stundenplanKomplett.daten.gueltigAb;
 			this._stundenplanGueltigBis = StundenplanManager.init_gueltig_bis(stundenplanKomplett.daten.gueltigAb, stundenplanKomplett.daten.gueltigBis);
 			this._stundenplanBezeichnung = stundenplanKomplett.daten.bezeichnungStundenplan;
@@ -584,7 +581,7 @@ export class StundenplanManager extends JavaObject {
 			try {
 				DateUtils.extractFromDateISO8601(gueltigBis);
 				return gueltigBis;
-			} catch(ex) {
+			} catch(ex : any) {
 				// empty block
 			}
 		}
@@ -839,18 +836,18 @@ export class StundenplanManager extends JavaObject {
 
 	private update_unterrichtmenge_by_idZeitraster_wochentyp_fach() : void {
 		this._unterrichtmenge_by_idZeitraster_wochentyp_fach = new HashMap3D();
-		for (const idZ of this._unterrichtmenge_by_idZeitraster_wochentyp.getKeySet())
-			for (const wt of this._unterrichtmenge_by_idZeitraster_wochentyp.getKeySetOf(idZ))
-				for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, idZ, wt))
+		for (const idZ of this._unterrichtmenge_by_idZeitraster_and_wochentyp.getKeySet())
+			for (const wt of this._unterrichtmenge_by_idZeitraster_and_wochentyp.getKeySetOf(idZ))
+				for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, idZ, wt))
 					if (u.idFach >= 0)
 						Map3DUtils.addToList(this._unterrichtmenge_by_idZeitraster_wochentyp_fach, idZ, wt, u.idFach, u);
 	}
 
 	private update_unterrichtmenge_by_idZeitraster_wochentyp_raum() : void {
 		this._unterrichtmenge_by_idZeitraster_wochentyp_raum = new HashMap3D();
-		for (const idZ of this._unterrichtmenge_by_idZeitraster_wochentyp.getKeySet())
-			for (const wt of this._unterrichtmenge_by_idZeitraster_wochentyp.getKeySetOf(idZ))
-				for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, idZ, wt))
+		for (const idZ of this._unterrichtmenge_by_idZeitraster_and_wochentyp.getKeySet())
+			for (const wt of this._unterrichtmenge_by_idZeitraster_and_wochentyp.getKeySetOf(idZ))
+				for (const u of Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, idZ, wt))
 					for (const idR of u.raeume)
 						Map3DUtils.addToList(this._unterrichtmenge_by_idZeitraster_wochentyp_raum, idZ, wt, idR, u);
 	}
@@ -1622,9 +1619,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_unterrichtmenge_by_idZeitraster_and_wochentyp() : void {
-		this._unterrichtmenge_by_idZeitraster_wochentyp = new HashMap2D();
+		this._unterrichtmenge_by_idZeitraster_and_wochentyp = new HashMap2D();
 		for (const u of this._unterrichtmenge)
-			Map2DUtils.addToList(this._unterrichtmenge_by_idZeitraster_wochentyp, u.idZeitraster, u.wochentyp, u);
+			Map2DUtils.addToList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, u.idZeitraster, u.wochentyp, u);
 	}
 
 	private update_unterrichtmenge_by_idRaum() : void {
@@ -4193,6 +4190,64 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert eine Liste aller Dummy-{@link StundenplanPausenzeit}-Objekte mit ID=-1, welche in diesem Manager noch nicht definiert sind,
+	 * die sich aber durch die Default-Werte ergeben. Die Pausenzeiten sind allen Klassen zugeordnet.
+	 *
+	 * @param tagVon     Der erste Tag (inklusive) des Bereichs.
+	 * @param tagBis     Der letzte Tag (inklusive) des Bereichs.
+	 *
+	 * @return eine Liste aller Dummy-{@link StundenplanPausenzeit}-Objekte mit ID=-1.
+	 */
+	public pausenzeitGetDummyListe(tagVon : number, tagBis : number) : List<StundenplanPausenzeit> {
+		const listDummies : List<StundenplanPausenzeit> = new ArrayList<StundenplanPausenzeit>();
+		for (let wochentag : number = tagVon; wochentag <= tagBis; wochentag++) {
+			if (this._stundenplanKonfig.defaultVormittagspause1Dauer > 0) {
+				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause1Nach);
+				let ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause1Dauer;
+				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
+				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
+					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
+					p.id = -1;
+					p.wochentag = wochentag;
+					p.beginn = beginn;
+					p.ende = ende;
+					p.bezeichnung = "1. Vormittagspause";
+					listDummies.add(p);
+				}
+			}
+			if (this._stundenplanKonfig.defaultVormittagspause2Dauer > 0) {
+				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause2Nach);
+				let ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause2Dauer;
+				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
+				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
+					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
+					p.id = -1;
+					p.wochentag = wochentag;
+					p.beginn = beginn;
+					p.ende = ende;
+					p.bezeichnung = "2. Vormittagspause";
+					listDummies.add(p);
+				}
+			}
+			if (this._stundenplanKonfig.defaultMittagspauseDauer > 0) {
+				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultMittagspauseNach);
+				let ende : number = beginn + this._stundenplanKonfig.defaultMittagspauseDauer;
+				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
+				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
+					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
+					p.id = -1;
+					p.wochentag = wochentag;
+					p.beginn = beginn;
+					p.ende = ende;
+					p.bezeichnung = "Mittagspause";
+					listDummies.add(p);
+				}
+			}
+		}
+		return listDummies;
+	}
+
+	/**
 	 * Liefert das Minimum aller {@link StundenplanPausenzeit#beginn}-Objekte, oder 480 (8 Uhr) falls keines vorhanden ist.
 	 * <br>Laufzeit: O(1)
 	 *
@@ -4857,6 +4912,24 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das Schuljahr, für welches der Stundenplan gültig ist
+	 *
+	 * @return das Schuljahr, für welches der Stundenplan gültig ist
+	 */
+	public getSchuljahr() : number {
+		return this._stundenplanSchuljahr;
+	}
+
+	/**
+	 * Liefert den Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 *
+	 * @return der Abschnitt im Schuljahr, für welchen der Stundenplan gültig ist
+	 */
+	public getAbschnitt() : number {
+		return this._stundenplanAbschnitt;
+	}
+
+	/**
 	 * Liefert das Datum, ab dem der Stundenplan gültig ist.
 	 *
 	 * @return das Datum, ab dem der Stundenplan gültig ist.
@@ -5000,7 +5073,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für den Unterrichtsbeginn (z.B. 8:00 Uhr = 8 * 60), kodiert als Minuten seit 0 Uhr.
 	 */
 	public stundenplanGetDefaultUnterrichtsbeginn() : number {
-		return this._stundenplanDefaultUnterrichtsbeginn;
+		return this._stundenplanKonfig.defaultUnterrichtsbeginn;
 	}
 
 	/**
@@ -5010,7 +5083,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanSetDefaultUnterrichtsbeginn(defaultUnterrichtsbeginn : number) : void {
 		DeveloperNotificationException.ifTrue("'defaultUnterrichtsbeginn' muss >= 0 sein!", defaultUnterrichtsbeginn < 0);
-		this._stundenplanDefaultUnterrichtsbeginn = defaultUnterrichtsbeginn;
+		this._stundenplanKonfig.defaultUnterrichtsbeginn = defaultUnterrichtsbeginn;
 	}
 
 	/**
@@ -5019,7 +5092,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Dauer einer Unterrichtsstunde (in Minuten).
 	 */
 	public stundenplanGetDefaultStundendauer() : number {
-		return this._stundenplanDefaultStundendauer;
+		return this._stundenplanKonfig.defaultStundendauer;
 	}
 
 	/**
@@ -5028,8 +5101,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param defaultStundendauer  Minuten einer Unterrichtsstunde.
 	 */
 	public stundenplanSetDefaultStundendauer(defaultStundendauer : number) : void {
-		DeveloperNotificationException.ifTrue("'defaultStundendauer' muss >= 0 sein!", defaultStundendauer < 0);
-		this._stundenplanDefaultStundendauer = defaultStundendauer;
+		DeveloperNotificationException.ifTrue("'defaultStundendauer' muss > 0 sein!", defaultStundendauer <= 0);
+		this._stundenplanKonfig.defaultStundendauer = defaultStundendauer;
 	}
 
 	/**
@@ -5038,7 +5111,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Wert für die Pausenzeit für Raumwechsel (in Minuten).
 	 */
 	public stundenplanGetDefaultPausenzeitFuerRaumwechsel() : number {
-		return this._stundenplanDefaultPausenzeitFuerRaumwechsel;
+		return this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
 	}
 
 	/**
@@ -5048,45 +5121,139 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public stundenplanSetDefaultPausenzeitFuerRaumwechsel(defaultPausenzeitFuerRaumwechsel : number) : void {
 		DeveloperNotificationException.ifTrue("'defaultPausenzeitFuerRaumwechsel' muss >= 0 sein!", defaultPausenzeitFuerRaumwechsel < 0);
-		this._stundenplanDefaultPausenzeitFuerRaumwechsel = defaultPausenzeitFuerRaumwechsel;
+		this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel = defaultPausenzeitFuerRaumwechsel;
 	}
 
 	/**
-	 * Liefert den Default-Wert für die Vormittagspause (in Minuten).
+	 * Liefert den Default-Wert für die 1. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 *
-	 * @return den Default-Wert für die Vormittagspause (in Minuten).
+	 * @return den Default-Wert für die 1. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 */
-	public stundenplanGetDefaultVormittagspause() : number {
-		return this._stundenplanDefaultVormittagspause;
+	public stundenplanGetDefaultVormittagspause1Nach() : number {
+		return this._stundenplanKonfig.defaultVormittagspause1Nach;
 	}
 
 	/**
-	 * Setzt den Default-Wert für die Vormittagspause (in Minuten).
+	 * Setzt den Default-Wert für die 1. Vormittagspause nach welcher welcher Stunde diese beginnt.
 	 *
-	 * @param defaultVormittagspause  Minuten für die Vormittagspause.
+	 * @param defaultVormittagspause1Nach  Stunde nach der die 1. Vormittagspause beginnt.
 	 */
-	public stundenplanSetDefaultVormittagspause(defaultVormittagspause : number) : void {
-		DeveloperNotificationException.ifTrue("'defaultVormittagspause' muss >= 0 sein!", defaultVormittagspause < 0);
-		this._stundenplanDefaultVormittagspause = defaultVormittagspause;
+	public stundenplanSetDefaultVormittagspause1Nach(defaultVormittagspause1Nach : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultVormittagspause1Nach' muss >= 0 sein!", defaultVormittagspause1Nach < 0);
+		this._stundenplanKonfig.defaultVormittagspause1Nach = defaultVormittagspause1Nach;
 	}
 
 	/**
-	 * Liefert den Default-Wert für die Mittagspause (in Minuten).
+	 * Liefert den Default-Wert für die Dauer der 1. Vormittagspause.
 	 *
-	 * @return den Default-Wert für die Mittagspause (in Minuten).
+	 * @return den Default-Wert für die Dauer der 1. Vormittagspause.
 	 */
-	public stundenplanGetDefaultMittagspause() : number {
-		return this._stundenplanDefaultMittagspause;
+	public stundenplanGetDefaultVormittagspause1Dauer() : number {
+		return this._stundenplanKonfig.defaultVormittagspause1Dauer;
 	}
 
 	/**
-	 * Setzt den Default-Wert für die Mittagspause (in Minuten).
+	 * Setzt den Default-Wert für die Dauer der 1. Vormittagspause.
 	 *
-	 * @param defaultMittagspause  Minuten für die Mittagspause.
+	 * @param defaultVormittagspause1Dauer  Dauer der 1. Vormittagspause (in Minuten).
 	 */
-	public stundenplanSetDefaultMittagspause(defaultMittagspause : number) : void {
-		DeveloperNotificationException.ifTrue("'defaultMittagspause' muss >= 0 sein!", defaultMittagspause < 0);
-		this._stundenplanDefaultMittagspause = defaultMittagspause;
+	public stundenplanSetDefaultVormittagspause1Dauer(defaultVormittagspause1Dauer : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultVormittagspause1Nach' muss >= 0 sein!", defaultVormittagspause1Dauer < 0);
+		this._stundenplanKonfig.defaultVormittagspause1Dauer = defaultVormittagspause1Dauer;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die 2. Vormittagspause nach welcher welcher Stunde diese beginnt.
+	 *
+	 * @return den Default-Wert für die 2. Vormittagspause nach welcher welcher Stunde diese beginnt.
+	 */
+	public stundenplanGetDefaultVormittagspause2Nach() : number {
+		return this._stundenplanKonfig.defaultVormittagspause2Nach;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die 2. Vormittagspause nach welcher welcher Stunde diese beginnt.
+	 *
+	 * @param defaultVormittagspause2Nach  Stunde nach der die 2. Vormittagspause beginnt.
+	 */
+	public stundenplanSetDefaultVormittagspause2Nach(defaultVormittagspause2Nach : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultVormittagspause2Nach' muss >= 0 sein!", defaultVormittagspause2Nach < 0);
+		this._stundenplanKonfig.defaultVormittagspause2Nach = defaultVormittagspause2Nach;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Dauer der 2. Vormittagspause.
+	 *
+	 * @return den Default-Wert für die Dauer der 2. Vormittagspause.
+	 */
+	public stundenplanGetDefaultVormittagspause2Dauer() : number {
+		return this._stundenplanKonfig.defaultVormittagspause2Dauer;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Dauer der 2. Vormittagspause.
+	 *
+	 * @param defaultVormittagspause2Dauer  Dauer der 2. Vormittagspause (in Minuten).
+	 */
+	public stundenplanSetDefaultVormittagspause2Dauer(defaultVormittagspause2Dauer : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultVormittagspause2Dauer' muss >= 0 sein!", defaultVormittagspause2Dauer < 0);
+		this._stundenplanKonfig.defaultVormittagspause2Dauer = defaultVormittagspause2Dauer;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Mittagspause nach welcher welcher Stunde diese beginnt.
+	 *
+	 * @return den Default-Wert für die Mittagspause nach welcher welcher Stunde diese beginnt.
+	 */
+	public stundenplanGetDefaultMittagspauseNach() : number {
+		return this._stundenplanKonfig.defaultMittagspauseNach;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Mittagspause nach welcher welcher Stunde diese beginnt.
+	 *
+	 * @param defaultMittagspauseNach  Stunde nach der die Mittagspause beginnt.
+	 */
+	public stundenplanSetDefaultMittagspauseNach(defaultMittagspauseNach : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultMittagspauseNach' muss >= 0 sein!", defaultMittagspauseNach < 0);
+		this._stundenplanKonfig.defaultMittagspauseNach = defaultMittagspauseNach;
+	}
+
+	/**
+	 * Liefert den Default-Wert für die Dauer der Mittagspause.
+	 *
+	 * @return den Default-Wert für die Dauer der Mittagspause.
+	 */
+	public stundenplanGetDefaultMittagspauseDauer() : number {
+		return this._stundenplanKonfig.defaultMittagspauseDauer;
+	}
+
+	/**
+	 * Setzt den Default-Wert für die Dauer der Mittagspause (in Minuten).
+	 *
+	 * @param defaultMittagspauseDauer  Dauer der Mittagspause (in Minuten).
+	 */
+	public stundenplanSetDefaultMittagspauseDauer(defaultMittagspauseDauer : number) : void {
+		DeveloperNotificationException.ifTrue("'defaultMittagspauseDauer' muss >= 0 sein!", defaultMittagspauseDauer < 0);
+		this._stundenplanKonfig.defaultMittagspauseDauer = defaultMittagspauseDauer;
+	}
+
+	/**
+	 * Setzt das {@link StundenplanKonfiguration}-Objekt.
+	 *
+	 * @param stundenplanKonfig  Das {@link StundenplanKonfiguration}-Objekt.
+	 */
+	public stundenplanKonfigSet(stundenplanKonfig : StundenplanKonfiguration) : void {
+		this._stundenplanKonfig = stundenplanKonfig;
+	}
+
+	/**
+	 * Liefert das aktuelle {@link StundenplanKonfiguration}-Objekt.
+	 *
+	 * @return das aktuelle {@link StundenplanKonfiguration}-Objekt.
+	 */
+	public stundenplanKonfigGet() : StundenplanKonfiguration {
+		return this._stundenplanKonfig;
 	}
 
 	/**
@@ -5347,7 +5514,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekt, die im übergeben Zeitraster und Wochentyp liegen.
 	 */
 	public unterrichtGetMengeByZeitrasterIdAndWochentypOrEmptyList(idZeitraster : number, wochentyp : number) : List<StundenplanUnterricht> {
-		return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, wochentyp);
+		return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, wochentyp);
 	}
 
 	/**
@@ -5381,7 +5548,7 @@ export class StundenplanManager extends JavaObject {
 	public unterrichtGetMengeByWochentagAndStundeAndWochentypOrEmptyList(wochentag : Wochentag, stunde : number, wochentyp : number) : List<StundenplanUnterricht> {
 		const zeitraster : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		if (zeitraster !== null)
-			return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, zeitraster.id, wochentyp);
+			return Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, zeitraster.id, wochentyp);
 		return new ArrayList<StundenplanUnterricht>();
 	}
 
@@ -5582,7 +5749,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde        Die Unterrichtsstunde.
 	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
-	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist, oder -2, falls die Schiene egal ist.
 	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Faches am "wochentag, stunde, wochentyp".
@@ -5594,10 +5761,10 @@ export class StundenplanManager extends JavaObject {
 			return list;
 		if ((inklWoche0) && (wochentyp !== 0))
 			for (const u of Map3DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp_fach, z.id, 0, idFach))
-				if (this.unterrichtHatSchiene(u, idSchiene))
+				if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 					list.add(u);
 		for (const u of Map3DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp_fach, z.id, wochentyp, idFach))
-			if (this.unterrichtHatSchiene(u, idSchiene))
+			if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 				list.add(u);
 		return list;
 	}
@@ -5610,7 +5777,7 @@ export class StundenplanManager extends JavaObject {
 	 * @param wochentag     Die ID des {@link Wochentag}-ENUM.
 	 * @param stunde        Die Unterrichtsstunde.
 	 * @param wochentyp     Der Wochentyp (0 jede Woche, 1 nur Woche A, 2 nur Woche B, ...)
-	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist.
+	 * @param idSchiene     Die Datenbank-ID der Schiene, oder -1, falls Unterricht ohne Schiene gemeint ist, oder -2, falls die Schiene egal ist.
 	 * @param inklWoche0    falls TRUE, wird Unterricht des Wochentyps 0 hinzugefügt.
 	 *
 	 * @return eine Liste aller {@link StundenplanUnterricht}-Objekte des Raumes am "wochentag, stunde, wochentyp".
@@ -5622,10 +5789,10 @@ export class StundenplanManager extends JavaObject {
 			return list;
 		if ((inklWoche0) && (wochentyp !== 0))
 			for (const u of Map3DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, 0, idRaum))
-				if (this.unterrichtHatSchiene(u, idSchiene))
+				if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 					list.add(u);
 		for (const u of Map3DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp_raum, z.id, wochentyp, idRaum))
-			if (this.unterrichtHatSchiene(u, idSchiene))
+			if (this.unterrichtHatSchiene(u, idSchiene) || (idSchiene === -2))
 				list.add(u);
 		return list;
 	}
@@ -6067,7 +6234,15 @@ export class StundenplanManager extends JavaObject {
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
 	 */
 	public zeitrasterGetDefaultStundenbeginnByStunde(stunde : number) : number {
-		return 480 + ((stunde - 1) * (45 + 5));
+		DeveloperNotificationException.ifTrue("zeitrasterGetDefaultStundenbeginnByStunde: stunde < 0", stunde < 0);
+		let start : number = this._stundenplanKonfig.defaultUnterrichtsbeginn + ((stunde - 1) * (this._stundenplanKonfig.defaultStundendauer + this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel));
+		if ((stunde > this._stundenplanKonfig.defaultVormittagspause1Nach) && (this._stundenplanKonfig.defaultVormittagspause1Dauer > 0))
+			start += this._stundenplanKonfig.defaultVormittagspause1Dauer - this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		if ((stunde > this._stundenplanKonfig.defaultVormittagspause2Nach) && (this._stundenplanKonfig.defaultVormittagspause2Dauer > 0))
+			start += this._stundenplanKonfig.defaultVormittagspause2Dauer - this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		if ((stunde > this._stundenplanKonfig.defaultMittagspauseNach) && (this._stundenplanKonfig.defaultMittagspauseDauer > 0))
+			start += this._stundenplanKonfig.defaultMittagspauseDauer - this._stundenplanKonfig.defaultPausenzeitFuerRaumwechsel;
+		return start;
 	}
 
 	/**
@@ -6079,7 +6254,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return das Default-Stundenende (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
 	 */
 	public zeitrasterGetDefaultStundenendeByStunde(stunde : number) : number {
-		return this.zeitrasterGetDefaultStundenbeginnByStunde(stunde) + 45;
+		return this.zeitrasterGetDefaultStundenbeginnByStunde(stunde) + this._stundenplanKonfig.defaultStundendauer;
 	}
 
 	/**
@@ -6377,6 +6552,40 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 * <br> Problem (1): Das Zeitraster schneidet zeitlich an dem Tag ein anderes Zeitraster.
+	 * <br> Problem (2): Die Unterrichtsstunde des Vorgängers startet zeitlich später.
+	 * <br> Problem (3): Die Unterrichtsstunde des Nachfolgers startet zeitlich früher.
+	 *
+	 * @param z  Das {@link StundenplanZeitraster}-Objekt, welches überprüft werden soll.
+	 *
+	 * @return TRUE, falls das {@link StundenplanZeitraster}-Objekt einen problematischen Zustand hat.
+	 */
+	public zeitrasterGetIstZustandProblematisch(z : StundenplanZeitraster) : boolean {
+		let zPrev : StundenplanZeitraster | null = null;
+		let zNext : StundenplanZeitraster | null = null;
+		for (const zCurr of MapUtils.getOrCreateArrayList(this._zeitrastermenge_by_wochentag, z.wochentag)) {
+			if (z.id === zCurr.id)
+				continue;
+			if (this.zeitrasterGetSchneidenSich(z.stundenbeginn, z.stundenende, zCurr.stundenbeginn, zCurr.stundenende))
+				return true;
+			const min : number = (zPrev === null) ? -1000 : zPrev.unterrichtstunde;
+			if ((zCurr.unterrichtstunde < z.unterrichtstunde) && (zCurr.unterrichtstunde > min))
+				zPrev = zCurr;
+			const max : number = (zNext === null) ? +1000 : zNext.unterrichtstunde;
+			if ((zCurr.unterrichtstunde > z.unterrichtstunde) && (zCurr.unterrichtstunde < max))
+				zNext = zCurr;
+		}
+		if ((z.stundenbeginn !== null)) {
+			if ((zPrev !== null) && (zPrev.stundenbeginn !== null) && (zPrev.stundenbeginn > z.stundenbeginn))
+				return true;
+			if ((zNext !== null) && (zNext.stundenbeginn !== null) && (zNext.stundenbeginn < z.stundenbeginn))
+				return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Liefert alle verwendeten sortierten Unterrichtsstunden der {@link StundenplanZeitraster}.
 	 * Das Array beinhaltet alle Zahlen von {@link #zeitrasterGetStundeMin()} bis {@link #zeitrasterGetStundeMax()}.
 	 * <br>Laufzeit: O(1), da Referenz auf ein Array.
@@ -6421,7 +6630,7 @@ export class StundenplanManager extends JavaObject {
 	public zeitrasterHatUnterrichtByWochentagAndStundeAndWochentyp(wochentag : Wochentag, stunde : number, wochentyp : number) : boolean {
 		const z : StundenplanZeitraster | null = this._zeitraster_by_wochentag_and_stunde.getOrNull(wochentag.id, stunde);
 		if (z !== null)
-			return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, z.id, wochentyp).isEmpty();
+			return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, z.id, wochentyp).isEmpty();
 		return false;
 	}
 
@@ -6509,7 +6718,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es mindestens einen Unterricht im Zeitraster mit einem einen Wochentyp 0 gibt.
 	 */
 	public zeitrasterHatUnterrichtMitWochentyp0(idZeitraster : number) : boolean {
-		return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, 0).isEmpty();
+		return !Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, 0).isEmpty();
 	}
 
 	/**
@@ -6586,7 +6795,7 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public zeitrasterHatUnterrichtMitWochentyp1BisN(idZeitraster : number) : boolean {
 		for (let wochentyp : number = 1; wochentyp <= this._stundenplanWochenTypModell; wochentyp++)
-			if (!Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_wochentyp, idZeitraster, wochentyp).isEmpty())
+			if (!Map2DUtils.getOrCreateArrayList(this._unterrichtmenge_by_idZeitraster_and_wochentyp, idZeitraster, wochentyp).isEmpty())
 				return true;
 		return false;
 	}
@@ -6798,6 +7007,8 @@ export class StundenplanManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.StundenplanManager'].includes(name);
 	}
+
+	public static class = new Class<StundenplanManager>('de.svws_nrw.core.utils.stundenplan.StundenplanManager');
 
 }
 

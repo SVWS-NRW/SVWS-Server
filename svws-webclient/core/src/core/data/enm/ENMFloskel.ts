@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMFloskel extends JavaObject {
 
@@ -41,6 +42,8 @@ export class ENMFloskel extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMFloskel'].includes(name);
 	}
+
+	public static class = new Class<ENMFloskel>('de.svws_nrw.core.data.enm.ENMFloskel');
 
 	public static transpilerFromJSON(json : string): ENMFloskel {
 		const obj = JSON.parse(json) as Partial<ENMFloskel>;

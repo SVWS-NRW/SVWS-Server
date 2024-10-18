@@ -3,7 +3,7 @@
 	"description": "SVWS-Server-Projekt: UI-Komponenten",
 	"author": "MSB NRW",
 	"license": "BSD-3-Clause",
-	"version": "0.9.1",
+	"version": "1.0.0",
 	"scripts": {
 		"build": "npm run build-lib && npm run build-dts",
 		"build-lib": "vite build",
@@ -15,7 +15,7 @@
 		"story:build": "histoire build",
 		"story:preview": "histoire preview",
 		"test": "vitest",
-		"test:run": "vitest run --coverage",
+		"test:run": "vitest run --coverage --coverage.include=src/components/*.vue --coverage.exclude=src/components/*.story.*",
 		"check-licenses": "license-checker-rseidelsohn --summary --unknown --production"
 	},
 	"files": [

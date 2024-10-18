@@ -18,6 +18,7 @@ import { KursblockungAlgorithmusPermanentKSchnellW } from '../../core/kursblocku
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungAlgorithmusSZufaellig } from '../../core/kursblockung/KursblockungAlgorithmusSZufaellig';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { KursblockungAlgorithmusPermanentKMatching } from '../../core/kursblockung/KursblockungAlgorithmusPermanentKMatching';
 
 export class KursblockungAlgorithmusPermanent extends JavaObject {
@@ -165,6 +166,8 @@ export class KursblockungAlgorithmusPermanent extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanent'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmusPermanent>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanent');
 
 }
 

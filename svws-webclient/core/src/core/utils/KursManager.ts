@@ -5,6 +5,7 @@ import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
 import { cast_java_util_List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 
 export class KursManager extends JavaObject {
@@ -173,6 +174,8 @@ export class KursManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.KursManager'].includes(name);
 	}
+
+	public static class = new Class<KursManager>('de.svws_nrw.core.utils.KursManager');
 
 }
 

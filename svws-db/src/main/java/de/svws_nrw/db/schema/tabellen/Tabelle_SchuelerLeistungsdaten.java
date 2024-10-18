@@ -1,10 +1,9 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -57,14 +56,10 @@ public class Tabelle_SchuelerLeistungsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte NotenKrz */
 	public SchemaTabelleSpalte col_NotenKrz = add("NotenKrz", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-			.setConverter(NoteConverterFromKuerzel.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Das Notenkürzel der erteilten Note");
 
 	/** Die Definition der Tabellenspalte NotenKrzQuartal */
 	public SchemaTabelleSpalte col_NotenKrzQuartal = add("NotenKrzQuartal", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
-			.setConverter(NoteConverterFromKuerzel.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Das Notenkürzel der Quartals-Note");
 
 	/** Die Definition der Tabellenspalte Warnung */

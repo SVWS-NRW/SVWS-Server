@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class VermerkartEintrag extends JavaObject {
 
@@ -39,6 +40,8 @@ export class VermerkartEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.VermerkartEintrag'].includes(name);
 	}
+
+	public static class = new Class<VermerkartEintrag>('de.svws_nrw.core.data.schule.VermerkartEintrag');
 
 	public static transpilerFromJSON(json : string): VermerkartEintrag {
 		const obj = JSON.parse(json) as Partial<VermerkartEintrag>;

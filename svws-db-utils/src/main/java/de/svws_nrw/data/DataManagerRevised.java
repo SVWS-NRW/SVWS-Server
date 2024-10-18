@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -141,19 +143,20 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	/**
 	 * Erstellt und initialisiert ein neues Datenbank-DTO.
 	 *
-	 * @param newID      	die neue ID für das DTO
+	 * @param newID      	   die neue ID für das DTO
+	 * @param initAttributes   die Attribute zur Initialisierung
 	 *
 	 * @return das neue DTO
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected DatabaseDTO newDTO(final ID newID) throws ApiOperationException {
+	protected DatabaseDTO newDTO(final ID newID, final Map<String, Object> initAttributes) throws ApiOperationException {
 		try {
 			// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
 			final Constructor<DatabaseDTO> constructor = classDatabaseDTO.getDeclaredConstructor();
 			constructor.setAccessible(true);
 			final DatabaseDTO dto = constructor.newInstance();
-			initDTO(dto, newID);
+			initDTO(dto, newID, initAttributes);
 			return dto;
 		} catch (final Exception e) {
 			if (e instanceof final ApiOperationException apiOperationException)
@@ -167,10 +170,13 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * Initialisiert das Datenbank-DTO mit der übergebenen ID.<br>
 	 * <b>Wichtig:</b> Diese Methode muss überschrieben werden, damit die Add-Methoden ausführbar sind.
 	 *
-	 * @param dto   das Datenbank-DTO
-	 * @param id    die ID
+	 * @param dto              das Datenbank-DTO
+	 * @param id               die ID
+	 * @param initAttributes   die Attribute zur Initialisierung
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected void initDTO(final DatabaseDTO dto, final ID id) throws ApiOperationException {
+	protected void initDTO(final DatabaseDTO dto, final ID id, final Map<String, Object> initAttributes) throws ApiOperationException {
 		throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Methode initDTO() ist standardmäßig nicht implementiert.");
 	}
 
@@ -184,6 +190,22 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @return das neu erstellte Core-DTO
 	 */
 	protected abstract CoreDTO map(DatabaseDTO dto) throws ApiOperationException;
+
+	/**
+	 * Wandelt die Datenbank-DTOs in der übergebenen Collection in Core-DTOs und gibt die Liste dieser umgewandelten DTOs zurück.
+	 *
+	 * @param dtos   die Collection der Datenbank-DTOs
+	 *
+	 * @return die Liste der Core-DTOs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<CoreDTO> mapList(final Collection<DatabaseDTO> dtos) throws ApiOperationException {
+		final List<CoreDTO> daten = new ArrayList<>();
+		for (final DatabaseDTO dto : dtos)
+			daten.add(map(dto));
+		return daten;
+	}
 
 
 	/**
@@ -355,6 +377,22 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		return Response.status(Status.NO_CONTENT).build();
 	}
 
+	/**
+	 * Passt die Informationen des Datenbank-DTO mit der angegebenen ID mithilfe des
+	 * JSON-Patches aus dem übergebenen {@link InputStream} an. Dabei werden nur die
+	 * übergebenen Mappings zugelassen.
+	 *
+	 * @param id              die ID des zu patchenden DTOs
+	 * @param is              der Input-Stream
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public CoreDTO patchFromStream(final ID id, final InputStream is) throws ApiOperationException {
+		return patch(id, JSONMapper.toMap(is));
+	}
+
 
 	/**
 	 * Passt die Informationen der Datenbank-DTOs mithilfe des
@@ -403,6 +441,20 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public Response addMultipleAsResponse(final InputStream is) throws ApiOperationException {
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(addMultiple(is)).build();
+	}
+
+	/**
+	 * Fügt mehrere neue DTOs in die Datenbank hinzu, indem in der Datenbank jeweils eine neue ID
+	 * abgefragt wird und die Attribute des JSON-Objektes gemäß dem Attribut-Mapper integriert werden.
+	 *
+	 * @param is   der Input-Stream
+	 *
+	 * @return die Liste mit den Core-DTOs
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public List<CoreDTO> addMultiple(final InputStream is) throws ApiOperationException {
 		// initiale Attribute der anzulegenden DTOs durchlaufen
 		final List<Map<String, Object>> multipleMaps = JSONMapper.toMultipleMaps(is);
 		final List<CoreDTO> daten = new ArrayList<>();
@@ -411,8 +463,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			newID = getNextID(newID, attributeMap);
 			daten.add(this.addBasic(newID, attributeMap));
 		}
-
-		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 
@@ -482,45 +533,78 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 
 
 	/**
-	 * Prüft, ob der Benutzer den Zugriff nur über eine funktionsbezogene Kompetenz erhalten hat und nicht (auch) durch
-	 * eine nicht funktionsbezogene Kompetenz.
+	 * Prüft, ob der Benutzer ausschließlich eine funktionsbezogene Kompetenz besitzt und nicht noch zusätzlich eine übergreifende Kompetenz.
 	 *
 	 * @param kompetenzFunktionsbezogen   die zu prüfende funktionsbezogene Kompetenz
-	 * @param kompetenzenAndere   die zu prüfenden anderen Kompetenzen, die ggf. einen nicht funktionsbezogenen Zugang zu den Daten erlauben
+	 * @param kompetenzenUebergreifend   die zu prüfenden übergreifenden Kompetenzen
 	 *
-	 * @return true, wenn der Zugriff über die funktionsbezogene Kompetenz erfolgt, und ansonsten false
+	 * @return <code>true</code>, wenn der Benutzer ausschließlich die funktionsbezogene Kompetenz besitzt.
+	 * Ansonsten <code>false</code> wenn der Benutzer eine übergreifende Kompetenz besitzt,
+	 * bei der eine weiterführende Prüfung nicht mehr notwendig ist.
+	 * <br>
+	 * Throws {@link IllegalArgumentException} wenn einer der Methodenparameter fehlt.
 	 */
-	public boolean checkBenutzerFunktionsbezogeneKompetenz(final BenutzerKompetenz kompetenzFunktionsbezogen, final Set<BenutzerKompetenz> kompetenzenAndere) {
+	public boolean hatBenutzerNurFunktionsbezogeneKompetenz(final @NotNull BenutzerKompetenz kompetenzFunktionsbezogen,
+			final @NotNull Set<BenutzerKompetenz> kompetenzenUebergreifend) {
+		if ((kompetenzFunktionsbezogen == null) || (kompetenzenUebergreifend == null) || kompetenzenUebergreifend.isEmpty())
+			throw new IllegalArgumentException("Die Parameter kompetenzFunktionsbezogen und kompetenzenUebergreifend dürfen nicht null oder leer sein.");
+
 		final Benutzer user = conn.getUser();
-		if (user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen)) {
-			for (final BenutzerKompetenz andere : kompetenzenAndere)
-				if (user.hatVerwendeteKompetenz(andere))
-					return false;
-			return true;
-		}
-		return false;
+		final boolean hatUebergreifendeKompetenz = kompetenzenUebergreifend.stream().anyMatch(user::hatVerwendeteKompetenz);
+		if (hatUebergreifendeKompetenz)
+			return false;
+
+		return user.hatVerwendeteKompetenz(kompetenzFunktionsbezogen);
 	}
 
 
 	/**
-	 * Prüft, ob der Benutzer auf die angegeben Klasse funktionsbezogene Rechte hat oder nicht.
+	 * Prüft, ob der Benutzer für die angegebene Klasse funktionsbezogene Rechte hat oder nicht.
 	 *
 	 * @param idKlasse   die ID der zu prüfenden Klasse
 	 *
-	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (503 - FORBIDDEN).
+	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf die Daten der Klasse hat (403 - FORBIDDEN).
 	 */
 	public void checkBenutzerFunktionsbezogeneKompetenzKlasse(final Long idKlasse) throws ApiOperationException {
 		if (idKlasse == null)
 			throw new ApiOperationException(Status.FORBIDDEN,
 					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keiner Klasse zugeordnet sind.");
+
 		final boolean hatKompetenzFuerKlasse = conn.getUser().getKlassenIDs().contains(idKlasse);
 		if (!hatKompetenzFuerKlasse) {
 			final DTOKlassen klasse = conn.queryByKey(DTOKlassen.class, idKlasse);
-			final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+			DTOSchuljahresabschnitte schuljahresabschnitt = null;
+			if (klasse != null) {
+				schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, klasse.Schuljahresabschnitts_ID);
+			}
+
+			final String kuerzel = (klasse != null) ? klasse.Klasse : "N/A";
+			final String jahrUndAbschnitt = (schuljahresabschnitt != null)
+					? (schuljahresabschnitt.Jahr + "." + schuljahresabschnitt.Abschnitt)
+					: "N/A";
+
 			throw new ApiOperationException(Status.FORBIDDEN,
-					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse %s des Schuljahresabschnittes %s.%s (ID %d)"
-							.formatted(klasse.Klasse, schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idKlasse));
+					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff auf die Daten der Klasse %s (ID: %d) des Schuljahresabschnittes %s"
+							.formatted(kuerzel, idKlasse, jahrUndAbschnitt));
 		}
+	}
+
+
+	/**
+	 * Prüft, ob der Benutzer bei dem angegeben Abiturjahrgang als Beratungslehrer funktionsbezogene Rechte hat oder nicht.
+	 *
+	 * @param abijahrgang   der zu prüfende Abiturjahrgang
+	 *
+	 * @throws ApiOperationException wenn der Benutzer nicht die Kompetenz für den funktionsbezogenen Zugriff auf den Abiturjahrgang hat (503 - FORBIDDEN).
+	 */
+	public void checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(final Integer abijahrgang) throws ApiOperationException {
+		if (abijahrgang == null)
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer kann keine funktionsbezogene Kompetenz nutzen, um auf Daten zuzugreifen, die keinem Abiturjahrgang zugeordnet sind.");
+		final boolean hatKompetenzFuerAbijahrgang = conn.getUser().getAbiturjahrgaenge().contains(abijahrgang);
+		if (!hatKompetenzFuerAbijahrgang)
+			throw new ApiOperationException(Status.FORBIDDEN,
+					"Der Benutzer hat keine funktionsbezogene Kompetenz für den Zugriff als Beratungslehrer auf den Abiturjahrgang " + abijahrgang);
 	}
 
 
@@ -576,9 +660,11 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param id              die ID des zu patchenden DTOs
 	 * @param attributesToPatch    die Map mit dem Mapping der Attributnamen auf die Werte der Attribute im Patch
 	 *
+	 * @return das Core-DTO
+	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	protected void patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
+	public CoreDTO patch(final ID id, final Map<String, Object> attributesToPatch) throws ApiOperationException {
 		// Prüfe, ob benötigte Parameter übergeben wurden
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Für das Patchen muss eine ID angegeben werden. Null ist nicht zulässig.");
@@ -595,8 +681,43 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		// Patchings auf DTO anwenden und anschließend in DB persistieren
 		applyPatchMappings(dto, attributesToPatch, null, Collections.emptySet(), false);
 		saveDatabaseDTO(dto);
+		return map(dto);
 	}
 
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param initAttributes  die Map mit den initialen Attributen für das neue DTO
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public CoreDTO add(final Map<String, Object> initAttributes) throws ApiOperationException {
+		return addBasic(getNextID(null, initAttributes), initAttributes);
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param initAttributes  die Map mit den initialen Attributen für das neue DTO
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public Response addFromMapAsResponse(final Map<String, Object> initAttributes) throws ApiOperationException {
+		final CoreDTO dto = addBasic(getNextID(null, initAttributes), initAttributes);
+		return Response.status(Status.CREATED).type(MediaType.APPLICATION_JSON).entity(dto).build();
+	}
 
 	/**
 	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
@@ -623,7 +744,7 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 		checkBeforeCreation(newID, initAttributes);
 
 		// Erstelle ein neues DTO für die DB und wende Initialisierung und das Mapping der Attribute an
-		final DatabaseDTO dto = newDTO(newID);
+		final DatabaseDTO dto = newDTO(newID, initAttributes);
 		applyPatchMappings(dto, initAttributes, null, attributesDelayedOnCreation, true);
 
 		// Persistiere das DTO in der Datenbank
@@ -633,6 +754,25 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 			saveDatabaseDTO(dto);
 		}
 		return getById(newID);
+	}
+
+	/**
+	 * Fügt ein neues DTO des übergebenen Typ in die Datenbank hinzu, indem in der
+	 * Datenbank eine neue ID abgefragt wird und die Attribute des JSON-Objektes gemäß dem
+	 * Attribut-Mapper integriert werden. Um zu gewährleisten, dass der Primärschlüssel
+	 * angelegt ist, wird das Patchen von einzelnen Attributen zurückgestellt und erst nach
+	 * dem Persistieren des Objektes in einem zweiten Schritt durchgeführt.
+	 *
+	 * @param is   der Input-Stream
+	 *
+	 * @return das Core-DTO
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public CoreDTO addFromStream(final InputStream is) throws ApiOperationException {
+		// Prüfe, ob alle relevanten Attribute für das Erstellen des DTOs übergeben wurden
+		final Map<String, Object> initAttributes = JSONMapper.toMap(is);
+		return this.addBasic(getNextID(null, initAttributes), initAttributes);
 	}
 
 

@@ -33,7 +33,7 @@ public class TranspileTs {
 		try {
 			cmdLine.addOption(new CmdLineOption("f", "files", true, "Eine Textdatei mit einer Liste aller Java-Quellcode-Dateien für den Transpiler"));
 			cmdLine.addOption(new CmdLineOption("o", "output", true, "Der Ziel-Ordner für den erzeugte TypeScript-Code"));
-			cmdLine.addOption(new CmdLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien dey Java-Compilers"));
+			cmdLine.addOption(new CmdLineOption("t", "tmpdir", true, "Der Ordner für temporäre Dateien, wie z.B. die class-Dateien des Java-Compilers"));
 			cmdLine.addOption(new CmdLineOption("i", "ignore", true, "Das Package-Präfix, welches bei der Ziel-Verzeichnisstruktur ignoriert werden soll"));
 			cmdLine.addOption(new CmdLineOption("r", "resources", false,
 					"Gibt an, ob die Typescript-Klassen zur Emulation des Java-Kerns mit ausgegeben werden sollen."));

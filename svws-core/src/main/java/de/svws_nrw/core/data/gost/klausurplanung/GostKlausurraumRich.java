@@ -5,16 +5,17 @@ import java.util.List;
 
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu einem Gost-Klausurraum.
+ * Sie liefert die mit Daten des zugehörigen Stundenplan-Raums angereicherten Informationen zu einem Gost-Klausurraum.
  */
 @XmlRootElement
-@Schema(description = "die Informationen zu einem Gost-Klausurraum.")
+@Schema(description = "die mit Daten des zugehörigen {@link StundenplanRaum} angereicherten Informationen zu einem {@link GostKlausurraum}.")
 @TranspilerDTO
 public class GostKlausurraumRich {
 
@@ -26,8 +27,8 @@ public class GostKlausurraumRich {
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 
-	/** Die Liste der angereicherten Schülerklausurtermine. */
-	@Schema(description = "die Liste der zugeordneten Schülerklausurtermin-IDs", example = "")
+	/** Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen. */
+	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen."))
 	public @NotNull List<Long> schuelerklausurterminIDs = new ArrayList<>();
 
 	/**
@@ -45,7 +46,7 @@ public class GostKlausurraumRich {
 	}
 
 	/**
-	 * Konstruktor für Transpiler.
+	 * Default-Konstruktor
 	 */
 	public GostKlausurraumRich() {
 	}

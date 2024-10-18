@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.CoreType;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaRevisionUpdateSQL;
 import de.svws_nrw.db.schema.SchemaRevisionen;
@@ -44,6 +45,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 		uebertrageLehrerStammschule();
 		verschiebeDatenVonEigeneSchule();
 		korrigiereCaseUbergangsempfehlungenUndSchulformen();
+		korrigiereLernplattformenTabelle();
 	}
 
 
@@ -1489,8 +1491,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				""",
 				Schema.tab_Kurse
 		);
-		final String alleSchulgliederungen = Arrays.stream(Schulgliederung.values())
-				.map(sgl -> Arrays.stream(sgl.historie).toList()).flatMap(List::stream)
+		final String alleSchulgliederungen = Arrays.stream(Schulgliederung.values()).map(CoreType::historie).flatMap(List::stream)
 				.map(h -> h.kuerzel).distinct().collect(Collectors.joining("','", "('", "')"));
 		add("Überprüfung der Schulgliederung",
 				"UPDATE EigeneSchule_Jahrgaenge SET SGL = '***' WHERE SGL NOT IN " + alleSchulgliederungen,
@@ -2586,7 +2587,7 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 						+ " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.IMPORT_EXPORT_LEHRERDATEN_EXPORTIEREN.daten.id + ", "
 						+ BenutzerKompetenz.ADMIN.daten.id + ")"
 						+ " UNION "
-						+ "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_ERSTELLEN.daten.id
+						+ "SELECT Gruppe_ID, " + BenutzerKompetenz.STUNDENPLAN_AENDERN.daten.id
 						+ " FROM " + Schema.tab_BenutzergruppenKompetenzen.name()
 						+ " WHERE Kompetenz_ID IN (" + BenutzerKompetenz.ADMIN.daten.id + ")"
 						+ " UNION "
@@ -2921,6 +2922,24 @@ public final class Revision1Updates extends SchemaRevisionUpdateSQL {
 				"UPDATE %1$s SET %2$s = upper(%2$s) WHERE %2$s <> upper(%2$s)".formatted(Schema.tab_Schueler.name(),
 						Schema.tab_Schueler.col_LSSchulformSIM.name()),
 				Schema.tab_Schueler);
+	}
+
+	private void korrigiereLernplattformenTabelle() {
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_LehrerLernplattform.name(),
+						Schema.tab_LehrerLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_LehrerLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_LehrerLernplattform);
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_SchuelerLernplattform.name(),
+						Schema.tab_SchuelerLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_SchuelerLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_SchuelerLernplattform);
+		add("Übertragen die Daten aus der Spalte EinwilligungenAbgefragt in die Spalte EinwilligungAbgefragt",
+				"UPDATE %1$s SET %2$s = %3$s".formatted(Schema.tab_ErzieherLernplattform.name(),
+						Schema.tab_ErzieherLernplattform.col_EinwilligungAbgefragt.name(),
+						Schema.tab_ErzieherLernplattform.col_EinwilligungenAbgefragt.name()),
+				Schema.tab_ErzieherLernplattform);
 	}
 
 }

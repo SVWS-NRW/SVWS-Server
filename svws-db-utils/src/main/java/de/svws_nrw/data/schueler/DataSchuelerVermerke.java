@@ -36,7 +36,7 @@ public final class DataSchuelerVermerke extends DataManagerRevised<Long, DTOSchu
 
 
 	@Override
-	protected void initDTO(final DTOSchuelerVermerke dtoSchuelerVermerke, final Long idVermerk) {
+	protected void initDTO(final DTOSchuelerVermerke dtoSchuelerVermerke, final Long idVermerk, final Map<String, Object> initAttributes) {
 		dtoSchuelerVermerke.ID = idVermerk;
 		dtoSchuelerVermerke.Bemerkung = "";
 		dtoSchuelerVermerke.AngelegtVon = conn.getUser().getUsername();

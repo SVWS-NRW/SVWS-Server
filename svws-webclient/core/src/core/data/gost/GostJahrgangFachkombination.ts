@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class GostJahrgangFachkombination extends JavaObject {
 
@@ -59,6 +60,8 @@ export class GostJahrgangFachkombination extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostJahrgangFachkombination'].includes(name);
 	}
+
+	public static class = new Class<GostJahrgangFachkombination>('de.svws_nrw.core.data.gost.GostJahrgangFachkombination');
 
 	public static transpilerFromJSON(json : string): GostJahrgangFachkombination {
 		const obj = JSON.parse(json) as Partial<GostJahrgangFachkombination>;

@@ -60,11 +60,11 @@ public final class DBEntityManager implements AutoCloseable {
 	/** Der Datenbank-Benutzer, der dieser Verbindung zugeordnet ist. */
 	private final Benutzer user;
 
-	/** Die verwendete Datenbank-Konfiguration {@link DBConfig} */
-	private final DBConfig config;
+	/** Die Connection-Factory, welche für diese Verbindung verantwortlich ist. */
+	private final ConnectionFactory factory;
 
 	/** Der intern verwendete {@link EntityManager} der Jakarta Persistence API (JPA) */
-	EntityManager em;
+	private EntityManager em;
 
 	/** Ein intern verwendeter Mutex, der garantiert, dass immer nur ein Thread eine Transaction auf diesem DBEntityManager ausführt. */
 	private final ReentrantLock mutex = new ReentrantLock();
@@ -77,17 +77,13 @@ public final class DBEntityManager implements AutoCloseable {
 	 * Fall, dass die Verbindung nicht erfolgreich ist, wird eine
 	 * {@link DBConnectionException} generiert.
 	 *
-	 * @param user     der Benutzer, der dieser Verbindung zugeordnet ist.
-	 * @param config   die Datenbank-Konfiguration
+	 * @param user      der Benutzer, der dieser Verbindung zugeordnet ist.
+	 * @param factory   die Factory für die Datenbank-Verbindungen
 	 */
-	DBEntityManager(final Benutzer user, final DBConfig config) {
+	DBEntityManager(final Benutzer user, final ConnectionFactory factory) {
 		this.user = user;
-		this.config = config;
-		if (this.config.getConnectionRetries() <= 0) {
-			this.em = user.connectionManager.getNewJPAEntityManager();
-		} else {
-			this.em = user.connectionManager.getNewJPAEntityManager(this.config.getConnectionRetries(), this.config.getRetryTimeout());
-		}
+		this.factory = factory;
+		this.em = factory.getNewJPAEntityManager();
 	}
 
 
@@ -114,25 +110,6 @@ public final class DBEntityManager implements AutoCloseable {
 	}
 
 
-	/**
-	 * Erneuert die Verbindung zur Datenbank. Dabei geht der Zustand
-	 * in Bezug auf die verwalteten Entitäten verloren.
-	 *
-	 * @throws DBConnectionException   die Verbindung konnte nicht neu aufgebaut werden
-	 */
-	public void reconnect() throws DBConnectionException {
-		if (em != null) {
-			em.clear();
-			em.close();
-		}
-		try {
-			em = user.connectionManager.getNewJPAEntityManager();
-		} catch (final IllegalStateException e) {
-			throw new DBConnectionException(e);
-		}
-	}
-
-
 	@Override
 	public void close() {
 		if (em != null) {
@@ -140,6 +117,7 @@ public final class DBEntityManager implements AutoCloseable {
 			em.close();
 			em = null;
 		}
+		factory.close(this);
 	}
 
 
@@ -163,7 +141,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 *         für die Datenbankverbindung verwendet werden
 	 */
 	public boolean useDBLogin() {
-		return config.useDBLogin();
+		return factory.getConfig().useDBLogin();
 	}
 
 
@@ -173,7 +151,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return der für die Datenbankverbindung verwendete {@link DBDriver}
 	 */
 	public DBDriver getDBDriver() {
-		return config.getDBDriver();
+		return factory.getConfig().getDBDriver();
 	}
 
 
@@ -183,7 +161,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return das für die Datenbankverbindung verwendeten Schema der Datenbank
 	 */
 	public String getDBSchema() {
-		return config.getDBSchema();
+		return factory.getConfig().getDBSchema();
 	}
 
 
@@ -195,7 +173,7 @@ public final class DBEntityManager implements AutoCloseable {
 	 * @return der Ort, an dem die Datenbank der genutzten Datenbankverbindung liegt.
 	 */
 	public String getDBLocation() {
-		return config.getDBLocation();
+		return factory.getConfig().getDBLocation();
 	}
 
 
@@ -867,11 +845,11 @@ public final class DBEntityManager implements AutoCloseable {
 				for (int i = first; i <= last; i++) {
 					final Object[] data = entities.get(i);
 					for (int j = 0; j < colnames.size(); j++) {
-						if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Timestamp timestamp)) {
+						if ((factory.getConfig().getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Timestamp timestamp)) {
 							prepared.setString(pos, datetimeFormatter.format(timestamp.toLocalDateTime()));
-						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Date date)) {
+						} else if ((factory.getConfig().getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Date date)) {
 							prepared.setString(pos, dateFormatter.format(date.toLocalDate()));
-						} else if ((config.getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Time time)) {
+						} else if ((factory.getConfig().getDBDriver() == DBDriver.SQLITE) && (data[j] instanceof final Time time)) {
 							prepared.setString(pos, timeFormatter.format(time.toLocalTime()));
 						} else {
 							prepared.setObject(pos, data[j]);
@@ -898,7 +876,7 @@ public final class DBEntityManager implements AutoCloseable {
 	private String toSQLStringWitEscapeSequences(final String str) {
 		if (str == null)
 			return null;
-		if (config.getDBDriver() == DBDriver.SQLITE)
+		if (factory.getConfig().getDBDriver() == DBDriver.SQLITE)
 			return "'" + str.replace("'", "''").replace("\0", "'||char(0)||'") + "'";
 		// else MariaDB / MYSQL ...
 		return "'" + str.replace("\\", "\\\\").replace("'", "\\'") + "'";

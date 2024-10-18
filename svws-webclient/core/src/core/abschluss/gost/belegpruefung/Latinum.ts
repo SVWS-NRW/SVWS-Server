@@ -1,6 +1,7 @@
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { SprachendatenUtils } from '../../../../core/utils/schueler/SprachendatenUtils';
@@ -49,6 +50,8 @@ export class Latinum extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<Latinum>('de.svws_nrw.core.abschluss.gost.belegpruefung.Latinum');
 
 }
 

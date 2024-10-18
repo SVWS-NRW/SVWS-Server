@@ -1,12 +1,10 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
-import de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -144,8 +142,6 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ASDSchulgliederung */
 	public SchemaTabelleSpalte col_ASDSchulgliederung = add("ASDSchulgliederung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
 			.setJavaName("Schulgliederung")
-			.setConverter(SchulgliederungKuerzelConverter.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("ASD-Kürzel SGL");
 
 	/** Die Definition der Tabellenspalte ASDJahrgang */
@@ -208,14 +204,10 @@ public class Tabelle_SchuelerLernabschnittsdaten extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte Gesamtnote_GS */
 	public SchemaTabelleSpalte col_Gesamtnote_GS = add("Gesamtnote_GS", SchemaDatentypen.INT, false)
-			.setConverter(NoteConverterFromInteger.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10");
 
 	/** Die Definition der Tabellenspalte Gesamtnote_NW */
 	public SchemaTabelleSpalte col_Gesamtnote_NW = add("Gesamtnote_NW", SchemaDatentypen.INT, false)
-			.setConverter(NoteConverterFromInteger.class)
-			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Lernbereichnote Naturwissenschaft HA10");
 
 	/** Die Definition der Tabellenspalte Folgeklasse_ID */

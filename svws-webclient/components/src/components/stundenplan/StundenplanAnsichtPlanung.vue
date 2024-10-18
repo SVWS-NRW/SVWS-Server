@@ -5,7 +5,7 @@
 			<!-- Das Feld links in der Überschrift beinhaltet den ausgewählten Wochentyp -->
 			<div class="inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start opacity-50 text-sm font-bold pb-0.5" />
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': toRaw(selected)===wochentag}">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" @click="updateSelected(wochentag)" class="svws-wochentag-label" :class="{'svws-selected': selected===wochentag}">
 				<span class="px-2 py-1 rounded"> {{ wochentag.beschreibung }}</span>
 			</div>
 		</div>
@@ -23,7 +23,7 @@
 			</div>
 			<div class="svws-ui-stundenplan--zeitraster">
 				<!-- Die Zeitraster-Einträge -->
-				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde svws-label text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'svws-selected-stunde': toRaw(selected)===stunde}">
+				<div v-for="stunde in zeitrasterRange" :key="stunde" @click="updateSelected(stunde)" class="svws-ui-stundenplan--stunde svws-label text-center justify-center cursor-pointer" :style="posZeitraster(undefined, stunde)" :class="{'svws-selected-stunde': selected===stunde}">
 					<div class="text-headline-sm">
 						{{ stunde }}.&nbsp;Stunde
 					</div>
@@ -32,9 +32,9 @@
 					</div>
 				</div>
 			</div>
-			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': toRaw(selected)===wochentag}">
+			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="svws-ui-stundenplan--zeitraster" :class="{'svws-selected': selected===wochentag}">
 				<template v-for="zeitrasterEintrag in manager().getListZeitrasterZuWochentag(wochentag)" :key="zeitrasterEintrag.id">
-					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': toRaw(selected)===zeitrasterEintrag || toRaw(selected) === zeitrasterEintrag.unterrichtstunde}">
+					<div class="svws-ui-stundenplan--stunde cursor-pointer" @click="updateSelected(zeitrasterEintrag)" :style="posZeitraster(wochentag, zeitrasterEintrag.unterrichtstunde)" :class="{'svws-selected': selected===zeitrasterEintrag || selected === zeitrasterEintrag.unterrichtstunde, 'bg-highlight': manager().zeitrasterGetIstZustandProblematisch(zeitrasterEintrag)}">
 						<div class="svws-ui-stundenplan--unterricht">
 							<span>{{ zeitrasterEintrag.unterrichtstunde }}</span>
 							<div class="flex content-start">
@@ -44,8 +44,8 @@
 					</div>
 				</template>
 				<template v-for="pause in manager().pausenzeitGetMengeByWochentagOrEmptyList(wochentag.id)" :key="pause.id">
-					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': toRaw(selected)===pause}">
-						<div v-if="toRaw(selected)===pause" class="svws-ui-stundenplan--pausen-aufsicht">
+					<div class="svws-ui-stundenplan--pause cursor-pointer" @click="updateSelected(pause)" :style="posPause(wochentag, pause)" :class="{'svws-selected': selected===pause}">
+						<div v-if="selected===pause" class="svws-ui-stundenplan--pausen-aufsicht">
 							<span class="icon i-ri-cup-line icon-primary" />
 						</div>
 						<div v-else class="svws-ui-stundenplan--pausen-aufsicht">
@@ -69,12 +69,16 @@
 					<span class="icon i-ri-add-line -ml-1" />{{ Wochentag.fromIDorException(manager().zeitrasterGetWochentagMaxEnum().id + (manager().getListZeitraster().size() === 0 ? 0:1)) }}
 				</svws-ui-button>
 			</div>
-			<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
-				<span class="icon i-ri-calendar-event-line" />
-				<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
-			</svws-ui-button>
+			<svws-ui-action-button title="Alle Zeitraster erstellen" :is-active="actionZeitraster" @click="()=>actionZeitraster = !actionZeitraster" icon="i-ri-add-line">
+				<stundenplan-zeitraster-einstellungen :manager :set-settings-defaults>
+					<svws-ui-button type="secondary" @click="addBlock" :title="`Alle Zeitraster Montag - Freitag, 1.-${Schulform.G === schulform ? '6':'9'}. Stunde erstellen`">
+						<span class="icon i-ri-calendar-event-line" />
+						<span class="icon i-ri-add-line -ml-1" />Mo-Fr / 1.-{{ Schulform.G === schulform ? '6':'9' }}. erstellen
+					</svws-ui-button>
+				</stundenplan-zeitraster-einstellungen>
+			</svws-ui-action-button>
 			<template v-if="importZeitraster !== undefined">
-				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster="importZeitraster" :remove-zeitraster="removeZeitraster" v-slot="{ openModal }">
+				<stundenplan-zeitraster-import-modal :stundenplan-manager="manager" :import-zeitraster :remove-zeitraster v-slot="{ openModal }">
 					<svws-ui-button class="mb-5" type="secondary" @click="openModal()"><span class="icon i-ri-archive-line" /> Aus Katalog importieren</svws-ui-button>
 				</stundenplan-zeitraster-import-modal>
 			</template>
@@ -85,31 +89,22 @@
 
 <script setup lang="ts">
 
-	import { computed, ref, toRaw } from "vue";
+	import { computed, ref } from "vue";
 	import type { StundenplanAnsichtPlanungProps } from "./StundenplanAnsichtPlanungProps";
-	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
 	import type { StundenplanZeitraster } from "../../../../core/src/core/data/stundenplan/StundenplanZeitraster";
 	import type { StundenplanPausenzeit } from "../../../../core/src/core/data/stundenplan/StundenplanPausenzeit";
-	import { Schulform } from "../../../../core/src/core/types/schule/Schulform";
+	import { Wochentag } from "../../../../core/src/core/types/Wochentag";
+	import { Schulform } from "../../../../core/src/asd/types/schule/Schulform";
 
 	const props = defineProps<StundenplanAnsichtPlanungProps>();
-
 	const showZeitachse = true;
-
-	const emit = defineEmits<{
-		'selected:updated': [item: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined];
-	}>();
-
-	const selected = ref<Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit|undefined>();
+	const actionZeitraster = ref<boolean>(false);
 
 	function updateSelected(event: Wochentag|number|StundenplanZeitraster|StundenplanPausenzeit) {
-		if (event === toRaw(selected.value)) {
-			selected.value = undefined;
-			emit('selected:updated', undefined);
-		} else {
-			selected.value = event;
-			emit('selected:updated', event);
-		}
+		if (event === props.selected)
+			props.setSelection(undefined);
+		else
+			props.setSelection(event);
 	}
 
 	const beginn = computed(() => {
@@ -182,7 +177,7 @@
 
 	async function addWochentag() {
 		const letzerWochentag = props.manager().zeitrasterGetWochentagMaxEnum();
-		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() ? 1 : 0), 1, 1);
+		const list = props.manager().zeitrasterGetDummyListe(letzerWochentag.id, letzerWochentag.id + (props.manager().getListZeitraster().size() > 0 ? 1 : 0), 1, 1);
 		await props.addZeitraster(list);
 	}
 
@@ -190,7 +185,7 @@
 		const letzteStunde = props.manager().zeitrasterGetStundeMax();
 		const wochentagMin = props.manager().zeitrasterGetWochentagMin();
 		const wochentagMax = props.manager().zeitrasterGetWochentagMax();
-		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() ? 1 : 0));
+		const list = props.manager().zeitrasterGetDummyListe(wochentagMin, wochentagMax, letzteStunde, letzteStunde + (props.manager().getListZeitraster().size() > 0 ? 1 : 0));
 		await props.addZeitraster(list);
 	}
 

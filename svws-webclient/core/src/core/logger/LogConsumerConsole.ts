@@ -1,6 +1,7 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { LogData } from '../../core/logger/LogData';
 import type { Consumer } from '../../java/util/function/Consumer';
+import { Class } from '../../java/lang/Class';
 import { DateUtils } from '../../core/utils/DateUtils';
 
 export class LogConsumerConsole extends JavaObject implements Consumer<LogData> {
@@ -73,6 +74,8 @@ export class LogConsumerConsole extends JavaObject implements Consumer<LogData> 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.function.Consumer', 'de.svws_nrw.core.logger.LogConsumerConsole'].includes(name);
 	}
+
+	public static class = new Class<LogConsumerConsole>('de.svws_nrw.core.logger.LogConsumerConsole');
 
 }
 

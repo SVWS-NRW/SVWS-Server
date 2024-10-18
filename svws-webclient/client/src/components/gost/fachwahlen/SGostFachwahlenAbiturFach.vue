@@ -50,9 +50,11 @@
 	import type { GostFachwahlenAbiturFachProps } from "./SGostFachwahlenAbiturFachProps";
 	import type { ComputedRef} from "vue";
 	import { computed } from "vue";
-	import { GostAbiturFach, ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
+	import { GostAbiturFach, Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList } from "@core";
 
 	const props = defineProps<GostFachwahlenAbiturFachProps>();
+
+	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
 
 	const fws: ComputedRef<GostStatistikFachwahl | undefined> = computed(() => {
 		for (const f of props.fachwahlstatistik)
@@ -67,7 +69,11 @@
 		{ key: "AB4", label: "Ab4", span: 1 },
 	];
 
-	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	function getBgColor(fws: GostStatistikFachwahl) : string {
+		if (fws.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+	}
 
 	function getSchuelerListe(idFach : number, abifach: GostAbiturFach) : List<SchuelerListeEintrag> {
 		const result = new ArrayList<SchuelerListeEintrag>();

@@ -1,18 +1,18 @@
 package de.svws_nrw.data.gost;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
-import de.svws_nrw.data.schule.DataSchuleStammdaten;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangsdaten;
@@ -86,6 +86,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 	 */
 	public static @NotNull GostJahrgangsdaten getJahrgangsdaten(final DBEntityManager conn, final int abijahrgang) throws ApiOperationException {
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 
 		// Bestimme den aktuellen Schuljahresabschnitt der Schule
 		final DTOSchuljahresabschnitte aktuellerAbschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
@@ -97,7 +98,7 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		if ((dtosJahrgaenge == null) || (dtosJahrgaenge.isEmpty()))
 			throw new ApiOperationException(Status.NOT_FOUND);
 
-		// Lese alle Abiturjahrgänge aus der Datenbank ein und ergänze diese im Vektor
+		// Lese den Abiturjahrgang aus der Datenbank ein
 		final DTOGostJahrgangsdaten jahrgangsdaten = (abijahrgang == -1)
 				? getVorlage(conn)
 				: conn.queryByKey(DTOGostJahrgangsdaten.class, abijahrgang);
@@ -110,8 +111,9 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		if (daten.abiturjahr >= 0) {
 			final int restjahre = jahrgangsdaten.Abi_Jahrgang - aktuellerAbschnitt.Jahr;
 			for (final DTOJahrgang jahrgang : dtosJahrgaenge) {
-				Integer jahrgangRestjahre = JahrgangsUtils.getRestlicheJahre(schule.Schulform, jahrgang.Gliederung, jahrgang.ASDJahrgang);
-				if ((jahrgangRestjahre != null) && (schule.Schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
+				Integer jahrgangRestjahre =
+						JahrgangsUtils.getRestlicheJahre(schulform, Schulgliederung.data().getWertByKuerzel(jahrgang.GliederungKuerzel), jahrgang.ASDJahrgang);
+				if ((jahrgangRestjahre != null) && (schulform != Schulform.GY) && JahrgangsUtils.istSekI(jahrgang.ASDJahrgang))
 					jahrgangRestjahre += 3;
 				if ((jahrgangRestjahre != null) && (restjahre == jahrgangRestjahre)) {
 					daten.jahrgang = jahrgang.ASDJahrgang;
@@ -133,13 +135,10 @@ public final class DataGostJahrgangsdaten extends DataManager<Integer> {
 		daten.beginnZusatzkursSW = jahrgangsdaten.ZusatzkursSWErstesHalbjahr;
 		// Ergänze die Information, ob bereits eine Blockung persistiert wurde anhand der angelegten Kurse in den entsprechenden Lernabschnitten
 		if (abijahrgang >= 0) {
-			final int anzahlAbschnitte = DataSchuleStammdaten.getAnzahlAbschnitte(conn);
-			final List<Integer> jahre = Arrays.asList(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
-			final List<DTOSchuljahresabschnitte> alleAbschnitte = conn.queryList(DTOSchuljahresabschnitte.QUERY_LIST_BY_JAHR,
-					DTOSchuljahresabschnitte.class, jahre);
-			for (final DTOSchuljahresabschnitte abschnitt : alleAbschnitte) {
-				final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.Jahr,
-						(anzahlAbschnitte == 4) ? ((abschnitt.Abschnitt + 1) / 2) : abschnitt.Abschnitt);
+			final @NotNull List<Schuljahresabschnitt> abschnitte =
+					conn.getUser().schuleGetAbschnitteBySchuljahre(abijahrgang - 1, abijahrgang - 2, abijahrgang - 3);
+			for (final Schuljahresabschnitt abschnitt : abschnitte) {
+				final GostHalbjahr halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abijahrgang, abschnitt.schuljahr, abschnitt.abschnitt);
 				daten.istBlockungFestgelegt[halbjahr.id] = DBUtilsGost.pruefeHatOberstufenKurseInAbschnitt(conn, halbjahr, abschnitt);
 				daten.existierenNotenInLeistungsdaten[halbjahr.id] = DBUtilsGost.pruefeHatNotenFuerOberstufeInAbschnitt(conn, halbjahr, abschnitt);
 			}

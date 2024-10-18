@@ -21,7 +21,7 @@ import { GostLaufbahnplanungDatenFachbelegung } from "../../../../core/src/core/
 import { GostLaufbahnplanungDatenSchueler } from "../../../../core/src/core/data/gost/GostLaufbahnplanungDatenSchueler";
 import type { GostSchuelerFachwahl } from "../../../../core/src/core/data/gost/GostSchuelerFachwahl";
 import { SchuelerListeEintrag } from "../../../../core/src/core/data/schueler/SchuelerListeEintrag";
-import { SchuleStammdaten } from "../../../../core/src/core/data/schule/SchuleStammdaten";
+import { SchuleStammdaten } from "../../../../core/src/asd/data/schule/SchuleStammdaten";
 import { DeveloperNotificationException } from "../../../../core/src/core/exceptions/DeveloperNotificationException";
 import { UserNotificationException } from "../../../../core/src/core/exceptions/UserNotificationException";
 import { GostHalbjahr } from "../../../../core/src/core/types/gost/GostHalbjahr";
@@ -29,6 +29,7 @@ import { GostKursart } from "../../../../core/src/core/types/gost/GostKursart";
 import { GostFaecherManager } from "../../../../core/src/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../core/src/java/util/List";
+import { JsonCoreTypeReaderStatic } from "../../../../core/src/JsonCoreTypeReaderStatic";
 
 
 interface RouteState {
@@ -68,6 +69,7 @@ export class RouteData {
 	}
 
 	private _state = shallowRef<RouteState>(RouteData._defaultState);
+	private reader = new JsonCoreTypeReaderStatic();
 
 	private setPatchedDefaultState(patch: Partial<RouteState>) {
 		this._state.value = Object.assign({ ... RouteData._defaultState }, patch);
@@ -92,7 +94,7 @@ export class RouteData {
 		return this._state.value.view;
 	}
 
-	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager | undefined, daten?: Abiturdaten): AbiturdatenManager | undefined {
+	protected createAbiturdatenmanager(faecherManager?: GostFaecherManager, daten?: Abiturdaten): AbiturdatenManager | undefined {
 		const abiturdaten = (daten === undefined) ? this._state.value.abiturdaten : daten;
 		const fachManager = (faecherManager === undefined) ? this._state.value.faecherManager : faecherManager;
 		if ((abiturdaten === undefined) || (fachManager === undefined))
@@ -104,7 +106,7 @@ export class RouteData {
 		if (art === 'gesamt')
 			return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
 		const abiturdatenManager = new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.GESAMT);
-		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen()), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22)
+		if (abiturdatenManager.pruefeBelegungExistiert(abiturdatenManager.getFachbelegungen(), GostHalbjahr.EF2, GostHalbjahr.Q11, GostHalbjahr.Q12, GostHalbjahr.Q21, GostHalbjahr.Q22))
 			return abiturdatenManager;
 		return new AbiturdatenManager(abiturdaten, jahrgangsdaten, fachManager, GostBelegpruefungsArt.EF1);
 	}
@@ -134,7 +136,7 @@ export class RouteData {
 		gostJahrgangsdaten.textBeratungsbogen = daten.textBeratungsbogen;
 		gostJahrgangsdaten.textMailversand = null;
 		// Initialisiere den Fächer-Manager mit den Fächerdaten
-		const faecherManager = new GostFaecherManager(daten.faecher);
+		const faecherManager = new GostFaecherManager(daten.abiturjahr - 1, daten.faecher);
 		faecherManager.addFachkombinationenAll(daten.fachkombinationen);
 		// Bestimme die importierten Laufbahnplanungsdaten für den Schüler
 		const planungsdaten = daten.schueler.get(0);
@@ -202,7 +204,7 @@ export class RouteData {
 		daten.schulBezeichnung1 = this._state.value.schuleStammdaten.bezeichnung1;
 		daten.schulBezeichnung2 = (this._state.value.schuleStammdaten.bezeichnung2 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung2;
 		daten.schulBezeichnung3 = (this._state.value.schuleStammdaten.bezeichnung3 === null) ? "" : this._state.value.schuleStammdaten.bezeichnung3;
-		daten.anmerkungen = "Letzte Änderung am " +  (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
+		daten.anmerkungen = "Letzte Änderung am " + (new Date()).toLocaleDateString("de-DE", { dateStyle: "short" });
 		daten.abiturjahr = this._state.value.abiturdaten.abiturjahr;
 		daten.jahrgang = this._state.value.gostJahrgang.jahrgang;
 		daten.hatZusatzkursGE = this._state.value.gostJahrgangsdaten.hatZusatzkursGE;
@@ -374,18 +376,23 @@ export class RouteData {
 		return { data, name };
 	}
 
-	importLaufbahnplanung = async (formData: FormData) => {
+	importLaufbahnplanung = async (formData: FormData) : Promise<string | null> => {
+		this.reader.readAll();
+		const gzData = formData.get("data");
+		if (!(gzData instanceof File))
+			return "Es wurde keine gültige Datei angegeben";
+		const ds = new DecompressionStream("gzip");
 		try {
-			const gzData = formData.get("data");
-			if (!(gzData instanceof File))
-				return;
-			const ds = new DecompressionStream("gzip");
 			const rawData = await (new Response(gzData.stream().pipeThrough(ds))).text();
 			const laufbahnplanungsdaten = GostLaufbahnplanungDaten.transpilerFromJSON(rawData);
+			const revRequired = 1;
+			if (laufbahnplanungsdaten.lpRevision !== revRequired)
+				return "Die Revision der Laufbahnplanungsdatei (" + laufbahnplanungsdaten.lpRevision + ") entspricht nicht der unterstützen Revision " + revRequired;
 			await this.ladeDaten(laufbahnplanungsdaten);
 			await RouteManager.doRoute(routeLaufbahnplanung.name);
+			return null; // Kein Fehler
 		} catch (e) {
-			throw new UserNotificationException(e instanceof Error ? e.message : "Unbekannter Fehler aufgetreten.");
+			return "Fehler beim Laden der Laufbahnplanungsdatei." + ((e instanceof Error) ? ": " + e.message : "");
 		}
 	}
 

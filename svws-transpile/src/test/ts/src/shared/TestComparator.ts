@@ -1,4 +1,4 @@
-import { type Comparator } from "@transpiled";
+import type { Comparator } from "@transpiled";
 import { TestPerson } from "./TestPerson";
 
 export class TestMinComparator implements Comparator<string | number | TestPerson> {
@@ -7,7 +7,7 @@ export class TestMinComparator implements Comparator<string | number | TestPerso
 			return (a < b) ? -1 : ((a === b) ? 0 : 1);
 		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
-			return ((a.nachname ?? "") < (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);
+			return (a.nachname < b.nachname) ? -1 : ((a.nachname === b.nachname) ? 0 : 1);
 		} else {
 			return 1;
 		}
@@ -20,7 +20,7 @@ export class TestMaxComparator implements Comparator<string | number | TestPerso
 			return (a > b) ? -1 : ((a === b) ? 0 : 1);
 		} else if (a instanceof TestPerson && b instanceof TestPerson) {
 			// nachname ist leer...
-			return ((a.nachname ?? "") > (b.nachname ?? "")) ? -1 : (((a.nachname ?? "") === (b.nachname ?? "")) ? 0 : 1);
+			return (a.nachname > b.nachname) ? -1 : ((a.nachname === b.nachname) ? 0 : 1);
 		} else {
 			return 1;
 		}

@@ -34,13 +34,13 @@
 							<template v-if="termin.datum === null">
 								<span class="opacity-25 inline-flex items-center gap-1">
 									<span class="icon i-ri-calendar-2-line" />
-									<svws-ui-button type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute( termin.abijahr, termin.halbjahr, undefined, termin.id ))" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
+									<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" @click="gotoKalenderdatum( termin )" :title="`Datum setzen`" size="small"><span class="icon i-ri-link" /> Datum setzen</svws-ui-button>
 								</span>
 							</template>
 							<template v-else>
 								<span class="opacity-50 inline-flex items-center gap-1">
 									<span>{{ DateUtils.gibDatumGermanFormat(termin.datum) }}</span>
-									<svws-ui-button v-if="!hideButtonRaeumePlanen" type="transparent" @click="RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute( termin.abijahr, termin.halbjahr, termin.id ))" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
+									<svws-ui-button v-if="!hideButtonRaeumePlanen" :disabled="!hatKompetenzUpdate" type="transparent" @click="gotoRaumzeitTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id)" :title="`Räume planen`" size="small"><span class="icon i-ri-link" /> Räume planen</svws-ui-button>
 								</span>
 							</template>
 						</slot>
@@ -73,7 +73,7 @@
 									:draggable="onDrag !== undefined && draggable(klausur, termin)"
 									@dragstart="onDrag && onDrag(klausur);$event.stopPropagation()"
 									@dragend="onDrag && onDrag(undefined);$event.stopPropagation()"
-									class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')"
+									class="svws-ui-tr" role="row"
 									:class="[
 										props.klausurCssClasses === undefined ? '' : props.klausurCssClasses(klausur, termin),
 										{
@@ -81,17 +81,17 @@
 										}
 									]">
 									<div class="svws-ui-td" role="cell">
-										<span class="icon i-ri-draggable i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
+										<span class="icon i-ri-draggable -m-0.5 -ml-3" v-if="onDrag !== undefined && (draggable === undefined || draggable(klausur, termin))" />
 									</div>
 									<div class="svws-ui-td" :class="{'-ml-2': inTooltip}" role="cell">
 										{{ GostHalbjahr.fromIDorException(kMan().vorgabeByKursklausur(klausur).halbjahr).jahrgang }}
 									</div>
 									<div class="svws-ui-td" role="cell">
-										<svws-ui-tooltip :hover="false" :indicator="false">
+										<svws-ui-tooltip :hover="false" :indicator="false" :keep-open>
 											<template #content>
-												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin />
+												<s-gost-klausurplanung-kursliste :k-man :kursklausur="klausur" :termin :patch-klausur :create-schuelerklausur-termin @modal="keepOpen = $event" />
 											</template>
-											<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
+											<span class="svws-ui-badge hover:opacity-75" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td" role="cell">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
@@ -101,10 +101,15 @@
 											<span :class="kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(termin, klausur).size() !== kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) ? 'line-through' : ''">{{ kMan().kursAnzahlKlausurschreiberByKursklausur(klausur) }}/</span>
 											<span class="">{{ kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</span>
 										</div>
-										<SvwsUiBadge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</SvwsUiBadge>
+										<svws-ui-tooltip :hover="true" :indicator="false">
+											<template #content>
+												Kurs enthält externe Schüler
+											</template>
+											<svws-ui-badge v-if="kMan().kursklausurMitExternenS(klausur)" type="highlight" size="normal">E</svws-ui-badge>
+										</svws-ui-tooltip>
 									</div>
 									<div class="svws-ui-td svws-align-right" :class="{'pr-3': inTooltip}" role="cell">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+									<div v-if="showKursschiene === true" class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 									<div v-if="kMan().quartalGetByTermin(termin) === -1" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 									<div v-if="showLastKlausurtermin === true" class="svws-ui-td svws-align-right" role="cell"><span class="opacity-50">{{ datumVorklausur(klausur) }}</span></div>
 								</div>
@@ -138,18 +143,14 @@
 
 <script setup lang="ts">
 
-	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
-	import { GostHalbjahr} from "@core";
-	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+	import { computed, ref } from "vue";
 	import type {DataTableColumn} from "@ui";
-	import {computed} from "vue";
-	import {DateUtils } from "@core";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungKalender } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungKalender";
-	import { routeGostKlausurplanungRaumzeit } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanungRaumzeit";
-
+	import type { GostKlausurplanungDragData } from "./SGostKlausurplanung";
+	import type { GostKlausurplanManager, GostKursklausur, GostKlausurtermin, GostSchuelerklausurTermin, GostKlausurenCollectionSkrsKrsData} from "@core";
+	import { GostHalbjahr, BenutzerKompetenz, DateUtils } from "@core";
 
 	const props = withDefaults(defineProps<{
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		klausurCssClasses?: (klausur: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => void;
@@ -170,6 +171,8 @@
 		createSchuelerklausurTermin?: (id: number) => Promise<void>;
 		patchKlausur?: (klausur: GostKursklausur | GostSchuelerklausurTermin, patch: Partial<GostKursklausur | GostSchuelerklausurTermin>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 		inTooltip?: boolean;
+		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		klausurCssClasses: undefined,
 		onDrag: undefined,
@@ -184,6 +187,9 @@
 		hideButtonRaeumePlanen: false,
 		inTooltip: false,
 	});
+
+	const keepOpen = ref<boolean>(false);
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const kursklausuren = () => props.kMan().kursklausurMitNachschreibernGetMengeByTermin(props.termin, props.showKursklausurenNachschreiber);
 	const schuelerklausurtermine = () => props.kMan().schuelerklausurterminNtGetMengeByTermin(props.termin);
@@ -201,7 +207,7 @@
 			return props.termin.bezeichnung;
 		if (!props.termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (kursklausuren().size())
+		if (kursklausuren().size() > 0)
 			return [...props.kMan().kursklausurGetMengeByTermin(props.termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}

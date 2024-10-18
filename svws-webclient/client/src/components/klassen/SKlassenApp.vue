@@ -1,34 +1,37 @@
 <template>
-	<template v-if="klassenListeManager().hasDaten() || props.gruppenprozesseEnabled">
+	<div v-if="(klassenListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<template v-if="props.gruppenprozesseEnabled">
+					<template v-if="activeRouteType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
-							Gruppenprozesse
-						</h2>
-						<span class="svws-subline">{{ selectedKlassen }}</span>
-					</template>
-					<template v-else>
-						<h2 class="svws-headline">
-							<span>{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}</span>
-							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID:
-								{{ klassenListeManager().daten().id }}
-							</svws-ui-badge>
+							<span>
+								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
+								<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+									ID: {{ klassenListeManager().daten().id }}
+								</svws-ui-badge>
+							</span>
 						</h2>
 						<span class="svws-subline">
 							{{ lehrerkuerzel }}
 						</span>
 					</template>
+					<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
+						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
+					</template>
+					<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
+						<h2 class="svws-headline"> Gruppenprozesse </h2>
+						<span class="svws-subline">{{ klassenSubline }}</span>
+					</template>
 				</div>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
-		<svws-ui-router-tab-bar :routes="props.gruppenprozesseEnabled ? tabsGruppenprozesse : tabs" :hidden="tabsHidden" :model-value="tab" @update:model-value="setTab">
+
+		<svws-ui-tab-bar :tab-manager>
 			<router-view />
-		</svws-ui-router-tab-bar>
-	</template>
+		</svws-ui-tab-bar>
+	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-team-line" />
 	</div>
@@ -38,30 +41,38 @@
 
 	import type { KlassenAppProps } from "./SKlassenAppProps";
 	import { computed } from "vue";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<KlassenAppProps>();
 
-	const selectedKlassen = computed<string>(() => {
-		const liste = props.klassenListeManager().liste.auswahlSorted();
-		let str = "";
-		for (const kl of liste)
-			str += (str.length > 0 ? ", " : "") + kl.kuerzel;
-		return str;
-	});
+	const klassenSubline = computed(() => {
+		const auswahlKlassenList = props.klassenListeManager().liste.auswahlSorted();
+		const leadingKlassenList = [];
+		for (let index = 0; index < auswahlKlassenList.size(); index++) {
+			if (index > 4)
+				break;
+
+			leadingKlassenList.push(auswahlKlassenList.get(index).kuerzel);
+		}
+
+		let subline = leadingKlassenList.join(', ');
+		if (auswahlKlassenList.size() > 5)
+			subline += ` und ${auswahlKlassenList.size() - 5} Weitere`;
+
+		return subline;
+	})
 
 	const lehrerkuerzel = computed<string>(() => {
-		let s = '';
-		if (props.klassenListeManager().hasDaten()) {
-			for (const id of props.klassenListeManager().daten().klassenLeitungen) {
-				const lehrer = props.klassenListeManager().lehrer.get(id);
-				if (lehrer !== null) {
-					if (s.length)
-						s += `, ${lehrer.kuerzel}`;
-					else s = lehrer.kuerzel;
-				}
-			}
+		if (!props.klassenListeManager().hasDaten())
+			return '';
+		let lehrerkuerzelStr = '';
+		for (const lehrerId of props.klassenListeManager().daten().klassenLeitungen) {
+			const lehrer = props.klassenListeManager().lehrer.get(lehrerId);
+			if (lehrer === null)
+				continue;
+			lehrerkuerzelStr += (lehrerkuerzelStr.length > 0) ? `, ${lehrer.kuerzel}` : lehrer.kuerzel;
 		}
-		return s;
+		return lehrerkuerzelStr;
 	});
 
 </script>

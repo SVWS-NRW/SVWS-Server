@@ -23,14 +23,12 @@
 								</svws-ui-input-wrapper>
 								<Transition>
 									<svws-ui-input-wrapper v-if="inputDBSchemata.size() > 0 && !connecting" class="mt-10" center>
-										<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="get_name" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
+										<svws-ui-select v-model="schema" title="Datenbank-Schema" :items="inputDBSchemata" :item-text="i => i.name ?? 'SCHEMANAME FEHLT'" class="w-full" @update:model-value="schema => schema && setSchema(schema)" />
 										<svws-ui-text-input v-model.trim="username" type="text" placeholder="Benutzername" @keyup.enter="doLogin" ref="refUsername" />
 										<svws-ui-text-input v-model.trim="password" type="password" placeholder="Passwort" @keyup.enter="doLogin" />
 										<svws-ui-spacing />
 										<div class="flex gap-2">
-											<svws-ui-button type="transparent" disabled>
-												Hilfe
-											</svws-ui-button>
+											<svws-ui-modal-hilfe> <s-login-hilfe /> </svws-ui-modal-hilfe>
 											<svws-ui-button @click="doLogin" type="primary" :disabled="authenticating">
 												Anmelden
 												<svws-ui-spinner v-if="authenticating" spinning />
@@ -86,10 +84,10 @@
 
 <script setup lang="ts">
 
-	import { computed, nextTick, ref, shallowRef, type Ref } from "vue";
+	import { computed, nextTick, ref, shallowRef } from "vue";
 	import { type ComponentExposed } from "vue-component-type-helpers";
 	import type { DBSchemaListeEintrag, List } from "@core";
-	import { ArrayList, DeveloperNotificationException } from "@core";
+	import { ArrayList, DeveloperNotificationException, JsonCoreTypeReader } from "@core";
 	import { SvwsUiTextInput } from "@ui";
 	import { version } from '../../version';
 	import { githash } from '../../githash';
@@ -97,15 +95,14 @@
 
 	const props = defineProps<LoginProps>();
 
-	const refUsername : Ref<ComponentExposed<typeof SvwsUiTextInput> | null> = ref(null);
-
+	const refUsername = ref<ComponentExposed<typeof SvwsUiTextInput>>();
 	const firstauth = ref(true);
 	const schema = shallowRef<DBSchemaListeEintrag | undefined>();
 	const username = ref("Admin");
 	const password = ref("");
 	const error = ref<{name: string; message: string;}|null>(null);
-
 	const copied = ref<boolean|null>(null);
+
 	async function copyToClipboard() {
 		try {
 			await navigator.clipboard.writeText(`${version} ${githash}`);
@@ -132,8 +129,11 @@
 	// Versuche zu beim Laden der Komponente automatisch mit Default-Einstellungen eine Verbindung zu dem Server aufzubauen
 	void connect();
 
-	function get_name(i: DBSchemaListeEintrag): string {
-		return i.name ?? '';
+	async function initCoreTypes() {
+		const reader = new JsonCoreTypeReader(`https://${props.hostname}`);
+		await reader.loadAll();
+		reader.readAll();
+		props.setMapCoreTypeNameJsonData(reader.mapCoreTypeNameJsonData);
 	}
 
 	async function connect() {
@@ -144,6 +144,7 @@
 			inputDBSchemata.value = await props.connectTo(props.hostname);
 			if (inputDBSchemata.value.size() <= 0)
 				throw new DeveloperNotificationException("Es sind keine Schemata vorhanden.");
+			await initCoreTypes();
 		} catch (e) {
 			connection_failed.value = true;
 			connecting.value = false;
@@ -198,74 +199,74 @@
 </script>
 
 <style lang="postcss" scoped>
-.login-wrapper {
-	@apply flex h-full flex-col justify-between;
-}
-
-.app--layout--login {
-	@apply p-0 bg-none bg-transparent;
-}
-
-.app--layout--login :global(.app--content-container) {
-	@apply bg-white/5;
-}
-
-.login-container {
-	@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
-	/*background-image: url('/images/noise.svg'), url('/images/placeholder-background.jpg');
-	background-size: 100px, cover;
-	background-blend-mode: overlay, normal;*/
-	background-image: url('/images/placeholder-background.jpg');
-	/*background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 90%),
-	linear-gradient(to top, #2285d5 0%, transparent 70%),
-	linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4) 70%),
-	#e3eefb;
-	animation: bg 30s infinite;
-
-	&:before {
-		content: '';
-		@apply absolute inset-0 pointer-events-none;
-		background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent 60%);
+	.login-wrapper {
+		@apply flex h-full flex-col justify-between;
 	}
 
-	&:after {
-		content: '';
-		@apply absolute inset-0 opacity-10 pointer-events-none;
-    background-image:  linear-gradient(rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 0) 1px);
-    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
-    background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
-	}*/
-}
+	.app--layout--login {
+		@apply p-0 bg-none bg-transparent;
+	}
 
-@keyframes bg {
-	0%, 100% { background-color: #2285d5; }
-  25% { background-color: #8a5cf6; }
-  50% { background-color: #84cc16; }
-  75% { background-color: #fff693; }
-}
+	.app--layout--login :global(.app--content-container) {
+		@apply bg-white/5;
+	}
 
-.modal {
-	@apply shadow-2xl shadow-black/50 rounded-3xl;
-}
+	.login-container {
+		@apply bg-cover bg-top h-full flex flex-col justify-center items-center px-4;
+		/*background-image: url('/images/noise.svg'), url('/images/placeholder-background.jpg');
+		background-size: 100px, cover;
+		background-blend-mode: overlay, normal;*/
+		background-image: url('/images/placeholder-background.jpg');
+		/*background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8), transparent 90%),
+		linear-gradient(to top, #2285d5 0%, transparent 70%),
+		linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.4) 70%),
+		#e3eefb;
+		animation: bg 30s infinite;
 
-.login-footer-link {
-	@apply inline-block;
-}
+		&:before {
+			content: '';
+			@apply absolute inset-0 pointer-events-none;
+			background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent 60%);
+		}
 
-.login-footer-link:hover,
-.login-footer-link:focus,
-.login-footer-link:hover .hover-underline,
-.login-footer-link:focus .hover-underline {
-	@apply underline;
-}
+		&:after {
+			content: '';
+			@apply absolute inset-0 opacity-10 pointer-events-none;
+			background-image:  linear-gradient(rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(90deg, rgba(255, 255, 255, 1) 2px, transparent 2px), linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, rgba(255, 255, 255, 0) 1px);
+			background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+			background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+		}*/
+	}
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
+	@keyframes bg {
+		0%, 100% { background-color: #2285d5; }
+		25% { background-color: #8a5cf6; }
+		50% { background-color: #84cc16; }
+		75% { background-color: #fff693; }
+	}
 
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
+	.modal {
+		@apply shadow-2xl shadow-black/50 rounded-3xl;
+	}
+
+	.login-footer-link {
+		@apply inline-block;
+	}
+
+	.login-footer-link:hover,
+	.login-footer-link:focus,
+	.login-footer-link:hover .hover-underline,
+	.login-footer-link:focus .hover-underline {
+		@apply underline;
+	}
+
+	.v-enter-active,
+	.v-leave-active {
+		transition: opacity 0.5s ease;
+	}
+
+	.v-enter-from,
+	.v-leave-to {
+		opacity: 0;
+	}
 </style>

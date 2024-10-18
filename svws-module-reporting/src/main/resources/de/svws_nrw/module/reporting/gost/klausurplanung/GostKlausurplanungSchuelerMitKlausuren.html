@@ -1,0 +1,104 @@
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+	<head th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+		<title>Schüler mit Klausuren</title>
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-pdf.css}" href="../../css/reporting-pdf.css" />
+		<link th:if="${mediaPrint}" rel="stylesheet" th:href="@{css/reporting-seite-hoch-koepfe-fuesse.css}" href="../../css/reporting-seite-hoch-koepfe-fuesse.css" />
+		<link rel="stylesheet" th:href="@{css/reporting-styles.css}" href="../../css/reporting-styles.css" />
+		<link rel="stylesheet" th:href="@{gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.css}" href="../../gost/klausurplanung/GostKlausurplanungSchuelerMitKlausuren.css" />
+	</head>
+
+	<body th:with="mediaPrint = ${Parameter.ausgabeformat == 2}">
+		<div class="start-new-page" th:each="schueler,iterationVarSchueler : ${GostKlausurplan.schuelerGefiltert()}">
+			<!--Beginn: Definition der Seitenköpfe und Seitenfüße. Diese werden per CSS in den @page-Boxen positioniert-->
+			<th:block th:if="${mediaPrint}">
+				<div class="pageTopLeft" th:utext="${Schule.bezeichnungSchuleMehrzeiligHtml}">schulbezeichnung1<br/>schulbezeichnung2<br/>schulbezeichnung3</div>
+				<div class="pageTopRight" th:utext="'Klausurplanung ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittKurz()} + '<br/>Schulnummer: ' + ${Schule.schulnummer()}">Klausurplanung<br/><br/>Schulnummer: 123456</div>
+				<div class="pageBottomLeft" th:text="'Gedruckt am ' + ${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}">Gedruckt am: 02.02.2022</div>
+				<div class="pageBottomRight"><span th:text="'Gesamtdruck Schülerklausurplan ' + ${iterationVarSchueler.count} + '/' + ${#lists.size(GostKlausurplan.schuelerGefiltert())}">Gesamtdruck Schülerklausurplan 13/57</span></div>
+			</th:block>
+			<!--Ende: Definition Seitenköpfe und Seitenfüße -->
+
+			<table class="fixed-100 p-0">
+				<colgroup>
+					<col style="width: 80%;"/>
+					<col style="width: 20%;"/>
+				</colgroup>
+				<thead>
+				<tr>
+					<td colspan="2" class="bo-b-grey"><h2 th:text="'Klausurplan ' + ${Schule.auswahlSchuljahresabschnitt().textSchuljahresabschnittLang()}">Klausurplan 2024/25 1. Halbjahr</h2></td>
+				</tr>
+				<tr>
+					<td class="p-t-25of100 bo-b-grey"><h3 th:text="${schueler.nachname()} + ', ' + ${schueler.vorname()}">Mustermann, Max</h3></td>
+					<td class="p-t-25of100 bo-b-grey ta-r"><h3 th:text="${schueler.auswahlLernabschnitt().klasse().kuerzel()}">EF</h3></td>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td colspan="2">
+						<table class="fixed-100 p-0">
+							<colgroup>
+								<col style="width: 5%;"/>
+								<col style="width: 16%;"/>
+								<col style="width: 15%;"/>
+								<col style="width: 15%;"/>
+								<col style="width: 15%;"/>
+								<col style="width: 12%;"/>
+								<col style="width: 12%;"/>
+								<col style="width: 10%;"/>
+							</colgroup>
+							<thead>
+							<tr>
+								<td class="head-small-grey">KW</td>
+								<td class="head-small-grey">Datum</td>
+								<td class="head-small-grey">Kurs</td>
+								<td class="head-small-grey">Lehrkraft</td>
+								<td class="head-small-grey">Raum</td>
+								<td class="head-small-grey">Beginn</td>
+								<td class="head-small-grey">Dauer</td>
+								<td class="head-small-grey ta-r">Medien</td>
+							</tr>
+							</thead>
+							<tbody>
+							<th:block th:each="schuelerklausur,iterationVarSchuelerklausur : ${schueler.gostKlausurplanungSchuelerklausuren()}">
+								<tr>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.klausurtermin() != null ? #convert.toKalenderwocheDE(schuelerklausur.klausurtermin().datum()) : ''}">35</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.klausurtermin() != null ? (#convert.toWochentagKurzDE(schuelerklausur.klausurtermin().datum()) + ' ' + #convert.toDateDE(schuelerklausur.klausurtermin().datum())) : ''}">Do. 02.10.2024</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kuerzel()}">ABC</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.kursklausur().kurs().kursLehrer().kuerzel()}">ABC</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${((schuelerklausur.klausurraum() == null) || (schuelerklausur.klausurraum().raumdaten() == null)) ? '' : schuelerklausur.klausurraum().raumdaten().kuerzel()}">A2.13</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.startuhrzeit() + ' Uhr'}">08:00 Uhr</td>
+									<td class="bo-t-grey p-tb-0-lr-1" th:text="${schuelerklausur.kursklausur().dauer() + ' Min.'}">180 Min.</td>
+									<td class="bo-t-grey p-tb-0-lr-1 ta-r" th:text="${(schuelerklausur.kursklausur().istAudioNotwendig() ? 'A' : '') + (schuelerklausur.kursklausur().istVideoNotwendig() ? 'V' : '')}">A</td>
+								</tr>
+								<tr th:if="${schuelerklausur.kursklausur() != null && schuelerklausur.kursklausur().istMdlPruefung()}">
+									<td></td>
+									<td></td>
+									<td colspan="7" class="cell-small-grey p-tb-0-lr-1 ta-l">Hinweis: Mündliche Prüfung.</td>
+								</tr>
+								<tr th:if="${(schuelerklausur.klausurtermin() != null && schuelerklausur.klausurtermin().bemerkung() != null)}">
+									<td></td>
+									<td></td>
+									<td colspan="7" class="cell-small-grey p-tb-0-lr-1 ta-l" th:text="${'Bemerkung zum Klausurtermin: ' + schuelerklausur.klausurtermin().bemerkung()}">Bemerkung zum Klausurtermin: Text zum Termin der Klausur</td>
+								</tr>
+								<tr th:if="${(schuelerklausur.bemerkung() != null)}">
+									<td></td>
+									<td></td>
+									<td colspan="7" class="cell-small-grey p-tb-0-lr-1 ta-l" th:text="${'Bemerkung zu Schülerklausur: ' + schuelerklausur.bemerkung()}">Bemerkung zu Schülerklausur: Text zur Klausur des Schülers</td>
+								</tr>
+								<tr th:if="${(schuelerklausur.kursklausur() != null && schuelerklausur.kursklausur().bemerkung() != null)}">
+									<td></td>
+									<td></td>
+									<td colspan="7" class="cell-small-grey p-tb-0-lr-1 ta-l" th:text="${'Bemerkung zu Kursklausur: ' + schuelerklausur.kursklausur().bemerkung()}">Bemerkung zu Kursklausur: Text zur Klausur des Kurses</td>
+								</tr>
+							</th:block>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

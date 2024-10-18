@@ -70,7 +70,23 @@ public class ConvertExpressionHelper {
 		if ((dateISO8601 == null) || dateISO8601.isEmpty())
 			return "";
 		try {
-			final String[] wochentage =  new String[] {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
+			final String[] wochentage = new String[] { "", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" };
+			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
+		} catch (final Exception ignore) {
+			return "";
+		}
+	}
+
+	/**
+	 * Gibt zu einem als String im ISO-Format vorliegendem den deutschen Wochentag als Abkürzung zurück.
+	 * @param dateISO8601		Der String, der das im ISO-Format yyyy-MM-dd vorliegende Datum enthält.
+	 * @return					Der abgekürzte deutsche Wochentag des Datums.
+	 */
+	public String toWochentagKurzDE(final String dateISO8601) {
+		if ((dateISO8601 == null) || dateISO8601.isEmpty())
+			return "";
+		try {
+			final String[] wochentage = new String[] { "", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa.", "So." };
 			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
 		} catch (final Exception ignore) {
 			return "";

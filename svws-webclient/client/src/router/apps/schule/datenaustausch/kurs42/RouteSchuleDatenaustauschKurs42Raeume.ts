@@ -1,19 +1,20 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 
-import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "../../../RouteApp";
 import { routeSchuleDatenaustauschKurs42, type RouteSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 
 import type { SchuleDatenaustauschKurs42RaeumeProps } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42RaeumeProps";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SSchuleDatenaustauschKurs42Raeume = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Raeume.vue");
 
 export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<any, RouteSchuleDatenaustauschKurs42> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);
+		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";

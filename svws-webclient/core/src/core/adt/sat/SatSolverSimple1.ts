@@ -1,5 +1,6 @@
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { SatInput } from '../../../core/adt/sat/SatInput';
 import { JavaMath } from '../../../java/lang/JavaMath';
@@ -83,6 +84,8 @@ export class SatSolverSimple1 extends SatSolver {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatSolverSimple1', 'java.util.function.Function', 'de.svws_nrw.core.adt.sat.SatSolver'].includes(name);
 	}
+
+	public static class = new Class<SatSolverSimple1>('de.svws_nrw.core.adt.sat.SatSolverSimple1');
 
 }
 

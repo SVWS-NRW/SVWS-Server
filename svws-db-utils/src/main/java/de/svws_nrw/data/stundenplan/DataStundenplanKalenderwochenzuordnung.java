@@ -40,13 +40,14 @@ public final class DataStundenplanKalenderwochenzuordnung
 	}
 
 	@Override
-	protected Long getID(final Map<String, Object> attributes) {
-		return (Long) attributes.get("id");
+	protected Long getID(final Map<String, Object> attributes) throws ApiOperationException {
+		return JSONMapper.convertToLong(attributes.get("id"), true);
 	}
 
 
 	@Override
-	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOStundenplanKalenderwochenZuordnung dto, final Long newId, final Map<String, Object> initAttributes)
+			throws ApiOperationException {
 		dto.ID = newId;
 		dto.Stundenplan_ID = this.stundenplanID;
 	}

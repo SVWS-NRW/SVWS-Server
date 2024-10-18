@@ -22,6 +22,7 @@ import de.svws_nrw.test.apitests.util.APITestUtil;
 import de.svws_nrw.test.apitests.util.BaseApiUtil;
 import de.svws_nrw.test.davapitests.util.xml.XmlPathWalker;
 import io.restassured.response.Response;
+
 /**
  * Testet die XML-Antworten der DavApi auf enthaltene Informationen
  */
@@ -288,6 +289,7 @@ class DavApiXmlResponseTest extends BaseApiUtil {
 		/**
 		 * Testet Property-Suche auf die Liste von Kalendern
 		 */
+		@Disabled("XML Unmarshaling ist fehlerhaft")
 		@Test
 		void givenPropfindOnCalendarCollection_then207() {
 			String kalender = "dav/gymabi/kalender";

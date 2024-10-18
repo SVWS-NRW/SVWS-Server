@@ -12,10 +12,7 @@ import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Kurs.</p>
- * <p>Sie enthält die Grunddaten eines Kurses mit Lehrern und den zugeordneten Schülern.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Kurs.
  */
 public class ReportingKurs {
 
@@ -35,7 +32,7 @@ public class ReportingKurs {
 	protected boolean istSichtbar;
 
 	/** Die Jahrgänge, denen der Kurs zugeordnet ist. */
-	protected List<ReportingJahrgang> jahrgaenge = new ArrayList<>();
+	protected List<ReportingJahrgang> jahrgaenge;
 
 	/** Das Kürzel des Kurses. */
 	protected String kuerzel;
@@ -47,13 +44,13 @@ public class ReportingKurs {
 	protected ReportingLehrer kursLehrer;
 
 	/** Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde */
-	protected List<Integer> schienen = new ArrayList<>();
+	protected List<Integer> schienen;
 
 	/** Die IDs der Schüler des Kurses. */
-	protected List<Long> idsSchueler = new ArrayList<>();
+	protected List<Long> idsSchueler;
 
 	/** Die Schüler des Kurses. */
-	protected List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler;
 
 	/** Der Schuljahresabschnitt des Kurses. */
 	protected ReportingSchuljahresabschnitt schuljahresabschnitt;

@@ -30,9 +30,9 @@
 <script setup lang="ts">
 
 	import { ref } from "vue";
+	import type { DataTableColumn } from "@ui";
 	import type { List, StundenplanPausenzeit } from "@core";
 	import { Wochentag, DateUtils } from "@core";
-	import type { DataTableColumn } from "@ui";
 
 	const props = defineProps<{
 		importPausenzeiten: (Pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
@@ -49,11 +49,11 @@
 	const _showModal = ref<boolean>(false);
 	const showModal = () => _showModal;
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const selected = ref<StundenplanPausenzeit[]>([...props.listPausenzeiten]);
+	const selected = ref<StundenplanPausenzeit[]>([]);
 	const pausenzeit = ref<StundenplanPausenzeit>()
 
-	const openModal = () => {
+	function openModal() {
+		selected.value = [...props.listPausenzeiten];
 		showModal().value = true;
 	}
 

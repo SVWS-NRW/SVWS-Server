@@ -9,6 +9,7 @@ import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { cast_java_util_Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { LinkedCollectionDescendingIterator } from '../../../core/adt/collection/LinkedCollectionDescendingIterator';
 import { LinkedCollectionIterator } from '../../../core/adt/collection/LinkedCollectionIterator';
 import { Arrays } from '../../../java/util/Arrays';
@@ -103,16 +104,16 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 		if ((__param0 === undefined)) {
 			if (this._size === 0)
 				return Array(0).fill(null);
-			const array : Array<E> = Array(this._size).fill(null);
+			const array : Array<E> = Array(this._size).fill(null) as unknown as Array<E>;
 			const iter : JavaIterator<E> = this.iterator();
 			for (let i : number = 0; i < this._size; i++) {
 				array[i] = iter.next();
 			}
 			return array;
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			if (a.length < this._size)
-				return this.toArray();
+				return this.toArray() as unknown as Array<T>;
 			const iter : JavaIterator<E> = this.iterator();
 			for (let i : number = 0; i < this._size; i++) {
 				const e : E = iter.next();
@@ -620,6 +621,8 @@ export class LinkedCollection<E> extends JavaObject implements Deque<E> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Collection', 'de.svws_nrw.core.adt.collection.LinkedCollection', 'java.util.Queue', 'java.util.Deque', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
+
+	public static class = new Class<LinkedCollection<any>>('de.svws_nrw.core.adt.collection.LinkedCollection');
 
 	public reversed() : Deque<E> {
 		throw new UnsupportedOperationException("Der Transpiler unterstützt diese Methode noch nicht.");

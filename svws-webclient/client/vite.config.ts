@@ -28,7 +28,7 @@ export default defineConfig({
 			"~": resolve(__dirname, "src"),
 			"@comp": resolve(__dirname, '../components/src/index.ts'),
 			"@ui": resolve(__dirname, '../ui/src/index.ts'),
-			"@core": resolve(__dirname, '../core/src/index.ts')
+			"@core": resolve(__dirname, '../core/src/index.ts'),
 		}
 	},
 	build: {

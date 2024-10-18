@@ -21,14 +21,15 @@ import de.svws_nrw.db.schema.SchemaTabelle;
 import de.svws_nrw.db.schema.SchemaTabelleIndex;
 import de.svws_nrw.db.schema.SchemaTabelleTrigger;
 import de.svws_nrw.db.schema.View;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Diese Klasse stellt Hilfs-Funktionen zur Verfügung, um auf ein SVWS-Datenbank-Schema zuzugreifen und dieses zu bearbeiten.
  */
 public final class DBSchemaManager {
 
-	/// Der Datenbank-Benutzer
-	private final Benutzer user;
+	/// Die Datenbank-Verbindung
+	private final DBEntityManager conn;
 
 	/// Der Status des Datenbank-Schema
 	private final DBSchemaStatus status;
@@ -56,13 +57,15 @@ public final class DBSchemaManager {
 	/**
 	 * Erstellt einen neuen DBSchema-Manager, der Schema-Operationen mithilfe des angegebenen Datenbank-Benutzer ermöglicht.
 	 *
-	 * @param user             der Datenbak-Benutzer
+	 * @param conn             die Datenbank-Verbindung
 	 * @param returnOnError    gibt an, ob Operatioen bei Einzelfehlern abgebrochen werden sollen
 	 * @param logger           ein Logger, um die Abläufe in dem Schema-Manager zu loggen
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private DBSchemaManager(final Benutzer user, final boolean returnOnError, final Logger logger) {
-		this.user = user;
-		this.status = DBSchemaStatus.read(user);
+	private DBSchemaManager(final DBEntityManager conn, final boolean returnOnError, final Logger logger) throws DBException {
+		this.conn = conn;
+		this.status = DBSchemaStatus.read(conn);
 		this.returnOnError = returnOnError;
 		this.logger = logger;
 		this.updater = new DBUpdater(this, returnOnError);
@@ -74,25 +77,27 @@ public final class DBSchemaManager {
 	/**
 	 * Versucht einen neuen DB-Schema-Manager zu erstellen.
 	 *
-	 * @param user             der Datenbank-Benutzer
+	 * @param conn             die Datenbank-Verbindung
 	 * @param returnOnError    gibt an, ob Operatioen bei Einzelfehlern abgebrochen werden sollen
 	 * @param logger           ein Logger, um die Abläufe in dem Schema-Manager zu loggen
 	 *
 	 * @return der DB-Schema-Manager bei Erfolg
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static DBSchemaManager create(final Benutzer user, final boolean returnOnError, final Logger logger) {
-		return new DBSchemaManager(user, returnOnError, (logger == null) ? new Logger() : logger);
+	public static DBSchemaManager create(final DBEntityManager conn, final boolean returnOnError, final Logger logger) throws DBException {
+		return new DBSchemaManager(conn, returnOnError, (logger == null) ? new Logger() : logger);
 	}
 
 
 
 	/**
-	 * Gibt den Datenbank-Benutzer des Managers zurück.
+	 * Gibt die Datenbank-Verbindung des Managers zurück.
 	 *
-	 * @return der Datenbank-Benutzer
+	 * @return die Datenbank-Verbindung
 	 */
-	public Benutzer getUser() {
-		return this.user;
+	public DBEntityManager getConnection() {
+		return this.conn;
 	}
 
 
@@ -340,7 +345,7 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, wenn das Schema erfolgreich erstellt wurde, sonst false
 	 */
-	private boolean createSVWSSchema(final DBEntityManager conn, final long revision, final boolean createUser, final boolean createTrigger) {
+	private boolean createSVWSSchemaInternal(final DBEntityManager conn, final long revision, final boolean createUser, final boolean createTrigger) {
 		logger.logLn("- Erstelle Tabellen für die aktuelle DB-Revision... ");
 		logger.modifyIndent(2);
 		boolean success = createAllTables(conn, revision);
@@ -429,7 +434,7 @@ public final class DBSchemaManager {
 	/**
 	 * Erstellt ein SVWS-Datenbank-Schema der angegebenen Revision
 	 *
-	 * @param user            der Datenbank-Benutzer über welchen eine Datenbank-Verbindung zum Erstellen des Schemas aufgebaut wird
+	 * @param conn            die Datenbank-Verbindung zum Erstellen des Schemas
 	 * @param revision        die Revision für das SVWS-DB-Schema
 	 * @param createUser      gibt an, ob Default-SVWS-Benutzer angelegt werden sollen
 	 * @param createTrigger   gibt an, ob auch die Trigger für die Datenbank-Revision erstellt werden sollen
@@ -437,27 +442,25 @@ public final class DBSchemaManager {
 	 *
 	 * @throws DBException falls das Erstellen des Schemas fehlschlägt
 	 */
-	public void createSVWSSchema(final Benutzer user, final long revision, final boolean createUser, final boolean createTrigger) throws DBException {
+	public void createSVWSSchema(final DBEntityManager conn, final long revision, final boolean createUser, final boolean createTrigger) throws DBException {
 		logger.logLn("-> Erstelle in der Ziel-DB ein SVWS-Schema der Revision " + revision);
 		logger.modifyIndent(2);
 		boolean result = true;
-		try (DBEntityManager conn = user.getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				result = createSVWSSchema(conn, revision, createUser, createTrigger);
-				if (!result)
-					throw new DBException("Fehler beim Erstellen des Schemas");
-				if (!conn.transactionCommit())
-					throw new DBException("Fehler beim Erstellen des Schemas - Datenbank-Transaktion konnte nicht abgeschlossen werden.");
-			} catch (final Exception e) {
-				logger.logLn(" " + strError);
-				if (e instanceof DBException)
-					throw e;
-				throw new DBException("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
-			} finally {
-				logger.modifyIndent(-2);
-				conn.transactionRollback();
-			}
+		try {
+			conn.transactionBegin();
+			result = createSVWSSchemaInternal(conn, revision, createUser, createTrigger);
+			if (!result)
+				throw new DBException("Fehler beim Erstellen des Schemas");
+			if (!conn.transactionCommit())
+				throw new DBException("Fehler beim Erstellen des Schemas - Datenbank-Transaktion konnte nicht abgeschlossen werden.");
+		} catch (final Exception e) {
+			logger.logLn(" " + strError);
+			if (e instanceof DBException)
+				throw e;
+			throw new DBException("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
+		} finally {
+			logger.modifyIndent(-2);
+			conn.transactionRollback();
 		}
 		logger.logLn(strOK);
 	}
@@ -471,8 +474,10 @@ public final class DBSchemaManager {
 	 * @param driver  die Informationen zum verwendeten Datenbank-Treiber (s.o.)
 	 *
 	 * @return true, falls die Operationen erfolgreich waren und ansonsten false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	private boolean dropSVWSSchemaMultipleStatements(final DBEntityManager conn, final DBDriver driver) {
+	private boolean dropSVWSSchemaMultipleStatements(final DBEntityManager conn, final DBDriver driver) throws DBException {
 		// no support to drop multiple tables in one drop statement - drop table order is important due to foreign key constraints
 		boolean success = true;
 		// Bestimme die aktuelle Revision der Datenbank
@@ -518,53 +523,53 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, wenn das Schema erfolgreich verworfen wurde,
 	 *         false wenn dabei Fehler aufgetreten sind.
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean dropSVWSSchema() {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			boolean success = true;
-			logger.logLn("- Verwerfe Tabellen...");
-			logger.modifyIndent(2);
+	public boolean dropSVWSSchema() throws DBException {
+		boolean success = true;
+		logger.logLn("- Verwerfe Tabellen...");
+		logger.modifyIndent(2);
 
-			final DBDriver driver = conn.getDBDriver();
-			if ((driver == DBDriver.MDB) || (driver == DBDriver.SQLITE)) {
-				success = dropSVWSSchemaMultipleStatements(conn, driver);
-			} else if ((driver == DBDriver.MARIA_DB) || (driver == DBDriver.MYSQL)) {
-				// drop all existing in one statement - we do not need to cope with foreign key constraints
-				final List<String> tableNames = status.getTabellen();
-				if (!tableNames.isEmpty()) {
-					logger.log("alle auf einmal... ");
-					final List<String> sql = new ArrayList<>();
-					sql.add("SET foreign_key_checks = 0");
-					sql.add(status.getTabellen().stream().collect(Collectors.joining(",", "DROP TABLE IF EXISTS ", ";")));
-					sql.add("SET foreign_key_checks = 1");
-					try {
-						conn.executeBatchWithJDBCConnection(sql);
-						logger.logLn(0, " " + strOK);
-					} catch (final DBException e) {
-						e.printStackTrace();
-						logger.logLn(0, " " + strError);
-						success = false;
-					}
-				}
-			} else if (driver == DBDriver.MSSQL) {
-				// drop all existing in one statement - we do not need to cope with foreign key constraints
-				final List<String> tableNames = status.getTabellen();
-				if (!tableNames.isEmpty()) {
-					logger.log("alle auf einmal... ");
-					final String sql = status.getTabellen().stream().collect(Collectors.joining(",", "DROP TABLE IF EXISTS ", ";"));
-					final int result = conn.executeWithJDBCConnection(sql);
-					if (result == Integer.MIN_VALUE) {
-						logger.logLn(0, " " + strError);
-						success = false;
-					} else {
-						logger.logLn(0, " " + strOK);
-					}
+		final DBDriver driver = conn.getDBDriver();
+		if ((driver == DBDriver.MDB) || (driver == DBDriver.SQLITE)) {
+			success = dropSVWSSchemaMultipleStatements(conn, driver);
+		} else if ((driver == DBDriver.MARIA_DB) || (driver == DBDriver.MYSQL)) {
+			// drop all existing in one statement - we do not need to cope with foreign key constraints
+			final List<String> tableNames = status.getTabellen();
+			if (!tableNames.isEmpty()) {
+				logger.log("alle auf einmal... ");
+				final List<String> sql = new ArrayList<>();
+				sql.add("SET foreign_key_checks = 0");
+				sql.add(status.getTabellen().stream().collect(Collectors.joining(",", "DROP TABLE IF EXISTS ", ";")));
+				sql.add("SET foreign_key_checks = 1");
+				try {
+					conn.executeBatchWithJDBCConnection(sql);
+					logger.logLn(0, " " + strOK);
+				} catch (final DBException e) {
+					e.printStackTrace();
+					logger.logLn(0, " " + strError);
+					success = false;
 				}
 			}
-			logger.modifyIndent(-2);
-			status.update();
-			return success;
+		} else if (driver == DBDriver.MSSQL) {
+			// drop all existing in one statement - we do not need to cope with foreign key constraints
+			final List<String> tableNames = status.getTabellen();
+			if (!tableNames.isEmpty()) {
+				logger.log("alle auf einmal... ");
+				final String sql = status.getTabellen().stream().collect(Collectors.joining(",", "DROP TABLE IF EXISTS ", ";"));
+				final int result = conn.executeWithJDBCConnection(sql);
+				if (result == Integer.MIN_VALUE) {
+					logger.logLn(0, " " + strError);
+					success = false;
+				} else {
+					logger.logLn(0, " " + strOK);
+				}
+			}
 		}
+		logger.modifyIndent(-2);
+		status.update();
+		return success;
 	}
 
 
@@ -578,46 +583,50 @@ public final class DBSchemaManager {
 	 *
 	 * @return true, falls das Erstellen erfolgreich durchgeführt wurde.
 	 */
-	private static boolean createAndUpdateSchemaInto(final DBConfig tgtConfig, final long rev, final Logger logger, final boolean clearSchema) {
-		final Benutzer schemaUser;
+	private static boolean createAndUpdateSchemaInto(final DBConfig tgtConfig, final long rev, final @NotNull Logger logger, final boolean clearSchema) {
+		final DBSchemaManager manager;
 		try {
-			schemaUser = Benutzer.create(tgtConfig);
+			final Benutzer schemaUser = Benutzer.create(tgtConfig);
+			manager = DBSchemaManager.create(schemaUser.getEntityManager(), true, logger);
 		} catch (@SuppressWarnings("unused") final DBException db) {
 			logger.logLn("Fehler beim Erstellen der Datenbankverbindung zum Ziel-Schema. Sind die Anmeldedaten korrekt?");
 			return false;
 		}
-		final DBSchemaManager manager = DBSchemaManager.create(schemaUser, true, logger);
 
 		// Schema leeren...
-		if ((clearSchema) && (!manager.dropSVWSSchema())) {
+		try {
+			if ((clearSchema) && (!manager.dropSVWSSchema())) {
+				logger.logLn("Fehler beim Leeren des Schemas in der Ziel-Datenbank.");
+				return false;
+			}
+		} catch (final DBException e) {
+			logger.logLn(e.getMessage());
 			logger.logLn("Fehler beim Leeren des Schemas in der Ziel-Datenbank.");
 			return false;
 		}
 
 		logger.logLn("Erstelle das Schema zunächst in der Revision 0.");
 		logger.modifyIndent(2);
-		try (DBEntityManager conn = schemaUser.getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				if (!manager.createSVWSSchema(conn, 0, true, true))
-					throw new DBException("Fehler beim Erstellen des Schemas");
-				if (!conn.transactionCommit())
-					throw new DBException("Fehler beim Erstellen des Schemas - Transaktion konnte nicht abgeschlossen werden");
-			} catch (final DBException e) {
-				logger.logLn(e.getMessage());
-				return false;
-			} catch (final Exception e) {
-				logger.logLn("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
-				return false;
-			} finally {
-				logger.modifyIndent(-2);
-				conn.transactionRollback();
-			}
+		try {
+			manager.conn.transactionBegin();
+			if (!manager.createSVWSSchemaInternal(manager.conn, 0, true, true))
+				throw new DBException("Fehler beim Erstellen des Schemas");
+			if (!manager.conn.transactionCommit())
+				throw new DBException("Fehler beim Erstellen des Schemas - Transaktion konnte nicht abgeschlossen werden");
+		} catch (final DBException e) {
+			logger.logLn(e.getMessage());
+			return false;
+		} catch (final Exception e) {
+			logger.logLn("Unerwarteter Fehler beim Erstellen des Schemas: " + e.getMessage());
+			return false;
+		} finally {
+			logger.modifyIndent(-2);
+			manager.conn.transactionRollback();
 		}
 
 		logger.logLn("Aktualisiere das Schema schrittweise auf Revision " + rev + ".");
 		logger.modifyIndent(2);
-		if (!manager.updater.update(schemaUser, rev, false, true))
+		if (!manager.updater.update(manager.conn, rev, false, true))
 			return false;
 		logger.modifyIndent(-2);
 		return true;

@@ -8,6 +8,7 @@ import { JavaMath } from '../../../../java/lang/JavaMath';
 import { System } from '../../../../java/lang/System';
 import { Random } from '../../../../java/util/Random';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { Arrays } from '../../../../java/util/Arrays';
 import { HashSet } from '../../../../java/util/HashSet';
@@ -782,6 +783,8 @@ export class KlausurblockungSchienenDynDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenDynDaten'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungSchienenDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungSchienenDynDaten');
 
 }
 

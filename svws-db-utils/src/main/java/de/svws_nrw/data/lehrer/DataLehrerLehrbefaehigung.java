@@ -3,11 +3,12 @@ package de.svws_nrw.data.lehrer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-import de.svws_nrw.core.data.lehrer.LehrerLehrbefaehigungEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigung;
-import de.svws_nrw.core.types.lehrer.LehrerLehrbefaehigungAnerkennung;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehrbefaehigungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigung;
+import de.svws_nrw.asd.types.lehrer.LehrerLehrbefaehigungAnerkennung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramtBefaehigung;
@@ -30,16 +31,16 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrerLehramtBefaehigung} in einen Core-DTO {@link LehrerLehrbefaehigungEintrag}.
-	 */
-	private static final Function<DTOLehrerLehramtBefaehigung, LehrerLehrbefaehigungEintrag> dtoMapper = (final DTOLehrerLehramtBefaehigung l) -> {
+	private static LehrerLehrbefaehigungEintrag map(final DBEntityManager conn, final DTOLehrerLehramtBefaehigung l) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final LehrerLehrbefaehigungEintrag daten = new LehrerLehrbefaehigungEintrag();
 		daten.id = l.Lehrer_ID;
-		final LehrerLehrbefaehigung lehrbefaehigung = LehrerLehrbefaehigung.getByKuerzel(l.LehrbefKrz);
-		daten.idLehrbefaehigung = (lehrbefaehigung == null) ? null : lehrbefaehigung.daten.id;
-		final LehrerLehrbefaehigungAnerkennung anerkennung = LehrerLehrbefaehigungAnerkennung.getByKuerzel(l.LehrbefAnerkennungKrz);
-		daten.idAnerkennungsgrund = (anerkennung == null) ? null : anerkennung.daten.id;
+		final LehrerLehrbefaehigung lehrbefaehigung = LehrerLehrbefaehigung.data().getWertByKuerzel(l.LehrbefKrz);
+		final LehrerLehrbefaehigungKatalogEintrag eintragLehrbefaehigung = (lehrbefaehigung == null) ? null : lehrbefaehigung.daten(schuljahr);
+		daten.idLehrbefaehigung = (eintragLehrbefaehigung == null) ? null : eintragLehrbefaehigung.id;
+		final LehrerLehrbefaehigungAnerkennung anerkennung = LehrerLehrbefaehigungAnerkennung.data().getWertByKuerzel(l.LehrbefAnerkennungKrz);
+		final LehrerLehrbefaehigungAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
+		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;
 		return daten;
 	};
 
@@ -70,7 +71,7 @@ public final class DataLehrerLehrbefaehigung extends DataManager<Long> {
 			return result;
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerLehramtBefaehigung l : daten)
-			result.add(dtoMapper.apply(l));
+			result.add(map(conn, l));
 		return result;
 	}
 

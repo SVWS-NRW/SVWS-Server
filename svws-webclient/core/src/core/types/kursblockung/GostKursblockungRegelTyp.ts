@@ -2,6 +2,7 @@ import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
 import { GostBlockungRegel } from '../../../core/data/gost/GostBlockungRegel';
@@ -365,6 +366,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostKursblockungRegelTyp>('de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp');
 
 }
 

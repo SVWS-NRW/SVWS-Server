@@ -6,36 +6,17 @@ import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 import de.svws_nrw.module.reporting.repositories.ReportingRepository;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
-import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungBlockungsergebnis;
 import de.svws_nrw.module.reporting.types.gost.kursplanung.ReportingGostKursplanungFachwahlstatistik;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
- *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik und erweitert die Klasse {@link ReportingGostKursplanungFachwahlstatistik}.</p>
- *
- *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
- *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
- *  greift die Proxy-Klassen an verschiedenen Stellen auf die Datenbank zu.</p>
- *
- *  <ul>
- *      <li>Die Proxy-Klasse stellt in der Regel einen zusätzlichen Constructor zur Verfügung, um Reporting-Objekte
- *  		aus Stammdatenobjekten (aus dem Package core.data) erstellen zu können. Darin werden Felder, die Reporting-Objekte
- *  		zurückgegeben und nicht im Stammdatenobjekt enthalten sind, mit null initialisiert.</li>
- * 		<li>Die Proxy-Klasse überschreibt einzelne Getter der Super-Klasse (beispielsweise bei Felder, die mit null initialisiert wurden)
- *  		und lädt dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
- *  		halten.</li>
- *  	<li>Die Proxy-Klasse können zudem auf das Blockungsergebnis {@link ReportingGostKursplanungBlockungsergebnis} zugreifen. Drin ist wieder der
- *  		Zugriff auf das Repository {@link ReportingRepository} möglich. Im ersteren kann auf die Ergebnis- und Datenmanager der
- *  		Blockung zugegriffen werden, um darüber Daten nachladen zu können.
- *  		Das zweite enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte
- *    		wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert werden. So sollen Datenbankzugriffe minimiert werden. Werden in der
- *    		Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
- *  </ul>
+ * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik und erweitert die Klasse {@link ReportingGostKursplanungFachwahlstatistik}.
  */
 public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGostKursplanungFachwahlstatistik {
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungFachwahlstatistik}.
 	 * @param reportingRepository Repository für die Reporting
 	 * @param gostHalbjahr Das GostHalbjahr, für die die fachwahlstatistik erstellt wird.
 	 * @param gostStatistikFachwahl Wahlstatistik für ein Fach der GOSt über alle Halbjahre.
@@ -60,7 +41,11 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 				gostStatistikFachwahl.fachwahlen[gostHalbjahr.id].wahlenGK);
 		// Hinweis: Die Klasse gostStatistikFachwahl unterscheidet bei der Anzahl der Wahlen nicht zwischen GK, PJK, VTF. Es gibt nur die wahlenGK.
 
-		final ReportingFach reportingFach = reportingRepository.mapReportingFaecher().get(gostStatistikFachwahl.id);
+		// Für die Daten des Faches wird mindestens der Abschnitt EF1 benötigt. Wenn dieser nicht existiert, dann kann die Statistik nicht existieren.
+		// Da in der GOSt konstante Fachbedingungen gelten müssen, kann hier die EF1 verwendet werden.
+		final ReportingSchuljahresabschnitt abschnittEF1 = reportingRepository.schuljahresabschnitt(gostStatistikFachwahl.abiturjahr - 4, 1);
+		final ReportingFach reportingFach = abschnittEF1.fach(gostStatistikFachwahl.id);
+
 		super.fach = reportingFach;
 
 		int kursgroessendifferenzLK = -1;

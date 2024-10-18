@@ -3,11 +3,12 @@ package de.svws_nrw.core.data.schule;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.adt.Pair;
 import de.svws_nrw.transpiler.TranspilerDTO;
 import de.svws_nrw.transpiler.annotations.AllowNull;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -74,12 +75,9 @@ public class HerkunftsschulnummerKatalogEintrag {
 		if (zulaessig != null) {
 			for (final @NotNull Pair<Schulform, @AllowNull Schulgliederung> zul : zulaessig) {
 				final SchulformSchulgliederung sfsgl = new SchulformSchulgliederung();
-				final @NotNull Schulform sf = zul.a;
-				if (sf.daten == null)
-					continue;
-				sfsgl.schulform = sf.daten.kuerzel;
+				sfsgl.schulform = zul.a.name();
 				final Schulgliederung sgl = zul.b;
-				sfsgl.gliederung = ((sgl == null) || (sgl.daten == null)) ? null : sgl.daten.kuerzel;
+				sfsgl.gliederung = (sgl == null) ? null : sgl.name();
 				this.zulaessig.add(sfsgl);
 			}
 		}

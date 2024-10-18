@@ -21,18 +21,19 @@ import java.util.Objects;
 
 
 /**
- * Diese Klasse dient der Erzeugung von PDF-Dokumenten aus html.
+ * Diese Klasse dient der Erzeugung von PDF-Dokumenten aus dem Code einer html-Datei.
+ * Die Rückgabe erfolgt als ByteArray oder als Response mit PDF-Content.
  */
 public class PdfBuilder {
 
-	/** Das finale html (also keine Datei oder Vorlage), aus dem die PDF-Datei erzeugt werden soll. */
+	/** Das finale html (also keine Vorlage), aus dem die PDF-Datei erzeugt werden soll. */
 	private final String html;
 
 	/**
-	 * Pfad und Name zu einer zum html gehörenden Datei in Projekt-Resources, z. B. die zum html gehörende CSS-Datei.
+	 * Root-Pfad zu den Ressourcen (Fonts, css, html). Dient als baseURI für die html- und PDF-Erzeugung.
 	 * Daraus gewinnt der PDF-Builder die baseURI für weitere Dateien zum html.
 	 */
-	private final String ressourcenDateipfad;
+	private final String rootPfad;
 
 	/** Dateiname der PDF-Datei. */
 	private final String dateiname;
@@ -42,13 +43,13 @@ public class PdfBuilder {
 	 * Erstellt einen neuen Builder für die Erzeugung des PDF-Dokumentes aus dem übergebenen html-Inhalt.
 	 * In dieser Vorlage müssen die Daten bereits eingearbeitet worden sein.
 	 *
-	 * @param html					Das html, aus dem schließlich die PDF-Datei erzeugt wird.
-	 * @param ressourcenDateipfad 	Pfad im Projekt, an dem der Builder die CSS-Datei finden kann.
-	 * @param dateiname 			Dateiname der PDF-Datei ohne Dateiendung
+	 * @param html		Das html, aus dem schließlich die PDF-Datei erzeugt wird.
+	 * @param rootPfad 	Root-Pfad zu den Ressourcen (Fonts, css, html). Dient als baseURI für die html- und PDF-Erzeugung.
+	 * @param dateiname Dateiname der PDF-Datei ohne Dateiendung
 	 */
-	public PdfBuilder(final String html, final String ressourcenDateipfad, final String dateiname) {
+	public PdfBuilder(final String html, final String rootPfad, final String dateiname) {
 		this.html = html;
-		this.ressourcenDateipfad = ressourcenDateipfad;
+		this.rootPfad = rootPfad;
 		this.dateiname = dateiname;
 	}
 
@@ -87,7 +88,6 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt eine Response mit der PDF-Datei als Content
-	 *
 	 * @return Response mit der PDF-Datei als Content
 	 */
 	public Response getPdfResponse() {
@@ -109,9 +109,7 @@ public class PdfBuilder {
 
 	/**
 	 * Erzeugt das PDF-Dokument mit der Hilfe des PdfRendererBuilder und schreibt in den übergebenen Output-Stream.
-	 *
 	 * @param 	oStream			der {@link OutputStream}, der die Daten der PDF-Datei enthält.
-	 *
 	 * @throws 	IOException   	wenn der HTML-Code nicht erzeugt werden kann oder bei einem Fehler beim Erzeugen (siehe auch {@link PdfRendererBuilder#run()}
 	 */
 	private void erzeugePDF(final OutputStream oStream) throws IOException {
@@ -131,19 +129,19 @@ public class PdfBuilder {
 			info.setProducer("SVWSServer");
 
 			final PdfRendererBuilder builder = new PdfRendererBuilder();
-			final String baseURI = Objects.requireNonNull(PDDocument.class.getClassLoader().getResource(ressourcenDateipfad)).toString();
+			final String baseURI = Objects.requireNonNull(PDDocument.class.getClassLoader().getResource(this.rootPfad)).toString();
 
 			builder.useFont(
-					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Regular.ttf"),
+					() -> PDDocument.class.getClassLoader().getResourceAsStream(this.rootPfad + "fonts/liberation/LiberationSans-Regular.ttf"),
 					"liberation");
 			builder.useFont(
-					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Bold.ttf"),
+					() -> PDDocument.class.getClassLoader().getResourceAsStream(this.rootPfad + "fonts/liberation/LiberationSans-Bold.ttf"),
 					"liberation", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
 			builder.useFont(
-					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-Italic.ttf"),
+					() -> PDDocument.class.getClassLoader().getResourceAsStream(this.rootPfad + "fonts/liberation/LiberationSans-Italic.ttf"),
 					"liberation", 400, BaseRendererBuilder.FontStyle.ITALIC, true);
 			builder.useFont(
-					() -> PDDocument.class.getClassLoader().getResourceAsStream("de/svws_nrw/module/reporting/fonts/liberation/LiberationSans-BoldItalic.ttf"),
+					() -> PDDocument.class.getClassLoader().getResourceAsStream(this.rootPfad + "fonts/liberation/LiberationSans-BoldItalic.ttf"),
 					"liberation", 700, BaseRendererBuilder.FontStyle.ITALIC, true);
 
 			builder.useFastMode();

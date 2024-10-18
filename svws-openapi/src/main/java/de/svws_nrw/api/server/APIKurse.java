@@ -3,7 +3,7 @@ package de.svws_nrw.api.server;
 import java.io.InputStream;
 
 import de.svws_nrw.core.data.kurse.KursDaten;
-import de.svws_nrw.core.data.kurse.KursartKatalogEintrag;
+import de.svws_nrw.asd.data.kurse.ZulaessigeKursartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.benutzer.DBBenutzerUtils;
@@ -63,7 +63,7 @@ public class APIKurse {
 	public Response getKurse(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursliste(conn, null).getList(),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
 
 
@@ -117,7 +117,7 @@ public class APIKurse {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).get(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_ANSEHEN);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
 
 
@@ -148,7 +148,7 @@ public class APIKurse {
 					content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).patch(id, is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -175,7 +175,7 @@ public class APIKurse {
 			content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KursDaten.class))) final InputStream is,
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).add(is),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -199,7 +199,7 @@ public class APIKurse {
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
 	public Response deleteKurs(@PathParam("schema") final String schema, @PathParam("id") final long id, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKursdaten(conn).delete(id),
-				request, ServerMode.STABLE, BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				request, ServerMode.STABLE, BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -217,7 +217,7 @@ public class APIKurse {
 			description = "Erstellt eine Liste aller in dem Katalog vorhanden gültigen Kursarten. "
 					+ "Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Ansehen von Katalogen besitzt.")
 	@ApiResponse(responseCode = "200", description = "Eine Liste von Kursart-Katalog-Einträgen",
-			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = KursartKatalogEintrag.class))))
+			content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ZulaessigeKursartKatalogEintrag.class))))
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um Katalog-Einträge anzusehen.")
 	@ApiResponse(responseCode = "404", description = "Keine Kursart-Katalog-Einträge gefunden")
 	public Response getKatalogKursarten(@PathParam("schema") final String schema, @Context final HttpServletRequest request) {

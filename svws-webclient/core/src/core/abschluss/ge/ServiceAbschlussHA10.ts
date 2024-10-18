@@ -7,8 +7,9 @@ import type { Predicate } from '../../../java/util/function/Predicate';
 import { AbschlussFaecherGruppe } from '../../../core/abschluss/ge/AbschlussFaecherGruppe';
 import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
-import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend } from '../../../asd/types/schule/SchulabschlussAllgemeinbildend';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFaecherGruppen';
@@ -180,6 +181,8 @@ export class ServiceAbschlussHA10 extends Service<GEAbschlussFaecher, AbschlussE
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10'].includes(name);
 	}
+
+	public static class = new Class<ServiceAbschlussHA10>('de.svws_nrw.core.abschluss.ge.ServiceAbschlussHA10');
 
 }
 

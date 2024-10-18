@@ -3,6 +3,7 @@ import { KursblockungStatic } from '../../core/kursblockung/KursblockungStatic';
 import { Random } from '../../java/util/Random';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 
 export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS {
@@ -85,6 +86,8 @@ export class KursblockungAlgorithmusSZufaellig extends KursblockungAlgorithmusS 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusS', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmusSZufaellig>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusSZufaellig');
 
 }
 

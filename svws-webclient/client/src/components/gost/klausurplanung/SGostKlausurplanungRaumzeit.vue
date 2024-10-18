@@ -1,5 +1,5 @@
 <template>
-	<template v-if="kMan().getStundenplanManagerOrNull()">
+	<template v-if="props.kMan().stundenplanManagerGeladenByAbschnitt(props.abschnitt!.id)">
 		<Teleport to=".svws-ui-header--actions" v-if="isMounted">
 			<svws-ui-modal-hilfe class="ml-auto"> <s-gost-klausurplanung-raumzeit-hilfe /> </svws-ui-modal-hilfe>
 		</Teleport>
@@ -16,9 +16,10 @@
 				</div>
 				<ul class="flex flex-col gap-0.5 -mx-3">
 					<li v-for="termin in termine()"
+						:id="'termin' + termin.id"
 						:key="termin.id"
 						@click="chooseTermin(termin)"
-						:draggable="isDraggable(termin)"
+						:draggable="isDraggable(undefined, termin)"
 						@dragstart="onDrag(termin)"
 						@dragend="onDrag(undefined)"
 						@dragover="checkDropZone($event)"
@@ -29,6 +30,7 @@
 							'cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 pb-1 rounded-lg': terminSelected.value !== undefined && terminSelected.value.id !== termin.id,
 						}">
 						<s-gost-klausurplanung-termin :termin
+							:benutzer-kompetenzen
 							:k-man
 							:on-drag
 							:draggable="isDraggable"
@@ -36,19 +38,22 @@
 							:klausur-css-classes="calculatCssClassesKlausur"
 							:compact-with-date="terminSelected.value === undefined || terminSelected.value.id !== termin.id"
 							:show-kursklausuren-nachschreiber="true"
+							:goto-kalenderdatum
+							:goto-raumzeit-termin="gotoTermin"
 							:hide-button-raeume-planen="true">
 							<template #main v-if="terminSelected.value === undefined || terminSelected.value.id !== termin.id"><template /></template>
 						</s-gost-klausurplanung-termin>
 					</li>
 				</ul>
 			</svws-ui-content-card>
-			<svws-ui-content-card v-if="terminSelected.value === undefined">
+			<svws-ui-content-card v-if="terminSelected.value === undefined || terminSelected.value.datum === null">
 				<div class="h-full rounded-lg shadow-inner flex items-center justify-center py-8 px-3 text-center">
 					<span class="opacity-50" v-if="termine().size() > 0">Zum Bearbeiten einen Klausurtermin aus der Planung auswählen.</span>
 				</div>
 			</svws-ui-content-card>
 			<template v-else>
 				<s-gost-klausurplanung-raumzeit-termin :termin="terminSelected.value"
+					:benutzer-kompetenzen
 					:k-man
 					:create-klausurraum
 					:loesche-klausurraum
@@ -60,7 +65,8 @@
 					:zeige-alle-jahrgaenge
 					:setze-raum-zu-schuelerklausuren
 					:get-config-value
-					:set-config-value />
+					:set-config-value
+					:goto-termin />
 			</template>
 		</div>
 	</template>
@@ -68,18 +74,20 @@
 
 <script setup lang="ts">
 	import type { List} from '@core';
-	import { ArrayList, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
+	import { ArrayList, BenutzerKompetenz, GostHalbjahr, GostKlausurraumRich, GostSchuelerklausurTermin, ListUtils} from '@core';
 	import { GostKlausurtermin} from '@core';
 	import { GostKlausurraum, GostKursklausur } from '@core';
-	import { ref, onMounted } from 'vue';
+	import { ref, onMounted, computed, useTemplateRef } from 'vue';
 	import type { GostKlausurplanungRaumzeitProps } from './SGostKlausurplanungRaumzeitProps';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from './SGostKlausurplanung';
 
 	const props = defineProps<GostKlausurplanungRaumzeitProps>();
 
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+
 	const chooseTermin = async (termin: GostKlausurtermin) => {
-		await props.setRaumTermin(termin);
-		await props.gotoTermin(termin.id);
+		props.setRaumTermin(termin);
+		await props.gotoTermin(termin.abijahr, GostHalbjahr.fromIDorException(termin.halbjahr), termin.id);
 	}
 
 	const termine = () => props.kMan().terminMitDatumGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value);
@@ -95,7 +103,9 @@
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 
-	function isDraggable(object: any, termin: GostKlausurtermin) : boolean {
+	const isDraggable = (object: any, termin: GostKlausurtermin) => {
+		if (!hatKompetenzUpdate.value)
+			return false;
 		if (object instanceof GostKursklausur) {
 			//if (object.idTermin === props.terminauswahl.value.id)
 			return !props.kMan().isKursklausurAlleSchuelerklausurenVerplant(object, termin);
@@ -110,22 +120,23 @@
 	const onDrag = (data: GostKlausurplanungDragData) => dragData.value = data;
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {
+		const data = dragData.value;
 		if (zone instanceof GostKlausurraum) {
 			const rRaum = new GostKlausurraumRich(zone, null);
-			if (dragData.value instanceof GostKursklausur)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.kMan().terminGetByIdOrException(zone.idTermin), dragData.value));
-			else if (dragData.value instanceof GostKlausurtermin && props.terminSelected.value)
+			if (data instanceof GostKursklausur && props.terminSelected.value)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausurMultijahrgang(props.terminSelected.value, data, true));
+			else if (data instanceof GostKlausurtermin && props.terminSelected.value)
 				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurOhneRaumGetMengeByTermin(props.terminSelected.value));
-			else if (dragData.value instanceof GostSchuelerklausurTermin)
-				rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+			else if (data instanceof GostSchuelerklausurTermin)
+				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
 			if (!rRaum.schuelerklausurterminIDs.isEmpty())
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), false);
 		} else if (zone instanceof GostKlausurtermin) {
 			const rRaum = new GostKlausurraumRich();
-			if (dragData.value instanceof GostKursklausur && props.terminSelected.value)
-				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, dragData.value));
-			else if (dragData.value instanceof GostSchuelerklausurTermin)
-				rRaum.schuelerklausurterminIDs = ListUtils.create1(dragData.value.id);
+			if (data instanceof GostKursklausur && props.terminSelected.value)
+				rRaum.schuelerklausurterminIDs = mapIDs(props.kMan().schuelerklausurterminAktuellGetMengeByTerminAndKursklausur(props.terminSelected.value, data));
+			else if (data instanceof GostSchuelerklausurTermin)
+				rRaum.schuelerklausurterminIDs = ListUtils.create1(data.id);
 			if (!rRaum.schuelerklausurterminIDs.isEmpty())
 				await props.setzeRaumZuSchuelerklausuren(ListUtils.create1(rRaum), true);
 		}
@@ -153,6 +164,11 @@
 
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+		}
 	});
 
 </script>

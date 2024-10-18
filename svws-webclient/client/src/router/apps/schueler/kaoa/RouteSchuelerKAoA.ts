@@ -16,7 +16,7 @@ const SSchuelerKaoa = () => import("~/components/schueler/kaoa/SSchuelerKaoa.vue
 export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSchueler> {
 
 	public constructor() {
-		super(Schulform.values().filter(f=>!f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
+		super(Schulform.values().filter(f => !f.equals(Schulform.G)), [ BenutzerKompetenz.KEINE ], "schueler.kaoa", "kaoa", SSchuelerKaoa, new RouteDataSchuelerKAoA());
 		super.mode = ServerMode.DEV;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "KAoA";
@@ -28,19 +28,21 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (this.parent === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert"));
-		if (to_params.id === undefined) {
-			await this.data.ladeDaten(null);
-		} else {
-			const id = parseInt(to_params.id);
-			try {
-				await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
-			} catch(error) {
-				return routeSchueler.getRoute(id);
+		try {
+			const { id } = RouteNode.getIntParams(to_params, ["id"]);
+			if (this.parent === undefined)
+				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
+			if (id === undefined) {
+				await this.data.ladeDaten(null);
+			} else {
+				try {
+					await this.data.ladeDaten(routeSchueler.data.schuelerListeManager.liste.get(id));
+				} catch(error) {
+					return routeSchueler.getRoute(id);
+				}
 			}
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -50,10 +52,12 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerKAoAProps {
 		return {
-			data: () => this.data.data,
 			patch: this.data.patch,
-			schuelerKaoaManager: () => routeSchuelerKAoA.data.schuelerKaoaManager,
-		 };
+			schuelerKaoaManager: () => this.data.schuelerKaoaManager,
+			auswahl: () => this.data.auswahl,
+			addKaoaDaten: routeSchuelerKAoA.data.addKaoaDaten,
+			deleteKaoaDaten: routeSchuelerKAoA.data.deleteKaoaDaten
+		};
 	}
 
 }

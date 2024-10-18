@@ -2,8 +2,8 @@
 	<div class="page--content">
 		<svws-ui-content-card title="Stammdaten">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />
-				<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr" type="text" disabled />
+				<svws-ui-text-input placeholder="Bezeichnung 1" :model-value="schule().bezeichnung1" @change="bezeichnung1 => bezeichnung1 && patch({ bezeichnung1 })" type="text" :disabled="!editSchuldaten" />
+				<svws-ui-text-input placeholder="Schulnummer" :model-value="schule().schulNr.toString()" type="text" disabled />
 				<svws-ui-text-input placeholder="Bezeichnung 2" :model-value="schule().bezeichnung2" @change="bezeichnung2 => patch({ bezeichnung2 })" type="text" :disabled="!editSchuldaten" />
 				<svws-ui-text-input placeholder="Schulform" :model-value="textSchulform" type="text" disabled />
 				<svws-ui-text-input placeholder="Bezeichnung 3" :model-value="schule().bezeichnung3" @change="bezeichnung3 => patch({ bezeichnung3 })" type="text" :disabled="!editSchuldaten" />
@@ -25,7 +25,7 @@
 		<!-- TODO Dauer der Unterrichtseinheiten -->
 		<svws-ui-content-card v-if="showSchuldaten" title="E-Mail-Server">
 			<svws-ui-input-wrapper :grid="2">
-				<svws-ui-text-input placeholder="SMTP-Host" :model-value="smptServerKonfiguration().host" @change="host => patchSMTPServerKonfiguration({ host })" type="text" :disabled="!editSchuldaten" />
+				<svws-ui-text-input placeholder="SMTP-Host" :model-value="smptServerKonfiguration().host" @change="host => host && patchSMTPServerKonfiguration({ host })" type="text" :disabled="!editSchuldaten" />
 				<svws-ui-input-number placeholder="Port" :model-value="smptServerKonfiguration().port" @change="port => (port !== null) && (port !== undefined) && patchSMTPServerKonfiguration({ port })" />
 				<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useStartTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useStartTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze StartTLS</svws-ui-checkbox>
 				<svws-ui-checkbox type="toggle" :model-value="smptServerKonfiguration().useTLS" @update:model-value="value => patchSMTPServerKonfiguration({ useTLS : (value === true) ? true : false })" :disabled="!editSchuldaten">Nutze TLS</svws-ui-checkbox>
@@ -46,18 +46,25 @@
 	const showSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_ANSEHEN));
 	const editSchuldaten = computed<boolean>(() => props.benutzerIstAdmin || props.benutzerKompetenzen.has(BenutzerKompetenz.SCHULBEZOGENE_DATEN_AENDERN));
 
-	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname || "", props.schule().hausnummer || "", props.schule().hausnummerZusatz || ""))
+	const strasse = computed(() => AdressenUtils.combineStrasse(props.schule().strassenname ?? "", props.schule().hausnummer ?? "", props.schule().hausnummerZusatz ?? ""))
 
-	const patchStrasse = (value: string ) => {
-		if (value) {
+	const patchStrasse = (value: string | null ) => {
+		if (value !== null) {
 			const vals = AdressenUtils.splitStrasse(value);
-			void props.patch({ strassenname: vals?.[0] || value, hausnummer: vals?.[1] || "", hausnummerZusatz: vals?.[2] || "" });
+			void props.patch({ strassenname: vals[0], hausnummer: vals[1], hausnummerZusatz: vals[2] });
 		}
 	}
 
 	const textSchulform = computed<string>(() => {
-		const schulform = Schulform.getByKuerzel(props.schule().schulform);
-		return schulform?.daten.bezeichnung ?? "---";
+		let schuljahr = -1;
+		const id = props.schule().idSchuljahresabschnitt;
+		for (const abschnitt of props.schule().abschnitte)
+			if (abschnitt.id === id) {
+				schuljahr = abschnitt.schuljahr;
+				break;
+			}
+		const schulform = Schulform.data().getWertByKuerzel(props.schule().schulform);
+		return schulform?.daten(schuljahr)?.text ?? "—";
 	});
 
 </script>

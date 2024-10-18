@@ -46,7 +46,7 @@
 
 	const copied = ref<boolean|null>(null);
 
-	const log = computed(()=> {
+	const log = computed(() => {
 		if (props.logs === undefined)
 			return;
 		let result = "";

@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
 	<span @mouseenter="hoverEnterTooltip"
 		@mouseleave="hoverLeaveTooltip"
@@ -18,12 +17,12 @@
 		</template>
 	</span>
 	<Teleport to="body">
-		<Transition enterActiveClass="duration-200 ease-out"
-			enterFromClass="transform opacity-0"
-			enterToClass="opacity-100"
-			leaveActiveClass="duration-100 ease-in"
-			leaveFromClass="opacity-100"
-			leaveToClass="transform opacity-0">
+		<Transition enter-active-class="duration-200 ease-out"
+			enter-from-class="transform opacity-0"
+			enter-to-class="opacity-100"
+			leave-active-class="duration-100 ease-in"
+			leave-from-class="opacity-100"
+			leave-to-class="transform opacity-0">
 			<div v-if="isOpen"
 				:style="floatingStyles"
 				class="tooltip transition-opacity"
@@ -45,7 +44,7 @@
 
 <script setup lang="ts">
 	import { useFloating, autoUpdate, arrow, flip, offset, shift } from "@floating-ui/vue";
-	import { Teleport, Transition, ref, computed } from "vue";
+	import { ref, computed } from "vue";
 	import { onClickOutside } from '@vueuse/core'
 
 	const props = withDefaults(defineProps<{
@@ -83,13 +82,11 @@
 	if ((props.keepOpen === true) || (props.initOpen === true))
 		isOpen.value = true;
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const { placement, middlewareData, floatingStyles } = useFloating(
 		reference,
 		floating,
 		{
 			placement: props.position,
-			// eslint-disable-next-line vue/no-setup-props-destructure
 			middleware: [flip(), shift(), offset(props.showArrow ? 6 : 2), arrow({element: floatingArrow})],
 			whileElementsMounted: autoUpdate,
 		}
@@ -118,6 +115,8 @@
 	}
 
 	function hideTooltip() {
+		if (props.keepOpen)
+			return;
 		isOpen.value = false;
 		emit("close");
 	}

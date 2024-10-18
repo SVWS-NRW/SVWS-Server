@@ -15,7 +15,7 @@ import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
 
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 
 /**
  * Diese Klasse wird für den Import der Tabelle ABP_Fachgruppen aus einer LuPO-Datenbank
@@ -31,7 +31,7 @@ public final class ABPFachgruppen {
 
 
 	/** Das Fachkürzel */
-	public String Fach = null;
+	public String FachKuerzel = null;
 
 	/** Die textuelle Bezeichnung des Faches */
 	public String Bezeichnung = null;
@@ -73,12 +73,12 @@ public final class ABPFachgruppen {
 			final Table table = db.getTable("ABP_Fachgruppen");
 			for (final Row r : table) {
 				final ABPFachgruppen fach = new ABPFachgruppen();
-				fach.Fach = r.getString(fieldFach);
+				fach.FachKuerzel = r.getString(fieldFach);
 				fach.Bezeichnung = r.getString(fieldBezeichnung);
 				fach.FachgruppeKrz = r.getString(fieldFachgruppeKrz);
 				fach.Aufgabenfeld = (r.getInt(fieldAufgabenfeld) == null) ? 0 : r.getInt(fieldAufgabenfeld);
 				fach.Sortierung = (r.getInt(fieldSortierung) == null) ? 0 : r.getInt(fieldSortierung);
-				zuordnung.put(fach.Fach, fach);
+				zuordnung.put(fach.FachKuerzel, fach);
 			}
 			return zuordnung;
 		} catch (@SuppressWarnings("unused") final IOException e) {
@@ -102,9 +102,9 @@ public final class ABPFachgruppen {
 					.addColumn(new ColumnBuilder(fieldAufgabenfeld, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 					.addColumn(new ColumnBuilder(fieldSortierung, DataType.LONG).putProperty(PropertyMap.DEFAULT_VALUE_PROP, DataType.TEXT, "0"))
 					.toTable(db);
-			for (final ABPFachgruppen fach : zuordnung.values().stream().sorted((fg1, fg2) -> fg1.Fach.compareToIgnoreCase(fg2.Fach)).toList()) {
+			for (final ABPFachgruppen fach : zuordnung.values().stream().sorted((fg1, fg2) -> fg1.FachKuerzel.compareToIgnoreCase(fg2.FachKuerzel)).toList()) {
 				table.addRow(
-						fach.Fach,
+						fach.FachKuerzel,
 						fach.Bezeichnung,
 						fach.FachgruppeKrz,
 						fach.Aufgabenfeld,
@@ -122,22 +122,22 @@ public final class ABPFachgruppen {
 	 * @return der Standard-Eintrag für die Tabelle ABPFachgruppen
 	 */
 	public static Map<String, ABPFachgruppen> getDefault() {
-		return Arrays.stream(ZulaessigesFach.values())
-				.filter(f -> f.getFachgruppe() != null)
+		return Arrays.stream(Fach.values())
+				.filter(f -> f.getFachgruppe(2024) != null)
 				.map(f -> {
 					final ABPFachgruppen fach = new ABPFachgruppen();
-					fach.Fach = f.daten.kuerzelASD;
-					fach.Bezeichnung = f.daten.bezeichnung;
-					fach.FachgruppeKrz = f.getFachgruppe().daten.kuerzel;
-					fach.Aufgabenfeld = f.getFachgruppe().daten.nummer;
+					fach.FachKuerzel = f.daten(2024).schluessel;
+					fach.Bezeichnung = f.daten(2024).text;
+					fach.FachgruppeKrz = f.getFachgruppe(2024).daten(2024).kuerzel;
+					fach.Aufgabenfeld = f.getFachgruppe(2024).daten(2024).nummer;
 					return fach;
-				}).collect(Collectors.toMap(f -> f.Fach, f -> f));
+				}).collect(Collectors.toMap(f -> f.FachKuerzel, f -> f));
 	}
 
 
 	@Override
 	public String toString() {
-		return "ABPFachgruppen [Fach=" + Fach + ", Bezeichnung=" + Bezeichnung + ", FachgruppeKrz=" + FachgruppeKrz
+		return "ABPFachgruppen [FachKuerzel=" + FachKuerzel + ", Bezeichnung=" + Bezeichnung + ", FachgruppeKrz=" + FachgruppeKrz
 				+ ", Aufgabenfeld=" + Aufgabenfeld + ", Sortierung=" + Sortierung + "]";
 	}
 

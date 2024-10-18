@@ -1,0 +1,32 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "TEILZEIT",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 2001000,
+			"schluessel": "1",
+			"kuerzel": "T",
+			"text": "Teilbeleger",
+			"schulformen": [
+				"WB"
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "VOLLZEIT",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2002000,
+			"schluessel": "2",
+			"kuerzel": "V",
+			"text": "Vollbeleger",
+			"schulformen": [
+				"WB"
+			],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

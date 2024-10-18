@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class OAuth2ServerTyp extends JavaEnum<OAuth2ServerTyp> {
 
@@ -86,6 +87,8 @@ export class OAuth2ServerTyp extends JavaEnum<OAuth2ServerTyp> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.oauth2.OAuth2ServerTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<OAuth2ServerTyp>('de.svws_nrw.core.types.oauth2.OAuth2ServerTyp');
 
 }
 

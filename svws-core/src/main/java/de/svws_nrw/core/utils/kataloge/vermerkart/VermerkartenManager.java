@@ -1,6 +1,6 @@
 package de.svws_nrw.core.utils.kataloge.vermerkart;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.core.data.schueler.SchuelerVermerkartZusammenfassung;
 import de.svws_nrw.core.data.schule.VermerkartEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;

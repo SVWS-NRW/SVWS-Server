@@ -7,7 +7,6 @@
 			"~/*": ["./src/*"],
 			"@comp": ["../components/src/index.ts"],
 			"@ui": ["../ui/src/index.ts"],
-			"@core": ["../core/src/index.ts"]
 		}
 	},
 	"include": [
@@ -16,7 +15,8 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../ui/src/",
-		"../components/src/"
+		"../components/src/",
+		"../core/src/",
 	],
 	"exclude": [
 		"**/*.story.vue",

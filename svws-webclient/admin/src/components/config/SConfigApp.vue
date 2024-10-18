@@ -26,6 +26,6 @@
 
 	const props = defineProps<ConfigAppProps>();
 
-	const info = computed(() => props.schuleInfo())
+	// const info = computed(() => props.schuleInfo())
 
 </script>

@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.kaoa.KAOAEbene4;
+import de.svws_nrw.asd.types.kaoa.KAOAEbene4;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -30,12 +30,9 @@ public class Tabelle_KAoA_SBO_Ebene4_Keys extends SchemaTabelle {
 		setJavaSubPackage("schule");
 		setJavaClassName("DTOKAoASBOEB4Keys");
 		setJavaComment("Gültige Schlüsselwerte für Fremdschlüssel zu den KAOA-Merkmalen der SBO-Ebene 4");
-		setCoreType(new SchemaTabelleCoreType(this, KAOAEbene4.class, KAOAEbene4.VERSION, rev -> Arrays
+		setCoreType(new SchemaTabelleCoreType(this, KAOAEbene4.class, KAOAEbene4.data().getVersion(), rev -> Arrays
 				.stream(KAOAEbene4.values())
-				.map(a -> Arrays.stream(a.historie)
-						.map(h -> "" + h.id)
-						.toList()
-				).flatMap(Collection::stream).toList()));
+				.map(a -> a.historie().stream().map(h -> "" + h.id).toList()).flatMap(Collection::stream).toList()));
 	}
 
 }

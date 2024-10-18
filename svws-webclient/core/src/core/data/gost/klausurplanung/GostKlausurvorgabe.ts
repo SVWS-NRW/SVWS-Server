@@ -1,5 +1,6 @@
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurvorgabe extends JavaObject {
 
@@ -64,6 +65,9 @@ export class GostKlausurvorgabe extends JavaObject {
 	public bemerkungVorgabe : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -94,6 +98,8 @@ export class GostKlausurvorgabe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurvorgabe>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurvorgabe');
 
 	public static transpilerFromJSON(json : string): GostKlausurvorgabe {
 		const obj = JSON.parse(json) as Partial<GostKlausurvorgabe>;

@@ -3,8 +3,8 @@ package de.svws_nrw.core.data.schueler;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.Geschlecht;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
@@ -74,5 +74,27 @@ public class SchuelerListeEintrag {
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */
 	@ArraySchema(schema = @Schema(implementation = Long.class))
 	public final @NotNull List<Long> kurse = new ArrayList<>();
+
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	@Override
+	public boolean equals(final Object another) {
+		// return another != null && another instanceof SchuelerListeEintrag skt && this.id == skt.id; (Syntax von Transpiler nicht unterstützt)
+		return (another != null) && (another instanceof SchuelerListeEintrag) && (this.id == ((SchuelerListeEintrag) another).id);
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	@Override
+	public int hashCode() {
+		return Long.hashCode(id);
+	}
 
 }

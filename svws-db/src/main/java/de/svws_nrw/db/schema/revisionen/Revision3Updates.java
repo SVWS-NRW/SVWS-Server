@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.schema.Schema;
@@ -629,8 +629,8 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 
 			// Sortiere die doppelten Einträge aus der Sprachenfolge nach ihrem Beginn, sofern vorhanden.
 			listDuplikateMITBeginn = listDuplikateMITBeginn.stream().filter(s -> (s[iASDVon] != null)).sorted((a, b) -> {
-				final Jahrgaenge aVon = Jahrgaenge.getByKuerzel((String) a[iASDVon]);
-				final Jahrgaenge bVon = Jahrgaenge.getByKuerzel((String) b[iASDVon]);
+				final Jahrgaenge aVon = Jahrgaenge.data().getWertBySchluessel((String) a[iASDVon]);
+				final Jahrgaenge bVon = Jahrgaenge.data().getWertBySchluessel((String) b[iASDVon]);
 				return aVon.compareTo(bVon);
 			}).toList();
 
@@ -680,10 +680,10 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						continue;
 					}
 
-					final Jahrgaenge jgFinalBeginn = Jahrgaenge.getByKuerzel(finalASDVon);
-					final Jahrgaenge jgFinalEnde = Jahrgaenge.getByKuerzel(finalASDBis);
-					final Jahrgaenge jgAktuellBeginn = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDVon]);
-					final Jahrgaenge jgAktuellEnde = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDBis]);
+					final Jahrgaenge jgFinalBeginn = Jahrgaenge.data().getWertBySchluessel(finalASDVon);
+					final Jahrgaenge jgFinalEnde = Jahrgaenge.data().getWertBySchluessel(finalASDBis);
+					final Jahrgaenge jgAktuellBeginn = Jahrgaenge.data().getWertBySchluessel((String) eintragSprachenfolge[iASDVon]);
+					final Jahrgaenge jgAktuellEnde = Jahrgaenge.data().getWertBySchluessel((String) eintragSprachenfolge[iASDBis]);
 
 					// Der gesetzte finale Eintrag hat einen definierten Sprachbeginn und ein definiertes Ende.
 					// Wenn der aktuell betrachtet Jahrgang nicht innerhalb des finalen beginnt oder lückenlos daran anschließt, dann behalte nur den jüngsten Eintrag.
@@ -759,8 +759,8 @@ public final class Revision3Updates extends SchemaRevisionUpdateSQL {
 						finalHeb = (Integer) eintragSprachenfolge[iHeb];
 						continue;
 					}
-					final Jahrgaenge jgFinalEnde = Jahrgaenge.getByKuerzel(finalASDBis);
-					final Jahrgaenge jgAktuellEnde = Jahrgaenge.getByKuerzel((String) eintragSprachenfolge[iASDBis]);
+					final Jahrgaenge jgFinalEnde = Jahrgaenge.data().getWertBySchluessel(finalASDBis);
+					final Jahrgaenge jgAktuellEnde = Jahrgaenge.data().getWertBySchluessel((String) eintragSprachenfolge[iASDBis]);
 
 					if ((jgFinalEnde != null) && ((jgAktuellEnde == null) || (jgAktuellEnde.compareTo(jgFinalEnde) > 0))) {
 						finalASDBis = (String) eintragSprachenfolge[iASDBis];

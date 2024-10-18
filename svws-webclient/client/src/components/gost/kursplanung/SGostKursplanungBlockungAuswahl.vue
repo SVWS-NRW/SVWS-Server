@@ -9,32 +9,32 @@
 		<template #header(name)>
 			<span>Blockungen</span>
 		</template>
-		<template #cell(name)="{ rowData: row }">
+		<template #cell(name)="{ rowData: blockung }">
 			<div class="flex justify-between w-full items-start">
 				<div class="flex items-center gap-1 w-full">
-					<div class="flex" v-if="row === auswahlBlockung">
-						<span v-if="(!edit_blockungsname)" class="border-b border-dotted hover:border-transparent cursor-text line-clamp-1 break-all leading-tight -my-0.5" @click.stop="edit_blockungsname = true">
-							{{ row.name }}
+					<div class="flex" v-if="blockung === auswahlBlockung">
+						<span v-if="!edit_blockungsname" class="border-b border-dotted hover:border-transparent cursor-text line-clamp-1 break-all leading-tight -my-0.5" @click.stop="hatUpdateKompetenz && (edit_blockungsname = true)">
+							{{ blockung.name }}
 						</span>
-						<svws-ui-text-input v-else :model-value="row.name" headless focus
-							@keyup.enter="(e: any) => patch_blockung(e.target.value, row.id)" @keyup.escape="edit_blockungsname=false"
-							@change="name => patch_blockung(name, row.id)" class="-my-0.5 w-full" />
+						<svws-ui-text-input v-else :model-value="blockung.name" headless focus
+							@keyup.enter="patch_blockung($event.target.value, blockung.id)" @keyup.escape="edit_blockungsname = false"
+							@change="name => name && patch_blockung(name, blockung.id)" class="-my-0.5 w-full" />
 					</div>
 					<div v-else>
-						<span>{{ row.name }}&nbsp;</span>
+						<span>{{ blockung.name }}&nbsp;</span>
 					</div>
 					<div class="-my-1 ml-auto inline-flex gap-1">
-						<template v-if="visible && (auswahlBlockung !== undefined && !isPending(auswahlBlockung.id)) && row === auswahlBlockung">
+						<template v-if="hatUpdateKompetenz && ((auswahlBlockung !== undefined) && !isPending(auswahlBlockung.id)) && (blockung === auswahlBlockung)">
 							<template v-if="allow_berechne_blockung">
-								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
-									<svws-ui-button type="transparent" @click="openModal()" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white">
-										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Ausführlich
+								<s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen v-if="allow_berechne_blockung" :map-core-type-name-json-data :ausfuehrliche-darstellung-kursdifferenz :set-ausfuehrliche-darstellung-kursdifferenz :get-datenmanager :add-ergebnisse v-slot="{ openModal }">
+									<svws-ui-button type="transparent" @click="openModal" title="Ausführliche Berechnung lokal im Browser und Auswahl von guten Ergebnissen" :disabled="apiStatus.pending" class="text-black dark:text-white mr-4">
+										<span class="icon-sm i-ri-calculator-line -mx-0.5" /> Blocken…
 									</svws-ui-button>
 								</s-gost-kursplanung-modal-blockung-ausfuehrlich-berechnen>
-								<svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button>
+								<!-- <svws-ui-button type="transparent" @click.stop="do_create_blockungsergebnisse" title="Schnelle Berechnung auf dem Server mit direkter Übernahme der Ergebnisse" :disabled="apiStatus.pending" v-if="allow_berechne_blockung" class="text-black dark:text-white"> <span class="icon-sm i-ri-calculator-line -mx-0.5" /> Schnell </svws-ui-button> -->
 							</template>
 							<svws-ui-tooltip position="top" v-else>
-								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Berechnen</svws-ui-button>
+								<svws-ui-button type="transparent" disabled> <span class="icon-sm i-ri-calculator-line -mx-0.5" />Blocken…</svws-ui-button>
 								<template #content>
 									<div class="normal-case text-base rich-text">
 										Damit Kursblockungen berechnet werden können, müssen zumindest Fachwahlen, Fächer und Kurse existieren.
@@ -42,51 +42,45 @@
 								</template>
 							</svws-ui-tooltip>
 							<s-gost-kursplanung-remove-blockung-modal :remove-blockung v-slot="{ openModal }">
-								<svws-ui-button type="icon" @click.stop="openModal()" title="Blockung löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
+								<svws-ui-button type="icon" @click.stop="openModal" title="Blockung löschen" :disabled="apiStatus.pending" class="text-black dark:text-white">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
 							</s-gost-kursplanung-remove-blockung-modal>
 						</template>
-						<div v-else class="mr-2 ml-auto inline-flex">
-							<svws-ui-tooltip v-if="row.anzahlErgebnisse > 1">
-								<span class="icon-sm i-ri-lock-fill -mx-1" />
-								<template #content>
-									<span>
-										{{ row.anzahlErgebnisse }} Ergebnisse vorhanden.
-										<br>Es können nur bei den Blockungsergebnissen, d.h.
-										den Kurs-Schienen- und der Kurs-Schülerzuordnungen, Änderungen vorgenommen werden.
-										<br>Für weitere Anpassungen an der Blockung müssen entweder alle Ergebnisse bis auf eines gelöscht werden
-										oder die Blockung muss zu einer neuen Blockung abgeleitet werden.
-									</span>
-								</template>
+						<template v-if="hatUpdateKompetenz">
+							<svws-ui-tooltip v-if="blockung.istAktiv">
+								<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, blockung.id)" />
+								<template #content> Aktivierte Blockung </template>
 							</svws-ui-tooltip>
-							<svws-ui-tooltip v-else autosize>
-								<span class="icon-sm i-ri-lock-unlock-line -mx-1" />
-								<template #content>
-									<span>In dieser Blockung können Regeln erstellt werden.</span>
-								</template>
+							<svws-ui-tooltip v-else>
+								<span class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, blockung.id)" />
+								<template #content> Blockung als aktiv markieren </template>
 							</svws-ui-tooltip>
-						</div>
-						<svws-ui-tooltip v-if="row.istAktiv">
-							<span class="icon icon-primary i-ri-checkbox-circle-fill ml-2 hover:opacity-50" @click="patchBlockung({ istAktiv: false }, row.id)" />
-							<template #content> Aktivierte Blockung </template>
-						</svws-ui-tooltip>
-						<svws-ui-tooltip v-else>
-							<span class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25 hover:opacity-75" @click="patchBlockung({ istAktiv: true }, row.id)" />
-							<template #content> Blockung als aktiv markieren </template>
-						</svws-ui-tooltip>
+						</template>
+						<template v-else>
+							<span v-if="blockung.istAktiv" class="icon icon-primary i-ri-checkbox-circle-fill ml-2" />
+							<span v-else class="icon icon-primary i-ri-checkbox-circle-line ml-2 opacity-25" />
+						</template>
 					</div>
 				</div>
 			</div>
 		</template>
-		<template #actions>
-			<slot name="blockungAuswahlActions" />
+		<template #actions v-if="hatUpdateKompetenz">
+			<svws-ui-button type="icon" title="Neue Blockung hinzufügen" @click.stop="addBlockung">
+				<span class="icon-sm i-ri-add-line -mx-0.5" />
+			</svws-ui-button>
 		</template>
 	</svws-ui-table>
-	<div v-if="auswahlBlockung !== undefined && isPending(auswahlBlockung.id)" class="my-3">
-		<auswahl-blockung-api-status :blockung="auswahlBlockung" :api-status />
+	<div v-if="(auswahlBlockung !== undefined) && isPending(auswahlBlockung.id)" class="my-3 flex gap-1 items-center mb-5 px-7 3xl:px-8" :class="{'animate-pulse': !apiStatus.hasError}">
+		<template v-if="apiStatus.pending">
+			<svws-ui-spinner spinning />
+			<span class="text-button text-black/50 dark:text-white/50">Ergebnisse werden berechnet…</span>
+		</template>
+		<template v-if="apiStatus.hasError">
+			<span class="text-error font-bold">Fehler beim Berechnen der Blockung.</span>
+		</template>
 	</div>
-	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr :api-status :get-datenmanager :patch-ergebnis :remove-ergebnisse :goto-ergebnis :auswahl-ergebnis />
+	<s-gost-kursplanung-ergebnis-auswahl v-if="hatBlockung" :halbjahr :api-status :get-datenmanager :patch-ergebnis :remove-ergebnisse :goto-ergebnis :auswahl-ergebnis :hat-update-kompetenz />
 </template>
 
 <script setup lang="ts">
@@ -97,6 +91,7 @@
 	import { ArrayList, BlockungsUtils } from "@core";
 
 	const props = defineProps<{
+		addBlockung: () => Promise<void>;
 		patchBlockung: (data: Partial<GostBlockungsdaten>, idBlockung: number) => Promise<boolean>;
 		removeBlockung: () => Promise<void>;
 		gotoBlockung: (auswahl: GostBlockungListeneintrag | undefined) => Promise<void>;
@@ -119,17 +114,15 @@
 		mode: ServerMode;
 		ausfuehrlicheDarstellungKursdifferenz: () => boolean;
 		setAusfuehrlicheDarstellungKursdifferenz: (value: boolean) => void;
+		hatUpdateKompetenz: boolean;
+		mapCoreTypeNameJsonData: () => Map<string, string>;
 	}>();
 
 	const edit_blockungsname = ref<boolean>(false);
 
-	const allow_berechne_blockung = computed(()=>
-		props.getDatenmanager().fachwahlGetAnzahl() > 0
-		&& props.getDatenmanager().getFaecherAnzahl() > 0
-		&& props.getDatenmanager().kursGetAnzahl() > 0
-	)
+	const allow_berechne_blockung = computed(() => (props.getDatenmanager().fachwahlGetAnzahl() > 0) && (props.getDatenmanager().getFaecherAnzahl() > 0) && (props.getDatenmanager().kursGetAnzahl() > 0));
 
-	const listBlockungen = computed(()=> {
+	const listBlockungen = computed(() => {
 		const list: List<GostBlockungListeneintrag> = new ArrayList();
 		for (const i of props.mapBlockungen().values())
 			list.add(i);
@@ -143,7 +136,9 @@
 		await props.gotoBlockung(blockung);
 	}
 
-	const isPending = (id: number) : boolean => ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
+	function isPending(id: number): boolean {
+		return ((props.apiStatus.data !== undefined) && (props.apiStatus.data.name === "gost.kursblockung.berechnen") && (props.apiStatus.data.id === id));
+	}
 
 	async function do_create_blockungsergebnisse() {
 		const id = props.auswahlBlockung?.id;
@@ -158,7 +153,5 @@
 			props.auswahlBlockung.name = value.toString();
 		edit_blockungsname.value = false;
 	}
-
-	const visible = computed<boolean>(() => props.mapBlockungen().size > 0);
 
 </script>

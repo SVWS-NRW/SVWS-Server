@@ -1,7 +1,11 @@
-import type { List, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenaufsichtBereichUpdate, StundenplanPausenzeit } from "@core";
+import type { BenutzerKompetenz, List, Schulform, ServerMode, StundenplanAufsichtsbereich, StundenplanManager, StundenplanPausenaufsicht, StundenplanPausenaufsichtBereichUpdate, StundenplanPausenzeit } from "@core";
 import type { ApiStatus } from "~/components/ApiStatus";
+import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface StundenplanPausenProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	stundenplanManager: () => StundenplanManager;
 	patchPausenzeit: (daten: Partial<StundenplanPausenzeit>, id: number) => Promise<void>;
 	removePausenzeiten: (pausenzeiten: StundenplanPausenzeit[]) => Promise<void>;
@@ -18,6 +22,6 @@ export interface StundenplanPausenProps {
 	removeAufsicht: (aufsichtID: number) => Promise<void>;
 	patchAufsicht: (aufsicht: Partial<StundenplanPausenaufsicht>, id: number) => Promise<void>;
 	apiStatus: ApiStatus;
-	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<void>;
+	gotoKatalog: (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => Promise<RoutingStatus>;
 }
 

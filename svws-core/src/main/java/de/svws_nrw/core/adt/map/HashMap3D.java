@@ -62,9 +62,9 @@ public class HashMap3D<K1, K2, K3, V> {
 	 *
 	 * @return Den Wert zum Mapping (key1, key2, key3).
 	 *
-	 * @throws NullPointerException falls es den Pfad (key1, key2, key3) nicht gibt.
+	 * @throws DeveloperNotificationException falls es den Pfad (key1, key2, key3) nicht gibt.
 	 */
-	public V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) throws NullPointerException {
+	public @NotNull V getOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3) throws DeveloperNotificationException {
 		final Map<K2, Map<K3, V>> map2 = _map1.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
@@ -73,10 +73,10 @@ public class HashMap3D<K1, K2, K3, V> {
 		if (map3 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", " + key2 + ") ungültig!");
 
-		if (!map3.containsKey(key3))
+		final V value = map3.get(key3);
+		if (value == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!");
-
-		return map3.get(key3);
+		return value;
 	}
 
 	/**

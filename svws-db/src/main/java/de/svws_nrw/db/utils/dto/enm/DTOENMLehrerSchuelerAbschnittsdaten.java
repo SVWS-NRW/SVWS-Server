@@ -2,17 +2,9 @@ package de.svws_nrw.db.utils.dto.enm;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromKuerzelSerializer;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultMinusConverter;
 import de.svws_nrw.db.converter.current.DatumConverter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
-import de.svws_nrw.db.converter.current.NoteConverterFromKuerzel;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -33,19 +25,13 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	public long leistungID;
 
 	/** Die erteilte Note */
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note note;
+	public String noteKuerzel;
 
 	/** Der Zeitstempel der letzten Änderung an der erteilten Note */
 	public String tsNote;
 
 	/** Die erteilte Quartals-Note */
-	@Convert(converter = NoteConverterFromKuerzel.class)
-	@JsonSerialize(using = NoteConverterFromKuerzelSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromKuerzelDeserializer.class)
-	public Note noteQuartal;
+	public String noteKuerzelQuartal;
 
 	/** Der Zeitstempel der letzten Änderung an der erteilten Quartals-Note */
 	public String tsNoteQuartal;
@@ -115,12 +101,10 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	public String BilingualerZweig;
 
 	/** Lernbereichnote Gesellschaftswissenschaft oder Arbeitlehre HA10 */
-	@Convert(converter = NoteConverterFromInteger.class)
-	public Note lernbereich1note;
+	public String lernbereich1notenKuerzel;
 
 	/** Lernbereichnote Naturwissenschaft HA10 */
-	@Convert(converter = NoteConverterFromInteger.class)
-	public Note lernbereich2note;
+	public String lernbereich2notenKuerzel;
 
 	/** Das Kürzel des Hauptförderschwerpunktes */
 	public String foerderschwerpunkt1Kuerzel;
@@ -156,6 +140,9 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Die LELS-Bemerkungen */
 	public String LELS;
 
+	/** Der Zeitstempel mit den letzten Änderungen zu der Lern und Leistungsentwicklung (LELS) in den Fächern */
+	public String tsLELS;
+
 	/** Die Bemerkungen zum außerunterrichtlichen Engagement */
 	public String AUE;
 
@@ -165,8 +152,14 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 	/** Die ESF-Bemerkungen */
 	public String ESF;
 
+	/** Der Zeitstempel mit den letzten Änderungen an der \"Empfehlung der Schulform\" beim Übergang von Primar- nach SekI */
+	public String tsESF;
+
 	/** Die Bemerkungen zu den Förderschwerpunkten */
 	public String bemerkungFSP;
+
+	/** Der Zeitstempel mit den letzten Änderungen an der Förderschwerpunktbemerkung */
+	public String tsBemerkungFSP;
 
 	/** Die Bemerkungen zur Versetzung */
 	public String bemerkungVersetzung;
@@ -203,8 +196,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-				    la.Gesamtnote_GS as lernbereich1note,
-				    la.Gesamtnote_NW as lernbereich2note,
+				    la.Gesamtnote_GS as lernbereich1notenKuerzel,
+				    la.Gesamtnote_NW as lernbereich2notenKuerzel,
 				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 				    la.ZieldifferentesLernen as ZieldifferentesLernen,
@@ -217,16 +210,19 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.ASV as ASV,
 				    enmla.tsASV as tsASV,
 				    bem.LELS as LELS,
+				    enmla.tsLELS as tsLELS,
 				    bem.AUE as AUE,
 				    enmla.tsAUE as tsAUE,
 				    bem.ESF as ESF,
-				    bem.bemerkungFSP as bemerkungFSP,
+				    enmla.tsESF as tsESF,
+				    bem.BemerkungFSP as bemerkungFSP,
+				    enmla.tsBemerkungFSP as tsBemerkungFSP,
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,
-				    ld.NotenKrz as note,
+				    ld.NotenKrz as noteKuerzel,
 				    enmld.tsNotenKrz as tsNote,
-				    ld.NotenKrzQuartal as noteQuartal,
+				    ld.NotenKrzQuartal as noteKuerzelQuartal,
 				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
@@ -248,13 +244,14 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
 				            AND la.Schuljahresabschnitts_ID = %d AND la.WechselNr = 0
 				        JOIN Schueler s ON la.Schueler_ID = s.ID AND s.Geloescht = '-' AND s.Status in (2, 6)
+				            AND s.Schuljahresabschnitts_ID = la.Schuljahresabschnitts_ID
 				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID AND kl.Kuerzel = '%s'
 				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				        LEFT JOIN TimestampsSchuelerLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN TimestampsSchuelerLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 				     la.Schueler_ID, la.ID, ld.ID
 				;
@@ -282,8 +279,8 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    k.Klasse as klasse,
 				    la.PruefOrdnung as pruefungsordnung,
 				    la.BilingualerZweig as BilingualerZweig,
-				    la.Gesamtnote_GS as lernbereich1note,
-				    la.Gesamtnote_NW as lernbereich2note,
+				    la.Gesamtnote_GS as lernbereich1notenKuerzel,
+				    la.Gesamtnote_NW as lernbereich2notenKuerzel,
 				    fs1.StatistikKrz as foerderschwerpunkt1Kuerzel,
 				    fs2.StatistikKrz as foerderschwerpunkt2Kuerzel,
 				    la.ZieldifferentesLernen as ZieldifferentesLernen,
@@ -296,16 +293,19 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				    bem.ASV as ASV,
 				    enmla.tsASV as tsASV,
 				    bem.LELS as LELS,
+				    enmla.tsLELS as tsLELS,
 				    bem.AUE as AUE,
 				    enmla.tsAUE as tsAUE,
 				    bem.ESF as ESF,
-				    bem.bemerkungFSP as bemerkungFSP,
+				    enmla.tsESF as tsESF,
+				    bem.BemerkungFSP as bemerkungFSP,
+				    enmla.tsBemerkungFSP as tsBemerkungFSP,
 				    bem.bemerkungVersetzung as bemerkungVersetzung,
 				    enmla.tsBemerkungVersetzung as tsBemerkungVersetzung,
 				    ld.ID as leistungID,
-				    ld.NotenKrz as note,
+				    ld.NotenKrz as noteKuerzel,
 				    enmld.tsNotenKrz as tsNote,
-				    ld.NotenKrzQuartal as noteQuartal,
+				    ld.NotenKrzQuartal as noteKuerzelQuartal,
 				    enmld.tsNotenKrzQuartal as tsNoteQuartal,
 				    ld.Kursart as kursart,
 				    ld.Fachlehrer_ID as lehrerID,
@@ -327,13 +327,14 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 				        JOIN SchuelerLeistungsdaten ld ON la.ID = ld.Abschnitt_ID
 				            AND la.Schuljahresabschnitts_ID = %d AND la.WechselNr = 0
 				        JOIN Schueler s ON la.Schueler_ID = s.ID AND s.Geloescht = '-' AND s.Status in (2, 6)
+				            AND s.Schuljahresabschnitts_ID = la.Schuljahresabschnitts_ID
 				        JOIN K_Lehrer kl ON ld.Fachlehrer_ID = kl.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs1 ON la.Foerderschwerpunkt_ID = fs1.ID
 				        LEFT JOIN K_Foerderschwerpunkt fs2 ON la.Foerderschwerpunkt2_ID = fs2.ID
 				        LEFT JOIN Klassen k ON la.Klassen_ID = k.ID
 				        LEFT JOIN SchuelerLD_PSFachBem bem ON la.ID = bem.Abschnitt_ID
-				        LEFT JOIN EnmLernabschnittsdaten enmla ON la.ID = enmla.ID
-				        LEFT JOIN EnmLeistungsdaten enmld ON ld.ID = enmld.ID
+				        LEFT JOIN TimestampsSchuelerLernabschnittsdaten enmla ON la.ID = enmla.ID
+				        LEFT JOIN TimestampsSchuelerLeistungsdaten enmld ON ld.ID = enmld.ID
 				ORDER BY
 				     la.Schueler_ID, la.ID, ld.ID
 				;
@@ -357,10 +358,10 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 		result = (prime * result) + ((kursart == null) ? 0 : kursart.hashCode());
 		result = (prime * result) + (int) (kursID ^ (kursID >>> 32));
 		result = (prime * result) + (int) (leistungID ^ (leistungID >>> 32));
-		result = (prime * result) + ((lernbereich1note == null) ? 0 : lernbereich1note.hashCode());
-		result = (prime * result) + ((lernbereich2note == null) ? 0 : lernbereich2note.hashCode());
-		result = (prime * result) + ((note == null) ? 0 : note.hashCode());
-		result = (prime * result) + ((noteQuartal == null) ? 0 : noteQuartal.hashCode());
+		result = (prime * result) + ((lernbereich1notenKuerzel == null) ? 0 : lernbereich1notenKuerzel.hashCode());
+		result = (prime * result) + ((lernbereich2notenKuerzel == null) ? 0 : lernbereich2notenKuerzel.hashCode());
+		result = (prime * result) + ((noteKuerzel == null) ? 0 : noteKuerzel.hashCode());
+		result = (prime * result) + ((noteKuerzelQuartal == null) ? 0 : noteKuerzelQuartal.hashCode());
 		result = (prime * result) + ((pruefungsordnung == null) ? 0 : pruefungsordnung.hashCode());
 		result = (prime * result) + ((BilingualerZweig == null) ? 0 : BilingualerZweig.hashCode());
 		return result;
@@ -424,20 +425,25 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 			return false;
 		if (leistungID != other.leistungID)
 			return false;
-		if (lernbereich1note == null) {
-			if (other.lernbereich1note != null)
+		if (lernbereich1notenKuerzel == null) {
+			if (other.lernbereich1notenKuerzel != null)
 				return false;
-		} else if (!lernbereich1note.equals(other.lernbereich1note))
+		} else if (!lernbereich1notenKuerzel.equals(other.lernbereich1notenKuerzel))
 			return false;
-		if (lernbereich2note == null) {
-			if (other.lernbereich2note != null)
+		if (lernbereich2notenKuerzel == null) {
+			if (other.lernbereich2notenKuerzel != null)
 				return false;
-		} else if (!lernbereich2note.equals(other.lernbereich2note))
+		} else if (!lernbereich2notenKuerzel.equals(other.lernbereich2notenKuerzel))
 			return false;
-		if (note == null) {
-			if (other.note != null)
+		if (noteKuerzel == null) {
+			if (other.noteKuerzel != null)
 				return false;
-		} else if (!note.equals(other.note))
+		} else if (!noteKuerzel.equals(other.noteKuerzel))
+			return false;
+		if (noteKuerzelQuartal == null) {
+			if (other.noteKuerzelQuartal != null)
+				return false;
+		} else if (!noteKuerzelQuartal.equals(other.noteKuerzelQuartal))
 			return false;
 		if (pruefungsordnung == null) {
 			if (other.pruefungsordnung != null)
@@ -470,11 +476,12 @@ public final class DTOENMLehrerSchuelerAbschnittsdaten {
 
 	@Override
 	public String toString() {
-		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + note + ", notenKrzQuartal=" + noteQuartal
+		return "DTOLehrerSchuelerAbschnittsdaten [leistungID=" + leistungID + ", kursID=" + kursID + ", notenKrz=" + noteKuerzel
+				+ ", notenKrzQuartal=" + noteKuerzelQuartal
 				+ ", kursart=" + kursart + ", AbiturFach=" + AbiturFach + ", fehlstundenGesamt=" + fehlstundenGesamt
 				+ ", fehlstundenUnentschuldigt=" + fehlstundenUnentschuldigt + ", fachbezogeneBemerkungen="
 				+ fachbezogeneBemerkungen + ", abschnittID=" + abschnittID + ", klasse=" + klasse + ", pruefungsordnung=" + pruefungsordnung
-				+ ", lernbereich1note=" + lernbereich1note + ", lernbereich2note=" + lernbereich2note
+				+ ", lernbereich1notenKuerzel=" + lernbereich1notenKuerzel + ", lernbereich2notenKuerzel=" + lernbereich2notenKuerzel
 				+ ", foerderschwerpunkt1Kuerzel=" + foerderschwerpunkt1Kuerzel + ", foerderschwerpunkt2Kuerzel="
 				+ foerderschwerpunkt2Kuerzel + "]";
 	}

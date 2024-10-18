@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -12,6 +13,7 @@ import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.schema.DBMigrationManager;
 
 
@@ -67,6 +69,7 @@ public class MigrateDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -132,7 +135,7 @@ public class MigrateDB {
 			final String srcDB = cmdLine.getValue("ss", "PUBLIC");
 			final String srcUser = cmdLine.getValue("su", "svwsadmin");
 			final String srcPwd = cmdLine.getValue("sp", "svwsadmin");
-			final DBConfig srcConfig = new DBConfig(srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false, 0, 0);
+			final DBConfig srcConfig = new DBConfig(PersistenceUnits.SVWS_DB, srcDrv, srcLoc, srcDB, false, srcUser, srcPwd, true, false);
 
 			// Lese die Optionen für die Ziel-Datenbank ein
 			final DBDriver tgtDrv = DBDriver.fromString(cmdLine.getValue("td", "MARIA_DB"));
@@ -144,7 +147,7 @@ public class MigrateDB {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true, 0, 0);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
 
 			// Führe die Migration mithilfe des Schema-Managers durch.
 			DBMigrationManager.migrate(srcConfig, tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, devMode, schulNr, logger);

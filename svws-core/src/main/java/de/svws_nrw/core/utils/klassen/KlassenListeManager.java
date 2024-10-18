@@ -7,18 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
+import de.svws_nrw.asd.data.schueler.SchuelerStatusKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.adt.map.HashMap2D;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.SchuelerStatus;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
@@ -43,6 +45,9 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	private final @NotNull HashMap2D<String, Long, KlassenDaten> _mapKlasseInSchulgliederung = new HashMap2D<>();
 	private final @NotNull HashMap<String, KlassenDaten> _mapKlasseByKuerzel = new HashMap<>();
 
+	/** Die ausgewählte Klassenleitung */
+	public LehrerListeEintrag auswahlKlassenLeitung = null;
+
 	/** Das Filter-Attribut für die Jahrgänge */
 	public final @NotNull AttributMitAuswahl<Long, JahrgangsDaten> jahrgaenge;
 	private static final @NotNull Function<JahrgangsDaten, Long> _jahrgangToId = (final @NotNull JahrgangsDaten jg) -> jg.id;
@@ -58,13 +63,23 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 	/** Das Filter-Attribut für die Schulgliederungen */
 	public final @NotNull AttributMitAuswahl<String, Schulgliederung> schulgliederungen;
-	private static final @NotNull Function<Schulgliederung, String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> sg.daten.kuerzel;
+	private final @NotNull Function<Schulgliederung, String> _schulgliederungToId = (final @NotNull Schulgliederung sg) -> {
+		final SchulgliederungKatalogEintrag sglke = sg.daten(getSchuljahr());
+		if (sglke == null)
+			throw new IllegalArgumentException("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.".formatted(sg.name(), getSchuljahr()));
+		return sglke.kuerzel;
+	};
 	private static final @NotNull Comparator<Schulgliederung> _comparatorSchulgliederung =
 			(final @NotNull Schulgliederung a, final @NotNull Schulgliederung b) -> a.ordinal() - b.ordinal();
 
 	/** Das Filter-Attribut für den Schüler-Status */
 	public final @NotNull AttributMitAuswahl<Integer, SchuelerStatus> schuelerstatus;
-	private static final @NotNull Function<SchuelerStatus, Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> s.id;
+	private final @NotNull Function<SchuelerStatus, Integer> _schuelerstatusToId = (final @NotNull SchuelerStatus s) -> {
+		final SchuelerStatusKatalogEintrag sske = s.daten(getSchuljahr());
+		if (sske == null)
+			throw new IllegalArgumentException("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.".formatted(s.name(), getSchuljahr()));
+		return Integer.parseInt(sske.kuerzel);
+	};
 	private static final @NotNull Comparator<SchuelerStatus> _comparatorSchuelerStatus =
 			(final @NotNull SchuelerStatus a, final @NotNull SchuelerStatus b) -> a.ordinal() - b.ordinal();
 
@@ -98,9 +113,10 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		this.jahrgaenge = new AttributMitAuswahl<>(jahrgaenge, _jahrgangToId, JahrgangsUtils.comparator, _eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl<>(lehrer, _lehrerToId, LehrerUtils.comparator, _eventHandlerFilterChanged);
 		final @NotNull List<Schulgliederung> gliederungen =
-				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.get(schulform);
+				(schulform == null) ? Arrays.asList(Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
 		this.schulgliederungen = new AttributMitAuswahl<>(gliederungen, _schulgliederungToId, _comparatorSchulgliederung, _eventHandlerFilterChanged);
 		initKlassen();
+		this.auswahlKlassenLeitung = null;
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
@@ -138,6 +154,12 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
 		}
+
+		// Setze Klassenleitungs-Auswahl zurück, falls vorhanden
+		if (auswahlKlassenLeitung != null) {
+			auswahlKlassenLeitung = null;
+			updateEintrag = true;
+		}
 		// TODO Liste der Klassenlehrer?
 		_filteredSchuelerListe = null;
 		return updateEintrag;
@@ -170,7 +192,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	/**
 	 * Setzt die Filtereinstellung auf nur sichtbare Klassen.
 	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 * @param value   true, wenn der Filter aktiviert werden soll und ansonsten false
 	 */
 	public void setFilterNurSichtbar(final boolean value) {
 		this._filterNurSichtbar = value;
@@ -184,7 +206,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	 * @param a   der erste Eintrag
 	 * @param b   der zweite Eintrag
 	 *
-	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
+	 * @return das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
 	 */
 	@Override
 	protected int compareAuswahl(final @NotNull KlassenDaten a, final @NotNull KlassenDaten b) {
@@ -249,6 +271,23 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		return this._filteredSchuelerListe;
 	}
 
+	/**
+	 * Gibt die ausgewählte Klassenleitung zurück
+	 *
+	 * @return die ausgewählte Klassenleitung
+	 */
+	public LehrerListeEintrag getAuswahlKlassenLeitung() {
+		return this.auswahlKlassenLeitung;
+	}
+
+	/**
+	 * Setzt die angegebene Lehrkraft zur ausgewählten Klassenleitung
+	 *
+	 * @param klassenLeitung neue ausgewählte Klassenleitung
+	 */
+	public void setAuswahlKlassenLeitung(final LehrerListeEintrag klassenLeitung) {
+		this.auswahlKlassenLeitung = klassenLeitung;
+	}
 
 	protected final @NotNull Runnable _eventSchuelerAuswahlChanged = () -> {
 		// TODO erstmal nichts zu tun ... wird später implementiert, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird
@@ -270,7 +309,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 	/**
 	 * Erhöht, bzw. senkt die Position der Klassenleitung mit der angegebenen Lehrer-ID auf der lokalen Klassenleitungs-Liste.
-	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächst-höher-stehenden (bzw. nächst-tiefer-stehenden) Eintrag
+	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächstgrößeren (bzw. nächskleineren) Eintrag
 	 * und dem angegebenen Eintrag getauscht.
 	 *
 	 * @param klassenleitungen   die Liste der Klassenleitungen
@@ -278,7 +317,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 	 * @param erhoehe            true, falls die Klassenleitung eine höhere Position auf der Klassenleitungs-Liste haben soll,
 	 *                           false, wenn sie eine tiefere Position auf der Klassenleitungs-Liste haben soll.
 	 *
-	 * @return true, falls Änderungen durchgeführt wurden, und ansonsten false
+	 * @return true, falls Änderungen durchgeführt wurden und ansonsten false
 	 *
 	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
 	 */
@@ -294,7 +333,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 			throw new DeveloperNotificationException("Es wurde keine Klassenleitung mit der angegebenen Klassen- und Lehrer-ID gefunden.");
 
 		if (erhoehe) {
-			// Prüfe, ob die Klassenleitung bereits an oberster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+			// Prüfe, ob die Klassenleitung bereits an oberster Stelle steht. Ist dies der Fall, so ist keine Änderung nötig...
 			if (posLehrer == 0)
 				return false;
 
@@ -306,7 +345,7 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 
 		}
 
-		// Prüfe, ob die Klassenleitung bereits an unterster Stelle steht. Ist dies der Fall so ist keine Änderung nötig...
+		// Prüfe, ob die Klassenleitung bereits an unterster Stelle steht. Ist dies der Fall, so ist keine Änderung nötig...
 		if ((posLehrer + 1) >= klassenleitungen.size())
 			return false;
 
@@ -315,6 +354,60 @@ public final class KlassenListeManager extends AuswahlManager<Long, KlassenDaten
 		klassenleitungen.set(posLehrer, lehrerIdNachfolger);
 		klassenleitungen.set(posLehrer + 1, lehrerId);
 		return true;
+	}
+
+	/**
+	 * Wenn das Kürzel nicht leer, für den Schuljahresabschnitt einzigartig und zwischen 1 und 15 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel das Kürzel der Klasse
+	 *
+	 * @return <code>true</code> wenn Kürzel der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateKuerzel(final String kuerzel) {
+		if ((kuerzel == null) || kuerzel.isBlank() || (kuerzel.trim().length() > 15))
+			return false;
+
+		for (final KlassenDaten klasse : this.liste.list())
+			if ((this.auswahlID() != klasse.id) && klasse.kuerzel.equals(kuerzel.trim()))
+				return false;
+
+		return true;
+	}
+
+	/**
+	 * Die Beschreibung ist optional und darf maximal 150 Zeichen lang sein.
+	 *
+	 * @param beschreibung die Beschreibung der Klasse
+	 *
+	 * @return <code>true</code> wenn Beschreibung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateBeschreibung(final String beschreibung) {
+		if (beschreibung == null)
+			return true;
+		return beschreibung.trim().length() <= 150;
+	}
+
+	/**
+	 * Der Sortierungsindex darf nicht <code>null</code> sein und muss größer gleich 0 sein.
+	 *
+	 * @param sortierung der Sortierungsindex der Klasse
+	 *
+	 * @return <code>true</code> wenn Sortierung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public boolean validateSortierung(final Integer sortierung) {
+		return (sortierung != null) && (sortierung >= 0);
+	}
+
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KlassenListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public void useFilter(final @NotNull KlassenListeManager srcManager) {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
 	}
 
 }

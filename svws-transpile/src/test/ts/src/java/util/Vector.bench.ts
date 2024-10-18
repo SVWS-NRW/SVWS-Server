@@ -20,7 +20,7 @@ describe.each([s, n, l])(
 			v.toArray(new Array<typeof a>());
 		});
 		bench( "[...v] destructure", () => {
-			[...v];
+			void [...v];
 		});
 		bench( "for of loop", () => {
 			const arr = []

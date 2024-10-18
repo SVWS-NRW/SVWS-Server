@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class AbschlussErgebnisBerufsbildend extends JavaObject {
 
@@ -42,6 +43,8 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		return ['de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend'].includes(name);
 	}
 
+	public static class = new Class<AbschlussErgebnisBerufsbildend>('de.svws_nrw.core.data.abschluss.AbschlussErgebnisBerufsbildend');
+
 	public static transpilerFromJSON(json : string): AbschlussErgebnisBerufsbildend {
 		const obj = JSON.parse(json) as Partial<AbschlussErgebnisBerufsbildend>;
 		const result = new AbschlussErgebnisBerufsbildend();
@@ -71,7 +74,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		result += '"hatBA" : ' + ((!obj.hatBA) ? 'null' : obj.hatBA.toString()) + ',';
 		result += '"abschlussAllgemeinbildend" : ' + ((!obj.abschlussAllgemeinbildend) ? 'null' : JSON.stringify(obj.abschlussAllgemeinbildend)) + ',';
 		if (!obj.log) {
-			result += '"log" : null';
+			result += '"log" : null' + ',';
 		} else {
 			result += '"log" : [ ';
 			for (let i = 0; i < obj.log.size(); i++) {
@@ -103,7 +106,7 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 		}
 		if (obj.log !== undefined) {
 			if (!obj.log) {
-				result += '"log" : null';
+				result += '"log" : null' + ',';
 			} else {
 				result += '"log" : [ ';
 				for (let i = 0; i < obj.log.size(); i++) {

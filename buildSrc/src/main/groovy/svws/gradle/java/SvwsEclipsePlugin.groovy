@@ -8,12 +8,17 @@ import groovy.xml.XmlParser
 /**
  * Dieses Plugin führt projektspezifische Einstellungen
  * in der Eclipse-Entwicklungsumgebung durch. Es nutzt
- * dazu die Funktionen des Eclipse Buildship Plugins.
- */
+ * dazu die Funktionen des Eclipse Buildship Plugins.*/
 class SvwsEclipsePlugin implements Plugin<Project> {
 
+	// Aktuell betrachtetes Projekt/Modul innerhalb des SVWS Projekts
 	def project
 
+	/**
+	 * Fügt die Methode hinzu, mit der eine Property in den Eclipse config Files gesetzt wird. Besitzt die config File bereits den angegebenen key,
+	 * dann wird von diesem nur der value überschrieben.
+	 * Diese Methode wird auf alle Projekte/Module angewendet.
+	 */
 	void addSetPropertyMethod() {
 		project.ext.setProperty = { File file, String key, String value ->
 			file = createFileIfAbsent(file)
@@ -23,7 +28,12 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Fügt die Methode hinzu, die Eclipse Core Preferences in die config File der IDE schreibt. Darunter fallen Formatter und Compiler Optionen.
+	 * Diese Methode wird auf alle Projekte/Module angewendet.
+	 */
 	void addSetEclipseCorePreferenceMethod() {
+		// Entfernt alle Einstellungen zum Formatter
 		project.ext.setEclipseCleanFormatter = { File prefsFile ->
 			if (prefsFile.exists()) {
 				def lines = prefsFile.readLines()
@@ -33,6 +43,7 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 			}
 		}
 
+		// Fügt die Formatter Optionen in die config File hinzu
 		project.ext.setEclipseFormatter = { File prefsFile, File formatterProfile ->
 			def profiles = new XmlParser().parse(formatterProfile)
 			profiles.children()[0].each {
@@ -43,11 +54,12 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 			}
 		}
 
+		// Fügt die Compiler Optionen in die config File hinzu
 		project.ext.setEclipseCompiler = { File prefsFile, File compilerProfile ->
 			def configLines = compilerProfile.readLines().findAll { it.startsWith('/instance/org.eclipse.jdt.core/') }
 					.collect { it.replaceFirst('/instance/org.eclipse.jdt.core/', '') }
 			configLines.each { line ->
-				def parts = line.split('=', 2)  // Splitte die Zeile in Key und Value
+				def parts = line.split('=', 2)
 				if (parts.length == 2) {
 					def key = parts[0].trim()
 					def value = parts[1].trim()
@@ -57,6 +69,10 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Fügt die Methode hinzu, die Eclipse UI Preferences in die config File der IDE schreibt. Darunter fallen Cleanup Optionen.
+	 * Diese Methode wird auf alle Projekte/Module angewendet.
+	 */
 	void addSetEclipseUiPreferenceMethod() {
 		project.ext.setEclipseCleanup = { File prefsFile, File cleanupProfile ->
 			def profiles = new XmlParser().parse(cleanupProfile)
@@ -69,6 +85,11 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Erstellt eine Datei, falls diese nicht existiert
+	 * @param file Die zu erstellende Datei
+	 * @return Die erstellte oder bereits bestehende Datei
+	 */
 	static File createFileIfAbsent(File file) {
 		if (!file.exists()) {
 			file.parentFile.mkdirs()
@@ -77,6 +98,10 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		return file
 	}
 
+	/**
+	 * Konfiguration alles Eclipse Einstellungen.
+	 * Diese Methode wird auf alle Projekte/Module angewendet.
+	 */
 	void configureEclipse() {
 		project.eclipse.project.file.whenMerged { gp ->
 			if (gp.name != null) {
@@ -91,8 +116,14 @@ class SvwsEclipsePlugin implements Plugin<Project> {
 		}
 	}
 
+	/**
+	 * Fügt dem Gradle-Projekt die Aufgaben 'eclipse' hinzu.
+	 *
+	 * @param project das Gradle-Projekt, auf das dieses Plugin angewendet wird.
+	 */
 	void apply(Project project) {
 		this.project = project
+		// Definition der Plugin ID. Basiert auf dem Eclipse Buildship Plugin
 		project.pluginManager.apply "eclipse"
 
 		this.addSetPropertyMethod()

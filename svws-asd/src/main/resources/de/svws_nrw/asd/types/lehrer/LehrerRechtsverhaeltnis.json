@@ -1,0 +1,114 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "L",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "L",
+			"kuerzel": "L",
+			"text": "Beamter auf Lebenszeit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "P",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "P",
+			"kuerzel": "P",
+			"text": "Beamter auf Probe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "A",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "A",
+			"kuerzel": "A",
+			"text": "Beamter auf Probe zur Anstellung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "N",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 7,
+			"schluessel": "N",
+			"kuerzel": "N",
+			"text": "Beamter, nebenamtlich (nicht hauptamtlich im Schuldienst)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "W",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 9,
+			"schluessel": "W",
+			"kuerzel": "W",
+			"text": "Beamter auf Widerruf (LAA)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "U",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "U",
+			"kuerzel": "U",
+			"text": "Angestellte, unbefristet (BAT-Vertrag)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "B",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "B",
+			"kuerzel": "B",
+			"text": "Angestellte, befristet (BAT-Vertrag)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "J",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 6,
+			"schluessel": "J",
+			"kuerzel": "J",
+			"text": "Angestellte, nicht BAT-Vertrag",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "S",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 8,
+			"schluessel": "S",
+			"kuerzel": "S",
+			"text": "Gestellungsvertrag",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "X",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10,
+			"schluessel": "X",
+			"kuerzel": "X",
+			"text": "Unentgeltlich Beschäftigte",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

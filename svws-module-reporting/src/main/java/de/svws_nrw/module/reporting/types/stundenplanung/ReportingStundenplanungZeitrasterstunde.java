@@ -4,10 +4,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 import de.svws_nrw.core.types.Wochentag;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum.</p>
- * <p>Sie enthält die Grunddaten eines Zeitrastereintrags in einem Stundenplan.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Zeitrasterstunde.
  */
 public class ReportingStundenplanungZeitrasterstunde {
 
@@ -39,7 +36,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 	 * @param wochentag			Der {@link Wochentag} an dem der Unterricht stattfindet.
 	 */
 	public ReportingStundenplanungZeitrasterstunde(final long id, final Long idStundenplan, final Integer stundenbeginn, final Integer stundenende,
-			final int unterrichtstunde,	final Wochentag wochentag) {
+			final int unterrichtstunde, final Wochentag wochentag) {
 		this.id = id;
 		this.idStundenplan = idStundenplan;
 		this.stundenbeginn = stundenbeginn;

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { SchuelerVermerkartZusammenfassung } from '../../../core/data/schueler/SchuelerVermerkartZusammenfassung';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -46,6 +47,8 @@ export class SchuelerUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SchuelerUtils'].includes(name);
 	}
+
+	public static class = new Class<SchuelerUtils>('de.svws_nrw.core.utils.schueler.SchuelerUtils');
 
 }
 

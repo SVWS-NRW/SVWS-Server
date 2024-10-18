@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class GELeistungsdifferenzierteKursart extends JavaEnum<GELeistungsdifferenzierteKursart> {
 
@@ -112,6 +113,8 @@ export class GELeistungsdifferenzierteKursart extends JavaEnum<GELeistungsdiffer
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GELeistungsdifferenzierteKursart>('de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart');
 
 }
 

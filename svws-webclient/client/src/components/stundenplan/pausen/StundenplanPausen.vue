@@ -9,7 +9,7 @@
 				</div>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<div class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop.stop="onDrop" @dragover.prevent="dropZone = true" @dragleave="setDragLeave">
+		<div v-if="hatUpdateKompetenz" class="h-full overflow-y-auto w-72 border-2 rounded-xl border-dashed relative" :class="[dragFromPausenzeit === undefined ? 'border-black/0' : 'border-error ring-4 ring-error/10']" @drop.stop="onDrop" @dragover.prevent="dropZone = true" @dragleave="setDragLeave">
 			<div class="fixed flex items-center justify-center h-3/4 w-64 z-20 pointer-events-none"><span :class="dragFromPausenzeit === undefined ? '':'icon-lg icon-error opacity-50 i-ri-delete-bin-line scale-[4]'" /></div>
 			<div class="svws-ui-table svws-type-navigation" style="scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.2) transparent;">
 				<div class="svws-ui-tbody">
@@ -19,7 +19,15 @@
 								@dragstart="onDrag(lehrer)" @dragend="dragEnd" draggable="true">
 								<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 								<span class="truncate grow p-1"> {{ lehrer.kuerzel }} ({{ lehrer.vorname[0] }}. {{ lehrer.nachname }})</span>
-								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()"> {{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}/{{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}</span>
+								<span class="rounded-lg bg-primary/70 text-white px-1 py-0.5 text-sm break-normal" v-if="mapLehrerPausenaufsichten.get(lehrer.id)?.size()">
+									<svws-ui-tooltip>
+										{{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}/{{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}
+										<template #content>
+											Gesamtdauer der Aufsichten in Minuten: {{ stundenplanManager().lehrerGetPausenaufsichtMinuten(lehrer.id, -1) }}
+											<br>Anzahl der Aufsichten: {{ stundenplanManager().lehrerGetPausenaufsichtAnzahl(lehrer.id, -1) }}
+										</template>
+									</svws-ui-tooltip>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -44,25 +52,26 @@
 							<div class="font-bold px-2 py-1" :class="{'bg-svws/20': lehrerAufsichten.get(pause.id)}"> {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitBeginn(pause.id) }} – {{ stundenplanManager().pausenzeitGetByIdStringOfUhrzeitEnde(pause.id) }} {{ pause.bezeichnung }} </div>
 							<div v-if="!pause.klassen.isEmpty()" class="text-sm px-2 mb-2 opacity-70 font-bold"> {{ [...pause.klassen].map(k => " " + stundenplanManager().klasseGetByIdOrException(k).kuerzel).toString() }} </div>
 							<!-- Zeige Wochentypenübersicht nur an, wenn mehr als jede Woche vorhanden ist -->
-							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht flex-grow font-bold place-items-center text-center w-full h-full">
+							<div v-if="wochentypen.size() > 1" class="svws-ui-stundenplan--pausen-aufsicht font-bold h-full justify-start" :style="`grid-template-columns: minmax(min-content, 0.5fr) minmax(min-content, 0.5fr) repeat(${wochentypen.size()-1}, minmax(min-content, 1fr))`">
 								<div>Bereich</div>
-								<div v-for="typ in wochentypen" :key="typ" class="w-full h-full rounded-sm" :class="{'bg-success/20': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
+								<div v-for="typ in wochentypen" :key="typ" class="h-full rounded-sm pl-5" :class="{'bg-success/20': pause.id === dragOverPausenzeit?.pauseID && typ === dragOverPausenzeit.typ && !bereichGesperrt(pause.id, dragOverPausenzeit.aufsichtsbereichID).value}">
 									{{ stundenplanManager().stundenplanGetWochenTypAsStringKurz(typ) }}
 								</div>
 							</div>
-							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht flex-grow"
+							<div v-for="aufsichtsbereich in stundenplanManager().aufsichtsbereichGetMengeAsList()" :key="aufsichtsbereich.id" class="svws-ui-stundenplan--pausen-aufsicht"
 								:class="{
 									'bg-svws/20': !isDraggingOver(pause.id, aufsichtsbereich.id).value && mapAufsichtBereichTyp.containsKey1AndKey2(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id),
 									'bg-error/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && bereichGesperrt(pause.id, aufsichtsbereich.id).value,
-									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}">
+									'bg-success/20': isDraggingOver(pause.id, aufsichtsbereich.id).value && !bereichGesperrt(pause.id, aufsichtsbereich.id).value}"
+								:style="`grid-template-columns: minmax(min-content, 0.5fr) minmax(min-content, 0.5fr) repeat(${wochentypen.size()-1}, minmax(min-content, 1fr))`">
 								<div> {{ aufsichtsbereich.kuerzel }} </div>
 								<div v-for="typ in wochentypen" :key="typ"
-									@drop.stop="onDrop" class="w-full h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
+									@drop.stop="onDrop" class="h-full rounded-sm" @dragover.prevent="setDragOver(pause.id, aufsichtsbereich.id, typ)" @dragleave="setDragLeave"
 									:class="{'bg-success/20': mapAufsichtBereichTyp.getOrNull(lehrerAufsichten.get(pause.id)?.id || -1, aufsichtsbereich.id, typ)}">
 									<div v-for="lehrer in stundenplanManager().lehrerGetMengeByPausenzeitIdAndAufsichtsbereichIdAndWochentypAndInklusive(pause.id, aufsichtsbereich.id, typ, false)"
-										:key="lehrer.id" class="hover:bg-slate-100 rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer}"
-										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" draggable="true" @dragend="dragEnd">
-										<span class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
+										:key="lehrer.id" class="rounded-md group flex place-items-center" :class="{'cursor-grab': !dragLehrer && hatUpdateKompetenz, 'hover:bg-slate-100': hatUpdateKompetenz}"
+										@dragstart.stop="onDrag(lehrer, {pauseID: pause.id, aufsichtsbereichID: aufsichtsbereich.id, typ})" :draggable="hatUpdateKompetenz" @dragend="dragEnd">
+										<span v-if="hatUpdateKompetenz" class="icon i-ri-draggable inline-block icon-dark opacity-60 group-hover:opacity-100 group-hover:icon-dark rounded-sm" />
 										<span>{{ lehrer.kuerzel }}</span>
 									</div>
 								</div>
@@ -81,7 +90,7 @@
 	import { computed, onMounted, ref } from "vue";
 	import type { StundenplanPausenProps } from "./StundenplanPausenProps";
 	import type { Wochentag, List, StundenplanPausenzeit, StundenplanKlasse, StundenplanPausenaufsicht, StundenplanLehrer} from "@core";
-	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList } from "@core";
+	import { StundenplanPausenaufsichtBereich, StundenplanPausenaufsichtBereichUpdate, HashMap3D, ArrayList, BenutzerKompetenz } from "@core";
 
 	type PausenzeitBereichTyp = {pauseID: number; aufsichtsbereichID: number; typ: number, lehrerID?: number};
 
@@ -95,6 +104,8 @@
 	const dragFromPausenzeit = ref<PausenzeitBereichTyp>();
 	const dragOverPausenzeit = ref<PausenzeitBereichTyp>();
 	const dropZone = ref<boolean>(false);
+
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	function onDrag(data: StundenplanLehrer|undefined, fromPausenzeit?: PausenzeitBereichTyp) {
 		dragLehrer.value = data;
@@ -183,7 +194,7 @@
 			bereichNeu.idAufsichtsbereich = aufsichtsbereichID;
 			bereichNeu.wochentyp = typ;
 			const aufsicht = lehrerAufsichten.value.get(pauseID);
-			bereichNeu.idPausenaufsicht = aufsicht?.id || -1;
+			bereichNeu.idPausenaufsicht = aufsicht?.id ?? -1;
 			update.listHinzuzufuegen.add(bereichNeu);
 		}
 		await props.updateAufsichtBereich(update, dragOverPausenzeit.value?.pauseID, dragLehrer.value?.id);
@@ -269,7 +280,7 @@
 		@apply grid auto-cols-fr border-none pt-0;
 		grid-template-columns: initial;
 		.svws-ui-stundenplan--unterricht, .svws-ui-stundenplan--pausen-aufsicht {
-			@apply gap-0
+			@apply gap-0;
 		}
 	}
 

@@ -4,11 +4,11 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.data.schule.ReformpaedagogikKatalogEintrag;
 import de.svws_nrw.core.types.schule.Reformpaedagogik;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -40,12 +40,9 @@ public final class DataKatalogReformpaedagogik extends DataManager<Long> {
 
 	@Override
 	public Response getList() throws ApiOperationException {
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if (schule == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
-		final var liste = Reformpaedagogik.get(schule.Schulform);
-		if (liste == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+		final Schulform schulform = conn.getUser().schuleGetSchulform();
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
+		final var liste = Reformpaedagogik.get(schuljahr, schulform);
 		final ArrayList<ReformpaedagogikKatalogEintrag> daten = new ArrayList<>();
 		for (final Reformpaedagogik p : liste)
 			daten.addAll(Arrays.asList(p.historie));

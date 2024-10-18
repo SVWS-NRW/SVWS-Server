@@ -55,7 +55,7 @@
 	import type { GostFachwahlenZusatzkurseProps } from "./SGostFachwahlenZusatzkurseProps";
 	import type { ComputedRef} from "vue";
 	import { computed, ref } from "vue";
-	import { ZulaessigesFach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
+	import { Fach, type GostStatistikFachwahl, type SchuelerListeEintrag, type List, ArrayList, GostHalbjahr } from "@core";
 
 	const props = defineProps<GostFachwahlenZusatzkurseProps>();
 
@@ -90,7 +90,13 @@
 		{ key: "ZK2", label: "ZK HJ2", span: 1 },
 	];
 
-	const getBgColor = (fws: GostStatistikFachwahl) => ZulaessigesFach.getByKuerzelASD(fws.kuerzelStatistik).getHMTLFarbeRGBA(1.0);
+	const schuljahr = computed<number>(() => props.faecherManager.getSchuljahr());
+
+	function getBgColor(fws: GostStatistikFachwahl) : string {
+		if (fws.kuerzelStatistik === null)
+			return 'rgb(220,220,220)';
+		return Fach.getBySchluesselOrDefault(fws.kuerzelStatistik).getHMTLFarbeRGBA(schuljahr.value, 1.0);
+	}
 
 	function doSortSchuelerListeByNachnameAndVornameAndId(liste : List<SchuelerListeEintrag>): List<SchuelerListeEintrag> {
 		liste.sort({ compare(a : SchuelerListeEintrag, b : SchuelerListeEintrag) : number {

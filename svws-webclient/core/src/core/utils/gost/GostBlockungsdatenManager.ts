@@ -3,7 +3,7 @@ import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { GostBlockungsergebnisManager } from '../../../core/utils/gost/GostBlockungsergebnisManager';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
-import { GostFaecherManager, cast_de_svws_nrw_core_utils_gost_GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
+import { GostFaecherManager } from '../../../core/utils/gost/GostFaecherManager';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { LongArrayKey } from '../../../core/adt/LongArrayKey';
@@ -28,10 +28,11 @@ import { MapUtils } from '../../../core/utils/MapUtils';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
-import { GostBlockungsdaten, cast_de_svws_nrw_core_data_gost_GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
+import { GostBlockungsdaten } from '../../../core/data/gost/GostBlockungsdaten';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBlockungSchiene } from '../../../core/data/gost/GostBlockungSchiene';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { ListUtils } from '../../../core/utils/ListUtils';
 import { DTOUtils } from '../../../core/utils/DTOUtils';
 import type { JavaMap } from '../../../java/util/JavaMap';
@@ -182,54 +183,31 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 
 	/**
-	 * Erstellt einen neuen Manager mit leeren Blockungsdaten und einem leeren Fächer-Manager.
-	 */
-	public constructor();
-
-	/**
-	 *Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
+	 * Erstellt einen neuen Manager mit den angegebenen Blockungsdaten und dem Fächer-Manager.
 	 *
 	 * @param daten           die Blockungsdaten
 	 * @param faecherManager  der Fächer-Manager
 	 */
-	public constructor(daten : GostBlockungsdaten, faecherManager : GostFaecherManager);
-
-	/**
-	 * Implementation for method overloads of 'constructor'
-	 */
-	public constructor(__param0? : GostBlockungsdaten, __param1? : GostFaecherManager) {
+	public constructor(daten : GostBlockungsdaten, faecherManager : GostFaecherManager) {
 		super();
-		if ((__param0 === undefined) && (__param1 === undefined)) {
-			this._faecherManager = new GostFaecherManager();
-			this._daten = new GostBlockungsdaten();
-			this._daten.gostHalbjahr = GostHalbjahr.EF1.id;
-			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
-			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this._compFachwahlen = this.createComparatorFachwahlen();
-			this._compRegel = this.createComparatorRegeln();
-			this._compSchueler = this.createComparatorSchueler();
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.GostBlockungsdaten')))) && ((__param1 !== undefined) && ((__param1 instanceof JavaObject) && (__param1.isTranspiledInstanceOf('de.svws_nrw.core.utils.gost.GostFaecherManager'))))) {
-			const daten : GostBlockungsdaten = cast_de_svws_nrw_core_data_gost_GostBlockungsdaten(__param0);
-			const faecherManager : GostFaecherManager = cast_de_svws_nrw_core_utils_gost_GostFaecherManager(__param1);
-			this._faecherManager = faecherManager;
-			this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
-			this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
-			this._compFachwahlen = this.createComparatorFachwahlen();
-			this._compRegel = this.createComparatorRegeln();
-			this._compSchueler = this.createComparatorSchueler();
-			this._daten = new GostBlockungsdaten();
-			this._daten.id = daten.id;
-			this._daten.name = daten.name;
-			this._daten.abijahrgang = daten.abijahrgang;
-			this._daten.gostHalbjahr = daten.gostHalbjahr;
-			this._daten.istAktiv = daten.istAktiv;
-			this.schieneAddListe(daten.schienen);
-			this.fachwahlAddListe(daten.fachwahlen);
-			this.schuelerAddListe(daten.schueler);
-			this.kursAddListe(daten.kurse);
-			this.regelAddListe(daten.regeln);
-			this.ergebnisAddListe(daten.ergebnisse);
-		} else throw new Error('invalid method overload');
+		this._faecherManager = faecherManager;
+		this._compKurs_fach_kursart_kursnummer = this.createComparatorKursFachKursartNummer();
+		this._compKurs_kursart_fach_kursnummer = this.createComparatorKursKursartFachNummer();
+		this._compFachwahlen = this.createComparatorFachwahlen();
+		this._compRegel = this.createComparatorRegeln();
+		this._compSchueler = this.createComparatorSchueler();
+		this._daten = new GostBlockungsdaten();
+		this._daten.id = daten.id;
+		this._daten.name = daten.name;
+		this._daten.abijahrgang = daten.abijahrgang;
+		this._daten.gostHalbjahr = daten.gostHalbjahr;
+		this._daten.istAktiv = daten.istAktiv;
+		this.schieneAddListe(daten.schienen);
+		this.fachwahlAddListe(daten.fachwahlen);
+		this.schuelerAddListe(daten.schueler);
+		this.kursAddListe(daten.kurse);
+		this.regelAddListe(daten.regeln);
+		this.ergebnisAddListe(daten.ergebnisse);
 	}
 
 	/**
@@ -773,6 +751,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Revalidiert alle Ergebnis. Dies führt zur Aktualisierung aller Ergebnisse.
+	 */
+	public ergebnisAlleRevalidieren() : void {
+		for (const ergebnisManager of this._map_idErgebnis_ErgebnisManager.values())
+			ergebnisManager.stateRevalidateEverything();
+	}
+
+	/**
 	 * Liefert den Wert des 1. Bewertungskriteriums. Darin enthalten sind: <br>
 	 * - Die Anzahl der nicht genügend gesetzten Kurse. <br>
 	 * - Die Anzahl der Regelverletzungen. <br>
@@ -978,7 +964,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kursGetName(idKurs : number) : string {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
-		const sSuffix : string = JavaObject.equalsTranspiler(kurs.suffix, ("")) ? "" : ("-" + kurs.suffix);
+		const sSuffix : string = JavaObject.equalsTranspiler("", (kurs.suffix)) ? "" : ("-" + kurs.suffix);
 		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
 	}
 
@@ -1646,6 +1632,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this._daten.regeln.sort(this._compRegel);
 		for (const listOfTyp of this._map_regeltyp_regeln.values())
 			listOfTyp.sort(this._compRegel);
+		this.ergebnisAlleRevalidieren();
 	}
 
 	/**
@@ -1794,7 +1781,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Liefert TRUE, falls ein Löschen der Regel erlaubt ist. <br>
-	 * Kriterium: Die Regel muss existieren und das aktuelle Ergebnis muss eine Vorlage sein.
+	 * Kriterium: Die Regel muss existieren.
 	 *
 	 * @param  idRegel Die Datenbank-ID der Regel.
 	 *
@@ -1802,7 +1789,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
 	 */
 	public regelGetIsRemoveAllowed(idRegel : number) : boolean {
-		return this._map_idRegel_regel.containsKey(idRegel) && this.getIstBlockungsVorlage();
+		return this._map_idRegel_regel.containsKey(idRegel);
 	}
 
 	private regelGet_KURS_MIT_DUMMY_SUS_AUFFUELLEN(idKurs : number) : GostBlockungRegel | null {
@@ -1814,12 +1801,10 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
-	 * Wirft eine Exception, falls es sich nicht um eine Blockungsvorlage handelt.
 	 *
 	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
 	 *
 	 * @throws DeveloperNotificationException Falls die Regel nicht existiert.
-	 * @throws UserNotificationException Falls es sich nicht um eine Blockungsvorlage handelt.
 	 */
 	public regelRemoveByID(idRegel : number) : void {
 		this.regelRemoveListeByIDs(SetUtils.create1(idRegel));
@@ -1847,7 +1832,6 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
 	 */
 	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
-		UserNotificationException.ifTrue("Ein Löschen von Regeln ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		for (const idRegel of regelmenge) {
 			const regel : GostBlockungRegel = this.regelGet(idRegel);
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
@@ -1862,6 +1846,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._map_multikey_regeln.remove(multikey);
 			this._daten.regeln.remove(regel);
 		}
+		this.ergebnisAlleRevalidieren();
 	}
 
 	private static regelToMultikey(regel : GostBlockungRegel) : LongArrayKey {
@@ -2423,6 +2408,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsdatenManager'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsdatenManager>('de.svws_nrw.core.utils.gost.GostBlockungsdatenManager');
 
 }
 

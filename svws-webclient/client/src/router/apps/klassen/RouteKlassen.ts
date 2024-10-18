@@ -6,15 +6,18 @@ import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
-import { routeKlasseDaten } from "~/router/apps/klassen/RouteKlasseDaten";
+import { routeKlassenDaten } from "~/router/apps/klassen/RouteKlassenDaten";
 import { routeKlassenStundenplan } from "~/router/apps/klassen/stundenplan/RouteKlassenStundenplan";
 import { RouteDataKlassen } from "~/router/apps/klassen/RouteDataKlassen";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { KlassenAppProps } from "~/components/klassen/SKlassenAppProps";
 import type { KlassenAuswahlProps } from "~/components/klassen/SKlassenAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
 import { routeKlasseGruppenprozesse } from "./RouteKlassenGruppenprozesse";
+import { RoutingStatus } from "~/router/RoutingStatus";
+import { ViewType } from "@ui";
+import { routeKlassenNeu } from "./RouteKlassenNeu";
 
 
 const SKlassenAuswahl = () => import("~/components/klassen/SKlassenAuswahl.vue")
@@ -23,50 +26,62 @@ const SKlassenApp = () => import("~/components/klassen/SKlassenApp.vue")
 export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "klassen", "klassen/:id(-?\\d+)?", SKlassenApp, new RouteDataKlassen());
+		super(Schulform.values(), [ BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN ], "klassen", "klassen/:id(-?\\d+)?", SKlassenApp, new RouteDataKlassen());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klassen";
 		super.setView("liste", SKlassenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKlasseDaten,
+			routeKlassenDaten,
+			routeKlassenNeu,
 			routeKlassenStundenplan,
 			routeKlasseGruppenprozesse,
 		];
-		super.defaultChild = routeKlasseDaten;
+		super.defaultChild = routeKlassenDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
+		try {
+			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 
-		const idKlasse = RouteNode.getIntParam(to_params, "id");
-		if (idKlasse instanceof Error)
-			return routeError.getRoute(idKlasse);
+			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
+				return this.data.view.getRoute(id);
+			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
+			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if ((idNeu !== null) && (idNeu !== id))
+				return routeKlassenDaten.getRoute(idNeu);
 
-		// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
-		const neueIdKlasse = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-		if (neueIdKlasse && neueIdKlasse !== idKlasse)
-			return routeKlasseDaten.getRoute(neueIdKlasse);
+			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
+			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
+				return routeKlasseGruppenprozesse.getRoute();
+			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
+				return routeKlassenNeu.getRoute();
 
-		// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-		if (this.isGruppenprozessRoute(to) && idKlasse !== undefined)
-			return routeKlasseGruppenprozesse.getRoute();
+			if (to.types.has(ViewType.GRUPPENPROZESSE))
+				await this.data.gotoGruppenprozess(false);
+			else if (to.types.has(ViewType.HINZUFUEGEN))
+				await this.data.gotoCreationMode(false);
+			else
+				await this.data.gotoEintrag(id);
 
-		if (this.isGruppenprozessRoute(to))
-			await this.data.gotoGruppenprozess(false);
-		else
-			await this.data.gotoEintrag(idKlasse)
+			if (to.name === this.name) {
+				if (this.data.klassenListeManager.hasDaten())
+					return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
+				return;
+			}
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
+	}
 
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.klassenListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
+		this.data.reset();
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
@@ -78,8 +93,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
 		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
 			return { name: routeKlassenStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
-		const redirect_name: string = (routeKlassen.selectedChild === undefined) ? routeKlasseDaten.name : routeKlassen.selectedChild.name;
-		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
+		return { name: this.data.view.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): KlassenAuswahlProps {
@@ -90,57 +104,29 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
 			gotoGruppenprozess: this.data.gotoGruppenprozess,
-			setzeDefaultSortierung: this.data.setzeDefaultSortierung
+			gotoCreationMode: this.data.gotoCreationMode,
+			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
+			activeRouteType: this.data.activeRouteType,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsGruppenprozesse: this.getTabsGruppenprozesse(),
-			tabsHidden: this.children_hidden().value,
-			gruppenprozesseEnabled: this.data.gruppenprozesseEnabled,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeRouteType),
+			activeRouteType: this.data.activeRouteType,
 		};
 	}
 
-	private getTab(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private isGruppenprozessRoute(child : RouteNode<any, any>) : boolean {
-		return (child === routeKlasseGruppenprozesse);
-	}
-
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		for (const c of super.children) {
-			if (!this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		}
-		return result;
-	}
-
-	private getTabsGruppenprozesse(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		for (const c of super.children) {
-			if (this.isGruppenprozessRoute(c) && c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		}
-		return result;
-	}
-
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.klassenListeManager.auswahlID() } });
-		this.data.setView(node, this.children);
+		const result = await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.klassenListeManager.auswahlID() } });
+		if (result === RoutingStatus.SUCCESS)
+			this.data.setView(node, this.children);
 	}
 
 }

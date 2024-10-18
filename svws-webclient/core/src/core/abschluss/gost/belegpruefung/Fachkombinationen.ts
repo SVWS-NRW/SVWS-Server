@@ -3,6 +3,7 @@ import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegun
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import { AbiturFachbelegungHalbjahr } from '../../../../core/data/gost/AbiturFachbelegungHalbjahr';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
@@ -72,6 +73,8 @@ export class Fachkombinationen extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<Fachkombinationen>('de.svws_nrw.core.abschluss.gost.belegpruefung.Fachkombinationen');
 
 }
 

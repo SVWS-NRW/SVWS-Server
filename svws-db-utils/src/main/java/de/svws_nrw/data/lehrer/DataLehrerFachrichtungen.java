@@ -3,11 +3,12 @@ package de.svws_nrw.data.lehrer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-import de.svws_nrw.core.data.lehrer.LehrerFachrichtungEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerFachrichtung;
-import de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerFachrichtung;
+import de.svws_nrw.asd.types.lehrer.LehrerFachrichtungAnerkennung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramtFachrichtung;
@@ -30,18 +31,18 @@ public final class DataLehrerFachrichtungen extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrerLehramtFachrichtung} in einen Core-DTO {@link LehrerFachrichtungEintrag}.
-	 */
-	private static final Function<DTOLehrerLehramtFachrichtung, LehrerFachrichtungEintrag> dtoMapper = (final DTOLehrerLehramtFachrichtung l) -> {
+	private static LehrerFachrichtungEintrag map(final DBEntityManager conn, final DTOLehrerLehramtFachrichtung l) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final LehrerFachrichtungEintrag daten = new LehrerFachrichtungEintrag();
 		daten.id = l.Lehrer_ID;
-		final LehrerFachrichtung fachrichtung = LehrerFachrichtung.getByKuerzel(l.FachrKrz);
-		daten.idFachrichtung = (fachrichtung == null) ? null : fachrichtung.daten.id;
-		final LehrerFachrichtungAnerkennung anerkennung = LehrerFachrichtungAnerkennung.getByKuerzel(l.FachrAnerkennungKrz);
-		daten.idAnerkennungsgrund = (anerkennung == null) ? null : anerkennung.daten.id;
+		final LehrerFachrichtung fachrichtung = LehrerFachrichtung.data().getWertByKuerzel(l.FachrKrz);
+		final LehrerFachrichtungKatalogEintrag eintragFachrichtung = (fachrichtung == null) ? null : fachrichtung.daten(schuljahr);
+		daten.idFachrichtung = (eintragFachrichtung == null) ? null : eintragFachrichtung.id;
+		final LehrerFachrichtungAnerkennung anerkennung = LehrerFachrichtungAnerkennung.data().getWertByKuerzel(l.FachrAnerkennungKrz);
+		final LehrerFachrichtungAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
+		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;
 		return daten;
-	};
+	}
 
 	@Override
 	public Response getAll() {
@@ -70,7 +71,7 @@ public final class DataLehrerFachrichtungen extends DataManager<Long> {
 			return result;
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerLehramtFachrichtung l : daten)
-			result.add(dtoMapper.apply(l));
+			result.add(map(conn, l));
 		return result;
 	}
 

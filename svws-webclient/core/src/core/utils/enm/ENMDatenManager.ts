@@ -1,22 +1,27 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
-import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
 import { ENMLeistung } from '../../../core/data/enm/ENMLeistung';
 import { ENMFach } from '../../../core/data/enm/ENMFach';
-import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import type { List } from '../../../java/util/List';
+import { FoerderschwerpunktKatalogEintrag } from '../../../asd/data/schule/FoerderschwerpunktKatalogEintrag';
+import { Geschlecht } from '../../../asd/types/Geschlecht';
+import { ENMNote } from '../../../core/data/enm/ENMNote';
+import { Foerderschwerpunkt } from '../../../asd/types/schule/Foerderschwerpunkt';
+import { ENMKlasse } from '../../../core/data/enm/ENMKlasse';
+import { ENMTeilleistungsart } from '../../../core/data/enm/ENMTeilleistungsart';
+import { ENMJahrgang } from '../../../core/data/enm/ENMJahrgang';
 import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
+import { ENMSchuelerAnkreuzkompetenz } from '../../../core/data/enm/ENMSchuelerAnkreuzkompetenz';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
+import { ENMAnkreuzkompetenz } from '../../../core/data/enm/ENMAnkreuzkompetenz';
 import { ENMDaten, cast_de_svws_nrw_core_data_enm_ENMDaten } from '../../../core/data/enm/ENMDaten';
-import { Note } from '../../../core/types/Note';
-import type { List } from '../../../java/util/List';
+import { NoteKatalogEintrag } from '../../../asd/data/NoteKatalogEintrag';
+import { Note } from '../../../asd/types/Note';
 import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
-import { Geschlecht } from '../../../core/types/Geschlecht';
-import { ENMNote } from '../../../core/data/enm/ENMNote';
-import { Foerderschwerpunkt } from '../../../core/types/schueler/Foerderschwerpunkt';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
 export class ENMDatenManager extends JavaObject {
@@ -60,6 +65,11 @@ export class ENMDatenManager extends JavaObject {
 	 * Temporäre Map für das Befüllen des ENMTeilleistungsarten-Vektors.
 	 */
 	private readonly mapTeilleistungsarten : JavaMap<number, ENMTeilleistungsart> = new HashMap<number, ENMTeilleistungsart>();
+
+	/**
+	 * Temporäre Map für das Befüllen des ENMAnkreuzkompetenz-Vektors.
+	 */
+	private readonly mapAnkreuzkompetenzen : JavaMap<number, ENMAnkreuzkompetenz> = new HashMap<number, ENMAnkreuzkompetenz>();
 
 	/**
 	 * Zählt die Id der Lerngruppe hoch.
@@ -134,18 +144,42 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
-	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
+	 * Setzt die Informationen zu den Texten der einzelnen Kompetenzstufen für Ankreuzkompetenzen.
+	 *
+	 * @param stufe1     der Text für die Stufe 1
+	 * @param stufe2     der Text für die Stufe 2
+	 * @param stufe3     der Text für die Stufe 3
+	 * @param stufe4     der Text für die Stufe 4
+	 * @param stufe5     der Text für die Stufe 5
+	 * @param sonstige   der Text für die frei definierbare Zeugnisrubrik "Sonstiges"
 	 */
-	public addNoten() : void {
+	public setAnkreuzkompetenzenStufen(stufe1 : string | null, stufe2 : string | null, stufe3 : string | null, stufe4 : string | null, stufe5 : string | null, sonstige : string | null) : void {
+		this.daten.ankreuzkompetenzen.textStufen[0] = stufe1;
+		this.daten.ankreuzkompetenzen.textStufen[1] = stufe2;
+		this.daten.ankreuzkompetenzen.textStufen[2] = stufe3;
+		this.daten.ankreuzkompetenzen.textStufen[3] = stufe4;
+		this.daten.ankreuzkompetenzen.textStufen[4] = stufe5;
+		this.daten.ankreuzkompetenzen.textSonstiges = sonstige;
+	}
+
+	/**
+	 * Fügt alle Noten des Core-Type {@link Note} zu dem Noten-Katalog der ENM-Datei hinzu.
+	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
+	 */
+	public addNoten(schuljahr : number) : void {
 		if (!this.daten.noten.isEmpty())
 			return;
-		const noten : Array<Note> = Note.values();
+		const noten : List<Note> = Note.data().getWerteBySchuljahr(schuljahr);
 		for (const note of noten) {
+			const nke : NoteKatalogEintrag | null = note.daten(schuljahr);
+			if (nke === null)
+				continue;
 			const enmNote : ENMNote = new ENMNote();
-			enmNote.id = note.id;
-			enmNote.kuerzel = note.kuerzel;
-			enmNote.notenpunkte = note.notenpunkte;
-			enmNote.text = note.text;
+			enmNote.id = nke.id as number;
+			enmNote.kuerzel = nke.kuerzel;
+			enmNote.notenpunkte = nke.notenpunkte;
+			enmNote.text = nke.text;
 			this.daten.noten.add(enmNote);
 		}
 	}
@@ -154,19 +188,22 @@ export class ENMDatenManager extends JavaObject {
 	 * Fügt alle Förderschwerpunkte des Core-Type {@link Foerderschwerpunkt} zu dem
 	 * Förderschwerpunkt-Katalog der ENM-Datei hinzu.
 	 *
+	 * @param schuljahr   das Schuljahr, für welches die ENM-Datei erzeugt wird
 	 * @param schulform   die Schulform, für welche die zulässigen Förderschwerpunkte
 	 *                    zurückgegeben werden
 	 */
-	public addFoerderschwerpunkte(schulform : Schulform) : void {
+	public addFoerderschwerpunkte(schuljahr : number, schulform : Schulform) : void {
 		if (!this.daten.foerderschwerpunkte.isEmpty())
 			return;
-		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.get(schulform);
-		for (let i : number = 0; i < foerderschwerpunkte.size(); i++) {
-			const foerderschwerpunkt : Foerderschwerpunkt | null = foerderschwerpunkte.get(i);
+		const foerderschwerpunkte : List<Foerderschwerpunkt> = Foerderschwerpunkt.getBySchuljahrAndSchulform(schuljahr, schulform);
+		for (const foerderschwerpunkt of foerderschwerpunkte) {
+			const fske : FoerderschwerpunktKatalogEintrag | null = foerderschwerpunkt.daten(schuljahr);
+			if (fske === null)
+				continue;
 			const enmFoerderschwerpunkt : ENMFoerderschwerpunkt | null = new ENMFoerderschwerpunkt();
-			enmFoerderschwerpunkt.id = foerderschwerpunkt.daten.id;
-			enmFoerderschwerpunkt.kuerzel = foerderschwerpunkt.daten.kuerzel;
-			enmFoerderschwerpunkt.beschreibung = foerderschwerpunkt.daten.beschreibung;
+			enmFoerderschwerpunkt.id = fske.id;
+			enmFoerderschwerpunkt.kuerzel = fske.kuerzel;
+			enmFoerderschwerpunkt.beschreibung = fske.text;
 			this.daten.foerderschwerpunkte.add(enmFoerderschwerpunkt);
 		}
 	}
@@ -180,10 +217,12 @@ export class ENMDatenManager extends JavaObject {
 	 * @param vorname       der Vorname des Lehrers
 	 * @param geschlecht        das Geschlecht des Lehrers
 	 * @param eMailDienstlich   die Dienst-Email-Adresse des Lehrers
+	 * @param passwordHash      der Password-Hash des Lehrer-Kennwortes für das Notenmodul
+	 * @param tsPasswordHash    der Zeitstempel, wann der Password-Hash zuletzt geändert wurde
 	 *
 	 * @return true, falls der Lehrer hinzugefügt wurde, ansonsten false
 	 */
-	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null) : boolean {
+	public addLehrer(id : number, kuerzel : string | null, nachname : string | null, vorname : string | null, geschlecht : Geschlecht, eMailDienstlich : string | null, passwordHash : string, tsPasswordHash : string | null) : boolean {
 		if (this.mapLehrer.get(id) !== null)
 			return false;
 		const enmLehrer : ENMLehrer = new ENMLehrer();
@@ -193,6 +232,8 @@ export class ENMDatenManager extends JavaObject {
 		enmLehrer.vorname = vorname;
 		enmLehrer.geschlecht = geschlecht.kuerzel;
 		enmLehrer.eMailDienstlich = eMailDienstlich;
+		enmLehrer.passwordHash = passwordHash;
+		enmLehrer.tsPasswordHash = tsPasswordHash;
 		this.daten.lehrer.add(enmLehrer);
 		this.mapLehrer.put(id, enmLehrer);
 		return true;
@@ -335,8 +376,35 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
+	 * Fügt eine Ankreuzkompetenz zum Katalog hinzu und überprüft dabei, ob sie schon in der Liste vorhanden ist.
+	 *
+	 * @param id                 die eindeutige ID der Ankreuzkompetenz
+	 * @param istFachkompetenz   gibt an, on es sich um eine Fach-bezogene Ankreuzkompetenz handelt oder nicht
+	 * @param fachID             die ID des Faches
+	 * @param jahrgang           der ASD-Jahrgang, dem die Ankreuzkompetenz zugeordnet ist
+	 * @param text               der Text der Ankreuzkompetenz
+	 * @param sortierung         die Reihenfolge der Ankreuzkompetenzen
+	 *
+	 * @return true, falls die Ankreuzkompetenz hinzugefügt wurde, ansonsten false
+	 */
+	public addAnkreuzkompetenz(id : number, istFachkompetenz : boolean, fachID : number | null, jahrgang : string, text : string, sortierung : number) : boolean {
+		if (this.mapAnkreuzkompetenzen.get(id) !== null)
+			return false;
+		const kompetenz : ENMAnkreuzkompetenz = new ENMAnkreuzkompetenz();
+		kompetenz.id = id;
+		kompetenz.istFachkompetenz = istFachkompetenz;
+		kompetenz.fachID = fachID;
+		kompetenz.jahrgang = jahrgang;
+		kompetenz.text = text;
+		kompetenz.sortierung = sortierung;
+		this.daten.ankreuzkompetenzen.kompetenzen.add(kompetenz);
+		this.mapAnkreuzkompetenzen.put(id, kompetenz);
+		return true;
+	}
+
+	/**
 	 * Liefert das ENM-Lehrer-Objekt für die angegebene Lehrer-ID zurück,
-	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String)}
+	 * sofern die Lehrer über die Methode {@link ENMDatenManager#addLehrer(long, String, String, String, Geschlecht, String, String, String)}
 	 * hinzugefügt wurden.
 	 *
 	 * @param id   die ID des Lehrers
@@ -425,6 +493,18 @@ export class ENMDatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert das ENMAnkreuzkompetenz-Objekt für die angegebene Ankreuzkompetenz-ID zurück,
+	 * sofern die Ankreuzkompetenz hinzugefügt wurde.
+	 *
+	 * @param id   die ID der Ankreuzkompetenz
+	 *
+	 * @return das ENMAnkreuzkompetenz-Objekt
+	 */
+	public getAnkreuzkompetenz(id : number) : ENMAnkreuzkompetenz | null {
+		return this.mapAnkreuzkompetenzen.get(id);
+	}
+
+	/**
 	 * Fügt eine neue Lerngruppe mit den angegebenen Parametern hinzu, falls sie noch nicht existiert. Die strID ist dabei
 	 * eine temporäre ID, die nur bei der Erstellung von ENMLerngruppen auf Serverseite genutzt wird.
 	 *
@@ -492,6 +572,27 @@ export class ENMDatenManager extends JavaObject {
 	 */
 	public addSchuelerSprachenfolge(schueler : ENMSchueler, sprache : string | null, fachID : number, fachKuerzel : string | null, reihenfolge : number, belegungVonJahrgang : number, belegungVonAbschnitt : number, belegungBisJahrgang : number | null, belegungBisAbschnitt : number | null, referenzniveau : string | null, belegungSekI : number | null) : void {
 		// empty block
+	}
+
+	/**
+	 * Fügt die Leistungsdaten mit den übergebenen Informationen zu den Leistungsdaten eines Schülers hinzu
+	 *
+	 * @param schueler      der Schüler
+	 * @param id            die ID der Schüler-Ankreuzkompetenz in der SVWS-DB (z.B. 307956)
+	 * @param kompetenzID   die Katalog-ID der Ankreuzkompetenz
+	 * @param stufen        die Information der Zuweisung zu den einzelnen Kompetenzstufen (Ein boolean-Array mit genau 5 Elementen)
+	 * @param tsStufe       der Zeitstempel der letzten Änderung an der Zuweisung der Kompetenzstufen
+	 *
+	 * @return die neue ENM-Leistung
+	 */
+	public addSchuelerAnkreuzkompetenz(schueler : ENMSchueler, id : number, kompetenzID : number | null, stufen : Array<boolean>, tsStufe : string | null) : ENMSchuelerAnkreuzkompetenz {
+		const kompetenz : ENMSchuelerAnkreuzkompetenz = new ENMSchuelerAnkreuzkompetenz();
+		kompetenz.id = id;
+		kompetenz.kompetenzID = kompetenzID;
+		kompetenz.stufen = stufen;
+		kompetenz.tsStufe = tsStufe;
+		schueler.ankreuzkompetenzen.add(kompetenz);
+		return kompetenz;
 	}
 
 	/**
@@ -583,6 +684,8 @@ export class ENMDatenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.enm.ENMDatenManager'].includes(name);
 	}
+
+	public static class = new Class<ENMDatenManager>('de.svws_nrw.core.utils.enm.ENMDatenManager');
 
 }
 

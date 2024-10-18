@@ -4,6 +4,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':svws-asd')
     implementation project(':svws-core')
 
     dto fileTree(dir: "${project.rootProject.projectDir}/svws-base/src/main/resources/schema", includes: ['**/*.csv'])

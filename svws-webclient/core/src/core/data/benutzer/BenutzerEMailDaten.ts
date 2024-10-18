@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class BenutzerEMailDaten extends JavaObject {
 
@@ -44,6 +45,8 @@ export class BenutzerEMailDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerEMailDaten'].includes(name);
 	}
+
+	public static class = new Class<BenutzerEMailDaten>('de.svws_nrw.core.data.benutzer.BenutzerEMailDaten');
 
 	public static transpilerFromJSON(json : string): BenutzerEMailDaten {
 		const obj = JSON.parse(json) as Partial<BenutzerEMailDaten>;

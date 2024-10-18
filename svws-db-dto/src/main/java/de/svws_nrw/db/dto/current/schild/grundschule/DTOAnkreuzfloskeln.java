@@ -123,7 +123,7 @@ public final class DTOAnkreuzfloskeln {
 	@JsonProperty
 	public int IstASV;
 
-	/** Jahrgang zu der die Ankreuzfloskel gehört */
+	/** ASD-Jahrgang zu der die Ankreuzfloskel gehört */
 	@Column(name = "Jahrgang")
 	@JsonProperty
 	public String Jahrgang;

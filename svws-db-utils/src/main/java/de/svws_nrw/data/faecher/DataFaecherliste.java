@@ -8,13 +8,14 @@ import java.util.function.Function;
 
 import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.fach.FachDaten;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
@@ -43,7 +44,7 @@ public final class DataFaecherliste extends DataManager<Long> {
 		final FachDaten daten = new FachDaten();
 		daten.id = f.ID;
 		daten.kuerzel = (f.Kuerzel == null) ? "" : f.Kuerzel;
-		daten.kuerzelStatistik = f.StatistikFach.daten.kuerzelASD;
+		daten.kuerzelStatistik = f.StatistikKuerzel;
 		daten.bezeichnung = (f.Bezeichnung == null) ? "" : f.Bezeichnung;
 		daten.istOberstufenFach = f.IstOberstufenFach;
 		daten.istPruefungsordnungsRelevant = f.IstPruefungsordnungsRelevant;
@@ -109,29 +110,33 @@ public final class DataFaecherliste extends DataManager<Long> {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final Schulform schulform = schule.Schulform;
-		if ((schulform == null) || (schulform.daten == null))
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
+		if (schulform == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
 		// Bestimme die Fächer
 		final @NotNull List<@NotNull DTOFach> faecher = conn.queryAll(DTOFach.class);
 		if ((faecher == null) || (faecher.isEmpty()))
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurden keine Fächer gefunden.");
-		if (!schulform.daten.hatGymOb)
+		if (!schulform.daten(schuljahresabschnitt.Jahr).hatGymOb)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Default-Sortierung für die Sekundarstufe II erfordert eine entsprechende Schulform.");
 		// Lege Datenstrukturen für die Zuordnung zu den einzelnen Statistik-Fächern an und befülle diese
-		final @NotNull Set<@NotNull ZulaessigesFach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
-		final @NotNull ArrayMap<@NotNull ZulaessigesFach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(ZulaessigesFach.values());
+		final @NotNull Set<@NotNull Fach> setGostFaecher = GostFachbereich.getAlleFaecher().keySet();
+		final @NotNull ArrayMap<@NotNull Fach, @NotNull List<@NotNull DTOFach>> map = new ArrayMap<>(Fach.values());
 		final @NotNull List<@NotNull DTOFach> nichtZugeordnet = new ArrayList<>();
 		for (final @NotNull DTOFach fach : faecher) {
-			if (setGostFaecher.contains(fach.StatistikFach))
-				map.computeIfAbsent(fach.StatistikFach, k -> new ArrayList<>()).add(fach);
+			final Fach tmpFach = Fach.data().getWertBySchluessel(fach.StatistikKuerzel);
+			if (setGostFaecher.contains(tmpFach))
+				map.computeIfAbsent(tmpFach, k -> new ArrayList<>()).add(fach);
 			else
 				nichtZugeordnet.add(fach);
 		}
 		// Bestimme die Fächer der Oberstufe in Standard-Sortierung
-		final @NotNull List<@NotNull ZulaessigesFach> gostFaecher = GostFachbereich.getAlleFaecherSortiert();
+		final @NotNull List<@NotNull Fach> gostFaecher = GostFachbereich.getAlleFaecherSortiert();
 		final @NotNull List<@NotNull DTOFach> faecherSortiert = new ArrayList<>();
-		for (final @NotNull ZulaessigesFach gostFach : gostFaecher) {
+		for (final @NotNull Fach gostFach : gostFaecher) {
 			final List<@NotNull DTOFach> tmpFach = map.get(gostFach);
 			if (tmpFach == null)
 				continue;

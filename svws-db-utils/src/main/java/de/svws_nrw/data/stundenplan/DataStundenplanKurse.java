@@ -4,14 +4,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.core.adt.map.HashMap2D;
+import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.kurse.DataKursdaten;
+import de.svws_nrw.data.kurse.DataKursliste;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.faecher.DTOFach;
-import de.svws_nrw.db.dto.current.schild.kurse.DTOKurs;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursLehrer;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
@@ -42,23 +44,31 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOKurs} in einen Core-DTO {@link StundenplanKurs}.
-	 */
-	private static final BiFunction<DTOKurs, DTOFach, StundenplanKurs> dtoMapper = (final DTOKurs k, final DTOFach f) -> {
+	private static StundenplanKurs map(final KursDaten k, final DTOFach f, final @NotNull HashMap2D<Integer, Long, DTOStundenplanSchienen> mapSchienen) {
 		final StundenplanKurs daten = new StundenplanKurs();
-		daten.id = k.ID;
-		daten.idFach = k.Fach_ID;
-		daten.bezeichnung = k.KurzBez;
-		daten.wochenstunden = k.WochenStd;
-		if (k.Sortierung != null)
-			daten.sortierung = k.Sortierung;
+		daten.id = k.id;
+		daten.idFach = k.idFach;
+		daten.bezeichnung = k.kuerzel;
+		daten.wochenstunden = k.wochenstunden;
+		if (k.sortierung != 32000)
+			daten.sortierung = k.sortierung;
 		else if (f.SortierungAllg != null)
 			daten.sortierung = f.SortierungAllg;
 		else
 			daten.sortierung = (f.SortierungSekII == null) ? 32000 : f.SortierungSekII;
+		daten.jahrgaenge.addAll(k.idJahrgaenge);
+		// Bestimme aus den Schienennummern der Kurs-Tabelle die IDs der Stundenplan-Kurse
+		if (!k.schienen.isEmpty()) {
+			for (final int schienenNummer : k.schienen) {
+				for (final Long jgID : daten.jahrgaenge) {
+					final DTOStundenplanSchienen schienen = mapSchienen.getOrNull(schienenNummer, jgID);
+					if (schienen != null)
+						daten.schienen.add(schienen.ID);
+				}
+			}
+		}
 		return daten;
-	};
+	}
 
 
 	@Override
@@ -80,10 +90,10 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
-		final List<DTOKurs> kurse = conn.queryList(DTOKurs.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOKurs.class, stundenplan.Schuljahresabschnitts_ID);
+		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
 		if (kurse.isEmpty())
 			return new ArrayList<>();
-		final List<Long> kursIDs = kurse.stream().map(k -> k.ID).toList();
+		final List<Long> kursIDs = kurse.stream().map(k -> k.id).toList();
 		// Schüler bestimmen
 		final Map<Long, List<Long>> mapKursSchuelerIDs = conn.queryList(
 				"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID IN ?1 AND e.LernabschnittWechselNr = 0", DTOKursSchueler.class, kursIDs)
@@ -92,43 +102,26 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 		final Map<Long, List<Long>> mapKursZusatzkraefte = conn.queryList(DTOKursLehrer.QUERY_LIST_BY_KURS_ID, DTOKursLehrer.class, kursIDs)
 				.stream().collect(Collectors.groupingBy(ks -> ks.Kurs_ID, Collectors.mapping(ks -> ks.Lehrer_ID, Collectors.toList())));
 		// Fächer bestimmen
-		final List<Long> faecherIDs = kurse.stream().map(k -> k.Fach_ID).toList();
+		final List<Long> faecherIDs = kurse.stream().map(k -> k.idFach).toList();
 		final Map<Long, DTOFach> mapFaecher = conn.queryByKeyList(DTOFach.class, faecherIDs).stream().collect(Collectors.toMap(f -> f.ID, f -> f));
 		// Map für Schienen-IDs bestimmen
-		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID,
-				DTOStundenplanSchienen.class, idStundenplan).stream()
-				.collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
+		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.ID, kurse);
+		conn.transactionFlush();
+		final @NotNull HashMap2D<Integer, Long, DTOStundenplanSchienen> mapSchienen = DataStundenplanSchienen.getMapDTOs(conn, stundenplan.ID);
 		// Erstelle die Core-DTOs
 		final ArrayList<StundenplanKurs> daten = new ArrayList<>();
-		for (final DTOKurs k : kurse) {
-			final DTOFach f = mapFaecher.get(k.Fach_ID);
+		for (final KursDaten k : kurse) {
+			final DTOFach f = mapFaecher.get(k.idFach);
 			if (f == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
-						"Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(k.Fach_ID, k.ID));
-			final StundenplanKurs kurs = dtoMapper.apply(k, f);
-			if (k.Jahrgang_ID == null) {
-				kurs.jahrgaenge.addAll(strLongToList(k.Jahrgaenge));
-			} else {
-				kurs.jahrgaenge.add(k.Jahrgang_ID);
-			}
-			if (k.Schienen != null) {
-				for (final Long schienenNummer : strLongToList(k.Schienen)) {
-					final Map<Long, Long> mapJahrgangID = mapNummerJahrgangID.get(schienenNummer.intValue());
-					if ((mapJahrgangID != null) && (!mapJahrgangID.isEmpty())) {
-						for (final Long jgID : kurs.jahrgaenge) {
-							final Long schienenID = mapJahrgangID.get(jgID);
-							if (schienenID != null)
-								kurs.schienen.add(schienenID);
-						}
-					}
-				}
-			}
-			final List<Long> schuelerIDs = mapKursSchuelerIDs.get(k.ID);
+						"Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(k.idFach, k.id));
+			final StundenplanKurs kurs = map(k, f, mapSchienen);
+			final List<Long> schuelerIDs = mapKursSchuelerIDs.get(k.id);
 			if (schuelerIDs != null)
 				kurs.schueler.addAll(schuelerIDs);
-			if (k.Lehrer_ID != null)
-				kurs.lehrer.add(k.Lehrer_ID);
-			final List<Long> zusatzkraefteIDs = mapKursZusatzkraefte.get(k.ID);
+			if (k.lehrer != null)
+				kurs.lehrer.add(k.lehrer);
+			final List<Long> zusatzkraefteIDs = mapKursZusatzkraefte.get(k.id);
 			if (zusatzkraefteIDs != null)
 				kurs.lehrer.addAll(zusatzkraefteIDs);
 			daten.add(kurs);
@@ -144,22 +137,6 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 	}
 
 
-	private static List<Long> strLongToList(final String str) {
-		final List<Long> result = new ArrayList<>();
-		if (str == null)
-			return result;
-		final String[] parts = str.split(",");
-		for (final String part : parts) {
-			try {
-				result.add(Long.parseLong(part.trim()));
-			} catch (@SuppressWarnings("unused") final NumberFormatException e) {
-				// der Fehler wird hier ignoriert und keine ID übernommen
-			}
-		}
-		return result;
-	}
-
-
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
 		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, stundenplanID);
@@ -167,48 +144,32 @@ public final class DataStundenplanKurse extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(stundenplanID));
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Kurs mit der ID null ist unzulässig.");
-		final DTOKurs kurs = conn.queryByKey(DTOKurs.class, id);
+		final List<KursDaten> kurse = DataKursliste.getKursListenFuerAbschnitt(conn, stundenplan.Schuljahresabschnitts_ID, false);
+		if (kurse.isEmpty())
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Es wurden keine Kurse in dem Schuljahresabschnitt mit der ID %d gefunden.".formatted(stundenplan.Schuljahresabschnitts_ID));
+		final KursDaten kurs = DataKursdaten.getKursdaten(conn, id);
 		if (kurs == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Kurs mit der ID %d gefunden.".formatted(id));
-		if (kurs.Schuljahresabschnitts_ID != stundenplan.Schuljahresabschnitts_ID)
+		if (kurs.idSchuljahresabschnitt != stundenplan.Schuljahresabschnitts_ID)
 			throw new ApiOperationException(Status.BAD_REQUEST,
 					"Der Schuljahresabschnitt %d des Kurses mit der ID %d stimmt nicht mit dem Schuljahresabschitt %d bei dem Stundenplan mit der ID %d überein."
-							.formatted(kurs.Schuljahresabschnitts_ID, kurs.ID, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
-		// Jahrgänge bestimmen
-		final List<Long> jahrgangsIDs = new ArrayList<>();
-		if (kurs.Jahrgang_ID == null) {
-			jahrgangsIDs.addAll(strLongToList(kurs.Jahrgaenge));
-		} else {
-			jahrgangsIDs.add(kurs.Jahrgang_ID);
-		}
-		// Schienen-IDs bestimmen
-		final Map<Integer, Map<Long, Long>> mapNummerJahrgangID = conn.queryList(DTOStundenplanSchienen.QUERY_BY_STUNDENPLAN_ID,
-				DTOStundenplanSchienen.class, stundenplan.ID).stream()
-				.collect(Collectors.groupingBy(s -> s.Nummer, Collectors.toMap(s -> s.Jahrgang_ID, s -> s.ID)));
+							.formatted(kurs.idSchuljahresabschnitt, kurs.id, stundenplan.Schuljahresabschnitts_ID, stundenplan.ID));
+		// Map für Schienen-IDs bestimmen
+		DataStundenplanSchienen.updateSchienenFromKursliste(conn, stundenplan.ID, kurse);
+		conn.transactionFlush();
+		final @NotNull HashMap2D<Integer, Long, DTOStundenplanSchienen> mapSchienen = DataStundenplanSchienen.getMapDTOs(conn, stundenplan.ID);
 		// Schüler bestimmen
 		final List<Long> schuelerIDs = conn.queryList(
-				"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kurs.ID)
+				"SELECT e FROM DTOKursSchueler e WHERE e.Kurs_ID = :value AND e.LernabschnittWechselNr IS NULL", DTOKursSchueler.class, kurs.id)
 				.stream().map(ks -> ks.Schueler_ID).toList();
 		// Fachdefinition laden
-		final DTOFach fach = conn.queryByKey(DTOFach.class, kurs.Fach_ID);
+		final DTOFach fach = conn.queryByKey(DTOFach.class, kurs.idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND,
-					"Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(kurs.Fach_ID, kurs.ID));
+					"Es wurde kein Fach mit der ID %d für den Kurs mit der ID %d gefunden.".formatted(kurs.idFach, kurs.id));
 		// DTO erstellen
-		final StundenplanKurs daten = dtoMapper.apply(kurs, fach);
-		daten.jahrgaenge.addAll(jahrgangsIDs);
-		if (kurs.Schienen != null) {
-			for (final Long schienenNummer : strLongToList(kurs.Schienen)) {
-				final Map<Long, Long> mapJahrgangID = mapNummerJahrgangID.get(schienenNummer.intValue());
-				if ((mapJahrgangID != null) && (!mapJahrgangID.isEmpty())) {
-					for (final Long jgID : jahrgangsIDs) {
-						final Long schienenID = mapJahrgangID.get(jgID);
-						if (schienenID != null)
-							daten.schienen.add(schienenID);
-					}
-				}
-			}
-		}
+		final StundenplanKurs daten = map(kurs, fach, mapSchienen);
 		daten.schueler.addAll(schuelerIDs);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}

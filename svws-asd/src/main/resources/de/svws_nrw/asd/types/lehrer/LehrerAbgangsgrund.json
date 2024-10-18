@@ -1,0 +1,81 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "RUHEST",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "11",
+			"kuerzel": "RUHEST",
+			"text": "Eintritt in den Ruhestand",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "UNFAEHIGK",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "12",
+			"kuerzel": "UNFÄHIGK",
+			"text": "Dienst-, Erwerbs-, Berufsunfähigkeit",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TOD",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "13",
+			"kuerzel": "TOD",
+			"text": "Tod",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "AndBuLand",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "14",
+			"kuerzel": "AndBuLand",
+			"text": "Übertritt in den Schuldienst eines anderen Bundeslandes",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WECHSEL",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "15",
+			"kuerzel": "WECHSEL",
+			"text": "Wechsel innerhalb des Landes von der berichtenden Schule an eine andere Schule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BEFRIST",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"schluessel": "16",
+			"kuerzel": "BEFRIST",
+			"text": "Befristete Abgänge",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SONSTIG",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7,
+			"schluessel": "17",
+			"kuerzel": "SONSTIG",
+			"text": "Sonstige Abgänge",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

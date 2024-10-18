@@ -9,6 +9,7 @@ include 'deployment:windows-installer'
 
 include 'svws-transpile'
 include 'svws-schulen'
+include 'svws-asd'
 include 'svws-core'
 include 'svws-db'
 include 'svws-db-dto'

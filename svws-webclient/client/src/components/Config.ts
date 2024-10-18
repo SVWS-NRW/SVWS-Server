@@ -103,6 +103,19 @@ export class Config {
 
 
 	/**
+	 * Gibt zurück, ob das Konfigurationselement mit dem angegebenen Schlüssel bereits
+	 * existiert oder nicht.
+	 *
+	 * @param key   der Schlüssel des Konfigurationselements
+	 *
+	 * @returns true, falls existent, und ansonsten false
+	 */
+	public hasElement(key: string): boolean {
+		return this._mapElements.has(key);
+	}
+
+
+	/**
 	 * Fügt ein neues Konfigurationselement zu der Konfiguration hinzu.
 	 *
 	 * @param elem   das hinzuzufügende Konfigurationselement
@@ -172,7 +185,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value);
 			this._mapGlobal.set(key, value);
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value);
 			this._mapUser.set(key, value);
 		}
@@ -214,7 +227,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value.toString());
 			this._mapUser.set(key, value.toString());
 		}
@@ -256,7 +269,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, value.toString());
 			this._mapGlobal.set(key, value.toString());
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, value.toString());
 			this._mapUser.set(key, value.toString());
 		}
@@ -307,7 +320,7 @@ export class Config {
 		if (elem.type === 'global') {
 			await this._setGlobal(key, strValue);
 			this._mapGlobal.set(key, strValue);
-		} else if (elem.type === 'user') {
+		} else {
 			await this._setUser(key, strValue);
 			this._mapUser.set(key, strValue);
 		}

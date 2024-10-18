@@ -7,7 +7,7 @@ import { api } from "~/router/Api";
 import { routeApp } from "~/router/apps/RouteApp";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
-import { ServerMode } from "@core";
+import { ServerMode } from "../../../core/src/core/types/ServerMode";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -306,7 +306,7 @@ export class RouteManager {
 
 // Initialisiere den Router
 export const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL ?? "/"),
+	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [ ]
 });
 

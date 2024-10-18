@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class KalenderEintrag extends JavaObject {
 
@@ -69,6 +70,8 @@ export class KalenderEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kalender.KalenderEintrag'].includes(name);
 	}
+
+	public static class = new Class<KalenderEintrag>('de.svws_nrw.core.data.kalender.KalenderEintrag');
 
 	public static transpilerFromJSON(json : string): KalenderEintrag {
 		const obj = JSON.parse(json) as Partial<KalenderEintrag>;

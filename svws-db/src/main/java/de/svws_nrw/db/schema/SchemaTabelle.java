@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.DBDriver;
 
 /**
@@ -698,6 +698,27 @@ public class SchemaTabelle {
 	 */
 	public boolean istPrimaerschlusselAttribut(final SchemaTabelleSpalte col) {
 		return this._pkSpalten.contains(col);
+	}
+
+
+	/**
+	 * Erstellt den Code für eine parametrisierte JPQL-Query
+	 *
+	 * @param rev   die DB-Revision, für welche die Query erstellt wird
+	 *
+	 * @return die JPQL
+	 */
+	public String getJPQLParameterizedQuery(final long rev) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT e FROM ").append(getJavaKlasse(rev)).append(" e WHERE ");
+		final var iter = pkSpalten().iterator();
+		for (int i = 0; i < pkSpalten().size(); i++) {
+			final SchemaTabelleSpalte col = iter.next();
+			if (i > 0)
+				sb.append(" AND ");
+			sb.append("e.").append(col.javaAttributName()).append(" = ?").append(i + 1);
+		}
+		return sb.toString();
 	}
 
 

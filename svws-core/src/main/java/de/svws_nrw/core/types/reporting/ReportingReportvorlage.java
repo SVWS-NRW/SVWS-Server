@@ -21,6 +21,9 @@ public enum ReportingReportvorlage {
 	/** Report-Vorlage: GOSt - Klausurplanung - Klausurtermine-Kurse */
 	GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN("GostKlausurplanung-KlausurtermineMitKursen"),
 
+	/** Report-Vorlage: GOSt - Klausurplanung - Schueler-Klausuren */
+	GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN("GostKlausurplanung-SchuelerMitKlausuren"),
+
 	/** Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler */
 	GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN("GostKursplanung-KursMitKursschuelern"),
 
@@ -40,7 +43,10 @@ public enum ReportingReportvorlage {
 	SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT("Schueler-GostLaufbahnplanungErgebnisuebersicht"),
 
 	/** Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen */
-	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen");
+	SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN("Schueler-GostLaufbahnplanungWahlbogen"),
+
+	/** Report-Vorlage: Schüler - Stammdaten - Liste */
+	SCHUELER_v_STAMMDATEN_LISTE("Schueler-Stammdatenliste");
 
 
 

@@ -1,6 +1,6 @@
 {
 	"index": 93,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Assistent/-in für Ernährung und Versorgung - Service",
 				"bezeichnungM": "Assistent für Ernährung und Versorgung - Service",
 				"bezeichnungW": "Assistentin für Ernährung und Versorgung - Service",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -33,7 +33,7 @@
 				"bezeichnung": "Kinderpfleger/-in",
 				"bezeichnungM": "Kinderpfleger",
 				"bezeichnungW": "Kinderpflegerin",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -67,7 +67,7 @@
 				"bezeichnung": "Sozialassistent/-in",
 				"bezeichnungM": "Sozialassistent",
 				"bezeichnungW": "Sozialassistentin",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -84,7 +84,7 @@
 				"bezeichnung": "Sozialassistent/-in - Heilerziehung",
 				"bezeichnungM": "Sozialassistent - Heilerziehung",
 				"bezeichnungW": "Sozialassistentin - Heilerziehung",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -98,9 +98,9 @@
 				"ebene1": "GE",
 				"ebene2": "SA",
 				"ebene3": null,
-				"bezeichnung": "Sozialassistent/-in (praxisintegriert)",
-				"bezeichnungM": "Sozialassistent (praxisintegriert)",
-				"bezeichnungW": "Sozialassistentin (praxisintegriert)",
+				"bezeichnung": "Sozialassistent/-in - (praxisintegriert)",
+				"bezeichnungM": "Sozialassistent - (praxisintegriert)",
+				"bezeichnungW": "Sozialassistentin - (praxisintegriert)",
 				"gueltigVon": 2022,
 				"gueltigBis": null
 			} ]
@@ -122,6 +122,108 @@
 				"gueltigBis": null
 			} ]
 		}, {
+			"schluessel": "103",
+			"schluessel2": "04",
+			"historie": [ {
+				"id": 2120000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - (Pflege)",
+				"bezeichnungM": "Sozialassistent - (Pflege)",
+				"bezeichnungW": "Sozialassistentin - (Pflege)",
+				"gueltigVon": 2023,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "05",
+			"historie": [ {
+				"id": 2121000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - (Pflege - praxisintegriert)",
+				"bezeichnungM": "Sozialassistent - (Pflege - praxisintegriert)",
+				"bezeichnungW": "Sozialassistentin - (Pflege - praxisintegriert)",
+				"gueltigVon": 2023,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "06",
+			"historie": [ {
+				"id": 2122000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - Heilerziehung (Pflege)",
+				"bezeichnungM": "Sozialassistent - Heilerziehung (Pflege)",
+				"bezeichnungW": "Sozialassistentin - Heilerziehung (Pflege)",
+				"gueltigVon": 2023,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "07",
+			"historie": [ {
+				"id": 2123000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - Heilerziehung (Pflege - praxisintegriert)",
+				"bezeichnungM": "Sozialassistent - Heilerziehung (Pflege - praxisintegriert)",
+				"bezeichnungW": "Sozialassistentin - Heilerziehung (Pflege - praxisintegriert)",
+				"gueltigVon": 2023,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "08",
+			"historie": [ {
+				"id": 2124000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - (Grundschule)",
+				"bezeichnungM": "Sozialassistent - (Grundschule)",
+				"bezeichnungW": "Sozialassistentin - (Grundschule)",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
+			"schluessel": "103",
+			"schluessel2": "09",
+			"historie": [ {
+				"id": 2125000,
+				"istAusgelaufen": false,
+				"berufsfeldGruppe": null,
+				"berufsfeld": null,
+				"ebene1": "GE",
+				"ebene2": null,
+				"ebene3": null,
+				"bezeichnung": "Sozialassistent/-in - (Grundschule - praxisintegriert)",
+				"bezeichnungM": "Sozialassistent - (Grundschule - praxisintegriert)",
+				"bezeichnungW": "Sozialassistentin - (Grundschule - praxisintegriert)",
+				"gueltigVon": 2024,
+				"gueltigBis": null
+			} ]
+		}, {
 			"schluessel": "999",
 			"schluessel2": "00",
 			"historie": [ {
@@ -135,7 +237,7 @@
 				"bezeichnung": "Sonstiger Bildungsgang",
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": 2022,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}

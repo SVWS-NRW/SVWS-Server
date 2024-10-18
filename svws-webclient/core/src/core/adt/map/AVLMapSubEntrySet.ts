@@ -3,6 +3,7 @@ import type { JavaSet } from '../../../java/util/JavaSet';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
@@ -55,7 +56,7 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 		if ((__param0 === undefined)) {
 			return this._sub.bcGetArrayListOfEntries().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T | null> = __param0;
+			const a : Array<T | null> = __param0 as unknown as Array<T>;
 			return this._sub.bcGetArrayListOfEntries().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -95,6 +96,8 @@ export class AVLMapSubEntrySet<K, V> extends JavaObject implements JavaSet<JavaM
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubEntrySet', 'java.util.Collection', 'java.util.Set', 'java.lang.Iterable'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubEntrySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySet');
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
 		const iter : JavaIterator<JavaMapEntry<any, any>> = this.iterator();

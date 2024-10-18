@@ -14,6 +14,7 @@ import { Random } from '../../../../java/util/Random';
 import { KlausurterminblockungAlgorithmen } from '../../../../core/types/gost/klausurplanung/KlausurterminblockungAlgorithmen';
 import { ArrayUtils } from '../../../../core/utils/ArrayUtils';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostKursklausurRich } from '../../../../core/data/gost/klausurplanung/GostKursklausurRich';
 import { ListUtils } from '../../../../core/utils/ListUtils';
 import { Arrays } from '../../../../java/util/Arrays';
@@ -659,6 +660,8 @@ export class KlausurterminblockungDynDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungDynDaten'].includes(name);
 	}
+
+	public static class = new Class<KlausurterminblockungDynDaten>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurterminblockungDynDaten');
 
 }
 

@@ -1,14 +1,14 @@
 package de.svws_nrw.core.abschluss;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
 
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
 import de.svws_nrw.core.data.abschluss.AbschlussErgebnis;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFach;
 import de.svws_nrw.core.data.abschluss.GEAbschlussFaecher;
 import de.svws_nrw.core.types.ge.GELeistungsdifferenzierteKursart;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -112,8 +112,9 @@ public final class AbschlussManager {
 	 * @return true, falls sie identisch sind und ansonsten false
 	 */
 	public static boolean equalsAbschluesse(final String a, final String b) {
-		if ((a == null) || (SchulabschlussAllgemeinbildend.OA.is(a)))
-			return (b == null) || (SchulabschlussAllgemeinbildend.OA.is(b));
+		final SchulabschlussAllgemeinbildend oa = SchulabschlussAllgemeinbildend.OA;
+		if ((a == null) || (oa.is(a)))
+			return (b == null) || (oa.is(b));
 		return a.equals(b);
 	}
 

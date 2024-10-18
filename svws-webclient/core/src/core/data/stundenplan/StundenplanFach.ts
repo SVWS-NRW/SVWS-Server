@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { RGBFarbe } from '../../../core/data/RGBFarbe';
+import { Class } from '../../../java/lang/Class';
+import { RGBFarbe } from '../../../asd/data/RGBFarbe';
 
 export class StundenplanFach extends JavaObject {
 
@@ -45,6 +46,8 @@ export class StundenplanFach extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanFach'].includes(name);
 	}
+
+	public static class = new Class<StundenplanFach>('de.svws_nrw.core.data.stundenplan.StundenplanFach');
 
 	public static transpilerFromJSON(json : string): StundenplanFach {
 		const obj = JSON.parse(json) as Partial<StundenplanFach>;

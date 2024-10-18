@@ -1,19 +1,23 @@
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostSchuelerklausurterminraumstunde extends JavaObject {
 
 	/**
-	 * Die ID der Schülerklausur.
+	 * Die ID des zugehörigen {@link GostSchuelerklausurTermin}s.
 	 */
 	public idSchuelerklausurtermin : number = -1;
 
 	/**
-	 * Die ID der Klausurraumstunde.
+	 * Die ID der zugehörigen {@link GostKlausurraumstunde}.
 	 */
 	public idRaumstunde : number = -1;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -44,6 +48,8 @@ export class GostSchuelerklausurterminraumstunde extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde'].includes(name);
 	}
+
+	public static class = new Class<GostSchuelerklausurterminraumstunde>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausurterminraumstunde');
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausurterminraumstunde {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausurterminraumstunde>;

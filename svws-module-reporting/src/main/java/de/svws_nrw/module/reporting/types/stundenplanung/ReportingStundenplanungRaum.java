@@ -2,10 +2,7 @@ package de.svws_nrw.module.reporting.types.stundenplanung;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum.</p>
- * <p>Sie enthält die Grunddaten eines Raumes, wie er im Stundenplan definiert wurde.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Raum.
  */
 public class ReportingStundenplanungRaum {
 

@@ -1,0 +1,37 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "E1",
+		"idHistorie": 1,
+		"historie": [ {
+			"id" : 1000,
+			"schluessel": "1", 
+			"kuerzel": "E1", 
+			"text": "Schuleingangsphase, 1. Schulbesuchsjahr", 
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "E2",
+		"idHistorie": 2,
+		"historie": [ {
+			"id" : 2000,
+			"schluessel": "2",
+			"kuerzel": "E2",
+			"text": "Schuleingangsphase, 2. Schulbesuchsjahr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E3",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "3",
+			"kuerzel": "E3",
+			"text": "Schuleingangsphase, 3. Schulbesuchsjahr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

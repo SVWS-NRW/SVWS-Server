@@ -15,21 +15,18 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	def project
 
 	/**
-	 * Fügt die Methode zum setzen der IntelliJ Formatter Optionen hinzu. Diese Methode wird auf alle Projekte/Module angewandt
+	 * Fügt die Methode zum setzen der IntelliJ Formatter Optionen hinzu. Diese Methode wird auf alle Projekte/Module angewandt.
 	 */
 	void addSetIntellijFormatterMethod() {
 		project.ext.setIntellijFormatter = { File projectXml, File configXml ->
-			// Erstellt oder überschreibt die Einstellungen für den Eclipse Formatter Adapter
 			overrideFile((File) project.file('.idea/eclipseCodeFormatter.xml'), (File) project.getRootProject().file('config/intellij/IntelliJ_Eclipse_Formatter_Adapter_config.xml'))
-			// Erstellt oder überschreibt die Code Styles config
 			overrideFile((File) project.file('.idea/codeStyles/codeStyleConfig.xml'), (File) project.getRootProject().file('config/intellij/IntelliJ_CodeStyle_config.xml'))
 
 			if (!projectXml.exists()) {
 				createFile(projectXml)
 			}
 
-			// Erstellt den parent "component" für die Konfiguration
-			Node codeStyleXml = new Node(null, 'codeStyleXml', [name: 'ProjectCodeStyleConfiguration'])
+			Node codeStyleXml = new Node(null, 'component', [name: 'ProjectCodeStyleConfiguration'])
 			Node configParsed = new XmlParser().parse(configXml)
 
 			codeStyleXml.append(configParsed)
@@ -45,24 +42,17 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 		project.ext.setIntellijInspections = { File projectXml, File configXml ->
 			createInspectionProfilesConfig()
 
-			// Wenn keine projectXml existiert, wird diese erstellt und der Inhalt von configXml übertragen
 			if (!projectXml.exists()) {
 				overrideFile(projectXml, configXml)
 				return
 			}
 
-			// Parsen der configXml für den Zugriff auf die XML Elemente
 			def (configInspections) = getParsedInspections(configXml)
-
-			// Hat configXml keine Inspection Konfigurationen, kann der Vorgang abgebrochen werden
 			if (configInspections.isEmpty()) {
 				return
 			}
 
-			// Parsen der projectXml für den Zugriff auf die XML Elemente
 			def (List<Object> projectInspections, Node projectParsed) = getParsedInspections(projectXml)
-
-			// Hat projectXml keine Inspection Konfigurationen, kann alles aus configXml übernommen werden
 			if (projectInspections.isEmpty()) {
 				overrideFile(projectXml, configXml)
 				return
@@ -89,10 +79,10 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	}
 
 	/**
-	 * Fügt eine Inspection Konfiguration in die Projekt konfiguration hinzu. Dabei wird die alphabetische Reihenfolge des class Attributs berücksichtigt
+	 * Fügt eine Inspection Konfiguration in die Projekt Konfiguration hinzu. Dabei wird die alphabetische Reihenfolge des class Attributs berücksichtigt.
 	 *
 	 * @param projectParsed Das parsed XML in welches die Konfiguration configInspection gemerged werden soll
-	 * @param configInspection Die Konfiguration, die in content übertragen werden soll
+	 * @param configInspection Die Konfiguration, die in projectParsed übertragen werden soll
 	 */
 	private static void addInspectionToProject(Node projectParsed, configInspection) {
 		// Ermittle den richtigen Index basierend auf der alphabetischen Reihenfolge der Konfigurationen (abhängig von 'class')
@@ -100,7 +90,6 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			projectInspection.'@class' > configInspection.'@class'
 		}
 
-		// Füge die Konfiguration hinzu
 		if (insertIndex == -1) {
 			projectParsed.profile.first().append(configInspection)
 		} else {
@@ -141,16 +130,12 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	 * @param source Inhalt, der in target geschrieben werden soll
 	 */
 	private void overrideFile(File target, File source) {
-		// Wenn die Quelldatei nicht existiert, kann der Vorgang abgebrochen werden
 		if (!source.exists()) {
 			return
 		}
-
 		if (!target.exists()) {
 			createFile(target)
 		}
-
-		// Inhalt der Zieldatei überschreiben
 		target.text = source.text
 	}
 
@@ -161,14 +146,12 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 	private void createInspectionProfilesConfig() {
 		// Die Quelldatei mit den vorgegebenen Severities
 		File configFile = project.getRootProject().file('config/intellij/IntelliJ_Inspections_config.xml')
-		// Wenn keine Source File existiert, wird der Vorgang abgebrochen
 		if (!configFile.exists()) {
 			return
 		}
 
 		// Die Zieldatei innerhalb des Projekts, in die die Cleanup Severity der projectFile germerged werden soll
 		File projectFile = project.file('.idea/inspectionProfiles/profiles_settings.xml')
-		// Wenn im Projekt keine Konfiguration existiert, kann diese einfach kopiert werden
 		if (!projectFile.exists()) {
 			overrideFile(projectFile, configFile)
 			return
@@ -190,13 +173,10 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			updateNecessary = true
 		}
 
-
+		// Suche, ob eine Farbdefinition mit Namen "Cleanup" bereits existiert
 		def projectColor = projectParsed.settings.info.option.find { it.@name == 'myName' && it.@value == 'Cleanup' }
 
-		// Falls im Projekt bereits eine Severity mit Namen "Cleanup" definiert ist, bleibt diese unberührt
 		if (!projectColor) {
-
-			// Sollte in der configFile keine Cleanup-Severity definiert sein, wird der Vorgang abgebrochen
 			def configColor = new XmlParser().parse(configFile).settings.info.option.find { it.@name == 'myName' && it.@value == 'Cleanup' }
 			if (configColor == null) {
 				return
@@ -212,22 +192,18 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 
 			// Hinzufügen der Cleanup Severity zur Liste der Errors und Warnings (am Ende der Liste)
 			def list = projectParsed.settings.list.first()
-			// Der neue Index ist die aktuelle Größe der Liste
 			String newIndex = list.item.size()
 			Node newItem = new XmlParser().parseText('<item index="' + newIndex + '" class="java.lang.String" itemvalue="Cleanup" />')
 			list.append(newItem)
 
-			// Aktualisieren der "size" des list Elements
 			list.@size = (newIndex + 1).toString()
 			updateNecessary = true
 		}
 
 
 		if (updateNecessary) {
-			// Schreibt das modifizierte XML in die projectFile
 			printXml(projectFile, projectParsed)
 		}
-
 	}
 
 	/**
@@ -250,7 +226,6 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			def matchingProjectInspection = projectInspections.find { projectInspection ->
 				projectInspection.'@class' == configInspection.'@class'
 			}
-			// Die Konfiguration ist nicht in projectInspections enthalten und muss an der richtigen Stelle eingefügt werden
 			if (!matchingProjectInspection) {
 				addInspectionToProject(projectParsed, configInspection)
 				return
@@ -293,21 +268,22 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 		project.ext.setIntellijInspections(project.file('.idea/inspectionProfiles/SVWS_Server_Inspections.xml'), project.getRootProject().file('config/intellij/IntelliJ_Inspections.xml'))
 	}
 
+	/**
+	 * Fügt dem Gradle-Projekt die Aufgaben 'initIntelliJ' und 'cleanIntelliJ' hinzu.
+	 *
+	 * @param project das Gradle-Projekt, auf das dieses Plugin angewendet wird.
+	 */
 	void apply(Project project) {
 		this.project = project
 
 		def initIntelliJ = project.task('initIntelliJ') {
-			group "ide"
+			group = "ide"
 			description = 'Konfiguriert die Code Styles und die Inspections in IntelliJ'
-			// ID des Plugins
+			// Definition der Plugin ID
 			project.pluginManager.apply "svws.gradle.svwsintellij.plugin"
 
-			// Füge Methode zum Überschreiben der Formatter Optionen hinzu
 			this.addSetIntellijFormatterMethod()
-			// Füge Methode zum Merge der Inspections Optionen hinzu
 			this.addSetIntellijInspectionsMethod()
-
-			// Starte die Konfiguration der IntelliJ IDE
 			this.configureIntellij()
 
 		}
@@ -318,7 +294,7 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 		}
 
 		def cleanIntelliJ = project.task('cleanIntelliJ') {
-			group "ide"
+			group = "ide"
 			description = 'Löscht Code Style und Inspections Profile in allen Projekten. ' +
 					'Eigene Inspection Profile werden dabei ignoriert.'
 
@@ -331,14 +307,12 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 				 * Eigene Konfigurationen des Entwicklers bleiben erhalten
 				 */
 				if (project == project.rootProject) {
-					// Code Styles werden dennoch komplett gelöscht
 					if (codeStylesFolder.exists()) {
 						println "Lösche Ordner: ${codeStylesFolder.absolutePath}"
 						codeStylesFolder.deleteDir()
 					}
-					if (!inspectionsFolder.exists()) {
-						return
-					}
+					if (!inspectionsFolder.exists()) return
+
 					// In der profiles_settings.xml wird nur das Project_Profile angepasst
 					File inspectionsProfileSettings = project.file('.idea/inspectionProfiles/profiles_settings.xml')
 					if (inspectionsProfileSettings.exists()) {
@@ -352,7 +326,6 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 					}
 				} else {
 					// In den Subprojects werden alle Code Styles und Inspectionprofile gelöscht
-					// Liste der zu löschenden Ordner (relativ zu jedem Projektverzeichnis)
 					def foldersToDelete = [codeStylesFolder, inspectionsFolder]
 
 					foldersToDelete.each { folderName ->
@@ -379,7 +352,6 @@ class SvwsIntelliJPlugin implements Plugin<Project> {
 			node.name() == 'option' && node.@name == 'PROJECT_PROFILE' && node.@value == 'SVWS-Server-Inspections'
 		}
 		if (nodeToRemove) {
-			// Entferne den Node
 			nodeToRemove.parent().remove(nodeToRemove)
 			printXml(inspectionsProfileSettings, xml)
 		}

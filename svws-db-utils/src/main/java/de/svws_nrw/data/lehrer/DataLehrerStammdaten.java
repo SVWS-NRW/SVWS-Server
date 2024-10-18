@@ -1,7 +1,7 @@
 package de.svws_nrw.data.lehrer;
 
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.core.types.PersonalTyp;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
 import de.svws_nrw.data.DTOMapper;
@@ -118,6 +118,8 @@ public final class DataLehrerStammdaten extends DataManager<Long> {
 	 * @param conn	die Datenbank-Verbindung
 	 *
 	 * @return Liste der Stammdaten der sichtbaren Lehrer
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public List<LehrerStammdaten> getSichtbareLehrerStammdaten(final DBEntityManager conn) throws ApiOperationException {
 		final var result = new ArrayList<LehrerStammdaten>();

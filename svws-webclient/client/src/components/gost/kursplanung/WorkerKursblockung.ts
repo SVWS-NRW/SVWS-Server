@@ -1,5 +1,5 @@
 import type { List } from "@core";
-import { ArrayList, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostFach, GostFaecherManager, KursblockungAlgorithmusPermanent } from "@core";
+import { ArrayList, GostBlockungsdaten, GostBlockungsdatenManager, GostBlockungsergebnis, GostFach, GostFaecherManager, JsonCoreTypeReader, KursblockungAlgorithmusPermanent } from "@core";
 import type { WorkerKursblockungErrorMessage, WorkerKursblockungMessageType, WorkerKursblockungReplyErgebnisse, WorkerKursblockungReplyInit, WorkerKursblockungReplyNext, WorkerKursblockungRequestErgebnisse, WorkerKursblockungRequestInit, WorkerKursblockungRequestNext } from "./WorkerKursblockungMessageTypes";
 
 /**
@@ -10,6 +10,8 @@ class WorkerKursblockung {
 
 	/** Der Algorithmus zur Berechnung von Kursblockungsergebnisse, sofern er initialisiert wurde */
 	protected algo: KursblockungAlgorithmusPermanent | null;
+	/** Der Reader für die CoreTypeDaten */
+	private reader = new JsonCoreTypeReader();
 
 	/**
 	 * Erzeugt eine neue Worker-Klasse ohne diese zu Initialisieren.
@@ -34,8 +36,10 @@ class WorkerKursblockung {
 	 * @param faecher          die Fächer des Abiturjahrgangs der gymnasialen Oberstufe
 	 * @param blockungsdaten   die Blockungsdaten
 	 */
-	public init(faecher: List<GostFach>, blockungsdaten: GostBlockungsdaten) {
-		const faecherManager = new GostFaecherManager(faecher);
+	public init(faecher: List<GostFach>, blockungsdaten: GostBlockungsdaten, mapCoreTypeNameJsonData: Map<string, string>) {
+		this.reader.mapCoreTypeNameJsonData = mapCoreTypeNameJsonData;
+		this.reader.readAll();
+		const faecherManager = new GostFaecherManager(blockungsdaten.abijahrgang - 1, faecher);
 		const datenmanager = new GostBlockungsdatenManager(blockungsdaten, faecherManager)
 		this.algo = new KursblockungAlgorithmusPermanent(datenmanager);
 	}
@@ -75,12 +79,13 @@ class WorkerKursblockung {
 	 * @param message   die Nachricht
 	 */
 	protected handleInit(message : WorkerKursblockungRequestInit) {
-		if ((!this.isInitialized()) && (message.faecher !== undefined) && (message.blockungsdaten !== undefined)) {
+		if (!this.isInitialized()) {
 			const faecherListe = new ArrayList<GostFach>();
 			for (const fach of message.faecher)
 				faecherListe.add(GostFach.transpilerFromJSON(fach));
 			const blockungsdaten = GostBlockungsdaten.transpilerFromJSON(message.blockungsdaten);
-			this.init(faecherListe, blockungsdaten);
+			const mapCoreTypeNameJsonData = message.mapCoreTypeNameJsonData
+			this.init(faecherListe, blockungsdaten, mapCoreTypeNameJsonData);
 		}
 		postMessage(<WorkerKursblockungReplyInit>{ cmd: 'init', initialized: this.isInitialized() });
 	}
@@ -117,7 +122,7 @@ class WorkerKursblockung {
 	 *
 	 * @param event   das eingehende Message-Event
 	 */
-	public messageHandler = (event: MessageEvent<any>) : void => {
+	public messageHandler = (event: MessageEvent) : void => {
 		const cmd: WorkerKursblockungMessageType = event.data.cmd;
 		try {
 			switch (cmd) {

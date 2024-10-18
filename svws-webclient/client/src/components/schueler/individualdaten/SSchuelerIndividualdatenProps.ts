@@ -13,5 +13,6 @@ export interface SchuelerIndividualdatenProps {
 	mapReligionen: Map<number, ReligionEintrag>;
 	schulform: Schulform;
 	serverMode: ServerMode;
-	benutzerKompetenzen: Set<BenutzerKompetenz>,
+	benutzerKompetenzen: Set<BenutzerKompetenz>;
+	autofocus: boolean;
 }

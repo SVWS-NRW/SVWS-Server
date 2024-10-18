@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
@@ -15,13 +16,12 @@ import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerLernabschnittsdaten;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
 import de.svws_nrw.core.data.schule.FoerderschwerpunktEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.jahrgang.JahrgangsUtils;
 import de.svws_nrw.core.utils.klassen.KlassenUtils;
 import de.svws_nrw.core.utils.kurse.KursUtils;
@@ -216,7 +216,7 @@ public class SchuelerLernabschnittManager {
 	public Schulgliederung lernabschnittGetGliederung() {
 		if (this._lernabschnittsdaten.schulgliederung == null)
 			return null;
-		return Schulgliederung.getByKuerzel(this._lernabschnittsdaten.schulgliederung);
+		return Schulgliederung.data().getWertByKuerzel(this._lernabschnittsdaten.schulgliederung);
 	}
 
 
@@ -232,7 +232,7 @@ public class SchuelerLernabschnittManager {
 		final JahrgangsDaten eintrag = _mapJahrgangByID.get(this._lernabschnittsdaten.jahrgangID);
 		if ((eintrag == null) || (eintrag.kuerzelStatistik == null))
 			return null;
-		return Jahrgaenge.getByKuerzel(eintrag.kuerzelStatistik);
+		return Jahrgaenge.data().getWertByKuerzel(eintrag.kuerzelStatistik);
 	}
 
 
@@ -362,6 +362,20 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
 	 *
+	 * @return die Fach-Informationen oder null, wenn kein Fach zugeordnet ist
+	 */
+	public FachDaten fachGetByLeistungId(final long idLeistung) {
+		final SchuelerLeistungsdaten leistung = _mapLeistungById.get(idLeistung);
+		if (leistung == null)
+			return null;
+		return _mapFachByID.get(leistung.fachID);
+	}
+
+	/**
+	 * Ermittelt die Informationen zum Fach, welche mit den Leistungsdaten verknüpft sind.
+	 *
+	 * @param idLeistung   die ID der Leistungsdaten
+	 *
 	 * @return die Fach-Informationen.
 	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
 	 */
@@ -375,12 +389,13 @@ public class SchuelerLernabschnittManager {
 	 *
 	 * @param idLeistung   die ID der Leistungsdaten
 	 *
-	 * @return die Farbe
-	 * @throws DeveloperNotificationException falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist
+	 * @return die Farbe und falls kein Fach zugeordnet ist oder die ID der Leistungsdaten nicht korrekt ist, die Default-Farbe rgb(220,220,220)
 	 */
-	public @NotNull String fachFarbeGetByLeistungsIdOrException(final long idLeistung) {
-		final @NotNull FachDaten fach = fachGetByLeistungIdOrException(idLeistung);
-		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getHMTLFarbeRGB();
+	public @NotNull String fachFarbeGetByLeistungsIdOrDefault(final long idLeistung) {
+		final FachDaten fachDaten = fachGetByLeistungId(idLeistung);
+		if (fachDaten == null)
+			return "rgb(220,220,220)";
+		return Fach.getBySchluesselOrDefault(fachDaten.kuerzel).getHMTLFarbeRGB(_schuljahresabschnitt.schuljahr);
 	}
 
 	/**
@@ -606,6 +621,16 @@ public class SchuelerLernabschnittManager {
 	 */
 	public @NotNull Schuljahresabschnitt schuljahresabschnittGet() {
 		return this._schuljahresabschnitt;
+	}
+
+
+	/**
+	 * Gibt das Schuljahr des Lernabschnittes zurück.
+	 *
+	 * @return das Schuljahr des Lernabschnittes
+	 */
+	public int schuljahrGet() {
+		return this._schuljahresabschnitt.schuljahr;
 	}
 
 

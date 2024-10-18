@@ -5,10 +5,10 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :columns="cols" selectable v-model="selected">
+			<svws-ui-table :clicked="auswahl" clickable @update:clicked="gotoEintrag" :items="mapKatalogeintraege().values()" :unselectable :columns selectable v-model="selected" scroll-into-view>
 				<template #actions>
-					<svws-ui-button @click="doDeleteEintraege()" type="trash" class="cursor-pointer" :disabled="selected.length === 0" />
-					<svws-ui-button type="icon" @click="addEintrag">
+					<svws-ui-button @click="doDeleteEintraege" type="trash" :disabled="selected.length === 0" />
+					<svws-ui-button type="icon" @click="addEintrag" :hasFocus="mapKatalogeintraege().size === 0">
 						<span class="icon i-ri-add-line" />
 					</svws-ui-button>
 				</template>
@@ -19,19 +19,27 @@
 
 <script setup lang="ts">
 
-	import { type StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
-	import { type StundenplanListeEintrag } from "@core";
-	import { type DataTableColumn } from "@ui";
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
+	import type { StundenplanAuswahlProps } from "./SStundenplanAuswahlProps";
+	import type { DataTableColumn } from "@ui";
+	import type { StundenplanListeEintrag } from "@core";
 
 	const props = defineProps<StundenplanAuswahlProps>();
 	const selected = ref<StundenplanListeEintrag[]>([]);
 
-	const cols: DataTableColumn[] = [
+	const columns: DataTableColumn[] = [
 		{ key: "bezeichnung", label: "Bezeichnung", span: 2, sortable: false },
 		{ key: "gueltigAb", label: "von", span: 1, sortable: false, defaultSort: 'asc', type: 'date' },
 		{ key: "gueltigBis", label: "bis", span: 1, sortable: false, type: 'date' }
 	];
+
+	const unselectable = computed(() => {
+		const set = new Set<StundenplanListeEintrag>();
+		const vorlage = props.mapKatalogeintraege().get(-1);
+		if (vorlage !== undefined)
+			set.add(vorlage);
+		return set;
+	})
 
 	async function doDeleteEintraege() {
 		await props.removeEintraege(selected.value);

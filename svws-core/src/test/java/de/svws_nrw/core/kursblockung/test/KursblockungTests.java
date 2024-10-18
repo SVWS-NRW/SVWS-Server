@@ -4,15 +4,19 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungRegel;
 import de.svws_nrw.core.data.gost.GostBlockungSchiene;
@@ -26,6 +30,7 @@ import de.svws_nrw.core.kursblockung.KursblockungStatic;
 import de.svws_nrw.core.logger.LogData;
 import de.svws_nrw.core.logger.LogLevel;
 import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
@@ -40,6 +45,14 @@ class KursblockungTests {
 
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
 
 	/**
 	 * Testet den Algorithmus "Maximum Cardinality Bipartite Matching". Hierfür werden Matrizen unterschiedlicher
@@ -892,12 +905,15 @@ class KursblockungTests {
 		}
 
 		// Erzeuge alle Fächer.
-		final HashMap<String, GostFach> mapFaecher = new HashMap<>();
+		final @NotNull List<Fach> zulFaecher = GostFachbereich.getAlleFaecherSortiert();
+		final List<GostFach> listFaecher = new ArrayList<>();
 		for (int fachID = 0; fachID < nFaecher; fachID++) {
+			final Fach fach = zulFaecher.get(pRandom.nextInt(zulFaecher.size()));
 			final GostFach gFach = new GostFach();
 			gFach.id = fachID;
-			gFach.kuerzel = "Test-Fach Nr. " + fachID;
-			mapFaecher.put(gFach.kuerzel, gFach);
+			gFach.kuerzel = fach.daten(2024).schluessel;
+			gFach.kuerzelAnzeige = "Test-Fach Nr. " + fachID;
+			listFaecher.add(gFach);
 		}
 
 		// Erzeuge alle Kursarten.
@@ -984,8 +1000,8 @@ class KursblockungTests {
 		gDaten.schienen.addAll(mapSchienen.values());
 
 		// Erzeuge GostFaecherManager
-		final GostFaecherManager fManager = new GostFaecherManager();
-		fManager.addAll(mapFaecher.values());
+		final GostFaecherManager fManager = new GostFaecherManager(2024);
+		fManager.addAll(listFaecher);
 
 		// Erzeuge GostBlockungsdatenManager
 		final GostBlockungsdatenManager input = new GostBlockungsdatenManager(gDaten, fManager);
@@ -1025,8 +1041,10 @@ class KursblockungTests {
 
 		final GostFach kbFach1 = new GostFach();
 		kbFach1.id = 1;
+		kbFach1.kuerzel = "D";
 		final GostFach kbFach2 = new GostFach();
 		kbFach2.id = 2;
+		kbFach2.kuerzel = "M";
 
 		final GostBlockungKurs kbKurs = new GostBlockungKurs();
 		kbKurs.id = 1;
@@ -1054,7 +1072,7 @@ class KursblockungTests {
 		// gDaten.regeln.addAll(mapRegeln.values());
 
 		// Erzeuge GostFaecherManager
-		final GostFaecherManager fManager = new GostFaecherManager();
+		final GostFaecherManager fManager = new GostFaecherManager(2024);
 		fManager.add(kbFach1);
 		fManager.add(kbFach2);
 

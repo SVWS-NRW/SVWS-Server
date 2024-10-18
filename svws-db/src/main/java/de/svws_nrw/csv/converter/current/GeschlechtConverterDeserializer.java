@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.db.converter.current.GeschlechtConverter;
 
 /**

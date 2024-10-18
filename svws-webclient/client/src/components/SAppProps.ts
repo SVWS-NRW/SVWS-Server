@@ -1,18 +1,18 @@
 import type { SchuleStammdaten, Schulform } from "@core";
-import type { AuswahlChildData } from "./AuswahlChildData";
+import type { TabData } from "@ui";
 import type { ApiStatus } from "./ApiStatus";
 
 export interface AppProps {
 	schulform: Schulform;
 	schuleStammdaten: SchuleStammdaten;
 	username: string;
-	schemaname: string;  // Der Name des DB-Schemas
+	schemaname: string; // Der Name des DB-Schemas
 	logout: () => Promise<void>;
-	setApp:  (value: AuswahlChildData) => Promise<void>;
-	benutzerprofilApp: AuswahlChildData;
-	app: AuswahlChildData;
-	apps: AuswahlChildData[];
+	setApp: (value: TabData) => Promise<void>;
+	benutzerprofilApp: TabData;
+	app: TabData;
+	selectedChild: TabData;
+	apps: TabData[];
 	appsHidden: boolean[];
 	apiStatus: ApiStatus;
-	backticks: () => boolean;
 }

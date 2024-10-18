@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import de.svws_nrw.test.apitests.util.BaseApiUtil;
+
 /**
  * Testmethode für die Verfügbarkeit der Dav-Api-Endpunkte
  */

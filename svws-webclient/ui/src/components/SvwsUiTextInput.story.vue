@@ -7,15 +7,6 @@
 			</div>
 		</Variant>
 
-		<Variant title="Type: Number" id="Number">
-			<div class="py-4">
-				<svws-ui-input-wrapper>
-					<svws-ui-text-input type="number" model-value="1" placeholder="Nummer" @input="onInput" />
-					<svws-ui-text-input type="number" model-value="" placeholder="Nummer mit Minimum" min="0" @input="onInput" />
-				</svws-ui-input-wrapper>
-			</div>
-		</Variant>
-
 		<Variant title="Special Types" id="Types">
 			<div class="py-4">
 				<svws-ui-input-wrapper>

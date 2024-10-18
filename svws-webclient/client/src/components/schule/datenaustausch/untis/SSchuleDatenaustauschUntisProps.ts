@@ -1,8 +1,5 @@
-import { type AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabManager } from "@ui";
 
 export interface SchuleDatenaustauschUntisProps {
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
 }

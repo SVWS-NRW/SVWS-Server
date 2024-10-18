@@ -3,6 +3,7 @@ import { SchuelerSchulbesuchSchule } from '../../../core/data/schueler/SchuelerS
 import { SchuelerSchulbesuchMerkmal } from '../../../core/data/schueler/SchuelerSchulbesuchMerkmal';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerSchulbesuchsdaten extends JavaObject {
 
@@ -143,6 +144,8 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten'].includes(name);
 	}
+
+	public static class = new Class<SchuelerSchulbesuchsdaten>('de.svws_nrw.core.data.schueler.SchuelerSchulbesuchsdaten');
 
 	public static transpilerFromJSON(json : string): SchuelerSchulbesuchsdaten {
 		const obj = JSON.parse(json) as Partial<SchuelerSchulbesuchsdaten>;

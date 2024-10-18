@@ -3,6 +3,7 @@ package de.svws_nrw.data.schueler;
 import java.util.List;
 import java.util.Objects;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.data.jahrgaenge.DBUtilsJahrgaenge;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.db.DBEntityManager;
@@ -34,9 +35,9 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 *
 	 * @return das DB-DTO-Objekt
 	 */
-	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final DTOSchuljahresabschnitte schuljahresabschnitt,
+	private static DTOSchuelerLernabschnittsdaten createDefault(final long idNew, final long idSchueler, final Schuljahresabschnitt schuljahresabschnitt,
 			final DTOKlassen klasse, final DTOJahrgang jahrgang) {
-		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.ID, false, false);
+		final DTOSchuelerLernabschnittsdaten lernabschnitt = new DTOSchuelerLernabschnittsdaten(idNew, idSchueler, schuljahresabschnitt.id, false, false);
 		lernabschnitt.WechselNr = 0;
 		lernabschnitt.Schulbesuchsjahre = null;
 		lernabschnitt.Hochrechnung = null;
@@ -58,7 +59,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 		lernabschnitt.AbschlIstPrognose = null;
 		lernabschnitt.Konferenzdatum = null;
 		lernabschnitt.ZeugnisDatum = null;
-		lernabschnitt.Schulgliederung = jahrgang.Gliederung;
+		lernabschnitt.Schulgliederung = jahrgang.GliederungKuerzel;
 		lernabschnitt.ASDJahrgang = jahrgang.ASDJahrgang;
 		lernabschnitt.Jahrgang_ID = jahrgang.ID;
 		lernabschnitt.Fachklasse_ID = null;
@@ -132,18 +133,18 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 *
 	 * @return true, falls ein solcher Lernabschnitt existiert und ansonsten false
 	 */
-	public static boolean pruefeWiederholung(final DBEntityManager conn, final DTOSchuljahresabschnitte schuljahresabschnitt, final Long idSchueler,
+	public static boolean pruefeWiederholung(final DBEntityManager conn, final Schuljahresabschnitt schuljahresabschnitt, final Long idSchueler,
 			final Long idJahrgang) {
 		if ((schuljahresabschnitt == null) || (idSchueler == null) || (idJahrgang == null))
 			return false;
 		final List<Long> schuljahresabschnitte = conn.queryList(
 				"SELECT e FROM DTOSchuelerLernabschnittsdaten e WHERE e.Schueler_ID = ?1 AND e.WechselNr = 0 AND e.Jahrgang_ID = ?2 AND e.Schuljahresabschnitts_ID <> ?3",
-				DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.ID)
+				DTOSchuelerLernabschnittsdaten.class, idSchueler, idJahrgang, schuljahresabschnitt.id)
 				.stream().map(sla -> sla.Schuljahresabschnitts_ID).toList();
 		if (schuljahresabschnitte.isEmpty())
 			return false;
 		return conn.queryByKeyList(DTOSchuljahresabschnitte.class, schuljahresabschnitte).stream()
-				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.Abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.Abschnitt));
+				.anyMatch(sja -> Objects.equals(sja.Abschnitt, schuljahresabschnitt.abschnitt) && !Objects.equals(sja.Jahr, schuljahresabschnitt.abschnitt));
 	}
 
 
@@ -167,13 +168,13 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 	 * @throws ApiOperationException   falls ein Fehler beim Erstellen des Lernabschnitts auftritt
 	 */
 	public static DTOSchuelerLernabschnittsdaten createByPrevious(final long idSLA, final DBEntityManager conn, final long idSchueler,
-			final DTOSchuljahresabschnitte schuljahresabschnitt) throws ApiOperationException {
+			final Schuljahresabschnitt schuljahresabschnitt) throws ApiOperationException {
 		// Prüfe, ob der vorige Lernabschnitt existiert
 		final DataKlassendaten dataKlassendaten = new DataKlassendaten(conn);
-		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.VorigerAbschnitt_ID);
+		final DTOSchuelerLernabschnittsdaten slaPrev = get(conn, idSchueler, schuljahresabschnitt.idVorigerAbschnitt);
 		if (slaPrev != null) {
 			// Bestimme Klasse, Jahrgang und weiteres aus dem vorigen Schuljahresabschnitt
-			final boolean schuljahrNeu = (schuljahresabschnitt.Abschnitt == 1);
+			final boolean schuljahrNeu = (schuljahresabschnitt.abschnitt == 1);
 			DTOKlassen klassePrev;  // Bestimme die entsprechende Klasse im vorigen Lernabschnitt
 			if (slaPrev.Folgeklasse_ID == null) { // Wenn die Folge-Klasse gesetzt ist, dann muss bei einem neuen Schuljahr dieses Feld genutzt werden...
 				klassePrev = dataKlassendaten.getDTO(slaPrev.Klassen_ID);
@@ -184,7 +185,7 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 				klassePrev = dataKlassendaten.getDTO(schuljahrNeu ? slaPrev.Folgeklasse_ID : slaPrev.Klassen_ID);
 			}
 			final DTOKlassen klasse = dataKlassendaten.getDTOByKuerzelOrASDKuerzelAndHalbjahresabschnittId(klassePrev.Klasse, klassePrev.ASDKlasse,
-					schuljahresabschnitt.ID);
+					schuljahresabschnitt.id);
 			final DTOJahrgang jahrgang = DBUtilsJahrgaenge.get(conn, klasse.Jahrgang_ID);
 			final DTOSchuelerLernabschnittsdaten sla = createDefault(idSLA, idSchueler, schuljahresabschnitt, klasse, jahrgang);
 			if (slaPrev.Schulbesuchsjahre != null)
@@ -201,14 +202,14 @@ public final class DBUtilsSchuelerLernabschnittsdaten {
 			sla.Wiederholung = pruefeWiederholung(conn, schuljahresabschnitt, idSchueler, sla.Jahrgang_ID);
 			if (!conn.transactionPersist(sla))
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.Jahr,
-								schuljahresabschnitt.Abschnitt, idSchueler));
+						"Fehler beim Schreiben des Schüler-Lernabschnitts %d.%d des Schülers %d in die Datenbank".formatted(schuljahresabschnitt.schuljahr,
+								schuljahresabschnitt.abschnitt, idSchueler));
 			conn.transactionFlush();
 			return sla;
 		}
 		throw new ApiOperationException(Status.NOT_FOUND, ("Fehler beim Erstellen des Schüler-Lernabschnitts %d.%d des Schülers %d. Es wurden keine"
 				+ " ausreichenden Daten zu einem vorigen Schüler-Lernabschnitt gefunden.")
-				.formatted(schuljahresabschnitt.Jahr, schuljahresabschnitt.Abschnitt, idSchueler));
+				.formatted(schuljahresabschnitt.schuljahr, schuljahresabschnitt.abschnitt, idSchueler));
 	}
 
 }

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { JavaMath } from '../../../java/lang/JavaMath';
 
@@ -328,7 +329,7 @@ export class SatInput extends JavaObject {
 	 */
 	public add_clause_exactly(__param0 : Array<number> | LinkedCollection<number>, __param1 : number) : void {
 		if (((__param0 !== undefined) && Array.isArray(__param0)) && ((__param1 !== undefined) && typeof __param1 === "number")) {
-			const pArray : Array<number> = __param0;
+			const pArray : Array<number> = __param0 as unknown as Array<number>;
 			const pAmount : number = __param1 as number;
 			const list : LinkedCollection<number> = new LinkedCollection<number>();
 			for (const x of pArray)
@@ -495,6 +496,8 @@ export class SatInput extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatInput'].includes(name);
 	}
+
+	public static class = new Class<SatInput>('de.svws_nrw.core.adt.sat.SatInput');
 
 }
 

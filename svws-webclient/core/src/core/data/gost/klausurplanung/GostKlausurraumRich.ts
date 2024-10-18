@@ -3,6 +3,7 @@ import { JavaLong } from '../../../../java/lang/JavaLong';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 import { GostKlausurraum, cast_de_svws_nrw_core_data_gost_klausurplanung_GostKlausurraum } from '../../../../core/data/gost/klausurplanung/GostKlausurraum';
 
 export class GostKlausurraumRich extends JavaObject {
@@ -18,7 +19,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public groesse : number = -1;
 
 	/**
-	 * Die Liste der angereicherten Schülerklausurtermine.
+	 * Ein Array mit den IDs der im Raum enthaltenen Schülerklausurterminen.
 	 */
 	public schuelerklausurterminIDs : List<number> = new ArrayList<number>();
 
@@ -32,7 +33,7 @@ export class GostKlausurraumRich extends JavaObject {
 	public constructor(klausurraum : GostKlausurraum, stundenplanraum : StundenplanRaum | null);
 
 	/**
-	 * Konstruktor für Transpiler.
+	 * Default-Konstruktor
 	 */
 	public constructor();
 
@@ -79,6 +80,8 @@ export class GostKlausurraumRich extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurraumRich>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurraumRich');
 
 	public static transpilerFromJSON(json : string): GostKlausurraumRich {
 		const obj = JSON.parse(json) as Partial<GostKlausurraumRich>;

@@ -1,6 +1,6 @@
 <template>
 	<div class="content">
-		<svws-ui-table :columns="cols" :items="undefined" has-background class="col-span-2 -mt-1">
+		<svws-ui-table :columns :items="leistungen" has-background class="col-span-2 -mt-1">
 			<template #header>
 				<div role="row" class="svws-ui-tr">
 					<div role="columnheader" :class="{ 'col-span-5': hatUpdateKompetenz, 'col-span-4': !hatUpdateKompetenz }" aria-label="Fach" />
@@ -18,62 +18,60 @@
 					<div role="columnheader" class="svws-ui-td svws-align-center" aria-label="Halbjahresnote"> Halbjahr </div>
 				</div>
 			</template>
-			<template #body="">
-				<template v-for="leistung in leistungen" :key="leistung.id">
-					<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrException(leistung.id) }">
-						<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
-							<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
-								:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
-								@update:model-value="(value : FachDaten) => void patchFach(value, leistung)"
-								class="w-full" headless />
-							<div v-else>{{ manager().fachGetByLeistungIdOrException(leistung.id)?.bezeichnung ?? '—' }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
-								:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="(value : KursDaten) => void patchKurs(value, leistung)"
-								class="w-full" headless removable />
-							<div v-else>{{ manager().kursGetByLeistungIdOrNull(leistung.id)?.kuerzel ?? '—' }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
-							<template v-if="(manager().kursGetByLeistungIdOrNull(leistung.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg).size() === 1">
-								<span>{{ leistung.kursart }}</span>
-							</template>
-							<template v-else>
-								<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="ZulaessigeKursart.getByAllgemeinerKursart(manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg)" :item-text="zk => zk.daten.kuerzel"
-									:model-value="ZulaessigeKursart.getByASDKursart(leistung.kursart)"
-									@update:model-value="value => patchLeistung({ kursart: ((value === null) || (value === undefined)) ? null : value.daten.kuerzel }, leistung.id)"
-									class="w-full" headless />
-								<div v-else>{{ ZulaessigeKursart.getByASDKursart(leistung.kursart)?.daten.kuerzel ?? '—' }}</div>
-							</template>
-						</div>
-						<div class="svws-ui-td svws-divider" role="cell">
-							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMenge()" :item-text="lehrer => textLehrer(lehrer)"
-								:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
-								@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, leistung.id)"
-								class="w-full" headless />
-							<div v-else>{{ textLehrer(manager().lehrerGetByLeistungIdOrNull(leistung.id)) }}</div>
-						</div>
-						<div class="svws-ui-td svws-divider" role="cell">
-							<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel"
-								:model-value="Note.fromKuerzel(leistung.noteQuartal)"
-								@update:model-value="value => patchLeistung({ noteQuartal: ((value === null) || (value === undefined)) ? null : value.kuerzel }, leistung.id)"
-								headless class="w-full" />
-							<div v-else>{{ Note.fromKuerzel(leistung.noteQuartal).kuerzel }}</div>
-						</div>
-						<div class="svws-ui-td" role="cell">
-							<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.kuerzel"
-								:model-value="Note.fromKuerzel(leistung.note)"
-								@update:model-value="value => patchLeistung({ note: ((value === null) || (value === undefined)) ? null : value.kuerzel }, leistung.id)"
-								headless class="w-full" />
-							<div v-else>{{ Note.fromKuerzel(leistung.note).kuerzel }}</div>
-						</div>
+			<template #rowCustom="{ row: leistung }">
+				<div v-if="leistung.id !== null" class="svws-ui-tr" role="row" :style="{ '--background-color': manager().fachFarbeGetByLeistungsIdOrDefault(leistung.id) }">
+					<div v-if="hatUpdateKompetenz" class="svws-ui-td svws-align-center cursor-pointer" role="cell">
+						<svws-ui-checkbox :model-value="auswahl.has(leistung)" @update:model-value="auswahl.has(leistung) ? auswahl.delete(leistung) : auswahl.add(leistung)" headless />
 					</div>
-				</template>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="props.manager().fachGetMenge()" :item-text="fach => ((fach === null) || (fach.bezeichnung === null)) ? '—' : fach.bezeichnung"
+							:model-value="manager().fachGetByLeistungIdOrException(leistung.id)"
+							@update:model-value="(value : FachDaten | null) => void patchFach(value, leistung)"
+							class="w-full" headless use-null />
+						<div v-else>{{ manager().fachGetByLeistungIdOrException(leistung.id)?.bezeichnung ?? '—' }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().kursGetMengeFilteredByLeistung(leistung.id)" :item-text="kurs => (kurs === null) ? '—' : kurs.kuerzel"
+							:model-value="manager().kursGetByLeistungIdOrNull(leistung.id)"
+							@update:model-value="(value : KursDaten | null) => void patchKurs(value, leistung)"
+							class="w-full" headless removable use-null />
+						<div v-else>{{ manager().kursGetByLeistungIdOrNull(leistung.id)?.kuerzel ?? '—' }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<!-- TODO In Gesamtschulen kann bei Klassenunterricht neben PUK noch E oder G als Kursart vorkommen -->
+						<template v-if="(manager().kursGetByLeistungIdOrNull(leistung.id) === null) || ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg).size() === 1">
+							<span>{{ leistung.kursart }}</span>
+						</template>
+						<template v-else>
+							<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="ZulaessigeKursart.getByAllgemeinerKursart(schuljahr, manager().kursGetByLeistungIdOrNull(leistung.id)!.kursartAllg)" :item-text="zk => zk.daten(schuljahr)?.kuerzel ?? '—'"
+								:model-value="(leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)"
+								@update:model-value="value => patchLeistung({ kursart: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+								class="w-full" headless />
+							<div v-else>{{ (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart)?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+						</template>
+					</div>
+					<div class="svws-ui-td svws-divider" role="cell">
+						<svws-ui-select v-if="hatUpdateKompetenz" title="—" :items="manager().lehrerGetMenge()" :item-text="lehrer => textLehrer(lehrer)"
+							:model-value="manager().lehrerGetByLeistungIdOrNull(leistung.id)"
+							@update:model-value="value => patchLeistung({ lehrerID: ((value === null) || (value === undefined)) ? null : value.id }, leistung.id)"
+							class="w-full" headless />
+						<div v-else>{{ textLehrer(manager().lehrerGetByLeistungIdOrNull(leistung.id)) }}</div>
+					</div>
+					<div class="svws-ui-td svws-divider" role="cell">
+						<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
+							:model-value="Note.fromKuerzel(leistung.noteQuartal)"
+							@update:model-value="value => patchLeistung({ noteQuartal: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+							headless class="w-full" />
+						<div v-else>{{ Note.fromKuerzel(leistung.noteQuartal).daten(schuljahr)?.kuerzel }}</div>
+					</div>
+					<div class="svws-ui-td" role="cell">
+						<svws-ui-select v-if="hatFachlehrerKompetenz(leistung.lehrerID)" title="—" :items="Note.values()" :item-text="(item: Note) => item?.daten(schuljahr)?.kuerzel ?? '—'"
+							:model-value="Note.fromKuerzel(leistung.note)"
+							@update:model-value="value => patchLeistung({ note: value?.daten(schuljahr)?.kuerzel ?? null }, leistung.id)"
+							headless class="w-full" />
+						<div v-else>{{ Note.fromKuerzel(leistung.note).daten(schuljahr)?.kuerzel }}</div>
+					</div>
+				</div>
 			</template>
 			<template v-if="hatUpdateKompetenz" #footer>
 				<div class="svws-ui-tr flex flex-row" role="row">
@@ -91,10 +89,10 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2" v-if="hatLernbereichsnote">
 				<span class="font-bold col-span-full">Lernbereichsnoten</span>
-				<svws-ui-select v-if="hatUpdateKompetenz" title="Gesellschaftswissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete v-model="lernbereichsnoteGSbzwAL" />
-				<div v-else>{{ lernbereichsnoteGSbzwAL?.kuerzel ?? '—' }}</div>
-				<svws-ui-select v-if="hatUpdateKompetenz" title="Naturwissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.kuerzel}`" autocomplete v-model="lernbereichsnoteNW" />
-				<div v-else>{{ lernbereichsnoteNW?.kuerzel ?? '—' }}</div>
+				<svws-ui-select v-if="hatUpdateKompetenz" title="Gesellschaftswissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.daten(schuljahr)?.kuerzel}`" autocomplete v-model="lernbereichsnoteGSbzwAL" />
+				<div v-else>{{ lernbereichsnoteGSbzwAL?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
+				<svws-ui-select v-if="hatUpdateKompetenz" title="Naturwissenschaft" :items="getLernbereichsnoten()" :item-text="i => `${i.daten(schuljahr)?.kuerzel}`" autocomplete v-model="lernbereichsnoteNW" />
+				<div v-else>{{ lernbereichsnoteNW?.daten(schuljahr)?.kuerzel ?? '—' }}</div>
 			</svws-ui-input-wrapper>
 			<svws-ui-spacing :size="2" v-if="hatLernbereichsnote" />
 			<svws-ui-input-wrapper class="col-span-full items-center" :grid="4">
@@ -118,11 +116,11 @@
 	import { computed, ref, watch } from "vue";
 	import type { SchuelerLernabschnittLeistungenProps } from "./SSchuelerLernabschnittLeistungenProps";
 	import type { SchuelerLeistungsdaten, List, KursDaten, FachDaten, LehrerListeEintrag} from "@core";
-	import { Note, ZulaessigeKursart, ArrayList, ZulaessigesFach, BenutzerKompetenz, BenutzerDaten, BenutzerTyp } from "@core";
+	import { Note, ZulaessigeKursart, ArrayList, Fach, BenutzerKompetenz, BenutzerTyp } from "@core";
 
 	const props = defineProps<SchuelerLernabschnittLeistungenProps>();
 
-	const cols = computed(() => {
+	const columns = computed(() => {
 		const result = [];
 		if (hatUpdateKompetenz.value)
 			result.push({ key: "auswahl", label: "Auswahl", fixedWidth: 1.5 });
@@ -145,6 +143,9 @@
 			|| ((props.benutzerKompetenzen.has(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN))
 				&& props.benutzerKompetenzenKlassen.has(props.schuelerListeManager().auswahl().idKlasse));
 	});
+
+	/// Das Schuljahr der Lernabschnittsdaten
+	const schuljahr = computed<number>(() => props.manager().schuljahrGet());
 
 	/**
 	 * Prüft, ob der angemeldete Benutzer eine Kompetenz zum Ändern von Leistungsdaten in Bezug
@@ -173,12 +174,11 @@
 			for (const l of oldLeistungen)
 				tmpSetIDs.add(l.id);
 			let changed : boolean = false;
-			for (const l of newLeistungen) {
+			for (const l of newLeistungen)
 				if (!tmpSetIDs.has(l.id)) {
 					changed = true;
 					break;
 				}
-			}
 			if (!changed)
 				return;
 		}
@@ -225,7 +225,7 @@
 			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichGSbzwAL);
 			return note === null ? undefined : note;
 		},
-		set: (value) => void props.patch({ noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+		set: (value) => void props.patch({ noteLernbereichGSbzwAL: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) })
 	});
 
 	const lernbereichsnoteNW = computed<Note | undefined>({
@@ -233,46 +233,46 @@
 			const note = Note.fromNoteSekI(props.manager().lernabschnittGet().noteLernbereichNW);
 			return note === null ? undefined : note;
 		},
-		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI() })
+		set: (value) => void props.patch({ noteLernbereichNW: value === undefined || value === Note.KEINE ? null : value.getNoteSekI(schuljahr.value) })
 	});
 
-	async function patchFach(fach: FachDaten, leistung: SchuelerLeistungsdaten) {
+	async function patchFach(fach: FachDaten | null, leistung: SchuelerLeistungsdaten) {
 		// Fach-Eintrag bei den Leistungsdaten wird entfernt
-		if ((fach === null) || (fach === undefined)) {
+		if (fach === null) {
 			await props.patchLeistung({ fachID: -1, kursID: null }, leistung.id);
 			return;
 		}
 		// Spezialfälle
-		const f : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzelStatistik);
-		if (f === ZulaessigesFach.VX) { // Speziallfall Gymnasiale Oberstufe - Vertiefungsfach
-			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.VTF.daten.kuerzel }, leistung.id);
-		} else if (f === ZulaessigesFach.PX) { // Speziallfall Gymnasiale Oberstufe - Projektkursfach
-			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.PJK.daten.kuerzel }, leistung.id);
+		const f : Fach = Fach.getBySchluesselOrDefault(fach.kuerzelStatistik);
+		if (f === Fach.VX) { // Speziallfall Gymnasiale Oberstufe - Vertiefungsfach
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.VTF.daten(schuljahr.value)?.kuerzel }, leistung.id);
+		} else if (f === Fach.PX) { // Speziallfall Gymnasiale Oberstufe - Projektkursfach
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: ZulaessigeKursart.PJK.daten(schuljahr.value)?.kuerzel }, leistung.id);
 		} else { // Allgemeiner Fall: Entfernen des Kurses und setzen einer speziellen Kursart, wenn die kursart der Leistung null ist
-			let kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
+			let kursart = (leistung.kursart === null) ? null : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
 			if (kursart === null)
 				kursart = ZulaessigeKursart.PUK;
-			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten.kuerzel }, leistung.id);
+			await props.patchLeistung({ fachID: fach.id, kursID: null, kursart: kursart.daten(schuljahr.value)?.kuerzel }, leistung.id);
 		}
 	}
 
-	async function patchKurs(kurs: KursDaten, leistung: SchuelerLeistungsdaten) {
-		if ((kurs === null) || (kurs === undefined)) {
-			await props.patchLeistung({ kursID: null }, leistung.id);
+	async function patchKurs(kurs: KursDaten | null, leistung: SchuelerLeistungsdaten) {
+		if (kurs === null) {
+			await props.patchLeistung({ kursID: null, kursart: ZulaessigeKursart.PUK.daten(schuljahr.value)?.kuerzel, abifach: null }, leistung.id);
 			return;
 		}
-		const kursart = ZulaessigeKursart.getByASDKursart(leistung.kursart);
-		if (kurs.kursartAllg !== kursart?.daten.kuerzelAllg) {
-			const kursarten : List<ZulaessigeKursart> = ZulaessigeKursart.getByAllgemeinerKursart(kurs.kursartAllg);
+		const kursart = (leistung.kursart === null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(leistung.kursart);
+		if (kurs.kursartAllg !== kursart?.daten(schuljahr.value)?.kuerzelAllg) {
+			const kursarten : List<ZulaessigeKursart> = ZulaessigeKursart.getByAllgemeinerKursart(schuljahr.value, kurs.kursartAllg);
 			let neueKursart : ZulaessigeKursart | null = kursart;
 			let neuesAbifach : number | null = leistung.abifach;
-			if (kurs.kursartAllg === ZulaessigeKursart.E.daten.kuerzel) { // Speziallfall Gesamtschule E-Kurs
+			if (kurs.kursartAllg === ZulaessigeKursart.E.daten(schuljahr.value)?.kuerzel) { // Speziallfall Gesamtschule E-Kurs
 				neueKursart = ZulaessigeKursart.E;
-			} else if (kurs.kursartAllg === ZulaessigeKursart.G.daten.kuerzel) { // Speziallfall Gesamtschule G-Kurs
+			} else if (kurs.kursartAllg === ZulaessigeKursart.G.daten(schuljahr.value)?.kuerzel) { // Speziallfall Gesamtschule G-Kurs
 				neueKursart = ZulaessigeKursart.G;
-			} else if (kurs.kursartAllg === ZulaessigeKursart.E.daten.kuerzelAllg) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+			} else if (kurs.kursartAllg === ZulaessigeKursart.E.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
 				neueKursart = ZulaessigeKursart.G;
-			} else if (kurs.kursartAllg === ZulaessigeKursart.GKM.daten.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+			} else if (kurs.kursartAllg === ZulaessigeKursart.GKM.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
 				neueKursart = ZulaessigeKursart.GKM;
 				if ((leistung.abifach === 1) || (leistung.abifach === 2))
 					neuesAbifach = null;
@@ -280,7 +280,7 @@
 					neueKursart = ZulaessigeKursart.AB3;
 				else if (leistung.abifach === 4)
 					neueKursart = ZulaessigeKursart.AB4;
-			} else if (kurs.kursartAllg === ZulaessigeKursart.LK1.daten.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+			} else if (kurs.kursartAllg === ZulaessigeKursart.LK1.daten(schuljahr.value)?.kuerzelAllg) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
 				// TODO Prüfen, ob das Fach für LK1 zulässig ist -> wenn nicht immer LK2, ansonsten prüfen, ob LK1 bereits bei den Lernabschnittsdaten zugeordnet ist und LK2 nicht. Ist dies der Fall -> LK2, sonst LK1
 				neueKursart = ZulaessigeKursart.LK1;
 				if (leistung.abifach === 2)
@@ -293,7 +293,7 @@
 			await props.patchLeistung({
 				kursID: kurs.id,
 				lehrerID: kurs.lehrer,
-				kursart: neueKursart?.daten.kuerzel ?? null,
+				kursart: neueKursart?.daten(schuljahr.value)?.kuerzel ?? null,
 				abifach: neuesAbifach,
 			}, leistung.id);
 		} else {

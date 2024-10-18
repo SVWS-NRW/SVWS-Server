@@ -1,5 +1,6 @@
 import type { Comparable } from '../../java/lang/Comparable';
 import { JavaObject } from '../../java/lang/JavaObject';
+import { Class } from '../../java/lang/Class';
 import { Arrays } from '../../java/util/Arrays';
 import { LogLevel } from '../../core/logger/LogLevel';
 import { System } from '../../java/lang/System';
@@ -129,6 +130,8 @@ export class LogData extends JavaObject implements Comparable<LogData> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.lang.Comparable', 'de.svws_nrw.core.logger.LogData'].includes(name);
 	}
+
+	public static class = new Class<LogData>('de.svws_nrw.core.logger.LogData');
 
 }
 

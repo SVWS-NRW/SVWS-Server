@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import type {  LehrerListeEintrag,  List} from "@core";
+import type { LehrerListeEintrag, List } from "@core";
 import { ApiServer, BetriebListeEintrag, DBSchemaListeEintrag, Erzieherart, ErzieherListeEintrag, FachDaten, GostFach } from "@core";
 
 const username = "Admin";

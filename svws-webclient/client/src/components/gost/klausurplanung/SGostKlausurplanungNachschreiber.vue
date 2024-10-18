@@ -21,9 +21,9 @@
 				<template #body>
 					<div v-for="termin in kMan().terminHtGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value)"
 						:key="termin.id"
-						class="svws-ui-tr" role="row" :title="cols.map(c => c.tooltip !== undefined ? c.tooltip : c.label).join(', ')">
+						class="svws-ui-tr" role="row">
 						<div class="svws-ui-td" role="cell">
-							<svws-ui-checkbox :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
+							<svws-ui-checkbox :title="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0 ? 'Termin enthält Nachschreiber' : ''" :disabled="kMan().schuelerklausurterminNtGetMengeByTermin(termin).size() > 0" v-model="termin.nachschreiberZugelassen" @update:model-value="patchKlausurtermin(termin.id, { 'nachschreiberZugelassen': termin.nachschreiberZugelassen } )" />
 						</div>
 						<div class="svws-ui-td" role="cell">
 							{{ termin.datum !== null ? DateUtils.gibDatumGermanFormat(termin.datum) : "N.N." }}
@@ -61,12 +61,13 @@
 	</svws-ui-modal>
 
 	<div class="page--content page--content--full relative">
-		<svws-ui-content-card title="In Planung">
-			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
-				<s-gost-klausurplanung-schuelerklausur-table :k-man="kMan"
+		<div class="content-card h-full flex flex-col">
+			<div class="content-card--headline mb-4">In Planung</div>
+			<div class="content-card--content flex flex-col p-3" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostSchuelerklausurTermin && dragData.idTermin !== null) ? 'border-error ring-4 ring-error/10 border-2 rounded-xl border-dashed' : '']">
+				<s-gost-klausurplanung-schuelerklausur-table :k-man
 					:schuelerklausuren="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)"
-					:on-drag="onDrag"
-					:draggable="() => true"
+					:on-drag
+					:draggable="() => hatKompetenzUpdate"
 					:selected-items="selectedNachschreiber">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
@@ -76,7 +77,7 @@
 					</template>
 				</s-gost-klausurplanung-schuelerklausur-table>
 			</div>
-		</svws-ui-content-card>
+		</div>
 		<svws-ui-content-card>
 			<svws-ui-content-card class="rounded-lg" v-if="multijahrgang()" :has-background="true">
 				<template #title>
@@ -92,24 +93,27 @@
 						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, halbjahr, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
 						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
 					</li>
-					<li class="flex" v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
-						<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
-						<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
-						<span v-else class="text-red-500">nicht alle zugewiesen.</span>
-						<svws-ui-button type="icon" @click="RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute(pair.a, pair.b.id ))" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
-					</li>
+					<template v-for="pair in GostKlausurplanManager.halbjahreParallelUndAktivGetMenge(jahrgangsdaten.abiturjahr, halbjahr, false)" :key="pair.a">
+						<li class="flex" v-if="kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() > 0">
+							<span>{{ kMan().schuelerklausurterminNtAktuellGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() }} Nachschreiber im Jahrgang {{ pair.b.jahrgang }},&nbsp;</span>
+							<span v-if="kMan().schuelerklausurterminNtAktuellOhneTerminGetMengeByHalbjahrAndQuartal(pair.a, pair.b, quartalsauswahl.value).size() == 0" class="text-green-500">alle zugewiesen.</span>
+							<span v-else class="text-red-500">nicht alle zugewiesen.</span>
+							<svws-ui-button type="icon" @click="gotoNachschreiber(pair.a, pair.b)" :title="`Zur Planung des Jahrgangs`" size="small"><span class="icon i-ri-link" /></svws-ui-button>
+						</li>
+					</template>
 				</ul>
 			</svws-ui-content-card>
 			<div class="flex justify-between items-start mt-5 mb-5">
 				<div class="flex flex-wrap items-center gap-2 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
-					<svws-ui-button type="secondary" @click="_showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
-					<svws-ui-button type="secondary" :disabled="selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken().value = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, false)"><span class="icon i-ri-add-line -ml-1" />Neuer Nachschreibtermin</svws-ui-button>
+					<svws-ui-button :disabled="!hatKompetenzUpdate" type="secondary" @click="_showModalTerminGrund = true"><span class="icon i-ri-checkbox-circle-line -ml-1" />Haupttermin zulassen</svws-ui-button>
+					<svws-ui-button type="secondary" :disabled="!hatKompetenzUpdate || selectedNachschreiber.isEmpty()" @click="showModalAutomatischBlocken().value = true"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(45rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-nachschreiber-termin v-for="termin of termine" :key="termin.id"
+						:benutzer-kompetenzen
 						:termin="() => termin"
 						:class="{'is-drop-zone': dragData !== undefined && kMan().konfliktPaarGetMengeTerminAndSchuelerklausurtermin(termin, dragData as GostSchuelerklausurTermin).isEmpty()}"
 						:k-man
@@ -124,7 +128,9 @@
 						:klausur-css-classes
 						:patch-klausur
 						:update-klausurblockung
-						:show-schuelerklausuren="true" />
+						:show-schuelerklausuren="true"
+						:goto-kalenderdatum
+						:goto-raumzeit-termin />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />
@@ -139,12 +145,10 @@
 <script setup lang="ts">
 
 	import type { JavaSet} from "@core";
-	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList } from "@core";
+	import { GostKlausurplanManager, GostKursklausur, DateUtils, GostKlausurtermin, GostSchuelerklausurTermin, GostNachschreibterminblockungKonfiguration, HashSet, ArrayList, BenutzerKompetenz } from "@core";
 	import { computed, ref, onMounted } from 'vue';
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
 	import type { GostKlausurplanungNachschreiberProps } from "./SGostKlausurplanungNachschreiberProps";
-	import { RouteManager } from '~/router/RouteManager';
-	import { routeGostKlausurplanungNachschreiber } from '~/router/apps/gost/klausurplanung/RouteGostKlausurplanungNachschreiber';
 	import type { DataTableColumn } from "@ui";
 
 	const _showModalTerminGrund = ref<boolean>(false);
@@ -161,6 +165,8 @@
 	const loading = ref<boolean>(false);
 
 	const props = defineProps<GostKlausurplanungNachschreiberProps>();
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
 	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
@@ -185,7 +191,7 @@
 	}
 
 	function draggable(data: GostKlausurplanungDragData) {
-		return data instanceof GostSchuelerklausurTermin;
+		return hatKompetenzUpdate.value && data instanceof GostSchuelerklausurTermin;
 	}
 
 	const onDrop = async (zone: GostKlausurplanungDropZone) => {

@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
 export class GostLaufbahnplanungFachkombinationTyp extends JavaEnum<GostLaufbahnplanungFachkombinationTyp> {
@@ -89,6 +90,8 @@ export class GostLaufbahnplanungFachkombinationTyp extends JavaEnum<GostLaufbahn
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<GostLaufbahnplanungFachkombinationTyp>('de.svws_nrw.core.types.gost.GostLaufbahnplanungFachkombinationTyp');
 
 }
 

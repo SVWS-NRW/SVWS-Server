@@ -3,11 +3,12 @@ package de.svws_nrw.data.lehrer;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
-import de.svws_nrw.core.data.lehrer.LehrerLehramtEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerLehramt;
-import de.svws_nrw.core.types.lehrer.LehrerLehramtAnerkennung;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtEintrag;
+import de.svws_nrw.asd.data.lehrer.LehrerLehramtKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramt;
+import de.svws_nrw.asd.types.lehrer.LehrerLehramtAnerkennung;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.lehrer.DTOLehrerLehramt;
@@ -30,16 +31,16 @@ public final class DataLehrerLehramt extends DataManager<Long> {
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrerLehramt} in einen Core-DTO {@link LehrerLehramtEintrag}.
-	 */
-	private static final Function<DTOLehrerLehramt, LehrerLehramtEintrag> dtoMapper = (final DTOLehrerLehramt l) -> {
+	private static LehrerLehramtEintrag map(final DBEntityManager conn, final DTOLehrerLehramt l) {
+		final int schuljahr = conn.getUser().schuleGetSchuljahr();
 		final LehrerLehramtEintrag daten = new LehrerLehramtEintrag();
 		daten.id = l.Lehrer_ID;
-		final LehrerLehramt lehramt = LehrerLehramt.getByKuerzel(l.LehramtKrz);
-		daten.idLehramt = (lehramt == null) ? null : lehramt.daten.id;
-		final LehrerLehramtAnerkennung anerkennung = LehrerLehramtAnerkennung.getByKuerzel(l.LehramtAnerkennungKrz);
-		daten.idAnerkennungsgrund = (anerkennung == null) ? null : anerkennung.daten.id;
+		final LehrerLehramt lehramt = LehrerLehramt.data().getWertByKuerzel(l.LehramtKrz);
+		final LehrerLehramtKatalogEintrag eintragLehramt = (lehramt == null) ? null : lehramt.daten(schuljahr);
+		daten.idLehramt = (eintragLehramt == null) ? null : eintragLehramt.id;
+		final LehrerLehramtAnerkennung anerkennung = LehrerLehramtAnerkennung.data().getWertByKuerzel(l.LehramtAnerkennungKrz);
+		final LehrerLehramtAnerkennungKatalogEintrag eintragAnerkennung = (anerkennung == null) ? null : anerkennung.daten(schuljahr);
+		daten.idAnerkennungsgrund = (eintragAnerkennung == null) ? null : eintragAnerkennung.id;
 		return daten;
 	};
 
@@ -69,7 +70,7 @@ public final class DataLehrerLehramt extends DataManager<Long> {
 			return result;
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerLehramt l : daten)
-			result.add(dtoMapper.apply(l));
+			result.add(map(conn, l));
 		return result;
 	}
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { AVLMapNode } from '../../../core/adt/map/AVLMapNode';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
@@ -63,6 +64,8 @@ export class AVLMapSubKeySetIterator<K, V> extends JavaObject implements JavaIte
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapSubKeySetIterator', 'java.util.Iterator'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubKeySetIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubKeySetIterator');
 
 }
 

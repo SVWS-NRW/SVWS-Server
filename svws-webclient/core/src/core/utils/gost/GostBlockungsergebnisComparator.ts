@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
 import { GostBlockungsergebnisBewertungComparator } from '../../../core/utils/gost/GostBlockungsergebnisBewertungComparator';
+import { Class } from '../../../java/lang/Class';
 import type { Comparator } from '../../../java/util/Comparator';
 
 export class GostBlockungsergebnisComparator extends JavaObject implements Comparator<GostBlockungsergebnis> {
@@ -37,6 +38,8 @@ export class GostBlockungsergebnisComparator extends JavaObject implements Compa
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator', 'java.util.Comparator'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnisComparator>('de.svws_nrw.core.utils.gost.GostBlockungsergebnisComparator');
 
 }
 

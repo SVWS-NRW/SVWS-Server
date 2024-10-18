@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 
-	import type { GostBlockungsdatenManager } from '@core';
 	import { ref } from 'vue';
+	import type { GostBlockungsdatenManager } from '@core';
 
 	const props = defineProps<{
 		blockungsname: string;

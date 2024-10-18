@@ -1,5 +1,6 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 import { Arrays } from '../../java/util/Arrays';
 import { JavaMath } from '../../java/lang/JavaMath';
@@ -512,6 +513,8 @@ export class KursblockungDynStatistik extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynStatistik'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynStatistik>('de.svws_nrw.core.kursblockung.KursblockungDynStatistik');
 
 }
 

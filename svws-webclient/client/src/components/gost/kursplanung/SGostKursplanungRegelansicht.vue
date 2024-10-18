@@ -257,14 +257,14 @@
 	import { computed, ref } from 'vue';
 	import type { ApiStatus } from '~/components/ApiStatus';
 	import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, List , Schueler, GostFach} from "@core";
-	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, GostKursart, SetUtils,
-		GostBlockungRegelUpdate, DeveloperNotificationException } from "@core";
+	import { ArrayList, GostBlockungKurs, GostBlockungRegel, GostBlockungSchiene, GostKursblockungRegelTyp, GostKursart, SetUtils, GostBlockungRegelUpdate, DeveloperNotificationException } from "@core";
 
 	const props = defineProps<{
 		getDatenmanager: () => GostBlockungsdatenManager;
 		getErgebnismanager: () => GostBlockungsergebnisManager;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 		apiStatus: ApiStatus;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	const nurRegelverletzungen = ref<boolean>(false);
@@ -273,7 +273,7 @@
 
 	const schueler = computed<List<Schueler>>(() => props.getDatenmanager().schuelerGetListe());
 
-	const disabled = computed<boolean>(() => props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() !== 1);
+	const disabled = computed<boolean>(() => !props.hatUpdateKompetenz);
 
 	const schienen = computed<List<GostBlockungSchiene>>(() => props.getDatenmanager().schieneGetListe());
 
@@ -476,7 +476,7 @@
 	}
 
 	const hatRegel = computed<boolean>({
-		get: () => props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN).isEmpty(),
+		get: () => !props.getDatenmanager().regelGetListeOfTyp(GostKursblockungRegelTyp.LEHRKRAEFTE_BEACHTEN).isEmpty(),
 		set: (erstellen) => void props.regelnUpdate(props.getErgebnismanager().regelupdateCreate_10_LEHRKRAEFTE_BEACHTEN(erstellen))
 	})
 
@@ -574,7 +574,7 @@
 		const fach = props.getDatenmanager().faecherManager().getOrException(kurs.fach_id);
 		const kuerzel = fach.kuerzelAnzeige ?? "??";
 		const kursart = (kurs.kursart > 0) ? GostKursart.fromID(kurs.kursart).kuerzel : 'kursart-fehlt';
-		const suffix = kurs.suffix ? "-" + kurs.suffix : "";
+		const suffix = (kurs.suffix.length > 0) ? "-" + kurs.suffix : "";
 		return `${kuerzel}-${kursart}${kurs.nummer.toString()}${suffix}`
 	}
 

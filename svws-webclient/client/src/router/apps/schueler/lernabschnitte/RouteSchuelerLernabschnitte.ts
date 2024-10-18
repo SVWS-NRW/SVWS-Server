@@ -14,9 +14,10 @@ import { routeSchuelerLernabschnittZeugnisdruck } from "~/router/apps/schueler/l
 import { routeSchuelerLernabschnittNachpruefung } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittNachpruefung";
 import { RouteDataSchuelerLernabschnitte } from "~/router/apps/schueler/lernabschnitte/RouteDataSchuelerLernabschnitte";
 
-import type { SchuelerLernabschnitteProps, SchuelerLernabschnitteAuswahlChildData } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
+import type { SchuelerLernabschnitteProps } from "~/components/schueler/lernabschnitte/SSchuelerLernabschnitteProps";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
 import { routeApp } from "../../RouteApp";
+import type { TabData } from "@ui";
 
 const SSchuelerLernabschnitte = () => import("~/components/schueler/lernabschnitte/SSchuelerLernabschnitte.vue");
 
@@ -41,23 +42,27 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.id instanceof Array || to_params.abschnitt instanceof Array || to_params.wechselNr instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein"));
-		if (to_params.id === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben."));
-		const id = parseInt(to_params.id);
-		await this.data.setSchueler(id, isEntering);
-		if (to_params.abschnitt !== undefined) {
-			const idSchuljahresabschnitt = parseInt(to_params.abschnitt);
-			const wechselNr = (to_params.wechselNr === undefined) ? 0 : parseInt(to_params.wechselNr);
-			await routeSchuelerLernabschnitte.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr);
+		try {
+			const { id, abschnitt: idSchuljahresabschnitt, wechselNr } = RouteNode.getIntParams(to_params, ["id", "abschnitt", "wechselNr"]);
+			if (id === undefined)
+				throw new DeveloperNotificationException("Fehler: Keine Schüler-ID in der URL angegeben.");
+			await this.data.setSchueler(id, isEntering);
+			if (idSchuljahresabschnitt !== undefined) {
+				await routeSchuelerLernabschnitte.data.setLernabschnitt(idSchuljahresabschnitt, wechselNr ?? 0);
+			}
+			if ((to === this) && (this.data.hatAuswahl))
+				return this.getChildRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		if ((to === this) && (this.data.hatAuswahl))
-			return this.getChildRoute(id, this.data.auswahl.schuljahresabschnitt, this.data.auswahl.wechselNr);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
+	}
+
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
 	}
 
 	public getChildRoute(id: number, abschnitt: number | undefined, wechselNr: number | undefined) : RouteLocationRaw {
@@ -73,25 +78,11 @@ export class RouteSchuelerLernabschnitte extends RouteNode<RouteDataSchuelerLern
 			lernabschnitt: routeSchuelerLernabschnitte.data.auswahl,
 			lernabschnitte: routeSchuelerLernabschnitte.data.listAbschnitte,
 			gotoLernabschnitt: routeSchuelerLernabschnitte.data.gotoLernabschnitt,
-			setChild: this.setChild,
-			child: this.getChild(),
-			children: this.getChildData(),
-			childrenHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getChild(): SchuelerLernabschnitteAuswahlChildData {
-		return this.data.view;
-	}
-
-	private getChildData(): SchuelerLernabschnitteAuswahlChildData[] {
-		const result: SchuelerLernabschnitteAuswahlChildData[] = [];
-		for (const c of this.children)
-			result.push(c);
-		return result;
-	}
-
-	private setChild = async (value: SchuelerLernabschnitteAuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

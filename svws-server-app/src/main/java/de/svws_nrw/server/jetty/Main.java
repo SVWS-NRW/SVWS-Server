@@ -5,6 +5,7 @@ import java.util.List;
 
 import de.svws_nrw.api.ResourceFileManager;
 import de.svws_nrw.api.SVWSVersion;
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.config.LogConsumerLogfile;
 import de.svws_nrw.config.SVWSKonfiguration;
 import de.svws_nrw.core.data.db.DBSchemaListeEintrag;
@@ -13,7 +14,6 @@ import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import jakarta.ws.rs.core.Response.Status;
@@ -49,7 +49,7 @@ public class Main {
 		}
 		logger.logLn("Revision veraltet - führe Update aus...");
 		logger.modifyIndent(2);
-		final boolean success = dbManager.updater.update(dbManager.getUser(), -1, devMode, true);
+		final boolean success = dbManager.updater.update(dbManager.getConnection(), -1, devMode, true);
 		logger.modifyIndent(-2);
 		if (logfile != null)
 			logger.removeConsumer(logfile);
@@ -79,7 +79,8 @@ public class Main {
 		}
 		logger.logLn("Core-Types veraltet - führe Update aus...");
 		logger.modifyIndent(2);
-		final boolean success = dbManager.updater.coreTypes.update(dbManager.getUser(), true, -1);
+
+		final boolean success = dbManager.updater.coreTypes.updateNewTransaction(dbManager.getConnection(), true, -1);
 		logger.modifyIndent(-2);
 		if (logfile != null)
 			logger.removeConsumer(logfile);
@@ -102,20 +103,14 @@ public class Main {
 		logger.modifyIndent(2);
 		final DBConfig dbconfig = svwsconfig.getDBConfig(schema.name);
 		boolean schemaOK = true;
-		Benutzer dbUser = null;
-		try {
-			dbUser = Benutzer.create(dbconfig);
-		} catch (final DBException e) {
-			logger.logLn(e.getMessage());
-			schemaOK = false;
-		}
-		if (schemaOK && (dbUser != null)) {
+		final Benutzer dbUser = Benutzer.create(dbconfig);
+		if (dbUser != null) {
 			try (DBEntityManager dbConn = dbUser.getEntityManager()) {
 				if (dbConn == null) {
 					logger.logLn("Verbindung zu dem Schema " + schema.name + " nicht möglich!");
 					return;
 				}
-				final DBSchemaManager dbManager = DBSchemaManager.create(dbUser, true, logger);
+				final DBSchemaManager dbManager = DBSchemaManager.create(dbConn, true, logger);
 				if (!dbManager.updater.isUptodate(-1, devMode) && !updateSchema(dbManager, logger))
 					schemaOK = false;
 				if (!dbManager.updater.coreTypes.isUptodate() && !updateSchemaCoreTypes(dbManager, logger))
@@ -162,6 +157,9 @@ public class Main {
 		logger.logLn("  Gesamt: " + (Math.round(Runtime.getRuntime().maxMemory() / 10000000.0) / 100.0) + "G");
 		logger.logLn("  Belegt: " + (Math.round(Runtime.getRuntime().totalMemory() / 10000000.0) / 100.0) + "G");
 		logger.logLn("  Frei: " + (Math.round(Runtime.getRuntime().freeMemory() / 10000000.0) / 100.0) + "G");
+
+		// Initialisiere die Core-Types
+		ASDCoreTypeUtils.initAll();
 
 		// Lese Konfiguration
 		final SVWSKonfiguration svwsconfig = SVWSKonfiguration.get();

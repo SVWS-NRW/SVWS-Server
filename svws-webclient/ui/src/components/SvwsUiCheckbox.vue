@@ -1,9 +1,9 @@
 <template>
 	<div class="inline-flex">
-		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title="title">
-			<input type="checkbox" v-model="checked" :disabled="disabled" :readonly="readonly" :indeterminate="indeterminate" :class="{'svws-headless': headless && type !== 'toggle'}" :color="color">
+		<label class="svws-ui-checkbox" :class="{'svws-statistik': statistics, 'svws-bw': bw, 'svws-ui-toggle': type === 'toggle'}" :title>
+			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle'}" :disabled :readonly :indeterminate :color ref="input">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
-			<span class="svws-ui-checkbox--label" v-if="$slots.default">
+			<span v-if="$slots.default" class="svws-ui-checkbox--label">
 				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
 					<svws-ui-tooltip position="right">
 						<span class="icon i-ri-bar-chart-2-line pointer-events-auto" />
@@ -20,7 +20,8 @@
 
 <script lang="ts" setup>
 
-	import { computed } from 'vue';
+	import type { ComputedRef, Ref } from 'vue';
+	import { computed, ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
 		modelValue: boolean;
@@ -57,6 +58,13 @@
 		}
 	})
 
+	const input = ref<null | HTMLInputElement>(null);
+	const content = computed<boolean>(() => checked.value);
+
+	defineExpose<{
+		content: ComputedRef<boolean>,
+		input: Ref<HTMLInputElement | null>,
+	}>({ content, input });
 </script>
 
 <style lang="postcss">

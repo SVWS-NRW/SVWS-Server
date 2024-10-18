@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -47,7 +47,7 @@ public class Tabelle_SchuelerLD_PSFachBem extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte BemerkungVersetzung */
 	public SchemaTabelleSpalte col_BemerkungVersetzung = add("BemerkungVersetzung", SchemaDatentypen.TEXT, false)
-			.setJavaComment("Text für Verstungsentscheidung");
+			.setJavaComment("Text für Versetzungsentscheidung");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */
 	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)

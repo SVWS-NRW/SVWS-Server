@@ -6,6 +6,7 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { Sprachpruefung } from '../../../core/data/schueler/Sprachpruefung';
 import { Sprachpruefungniveau } from '../../../core/types/fach/Sprachpruefungniveau';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Sprachendaten } from '../../../core/data/schueler/Sprachendaten';
 import type { Comparator } from '../../../java/util/Comparator';
 
@@ -525,7 +526,7 @@ export class SprachendatenUtils extends JavaObject {
 			default: {
 				try {
 					return JavaInteger.parseInt(kuerzelJg);
-				} catch(e) {
+				} catch(e : any) {
 					return 0;
 				}
 			}
@@ -539,6 +540,8 @@ export class SprachendatenUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schueler.SprachendatenUtils'].includes(name);
 	}
+
+	public static class = new Class<SprachendatenUtils>('de.svws_nrw.core.utils.schueler.SprachendatenUtils');
 
 }
 

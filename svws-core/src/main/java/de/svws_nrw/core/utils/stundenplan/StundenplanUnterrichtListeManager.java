@@ -10,13 +10,13 @@ import de.svws_nrw.core.data.stundenplan.StundenplanKlasse;
 import de.svws_nrw.core.data.stundenplan.StundenplanKurs;
 import de.svws_nrw.core.data.stundenplan.StundenplanUnterricht;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.stundenplan.StundenplanFach;
 import de.svws_nrw.core.data.stundenplan.StundenplanLehrer;
 import de.svws_nrw.core.data.stundenplan.StundenplanRaum;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.types.Wochentag;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
 import jakarta.validation.constraints.NotNull;
@@ -185,9 +185,12 @@ public final class StundenplanUnterrichtListeManager extends AuswahlManager<Long
 			return false;
 		if (!checkContains(this.schienen, eintrag.schienen))
 			return false;
-		// final @NotNull List<StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
-		// if (!checkContains(this.schueler, listeSchueler))
-		// 	return false;
+		final @NotNull List<StundenplanSchueler> listeSchueler = stundenplanManager.schuelerGetMengeByUnterrichtIdAsList(eintrag.id);
+		final @NotNull List<Long> listIdSchueler = new ArrayList<>();
+		for (final StundenplanSchueler s : listeSchueler)
+			listIdSchueler.add(s.id);
+		if (!checkContains(this.schueler, listIdSchueler))
+			return false;
 		return true;
 	}
 

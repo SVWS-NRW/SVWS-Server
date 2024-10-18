@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class VerkehrsspracheKatalogEintrag extends JavaObject {
 
@@ -80,6 +81,8 @@ export class VerkehrsspracheKatalogEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag'].includes(name);
 	}
+
+	public static class = new Class<VerkehrsspracheKatalogEintrag>('de.svws_nrw.core.data.schule.VerkehrsspracheKatalogEintrag');
 
 	public static transpilerFromJSON(json : string): VerkehrsspracheKatalogEintrag {
 		const obj = JSON.parse(json) as Partial<VerkehrsspracheKatalogEintrag>;

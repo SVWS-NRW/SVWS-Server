@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.ExecutableElement;
@@ -574,6 +575,8 @@ public class TypeNode {
 		if (resolved.containsKey(typeVar)) {
 			final TypeMirror tm = resolved.get(typeVar);
 			final TypeNode tn = new TypeNode(plugin, tm, true, !Transpiler.hasAllowNullAnnotation(tv), resolved);
+			if ((tm instanceof final TypeVariable tv2) && (Objects.equals(tv.toString(), tv2.toString())))
+				return tv.toString();
 			return tn.transpile(false);
 		}
 		if (withBounds) {
@@ -597,8 +600,17 @@ public class TypeNode {
 		final ExpressionType type = plugin.getTranspiler().getExpressionType(node.getExpression());
 		if (type instanceof final ExpressionClassType ect) // for nested classes and interfaces
 			return TranspilerTypeScriptPlugin.getImportName(classname, ect.getFullQualifiedName()) + ((decl && !notNull) ? " | null" : "");
-		if ("Object".equals(classname) && "java.lang".equals(packagename))
-			return "object" + ((decl && !notNull) ? " | null" : "");
+		if ("java.lang".equals(packagename)) {
+			final String result = switch (classname) {
+				case "Object" -> "object" + ((decl && !notNull) ? " | null" : "");
+				case "Byte", "Short", "Integer", "Long", "Float", "Double"
+					-> "number" + ((decl && !notNull) ? " | null" : "");
+				case "String" -> "string" + ((decl && !notNull) ? " | null" : "");
+				default -> null;
+			};
+			if (result != null)
+				return result;
+		}
 		return TranspilerTypeScriptPlugin.getImportName(classname, packagename) + ((decl && !notNull) ? " | null" : "");
 	}
 
@@ -648,6 +660,14 @@ public class TypeNode {
 		return sb.toString();
 	}
 
+	private String transpileClass(final ClassTree node) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(node.getSimpleName().toString());
+		if (!notNull)
+			sb.append(" | null");
+		return sb.toString();
+	}
+
 	private String transpileInternal(final boolean noTypeArgs, final boolean parentNotNull, final boolean contentNotNull, final boolean noBounds) {
 		if ((node == null) && (typeMirror == null))
 			return "void";
@@ -668,6 +688,8 @@ public class TypeNode {
 				return this.transpileWildcard(wt);
 			if (node instanceof final TypeParameterTree tpt)
 				return this.transpileTypeParameter(tpt, noBounds);
+			if (node instanceof final ClassTree ct)
+				return this.transpileClass(ct);
 			throw new TranspilerException("Transpiler Error: Type node of kind " + node.getKind() + " not yet supported by the transpiler.");
 		}
 		if (typeMirror.getKind().isPrimitive())
@@ -874,7 +896,7 @@ public class TypeNode {
 		if (node instanceof final ParameterizedTypeTree p)
 			return getParameterizedTypeBaseTypeNode(p).getTypeCast(identifier);
 		if (node instanceof ArrayTypeTree)
-			return identifier;
+			return identifier + " as unknown as " + this.transpileInternal(false, this.notNull, this.notNull, false);
 		if (node instanceof final AnnotatedTypeTree att) {
 			final boolean hasNotNull = plugin.getTranspiler().hasNotNullAnnotation(att);
 			final TypeNode underlyingTypeNode = new TypeNode(plugin, att.getUnderlyingType(), decl, hasNotNull);

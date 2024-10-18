@@ -41,4 +41,11 @@ public class KlausurblockungNachschreiberAlgorithmusBewertung {
 		return 0;
 	}
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public KlausurblockungNachschreiberAlgorithmusBewertung() {
+		super();
+	}
+
 }

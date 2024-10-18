@@ -10,7 +10,7 @@ icon: 'ri:code-s-slash-line'
 In diesem Guide werden die wichtigsten Informationen und Best Practices für die Entwicklung von UI-Komponenten für den
 SVWS Client zusammengefasst.
 
-* [Farben](/story/farben)
+* [Farben](/story/color)
 * [Icons](/story/icons)
 * [Performance](#performance)
   * [Komponente oder nur ein `div`?](#komponente-oder-nur-ein-div)

@@ -105,9 +105,9 @@ describe.each(Object.entries(abiturdaten))(
 		for (let index = 0; index < gost_fachkombis.length; index++) {
 			listKombis.add(gost_fachkombis[index]);
 		}
-		const faecherManager = new GostFaecherManager(list, listKombis);
 		describe.each(Object.entries(schueler))("Testfall %s", (id, abitur) => {
 			test("EF1", () => {
+				const faecherManager = new GostFaecherManager(1, list, listKombis);
 				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =
@@ -128,6 +128,7 @@ describe.each(Object.entries(abiturdaten))(
 				expect(fehlercodes_expected).toEqual(fehlercodes_ergebnis);
 			});
 			test("Gesamt", () => {
+				const faecherManager = new GostFaecherManager(1, list, listKombis);
 				const manager = new AbiturdatenManager(abitur, jahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 				const ergebnis = manager.getBelegpruefungErgebnis();
 				const expected: GostBelegpruefungErgebnis =

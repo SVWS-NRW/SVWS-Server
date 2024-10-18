@@ -19,7 +19,7 @@ import de.svws_nrw.core.data.gost.GostLeistungen;
 import de.svws_nrw.core.data.gost.GostLeistungenFachbelegung;
 import de.svws_nrw.core.data.gost.GostLeistungenFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -490,8 +490,8 @@ public final class ABPSchuelerFaecher {
 						}
 					}
 					if (belegung != null) {
-						final String note = Note.fromKuerzel(belegung.notenKuerzel).istNote() ? ("" + Note.fromKuerzel(belegung.notenKuerzel).notenpunkte)
-								: Note.fromKuerzel(belegung.notenKuerzel).kuerzel;
+						final Note tmpNote = Note.fromKuerzel(belegung.notenKuerzel);
+						final String note = tmpNote.istNote(2024) ? ("" + tmpNote.daten(2024).notenpunkte) : tmpNote.daten(2024).kuerzel;
 						if (halbjahr == GostHalbjahr.EF1) {
 							eintrag.Kursart_E1 = getKursart(belegung);
 							eintrag.Punkte_E1 = note;

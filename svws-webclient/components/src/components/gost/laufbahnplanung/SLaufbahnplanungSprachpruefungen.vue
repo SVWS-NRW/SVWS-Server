@@ -4,7 +4,7 @@
 			<svws-ui-tooltip>
 				{{ pruefung.sprache }}
 				<template #content>
-					{{ ZulaessigesFach.getFremdspracheByKuerzelAtomar(pruefung.sprache).daten.bezeichnung }}
+					{{ Fach.data().getWertByKuerzel(pruefung.sprache)?.daten(schuljahr)?.text ?? '' }}
 				</template>
 			</svws-ui-tooltip>
 		</template>
@@ -24,9 +24,10 @@
 <script setup lang="ts">
 	import type { Sprachendaten } from '../../../../../core/src/core/data/schueler/Sprachendaten';
 	import { Sprachpruefungniveau } from '../../../../../core/src/core/types/fach/Sprachpruefungniveau';
-	import { ZulaessigesFach } from '../../../../../core/src/core/types/fach/ZulaessigesFach';
+	import { Fach } from '../../../../../core/src/asd/types/fach/Fach';
 
 	const props = defineProps<{
+		schuljahr: number;
 		sprachendaten: () => Sprachendaten;
 	}>();
 	const columns = [{key: 'sprache', label: 'Sprachprüfung',}, {key: 'typ', label: 'Typ',}, {key: 'anspruchsniveauId', label: "Niveau",}, {key: 'ersetzt', label: 'Ersetzt',}, {key: 'note', label: 'Note'}];

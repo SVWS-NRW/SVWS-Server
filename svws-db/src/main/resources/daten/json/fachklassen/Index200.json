@@ -1,6 +1,6 @@
 {
 	"index": 200,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -203,7 +203,7 @@
 				"bezeichnung": "Sonstiger Bildungsgang",
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": 2022,
+				"gueltigVon": null,
 				"gueltigBis": null
 			} ]
 		}

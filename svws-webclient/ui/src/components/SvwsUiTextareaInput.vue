@@ -40,16 +40,14 @@
 
 <script setup lang="ts">
 
-	import type { Ref } from 'vue';
 	import { ref, computed, watch, nextTick } from 'vue';
 
 	type ResizableOption = "both" | "horizontal" | "vertical" | "none";
-	type InputDataType = string | null;
 
 	const props = withDefaults(defineProps<{
-		modelValue?: InputDataType;
+		modelValue?: string | null;
 		placeholder?: string;
-		valid?: (value: InputDataType) => boolean;
+		valid?: (value: string | null) => boolean;
 		statistics?: boolean;
 		required?: boolean;
 		disabled?: boolean;
@@ -75,13 +73,12 @@
 	})
 
 	const emit = defineEmits<{
-		"update:modelValue": [value: InputDataType];
-		"change": [value: InputDataType];
-		"blur": [value: InputDataType];
+		"update:modelValue": [value: string | null];
+		"change": [value: string | null];
+		"blur": [value: string | null];
 	}>();
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
-	const data = ref<InputDataType>(props.modelValue);
+	const data = ref<string | null>(props.modelValue);
 
 	const dataOrEmpty = computed<string>({
 		get: () => data.value === null ? '' : data.value,
@@ -90,25 +87,24 @@
 
 	const textarea = ref<HTMLTextAreaElement | null>(null);
 	watch([data], () => nextTick(() => {
-		if (textarea.value !== null) {
-			textarea.value.style.height = `${textarea.value.scrollHeight > textarea.value.clientHeight ? textarea.value.scrollHeight :  {}}px`;
-		}
+		if (textarea.value !== null)
+			textarea.value.style.height = textarea.value.scrollHeight > textarea.value.clientHeight ? `${textarea.value.scrollHeight}px`: 'inherit';
 	}), { immediate: true })
 
-	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
 	const isValid = computed(() => {
 		let tmpIsValid = true;
 		if ((props.required === true) && (data.value === null))
 			return false;
-		if (tmpIsValid && (props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if ((props.maxLen !== undefined) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
 			tmpIsValid = false;
-		if (tmpIsValid && (((data.value !== null) || (data.value !== ''))))
+		if (tmpIsValid && (data.value !== null) && (data.value !== ''))
 			tmpIsValid = props.valid(data.value);
 		return tmpIsValid;
 	})
 
-	function updateData(value: InputDataType) {
+	function updateData(value: string | null) {
 		if (data.value !== value) {
 			data.value = value;
 			emit("update:modelValue", data.value);
@@ -138,11 +134,7 @@
 			emit("change", data.value);
 	}
 
-	defineExpose<{
-		content: Ref<InputDataType>,
-	}>({
-		content: data
-	});
+	defineExpose({ content: data });
 
 </script>
 

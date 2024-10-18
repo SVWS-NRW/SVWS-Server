@@ -1,4 +1,4 @@
-import { type ShallowRef, shallowRef } from "vue";
+import { type ShallowRef, shallowRef, ref } from "vue";
 
 import { type RouteNode } from "~/router/RouteNode";
 import { DeveloperNotificationException } from "@core";
@@ -27,6 +27,8 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 	/** Der aktuelle State */
 	protected _state : ShallowRef<RouteState>;
 
+	/** Parameter zum automatischen Setzen des Fokus nach der Reiterauswahl */
+	protected _autofocus = ref<boolean>(false);
 
 	/**
 	 * Erzeugt ein neues Route-Daten-Objekt mit dem übergebenen Default-State.
@@ -136,6 +138,20 @@ export abstract class RouteData<RouteState extends RouteStateInterface> {
 		if (this._state.value.view === undefined)
 			throw new DeveloperNotificationException("Bei dieser Route wurde keine Ansicht im Default-State definiert.");
 		return this._state.value.view;
+	}
+
+	/**
+	 * Getter für die Information, ob die aktuelle Ansicht einen Autofokus unterstützen soll.
+	 */
+	public get autofocus(): boolean {
+		return this._autofocus.value;
+	}
+
+	/**
+	 * Setter für die Information, ob die aktuelle Ansicht einen Autofokus unterstützen soll.
+	 */
+	public set autofocus(value: boolean) {
+		this._autofocus.value = value;
 	}
 
 }

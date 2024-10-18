@@ -9,11 +9,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKurs;
 import de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung;
@@ -37,9 +39,20 @@ import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
 @DisplayName("Testet den {@link GostBlockungsergebnisManager}.")
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class GostBlockungsergebnisManagerTest {
+
 	private static final long RANDOM_SEED = 6L;
 	private static final String PFAD_DATEN_001 = "de/svws_nrw/core/kursblockung/blockung001/";
 	private static final String PFAD_DATEN_002 = "de/svws_nrw/core/kursblockung/blockung002/";
+
+
+	/**
+	 * Initialisierung der Core-Types
+	 */
+	@BeforeAll
+	static void setup() {
+		ASDCoreTypeUtils.initAll();
+	}
+
 
 	/**
 	 * Testet das Einlesen und Konvertieren der Daten 001. Diese befinden sich hier {@link #PFAD_DATEN_001}.

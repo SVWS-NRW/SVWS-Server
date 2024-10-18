@@ -5,6 +5,7 @@ import { StundenplanblockungManagerLehrkraft } from '../../../core/utils/stunden
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungManagerKlasse } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasse';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerKopplung } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplung';
 
 export class StundenplanblockungManagerLerngruppe extends JavaObject {
@@ -173,6 +174,8 @@ export class StundenplanblockungManagerLerngruppe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppe'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerLerngruppe>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppe');
 
 }
 

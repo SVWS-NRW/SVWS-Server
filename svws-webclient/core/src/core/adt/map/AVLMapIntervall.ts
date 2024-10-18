@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class AVLMapIntervall<K> extends JavaObject {
 
@@ -60,6 +61,8 @@ export class AVLMapIntervall<K> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.AVLMapIntervall'].includes(name);
 	}
+
+	public static class = new Class<AVLMapIntervall<any>>('de.svws_nrw.core.adt.map.AVLMapIntervall');
 
 }
 

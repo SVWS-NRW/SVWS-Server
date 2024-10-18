@@ -3,6 +3,7 @@ import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegun
 import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBelegpruefungsArt';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -65,6 +66,8 @@ export class LiterarischKuenstlerisch extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch'].includes(name);
 	}
+
+	public static class = new Class<LiterarischKuenstlerisch>('de.svws_nrw.core.abschluss.gost.belegpruefung.LiterarischKuenstlerisch');
 
 }
 

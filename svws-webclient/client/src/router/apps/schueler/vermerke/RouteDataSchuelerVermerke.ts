@@ -76,7 +76,7 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 		if ((auswahl === null) || (auswahl === undefined)) {
 			this.setPatchedDefaultState({});
 		} else {
-			const schuelerVermerke =  await api.server.getVermerkdaten(api.schema, auswahl.id);
+			const schuelerVermerke = await api.server.getVermerkdaten(api.schema, auswahl.id);
 			const vermerkArten = await api.server.getVermerkarten(api.schema);
 			const mapVermerkArten = new Map();
 			for (const va of vermerkArten)

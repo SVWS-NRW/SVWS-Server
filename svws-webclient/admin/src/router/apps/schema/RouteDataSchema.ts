@@ -1,8 +1,5 @@
 import { type Ref, ref, shallowRef } from "vue";
 
-import type { BenutzerKennwort , BenutzerListeEintrag, Comparator,  List, SchuleInfo, SchulenKatalogEintrag } from "@core";
-import { ArrayList, DatenbankVerbindungsdaten, DeveloperNotificationException, JavaString, MigrateBody, OpenApiError, SchemaListeEintrag, SimpleOperationResponse } from "@core";
-
 import { api } from "~/router/Api";
 import { RouteManager } from "~/router/RouteManager";
 import type { RouteNode } from "~/router/RouteNode";
@@ -11,6 +8,20 @@ import { routeApp } from "../RouteApp";
 import { routeSchema } from "~/router/apps/schema/RouteSchema";
 import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSchemaUebersicht";
 import type { SchemaMigrationQuelle } from "~/components/schema/SchemaMigrationQuelle";
+import { SchemaListeEintrag } from "../../../../../core/src/core/data/db/SchemaListeEintrag";
+import type { SchuleInfo } from "../../../../../core/src/core/data/schule/SchuleInfo";
+import type { SchulenKatalogEintrag } from "../../../../../core/src/core/data/schule/SchulenKatalogEintrag";
+import type { List } from "../../../../../core/src/java/util/List";
+import { ArrayList } from "../../../../../core/src/java/util/ArrayList";
+import type { BenutzerListeEintrag } from "../../../../../core/src/core/data/benutzer/BenutzerListeEintrag";
+import type { Comparator } from "../../../../../core/src/java/util/Comparator";
+import { DeveloperNotificationException } from "../../../../../core/src/core/exceptions/DeveloperNotificationException";
+import type { BenutzerKennwort } from "../../../../../core/src/core/data/BenutzerKennwort";
+import { SimpleOperationResponse } from "../../../../../core/src/core/data/SimpleOperationResponse";
+import { OpenApiError } from "../../../../../core/src/api/OpenApiError";
+import { MigrateBody } from "../../../../../core/src/core/data/db/MigrateBody";
+import { DatenbankVerbindungsdaten } from "../../../../../core/src/core/data/schema/DatenbankVerbindungsdaten";
+import { JavaString } from "../../../../../core/src/java/lang/JavaString";
 
 
 interface RouteStateSchema {
@@ -130,7 +141,7 @@ export class RouteDataSchema {
 	/**
 	 * Initialisiert die Schema-Liste
 	 */
-	public async init(schemaname : string | undefined) {
+	public async init(schemaname : string | undefined, refreshOnly? : boolean) {
 		api.status.start();
 		const mapSchema = new Map<string, SchemaListeEintrag>();
 		const listSchema : List<SchemaListeEintrag> = await api.privileged.getSchemaListe();
@@ -144,8 +155,8 @@ export class RouteDataSchema {
 			if (currSchema === undefined)
 				currSchema = mapSchema.values().next().value;
 		}
-		const revision = await api.server.getServerDBRevision();
-		const schulen: List<SchulenKatalogEintrag> = await api.privileged.getAllgemeinenKatalogSchulen();
+		const revision = (refreshOnly === true) ? this._state.value.revision : await api.server.getServerDBRevision();
+		const schulen: List<SchulenKatalogEintrag> = (refreshOnly === true) ? this._state.value.schulen : await api.privileged.getAllgemeinenKatalogSchulen();
 		const view = routeSchemaUebersicht;
 		const { auswahl, schuleInfo, admins } = await this.getSchemaInformation(currSchema);
 		this.setPatchedDefaultState({ mapSchema, auswahl, schuleInfo, admins, revision, schulen, view });
@@ -196,7 +207,7 @@ export class RouteDataSchema {
 	}
 
 	gotoSchema = async (auswahl: SchemaListeEintrag | undefined) => {
-		if (auswahl === undefined || auswahl === null) {
+		if (auswahl === undefined) {
 			await RouteManager.doRoute({ name: routeSchema.name });
 			return;
 		}
@@ -209,12 +220,12 @@ export class RouteDataSchema {
 		await RouteManager.doRoute('/schemaneu');
 	}
 
-	setAuswahlGruppe = (auswahlGruppe: SchemaListeEintrag[]) =>	{
+	setAuswahlGruppe = async (auswahlGruppe: SchemaListeEintrag[]) =>	{
 		this.setPatchedState({ auswahlGruppe });
 		if ((auswahlGruppe.length > 0) && ((routeApp.selectedChild?.name === 'schema') || (routeApp.selectedChild?.name === 'schemaneu')))
-			RouteManager.doRoute('/schemagruppe');
+			await RouteManager.doRoute('/schemagruppe');
 		else if ((auswahlGruppe.length === 0) && (routeApp.selectedChild?.name === 'schemagruppe'))
-			RouteManager.doRoute('schema');
+			await RouteManager.doRoute('schema');
 	}
 
 	upgradeSchema = async () => {
@@ -223,7 +234,7 @@ export class RouteDataSchema {
 		api.status.start();
 		const result = await api.privileged.updateSchemaToCurrent(this.auswahl.name);
 		api.status.stop();
-		await this.init(this.auswahl.name);
+		await this.init(this.auswahl.name, true);
 		return result;
 	}
 
@@ -238,21 +249,14 @@ export class RouteDataSchema {
 			this._state.value.auswahl = undefined;
 			await this.gotoSchema(undefined);
 		}
-		this.setAuswahlGruppe([]);
+		await this.setAuswahlGruppe([]);
 	}
 
 	addSchema = async (data: BenutzerKennwort, schema: string) => {
 		api.status.start();
 		const result = await api.privileged.createSchemaCurrent(data, schema);
-		const list = await api.privileged.getSVWSSchemaListe();
-		for (const item of list)
-			if (item.name === schema) {
-				this.mapSchema.set(item.name.toLocaleLowerCase(), item);
-				this.setPatchedState({mapSchema: this.mapSchema});
-				await this.setSchema(item);
-				break;
-			}
 		api.status.stop();
+		await this.init(schema, true);
 		return result;
 	}
 
@@ -260,7 +264,7 @@ export class RouteDataSchema {
 		api.status.start();
 		const result = await api.privileged.importSQLite2Schema(data, schema);
 		api.status.stop();
-		await this.init(schema);
+		await this.init(schema, true);
 		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
@@ -283,7 +287,7 @@ export class RouteDataSchema {
 		let result = new SimpleOperationResponse();
 		try {
 			result = await api.privileged.importSQLiteInto(data, this.auswahl.name);
-		} catch (error) {
+		} catch (error: unknown) {
 			if ((error instanceof OpenApiError) && (error.response instanceof Response)) {
 				try {
 					const json = await error.response.text();
@@ -296,11 +300,12 @@ export class RouteDataSchema {
 			} else {
 				result = new SimpleOperationResponse();
 				result.success = false;
-				result.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unterwarteten Fehler: " + error);
+				const out = error instanceof Error ? error.message : 'unbekannter Fehler';
+				result.log.add("Es soll ein Backup wiederhergestellt werden, aber es gab einen unerwarteten Fehler: " + out);
 			}
 		}
 		api.status.stop();
-		await this.init(this.auswahl.name);
+		await this.init(this.auswahl.name, true);
 		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
@@ -315,6 +320,7 @@ export class RouteDataSchema {
 		formData.append("database", data);
 		const result = await this.importSchema(formData, duplikat);
 		api.status.stop();
+		await this.init(duplikat, true);
 		return result;
 	}
 
@@ -322,21 +328,21 @@ export class RouteDataSchema {
 		const currSchema = this.auswahl?.name;
 		const migrateBody = new MigrateBody();
 		const datenbankVerbindungsdaten = new DatenbankVerbindungsdaten();
-		const db = formData.get('db')?.toString() || null;
-		const schulnummer = parseInt(formData.get('schulnummer')?.toString() || '');
-		let schema = formData.get('schema')?.toString() || null;
+		const db = formData.get('db')?.toString() ?? null;
+		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '0');
+		let schema = formData.get('schema')?.toString() ?? null;
 		if (schema === currSchema) {
-			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() || null;
-			datenbankVerbindungsdaten.schema = formData.get('srcSchema')?.toString() || null;
-			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() || null;
-			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() || null;
+			datenbankVerbindungsdaten.location = formData.get('srcLocation')?.toString() ?? null;
+			datenbankVerbindungsdaten.schema = formData.get('srcSchema')?.toString() ?? null;
+			datenbankVerbindungsdaten.username = formData.get('srcUsername')?.toString() ?? null;
+			datenbankVerbindungsdaten.password = formData.get('srcPassword')?.toString() ?? null;
 		} else {
-			migrateBody.srcLocation = formData.get('srcLocation')?.toString() || null;
-			migrateBody.srcSchema = formData.get('srcSchema')?.toString() || null;
-			migrateBody.srcUsername = formData.get('srcUsername')?.toString() || null;
-			migrateBody.srcPassword = formData.get('srcPassword')?.toString() || null;
-			migrateBody.schemaUsername = formData.get('schemaUsername')?.toString() || api.username;
-			migrateBody.schemaUserPassword = formData.get('schemaUserPassword')?.toString() || null;
+			migrateBody.srcLocation = formData.get('srcLocation')?.toString() ?? null;
+			migrateBody.srcSchema = formData.get('srcSchema')?.toString() ?? null;
+			migrateBody.srcUsername = formData.get('srcUsername')?.toString() ?? null;
+			migrateBody.srcPassword = formData.get('srcPassword')?.toString() ?? null;
+			migrateBody.schemaUsername = formData.get('schemaUsername')?.toString() ?? api.username;
+			migrateBody.schemaUserPassword = formData.get('schemaUserPassword')?.toString() ?? null;
 		}
 		if (schema === null || db === null)
 			throw new DeveloperNotificationException("Es muss ein Schema und eine Datenbank für eine Migration angegeben werden.");
@@ -345,7 +351,7 @@ export class RouteDataSchema {
 		try {
 			switch (db) {
 				case 'mariadb':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMariaDBSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
@@ -357,7 +363,7 @@ export class RouteDataSchema {
 							result = await api.privileged.migrateMariaDB2Schema(migrateBody, schema);
 					break;
 				case 'mysql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMySqlSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
@@ -369,7 +375,7 @@ export class RouteDataSchema {
 							result = await api.privileged.migrateMySQL2Schema(migrateBody, schema);
 					break;
 				case 'mssql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						if (schema === currSchema)
 							result = await api.privileged.migrateMsSqlServerSchulnummerInto(datenbankVerbindungsdaten, schema, schulnummer);
 						else
@@ -403,10 +409,13 @@ export class RouteDataSchema {
 			} else {
 				result = new SimpleOperationResponse();
 				result.success = false;
-				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + error);
+				const out = error instanceof Error ? error.message : 'unbekannter Fehler';
+				result.log.add("Beim Migrieren gab es einen unterwarteten Fehler: " + out);
 			}
 		}
-		await this.init(schema ?? undefined);
+		api.status.stop();
+		await this.init(schema ?? undefined, true);
+		api.status.start();
 		await this.setSchema(this.auswahl);
 		api.status.stop();
 		return result;
@@ -417,13 +426,23 @@ export class RouteDataSchema {
 			throw new DeveloperNotificationException("Es soll ein Schema initialisiert werden, aber es ist kein Schema ausgewählt.");
 		api.status.start();
 		const result = await api.privileged.initSchemaMitSchule(this.auswahl.name, schulnummer);
-		await this.setSchema(this.auswahl);
 		api.status.stop();
+		await this.init(this.auswahl.name, true);
+		return result;
+	}
+
+	createEmptySchema = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException("Es soll ein leeres SVWS-Schema in einem Schema erstellt werden, aber es ist kein Schema ausgewählt.");
+		api.status.start();
+		const result = await api.privileged.createSchemaCurrentInto(this.auswahl.name);
+		api.status.stop();
+		await this.init(this.auswahl.name, true);
 		return result;
 	}
 
 	addExistingSchemaToConfig = async(data: BenutzerKennwort, schema: string) => {
-		if ((schema === undefined) || (schema === ""))
+		if (schema === "")
 			throw new DeveloperNotificationException("Es soll ein Schema zur Konfiguration hinzugefügt werden, aber es ist kein Schemaname angegeben.");
 		api.status.start();
 		await api.privileged.importExistingSchema(data, schema);
@@ -434,6 +453,6 @@ export class RouteDataSchema {
 		this.commit();
 	}
 
-	refresh = async () => await this.init(undefined);
+	refresh = async () => await this.init(undefined, true);
 
 }

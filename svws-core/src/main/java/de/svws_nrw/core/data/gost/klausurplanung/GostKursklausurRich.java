@@ -1,19 +1,20 @@
 package de.svws_nrw.core.data.gost.klausurplanung;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * Diese Klasse wird bei der Kommunikation über die Open-API-Schnittstelle verwendet.
- * Sie liefert die Informationen zu einer Gost-Kursklausur.
+ * Sie liefert die mit zur Blockung benötigten Daten angereicherten Informationen zu einer Gost-Kursklausur.
  */
 @XmlRootElement
-@Schema(description = "die Informationen zu einer Gost-Kursklausur")
+@Schema(description = "die mit zur Blockung benötigten Daten angereicherten Informationen zu einer Gost-Kursklausur")
 @TranspilerDTO
 public class GostKursklausurRich {
 
@@ -69,8 +70,8 @@ public class GostKursklausurRich {
 	@Schema(description = "die Startzeit der Klausur in Minuten seit 0 Uhr, sofern abweichend von Startzeit des gesamten Termins", example = "540")
 	public Integer startzeit = null;
 
-	/** Die Liste der IDs der zugehörigen Schüler. */
-	@Schema(description = "die Liste der IDs der zugehörigen Schüler", example = "[ 5590, 5591, 5592, ... ]")
+	/** Ein Array mit den IDs der zugehörigen Schüler. */
+	@ArraySchema(schema = @Schema(implementation = GostSchuelerklausurterminraumstunde.class, description = "Ein Array mit den IDs der zugehörigen Schüler."))
 	public @NotNull List<Long> schuelerIds = new ArrayList<>();
 
 	/** Die textuelle Bemerkung zur Kursklausur, sofern vorhanden. */
@@ -96,6 +97,13 @@ public class GostKursklausurRich {
 	@Override
 	public int hashCode() {
 		return Long.hashCode(id);
+	}
+
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKursklausurRich() {
+		super();
 	}
 
 }

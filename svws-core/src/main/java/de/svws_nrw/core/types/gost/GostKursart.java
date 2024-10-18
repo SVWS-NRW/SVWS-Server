@@ -9,7 +9,7 @@ import de.svws_nrw.core.adt.map.ArrayMap;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostFachwahl;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import jakarta.validation.constraints.NotNull;
 
 /**

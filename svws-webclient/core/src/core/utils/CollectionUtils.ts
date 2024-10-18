@@ -3,6 +3,7 @@ import type { JavaSet } from '../../java/util/JavaSet';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import type { JavaMap } from '../../java/util/JavaMap';
 import { HashSet } from '../../java/util/HashSet';
 import type { Predicate } from '../../java/util/function/Predicate';
@@ -74,6 +75,8 @@ export class CollectionUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.CollectionUtils'].includes(name);
 	}
+
+	public static class = new Class<CollectionUtils>('de.svws_nrw.core.utils.CollectionUtils');
 
 }
 

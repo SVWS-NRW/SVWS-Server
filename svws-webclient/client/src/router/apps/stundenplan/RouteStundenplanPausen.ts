@@ -13,7 +13,9 @@ const StundenplanPausen = () => import("~/components/stundenplan/pausen/Stundenp
 export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN ], "stundenplan.pausen", "pausen", StundenplanPausen);
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+		], "stundenplan.pausen", "pausen", StundenplanPausen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Pausen";
@@ -28,6 +30,9 @@ export class RouteStundenplanPausen extends RouteNode<any, RouteStundenplan> {
 
 	public getProps(to: RouteLocationNormalized): StundenplanPausenProps {
 		return {
+			schulform: api.schulform,
+			serverMode: api.mode,
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchPausenzeit: routeStundenplan.data.patchPausenzeit,
 			removePausenzeiten: routeStundenplan.data.removePausenzeiten,

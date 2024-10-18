@@ -1,4 +1,5 @@
 import { GostFach } from '../../../../core/data/gost/GostFach';
+import { Fach } from '../../../../asd/types/fach/Fach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostFachUtils } from '../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../java/util/ArrayList';
@@ -10,8 +11,8 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { NullPointerException } from '../../../../java/lang/NullPointerException';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 
 export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
@@ -153,10 +154,10 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 			throw new NullPointerException()
 		if (GostFachUtils.istBilingual(fach))
 			this.addFehler(GostBelegungsfehler.ZK_13);
-		const zFach : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		if ((zFach as unknown === ZulaessigesFach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE()))
+		const zFach : Fach | null = Fach.getBySchluesselOrDefault(fach.kuerzel);
+		if ((zFach as unknown === Fach.GE as unknown) && (!this.manager.istErlaubtZusatzkursGE()))
 			this.addFehler(GostBelegungsfehler.ZK_14);
-		if ((zFach as unknown === ZulaessigesFach.SW as unknown) && (!this.manager.istErlaubtZusatzkursSW()))
+		if ((zFach as unknown === Fach.SW as unknown) && (!this.manager.istErlaubtZusatzkursSW()))
 			this.addFehler(GostBelegungsfehler.ZK_15);
 		const halbjahre : List<GostHalbjahr> = this.manager.getHalbjahreKursart(fachbelegung, GostKursart.ZK);
 		if (halbjahre.size() === 2) {
@@ -177,9 +178,9 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 				this.addFehler(GostBelegungsfehler.ZK_10);
 		}
 		if (!halbjahre.isEmpty()) {
-			if ((zFach as unknown === ZulaessigesFach.GE as unknown) && (this.manager.getBeginnZusatzkursGE() as unknown !== halbjahre.get(0) as unknown))
+			if ((zFach as unknown === Fach.GE as unknown) && (this.manager.getBeginnZusatzkursGE() as unknown !== halbjahre.get(0) as unknown))
 				this.addFehler(GostBelegungsfehler.ZK_16);
-			if ((zFach as unknown === ZulaessigesFach.SW as unknown) && (this.manager.getBeginnZusatzkursSW() as unknown !== halbjahre.get(0) as unknown))
+			if ((zFach as unknown === Fach.SW as unknown) && (this.manager.getBeginnZusatzkursSW() as unknown !== halbjahre.get(0) as unknown))
 				this.addFehler(GostBelegungsfehler.ZK_17);
 		}
 	}
@@ -295,6 +296,8 @@ export class GesellschaftswissenschaftenUndReligion extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion'].includes(name);
 	}
+
+	public static class = new Class<GesellschaftswissenschaftenUndReligion>('de.svws_nrw.core.abschluss.gost.belegpruefung.GesellschaftswissenschaftenUndReligion');
 
 }
 

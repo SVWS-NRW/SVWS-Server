@@ -3,6 +3,7 @@ import { SchuelerblockungInputKurs } from '../../../core/data/kursblockung/Schue
 import { ArrayList } from '../../../java/util/ArrayList';
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerblockungInput extends JavaObject {
 
@@ -38,6 +39,8 @@ export class SchuelerblockungInput extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.kursblockung.SchuelerblockungInput'].includes(name);
 	}
+
+	public static class = new Class<SchuelerblockungInput>('de.svws_nrw.core.data.kursblockung.SchuelerblockungInput');
 
 	public static transpilerFromJSON(json : string): SchuelerblockungInput {
 		const obj = JSON.parse(json) as Partial<SchuelerblockungInput>;

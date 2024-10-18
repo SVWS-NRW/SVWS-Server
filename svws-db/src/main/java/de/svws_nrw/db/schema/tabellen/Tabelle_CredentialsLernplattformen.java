@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -53,6 +53,12 @@ public class Tabelle_CredentialsLernplattformen extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte AES */
 	public SchemaTabelleSpalte col_AES = add("AES", SchemaDatentypen.TEXT, false)
 			.setJavaComment("AES-Schlüssel für den Credential-Datensatz");
+
+	/** Die Definition der Tabellenspalte SchulnrEigner */
+	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels CredentialsLernplattformen_Lernplattform_FK */

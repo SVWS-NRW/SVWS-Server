@@ -19,11 +19,12 @@ import de.svws_nrw.core.data.benutzer.BenutzerDaten;
 import de.svws_nrw.core.data.benutzer.BenutzergruppeDaten;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.benutzer.BenutzerTyp;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.gost.DTOGostJahrgangBeratungslehrer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzer;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerAllgemein;
 import de.svws_nrw.db.dto.current.schild.benutzer.DTOBenutzerKompetenz;
@@ -39,6 +40,7 @@ import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOAbteilungsKlassen;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.svws.auth.DTOCredentials;
 import de.svws_nrw.db.dto.current.views.benutzer.DTOViewBenutzerdetails;
 import de.svws_nrw.db.utils.ApiOperationException;
@@ -134,12 +136,14 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 	 *
 	 */
 	private boolean istKompetenzZulaessig(final List<Long> kids) throws ApiOperationException {
-		//Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
-		//Nehme als Schulform GY als Beispiel
+		// Überprüfe die Zulässigkeit der Kompetenzen für die Schulform
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
-		final Schulform schulform = Schulform.getByNummer(schule.SchulformNr);
+		final Schulform schulform = Schulform.data().getWertBySchluessel(schule.SchulformNr);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
 
 		final List<BenutzerKompetenz> bks = new ArrayList<>();
 		for (final Long kid : kids) {
@@ -147,9 +151,9 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		}
 
 		for (final BenutzerKompetenz bk : bks) {
-			if (!bk.hatSchulform(schulform))
+			if (!bk.hatSchulform(schuljahresabschnitt.Jahr, schulform))
 				throw new ApiOperationException(Status.FORBIDDEN, "Die Kompetenz" + bk.daten.bezeichnung + "ist für die Schulform"
-						+ schulform.daten.bezeichnung + "nicht zulässig");
+						+ schulform.daten(schuljahresabschnitt.Jahr).text + "nicht zulässig");
 		}
 		return true;
 	}
@@ -380,7 +384,7 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 			final LocalDateTime von = ((slf.Von == null) ? LocalDate.of(1900, 1, 1) : LocalDate.parse(slf.Von)).atStartOfDay();
 			final LocalDateTime bis = ((slf.Bis == null) ? LocalDate.of(9999, 12, 31) : LocalDate.parse(slf.Bis)).atTime(23, 59, 59);
 			final LocalDateTime jetzt = LocalDateTime.now(ZoneId.of("Europe/Berlin"));
-			final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.getByID(slf.ID);
+			final LehrerLeitungsfunktion funktion = LehrerLeitungsfunktion.data().getWertByID(slf.ID);
 			if ((funktion != null) && (von.compareTo(jetzt) <= 0) && (jetzt.compareTo(bis) <= 0))
 				result.add(funktion);
 		}
@@ -389,21 +393,51 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 
 
 	/**
-	 * Gibt die Liste der IDs der aktuellen Leitunsfunktionen des Lehrers mit den angegebenen ID zurück.
+	 * Gibt die Liste der IDs der aktuellen Leitungsfunktionen des Lehrers mit den angegebenen ID zurück.
 	 *
+	 * @param schuljahr     das aktuelle Schuljahr der Schule
 	 * @param conn          die aktuelle Datenbankverbindung
 	 * @param typBenutzer   der Typ des Benutzer
 	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
 	 *
 	 * @return die IDs der aktuellen Leitunsfunktionen
 	 */
-	public static List<Long> getLeitungsfunktionenIDs(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
-		return getLeitungsfunktionen(conn, typBenutzer, idBenutzer).stream().map(l -> l.daten.id).toList();
+	public static List<Long> getLeitungsfunktionenIDs(final int schuljahr, final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		return getLeitungsfunktionen(conn, typBenutzer, idBenutzer).stream().map(l -> l.daten(schuljahr).id).toList();
+	}
+
+
+	/**
+	 * Gibt die Liste der Abiturjahrgänge des Lehrers mit den angegebenen ID zurück.
+	 *
+	 * @param conn          die aktuelle Datenbankverbindung
+	 * @param typBenutzer   der Typ des Benutzer
+	 * @param idBenutzer    die ID des Benutzers in Abhängigkeit vom Typ
+	 *
+	 * @return die Liste der Abiturjahrgänge
+	 */
+	public static List<Integer> getBeratungslehrerAbiturjahrgaenge(final DBEntityManager conn, final int typBenutzer, final long idBenutzer) {
+		// Nur Lehrer-Benutzer können Beratungslehrer sein.
+		if (typBenutzer != BenutzerTyp.LEHRER.id)
+			return new ArrayList<>();
+		final List<DTOGostJahrgangBeratungslehrer> dtos =
+				conn.queryList(DTOGostJahrgangBeratungslehrer.QUERY_BY_LEHRER_ID, DTOGostJahrgangBeratungslehrer.class, idBenutzer);
+		final List<Integer> result = new ArrayList<>();
+		for (final DTOGostJahrgangBeratungslehrer dto : dtos)
+			result.add(dto.Abi_Jahrgang);
+		return result;
 	}
 
 
 	@Override
 	public Response get(final Long id) throws ApiOperationException {
+		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		if (schule == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Schule angelegt.");
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
+
 		// Lese die Informationen zu den Gruppen ein
 		final List<Long> gruppenIDs = conn.queryList(DTOBenutzergruppenMitglied.QUERY_BY_BENUTZER_ID, DTOBenutzergruppenMitglied.class, id).stream()
 				.map(g -> g.Gruppe_ID).toList();
@@ -435,7 +469,8 @@ public final class DataBenutzerDaten extends DataManager<Long> {
 		}
 		// Füge die Informationen hinzu, zu welchen Klassen funktionsbezogene Kompetenzen vorliegen oder welche Leitungsfunktionen vorliegen
 		daten.kompetenzenKlassen.addAll(getKlassenFunktionsbezogen(conn, daten.typ, daten.typID));
-		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(conn, daten.typ, daten.typID));
+		daten.leitungsfunktionen.addAll(getLeitungsfunktionenIDs(schuljahresabschnitt.Jahr, conn, daten.typ, daten.typID));
+		daten.kompetenzenAbiturjahrgaenge.addAll(getBeratungslehrerAbiturjahrgaenge(conn, daten.typ, daten.typID));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class LinkedCollectionElement<E> extends JavaObject {
 
@@ -98,6 +99,8 @@ export class LinkedCollectionElement<E> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.collection.LinkedCollectionElement'].includes(name);
 	}
+
+	public static class = new Class<LinkedCollectionElement<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionElement');
 
 }
 

@@ -1,7 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { ServerMode } from "@core";
-
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
 import { routeError } from "~/router/error/RouteError";
@@ -10,10 +8,12 @@ import { routeSchemaUebersicht } from "~/router/apps/schema/uebersicht/RouteSche
 
 import { RouteDataSchema } from "~/router/apps/schema/RouteDataSchema";
 
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "../../../../../ui/src/components/App/TabData";
+import { TabManager } from "../../../../../ui/src/components/App/TabManager";
 import type { SchemaAppProps } from "~/components/schema/SSchemaAppProps";
 import type { SchemaAuswahlProps } from "~/components/schema/SSchemaAuswahlProps";
 import { api } from "~/router/Api";
+import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 
 const SSchemaAuswahl = () => import("~/components/schema/SSchemaAuswahl.vue")
 const SSchemaApp = () => import("~/components/schema/SSchemaApp.vue")
@@ -39,13 +39,13 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		// Prüfe, ob bereits ein Schema ausgewählt wurde. Wenn nicht, dann lade die Liste vom Server und wähle ein Default-Schema aus
 		const auswahl = this.data.auswahl;
 		if (auswahl === undefined) {
-			await this.data.init(to_params.schema);
+			await this.data.init(to_params.schema, !isEntering);
 			// Prüfe, ob ein Schema in der neu geladenen Liste vorhanden ist
 			if (this.data.auswahl !== undefined)
 				return this.getChildRoute(this.data.auswahl.name);
 			return;
 		}
-		const schemaNeu = (to_params.schema === null) ? undefined : this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
+		const schemaNeu = (to_params.schema === undefined) ? undefined : this.data.mapSchema.get(to_params.schema.toLocaleLowerCase());
 		await this.data.setSchema(schemaNeu);
 		if (to.name === this.name)
 			return this.getChildRoute(to_params.schema);
@@ -58,7 +58,6 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 	protected async leaveBefore(from: RouteNode<unknown, any>, from_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		// Aufräumen der Quelldaten für Migrationen aus RouteData, damit diese beim Abmelden nicht erhalten bleiben!
 		this.data.resetMigrationQuellinformationen();
-		this.data.setSchema(undefined);
 	}
 
 	public getRoute(schema?: string) : RouteLocationRaw {
@@ -94,26 +93,22 @@ export class RouteSchema extends RouteNode<RouteDataSchema, RouteApp> {
 		return {
 			auswahl: this.data.auswahl,
 			schuleInfo: () => this.data.schuleInfo,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => new TabManager(this.getTabs(), this.getTab(), this.setTab),
 		};
 	}
 
-	private getTab(): AuswahlChildData {
+	private getTab(): TabData {
 		return { name: this.data.view.name, text: this.data.view.text };
 	}
 
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getTabs(): TabData[] {
+		const result: TabData[] = [];
 		for (const { name, text } of this.children)
 			result.push({ name, text });
 		return result;
 	}
 
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

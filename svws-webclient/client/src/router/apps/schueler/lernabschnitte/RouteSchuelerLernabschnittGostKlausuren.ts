@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, JahrgangsUtils, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, JahrgangsUtils, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeError } from "~/router/error/RouteError";
@@ -10,30 +10,45 @@ import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~
 import type { SchuelerLernabschnittGostKlausurenProps } from "~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausurenProps";
 import { api } from "~/router/Api";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeSchuelerLernabschnittAllgemein } from "./RouteSchuelerLernabschnittAllgemein";
 
 const SSchuelerLernabschnittGostKlausuren = () => import("~/components/schueler/lernabschnitte/gostKlausuren/SSchuelerLernabschnittGostKlausuren.vue");
 
 export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, RouteSchuelerLernabschnitte> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN, BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION ], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION
+		], "schueler.lernabschnitt.gostklausuren", "gostklausuren", SSchuelerLernabschnittGostKlausuren);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Klausuren";
 		super.children = [
 		];
 		this.isHidden = (params?: RouteParams) => {
-			if ((params === undefined) || (params.id === undefined) || (params.id instanceof Array))
-				return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			const manager = routeSchueler.data.schuelerListeManager;
-			if (!manager.hasDaten())
-				return false;
-			const abiturjahr = manager.auswahl().abiturjahrgang;
-			const jahrgang = manager.jahrgaenge.get(manager.auswahl().idJahrgang);
-			if (((abiturjahr !== null) && (manager.abiturjahrgaenge.get(abiturjahr) !== null))
-				&& ((jahrgang !== null) && (JahrgangsUtils.istGymOb(jahrgang.kuerzelStatistik))))
-				return false;
-			return routeSchueler.getRoute(parseInt(params.id));
+			return this.checkHidden(params);
+		}
+	}
+
+	protected checkHidden(to_params?: RouteParams) {
+		try {
+			const { id, abschnitt, wechselNr } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id", "abschnitt", "wechselNr"]) : {id: undefined, abschnitt: undefined, wechselNr: undefined};
+			if ((id === undefined) || (abschnitt === undefined) || (wechselNr === undefined))
+				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
+			if (routeSchueler.data.schuelerListeManager.hasDaten()) {
+				const abiturjahr = routeSchueler.data.schuelerListeManager.auswahl().abiturjahrgang;
+				if (((abiturjahr !== null) && routeSchueler.data.schuelerListeManager.abiturjahrgaenge.get(abiturjahr))
+				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN)
+					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr)))) {
+					if (routeSchuelerLernabschnitte.data.hatGymOb)
+						return false;
+				}
+			}
+			return routeSchuelerLernabschnittAllgemein.getRoute(id, abschnitt, wechselNr);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -52,7 +67,8 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 			hatKlausurManager: () => routeSchuelerLernabschnitte.data.hatKlausurManager,
 			createSchuelerklausurTermin: routeSchuelerLernabschnitte.data.createSchuelerklausurTermin,
 			deleteSchuelerklausurTermin: routeSchuelerLernabschnitte.data.deleteSchuelerklausurTermin,
-			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin
+			patchSchuelerklausurTermin: routeSchuelerLernabschnitte.data.patchSchuelerklausurTermin,
+			gotoPlanung: routeSchuelerLernabschnitte.data.gotoPlanung,
 		};
 	}
 

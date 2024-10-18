@@ -1,14 +1,16 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
-import { useRoute } from "vue-router";
 
 import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
 
+import type { TabData } from "@ui";
+import { TabManager, Checkpoint, ViewType } from "@ui";
+
 import { api } from "~/router/Api";
 import { routerManager } from "./RouteManager";
-import { type RouteData } from "./RouteData";
+import type { RouteData } from "./RouteData";
 
 /**
  * Diese abstrakte Klasse ist die Basisklasse aller Knoten für
@@ -28,7 +30,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/** Ein Set mit den Kompetenzen die ein angemeldeter Benutzer für die Route benötigt */
 	protected _kompetenzenBenoetigt: Set<BenutzerKompetenz> = new Set();
 
-	/** Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht */
+	/**
+	 * Eine Funktion zum Prüfen, ob der Knoten, d.h. die Route, versteckt sein soll oder nicht
+	 *
+	 * Wird eine Route als hidden erkannt, wird eine Umleitungsroute als Return-Statement zurückgegeben.
+	 * Auf diese Route wird umgeleitet, wenn diese Route vorher aktiv war, ggf. mit anderen Daten.
+	 * Diese Methode wird auch zur Erstellung der hiddenChildren verwendet, das dann tatsächlich ein Array
+	 * mit Boolean-Werten zurückgibt.
+	 * */
 	protected isHidden: ((params?: RouteParams) => RouteLocationRaw | false) | undefined = undefined;
 
 	/** Der Elter-Knoten, sofern es sich um einen Kind-Knoten handelt. */
@@ -52,9 +61,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/** Der Kind-Knoten, welcher als Default ausgewählt werden soll */
 	protected _defaultChild: RouteNode<any, any> | undefined = undefined;
 
+	/** Gibt den bzw. die Typen der Route an */
+	protected _types: Set<ViewType>;
+
 	/** Der Modus, in welchem die Route zulässig ist oder nicht. */
 	private _mode: ServerMode = ServerMode.DEV;
 
+	/** Checkpoint der beim Verlassen dieser Route, für eine Checkpoint Aktion genutzt werden kann. */
+	private _checkpoint: Checkpoint | undefined = undefined;
 
 	/**
 	 * Erstellt einen neuen Knoten für das Routing mithilfe einer
@@ -67,7 +81,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param name          der Name des Routing-Knotens (siehe RouteRecordRaw)
 	 * @param path          der Pfad der Route (siehe RouteRecordRaw)
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
-	* @param data          die dem Knoten zugeordneten Daten
+	 * @param data          die dem Knoten zugeordneten Daten
 	 */
 	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
@@ -78,13 +92,15 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
-				text: name // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				text: name, // Ein Text, welcher zur Darstellung in der GUI genutzt wird (z.B. der Text auf Tabs)
+				menugroup: "" // Die Menu-Gruppe, falls die Route einem Menu zugeordnet ist und dort einer Gruppe
 			}
 		};
 		this._children = [];
 		this._menu = [];
 		this._hasData = (data !== undefined);
 		this._data = (data !== undefined) ? data : {} as TRouteData;
+		this._types = new Set([ ViewType.DEFAULT ]);
 		// Setze die erlaubten Schulformen
 		for (const sf of schulformen)
 			this._schulformenErlaubt.add(sf);
@@ -120,8 +136,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	public abstract getRoute(...args: any[]) : RouteLocationRaw;
 
 	/**
-   * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
-   */
+	 * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
+	 */
 	public get text() : string {
 		return (this._record.meta as { text: string }).text;
 	}
@@ -131,6 +147,20 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public set text(text : string) {
 		(this._record.meta as { text: string }).text = text;
+	}
+
+	/**
+	 * Gibt die Menu-Gruppe der Route zurück, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public get menugroup() : string {
+		return (this._record.meta as { menugroup: string }).menugroup;
+	}
+
+	/**
+	 * Setzt die Menu-Gruppe der Route, welche für die Gruppierung bei Link-Listen verwendet wird
+	 */
+	public set menugroup(menugroup : string) {
+		(this._record.meta as { menugroup: string }).menugroup = menugroup;
 	}
 
 	/**
@@ -159,6 +189,41 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	protected set mode(mode : ServerMode) {
 		this._mode = mode;
+	}
+
+	/**
+	 * Gibt an, ob ein Checkpoint hinterlegt ist und dieser gerade aktiv ist.
+	 */
+	public isCheckpointActive() : boolean {
+		return (this._checkpoint !== undefined) && this._checkpoint.active;
+	}
+
+	/**
+	 * Gibt den hinterlegten Checkpoint zurück.
+	 */
+	public get checkpoint() : Checkpoint | undefined {
+		return this._checkpoint;
+	}
+
+	/**
+	 * Wenn <code>true</code> übergeben wird, wird ein Checkpoint für diese RouteNode erzeugt, ansonsten wird der Checkpoint entfernt.
+	 */
+	public set setCheckpoint(checkpoint: boolean) {
+		this._checkpoint = checkpoint ? new Checkpoint() : undefined;
+	}
+
+	/**
+	 * Gibt die Routen-Typen zurück, welche der Route zugeordnet sind.
+	 */
+	public get types() : Set<ViewType> {
+		return this._types;
+	}
+
+	/**
+	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
+	 */
+	protected set types(types : Set<ViewType>) {
+		this._types = types;
 	}
 
 	/**
@@ -253,8 +318,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns ein Array mit der
 	 */
 	public children_hidden() : ComputedRef<boolean[]> {
-		const route = useRoute();
-		return computed(() => this.children.map(c => c.hidden(route.params) !== false));
+		return computed(() => this.children.map(c => c.hidden(routerManager.getRouteParams()) !== false));
 	}
 
 	/**
@@ -268,7 +332,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * TODO
 	 */
 	public set selectedChildRecord(record : RouteRecordRaw | undefined) {
-		this._selectedChild.value = (record === undefined) || (record.name === undefined) ? undefined : RouteNode.mapNodesByName.get(record.name?.toString());
+		this._selectedChild.value = ((record === undefined) || (record.name === undefined))
+			? undefined : this._selectedChild.value = RouteNode.mapNodesByName.get(record.name.toString());
 	}
 
 	/**
@@ -290,6 +355,81 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public get defaultChild() : RouteNode<any, any> | undefined {
 		return this._defaultChild;
+	}
+
+	/**
+	 * Gibt ein passend zu dem getter menu ein Array zurück,
+	 * welches angibt, ob die einzelnen Kind-Knoten versteckt sind oder
+	 * nicht.
+	 *
+	 * @returns ein Array mit der
+	 */
+	public menu_hidden() : ComputedRef<boolean[]> {
+		return computed(() => this.menu.map(c => c.hidden(routerManager.getRouteParams()) !== false));
+	}
+
+	/**
+	 * Erstellt anhand der Children einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param nodes         die Kind- oder Menu-Knoten
+	 * @param nodesHidden   die Information zu den Knoten, ob diese versteckt sind oder nicht
+	 * @param tabname       der Name des ausgewählten Tabs
+	 * @param setTab        die Callback-Methode
+	 */
+	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
+		const tabs: TabData[] = [];
+		let tab = null;
+		for (const node of nodes) {
+			if (!node.types.has(type))
+				continue;
+			if (!(node.hatEineKompetenz() && node.hatSchulform()))
+				continue;
+			const newTab = <TabData>{ name: node.name, text: node.text };
+			if (!this.checkTabVisibility(newTab))
+				continue;
+			newTab.tabgroup = node.menugroup;
+			tabs.push(newTab);
+			if (node.name === tabname)
+				tab = newTab;
+		}
+		if (tab === null)
+			tab = tabs[0];
+		return new TabManager(tabs, tab, setTab, nodesHidden);
+	}
+
+	/**
+	 * Erstellt anhand der Children einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param tabname   der Name des ausgewählten Tabs
+	 * @param setTab    die Callback-Methode
+	 */
+	public createTabManagerByChildren(tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
+		return this.createTabManager(this.children, this.children_hidden().value, tabname, setTab, type);
+	}
+
+	/**
+	 * Erstellt anhand der Menu-Einträge einen neuen Tab-Manager mit dem angegebenen Tab
+	 * vorausgewählte und der angegebenen Callback-Methode bei einer Tab-Auswahl
+	 *
+	 * @param tabname   der Name des ausgewählten Tabs
+	 * @param setTab    die Callback-Methode
+	 */
+	public createTabManagerByMenu(tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
+		return this.createTabManager(this.menu, this.menu_hidden().value, tabname, setTab, type);
+	}
+
+	/**
+	 * Prüft, ob das übergeben Tab sichtbar ist oder nicht. Diese Methode kann von Route-Nodes
+	 * überschrieben werden, um bedingte Sichtbarkeit der Child-Routes zu steuern.
+	 *
+	 * @param tab   der zu prüfende Tab
+	 *
+	 * @returns true, falls der Tab sichtbar ist, und ansonsten false
+	 */
+	protected checkTabVisibility(tab: TabData) {
+		return true;
 	}
 
 	/**
@@ -324,7 +464,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * Setzt der Property-Handler für die Default-View
 	 */
 	public set propHandler(handler: (to: RouteLocationNormalized) => Record<string, any>) {
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })["default"] = handler;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>).default = handler;
 	}
 
 	/**
@@ -347,7 +487,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public isSelected(name: RouteRecordName | null | undefined): boolean {
 		const node = RouteNode.getNodeByName(this.name);
-		if (node === undefined || !name)
+		if ((node === undefined) || (name === null) || (name === ""))
 			return false;
 		if (node.name === name)
 			return true;
@@ -368,8 +508,8 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected setView(name: string, component: RouteComponent, prop_handler: (to: RouteLocationNormalized) => Record<string, any>) {
 		if ((this._record.components === undefined) || (this._record.props === undefined))
 			throw new DeveloperNotificationException("Unerwarteter Fehler in der Methode RouteNode::addView. components oder props ist undefined.");
-		(this._record.components as { [key: string] : RouteComponent })[name] = component;
-		(this._record.props as { [key: string] : (to: RouteLocationNormalized) => Record<string, any> })[name] = prop_handler;
+		(this._record.components as Record<string, RouteComponent>)[name] = component;
+		(this._record.props as Record<string, (to: RouteLocationNormalized) => Record<string, any>>)[name] = prop_handler;
 	}
 
 
@@ -381,7 +521,10 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @returns true, wenn die View vorhanden ist, und ansonsten false
 	 */
 	public hasView(name : string): boolean {
-		return (this._record.components as { [key: string] : RouteComponent })[name] !== undefined;
+		const comp : Record<string, RouteComponent | undefined> | null | undefined = this._record.components;
+		if ((comp === undefined) || (comp === null))
+			return false;
+		return (comp[name] !== undefined);
 	}
 
 
@@ -397,6 +540,14 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 		return {};
 	}
 
+	/**
+	 * Hook die ausgeführt wird, nach dem ein aktiver Checkpoint betreten wurde.
+	 *
+	 * @param destination Ziel Route zu der ursprünglich navigiert werden sollte.
+	 */
+	public async doCheckpoint(destination: RouteLocationRaw): Promise<void> {
+		return this._checkpoint?.doCheckpoint(destination);
+	}
 
 	/**
 	 * TODO see RouterManager - global hook
@@ -611,17 +762,43 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * angegebenen Namen zu bestimmen und als Integer-Wert zu interpretieren.
 	 *
 	 * @param params   die Parameter der Route
-	 * @param name     der Name des Parameters
+	 * @param names[]  der Namen der Parameter
 	 *
-	 * @returns der Integer-Wert, undefined oder ein Error
+	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
 	 */
-	protected static getIntParam(params: RouteParams, name: string) : number | undefined | Error {
-		const value = params[name];
-		if ((value === undefined) || value.toString().trim().length === 0)
-			return undefined;
-		if (value instanceof Array)
-			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		return parseInt(value);
+	protected static getIntParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], number | undefined> {
+		const res: Record<string, number | undefined> = {};
+		for (const name of names) {
+			const value = params[name];
+			if (value instanceof Array)
+				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
+			else if ((value === undefined) || (value.toString().trim().length === 0))
+				res[name] = undefined;
+			else res[name] = parseInt(value);
+		}
+		return res;
+	}
+
+	/**
+	 * Versucht bei den angegebenen Parametern den Parameter mit dem
+	 * angegebenen Namen zu bestimmen und als String-Wert zu interpretieren.
+	 *
+	 * @param params   die Parameter der Route
+	 * @param names[]  der Namen der Parameter
+	 *
+	 * @returns der Ein Objekt mit den Integer-Werten oder undefined mit den Parametern als Key
+	 */
+	protected static getStringParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], string | undefined> {
+		const res: Record<string, string | undefined> = {};
+		for (const name of names) {
+			const value = params[name];
+			if (value instanceof Array)
+				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
+			else if ((value === undefined) || (value.toString().trim().length === 0))
+				res[name] = undefined;
+			else res[name] = value.toString();
+		}
+		return res;
 	}
 
 }

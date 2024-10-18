@@ -1,9 +1,9 @@
 <template>
-	<svws-ui-content-card v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl" overflow-scroll>
+	<div v-if="hatBlockung && hatErgebnis" class="-mt-0.5 s-gost-kursplanung-schueler-auswahl flex flex-col" overflow-scroll>
 		<svws-ui-table :model-value="schuelerFilter().filtered.value" v-model:clicked="selected" clickable scroll :items="undefined"
 			:filter-open="isSchuelerFilterOpen()" @update:filter-open="setIsSchuelerFilterOpen"
 			:filtered="schuelerFilter().kurs_toggle.value === 'kurs' || schuelerFilter().fach_toggle.value === 'fach' || schuelerFilter().radio_filter !== 'alle'"
-			:columns="cols" :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
+			:columns :no-data="schuelerFilter().filtered.value.length <= 0" :disable-footer="schuelerFilter().filtered.value.length <= 0">
 			<template #search>
 				<svws-ui-text-input type="search" v-model="schuelerFilter().name" placeholder="Suche" removable />
 			</template>
@@ -30,7 +30,7 @@
 					<div class="svws-ui-spacing" />
 				</div>
 				<div class="radio radio--row col-span-full">
-					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="AlleA" label="Alle" :icon="false" />
+					<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="alle" name="Alle" label="Alle" :icon="false" />
 					<svws-ui-tooltip>
 						<svws-ui-radio-option v-model="schuelerFilter().radio_filter" value="kollisionen" name="Kollisionen" label="K">
 							<span class="icon-sm inline-block i-ri-alert-line" />
@@ -116,7 +116,7 @@
 					</div>
 					<div role="cell" class="svws-ui-td svws-align-center" @click="event => fixieren_regel_toggle(fach?.id ?? schuelerFilter().kurs?.fach_id, s.id, event)">
 						<template v-if="fixierRegeln.get(s.id) === undefined">
-							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined)) && allowRegeln" />
+							<span class="icon i-ri-pushpin-line -my-0.5 opacity-0 hover:opacity-75" v-if="!((fach === undefined) && (schuelerFilter().kurs === undefined))" />
 						</template>
 						<template v-else>
 							<template v-if="fach !== undefined">
@@ -134,12 +134,12 @@
 					</div>
 					<div role="cell" class="svws-ui-td">
 						<div class="flex flex-row">
-							{{ `${s.nachname}, ${s.vorname}` }}
+							{{ s.nachname }}, {{ s.vorname }}
 							<template v-if="getDatenmanager().schuelerGet(s.id).abschlussjahrgang !== getDatenmanager().daten().abijahrgang">
 								<span class="ml-1">(Abi {{ getDatenmanager().schuelerGet(s.id).abschlussjahrgang }})</span>
 							</template>
 							<template v-if="s.status !== 2">
-								<span class="ml-1">({{ SchuelerStatus.fromID(s.status)?.bezeichnung || '' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
+								<span class="ml-1">({{ SchuelerStatus.data().getWertByKuerzel("" + s.status)?.daten(schuljahr)?.text ?? '—' }}{{ s.externeSchulNr ? ` ${s.externeSchulNr}` : '' }})</span>
 							</template>
 						</div>
 					</div>
@@ -158,7 +158,7 @@
 			<template #footer>
 				<div role="row" class="svws-ui-tr">
 					<div class="svws-ui-td col-span-full w-full">
-						<div class="grid grid-cols-4 w-full gap-y-2 text-button font-medium py-1 normal-nums pl-5" :class="fach !== undefined || schuelerFilter().kurs !== undefined ? 'pt-2' : 'py-1'">
+						<div class="grid grid-cols-4 w-full gap-y-2 text-button font-medium py-1 normal-nums pl-5" :class="(fach !== undefined) || (schuelerFilter().kurs !== undefined) ? 'pt-2' : 'py-1'">
 							<template v-if="fach !== undefined || schuelerFilter().kurs !== undefined">
 								<span class="col-span-2 inline-flex gap-0.5" :class="{'opacity-50 font-medium': !schuelerFilter().statistics.value.schriftlich}">
 									<span class="icon i-ri-draft-line -m-0.5 mr-0.5" />{{ schuelerFilter().statistics.value.schriftlich }} schriftlich
@@ -181,7 +181,7 @@
 				</div>
 			</template>
 		</svws-ui-table>
-	</svws-ui-content-card>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -194,21 +194,24 @@
 
 	const props = defineProps<KursplanungSchuelerAuswahlProps>();
 
-	const allowRegeln = computed<boolean>(() => (props.getDatenmanager().ergebnisGetListeSortiertNachBewertung().size() === 1));
+	const schuljahr = computed<number>(() => props.getDatenmanager().faecherManager().getSchuljahr());
 
 	const fach = computed<GostFach|undefined>({
 		get: () => {
 			for (const fach of props.faecherManager.faecher())
 				if (fach.id === props.schuelerFilter().fach)
 					return fach;
-			return undefined
+			return undefined;
 		},
 		set: (value) => props.schuelerFilter().fach = value?.id
 	})
 
 	const selected = computed<Schueler | undefined>({
 		get: () => props.schueler,
-		set: (value) => { if (value !== undefined) void props.setSchueler(value); }
+		set: (value) => {
+			if (value !== undefined)
+				void props.setSchueler(value);
+		}
 	});
 
 	const kollision = (idSchueler: number) => computed<boolean>(() => {
@@ -218,16 +221,14 @@
 		return props.getErgebnismanager().getOfSchuelerOfKursHatKollision(idSchueler, kursid);
 	});
 
-	const nichtwahl = (idSchueler: number) => computed<boolean>(() =>
-		props.getErgebnismanager().getOfSchuelerHatNichtwahl(idSchueler)
-	);
+	const nichtwahl = (idSchueler: number) => computed<boolean>(() => props.getErgebnismanager().getOfSchuelerHatNichtwahl(idSchueler));
 
-	const weitere = computed(()=>{
+	const weitere = computed(() => {
 		const kurs = props.schuelerFilter().kurs;
 		if (kurs === undefined)
 			return '';
 		const anzahl = props.getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id);
-		return anzahl > 0 ? `+${anzahl.toString()} weitere` : '';
+		return anzahl > 0 ? `+${anzahl} weitere` : '';
 	})
 
 
@@ -236,19 +237,18 @@
 		if ((fach.value === undefined) && (kurs === undefined))
 			return undefined;
 		let idFach : number;
-		if (fach.value !== undefined) {
+		if (fach.value !== undefined)
 			idFach = fach.value.id;
-		} else if (kurs !== undefined) {
+		else if (kurs !== undefined)
 			idFach = kurs.fach_id;
-		} else
+		else
 			return undefined;
 		if (!props.getErgebnismanager().getParent().schuelerGetHatFach(id, idFach))
 			return undefined;
 		return props.getErgebnismanager().getParent().schuelerGetOfFachFachwahl(id, idFach).istSchriftlich ? 's':'m';
 	}
 
-
-	function calculateColumns() {
+	const columns = computed<DataTableColumn[]>(() => {
 		const cols: DataTableColumn[] = [
 			{key: 'status', label: '  ', fixedWidth: 1.75},
 			{key: 'fixiert', label: 'F', tooltip: "Kursfixierung", fixedWidth: 2, align: "center"},
@@ -259,9 +259,9 @@
 		if (fach.value !== undefined || props.schuelerFilter().kurs !== undefined)
 			cols.push({key: 'schriftlichkeit', label: 'W', tooltip: 'Wahl: schriftlich oder mündlich', fixedWidth: 2, align: "center"});
 		return cols;
-	}
+	})
 
-	const fixierRegeln = computed(()=>{
+	const fixierRegeln = computed(() => {
 		const regeln = props.getDatenmanager().regelGetListe();
 		const map = new Map<number, Set<number>>();
 		for (const r of regeln)
@@ -275,9 +275,9 @@
 		return map;
 	})
 
-	const fixierRegelKurs = (idKurs: number | undefined, idSchueler: number) => computed<boolean>(() => {
-		return (idKurs && props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
-	});
+	const fixierRegelKurs = (idKurs: number | undefined, idSchueler: number) => computed<boolean>(() =>
+		(typeof idKurs === 'number') && props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)
+	);
 
 	const fixierRegelFach = (idFach: number | undefined, idSchueler: number) => computed<boolean>(() => {
 		if (idFach === undefined)
@@ -288,9 +288,6 @@
 			return false;
 		return (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs)) ? true : false;
 	});
-
-	const cols = computed(() => calculateColumns());
-
 
 	const fixier_regel = (idKurs: number, idSchueler: number) => computed<number | undefined>(() => {
 		if (props.getDatenmanager().schuelerGetIstFixiertInKurs(idSchueler, idKurs))
@@ -312,7 +309,7 @@
 	}
 
 	async function fixieren_regel_toggle(fachID: number | undefined, idSchueler: number, event: Event) {
-		if (fachID === undefined || !allowRegeln.value)
+		if (fachID === undefined)
 			return;
 		event.stopPropagation();
 		const kurs = props.getErgebnismanager().getOfSchuelerOfFachZugeordneterKurs(idSchueler, fachID);

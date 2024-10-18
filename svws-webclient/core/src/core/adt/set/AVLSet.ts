@@ -2,6 +2,7 @@ import type { NavigableSet } from '../../../java/util/NavigableSet';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import type { SortedSet } from '../../../java/util/SortedSet';
 import { cast_java_util_SortedSet } from '../../../java/util/SortedSet';
 import { AVLMap } from '../../../core/adt/map/AVLMap';
@@ -91,7 +92,7 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 		if ((__param0 === undefined)) {
 			return this._set.toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			return this._set.toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -224,6 +225,8 @@ export class AVLSet<E> extends JavaObject implements NavigableSet<E> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.set.AVLSet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
+
+	public static class = new Class<AVLSet<any>>('de.svws_nrw.core.adt.set.AVLSet');
 
 	public reversed() : NavigableSet<E> {
 		return this.descendingSet();

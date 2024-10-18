@@ -1,0 +1,554 @@
+{
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "ID_00",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 82,
+			"schluessel": "00",
+			"kuerzel": "00",
+			"text": "für die Primarstufe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_01",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 83,
+			"schluessel": "01",
+			"kuerzel": "01",
+			"text": "an der Grund- und Hauptschule (Stufenschwerpunkt I)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_02",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 84,
+			"schluessel": "02",
+			"kuerzel": "02",
+			"text": "an der Grund- und Hauptschule (Stufenschwerpunkt II)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_03",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 85,
+			"schluessel": "03",
+			"kuerzel": "03",
+			"text": "an der Volksschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_09",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 86,
+			"schluessel": "09",
+			"kuerzel": "09",
+			"text": "für Sonderpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_10",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 87,
+			"schluessel": "10",
+			"kuerzel": "10",
+			"text": "an Sonderschulen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_11",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 88,
+			"schluessel": "11",
+			"kuerzel": "11",
+			"text": "für Sonderpädagogik und die Primarstufe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_12",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 89,
+			"schluessel": "12",
+			"kuerzel": "12",
+			"text": "für Sonderpädagogik und die Sekundarstufe I",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_14",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 90,
+			"schluessel": "14",
+			"kuerzel": "14",
+			"text": "Sonderpädagogik LPO 03",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_15",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 91,
+			"schluessel": "15",
+			"kuerzel": "15",
+			"text": "Grund-, Haupt- u. Realschule u. entspr. Jahrg.stufen d. Gesamtschule -Schwerp.- Grundschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_16",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 92,
+			"schluessel": "16",
+			"kuerzel": "16",
+			"text": "Grund-, Haupt- u. Realschule u. entspr. Jahrg.stufen d. Gesamtsch. -Schwerp.- H/R/Gesamtsch.",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_19",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 93,
+			"schluessel": "19",
+			"kuerzel": "19",
+			"text": "für die Sekundarstufe I und die Primarstufe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_20",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 94,
+			"schluessel": "20",
+			"kuerzel": "20",
+			"text": "für die Sekundarstufe I",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_21",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 95,
+			"schluessel": "21",
+			"kuerzel": "21",
+			"text": "an der Realschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_24",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 96,
+			"schluessel": "24",
+			"kuerzel": "24",
+			"text": "für die Sekundarstufe II und die Sekundarstufe I",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_25",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 97,
+			"schluessel": "25",
+			"kuerzel": "25",
+			"text": "am Gymnasium",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_27",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 98,
+			"schluessel": "27",
+			"kuerzel": "27",
+			"text": "Gymnasium und Gesamtschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_29",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 99,
+			"schluessel": "29",
+			"kuerzel": "29",
+			"text": "für die Sekundarstufe II (ohne berufliche Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_30",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 100,
+			"schluessel": "30",
+			"kuerzel": "30",
+			"text": "an berufsbildenden Schulen (alle Lehrer mit 2. Staatsprüfung oder erworbener Anstellungsfähigkeit)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_31",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 101,
+			"schluessel": "31",
+			"kuerzel": "31",
+			"text": "für die Sekundarstufe II und Sonderpädagogik",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_32",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 102,
+			"schluessel": "32",
+			"kuerzel": "32",
+			"text": "für die Sekundarstufe II (mit beruflicher Fachrichtung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_35",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 103,
+			"schluessel": "35",
+			"kuerzel": "35",
+			"text": "Berufskolleg",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_40",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 104,
+			"schluessel": "40",
+			"kuerzel": "40",
+			"text": "Fachhochschullehrer",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_50",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 105,
+			"schluessel": "50",
+			"kuerzel": "50",
+			"text": "Fachlehrer an Sonderschulen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_51",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 106,
+			"schluessel": "51",
+			"kuerzel": "51",
+			"text": "Religionslehrer/Geistlicher/Katechet",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_52",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 107,
+			"schluessel": "52",
+			"kuerzel": "52",
+			"text": "Fachlehrer mit der Befähigung für die Laufbahn des Werkstattlehrers",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_53",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 108,
+			"schluessel": "53",
+			"kuerzel": "53",
+			"text": "Fachlehrer",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_54",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 109,
+			"schluessel": "54",
+			"kuerzel": "54",
+			"text": "Fachlehrer für Kurzschrift und Maschinenschreiben",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_55",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 110,
+			"schluessel": "55",
+			"kuerzel": "55",
+			"text": "Fachlehrer mit der Befähigung für die Laufbahn des technischen Lehrers an beruflichen Schulen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_56",
+		"idHistorie": 30,
+		"historie": [ {
+			"id": 111,
+			"schluessel": "56",
+			"kuerzel": "56",
+			"text": "Schulkindergärtnerin",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_57",
+		"idHistorie": 31,
+		"historie": [ {
+			"id": 112,
+			"schluessel": "57",
+			"kuerzel": "57",
+			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplompädagoge/-in (ohne sonderpädagogische Zusatzausbildung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_58",
+		"idHistorie": 32,
+		"historie": [ {
+			"id": 113,
+			"schluessel": "58",
+			"kuerzel": "58",
+			"text": "ohne sonderpäd. Zusatzausbildung:Erzieher, Kindergärtnerin u.a.",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_59",
+		"idHistorie": 33,
+		"historie": [ {
+			"id": 114,
+			"schluessel": "59",
+			"kuerzel": "59",
+			"text": "ohne sonderpäd. Zusatzausbildung:Sonstige pädagogische Unterrichtshilfe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_60",
+		"idHistorie": 34,
+		"historie": [ {
+			"id": 115,
+			"schluessel": "60",
+			"kuerzel": "60",
+			"text": "Sozialarbeiter/-in, Sozialpädagoge/-in, Diplompädagoge/-in (mit sonderpädagogische Zusatzausbildung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_61",
+		"idHistorie": 35,
+		"historie": [ {
+			"id": 116,
+			"schluessel": "61",
+			"kuerzel": "61",
+			"text": "mit sonderpäd. Zusatzausbildung:Erzieher, Kindergärtnerin u.a.",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_62",
+		"idHistorie": 36,
+		"historie": [ {
+			"id": 117,
+			"schluessel": "62",
+			"kuerzel": "62",
+			"text": "mit sonderpäd. Zusatzausbildung:Sonstige pädagogische Unterrichtshilfe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_96",
+		"idHistorie": 37,
+		"historie": [ {
+			"id": 118,
+			"schluessel": "96",
+			"kuerzel": "96",
+			"text": "Qualifikation mit Hohschulabschluss ohne 2. Staatsprüfung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_97",
+		"idHistorie": 38,
+		"historie": [ {
+			"id": 119,
+			"schluessel": "97",
+			"kuerzel": "97",
+			"text": "Lehrer, der außerhalb des Geltungsbereichs des Grundgesetzes seine Qualifikation erworben hat",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_98",
+		"idHistorie": 39,
+		"historie": [ {
+			"id": 120,
+			"schluessel": "98",
+			"kuerzel": "98",
+			"text": "Lehramtsanwärter/Studienreferendar",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_99",
+		"idHistorie": 40,
+		"historie": [ {
+			"id": 121,
+			"schluessel": "99",
+			"kuerzel": "99",
+			"text": "Sonstiger Lehrer (Gymnastik-, Werk-, Hauswirtschaftslehrer, Übungsleiter)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_70",
+		"idHistorie": 41,
+		"historie": [ {
+			"id": 122,
+			"schluessel": "70",
+			"kuerzel": "70",
+			"text": "Schulverwaltungsassistent",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_04",
+		"idHistorie": 42,
+		"historie": [ {
+			"id": 123,
+			"schluessel": "04",
+			"kuerzel": "04",
+			"text": "Grundschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_17",
+		"idHistorie": 43,
+		"historie": [ {
+			"id": 124,
+			"schluessel": "17",
+			"kuerzel": "17",
+			"text": "Haupt-, Real- und  Gesamtschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_08",
+		"idHistorie": 44,
+		"historie": [ {
+			"id": 125,
+			"schluessel": "08",
+			"kuerzel": "08",
+			"text": "Sonderpädagogische Förderung",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_18",
+		"idHistorie": 45,
+		"historie": [ {
+			"id": 126,
+			"schluessel": "18",
+			"kuerzel": "18",
+			"text": "Haupt-, Real-, Sekundar- und Gesamtschule",
+			"gueltigVon": 2019,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_49",
+		"idHistorie": 46,
+		"historie": [ {
+			"id": 127,
+			"schluessel": "49",
+			"kuerzel": "49",
+			"text": "Berufskolleg mit einer beruflichen Fachrichtung (§ 40 LVO)",
+			"gueltigVon": 2019,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_63",
+		"idHistorie": 47,
+		"historie": [ {
+			"id": 128,
+			"schluessel": "63",
+			"kuerzel": "63",
+			"text": "Heilpädagoge/-in",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_64",
+		"idHistorie": 48,
+		"historie": [ {
+			"id": 129,
+			"schluessel": "64",
+			"kuerzel": "64",
+			"text": "Handwerksmeister/-in",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_65",
+		"idHistorie": 49,
+		"historie": [ {
+			"id": 130,
+			"schluessel": "65",
+			"kuerzel": "65",
+			"text": "Alltagshelfer/-in",
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ID_90",
+		"idHistorie": 50,
+		"historie": [ {
+			"id": 131,
+			"schluessel": "90",
+			"kuerzel": "90",
+			"text": "Studierende",
+			"gueltigVon": 2024,
+			"gueltigBis": null
+		} ]
+	} ]
+}

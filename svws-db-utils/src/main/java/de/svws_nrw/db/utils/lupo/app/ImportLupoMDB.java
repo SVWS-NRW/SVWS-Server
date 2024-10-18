@@ -1,5 +1,6 @@
 package de.svws_nrw.db.utils.lupo.app;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -9,6 +10,7 @@ import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.Benutzer;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 
 
@@ -29,6 +31,7 @@ public class ImportLupoMDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -62,7 +65,7 @@ public class ImportLupoMDB {
 			final String tgtDB = cmdLine.getValue("ts", "svwsdb");
 			final String tgtUser = cmdLine.getValue("tu", "svwsadmin");
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false, 0, 0);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_DB, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, false);
 			final Benutzer user = Benutzer.create(tgtConfig);
 
 			// Lese den Namen für der LuPO-Datei ein und öffne die Datei

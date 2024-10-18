@@ -5,6 +5,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { Collection } from '../../../java/util/Collection';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Collections } from '../../../java/util/Collections';
 import { Arrays } from '../../../java/util/Arrays';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -210,6 +211,8 @@ export class StundenplanblockungRegelTyp extends JavaEnum<StundenplanblockungReg
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungRegelTyp>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelTyp');
 
 }
 

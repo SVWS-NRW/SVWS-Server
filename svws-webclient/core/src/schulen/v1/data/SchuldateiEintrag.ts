@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiEintrag extends JavaObject {
 
@@ -32,6 +33,8 @@ export class SchuldateiEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiEintrag>('de.svws_nrw.schulen.v1.data.SchuldateiEintrag');
 
 	public static transpilerFromJSON(json : string): SchuldateiEintrag {
 		const obj = JSON.parse(json) as Partial<SchuldateiEintrag>;

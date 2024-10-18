@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class OAuth2ClientSecret extends JavaObject {
 
@@ -34,6 +35,8 @@ export class OAuth2ClientSecret extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.oauth2.OAuth2ClientSecret'].includes(name);
 	}
+
+	public static class = new Class<OAuth2ClientSecret>('de.svws_nrw.core.data.oauth2.OAuth2ClientSecret');
 
 	public static transpilerFromJSON(json : string): OAuth2ClientSecret {
 		const obj = JSON.parse(json) as Partial<OAuth2ClientSecret>;

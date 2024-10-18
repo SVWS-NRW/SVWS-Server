@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-page" :class="{'svws-single-route': props.routes.length === 1}">
+	<div class="svws-ui-page" :class="{'svws-single-tab': props.tabs.length === 1}">
 		<div class="svws-ui-tabs">
 			<div class="svws-ui-tabs--wrapper">
 				<div v-if="state.scrolled" class="svws-ui-tabs--scroll-button -left-1 pl-1 bg-gradient-to-l" @click="scroll('left')">
@@ -8,8 +8,8 @@
 					</svws-ui-button>
 				</div>
 				<div ref="tabsListElement" class="svws-ui-tabs--list">
-					<template v-for="(route, index) in props.routes" :key="index">
-						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="selected" @select="select(route)" />
+					<template v-for="(route, index) in props.tabs" :key="index">
+						<svws-ui-router-tab-bar-button v-if="!isHidden(index)" :route="route" :selected="props.tab" @select="setTab(route)" />
 					</template>
 				</div>
 				<div v-if="!state.scrolledMax" class="svws-ui-tabs--scroll-button -right-1 pr-1 bg-gradient-to-r justify-end" @click="scroll('right')">
@@ -27,19 +27,15 @@
 </template>
 
 <script lang="ts" setup>
-	import type { WritableComputedRef } from 'vue';
+
 	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { RouteRecordRaw } from 'vue-router';
-	import type { AuswahlChildData } from '../../types';
+	import type { TabData } from './TabData';
 
 	const props = defineProps<{
-		routes: RouteRecordRaw[] | AuswahlChildData[]
-		hidden: boolean[] | undefined
-		modelValue: RouteRecordRaw | AuswahlChildData
-	}>();
-
-	const emit = defineEmits<{
-		(e: 'update:modelValue', value: any): any,
+		tabs: TabData[];
+		hidden?: boolean[] | undefined;
+		tab: TabData;
+		setTab: (tab: TabData) => Promise<void>;
 	}>();
 
 	type ComponentData = {
@@ -50,17 +46,30 @@
 		scrollOffset: number;
 	}
 
+	let processingKeyboardEvent = false;
 	const tabsListElement = ref();
-	const selected: WritableComputedRef<RouteRecordRaw | AuswahlChildData> = computed({
-		get: () => props.modelValue,
-		set: (value) => emit('update:modelValue', value)
-	});
 
 	function isHidden(index: number) {
-		if ((props.hidden === undefined) || props.hidden[index] === undefined)
+		if (props.hidden?.[index] === undefined)
 			return false;
 		return props.hidden[index];
 	}
+
+	const visibleTabs = computed<TabData[]> (() => {
+		const visibleTabs: TabData[] = [];
+		for (let i = 0; i < props.tabs.length; i++)
+			if (!isHidden(i))
+				visibleTabs.push(props.tabs[i]);
+		return visibleTabs;
+	});
+
+	const selectedIndex = computed<number>(() => {
+		const tabs = visibleTabs.value;
+		for (let i = 0; i < tabs.length; i++)
+			if (tabs[i].name === props.tab.name)
+				return i;
+		return -1;
+	});
 
 	const state = ref<ComponentData>({
 		scrolled: false,
@@ -75,12 +84,14 @@
 		state.value.scrolledMax = (tabsListElement.value?.scrollLeft ?? 0) >= state.value.maxScrollLeft;
 		tabsListElement.value?.addEventListener("scroll", handleScroll);
 		window.addEventListener("resize", handleScroll);
+		window.addEventListener("keydown", switchTab)
 	})
 
 
 	onUnmounted(() => {
 		tabsListElement.value?.removeEventListener("scroll", handleScroll);
 		window.removeEventListener("resize", handleScroll);
+		window.removeEventListener("keydown", switchTab)
 	});
 
 
@@ -105,8 +116,15 @@
 		});
 	}
 
-	function select(route: RouteRecordRaw | AuswahlChildData) {
-		selected.value = route;
+	function switchTab(event: KeyboardEvent) {
+		if (event.altKey && event.ctrlKey && !processingKeyboardEvent && !event.repeat && ((event.key === "ArrowLeft") || (event.key === "ArrowRight"))) {
+			processingKeyboardEvent = true;
+			const backwards = (event.key === "ArrowLeft");
+			const targetIndex = backwards ? ((selectedIndex.value === 0) ? visibleTabs.value.length - 1 : selectedIndex.value - 1)
+				: ((selectedIndex.value === visibleTabs.value.length - 1) ? 0 : selectedIndex.value + 1);
+			void props.setTab(visibleTabs.value[targetIndex]);
+			processingKeyboardEvent = false;
+		}
 	}
 
 </script>
@@ -182,10 +200,6 @@
 
 	.svws-sub-nav-target {
 		@apply overflow-x-auto flex-shrink-0;
-	}
-
-	.svws-ui-secondary-tabs {
-		@apply text-button flex gap-[2px] -mx-3 pt-1.5 pb-3 px-1 -mt-px rounded-md;
 	}
 
 </style>

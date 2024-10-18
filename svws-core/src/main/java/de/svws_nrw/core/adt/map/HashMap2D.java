@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
@@ -194,6 +195,18 @@ public class HashMap2D<K1, K2, V> {
 	}
 
 	/**
+	 * Liefert eine Liste aller Values des 1. Keys in dieser Map.
+	 *
+	 * @param key1  Der 1. Schlüssel des Paares(key1, key2).
+	 *
+	 * @return eine Liste aller Values des 1. Keys in dieser Map.
+	 */
+	public List<V> getNonNullValuesOfKey1AsListOrNull(final @NotNull K1 key1) {
+		final Map<K2, V> map1 = getSubMapOrNull(key1);
+		return map1 == null ? null : new ArrayList<>(map1.values());
+	}
+
+	/**
 	 * Liefert eine Liste aller Values in dieser Map.
 	 *
 	 * @return eine Liste aller Values in dieser Map.
@@ -215,6 +228,15 @@ public class HashMap2D<K1, K2, V> {
 	 */
 	public @NotNull Set<K1> getKeySet() {
 		return this._map.keySet();
+	}
+
+	/**
+	 * Liefert das EntrySet des 1. Schlüssels.
+	 *
+	 * @return das EntrySet der SubMap des 1. Schlüssels.
+	 */
+	public @NotNull Set<Entry<K1, Map<K2, V>>> getEntrySet() {
+		return this._map.entrySet();
 	}
 
 	/**

@@ -1,0 +1,59 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "BERUFSFACHSCHULE",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000, 
+			"schluessel": "BF",
+			"kuerzel": "BF",
+			"text": "Berufsfachschulen",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BERUFSSCHULE",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "BS",
+			"kuerzel": "BS",
+			"text": "Berufsschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BERUFLICHES_GYMNASIUM",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "BY",
+			"kuerzel": "BY",
+			"text": "Berufliches Gymnasium",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FACHOBERSCHULE",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "FO",
+			"kuerzel": "FO",
+			"text": "Fachoberschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FACHSCHULE",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "FS",
+			"kuerzel": "FS",
+			"text": "Fachschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

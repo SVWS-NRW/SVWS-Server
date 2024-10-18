@@ -2,9 +2,6 @@ package de.svws_nrw.db.dto.current.schild.schueler;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
-import de.svws_nrw.db.converter.current.SprachreferenzniveauConverter;
-
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
 
 
 import jakarta.persistence.Cacheable;
@@ -20,8 +17,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
-import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterSerializer;
-import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerSprachenfolge.
@@ -168,10 +163,7 @@ public final class DTOSchuelerSprachenfolge {
 	/** Referenzniveau GeR des Sprachenfolgeeintrags */
 	@Column(name = "Referenzniveau")
 	@JsonProperty
-	@Convert(converter = SprachreferenzniveauConverter.class)
-	@JsonSerialize(using = SprachreferenzniveauConverterSerializer.class)
-	@JsonDeserialize(using = SprachreferenzniveauConverterDeserializer.class)
-	public Sprachreferenzniveau Referenzniveau;
+	public String Referenzniveau;
 
 	/** Gibt an, ob der Schüler das kleine Latinum erreicht hat */
 	@Column(name = "KleinesLatinumErreicht")

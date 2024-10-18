@@ -1,28 +1,17 @@
 import type { RouteLocationRaw, RouteParams } from "vue-router";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 import { RouteManager } from "~/router/RouteManager";
+import { RoutingStatus } from "~/router/RoutingStatus";
 import { RouteDataApp } from "~/router/apps/RouteDataApp";
 import { routeBenutzerprofil } from "./benutzerprofil/RouteBenutzerprofil";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
-import { routeSchuleBenutzer } from "~/router/apps/schule/benutzer/RouteSchuleBenutzer";
-import { routeSchuleBenutzergruppe } from "~/router/apps/schule/benutzergruppen/RouteSchuleBenutzergruppe";
-import { routeSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
-import { routeKataloge } from "~/router/apps/kataloge/RouteKataloge"
-import { routeKatalogFaecher } from "~/router/apps/kataloge/faecher/RouteKatalogFaecher";
-import { routeKatalogBetriebe } from "~/router/apps/kataloge/betriebe/RouteKatalogBetriebe";
-import { routeKatalogReligion } from "~/router/apps/kataloge/religion/RouteKatalogReligionen";
-import { routeKatalogVermerkarten } from "~/router/apps/kataloge/vermerke/RouteKatalogVermerkarten";
-import { routeKatalogJahrgaenge } from "~/router/apps/kataloge/jahrgaenge/RouteKatalogJahrgaenge";
-import { routeKatalogFoerderschwerpunkte } from "~/router/apps/kataloge/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
-import { routeKatalogRaeume } from "~/router/apps/kataloge/raum/RouteKatalogRaeume";
-import { routeKatalogAufsichtsbereiche } from "~/router/apps/kataloge/aufsichtsbereich/RouteKatalogAufsichtsbereiche";
-import { routeKatalogPausenzeiten } from "~/router/apps/kataloge/pausenzeit/RouteKatalogPausenzeiten";
-import { routeKatalogZeitraster } from "~/router/apps/kataloge/zeitraster/RouteKatalogZeitraster";
-import { routeKatalogEinwilligungsarten } from "~/router/apps/kataloge/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeSchuleJahrgaenge } from "~/router/apps/schule/jahrgaenge/RouteSchuleJahrgaenge";
+import { routeSchuleFaecher } from "~/router/apps/schule/faecher/RouteSchuleFaecher";
+import { routeStundenplanKataloge } from "./stundenplan/RouteStundenplanKataloge";
 import { routeSchueler } from "~/router/apps/schueler/RouteSchueler";
 import { routeLehrer } from "~/router/apps/lehrer/RouteLehrer";
 import { routeKlassen } from "~/router/apps/klassen/RouteKlassen";
@@ -31,9 +20,23 @@ import { routeGost } from "~/router/apps/gost/RouteGost";
 import { routeStatistik } from "~/router/apps/statistik/RouteStatistik";
 import { routeStundenplan } from "~/router/apps/stundenplan/RouteStundenplan";
 import { routeLogin } from "~/router/login/RouteLogin";
-import { routeKatalogSchulen } from "./kataloge/schulen/RouteKatalogSchulen";
 import { routeError } from "../error/RouteError";
+import { routeSchuleBetriebe } from "./schule/betriebe/RouteSchuleBetriebe";
+import { routeKatalogEinwilligungsarten } from "./schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
+import { routeKatalogFoerderschwerpunkte } from "./schule/foerderschwerpunkte/RouteKatalogFoerderschwerpunkte";
+import { routeKatalogReligionen } from "./schule/religionen/RouteKatalogReligionen";
+import { routeKatalogSchulen } from "./schule/schulen/RouteKatalogSchulen";
+import { routeKatalogVermerkarten } from "./schule/vermerke/RouteKatalogVermerkarten";
+import { routeEinstellungen } from "./einstellungen/RouteEinstellungen";
+import { routeEinstellungenBenutzer } from "~/router/apps/einstellungen/benutzer/RouteEinstellungenBenutzer";
+import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
+import { routeSchuleDatenaustauschKurs42 } from "./schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
+import { routeSchuleDatenaustauschUntis } from "./schule/datenaustausch/untis/RouteSchuleDatenaustauschUntis";
 import SApp from "~/components/SApp.vue";
+import { routeSchuleDatenaustauschENM } from "./schule/datenaustausch/RouteSchuleDatenaustauschENM";
+import { routeSchuleDatenaustauschLaufbahnplanung } from "./schule/datenaustausch/RouteSchuleDatenaustauschLupo";
+import { routeSchuleDatenaustauschSchulbewerbung } from "./schule/datenaustausch/RouteSchuleDatenaustauschSchulbewerbung";
+import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSchuleDatenaustauschWenom";
 
 
 export class RouteApp extends RouteNode<RouteDataApp, any> {
@@ -45,22 +48,13 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		super.text = "SVWS-Client";
 		super.children = [
 			routeBenutzerprofil,
-			routeSchule,
-			routeSchuleBenutzer,
-			routeSchuleBenutzergruppe,
-			routeSchuleDatenaustausch,
-			routeKataloge,
-			routeKatalogFaecher,
-			routeKatalogReligion,
+			routeSchuleJahrgaenge,
+			routeSchuleFaecher,
+			routeKatalogReligionen,
 			routeKatalogEinwilligungsarten,
 			routeKatalogVermerkarten,
-			routeKatalogBetriebe,
-			routeKatalogJahrgaenge,
+			routeSchuleBetriebe,
 			routeKatalogFoerderschwerpunkte,
-			routeKatalogRaeume,
-			routeKatalogAufsichtsbereiche,
-			routeKatalogPausenzeiten,
-			routeKatalogZeitraster,
 			routeKatalogSchulen,
 			routeSchueler,
 			routeLehrer,
@@ -69,10 +63,20 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
+			routeStundenplanKataloge,
+			routeEinstellungen,
+			routeEinstellungenBenutzer,
+			routeEinstellungenBenutzergruppe,
+			routeSchule,
+			routeSchuleDatenaustauschKurs42,
+			routeSchuleDatenaustauschUntis,
+			routeSchuleDatenaustauschLaufbahnplanung,
+			routeSchuleDatenaustauschSchulbewerbung,
+			routeSchuleDatenaustauschENM,
+			routeSchuleDatenaustauschWenom,
 		];
 		super.menu = [
 			routeSchule,
-			routeKataloge,
 			routeSchueler,
 			routeLehrer,
 			routeKlassen,
@@ -80,6 +84,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			routeGost,
 			routeStatistik,
 			routeStundenplan,
+			routeEinstellungen,
 		];
 		super.defaultChild = routeSchueler;
 	}
@@ -89,22 +94,24 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		if (isEntering)
-			await this.data.init();
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
-		if (idSchuljahresabschnitt === undefined)
-			return this.getRoute(this.data.aktAbschnitt.value.id);
-		// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
-		await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-		// Prüfe, ob die View aktualisiert werden muss
-		let cur: RouteNode<any, any> = to;
-		while (cur.parent !== this)
-		  cur = cur.parent;
-		if (cur !== this.data.view)
-			this.data.setView(cur, this.children);
+		try {
+			if (isEntering)
+				await this.data.init();
+			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
+			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
+			if (idSchuljahresabschnitt === undefined)
+				return this.getRoute(this.data.aktAbschnitt.value.id);
+			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
+			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			// Prüfe, ob die View aktualisiert werden muss
+			let cur: RouteNode<any, any> = to;
+			while (cur.parent !== this)
+				cur = cur.parent;
+			if (cur !== this.data.view)
+				this.data.setView(cur, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -125,20 +132,25 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			// Props für die Navigation
 			setApp: this.setApp,
 			app: this.getApp(),
-			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hideAuswahl: true },
+			selectedChild: this.getSelectedChild(),
+			benutzerprofilApp: { name: routeBenutzerprofil.name, text: routeBenutzerprofil.text, hide: true },
 			apps: this.getApps(),
 			appsHidden: this.children_hidden().value,
 			apiStatus: api.status,
-			backticks: () => routeBenutzerprofil.data.backticks,
 		};
 	}
 
-	private getApp(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text, hideAuswahl: !this.data.view.hasView('liste') };
+	private getSelectedChild(): TabData {
+		const child = this.selectedChild!;
+		return { name: child.name, text: child.text, hide: false };
 	}
 
-	private getApps(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
+	private getApp(): TabData {
+		return { name: this.data.view.name, text: this.data.view.text, hide: !this.data.view.hasView('liste') && !this.data.view.hasView('submenu') };
+	}
+
+	private getApps(): TabData[] {
+		const result: TabData[] = [];
 		for (const c of super.menu) {
 			if (c.hatEineKompetenz() && c.hatSchulform())
 				result.push({ name: c.name, text: c.text });
@@ -146,14 +158,15 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		return result;
 	}
 
-	private setApp = async (value: AuswahlChildData) => {
+	private setApp = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
-		this.data.setView(node, this.children);
+		const result = await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		if (result === RoutingStatus.SUCCESS)
+			this.data.setView(node, this.children);
 	}
 
 }

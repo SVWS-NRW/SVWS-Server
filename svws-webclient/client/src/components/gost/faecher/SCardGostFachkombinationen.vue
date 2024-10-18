@@ -8,12 +8,12 @@
 				</template>
 			</svws-ui-tooltip>
 		</template>
-		<svws-ui-table :items="rows" :no-data="rows.size() === 0" :columns="cols">
-			<template #row="{ row }">
-				<s-row-gost-fachkombination :typ="typ" :kombination="row" :faecher-manager="faecherManager" :patch-fachkombination="patchFachkombination" :remove-fachkombination="removeFachkombination" />
+		<svws-ui-table :items :no-data="items.size() === 0" :columns>
+			<template #row="{ row: kombination }">
+				<s-row-gost-fachkombination :typ :kombination :faecher-manager :patch-fachkombination :remove-fachkombination :hat-update-kompetenz />
 			</template>
-			<template #actions>
-				<svws-ui-button size="small" type="icon" @click="add_kurskombi"><span class="icon i-ri-add-line" /> </svws-ui-button>
+			<template #actions v-if="hatUpdateKompetenz">
+				<svws-ui-button size="small" type="icon" @click="addFachkombination(typ)"><span class="icon i-ri-add-line" /> </svws-ui-button>
 			</template>
 		</svws-ui-table>
 	</svws-ui-content-card>
@@ -33,6 +33,7 @@
 		removeFachkombination: (id: number) => Promise<GostJahrgangFachkombination | undefined>;
 		typ: GostLaufbahnplanungFachkombinationTyp;
 		mapFachkombinationen: () => Map<number, GostJahrgangFachkombination>;
+		hatUpdateKompetenz: boolean;
 	}>();
 
 	const title = computed<string>(() => {
@@ -46,7 +47,7 @@
 		}
 	});
 
-	const rows = computed<List<GostJahrgangFachkombination>>(() => {
+	const items = computed<List<GostJahrgangFachkombination>>(() => {
 		const result = new ArrayList<GostJahrgangFachkombination>();
 		for (const kombi of props.mapFachkombinationen().values())
 			if (GostLaufbahnplanungFachkombinationTyp.fromValue(kombi.typ) === props.typ)
@@ -54,11 +55,7 @@
 		return result;
 	});
 
-	async function add_kurskombi() {
-		void props.addFachkombination(props.typ);
-	}
-
-	const cols = computed<DataTableColumn[]>(() => [
+	const columns = computed<DataTableColumn[]>(() => [
 		{ key: "Fach1", label: "Fach 1", span: 1, minWidth: 5 },
 		{ key: "Kursart1", label: "Kursart 1", span: 1, minWidth: 5},
 		{ key: "Empty", label: (props.typ === GostLaufbahnplanungFachkombinationTyp.ERFORDERLICH) ? "\u21d2" : "\u21d4 ", span: 0.25, minWidth: 1},

@@ -29,6 +29,7 @@ import { MapUtils } from '../../core/utils/MapUtils';
 import { GostBlockungsergebnisKursSchuelerZuordnungUpdate } from '../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnungUpdate';
 import { Schueler } from '../../core/data/schueler/Schueler';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Class } from '../../java/lang/Class';
 import { ListUtils } from '../../core/utils/ListUtils';
 import { DTOUtils } from '../../core/utils/DTOUtils';
 import type { JavaMap } from '../../java/util/JavaMap';
@@ -1271,6 +1272,8 @@ export class KursblockungDynDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynDaten'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynDaten>('de.svws_nrw.core.kursblockung.KursblockungDynDaten');
 
 }
 

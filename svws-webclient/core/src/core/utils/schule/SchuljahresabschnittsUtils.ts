@@ -1,7 +1,8 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { JavaLong } from '../../../java/lang/JavaLong';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Class } from '../../../java/lang/Class';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuljahresabschnittsUtils extends JavaObject {
@@ -32,6 +33,8 @@ export class SchuljahresabschnittsUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils'].includes(name);
 	}
+
+	public static class = new Class<SchuljahresabschnittsUtils>('de.svws_nrw.core.utils.schule.SchuljahresabschnittsUtils');
 
 }
 

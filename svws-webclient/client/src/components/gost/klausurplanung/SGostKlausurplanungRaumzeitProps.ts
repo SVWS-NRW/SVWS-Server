@@ -9,13 +9,18 @@ import type {
 	GostKursklausur,
 	GostKlausurplanManager,
 	List,
+	BenutzerKompetenz,
+	Schuljahresabschnitt,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungRaumzeitProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
-	gotoTermin: (value: number) => Promise<void>;
+	abschnitt: Schuljahresabschnitt | undefined;
+	gotoTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
+	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
 	kMan: () => GostKlausurplanManager;
 	createKlausurraum: (raum: Partial<GostKlausurraum>) => Promise<void>;
 	loescheKlausurraum: (id: number) => Promise<boolean>;
@@ -23,10 +28,10 @@ export interface GostKlausurplanungRaumzeitProps {
 	setzeRaumZuSchuelerklausuren: (raeume: List<GostKlausurraumRich>, deleteFromRaeume: boolean) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	patchKlausur: (klausur: GostKursklausur, patch: Partial<GostKursklausur>) => Promise<GostKlausurenCollectionSkrsKrsData>;
 	quartalsauswahl: WritableComputedRef<0 | 1 | 2>;
-	setRaumTermin : (termin: GostKlausurtermin | null) => Promise<void>;
+	setRaumTermin : (termin: GostKlausurtermin | null) => void;
 	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	getConfigValue: (value: string) => string;
-	setConfigValue: (key: string, value: string) => void;
+	setConfigValue: (key: string, value: string) => Promise<void>;
 }

@@ -1,0 +1,468 @@
+{
+	"version": 1,
+	"daten": [ {	
+		"bezeichner": "FG_D",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"nummer": 1,
+			"schluessel": 110,
+			"text": "Deutsch",
+			"kuerzel": "D",
+			"farbe": {"red": 253, "green": 233, "blue": 217},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 0,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_AL",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"nummer": 2,
+			"schluessel": 400,
+			"text": "Arbeitslehre",
+			"kuerzel": "AL",
+			"farbe": {"red": 253, "green": 221, "blue": 195},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 12,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_FS",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"nummer": 2,
+			"schluessel": 100,
+			"text": "Fremdsprachen",
+			"kuerzel": "FS",
+			"farbe": {"red": 253, "green": 221, "blue": 195},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 9,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_MS",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"nummer": 3,
+			"schluessel": 500,
+			"text": "Kunst und Musik",
+			"kuerzel": "MS",
+			"farbe": {"red": 252, "green": 204, "blue": 165},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 13,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_ME",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"nummer": 4,
+			"schluessel": null,
+			"text": "Literatur, instrumental- oder vokalpraktischer Kurs",
+			"kuerzel": "ME",
+			"farbe": {"red": 252, "green": 204, "blue": 165},
+			"schulformen": ["BK", "SB", "GE", "GY", "SG", "WB"],
+			"sortierung": 13,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_GS",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"nummer": 5,
+			"schluessel": 300,
+			"text": "Gesellschaftswissenschaft",
+			"kuerzel": "GS",
+			"farbe": {"red": 234, "green": 241, "blue": 222},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 11,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_PL",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7,
+			"nummer": 5,
+			"schluessel": null,
+			"text": "Philosophie",
+			"kuerzel": "PL",
+			"farbe": {"red": 234, "green": 241, "blue": 222},
+			"schulformen": ["BK", "SB", "GE", "GY", "SG", "WB"],
+			"sortierung": 11,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_RE",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 8,
+			"nummer": 6,
+			"schluessel": 900,
+			"text": "Religion",
+			"kuerzel": "RE",
+			"farbe": {"red": 215, "green": 228, "blue": 188},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 6,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_M",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 9,
+			"nummer": 7,
+			"schluessel": 700,
+			"text": "Mathematik",
+			"kuerzel": "M",
+			"farbe": {"red": 197, "green": 217, "blue": 241},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 15,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_NW",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 10,
+			"nummer": 8,
+			"schluessel": 200,
+			"text": "Naturwissenschaften",
+			"kuerzel": "NW",
+			"farbe": {"red": 141, "green": 180, "blue": 227},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 10,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_WN",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 11,
+			"nummer": 8,
+			"schluessel": null,
+			"text": "weiteres naturwissenschaftliches / technisches Fach",
+			"kuerzel": "WN",
+			"farbe": {"red": 141, "green": 180, "blue": 227},
+			"schulformen": ["BK", "SB", "GE", "GY", "SG", "WB"],
+			"sortierung": 10,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_SP",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 12,
+			"nummer": 9,
+			"schluessel": 600,
+			"text": "Sport",
+			"kuerzel": "SP",
+			"farbe": {"red": 224, "green": 211, "blue": 229},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 14,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_VX",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 13,
+			"nummer": 10,
+			"schluessel": 1500,
+			"text": "Vertiefungskurs",
+			"kuerzel": "VX",
+			"farbe": {"red": 216, "green": 216, "blue": 216},
+			"schulformen": ["BK", "SB", "GE", "GY", "SG", "WB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_PX",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 14,
+			"nummer": 11,
+			"schluessel": 1600,
+			"text": "Projektkurs",
+			"kuerzel": "PX",
+			"farbe": {"red": 191, "green": 191, "blue": 191},
+			"schulformen": ["BK", "SB", "GE", "GY", "SG", "WB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_BUE",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 15,
+			"nummer": null,
+			"schluessel": 10,
+			"text": "Berufsübergreifender Bereich",
+			"kuerzel": "BUE",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 1,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_BBS",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 16,
+			"nummer": null,
+			"schluessel": 20,
+			"text": "Berufsbezogener Bereich",
+			"kuerzel": "BBS",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 2,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_BBS_SCHWERPUNKT",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 17,
+			"nummer": null,
+			"schluessel": 25,
+			"text": "Berufsbezogener Bereich (Schwerpunkt)",
+			"kuerzel": "BBS",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_DF",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 18,
+			"nummer": null,
+			"schluessel": 30,
+			"text": "Differenzierungsbereich",
+			"kuerzel": "DF",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 3,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_BP",
+		"idHistorie": 19,
+		"historie": [ {
+			"id": 19,
+			"nummer": null,
+			"schluessel": 40,
+			"text": "Berufspraktikum",
+			"kuerzel": "BP",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 4,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_BLL",
+		"idHistorie": 20,
+		"historie": [ {
+			"id": 20,
+			"nummer": null,
+			"schluessel": 60,
+			"text": "besondere Lernleistung",
+			"kuerzel": "BLL",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["GE", "GY", "SG", "WB"],
+			"sortierung": 8,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_WP",
+		"idHistorie": 21,
+		"historie": [ {
+			"id": 21,
+			"nummer": null,
+			"schluessel": 800,
+			"text": "Wahlpflichtbereich",
+			"kuerzel": "WP",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 16,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_ZUV",
+		"idHistorie": 22,
+		"historie": [ {
+			"id": 22,
+			"nummer": null,
+			"schluessel": 1000,
+			"text": "Zusätzliche Unterrichtsveranstaltungen",
+			"kuerzel": "ZUV",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_ANG",
+		"idHistorie": 23,
+		"historie": [ {
+			"id": 23,
+			"nummer": null,
+			"schluessel": 1100,
+			"text": "Angleichungskurse",
+			"kuerzel": "ANG",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_D_SP",
+		"idHistorie": 24,
+		"historie": [ {
+			"id": 24,
+			"nummer": null,
+			"schluessel": 1200,
+			"text": "Sprache",
+			"kuerzel": "D_SP",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["G", "KS", "S", "V"],
+			"sortierung": 0,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_SU",
+		"idHistorie": 25,
+		"historie": [ {
+			"id": 25,
+			"nummer": null,
+			"schluessel": 1300,
+			"text": "Sachunterricht",
+			"kuerzel": "SU",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["G", "KS", "S", "V"],
+			"sortierung": 0,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_FOE",
+		"idHistorie": 26,
+		"historie": [ {
+			"id": 26,
+			"nummer": null,
+			"schluessel": 1400,
+			"text": "Förderunterricht",
+			"kuerzel": "FOE",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["G", "KS", "S", "V"],
+			"sortierung": 0,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_ABA",
+		"idHistorie": 27,
+		"historie": [ {
+			"id": 27,
+			"nummer": null,
+			"schluessel": 1700,
+			"text": "Abschlussarbeit",
+			"kuerzel": "ABA",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_PA",
+		"idHistorie": 28,
+		"historie": [ {
+			"id": 28,
+			"nummer": null,
+			"schluessel": 1800,
+			"text": "Projektarbeit",
+			"kuerzel": "PA",
+			"farbe": {"red": 220, "green": 220, "blue": 220},
+			"schulformen": ["BK", "SB"],
+			"sortierung": 0,
+			"fuerZeugnis": false,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FG_IF",
+		"idHistorie": 29,
+		"historie": [ {
+			"id": 29,
+			"nummer": null,
+			"schluessel": 1900,
+			"text": "Informatik (Sek I)",
+			"kuerzel": "IF",
+			"farbe": {"red": 141, "green": 180, "blue": 227},
+			"schulformen": ["BK", "SB", "FW", "HI", "WF", "G", "GE", "GY", "H", "PS", "R", "KS", "S", "SG", "SK", "SR", "V", "WB"],
+			"sortierung": 10,
+			"fuerZeugnis": true,
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

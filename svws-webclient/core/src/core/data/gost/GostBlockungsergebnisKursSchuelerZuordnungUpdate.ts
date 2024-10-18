@@ -3,6 +3,7 @@ import { GostBlockungRegelUpdate } from '../../../core/data/gost/GostBlockungReg
 import { GostBlockungsergebnisKursSchuelerZuordnung, cast_de_svws_nrw_core_data_gost_GostBlockungsergebnisKursSchuelerZuordnung } from '../../../core/data/gost/GostBlockungsergebnisKursSchuelerZuordnung';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject {
 
@@ -33,6 +34,8 @@ export class GostBlockungsergebnisKursSchuelerZuordnungUpdate extends JavaObject
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnisKursSchuelerZuordnungUpdate>('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchuelerZuordnungUpdate');
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKursSchuelerZuordnungUpdate {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisKursSchuelerZuordnungUpdate>;

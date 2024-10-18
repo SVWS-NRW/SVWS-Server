@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.davapi.data.CollectionRessourceQueryParameters;
 import de.svws_nrw.davapi.data.IAdressbuchKontaktRepository;
@@ -67,7 +67,7 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 	@Override
 	public List<AdressbuchEintrag> getKontakteByAdressbuch(final String adressbuchId, final CollectionRessourceQueryParameters params) {
 		if (!params.includeRessources
-				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.ADRESSDATEN_ERZIEHER_ANSEHEN)) {
+				|| !conn.getUser().pruefeKompetenz(BenutzerKompetenz.CARDDAV_ERZIEHER_ANSEHEN)) {
 			return new ArrayList<>();
 		}
 
@@ -107,7 +107,7 @@ public final class ErzieherWithCategoriesRepository implements IAdressbuchKontak
 				.queryTelefonNummernBySchuelerIds(schuelerBySchuelerIds.keySet(), conn);
 
 		final Map<Long, SchuelerStatus> schuelerStatusById = filteredDtoSchuelers.stream()
-				.collect(Collectors.toMap(s -> s.ID, s -> s.Status));
+				.collect(Collectors.toMap(s -> s.ID, s -> SchuelerStatus.data().getWertByKuerzel("" + s.idStatus)));
 		final Map<Long, Set<String>> categoriesBySchuelerId = getCategoriesBySchuelerId(schuelerStatusById);
 
 		return erzieherBySchuelerID.entrySet().stream().map(entry -> {

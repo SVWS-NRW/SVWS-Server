@@ -4,28 +4,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.svws_nrw.core.data.kataloge.OrtKatalogEintrag;
 import de.svws_nrw.core.data.kataloge.OrtsteilKatalogEintrag;
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
+import de.svws_nrw.module.reporting.types.gost.klausurplanung.ReportingGostKlausurplanungSchuelerklausur;
 import de.svws_nrw.module.reporting.types.schueler.gost.abitur.ReportingSchuelerGostAbitur;
 import de.svws_nrw.module.reporting.types.schueler.gost.kursplanung.ReportingSchuelerGostKursplanungKursbelegung;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
 import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 import de.svws_nrw.module.reporting.types.schueler.sprachen.ReportingSchuelerSprachbelegung;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schueler.</p>
- * <p>Sie enthält die Stammdaten eines Schülers, so wie alle weiteren abhängigen Daten (Lernabschnitte, Plaungsdaten usw.).</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schüler.</p>
  */
 public class ReportingSchueler {
 
 	/** Daten des aktuellen Lernabschnitts. */
-	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt aktuellerLernabschnitt;
 
 	/** Das Anmeldedatum des Schülers. */
 	protected String anmeldedatum;
@@ -34,7 +31,7 @@ public class ReportingSchueler {
 	protected String aufnahmedatum;
 
 	/** Daten des ausgewählten Lernabschnitts. */
-	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt = null;
+	protected ReportingSchuelerLernabschnitt auswahlLernabschnitt;
 
 	/** Textfeld mit Bemerkungen zum Schülerdatensatz. */
 	protected String bemerkungen;
@@ -85,13 +82,16 @@ public class ReportingSchueler {
 	protected Geschlecht geschlecht;
 
 	/** Daten der Abiturdaten der GOSt. */
-	protected ReportingSchuelerGostAbitur gostAbitur = null;
+	protected ReportingSchuelerGostAbitur gostAbitur;
 
-	/** Daten der GOSt-Laufbahnplanung. */
-	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung = null;
+	/** Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert. */
+	protected List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren;
 
 	/** Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert. */
 	protected List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen;
+
+	/** Daten der GOSt-Laufbahnplanung. */
+	protected ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung;
 
 	/** Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers. */
 	protected Long haltestelleID;
@@ -127,7 +127,7 @@ public class ReportingSchueler {
 	protected boolean keineAuskunftAnDritte;
 
 	/** Daten aller Lernabschnitte. */
-	protected List<ReportingSchuelerLernabschnitt> lernabschnitte = new ArrayList<>();
+	protected List<ReportingSchuelerLernabschnitt> lernabschnitte;
 
 	/** Der Nachname des Schülers. */
 	protected String nachname;
@@ -142,7 +142,7 @@ public class ReportingSchueler {
 	protected ReligionEintrag religion;
 
 	/** Daten aller Sprachbelegungen. */
-	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen = new ArrayList<>();
+	protected List<ReportingSchuelerSprachbelegung> sprachbelegungen;
 
 	/** Die erste Staatsangehörigkeit des Schülers. */
 	protected Nationalitaeten staatsangehoerigkeit1;
@@ -209,6 +209,7 @@ public class ReportingSchueler {
 	 * @param geburtsort Der Geburtsort des Schülers.
 	 * @param geschlecht Das Geschlecht des Schülers.
 	 * @param gostAbitur Daten der Abiturdaten der GOSt.
+	 * @param gostKlausurplanungSchuelerklausuren Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
 	 * @param gostKursplanungKursbelegungen Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
 	 * @param gostLaufbahnplanung Daten der GOSt-Laufbahnplanung.
 	 * @param haltestelleID Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers.
@@ -248,7 +249,8 @@ public class ReportingSchueler {
 			final String emailSchule, final boolean erhaeltMeisterBAFOEG, final boolean erhaeltSchuelerBAFOEG, final String externeSchulNr,
 			final Long fahrschuelerArtID, final String foto, final String geburtsdatum, final String geburtsland, final String geburtslandMutter,
 			final String geburtslandVater, final String geburtsname, final String geburtsort, final Geschlecht geschlecht,
-			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
+			final ReportingSchuelerGostAbitur gostAbitur, final List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren,
+			final List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen,
 			final ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung, final Long haltestelleID, final boolean hatMasernimpfnachweis,
 			final boolean hatMigrationshintergrund, final String hausnummer, final String hausnummerZusatz, final long id,
 			final Boolean istBerufsschulpflichtErfuellt, final boolean istDuplikat, final Boolean istSchulpflichtErfuellt, final Boolean istVolljaehrig,
@@ -278,6 +280,7 @@ public class ReportingSchueler {
 		this.geburtsort = geburtsort;
 		this.geschlecht = geschlecht;
 		this.gostAbitur = gostAbitur;
+		this.gostKlausurplanungSchuelerklausuren = gostKlausurplanungSchuelerklausuren;
 		this.gostKursplanungKursbelegungen = gostKursplanungKursbelegungen;
 		this.gostLaufbahnplanung = gostLaufbahnplanung;
 		this.haltestelleID = haltestelleID;
@@ -481,7 +484,7 @@ public class ReportingSchueler {
 	 * Die Abiturdaten der GOSt.
 	 * @return Inhalt des Feldes gostAbitur
 	 */
-	public ReportingSchuelerGostAbitur gostAbitur()  {
+	public ReportingSchuelerGostAbitur gostAbitur() {
 		return gostAbitur;
 	}
 
@@ -491,6 +494,14 @@ public class ReportingSchueler {
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
 		return gostLaufbahnplanung;
+	}
+
+	/**
+	 * Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
+	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren
+	 */
+	public List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren() {
+		return gostKlausurplanungSchuelerklausuren;
 	}
 
 	/**

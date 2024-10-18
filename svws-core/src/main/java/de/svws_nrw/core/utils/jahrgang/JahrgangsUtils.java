@@ -2,10 +2,10 @@ package de.svws_nrw.core.utils.jahrgang;
 
 import java.util.Comparator;
 
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -43,7 +43,7 @@ public final class JahrgangsUtils {
 	 *
 	 * @return die restlichen Jahre oder null
 	 */
-	public static Integer getRestlicheJahre(final @NotNull Schulform schulform, final @NotNull Schulgliederung gliederung, final @NotNull String jahrgang) {
+	public static Integer getRestlicheJahre(final @NotNull Schulform schulform, final Schulgliederung gliederung, final String jahrgang) {
 		// TODO Benutze einen noch zu definierenden Core-Type für Jahrgänge und verschiebe diese Methode in diesen Core-Type
 		if (gliederung == null)
 			return null;
@@ -140,12 +140,11 @@ public final class JahrgangsUtils {
 	 * @return true, falls es sich um einen Sek I-Jahrgang handelt, und ansonsten false
 	 */
 	public static boolean istSekI(final @NotNull String jahrgang) {
-		return Jahrgaenge.JG_05.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_06.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_07.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_08.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_09.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_10.daten.kuerzel.equals(jahrgang);
+		final Jahrgaenge jg = Jahrgaenge.data().getWertByKuerzel(jahrgang);
+		return switch (jg) {
+			case JAHRGANG_05, JAHRGANG_06, JAHRGANG_07, JAHRGANG_08, JAHRGANG_09, JAHRGANG_10 -> true;
+			default -> false;
+		};
 	}
 
 
@@ -157,9 +156,11 @@ public final class JahrgangsUtils {
 	 * @return true, falls es sich um einen Jahrgang der Gymnasialen Oberstufe handelt, und ansonsten false
 	 */
 	public static boolean istGymOb(final @NotNull String jahrgang) {
-		return Jahrgaenge.JG_EF.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_Q1.daten.kuerzel.equals(jahrgang)
-				|| Jahrgaenge.JG_Q2.daten.kuerzel.equals(jahrgang);
+		final Jahrgaenge jg = Jahrgaenge.data().getWertByKuerzel(jahrgang);
+		return switch (jg) {
+			case EF, Q1, Q2 -> true;
+			default -> false;
+		};
 	}
 
 }

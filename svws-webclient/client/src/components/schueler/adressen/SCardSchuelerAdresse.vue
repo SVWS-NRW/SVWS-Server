@@ -8,16 +8,16 @@
 			</svws-ui-button>
 		</template>
 		<svws-ui-input-wrapper :grid="4">
-			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1}, props.betriebsStammdaten.id)" type="text" span="2" />
-			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche}, props.betriebsStammdaten.id)" title="Branche" type="text" />
-			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Name" :model-value="betriebsStammdaten.name1" @change="name1=>patchBetrieb({name1: name1 ?? undefined}, props.betriebsStammdaten.id)" type="text" span="2" />
+			<svws-ui-text-input placeholder="Namensergänzung" :model-value="betriebsStammdaten.name2" @change="name2=>patchBetrieb({name2: name2 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Branche" :model-value="betriebsStammdaten.branche" @change="branche=>patchBetrieb({branche: branche ?? undefined}, props.betriebsStammdaten.id)" title="Branche" type="text" />
+			<svws-ui-text-input placeholder="Straße und Hausnummer" :model-value="betriebsStammdaten.strassenname" @change="strassenname=>patchBetrieb({strassenname: strassenname ?? undefined}, props.betriebsStammdaten.id)" type="text" />
 			<svws-ui-select title="Wohnort" v-model="inputWohnortID" :items="mapOrte" :item-filter="orte_filter"
 				:item-sort="orte_sort" :item-text="(i: OrtKatalogEintrag) => `${i.plz} ${i.ortsname}`" autocomplete />
-			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax}, props.betriebsStammdaten.id)" type="text" />
-			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email}, props.betriebsStammdaten.id)" type="email" verify-email />
+			<svws-ui-text-input placeholder="Telefon" :model-value="betriebsStammdaten.telefon1" @change="telefon1=>patchBetrieb({telefon1: telefon1 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="2. Telefon" :model-value="betriebsStammdaten.telefon2" @change="telefon2=>patchBetrieb({telefon2: telefon2 ?? undefined}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="Fax" :model-value="betriebsStammdaten.fax" @change="fax=>patchBetrieb({fax: fax ?? undefined}, props.betriebsStammdaten.id)" type="text" />
+			<svws-ui-text-input placeholder="E-Mail" :model-value="betriebsStammdaten.email" @change="email=>patchBetrieb({email: email ?? undefined}, props.betriebsStammdaten.id)" type="email" verify-email />
 			<svws-ui-spacing />
 			<svws-ui-select title="Betreuende Lehrkraft" v-model="inputBetreuungslehrer" :items="mapLehrer" :item-text="(i:LehrerListeEintrag) => i.nachname" removable />
 			<div class="flex gap-1 h-min items-center">
@@ -47,8 +47,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import { computed } from "vue";
+	import type { BetriebAnsprechpartner, BetriebStammdaten, LehrerListeEintrag, OrtKatalogEintrag, SchuelerBetriebsdaten } from "@core";
 	import { orte_filter, orte_sort } from "~/utils/helfer";
 
 	const props = defineProps<{
@@ -56,7 +56,7 @@
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
 		patchAnsprechpartner: (data : Partial<BetriebAnsprechpartner>, id : number) => Promise<void>;
 		createAnsprechpartner: (data: BetriebAnsprechpartner) => Promise<void>;
-		betrieb:  SchuelerBetriebsdaten;
+		betrieb: SchuelerBetriebsdaten;
 		betriebsStammdaten: BetriebStammdaten ;
 		mapLehrer: Map<number, LehrerListeEintrag>;
 		mapAnsprechpartner: Map<number, BetriebAnsprechpartner>;
@@ -83,15 +83,15 @@
 
 
 	const anschreiben = computed<boolean>({
-		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
+		get: () => props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 
 	function getAnsprechpartnervonBetrieb ( ): Map<number, BetriebAnsprechpartner>{
 		const t = new Map<number, BetriebAnsprechpartner>();
-		for (let entry of props.mapAnsprechpartner.entries()) {
-			let mapKey = entry[0];
-			let mapValue = entry[1];
+		for (const entry of props.mapAnsprechpartner.entries()) {
+			const mapKey = entry[0];
+			const mapValue = entry[1];
 			if( mapValue.betrieb_id === props.betriebsStammdaten.id)
 				t.set(mapKey,mapValue)
 		}

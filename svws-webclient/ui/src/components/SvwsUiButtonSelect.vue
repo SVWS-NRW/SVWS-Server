@@ -14,7 +14,7 @@
 			<span class="icon i-ri-arrow-up-s-line" v-else />
 		</button>
 		<Teleport to="body">
-			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy="strategy" :floating-left="floatingLeft" :floating-top="floatingTop" :filtered-list="dropdownActions">
+			<svws-ui-dropdown-list v-if="dropdownOpen && dropdownActions" ref="refList" :strategy :floating-left :floating-top :filtered-list="dropdownActions">
 				<template #item="{ item }">
 					<hr v-if="item.separator === true" class="w-full mx-auto my-1 text-dark">
 					<button v-else class="svws-ui-dropdown-list--item" role="button" @click="action(item)">
@@ -69,7 +69,7 @@
 		}
 	}
 
-	const listEmpty = computed(()=> {
+	const listEmpty = computed(() => {
 		for (const _ of props.dropdownActions)
 			return false;
 		return true;
@@ -80,7 +80,7 @@
 		void item.action();
 	}
 
-	const {x, y, strategy} = useFloating( inputEl, refList, {
+	const { x, y, strategy } = useFloating( inputEl, refList, {
 		placement: 'bottom-start',
 		middleware: [flip(), shift(), offset(2), size({
 			apply({rects, elements}) {
@@ -90,10 +90,10 @@
 		whileElementsMounted: autoUpdate,
 	});
 
-	const floatingTop = computed(() => `${y.value ?? 0}px`);
-	const floatingLeft = computed(() => `${x.value ?? 0}px`);
+	const floatingTop = computed(() => `${y.value}px`);
+	const floatingLeft = computed(() => `${x.value}px`);
 
-	onClickOutside(button, ()=> dropdownOpen.value = false);
+	onClickOutside(button, () => dropdownOpen.value = false);
 
 </script>
 

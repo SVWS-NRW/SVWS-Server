@@ -10,6 +10,7 @@ compileJava.dependsOn(":svws-module-dav-api:assemble")
 
 dependencies {
 	implementation project(':svws-schulen')
+	implementation project(':svws-asd')
 	implementation project(':svws-core')
 	implementation project(':svws-db')
 	implementation project(':svws-db-dto')
@@ -39,6 +40,7 @@ task transpile(type: JavaExec) {
 	group "build"
 	dependsOn project(':svws-transpile').tasks.assemble
 	dependsOn project(":svws-schulen").tasks.assemble
+	dependsOn project(":svws-asd").tasks.assemble
 	dependsOn project(":svws-core").tasks.assemble
 	dependsOn compileJava
 	dependsOn prepareTranspile
@@ -61,20 +63,24 @@ task assembleTranspiled(type: Copy) {
 	group "build"
 	dependsOn transpile
 	inputs.dir "$rootDir/svws-schulen/build/ts"
+	inputs.dir "$rootDir/svws-asd/build/ts"
 	inputs.dir "$rootDir/svws-core/build/ts"
 	inputs.dir "$buildDir/tsapi"
 	outputs.dir "$rootDir/svws-webclient/core/src"
 	doFirst {
-		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: ["**/*.ts"])
+		delete fileTree(dir: "$rootDir/svws-webclient/core/src", includes: [ "**/*.ts" ], excludes: [ "**/JsonCore*.ts", "**/test.ts" ])
 	}
 	from "$rootDir/svws-schulen/build/ts"
+	from "$rootDir/svws-asd/build/ts"
 	from "$rootDir/svws-core/build/ts"
 	from "$buildDir/tsapi"
 	into "$rootDir/svws-webclient/core/src"
 	include "**/*.ts"
 	exclude "index.ts"
 	doLast {
-		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = file("$rootDir/svws-schulen/build/ts/index.ts").getText() + file("$rootDir/svws-core/build/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
+		(new File("$rootDir/svws-webclient/core/src/index.ts")).text = "export { JsonCoreTypeReader } from './JsonCoreTypeReader';\n" + 
+			file("$rootDir/svws-schulen/build/ts/index.ts").getText() + file("$rootDir/svws-asd/build/ts/index.ts").getText() +
+			file("$rootDir/svws-core/build/ts/index.ts").getText() + file("$buildDir/tsapi/index.ts").getText()
 	}
 }
 

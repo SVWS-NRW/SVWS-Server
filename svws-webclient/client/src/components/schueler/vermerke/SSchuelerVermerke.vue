@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="" class="col-span-full">
-			<svws-ui-button class="ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
+			<svws-ui-button v-autofocus class="ml-auto mr-0 p-3 mb-8 min-h-10" @click="addWrapper">
 				<p style="margin-right: 1rem">Neuen Vermerk hinzufügen</p>
 				<span class="icon icon-lg i-ri-chat-new-line" />
 			</svws-ui-button>
@@ -45,13 +45,13 @@
 
 	const props = defineProps<SchuelerVermerkeProps>();
 
-	import { DateUtils, type SchuelerVermerke } from "@core";
 	import { ref } from "vue";
+	import { DateUtils, type SchuelerVermerke } from "@core";
 
 	const activeVermerk = ref<SchuelerVermerke>();
 
 	function getDate(vermerk: SchuelerVermerke) {
-		return DateUtils.gibDatumGermanFormat(vermerk.datum || new Date().toISOString());
+		return DateUtils.gibDatumGermanFormat(vermerk.datum ?? new Date().toISOString());
 	}
 
 	async function addWrapper() {
@@ -60,11 +60,11 @@
 	}
 
 	function getTitle(vermerk: SchuelerVermerke) {
-		return `${props.mapVermerkArten.get(vermerk.idVermerkart || -1)?.bezeichnung || "Neuer Vermerk"}: ${vermerk.bemerkung || ''}`;
+		return `${props.mapVermerkArten.get(vermerk.idVermerkart ?? -1)?.bezeichnung ?? "Neuer Vermerk"}: ${vermerk.bemerkung}`;
 	}
 
 	function getDescription(vermerk: SchuelerVermerke) : string {
-		return (vermerk.geaendertVon || vermerk.angelegtVon) + ' - ' + getDate(vermerk);
+		return `${vermerk.geaendertVon ?? vermerk.angelegtVon} - ${getDate(vermerk)}`;
 	}
 
 </script>

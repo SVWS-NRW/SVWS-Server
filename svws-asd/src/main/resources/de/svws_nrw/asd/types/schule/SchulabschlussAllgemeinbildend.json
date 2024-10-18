@@ -1,0 +1,244 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "OA",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 0,
+			"schluessel": "A",
+			"kuerzel": "OA",
+			"text": "Ohne Abschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA9A",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 1000,
+			"kuerzel": "HA9A",
+			"text": "Hauptschulabschluss nach Klasse 9 (ohne Berechtigung zum Besuch der Klasse 10 Typ B)",
+			"schluessel": "B",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+			}, {
+			"id": 1001,
+			"schluessel": "B",
+			"kuerzel": "ESAA",
+			"text": "Erster Schulabschluss (ohne Berechtigung zum Besuch der Klasse 10 Typ B)",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA9",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 2000,
+			"schluessel": "C",
+			"kuerzel": "HA9",
+			"text": "Hauptschulabschluss nach Klasse 9 (mit Berechtigung zum Besuch der Klasse 10 Typ B)",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 2001,
+			"schluessel": "C",
+			"kuerzel": "ESA",
+			"text": "Erster Schulabschluss (mit Berechtigung zum Besuch der Klasse 10 Typ B)",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA9_FOE",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "S",
+			"kuerzel": "HA9_FOE",
+			"text": "Hauptschulabschluss nach Klasse 9 (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {	
+			"id": 3001,
+			"schluessel": "S",
+			"kuerzel": "ESA_FOE",
+			"text": "Erster Schulabschluss (ggf. mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs am Berufskolleg bei internationalen Förderklassen)",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA9_Q",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "O",
+			"kuerzel": "HA9_Q",
+			"text": "Hauptschulabschluss nach Klasse 9 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 4001,
+			"schluessel": "O",
+			"kuerzel": "ESA_Q",
+			"text": "Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA10",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "D",
+			"kuerzel": "HA10",
+			"text": "Hauptschulabschluss nach Klasse 10",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 5001,
+			"schluessel": "D",
+			"kuerzel": "EESA",
+			"text": "Erweiterer Erster Schulabschluss",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HA10_Q",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 6000,
+			"schluessel": "U",
+			"kuerzel": "HA10_Q",
+			"text": "Hauptschulabschluss nach Klasse 10 (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
+			"gueltigVon": null,
+			"gueltigBis": 2021
+		}, {
+			"id": 6001,
+			"schluessel": "U",
+			"kuerzel": "EESA_Q",
+			"text": "Erweiterter Erster Schulabschluss (mit der Berechtigung zum Besuch der Gymnasialen Oberstufe)",
+			"gueltigVon": 2022,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MSA",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 10000,
+			"schluessel": "F",
+			"kuerzel": "MSA",
+			"text": "Mittlerer Schulabschluss",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MSA_Q",
+		"idHistorie": 9,
+		"historie": [ {
+			"id": 11000,
+			"schluessel": "G",
+			"kuerzel": "MSA_Q",
+			"text": "Mittlerer Schulabschluss (mit der Berechtigung zum Besuch Gymnasialen Oberstufe)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "MSA_Q1",
+		"idHistorie": 10,
+		"historie": [ {
+			"id": 12000,
+			"schluessel": "I",
+			"kuerzel": "MSA_Q1",
+			"text": "Mittlerer Schulabschluss mit der Berechtigung zum Besuch der Qualifikationsphase Gymnasialen Oberstufe",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "VS_11",
+		"idHistorie": 11,
+		"historie": [ {
+			"id": 13000,
+			"schluessel": "P",
+			"kuerzel": "VS_11",
+			"text": "Versetzung in die Klasse 11 der Fachoberschule (BK)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FHR_S",
+		"idHistorie": 12,
+		"historie": [ {
+			"id": 20000,
+			"schluessel": "H",
+			"kuerzel": "FHR_S",
+			"text": "Fachhochschulreife (nur schulischer Teil)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FHR",
+		"idHistorie": 13,
+		"historie": [ {
+			"id": 21000,
+			"schluessel": "J",
+			"kuerzel": "FHR",
+			"text": "Fachhochschulreife",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FGHR",
+		"idHistorie": 14,
+		"historie": [ {
+			"id": 22000,
+			"schluessel": "Q",
+			"kuerzel": "FGHR",
+			"text": "fachgebundene Hochschulreife (BK)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ABITUR",
+		"idHistorie": 15,
+		"historie": [ {
+			"id": 30000,
+			"schluessel": "K",
+			"kuerzel": "ABITUR",
+			"text": "Abitur / Allgemeine Hochschulreife",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FOEG",
+		"idHistorie": 16,
+		"historie": [ {
+			"id": 40000,
+			"schluessel": "M",
+			"kuerzel": "FOEG",
+			"text": "Förderschule (Förderschwerpunkt geistige Entwicklung)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FOEL",
+		"idHistorie": 17,
+		"historie": [ {
+			"id": 41000,
+			"schluessel": "V",
+			"kuerzel": "FOEL",
+			"text": "Förderschule (Förderschwerpunkt Lernen)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "WALD",
+		"idHistorie": 18,
+		"historie": [ {
+			"id": 50000,
+			"schluessel": "W",
+			"kuerzel": "WALD",
+			"text": "Zeugnis der Waldorfschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 
 export class StundenplanblockungManagerStundenelement extends JavaObject {
@@ -58,6 +59,8 @@ export class StundenplanblockungManagerStundenelement extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerStundenelement'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerStundenelement>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerStundenelement');
 
 }
 

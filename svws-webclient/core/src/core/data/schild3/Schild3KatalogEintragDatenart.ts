@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class Schild3KatalogEintragDatenart extends JavaObject {
 
@@ -44,6 +45,8 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart'].includes(name);
 	}
+
+	public static class = new Class<Schild3KatalogEintragDatenart>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragDatenart');
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragDatenart {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragDatenart>;

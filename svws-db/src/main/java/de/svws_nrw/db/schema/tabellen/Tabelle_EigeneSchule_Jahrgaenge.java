@@ -1,8 +1,7 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
-import de.svws_nrw.db.converter.current.statkue.SchulgliederungKuerzelConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -73,8 +72,7 @@ public class Tabelle_EigeneSchule_Jahrgaenge extends SchemaTabelle {
 
 	/** Die Definition der Tabellenspalte SGL */
 	public SchemaTabelleSpalte col_SGL = add("SGL", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)
-			.setJavaName("Gliederung")
-			.setConverter(SchulgliederungKuerzelConverter.class)
+			.setJavaName("GliederungKuerzel")
 			.setConverterRevision(SchemaRevisionen.REV_1)
 			.setJavaComment("Schulgliederung des Jahrgangs");
 

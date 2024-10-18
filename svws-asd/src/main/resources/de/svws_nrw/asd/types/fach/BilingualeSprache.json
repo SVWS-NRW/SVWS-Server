@@ -1,0 +1,144 @@
+{
+	"version": 3,
+	"daten": [ {
+		"bezeichner": "ENGLISCH",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1000,
+			"kuerzel": "E",
+			"text": "Englisch",
+			"schluessel": "E",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 1001,
+			"kuerzel": "E",
+			"text": "Englisch",
+			"schluessel": "E",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FRANZOESISCH",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2000,
+			"kuerzel": "F",
+			"text": "Französisch",
+			"schluessel": "F",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 2001,
+			"kuerzel": "F",
+			"text": "Französisch",
+			"schluessel": "F",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ITALIENISCH",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"kuerzel": "I",
+			"text": "Italienisch",
+			"schluessel": "I",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 3001,
+			"kuerzel": "I",
+			"text": "Italienisch",
+			"schluessel": "I",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NIEDERLAENDISCH",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"kuerzel": "N",
+			"text": "Niederländisch",
+			"schluessel": "N",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 4001,
+			"kuerzel": "N",
+			"text": "Niederländisch",
+			"schluessel": "N",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SPANISCH",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"kuerzel": "S",
+			"text": "Spanisch",
+			"schluessel": "S",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 5001,
+			"kuerzel": "S",
+			"text": "Spanisch",
+			"schluessel": "S",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "TUERKISCH",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6000,
+			"kuerzel": "T",
+			"text": "Türkisch",
+			"schluessel": "T",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 6001,
+			"kuerzel": "T",
+			"text": "Türkisch",
+			"schluessel": "T",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "NEUGRIECHIESCH",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 7000,
+			"kuerzel": "Z",
+			"text": "Neugriechisch",
+			"schluessel": "Z",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "GM", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		}, {
+			"id": 7001,
+			"kuerzel": "Z",
+			"text": "Neugriechisch",
+			"schluessel": "Z",
+			"schulformen": ["BK", "SB", "G", "GE", "GY", "PS", "R", "SG", "SK", "SR"],
+			"gueltigVon": 2023,
+			"gueltigBis": null
+		} ]
+	} ]
+}

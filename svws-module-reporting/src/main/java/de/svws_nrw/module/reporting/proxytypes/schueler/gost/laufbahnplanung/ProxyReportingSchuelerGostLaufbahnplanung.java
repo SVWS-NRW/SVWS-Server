@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnisFehler;
@@ -19,11 +20,12 @@ import de.svws_nrw.core.data.gost.GostBeratungslehrer;
 import de.svws_nrw.core.data.gost.GostFach;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostLaufbahnplanungBeratungsdaten;
-import de.svws_nrw.core.data.lehrer.LehrerStammdaten;
+import de.svws_nrw.asd.data.lehrer.LehrerStammdaten;
 import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogLevel;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.core.utils.schueler.SprachendatenUtils;
@@ -35,6 +37,7 @@ import de.svws_nrw.data.gost.DataGostSchuelerLaufbahnplanungBeratungsdaten;
 import de.svws_nrw.data.lehrer.DataLehrerStammdaten;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.module.reporting.utils.ReportingExceptionUtils;
+import jakarta.validation.constraints.NotNull;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungErgebnismeldung;
 import de.svws_nrw.module.reporting.proxytypes.gost.laufbahnplanung.ProxyReportingGostLaufbahnplanungFachwahl;
 import de.svws_nrw.module.reporting.proxytypes.lehrer.ProxyReportingLehrer;
@@ -45,46 +48,33 @@ import de.svws_nrw.module.reporting.types.gost.laufbahnplanung.ReportingGostLauf
 import de.svws_nrw.module.reporting.types.lehrer.ReportingLehrer;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 import de.svws_nrw.module.reporting.types.schueler.gost.laufbahnplanung.ReportingSchuelerGostLaufbahnplanung;
-import de.svws_nrw.module.reporting.types.schueler.lernabschnitte.ReportingSchuelerLernabschnitt;
 
 /**
- *  <p>Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung und erweitert die Klasse {@link ReportingSchuelerGostLaufbahnplanung}.</p>
- *
- *  <p>In diesem Kontext besitzt die Proxy-Klasse ausschließlich die gleichen Methoden wie die zugehörige Reporting-Super-Klasse.
- *  Während die Super-Klasse aber als reiner Datentyp konzipiert ist, d. h. ohne Anbindung an die Datenbank,
- *  greift die Proxy-Klassen an verschiedenen Stellen auf die Datenbank zu.</p>
- *
- *  <ul>
- *      <li>Die Proxy-Klasse stellt in der Regel einen zusätzlichen Constructor zur Verfügung, um Reporting-Objekte
- *  		aus Stammdatenobjekten (aus dem Package core.data) erstellen zu können. Darin werden Felder, die Reporting-Objekte
- *  		zurückgegeben und nicht im Stammdatenobjekt enthalten sind, mit null initialisiert.</li>
- * 		<li>Die Proxy-Klasse überschreibt einzelne Getter der Super-Klasse (beispielsweise bei Felder, die mit null initialisiert wurden)
- *  		und lädt dort dann aus der Datenbank die Daten bei Bedarf nach (lazy-loading), um den Umfang der Datenstrukturen gering zu
- *  		halten.</li>
- * 		<li>Die Proxy-Klasse können zudem auf das Repository {@link ReportingRepository} zugreifen. Dieses
- * 			enthält neben den Stammdaten der Schule einige Maps, in der zur jeweiligen ID bereits ausgelesene Stammdaten anderer Objekte
- * 			wie Kataloge, Jahrgänge, Klassen, Lehrer, Schüler usw. gespeichert werden. So sollen Datenbankzugriffe minimiert werden. Werden in der
- * 			Proxy-Klasse Daten nachgeladen, so werden sie dabei auch in der entsprechenden Map des Repository ergänzt.</li>
- *  </ul>
+ * Proxy-Klasse im Rahmen des Reportings für Daten vom Typ SchuelerGostLaufbahnplanung und erweitert die Klasse {@link ReportingSchuelerGostLaufbahnplanung}.
  */
 public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchuelerGostLaufbahnplanung {
 
-	/** Repository für die Reporting */
+	/** Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung. */
 	@JsonIgnore
 	private final ReportingRepository reportingRepository;
 
+	/** Das im Repository ausgewählte Schuljahr. Auf dessen Basis werden die Statistikdaten geladen. */
+	@JsonIgnore
+	private final int auswahlSchuljahr;
 
 
 	/**
-	 * Erstellt ein neues Reporting-Objekt auf Basis eines Stammdaten-Objektes.
-	 *
+	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostLaufbahnplanung}.
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param reportingSchueler	Schüler, dessen GOSt-Laufbahnplanung gelesen werden soll.
 	 */
 	public ProxyReportingSchuelerGostLaufbahnplanung(final ReportingRepository reportingRepository, final ReportingSchueler reportingSchueler) {
 		super(0, "", "", "", "", "", new ArrayList<>(), "", new ArrayList<>(), new ArrayList<>(), "", "", new ArrayList<>(), "", null, "", "", 0, 0, 0, 0, 0, 0,
 				0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
 		this.reportingRepository = reportingRepository;
+		this.auswahlSchuljahr = this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr();
+		final int auswahlSchuljahrAbschnitt = this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt();
 
 		// Abiturdaten zum Schüler holen. Wenn zum Schüler kein Abiturjahr gefunden wird, dann wird er übergangen. Die Daten sind dann die aus der
 		// Initialisierung.
@@ -111,7 +101,9 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			tempGostLaufbahnplanungBeratungsdaten =
 					new DataGostSchuelerLaufbahnplanungBeratungsdaten(this.reportingRepository.conn()).getFromID(reportingSchueler.id());
 			tempGostJahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(this.reportingRepository.conn(), super.abiturjahr());
-			tempGostFaecherManager = DBUtilsFaecherGost.getFaecherManager(this.reportingRepository.conn(), super.abiturjahr());
+			tempGostFaecherManager =
+					DBUtilsFaecherGost.getFaecherManager(auswahlSchuljahr, this.reportingRepository.conn(),
+							super.abiturjahr());
 		} catch (final ApiOperationException e) {
 			ReportingExceptionUtils.putStacktraceInLog(
 					"INFO: Fehler mit definiertem Rückgabewert abgefangen bei der Bestimmung der GOSt-Laufbahnplanung eines Schülers (Manager).", e,
@@ -133,31 +125,24 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 		final AbiturdatenManager abiturdatenManager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, gostFaecherManager, GostBelegpruefungsArt.GESAMT);
 
 		// ##### Grunddaten und Summen setzen ###############
+		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
+		super.emailText = gostJahrgangsdaten.textMailversand;
+
+		// Halbjahre gemäß Abiturjahrgang und Schuljahresabschnitte setzen.
+		eintragBeratungGostHalbjahreErzeugen();
+
+		// Aktuelle Prüfungsordnung und Klasse ergänzen, wenn Lernabschnitt vorhanden.
 		if (reportingSchueler.aktuellerLernabschnitt() != null) {
 			super.pruefungsordnung = reportingSchueler.aktuellerLernabschnitt().pruefungsOrdnung();
 			if (!super.pruefungsordnung().toLowerCase().contains("gost"))
 				super.pruefungsordnung = "APO-GOSt";
+			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
 		} else {
 			super.pruefungsordnung = "APO-GOSt";
-		}
-		super.beratungsbogenText = gostJahrgangsdaten.textBeratungsbogen;
-		super.emailText = gostJahrgangsdaten.textMailversand;
-
-		if (reportingSchueler.aktuellerLernabschnitt() != null) {
-			super.aktuellesGOStHalbjahr = reportingSchueler.aktuellerLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt;
-			super.aktuelleKlasse = reportingSchueler.aktuellerLernabschnitt().klasse().kuerzel();
-			eintragBeratungAktuellesGostHalbjahrErgaenzen(reportingSchueler.aktuellerLernabschnitt());
+			super.aktuelleKlasse = "";
 		}
 
-		if (reportingSchueler.auswahlLernabschnitt() != null) {
-			super.auswahlGOStHalbjahr = reportingSchueler.auswahlLernabschnitt().jahrgang().kuerzelStatistik() + '.'
-					+ reportingRepository.auswahlSchuljahresabschnitt().abschnitt;
-			super.auswahlKlasse = reportingSchueler.auswahlLernabschnitt().klasse().kuerzel();
-			eintragBeratungAuswahlGostHalbjahrErgaenzen(reportingSchueler.auswahlLernabschnitt());
-		}
-
-		eintragBeratungslehrkraefteErgaenzen(schuelerBeratungsdaten, gostJahrgangsdaten);
+		eintragBeratungslehrkraefteErzeugen(schuelerBeratungsdaten, gostJahrgangsdaten);
 		super.letzterRuecklaufDatum = schuelerBeratungsdaten.ruecklaufdatum;
 		super.letzteBeratungDatum = schuelerBeratungsdaten.beratungsdatum;
 		super.kommentar = schuelerBeratungsdaten.kommentar;
@@ -209,7 +194,6 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	}
 
 
-
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
 	 * @return Repository für die Reporting
@@ -221,48 +205,43 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 
 	/**
-	 * Setzt das Beratungshalbjahr für den Schüler zum aktuellen Schuljahresabschnitt des Schülers
-	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
+	 * Setzt die Beratungshalbjahre für den Schüler gemäß der ausgewählten Schuljahresabschnitte und des Abiturjahrgangs.
 	 */
-	private void eintragBeratungAktuellesGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
-		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
-		switch (folgeHalbjahr) {
-			case 2 -> super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-			case 1 -> {
-				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
-				else
-					super.folgeAktuellesGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
+	private void eintragBeratungGostHalbjahreErzeugen() {
+		final GostHalbjahr aktuellesGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
+				this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr(), this.reportingRepository.aktuellerSchuljahresabschnitt().abschnitt());
+		final GostHalbjahr auswahlGostHalbjahrAbiturjahrgang = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr,
+				this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr(), this.reportingRepository.auswahlSchuljahresabschnitt().abschnitt());
 
-			}
-			default -> super.folgeAktuellesGOStHalbjahr = "";
+		if (aktuellesGostHalbjahrAbiturjahrgang != null) {
+			super.aktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.kuerzel;
+			if (aktuellesGostHalbjahrAbiturjahrgang.next() != null)
+				super.folgeAktuellesGOStHalbjahr = aktuellesGostHalbjahrAbiturjahrgang.next().kuerzel;
+			else
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+		} else {
+			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
+			super.aktuellesGOStHalbjahr = "";
+			if (this.reportingRepository.aktuellerSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			else
+				super.folgeAktuellesGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
 		}
-		// Frühestes Beratungshalbjahr kann die EF.1 sein.
-		if (super.folgeAktuellesGOStHalbjahr().compareTo("EF.1") < 0)
-			super.folgeAktuellesGOStHalbjahr = "EF.1";
-	}
 
-
-	/**
-	 * Setzt das Beratungshalbjahr für den Schüler zum ausgewählten Schuljahresabschnitt des Schülers
-	 * @param reportingSchuelerLernabschnitt Der Lernabschnitt des Schülers, dessen FolgeBeratungshalbjahr ergänzt werden soll
-	 */
-	private void eintragBeratungAuswahlGostHalbjahrErgaenzen(final ReportingSchuelerLernabschnitt reportingSchuelerLernabschnitt) {
-		final int folgeHalbjahr = (reportingSchuelerLernabschnitt.schuljahresabschnitt().abschnitt() % 2) + 1;
-		switch (folgeHalbjahr) {
-			case 2 -> super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-			case 1 -> {
-				if (reportingSchuelerLernabschnitt.jahrgang().folgejahrgang() != null)
-					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().folgejahrgang().kuerzelStatistik() + ".1";
-				else
-					super.folgeAuswahlGOStHalbjahr = reportingSchuelerLernabschnitt.jahrgang().kuerzelStatistik() + ".2";
-
-			}
-			default -> super.folgeAuswahlGOStHalbjahr = "";
+		if (auswahlGostHalbjahrAbiturjahrgang != null) {
+			super.auswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.kuerzel;
+			if (auswahlGostHalbjahrAbiturjahrgang.next() != null)
+				super.folgeAuswahlGOStHalbjahr = auswahlGostHalbjahrAbiturjahrgang.next().kuerzel;
+			else
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+		} else {
+			// Hier muss entweder ein Jahr vor EF.1 oder nach Q2.2 vorliegen. Prüfe mittels Abiturjahr.
+			super.auswahlGOStHalbjahr = "";
+			if (this.reportingRepository.auswahlSchuljahresabschnitt().schuljahr() >= super.abiturjahr)
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.Q22.kuerzel;
+			else
+				super.folgeAuswahlGOStHalbjahr = GostHalbjahr.EF1.kuerzel;
 		}
-		// Frühestes Beratungshalbjahr kann die EF.1 sein.
-		if (super.folgeAuswahlGOStHalbjahr().compareTo("EF.1") < 0)
-			super.folgeAuswahlGOStHalbjahr = "EF.1";
 	}
 
 
@@ -271,7 +250,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param gostBeratungsdaten	Oberstufenschüler, dessen Beratungslehrkräfte ermitteln werden sollen.
 	 * @param gostJahrgangsdaten	Die Daten des GOSt-Jahrgangs.
 	 */
-	private void eintragBeratungslehrkraefteErgaenzen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
+	private void eintragBeratungslehrkraefteErzeugen(final GostLaufbahnplanungBeratungsdaten gostBeratungsdaten, final GostJahrgangsdaten gostJahrgangsdaten) {
 		// Letzte Beratungslehrkraft bestimmen aus den GOSt-Daten des Schülers
 		if (gostBeratungsdaten.beratungslehrerID != null) {
 			super.letzteBeratungLehrkraft = new ProxyReportingLehrer(
@@ -359,13 +338,13 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			}
 
 			// Bestimme noch Einträge zu den Sprachdaten, wenn das Fach eine Sprache ist.
-			final ZulaessigesFach zfach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
+			final @NotNull Fach zfach = Fach.getBySchluesselOrDefault(fach.kuerzel);
 			Sprachbelegung sprachbelegung = null;
 			Sprachpruefung sprachpruefung = null;
 
 			if (checkIstFremdsprachenfach(fach, zfach)) {
-				sprachbelegung = sprachbelegungen.get(zfach.daten.kuerzel);
-				sprachpruefung = sprachpruefungen.get(zfach.daten.kuerzel);
+				sprachbelegung = sprachbelegungen.get(zfach.daten(auswahlSchuljahr).kuerzel);
+				sprachpruefung = sprachpruefungen.get(zfach.daten(auswahlSchuljahr).kuerzel);
 			}
 
 			if (sprachbelegung != null) {
@@ -375,7 +354,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 					jahrgangFremdsprachenbeginn = sprachbelegung.belegungVonJahrgang;
 					positionFremdsprachenfolge = (sprachbelegung.reihenfolge != null) ? sprachbelegung.reihenfolge.toString() : "";
 				}
-			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten, zfach.daten.kuerzel))) {
+			} else if ((sprachpruefung != null) && (SprachendatenUtils.istFortfuehrbareSpracheInGOSt(abiturdaten.sprachendaten,
+					zfach.daten(auswahlSchuljahr).kuerzel))) {
 				istFortfuehrbareFremdspracheInGOSt = true;
 				if (sprachpruefung.istFeststellungspruefung) {
 					jahrgangFremdsprachenbeginn = "SFP";
@@ -391,7 +371,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			fachwahl = new ProxyReportingGostLaufbahnplanungFachwahl(
 					abiturfach,
 					belegungEF1, belegungEF2, belegungQ11, belegungQ12, belegungQ21, belegungQ22,
-					reportingRepository.mapReportingFaecher().get(fach.id),
+					reportingRepository.auswahlSchuljahresabschnitt().fach(fach.id),
 					fachBelegtInGost,
 					istFortfuehrbareFremdspracheInGOSt,
 					jahrgangFremdsprachenbeginn,
@@ -419,8 +399,8 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param zfach	Das zu prüfende zugehörige Fach
 	 * @return		true, wenn es eine reguläre Fremdsprache ist, sonst false.
 	 */
-	private static boolean checkIstFremdsprachenfach(final GostFach fach, final ZulaessigesFach zfach) {
-		return fach.istFremdsprache && (zfach != null) && !(zfach.daten.kuerzelASD.equals("PX") || zfach.daten.kuerzelASD.equals("VX"));
+	private static boolean checkIstFremdsprachenfach(final GostFach fach, final Fach zfach) {
+		return fach.istFremdsprache && (zfach != null) && !((Fach.PX == zfach) || (Fach.VX == zfach));
 	}
 
 
@@ -430,14 +410,22 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	 * @param zfach 			Das zulässige Fach, gegen das der Sprachbeginn geprüft wird.
 	 * @return					true, wenn eine Belegung möglich war, sonst false
 	 */
-	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final ZulaessigesFach zfach) {
-		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty())
-				&& ((zfach.daten.abJahrgang == null)
-						|| zfach.daten.abJahrgang.isEmpty()
-						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
-								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
-						|| ((zfach.daten.abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
-								&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
+	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
+		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
+		if (abJahrgang == null)
+			return true;
+		else {
+			if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) != null)
+				abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
+			else
+				return false;
+		}
+
+		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) && ((abJahrgang == null) || abJahrgang.isEmpty()
+				|| ((abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
+						&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
+				|| ((abJahrgang.compareToIgnoreCase("EF") < 0) && !fach.istFremdSpracheNeuEinsetzend
+						&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") < 0)));
 	}
 
 
@@ -462,4 +450,5 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 			return "AT";
 		return "";
 	}
+
 }

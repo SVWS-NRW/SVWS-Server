@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMKlasse extends JavaObject {
 
@@ -46,6 +47,8 @@ export class ENMKlasse extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMKlasse'].includes(name);
 	}
+
+	public static class = new Class<ENMKlasse>('de.svws_nrw.core.data.enm.ENMKlasse');
 
 	public static transpilerFromJSON(json : string): ENMKlasse {
 		const obj = JSON.parse(json) as Partial<ENMKlasse>;

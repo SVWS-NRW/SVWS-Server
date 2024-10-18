@@ -17,6 +17,7 @@ import java.util.zip.ZipOutputStream;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.base.LogUtils;
 import de.svws_nrw.base.untis.UntisGPU001;
 import de.svws_nrw.base.untis.UntisGPU002;
@@ -26,7 +27,7 @@ import de.svws_nrw.base.untis.UntisGPU015;
 import de.svws_nrw.base.untis.UntisGPU019;
 import de.svws_nrw.core.adt.LongArrayKey;
 import de.svws_nrw.core.adt.map.HashMap2D;
-import de.svws_nrw.core.data.RGBFarbe;
+import de.svws_nrw.asd.data.RGBFarbe;
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.fach.FachDaten;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
@@ -35,14 +36,13 @@ import de.svws_nrw.core.data.gost.GostBlockungsergebnisSchiene;
 import de.svws_nrw.core.data.kurse.KursDaten;
 import de.svws_nrw.core.data.lehrer.LehrerListeEintrag;
 import de.svws_nrw.core.data.schueler.Schueler;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.stundenplan.StundenplanListeEintragMinimal;
 import de.svws_nrw.core.data.stundenplan.StundenplanSchiene;
 import de.svws_nrw.core.data.stundenplan.StundenplanZeitraster;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.Geschlecht;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.Geschlecht;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.utils.DateUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
@@ -63,6 +63,7 @@ import de.svws_nrw.db.dto.current.schild.katalog.DTOKatalogRaum;
 import de.svws_nrw.db.dto.current.schild.klassen.DTOKlassen;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
+import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplan;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterricht;
 import de.svws_nrw.db.dto.current.schild.stundenplan.DTOStundenplanUnterrichtKlasse;
@@ -136,7 +137,7 @@ public final class DataUntis {
 		// Übertrage den Katalog mit dem Zeitraster
 		DataStundenplanZeitraster.addZeitraster(conn, dtoStundenplan, DataKatalogZeitraster.getZeitraster(conn));
 		// Erzeuge die Einträge für die Kurs-Schienen
-		DataStundenplanSchienen.addSchienenFromKursliste(conn, idStundenplan, kurse);
+		DataStundenplanSchienen.updateSchienenFromKursliste(conn, idStundenplan, kurse);
 		final List<StundenplanSchiene> schienen = DataStundenplanSchienen.getSchienen(conn, idStundenplan);
 		final HashMap2D<Long, Integer, StundenplanSchiene> mapSchienen = new HashMap2D<>();
 		for (final StundenplanSchiene schiene : schienen)
@@ -218,14 +219,6 @@ public final class DataUntis {
 							DataStundenplanRaeume.getOrCreateRaum(conn, idStundenplan, u.raumKuerzel).id));
 			} else {
 				// Prüfe, ob der Kursunterricht schon mit einem früheren Datensatz bearbeitet wurde
-				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde };
-				if (!setKursUnterricht.add(new LongArrayKey(key))) {
-					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d hinzugefügt."
-							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde) + " Überspringe diesen Eintrag...");
-					continue;
-				}
-				// Erstelle den Kurs-Unterricht ...
-				final long uid = next_uid++;
 				int wt = 0;
 				if ((u.wochentyp != null) && !u.wochentyp.isBlank()) {
 					try {
@@ -236,6 +229,14 @@ public final class DataUntis {
 						wt = 0;
 					}
 				}
+				final long[] key = { kurs.id, u.idUnterricht, u.wochentag, u.stunde, wt };
+				if (!setKursUnterricht.add(new LongArrayKey(key))) {
+					logger.logLn(2, "Unterricht mit der ID %d wurde für den Kurs '%s' mit der ID %d bereits für den Wochentag %d und der Stunde %d mit Wochentyp %d hinzugefügt."
+							.formatted(u.idUnterricht, kurs.kuerzel, kurs.id, u.wochentag, u.stunde, wt) + " Überspringe diesen Eintrag...");
+					continue;
+				}
+				// Erstelle den Kurs-Unterricht ...
+				final long uid = next_uid++;
 				maxWochentyp = (maxWochentyp < wt) ? wt : maxWochentyp;
 				final DTOStundenplanUnterricht dtoUnterricht = new DTOStundenplanUnterricht(uid, zeitraster.id, wt, kurs.idFach);
 				dtoUnterricht.Kurs_ID = kurs.id;
@@ -267,6 +268,7 @@ public final class DataUntis {
 			dtoStundenplan.WochentypModell = maxWochentyp;
 			conn.transactionPersist(dtoStundenplan);
 			conn.transactionFlush();
+			// TODO Fasse alle erzeugten Unterrichte als WT 0 zusammen, die bis auf den Wochentyp identisch sind und alle Wochentypen abdecken.
 		}
 	}
 
@@ -445,7 +447,10 @@ public final class DataUntis {
 	 */
 	public static Response exportUntisBlockungsergebnis(final DBEntityManager conn, final Logger logger, final long idBlockungsergebnis,
 			final long idUnterrichtStart) throws ApiOperationException {
-		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final DTOSchuljahresabschnitte schuljahresabschnitt = conn.queryByKey(DTOSchuljahresabschnitte.class, schule.Schuljahresabschnitts_ID);
+		if (schuljahresabschnitt == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine gültiger Schuljahresabschnitt vorhanden.");
 		logger.logLn("-> Prüfe, ob das Blockungsergebnis gültig ist und die erste ID für den Unterricht > 0 ist...");
 		logger.modifyIndent(2);
 		logger.log("Prüfe die ID für den Unterricht auf Gültigkeit... ");
@@ -513,8 +518,7 @@ public final class DataUntis {
 				u.studentenZahl = ergebnisManager.getOfKursAnzahlSchueler(kurs.id);
 				u.wochenTyp = "WA";
 				u.jahreswert = 0.0048;
-				final ZulaessigesFach fach = ZulaessigesFach.getByKuerzelASD(ergebnisManager.getFach(kurs.fach_id).kuerzel);
-				final RGBFarbe fachFarbe = (fach == null) ? new RGBFarbe(255, 255, 255) : fach.getFarbe();
+				final RGBFarbe fachFarbe = Fach.getBySchluesselOrDefault(ergebnisManager.getFach(kurs.fach_id).kuerzel).getFarbe(schuljahresabschnitt.Jahr);
 				u.farbeHintergrund = "" + ((fachFarbe.red * 65536) + (fachFarbe.green * 256) + fachFarbe.blue);
 				u.kennzeichen = "n";
 				u.doppelStdMin = 1;

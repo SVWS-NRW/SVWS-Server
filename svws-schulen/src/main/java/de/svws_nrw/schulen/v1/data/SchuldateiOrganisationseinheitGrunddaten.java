@@ -21,11 +21,11 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 
 	/** Die ID der Grunddaten. */
 	@Schema(description = "die ID dieses Eintrags", example = "4711")
-	public Integer id = null;
+	public @NotNull String id = "";
 
 	/** Die Schulnummer. */
 	@Schema(description = "die Schulnummer", example = "100001")
-	public int schulnummer = 0;
+	public @NotNull String schulnummer = "";
 
 	/** Die Kurzbezeichnung der Organisationseinheit */
 	@Schema(description = "die Kurzbezeichnung der Organisationseinheit", example = "Düsseldorf, MSB")
@@ -33,51 +33,51 @@ public class SchuldateiOrganisationseinheitGrunddaten extends SchuldateiEintrag 
 
 	/** Der Rechtsstatus der Organisationseinheit 1=öffentlich, 2=privat*/
 	@Schema(description = "Der Rechtsstatus der Organisationseinheit", example = "1")
-	public int rechtsstatus;
+	public @NotNull String rechtsstatus = "";
 
 	/** Schulträgernummer der Organisationseinheit */
 	@Schema(description = "Schulträgernummer der Organisationseinheit")
-	public int schultraegernummer = 0;
+	public @NotNull String schultraegernummer = "";
 
 	/** Art der Trägerschaft der Schule */
 	@Schema(description = "Art der Trägerschaft des Schulträgers", example = "00")
-	public int artdertraegerschaft = 0;
+	public @NotNull String artdertraegerschaft = "";
 
 	/** Betriebsschlüssel der Schule */
 	@Schema(description = "Betriebsschlüssel der Schule")
-	public int schulbetriebsschluessel = 0;
+	public @NotNull String schulbetriebsschluessel = "";
 
 	/** Kapitel der Schule */
 	@Schema(description = "Kapitel der Schule")
-	public int kapitel = 0;
+	public @NotNull String kapitel = "";
 
 	/** Obere Schulaufsicht der Schule */
 	@Schema(description = "Obere Schulaufsicht der Schule", example = "001")
-	public int obereschulaufsicht = 0;
+	public @NotNull String obereschulaufsicht = "";
 
 	/** Untere Schulaufsicht der Schule */
 	@Schema(description = "Untere Schulaufsicht der Schule")
-	public int untereschulaufsicht = 0;
+	public @NotNull String untereschulaufsicht = "";
 
 	/** Zentrum für schulpraktische Lehrerausbildung ZFSL */
 	@Schema(description = "Zentrum für schulpraktische Lehrerausbildung ZFSL", example = "503010")
-	public int zfsl = 0;
+	public @NotNull String zfsl = "";
 
 	/** Dienststellenschlüssel bzw. Personalbereich der Organisationseinheit */
 	@Schema(description = "Dienststellenschlüssel (Personalbereich) der Organisationseinheit", example = "M005")
-	public int dienststellenschluessel = 0;
+	public @NotNull String dienststellenschluessel = "";
 
 	/** Personalteilbereich der Organisationseinheit */
 	@Schema(description = "Personalteilbereich der Organisationseinheit", example = "2160")
-	public String ptb = null;
+	public @NotNull String ptb = "";
 
 	/** Gibt an ob die Schule Internatsbetrieb hat */
 	@Schema(description = "Gibt die Art des Internatbetriebs an")
-	public String internatsbetrieb = null;
+	public @NotNull String internatsbetrieb = "";
 
 	/** Anzahl der Internatsplätze */
 	@Schema(description = "Anzahl der Internatsplätze")
-	public Integer internatsplaetze = null;
+	public int internatsplaetze = 0;
 
 	/** Die Schulformen der Organisationseinheit:Schule (zeitl. Verlaufsliste)*/
 	@ArraySchema(schema = @Schema(implementation = SchuldateiOrganisationseinheitSchulform.class))

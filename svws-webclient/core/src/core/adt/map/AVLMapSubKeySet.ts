@@ -2,6 +2,7 @@ import type { NavigableSet } from '../../../java/util/NavigableSet';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import type { SortedSet } from '../../../java/util/SortedSet';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -63,7 +64,7 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 		if ((__param0 === undefined)) {
 			return this._sub.bcGetArrayListOfKeys().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			return this._sub.bcGetArrayListOfKeys().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -196,6 +197,8 @@ export class AVLMapSubKeySet<K, V> extends JavaObject implements NavigableSet<K>
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.SequencedSet', 'de.svws_nrw.core.adt.map.AVLMapSubKeySet', 'java.util.SortedSet', 'java.util.Collection', 'java.util.Set', 'java.util.NavigableSet', 'java.lang.Iterable', 'java.util.SequencedCollection'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubKeySet<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubKeySet');
 
 	public reversed() : NavigableSet<K> {
 		return this.descendingSet();

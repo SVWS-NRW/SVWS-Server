@@ -1,10 +1,7 @@
 import type { LehrerListeManager } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
+import type { TabManager } from "@ui";
 
 export interface LehrerAppProps {
 	lehrerListeManager: () => LehrerListeManager;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
 }

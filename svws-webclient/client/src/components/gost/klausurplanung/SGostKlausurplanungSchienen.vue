@@ -30,7 +30,7 @@
 
 	<div class="page--content page--content--full relative">
 		<svws-ui-content-card title="In Planung">
-			<div class="flex flex-col" @drop="onDrop(undefined)" @dragover="$event.preventDefault()">
+			<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
 				<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 					<template #noData>
 						<div class="leading-tight flex flex-col gap-0.5">
@@ -54,23 +54,23 @@
 						<div v-for="klausur in props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" class="svws-ui-tr cursor-grab active:cursor-grabbing" role="row"
 							:key="klausur.id"
 							:data="klausur"
-							:draggable="true"
+							:draggable="draggable(klausur)"
 							@dragstart="onDrag(klausur)"
 							@dragend="onDrag(undefined)"
 							:class="klausurCssClasses(klausur, undefined)">
 							<div class="svws-ui-td">
-								<span class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
+								<span v-if="hatKompetenzUpdate" class="icon i-ri-draggable -m-0.5 -ml-4 -mr-1" />
 								<span class="svws-ui-badge" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(klausur)};`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur) }}</span>
 							</div>
 							<div class="svws-ui-td">{{ kMan().kursLehrerKuerzelByKursklausur(klausur) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ kMan().schuelerklausurGetMengeByKursklausur(klausur).size() + "/" + kMan().kursAnzahlSchuelerGesamtByKursklausur(klausur) }}</div>
 							<div class="svws-ui-td svws-align-right">{{ kMan().vorgabeByKursklausur(klausur).dauer }}</div>
-							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
+							<div class="svws-ui-td svws-align-right"><span class="opacity-50">{{ kMan().kursSchieneByKursklausur(klausur).isEmpty() ? "-" : kMan().kursSchieneByKursklausur(klausur).get(0) }}</span></div>
 							<div class="svws-ui-td svws-align-right -mr-0.5" v-if="!quartalsauswahl.value"><span class="opacity-50">{{ kMan().vorgabeByKursklausur(klausur).quartal }}.</span></div>
 						</div>
 					</template>
 					<template #actions>
-						<svws-ui-button class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
+						<svws-ui-button :disabled="!hatKompetenzUpdate" class="-mr-3" type="transparent" @click="erzeugeKursklausurenAusVorgabenOrModal" title="Erstelle Klausuren aus den Vorgaben"><span class="icon i-ri-upload-2-line" />Aus Vorgaben erstellen</svws-ui-button>
 					</template>
 				</svws-ui-table>
 			</div>
@@ -78,29 +78,34 @@
 		<svws-ui-content-card>
 			<div class="flex justify-between items-start mb-5">
 				<div class="flex flex-wrap items-center gap-0.5 w-full">
-					<svws-ui-button @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
-					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
-					<svws-ui-button type="transparent" class="hover--danger ml-auto" @click="terminSelected = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
+					<svws-ui-button :disabled="!hatKompetenzUpdate" @click="erzeugeKlausurtermin(quartalsauswahl.value, true)"><span class="icon i-ri-add-line -ml-1" />Termin<template v-if="termine.size() === 0"> hinzufügen</template></svws-ui-button>
+					<svws-ui-button type="transparent" @click="showModalAutomatischBlocken().value = true" :disabled="!hatKompetenzUpdate || props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value).size() === 0"><span class="icon i-ri-sparkling-line" />Automatisch blocken <svws-ui-spinner :spinning="loading" /></svws-ui-button>
+					<svws-ui-button type="transparent" :disabled="!hatKompetenzUpdate" class="hover--danger ml-auto" @click="terminSelected.value = undefined; loescheKlausurtermine(termine)" v-if="termine.size() > 0" title="Alle Termine löschen"><span class="icon i-ri-delete-bin-line" />Alle löschen</svws-ui-button>
 				</div>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 pt-2 -mt-2">
 				<template v-if="termine.size()">
 					<s-gost-klausurplanung-schienen-termin v-for="termin of termine" :key="termin.id"
+						:id="'termin' + termin.id"
+						:benutzer-kompetenzen
 						:termin="() => termin"
 						:class="dropOverCssClasses(termin)"
 						:k-man
 						:drag-data="() => dragData"
-						@dragover="terminSelected=termin"
+						@dragover="terminSelected.value=termin"
+						@dragleave="terminSelected.value=undefined"
 						:on-drag
 						:on-drop
 						:draggable
-						:termin-selected="terminSelected?.id===termin.id"
-						@click="terminSelected=(terminSelected?.id===termin.id?undefined:termin);$event.stopPropagation()"
+						:termin-selected="props.terminSelected.value?.id===termin.id"
+						@click="gotoSchienen(props.terminSelected.value?.id===termin.id?undefined:termin);$event.stopPropagation()"
 						:loesche-klausurtermine
 						:patch-klausurtermin
 						:klausur-css-classes
 						:create-schuelerklausur-termin
-						:patch-klausur />
+						:patch-klausur
+						:goto-kalenderdatum
+						:goto-raumzeit-termin />
 				</template>
 				<template v-else>
 					<div class="shadow-inner rounded-lg h-48" />
@@ -134,7 +139,7 @@
 					<li v-for="klausur in klausurKonflikte()" :key="klausur.getKey().id">
 						<span class="svws-ui-badge" :style="`--background-color: ${ kMan().fachHTMLFarbeRgbaByKursklausur(klausur.getKey()) };`">{{ kMan().kursKurzbezeichnungByKursklausur(klausur.getKey()) }}</span>
 						<div class="leading-tight">
-							{{ [...klausur.getValue()].map(sid => kMan().getSchuelerMap().get(sid)?.vorname + ' ' + kMan().getSchuelerMap().get(sid)?.nachname).join(", ") }}
+							{{ [...klausur.getValue()].map(sid => kMan().schuelerGetByIdOrException(sid)?.vorname + ' ' + kMan().schuelerGetByIdOrException(sid)?.nachname).join(", ") }}
 						</div>
 					</li>
 				</ul>
@@ -146,7 +151,7 @@
 				</div>
 				<ul class="flex flex-col gap-4">
 					<li v-for="konflikt in anzahlProKwKonflikte(3)" :key="konflikt.getKey()">
-						<span class="font-bold">{{ kMan().getSchuelerMap().get(konflikt.getKey())?.vorname + ' ' + kMan().getSchuelerMap().get(konflikt.getKey())?.nachname }}</span>
+						<span class="font-bold">{{ kMan().schuelerGetByIdOrException(konflikt.getKey())?.vorname + ' ' + kMan().schuelerGetByIdOrException(konflikt.getKey())?.nachname }}</span>
 						<div class="grid grid-cols-3 gap-x-1 gap-y-2 mt-0.5">
 							<span v-for="klausur in konflikt.getValue()" :key="klausur.id" class="svws-ui-badge flex-col w-full" :style="`--background-color: ${kMan().fachHTMLFarbeRgbaByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur))};`">
 								<span class="text-button font-medium">{{ kMan().kursKurzbezeichnungByKursklausur(kMan().kursklausurBySchuelerklausurTermin(klausur)) }}</span>
@@ -168,7 +173,7 @@
 <script setup lang="ts">
 
 	import type { GostSchuelerklausurTermin, JavaMapEntry, JavaSet, List} from "@core";
-	import { OpenApiError } from "@core";
+	import { BenutzerKompetenz, OpenApiError } from "@core";
 	import {GostKursklausur, GostKlausurtermin, HashSet, KlausurterminblockungAlgorithmen, GostKlausurterminblockungDaten, KlausurterminblockungModusKursarten, KlausurterminblockungModusQuartale, DateUtils } from "@core";
 	import type { Ref } from 'vue';
 	import { computed, ref, onMounted } from 'vue';
@@ -181,13 +186,14 @@
 
 	const props = defineProps<GostKlausurplanungSchienenProps>();
 
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
+
 	const loading = ref<boolean>(false);
 
 	const dragData = ref<GostKlausurplanungDragData>(undefined);
-	const terminSelected = ref<GostKlausurtermin | undefined>(undefined);
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
-		terminSelected.value = undefined;
+		props.terminSelected.value = undefined;
 		dragData.value = data;
 	};
 
@@ -195,8 +201,8 @@
 		const termin = props.kMan().terminOrNullByKursklausur(klausur);
 		if (termin !== null && termin.datum !== null)
 			return DateUtils.gibDatumGermanFormat(termin.datum);
-		if (terminSelected.value !== undefined && terminSelected.value.datum !== null)
-			return DateUtils.gibDatumGermanFormat(terminSelected.value.datum);
+		if (props.terminSelected.value !== undefined && props.terminSelected.value.datum !== null)
+			return DateUtils.gibDatumGermanFormat(props.terminSelected.value.datum);
 		return "N.N."
 	}
 
@@ -227,20 +233,20 @@
 	}
 
 	const klausurKonflikte = () => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(terminSelected.value, dragData.value).entrySet();
-		} else if (terminSelected.value !== undefined)
-			return props.kMan().konflikteMapKursklausurSchueleridsByTermin(terminSelected.value).entrySet();
+		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+				return props.kMan().konflikteNeuMapKursklausurSchueleridsByTerminAndKursklausur(props.terminSelected.value, dragData.value).entrySet();
+		} else if (props.terminSelected.value !== undefined)
+			return props.kMan().konflikteMapKursklausurSchueleridsByTermin(props.terminSelected.value).entrySet();
 		return new HashSet<JavaMapEntry<GostKursklausur, JavaSet<number>>>();
 	}
 
 	const anzahlProKwKonflikte = (threshold: number) => {
-		if (dragData.value !== undefined && terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
-			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === terminSelected.value.quartal || terminSelected.value.quartal === 0)
-				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(terminSelected.value, dragData.value, threshold).entrySet();
-		} else if (terminSelected.value !== undefined)
-			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(terminSelected.value, threshold).entrySet();
+		if (dragData.value !== undefined && props.terminSelected.value !== undefined && dragData.value instanceof GostKursklausur) {
+			if (props.kMan().vorgabeByKursklausur(dragData.value).quartal === props.terminSelected.value.quartal || props.terminSelected.value.quartal === 0)
+				return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndKursklausurAndThreshold(props.terminSelected.value, dragData.value, threshold).entrySet();
+		} else if (props.terminSelected.value !== undefined)
+			return props.kMan().klausurenProSchueleridExceedingKWThresholdByTerminAndThreshold(props.terminSelected.value, threshold).entrySet();
 		return new HashSet<JavaMapEntry<number, List<GostSchuelerklausurTermin>>>();
 	}
 
@@ -249,7 +255,7 @@
 			const klausur = dragData.value;
 			klausurMoveDropZone = zone;
 			klausurMoveDragData = dragData.value;
-			if (props.kMan().hatRaumzuteilungByKursklausur(klausur)) {
+			if (klausur.idTermin !== null && props.kMan().hatRaumzuteilungByKursklausur(klausur)) {
 				modalKlausurHatRaeume.value = true;
 				return;
 			} else {
@@ -266,7 +272,7 @@
 				const termin = klausurMoveDropZone;
 				if (termin.id !== klausurMoveDragData.idTermin) {
 					await props.patchKlausur(klausurMoveDragData, {idTermin: termin.id});
-					terminSelected.value = klausurMoveDropZone;
+					props.terminSelected.value = klausurMoveDropZone;
 				}
 			}
 		}
@@ -286,7 +292,7 @@
 	const blockeGleicheLehrkraft = ref(false);
 
 	function draggable(data: GostKlausurplanungDragData) {
-		return data instanceof GostKursklausur;
+		return hatKompetenzUpdate.value && data instanceof GostKursklausur;
 	}
 
 	const blocken = async () => {
@@ -322,6 +328,11 @@
 	const isMounted = ref(false);
 	onMounted(() => {
 		isMounted.value = true;
+		if (props.terminSelected.value) {
+			const scrollToElement = document.getElementById("termin" + props.terminSelected.value.id);
+			if (scrollToElement)
+				scrollToElement.scrollIntoView({ behavior: 'smooth', block: "nearest" });
+		}
 	});
 
 	function calculateColumns() {

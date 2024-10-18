@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BenutzerConfigElement } from '../../../core/data/benutzer/BenutzerConfigElement';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class BenutzerConfig extends JavaObject {
 
@@ -27,6 +28,8 @@ export class BenutzerConfig extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzerConfig'].includes(name);
 	}
+
+	public static class = new Class<BenutzerConfig>('de.svws_nrw.core.data.benutzer.BenutzerConfig');
 
 	public static transpilerFromJSON(json : string): BenutzerConfig {
 		const obj = JSON.parse(json) as Partial<BenutzerConfig>;

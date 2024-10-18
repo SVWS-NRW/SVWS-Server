@@ -19,9 +19,9 @@
 				</template>
 			</svws-ui-table>
 		</div>
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+		<Teleport to=".svws-sub-nav-target" defer>
 			<nav class="svws-ui-secondary-tabs">
-				<svws-ui-router-tab-bar-button v-for="(c, index) in children" :route="c" :selected="child" :hidden="childrenHidden[index]" @select="setChild(c)" :key="index" />
+				<svws-ui-tab-bar :tab-manager secondary />
 			</nav>
 		</Teleport>
 		<div class="grow h-full">
@@ -34,12 +34,8 @@
 <script setup lang="ts">
 
 	import type { SchuelerLernabschnitteProps } from "./SSchuelerLernabschnitteProps";
-	import { ref, onMounted } from 'vue';
 
 	const props = defineProps<SchuelerLernabschnitteProps>();
-
-	const isMounted = ref(false);
-	onMounted(() => isMounted.value = true);
 
 </script>
 

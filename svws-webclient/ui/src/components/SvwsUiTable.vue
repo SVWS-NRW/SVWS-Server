@@ -109,11 +109,15 @@
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
 						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }">
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
+							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
-								<div v-if="selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-									<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop>
-								</div>
+								<template v-if="selectable">
+									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
+										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
+									</div>
+									<div v-else class="svws-ui-td svws-align-center" role="cell" />
+								</template>
 								<slot name="rowSelectable" :row="row.source">
 									<div class="svws-ui-td" role="cell" v-for="cell in row.cells" :key="`table-cell_${cell.column.key + cell.rowIndex}`"
 										:class="[
@@ -125,7 +129,8 @@
 											}]">
 										<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
 										<slot v-else name="cell" v-bind="cell">
-											<svws-ui-text-input v-if="row.isEditing" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
+											<svws-ui-text-input v-if="row.isEditing && cell.column.type !== 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
+											<svws-ui-input-number v-if="row.isEditing && cell.column.type === 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
 											<template v-else-if="cell.value">
 												{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 											</template>
@@ -150,16 +155,10 @@
 					<div v-if="selectable" class="svws-ui-td svws-align-center" role="columnheader" aria-label="Alle auswählen">
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
-					<div v-if="count" class="text-sm svws-ui-td" role="cell">
-						<span v-if="allRowsSelected && modelValue" class="font-medium">
-							Alle {{ modelValue.length }} ausgewählt
-						</span>
-						<span v-else-if="someNotAllRowsSelected && modelValue" class="font-medium">
-							{{ modelValue.length }}<span class="opacity-50">/{{ sortedRows.length }}</span> ausgewählt
-						</span>
-						<span v-else class="opacity-50">
-							{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}
-						</span>
+					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
+						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
+						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/{{ sortedRows.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
+						<template v-else>{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</template></template>
 					</div>
 					<div v-if="$slots.actions" class="flex-grow justify-end svws-ui-td" role="cell">
 						<slot name="actions" />
@@ -172,43 +171,44 @@
 
 <script lang="ts" setup generic="DataTableItem extends Record<string, any>">
 
+	import { computed, toRef, toRaw, ref, watch, nextTick, onMounted } from "vue";
 	import type { DataTableColumn, InputType, SortByAndOrder } from "../types";
-	import { computed, useAttrs, toRef, toRaw, ref, watch, nextTick } from "vue";
 
 	type DataTableColumnSource = DataTableColumn | string
 
 	type DataTableColumnInternal = {
-		[key: string]: unknown
-		source: DataTableColumnSource
-		initialIndex: number
-		key: string
-		name: string
-		label: string
-		sortable: boolean
-		span: number
-		fixedWidth: string | number
-		minWidth: string | number
-		align: 'left' | 'center' | 'right'
-		tooltip: string
-		disabled: boolean
-		type: InputType
-		divider: boolean
-		toggle: boolean
-		toggleInvisible: boolean
+		[key: string]: unknown;
+		source: DataTableColumnSource;
+		initialIndex: number;
+		key: string;
+		name: string;
+		label: string;
+		sortable: boolean;
+		span: number;
+		fixedWidth: number;
+		minWidth: number;
+		align: 'left' | 'center' | 'right';
+		tooltip: string;
+		disabled: boolean;
+		type: InputType;
+		divider: boolean;
+		toggle: boolean;
+		toggleInvisible: boolean;
 	}
 
 	type DataTableCell = {
-		rowIndex: number
-		rowData: DataTableItem
-		column: DataTableColumnInternal
-		value: any
+		rowIndex: number;
+		rowData: DataTableItem;
+		column: DataTableColumnInternal;
+		value: any;
 	}
 
 	type DataTableRow = {
-		initialIndex: number
-		source: DataTableItem
-		cells: DataTableCell[]
-		isEditing?: boolean
+		selectable: boolean;
+		initialIndex: number;
+		source: DataTableItem;
+		cells: DataTableCell[];
+		isEditing?: boolean;
 	}
 
 	defineOptions({ inheritAttrs: false });
@@ -221,7 +221,7 @@
 			modelValue?: DataTableItem[];
 			uniqueKey?: string;
 			clickable?: boolean;
-			allowUnclick?: boolean;
+			// allowUnclick?: boolean;
 			clicked?: DataTableItem | undefined | null;
 			selectable?: boolean;
 			disableHeader?: boolean;
@@ -240,6 +240,8 @@
 			sortByMulti?: Map<string, (boolean | null)>;
 			toggleColumns?: boolean;
 			scroll?: boolean;
+			allowArrowKeySelection?: boolean;
+			unselectable?: Set<DataTableItem>;
 		}>(),
 		{
 			columns: () => [],
@@ -249,7 +251,7 @@
 			uniqueKey: undefined,
 			disableHeader: false,
 			clickable: false,
-			allowUnclick: false,
+			// allowUnclick: false,
 			clicked: undefined,
 			selectable: false,
 			disableFooter: false,
@@ -267,19 +269,22 @@
 			sortByMulti: undefined,
 			toggleColumns: false,
 			scroll: false,
+			allowArrowKeySelection: false,
+			unselectable: () => new Set<DataTableItem>(),
 		}
 	);
 
 	const emit = defineEmits<{
 		"update:modelValue": [items: any[]];
 		"update:sortByAndOrder": [obj: SortByAndOrder];
-		"update:clicked": [items: any | null];
+		"update:clicked": [items: DataTableItem];
 		"update:filterOpen": [open: boolean];
 		"update:hiddenColumns": [keys: Set<string>];
 	}>();
 
-	const attrs = useAttrs();
+	// const attrs = useAttrs();
 	const itemRefs = ref(new Map());
+	const selectionRefs = ref(new Map());
 
 	function capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
@@ -291,57 +296,65 @@
 		return Object.keys(accumulatedObject);
 	}
 
+	function switchElement(event: KeyboardEvent, list: Map<number, HTMLElement | null>, index: number, backwards: boolean) {
+		if (!props.allowArrowKeySelection)
+			return;
+		let targetIndex;
+		if (index === list.size-1 && !backwards)
+			targetIndex = 0;
+		else if (index === 0 && backwards)
+			targetIndex = list.size-1;
+		else
+			targetIndex = backwards ? index-1 : index+1;
+		const ele = list.get(targetIndex);
+		if ((ele !== null) && (ele !== undefined))
+			ele.focus();
+	}
+
 	const buildTableColumn = (source: DataTableColumnSource, initialIndex: number): DataTableColumnInternal => {
 		const input = typeof source === 'string' ? { key: source } : source;
 		return {
 			source,
 			initialIndex,
 			key: input.key,
-			name: input.name || input.key,
-			label: input.label || capitalizeFirstLetter(input.key),
-			sortable: input.sortable || false,
-			span: input.span || 1,
-			fixedWidth: input.fixedWidth || 0,
-			minWidth: input.minWidth || 0,
-			align: input.align || 'left',
-			tooltip: input.tooltip || '',
-			disabled: input.disabled || false,
-			type: input.type || 'text',
-			divider: input.divider || false,
-			toggle: input.toggle || false,
-			toggleInvisible: input.toggleInvisible || false,
+			name: input.name ?? input.key,
+			label: input.label ?? capitalizeFirstLetter(input.key),
+			sortable: input.sortable ?? false,
+			span: input.span ?? 1,
+			fixedWidth: (input.fixedWidth === undefined) ? 0 : Number(input.fixedWidth),
+			minWidth: (input.minWidth === undefined) ? 0 : Number(input.minWidth),
+			align: input.align ?? 'left',
+			tooltip: input.tooltip ?? '',
+			disabled: input.disabled ?? false,
+			type: input.type ?? 'text',
+			divider: input.divider ?? false,
+			toggle: input.toggle ?? false,
+			toggleInvisible: input.toggleInvisible ?? false,
 		}
 	}
 
 	const columnsComputed = computed(() =>
 		(props.columns.length === 0)
 			? getKeys(props.items).map((item, index) => buildTableColumn(item, index))
-			: props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !props.hiddenColumns.has(column.key)))
+			: props.columns.map((column, index) => buildTableColumn(column, index)).filter(column => !props.hiddenColumns.has(column.key)));
 
-	const gridTemplateColumns = computed(() => {
-		return columnsComputed.value.map(column =>
-			`minmax(${
-				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : (column.minWidth ? (column.minWidth + (typeof column.minWidth === "number" ? 'rem' : '')) : '4rem')
-			}, ${
-				column.fixedWidth ? (column.fixedWidth + (typeof column.fixedWidth === "number" ? 'rem' : '')) : column.span + 'fr'
-			})`
-		).join(' ');
-	})
+	const gridTemplateColumns = computed<string>(() =>
+		columnsComputed.value.map(column =>
+			`minmax(${ column.fixedWidth > 0 ? (column.fixedWidth + 'rem') : (column.minWidth > 0 ? (column.minWidth + 'rem') : '4rem') }, ${ column.fixedWidth > 0 ? (column.fixedWidth + 'rem') : column.span + 'fr' })`
+		).join(' '));
 
-	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value || 'repeat(auto-fit, minmax(0, 1fr))');
+	const gridTemplateColumnsComputed = computed(() => gridTemplateColumns.value.length > 0 ? gridTemplateColumns.value : 'repeat(auto-fit, minmax(0, 1fr))');
 
-	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) => {
-		return { initialIndex: index, source: toRaw(source), cells: columnsComputed.value.map(column => {
-			return { rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' };
-		})}
-	}));
+	const rowsComputed = computed<DataTableRow[]>(() => [...props.items].map((source, index) =>
+		({ selectable: !props.unselectable.has(toRaw(source)), initialIndex: index, source: toRaw(source), cells:
+			columnsComputed.value.map(column => ({ rowIndex: index, rowData: toRaw(source), column, value: source[column.key] ?? '' }))
+		})));
 
 	const sortedRows = computed(() => {
 		if (rowsComputed.value.length < 0 || props.sortByMulti !== undefined)
 			return rowsComputed.value;
-		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => internalSortByAndOrder.value.key === key && sortable, );
-		const column = columnsComputed.value[columnIndex];
-		if (!column)
+		const columnIndex = columnsComputed.value.findIndex( ({ key, sortable }) => (internalSortByAndOrder.value.key === key) && sortable);
+		if ((columnIndex < 0) || (columnIndex > columnsComputed.value.length -1))
 			return rowsComputed.value;
 		const sortingOrderRatio = internalSortByAndOrder.value.order === false ? -1 : 1
 		return [...rowsComputed.value].sort((a, b) => {
@@ -353,7 +366,7 @@
 		})
 	})
 
-	const cycleSorting = (value: boolean | null | undefined) => {
+	function cycleSorting(value: boolean | null | undefined) {
 		if (value === null || value === undefined)
 			return true;
 		if (value === true)
@@ -361,7 +374,6 @@
 		return null;
 	}
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const internalSortByAndOrder = ref<SortByAndOrder>(props.sortByAndOrder)
 
 	function toggleSorting(column: DataTableColumnInternal) {
@@ -379,25 +391,26 @@
 	const filterOpenProp = toRef(props, 'filterOpen');
 	const isFilterOpen = ref(filterOpenProp.value);
 
-	const toggleFilterOpen = () => {
+	function toggleFilterOpen() {
 		isFilterOpen.value = !isFilterOpen.value;
 		emit('update:filterOpen', isFilterOpen.value);
 	}
 
 	const selectedItemsRaw = computed(() => (props.modelValue ?? []).map(i => toRaw(i)))
-	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.every(isRowSelected));
+	const allRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.filter(row => !props.unselectable.has(row.source)).every(isRowSelected));
 	const someNotAllRowsSelected = computed(() => (sortedRows.value.length === 0) ? false : sortedRows.value.some(isRowSelected) && !allRowsSelected.value);
+	const selectedItemsNotListed = computed(() => selectedItemsRaw.value.filter(i => !sortedRows.value.some(r => toRaw(r.source) === i)));
 
 	function isRowSelected(row: DataTableRow) {
 		return selectedItemsRaw.value.includes(row.source)
 	}
 
 	function selectAllRows() {
-		emit('update:modelValue', [...sortedRows.value.map(row => row.source)]);
+		emit('update:modelValue', [...sortedRows.value.filter(row => !props.unselectable.has(row.source)).map(row => row.source).concat(selectedItemsNotListed.value)]);
 	}
 
 	function unselectAllRows() {
-		emit('update:modelValue', []);
+		emit('update:modelValue', [...selectedItemsNotListed.value]);
 	}
 
 	function selectRow(row: DataTableRow) {
@@ -415,16 +428,16 @@
 		if (!props.selectable)
 			return;
 		if (isRowSelected(row))
-			unselectRow(row)
+			unselectRow(row);
 		else
-			selectRow(row)
+			selectRow(row);
 	}
 
 	function toggleBulkSelection() {
 		if (allRowsSelected.value)
-			unselectAllRows()
+			unselectAllRows();
 		else
-			selectAllRows()
+			selectAllRows();
 	}
 
 	const clickedItemRaw = computed(() => (toRaw(props.clicked) ?? null));
@@ -438,18 +451,18 @@
 		return true;
 	}
 
-	function resetClickedRow() {
-		if (props.allowUnclick)
-			emit('update:clicked', null);
-	}
+	// function resetClickedRow() {
+	// 	if (props.allowUnclick)
+	// 		emit('update:clicked', null);
+	// }
 
 	function toggleRowClick(row: DataTableRow) {
 		if (!props.clickable)
 			return;
-		if (isRowClicked(row))
-			resetClickedRow();
-		else
-			setClickedRow(row);
+		// if (isRowClicked(row))
+		// 	resetClickedRow();
+		// else
+		setClickedRow(row);
 	}
 
 	function setClickedRow(row: DataTableRow) {
@@ -466,12 +479,15 @@
 	}
 
 	function scrollToClickedElement() {
-		if (!props.scrollIntoView || clickedItemIndex.value === undefined)
+		// wenn eine Mehrfachauswahl durchgeführt wird, springe nicht zum ausgewählten Item
+		if (props.modelValue !== undefined && props.modelValue.length > 0)
+			return;
+		if ((props.scrollIntoView === undefined) || (props.scrollIntoView === false) || (clickedItemIndex.value === undefined))
 			return;
 		// TODO scrollIntoViewIfNeeded wird nicht von FF unterstützt as of 116
-		const clickedElementHtml = itemRefs.value.get(clickedItemIndex.value);
+		const clickedElementHtml: any = itemRefs.value.get(clickedItemIndex.value);
 		const scrollOptions: ScrollIntoViewOptions = { behavior: "auto", block: "center" };
-		if (clickedElementHtml) {
+		if ((clickedElementHtml !== undefined) && (clickedElementHtml !== null)) {
 			if (typeof clickedElementHtml.scrollIntoViewIfNeeded === "function")
 				clickedElementHtml.scrollIntoViewIfNeeded(scrollOptions);
 			else if(!isInView(clickedElementHtml))
@@ -481,7 +497,6 @@
 
 	const noDataCalculated = computed(() => (sortedRows.value.length === 0));
 
-	// eslint-disable-next-line vue/no-setup-props-destructure
 	const data = ref<Set<string>>(props.hiddenColumns);
 
 	watch(() => props.hiddenColumns, (value: Set<string>) => updateHiddenColumnsSet(value), { immediate: false });
@@ -492,7 +507,7 @@
 		data.value = value;
 	}
 
-	function updateHiddenColumns(columnKey: string, ok: any) {
+	function updateHiddenColumns(columnKey: string, ok: boolean) {
 		if (ok) {
 			data.value.delete(columnKey);
 		} else {
@@ -510,542 +525,550 @@
 		return false;
 	});
 
+	onMounted(() => itemRefs.value.get(clickedItemIndex.value)?.focus());
+
 </script>
 
 <style lang="postcss">
-.svws-ui-table {
-	@apply flex max-h-full w-full flex-col bg-white tabular-nums dark:bg-black;
-  @apply border-black/25 dark:border-white/25;
-	--checkbox-width: 1.75rem;
-	--background-color: rgb(var(--color-white));
 
-  & + & {
-    @apply mt-10;
-  }
+	.svws-ui-table {
+		@apply flex max-h-full w-full flex-col bg-white tabular-nums dark:bg-black;
+		@apply border-black/25 dark:border-white/25;
+		--checkbox-width: 1.75rem;
+		--background-color: rgb(var(--color-white));
 
-	&.svws-has-background {
-	  @apply text-black dark:text-black;
-	  /*@apply rounded-lg border border-black/50 border-b-0 ring-4 ring-light dark:ring-white/5;*/
-	}
+		& + & {
+			@apply mt-10;
+		}
 
-	&.svws-no-data,
-	&.svws-no-data .svws-ui-thead,
-	&.svws-no-data .svws-ui-tbody,
-	&.svws-no-data .svws-ui-tfoot,
-	&.svws-no-data .svws-ui-td {
-		@apply border-black/10 dark:border-white/10;
-	}
+		&.svws-has-background {
+			@apply text-black dark:text-black;
+			/*@apply rounded-lg border border-black/50 border-b-0 ring-4 ring-light dark:ring-white/5;*/
+		}
 
-	.app--sidebar-container & {
-		@apply border-x-0;
-	}
+		&.svws-no-data,
+		&.svws-no-data .svws-ui-thead,
+		&.svws-no-data .svws-ui-tbody,
+		&.svws-no-data .svws-ui-tfoot,
+		&.svws-no-data .svws-ui-td {
+			@apply border-black/10 dark:border-white/10;
+		}
 
-  .content-card &:not(.svws-no-mx),
-  .svws-table-offset & {
-    @apply -mx-3 w-auto;
+		.app--sidebar-container & {
+			@apply border-x-0;
+		}
 
-    .svws-ui-td:first-child {
-      @apply pl-3;
-    }
-  }
+		.content-card &:not(.svws-no-mx),
+		.svws-table-offset & {
+			@apply -mx-3 w-auto;
 
-  .content-card &:not(.svws-no-mx):not(.svws-has-background),
-  .svws-table-offset &:not(.svws-has-background) {
-    .svws-ui-td:last-child {
-      @apply pr-3;
-    }
-  }
-
-  .app-layout--aside-container & {
-    @apply -mx-6 w-auto;
-
-    .svws-ui-td:first-child {
-      @apply pl-6;
-    }
-
-    .svws-ui-td:last-child {
-      @apply pr-6;
-    }
-  }
-
-  .svws-ui-badge {
-  	&.svws-has-background & {
-      @apply border-transparent;
-    }
-  }
-}
-
-.svws-ui-thead,
-.svws-ui-tbody,
-.svws-ui-tfoot {
-	@apply min-w-fit;
-}
-
-.svws-ui-thead,
-.svws-ui-tfoot,
-.svws-ui-tfoot--data {
-	@apply sticky bg-white dark:bg-black dark:text-white;
-	@apply border-black/25 dark:border-white/25;
-
-	.svws-ui-table.svws-has-background & {
-		@apply border-black/50 dark:border-white/50;
-	}
-
-	.svws-ui-tr:last-child .svws-ui-td {
-		@apply border-b-0;
-	}
-}
-
-.svws-ui-thead {
-	@apply top-0 z-20;
-	@apply border-b;
-
-  .svws-ui-tr:not(:last-child) .svws-ui-td {
-    @apply border-t border-t-transparent;
-  }
-
-  .svws-ui-badge {
-    @apply text-button font-bold;
-  }
-
-  .svws-no-data & {
-    @apply pointer-events-none text-black dark:text-white opacity-25;
-  }
-
-	.svws-ui-td {
-		@apply items-center pt-0 text-button;
-
-		&.svws-sortable-column {
-			@apply cursor-pointer select-none focus:outline-none;
-
-			.tooltip-trigger {
-				@apply cursor-pointer;
-			}
-
-			&:not(.svws-active):hover {
-				.svws-sorting-icon {
-					@apply bg-light dark:bg-white/10;
-
-					.svws-sorting-asc,
-					.svws-sorting-desc {
-							@apply opacity-100;
-					}
-				}
-			}
-
-			&:focus-visible {
-				.svws-sorting-icon {
-					@apply ring-2 ring-black/25 ring-offset-1;
-				}
-			}
-
-			&.svws-active,
-			&.svws-active:hover {
-				@apply text-svws;
-
-				.svws-sorting-icon {
-					@apply bg-svws/5 dark:bg-svws/10;
-
-					.page--statistik & {
-						@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
-					}
-				}
+			.svws-ui-td:first-child {
+				@apply pl-3;
 			}
 		}
 
-		.svws-sorting-icon {
-			@apply relative -my-2 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-0;
-
-			.svws-sorting-asc,
-			.svws-sorting-desc {
-				@apply absolute h-4 w-4 opacity-25 top-0.5 left-0.5;
-
-				&.svws-active {
-					@apply opacity-100 text-svws;
-
-					.page--statistik & {
-						@apply text-violet-500;
-					}
-				}
-			}
-
-			.svws-sorting-asc {
-				clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-			}
-
-			.svws-sorting-desc {
-				clip-path: polygon(50% 0, 50% 100%, 100% 100%, 100% 0);
+		.content-card &:not(.svws-no-mx):not(.svws-has-background),
+		.svws-table-offset &:not(.svws-has-background) {
+			.svws-ui-td:last-child {
+				@apply pr-3;
 			}
 		}
 
-		.tooltip-trigger {
-			@apply inline-flex h-full items-center line-clamp-1;
-		}
-	}
-}
+		.app-layout--aside-container & {
+			@apply -mx-6 w-auto;
 
-.svws-ui-tbody {
-	@apply flex h-auto flex-col;
+			.svws-ui-td:first-child {
+				@apply pl-6;
+			}
 
-	.svws-clickable & {
-		.svws-ui-tr {
-			@apply cursor-pointer;
-
-			&:not(.svws-clicked):hover {
-				@apply bg-black/5 dark:bg-white/5;
+			.svws-ui-td:last-child {
+				@apply pr-6;
 			}
 		}
-	}
-
-  .button {
-    @apply -my-1 h-[1.4rem];
-  }
-
-  .tooltip-trigger {
-    margin-top: -0.1rem;
-    margin-bottom: -0.1rem;
-
-    .button {
-      @apply -my-0.5;
-    }
-  }
-
-  .svws-ui-checkbox {
-    @apply my-0;
-  }
-
-  .svws-ui-tr {
-	  .svws-ui-table.svws-has-background & {
-      background-color: var(--background-color);
-    }
-  }
-
-  .svws-ui-td {
-    .text-input-component {
-      @apply w-full h-auto -my-0.5;
-    }
-
-    .text-input--control {
-      @apply border-none;
-    }
-  }
-
-	.svws-has-selection & {
-		.svws-ui-tr:not(.svws-selected):not(.svws-clicked) {
-			@apply text-black/50 dark:text-white/50;
-
-      .svws-ui-badge {
-        @apply text-black opacity-50 dark:text-white;
-      }
-		}
-	}
-}
-
-.svws-ui-tfoot,
-.svws-ui-tfoot--data {
-	@apply sticky z-10;
-	@apply -mt-px border-y;
-  	@apply -bottom-px;
-
-	.svws-ui-table.overflow-auto & {
-		@apply bottom-0;
-	}
-}
-
-.svws-ui-tfoot {
-	.svws-ui-tr {
-		@apply flex w-full items-center;
-
-		.svws-ui-td {
-			@apply items-center border-transparent dark:border-transparent;
-		}
-	}
-
-	.svws-selectable & {
-		.svws-ui-td:first-child {
-			width: var(--checkbox-width);
-		}
-	}
-}
-
-.svws-ui-tr {
-	@apply relative grid text-base min-h-[1.7rem] focus:outline-none;
-	grid-template-columns: v-bind(gridTemplateColumnsComputed);
-	min-width: fit-content;
-
-	&.svws-selected {
-		@apply font-medium;
-	}
-
-	&.svws-clicked {
-		@apply font-bold bg-svws/5 text-svws dark:bg-svws/5;
 
 		.svws-ui-badge {
-		  @apply border-black/25 dark:border-white/25 font-bold;
-		}
-
-		.page--statistik & {
-			@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
-		}
-
-    .svws-ui-tr:not(.svws-clicked) {
-      @apply bg-white font-medium text-black dark:text-white;
-    }
-	}
-
-	.svws-selectable & {
-		grid-template-columns: var(--checkbox-width) v-bind(gridTemplateColumnsComputed);
-	}
-
-	.svws-ui-tfoot & {
-		@apply min-h-[2.25rem] h-auto;
-	}
-
-	.svws-ui-thead & {
-		@apply min-h-[1.9rem] h-auto;
-
-		.svws-ui-td {
-			@apply py-2;
-		}
-
-	}
-}
-
-.svws-ui-td {
-	@apply flex items-start gap-1 overflow-hidden border-b border-black/25 leading-none dark:border-white/25;
-	padding: 0.3rem 0.25rem;
-
-	&.svws-no-padding {
-		@apply p-0;
-	}
-
-	.svws-no-padding {
-		margin: -0.1rem -0.25rem;
-	}
-
-	&.svws-divider {
-		@apply border-r;
-
-    + .svws-ui-td:not(.svws-align-center) {
-      @apply pl-2;
-
-      .svws-ui-badge {
-        @apply -ml-1.5;
-      }
-    }
-	}
-
-	.svws-ui-table.svws-has-background & {
-		@apply border-black/50 dark:border-white/50;
-	}
-
-	&.svws-align-right {
-		@apply justify-end text-right;
-	}
-
-	&.svws-align-center {
-		@apply justify-center text-center;
-	}
-
-	&.svws-disabled,
-	.svws-disabled &,
-	&.svws-disabled-soft,
-	.svws-disabled-soft & {
-		@apply relative cursor-default text-black/50 dark:text-white/50;
-
-		.svws-ui-table.svws-has-background & {
-			@apply text-black/75 dark:text-black/75;
-		}
-
-		&:before {
-			@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10 border border-black/5;
-			content: '';
-
-			.svws-ui-table.svws-has-background & {
-				@apply bg-black/40;
+			&.svws-has-background & {
+				@apply border-transparent;
 			}
 		}
 	}
 
-	&.svws-disabled-soft,
-	.svws-disabled-soft & {
-		@apply text-black dark:text-white;
-
-		.svws-has-background & {
-			@apply text-black/80 dark:text-black/80;
-
-			.button {
-				@apply text-black dark:text-black;
-			}
-		}
-
-		&:before {
-			.svws-ui-table.svws-has-background & {
-				@apply bg-black/20;
-				box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
-			}
-		}
-	}
-
-	.svws-ui-tr.svws-disabled-soft & {
-		&:before {
-			@apply border-transparent;
-		}
-	}
-
-	.app--sidebar-container .svws-ui-table:not(.svws-selectable) &:first-child,
-	.svws-ui-table.svws-selectable &.svws-no-data-text {
-		@apply pl-3 2xl:pl-7 4xl:pl-8;
-	}
-
-  .app--sidebar-container &.svws-align-right:last-child {
-    @apply pr-3;
-  }
-
-	.drag-el:last-child & {
-		@apply border-b-0;
-	}
-
-	.button {
-		font-size: 0.833rem;
-		padding: 0.1em 0.7em;
-	}
-
-	.text-input-component input {
-		@apply h-auto w-full py-0;
-	}
-
-  input[type="date"] {
-    @apply px-0;
-  }
-}
-
-.svws-ui-table {
-  /*&.svws-type-collapsible*/
-
-  .svws-ui-tr {
-    .svws-ui-tr {
-      @apply col-span-full last:pb-4;
-
-      > .svws-ui-td {
-        @apply border-dashed border-transparent;
-
-		  &.svws-divider {
-			  @apply border-solid border-r-black/25 dark:border-r-white/25;
-		  }
-      }
-    }
-
-    > .svws-ui-tr:not(:last-child) {
-      @apply border-b border-dashed border-black/50 dark:border-white/50;
-    }
-  }
-
-  .svws-toggle-collapse {
-    @apply inline-flex h-5 w-5 items-center justify-center rounded -my-0.5 mx-0.5;
-
-    &:hover,
-    &:focus-visible {
-      @apply bg-black/10 dark:bg-white/10;
-    }
-  }
-}
-
-.svws-ui-table.svws-type-navigation {
-  @apply mx-0;
-
-	&,
 	.svws-ui-thead,
 	.svws-ui-tbody,
+	.svws-ui-tfoot {
+		@apply min-w-fit;
+	}
+
+	.svws-ui-thead,
 	.svws-ui-tfoot,
-	.svws-ui-td {
-		@apply border-none;
+	.svws-ui-tfoot--data {
+		@apply sticky bg-white dark:bg-black dark:text-white;
+		@apply border-black/25 dark:border-white/25;
+
+		.svws-ui-table.svws-has-background & {
+			@apply border-black/50 dark:border-white/50;
+		}
+
+		.svws-ui-tr:last-child .svws-ui-td {
+			@apply border-b-0;
+		}
+	}
+
+	.svws-ui-thead {
+		@apply top-0 z-20;
+		@apply border-b;
+
+		.svws-ui-tr:not(:last-child) .svws-ui-td {
+			@apply border-t border-t-transparent;
+		}
+
+		.svws-ui-badge {
+			@apply text-button font-bold;
+		}
+
+		.svws-no-data & {
+			@apply pointer-events-none text-black dark:text-white opacity-25;
+		}
+
+		.svws-ui-td {
+			@apply items-center pt-0 text-button;
+
+			&.svws-sortable-column {
+				@apply cursor-pointer select-none focus:outline-none;
+
+				.tooltip-trigger {
+					@apply cursor-pointer;
+				}
+
+				&:not(.svws-active):hover {
+					.svws-sorting-icon {
+						@apply bg-light dark:bg-white/10;
+
+						.svws-sorting-asc,
+						.svws-sorting-desc {
+								@apply opacity-100;
+						}
+					}
+				}
+
+				&:focus-visible {
+					.svws-sorting-icon {
+						@apply ring-2 ring-black/25 ring-offset-1;
+					}
+				}
+
+				&.svws-active,
+				&.svws-active:hover {
+					@apply text-svws;
+
+					.svws-sorting-icon {
+						@apply bg-svws/5 dark:bg-svws/10;
+
+						.page--statistik & {
+							@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
+						}
+					}
+				}
+			}
+
+			.svws-sorting-icon {
+				@apply relative -my-2 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-0;
+
+				.svws-sorting-asc,
+				.svws-sorting-desc {
+					@apply absolute h-4 w-4 opacity-25 top-0.5 left-0.5;
+
+					&.svws-active {
+						@apply opacity-100 text-svws;
+
+						.page--statistik & {
+							@apply text-violet-500;
+						}
+					}
+				}
+
+				.svws-sorting-asc {
+					clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+				}
+
+				.svws-sorting-desc {
+					clip-path: polygon(50% 0, 50% 100%, 100% 100%, 100% 0);
+				}
+			}
+
+			.tooltip-trigger {
+				@apply inline-flex h-full items-center line-clamp-1;
+			}
+		}
 	}
 
 	.svws-ui-tbody {
-		@apply flex flex-col gap-[0.1rem];
+		@apply flex h-auto flex-col;
+
+		.svws-clickable & {
+			.svws-ui-tr {
+				@apply cursor-pointer;
+
+				&:not(.svws-clicked):hover {
+					@apply bg-black/5 dark:bg-white/5;
+				}
+
+				&:focus-visible {
+					@apply bg-black/10 dark:bg-white/10;
+				}
+			}
+		}
+
+		.button {
+			@apply -my-1 h-[1.4rem];
+		}
+
+		.tooltip-trigger {
+			margin-top: -0.1rem;
+			margin-bottom: -0.1rem;
+
+			.button {
+			@apply -my-0.5;
+			}
+		}
+
+		.svws-ui-checkbox {
+			@apply my-0;
+		}
 
 		.svws-ui-tr {
-			@apply w-fit rounded;
+			.svws-ui-table.svws-has-background & {
+			background-color: var(--background-color);
+			}
+		}
+
+		.svws-ui-td {
+			.text-input-component {
+				@apply w-full h-auto -my-0.5;
+			}
+
+			.text-input--control {
+				@apply border-none;
+			}
+		}
+
+		.svws-has-selection & {
+			.svws-ui-tr:not(.svws-selected):not(.svws-clicked) {
+				@apply text-black/50 dark:text-white/50;
+
+				.svws-ui-badge {
+					@apply text-black opacity-50 dark:text-white;
+				}
+			}
 		}
 	}
-}
 
-.svws-ui-table.svws-type-grid {
-  @apply border-x border-t border-black/25 dark:border-white/25;
+	.svws-ui-tfoot,
+	.svws-ui-tfoot--data {
+		@apply sticky z-10;
+		@apply -mt-px border-y;
+		@apply -bottom-px;
 
-  &.svws-has-background {
-    @apply border-black/50 dark:border-black/50;
-  }
+		.svws-ui-table.overflow-auto & {
+			@apply bottom-0;
+		}
+	}
 
-  .svws-ui-thead,
-  .svws-ui-tbody {
-    .svws-ui-td:not(:last-child) {
-      @apply border-r border-black/25 dark:border-white/25;
-    }
+	.svws-ui-tfoot {
+		.svws-ui-tr {
+			@apply flex w-full items-center;
 
-    .svws-ui-td:not(.svws-align-center) {
-      @apply pl-1.5;
-    }
+			.svws-ui-td {
+				@apply items-center border-transparent dark:border-transparent;
+			}
+		}
 
-    .svws-ui-td:not(.svws-align-center):not(:last-child) {
-      @apply pr-1.5;
-    }
+		.svws-selectable & {
+			.svws-ui-td:first-child {
+				width: var(--checkbox-width);
+			}
+		}
+	}
 
-    .svws-ui-td.svws-divider {
-      @apply border-r-2;
-    }
-  }
+	.svws-ui-tr {
+		@apply relative grid text-base min-h-[1.7rem] focus:outline-none;
+		grid-template-columns: v-bind(gridTemplateColumnsComputed);
+		min-width: fit-content;
 
-  &.svws-has-background {
-    .svws-ui-thead,
-    .svws-ui-tbody {
-      .svws-ui-td:not(:last-child) {
-        @apply border-black/50 dark:border-black/50;
-      }
-    }
-  }
+		&.svws-selected {
+			@apply font-medium;
+		}
 
-  .content-card &:not(.svws-no-mx) .svws-ui-td:first-child,
-  .svws-table-offset & .svws-ui-td:first-child {
-    @apply pl-3;
-  }
+		&.svws-clicked {
+			@apply font-bold bg-svws/5 text-svws dark:bg-svws/5;
 
-  .content-card &.svws-selectable:not(.svws-no-mx) .svws-ui-td:first-child,
-  .svws-table-offset &.svws-selectable .svws-ui-td:first-child {
-    @apply pl-1;
-  }
-}
+			.svws-ui-badge {
+			@apply border-black/25 dark:border-white/25 font-bold;
+			}
 
-.svws-ui-table-filter {
-  @apply mb-5;
+			.page--statistik & {
+				@apply bg-violet-500/5 text-violet-500 dark:bg-violet-500/10;
+			}
 
-  .svws-ui-checkbox {
-    @apply font-normal text-button;
+			.svws-ui-tr:not(.svws-clicked) {
+				@apply bg-white font-medium text-black dark:text-white;
+			}
+		}
 
-    .svws-ui-checkbox--label {
-      @apply pt-0.5;
-    }
-  }
+		.svws-selectable & {
+			grid-template-columns: var(--checkbox-width) v-bind(gridTemplateColumnsComputed);
+		}
 
-  .button--badge {
-    @apply left-auto mt-0 h-2 w-2 p-0 bg-svws right-0.5 top-1.5;
-  }
-}
+		.svws-ui-tfoot & {
+			@apply min-h-[2.25rem] h-auto;
+		}
 
-.svws-ui-table-filter--advanced {
-  @apply grid grid-cols-1 gap-2 pt-5 sm:grid-cols-2;
+		.svws-ui-thead & {
+			@apply min-h-[1.9rem] h-auto;
 
-  .svws-ui-toggle {
-    @apply mt-2;
-  }
-}
+			.svws-ui-td {
+				@apply py-2;
+			}
 
-.svws-fachwahlen--has-selection .svws-ui-tbody .svws-ui-td:not(.svws-selected) {
-	@apply bg-white/50 text-black/50 dark:text-black/50 font-normal;
-}
+		}
+	}
 
-.svws-fachwahlen--has-selection .svws-ui-td.svws-selected {
-	@apply font-bold;
-}
+	.svws-ui-td {
+		@apply flex items-start gap-1 overflow-hidden border-b border-black/25 leading-none dark:border-white/25;
+		padding: 0.3rem 0.25rem;
+
+		&.svws-no-padding {
+			@apply p-0;
+		}
+
+		.svws-no-padding {
+			margin: -0.1rem -0.25rem;
+		}
+
+		&.svws-divider {
+			@apply border-r;
+
+			+ .svws-ui-td:not(.svws-align-center) {
+				@apply pl-2;
+
+				.svws-ui-badge {
+					@apply -ml-1.5;
+				}
+			}
+		}
+
+		.svws-ui-table.svws-has-background & {
+			@apply border-black/50 dark:border-white/50;
+		}
+
+		&.svws-align-right {
+			@apply justify-end text-right;
+		}
+
+		&.svws-align-center {
+			@apply justify-center text-center;
+		}
+
+		&.svws-disabled,
+		.svws-disabled &,
+		&.svws-disabled-soft,
+		.svws-disabled-soft & {
+			@apply relative cursor-default text-black/50 dark:text-white/50;
+
+			.svws-ui-table.svws-has-background & {
+				@apply text-black/75 dark:text-black/75;
+			}
+
+			&:before {
+				@apply pointer-events-none absolute inset-0 bg-black/10 dark:bg-white/10 border border-black/5;
+				content: '';
+
+				.svws-ui-table.svws-has-background & {
+					@apply bg-black/40;
+				}
+			}
+		}
+
+		&.svws-disabled-soft,
+		.svws-disabled-soft & {
+			@apply text-black dark:text-white;
+
+			.svws-has-background & {
+				@apply text-black/80 dark:text-black/80;
+
+				.button {
+					@apply text-black dark:text-black;
+				}
+			}
+
+			&:before {
+				.svws-ui-table.svws-has-background & {
+					@apply bg-black/20;
+					box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+				}
+			}
+		}
+
+		.svws-ui-tr.svws-disabled-soft & {
+			&:before {
+				@apply border-transparent;
+			}
+		}
+
+		.app--sidebar-container .svws-ui-table:not(.svws-selectable) &:first-child,
+		.svws-ui-table.svws-selectable &.svws-no-data-text {
+			@apply pl-3 2xl:pl-7 4xl:pl-8;
+		}
+
+		.app--sidebar-container &.svws-align-right:last-child {
+			@apply pr-3;
+		}
+
+		.drag-el:last-child & {
+			@apply border-b-0;
+		}
+
+		.button {
+			font-size: 0.833rem;
+			padding: 0.1em 0.7em;
+		}
+
+		.text-input-component input {
+			@apply h-auto w-full py-0;
+		}
+
+		input[type="date"] {
+			@apply px-0;
+		}
+	}
+
+	.svws-ui-table {
+		/*&.svws-type-collapsible*/
+
+		.svws-ui-tr {
+			.svws-ui-tr {
+				@apply col-span-full last:pb-4;
+
+				> .svws-ui-td {
+					@apply border-dashed border-transparent;
+
+					&.svws-divider {
+						@apply border-solid border-r-black/25 dark:border-r-white/25;
+					}
+				}
+			}
+
+			> .svws-ui-tr:not(:last-child) {
+				@apply border-b border-dashed border-black/50 dark:border-white/50;
+			}
+		}
+
+		.svws-toggle-collapse {
+			@apply inline-flex h-5 w-5 items-center justify-center rounded -my-0.5 mx-0.5;
+
+			&:hover,
+			&:focus-visible {
+				@apply bg-black/10 dark:bg-white/10;
+			}
+		}
+	}
+
+	.svws-ui-table.svws-type-navigation {
+		@apply mx-0;
+
+		&,
+		.svws-ui-thead,
+		.svws-ui-tbody,
+		.svws-ui-tfoot,
+		.svws-ui-td {
+			@apply border-none;
+		}
+
+		.svws-ui-tbody {
+			@apply flex flex-col gap-[0.1rem];
+
+			.svws-ui-tr {
+				@apply w-fit rounded;
+			}
+		}
+	}
+
+	.svws-ui-table.svws-type-grid {
+		@apply border-x border-t border-black/25 dark:border-white/25;
+
+		&.svws-has-background {
+			@apply border-black/50 dark:border-black/50;
+		}
+
+		.svws-ui-thead,
+		.svws-ui-tbody {
+			.svws-ui-td:not(:last-child) {
+				@apply border-r border-black/25 dark:border-white/25;
+			}
+
+			.svws-ui-td:not(.svws-align-center) {
+				@apply pl-1.5;
+			}
+
+			.svws-ui-td:not(.svws-align-center):not(:last-child) {
+				@apply pr-1.5;
+			}
+
+			.svws-ui-td.svws-divider {
+				@apply border-r-2;
+			}
+		}
+
+		&.svws-has-background {
+			.svws-ui-thead,
+			.svws-ui-tbody {
+				.svws-ui-td:not(:last-child) {
+					@apply border-black/50 dark:border-black/50;
+				}
+			}
+		}
+
+		.content-card &:not(.svws-no-mx) .svws-ui-td:first-child,
+		.svws-table-offset & .svws-ui-td:first-child {
+			@apply pl-3;
+		}
+
+		.content-card &.svws-selectable:not(.svws-no-mx) .svws-ui-td:first-child,
+		.svws-table-offset &.svws-selectable .svws-ui-td:first-child {
+			@apply pl-1;
+		}
+	}
+
+	.svws-ui-table-filter {
+		@apply mb-5;
+
+		.svws-ui-checkbox {
+			@apply font-normal text-button;
+
+			.svws-ui-checkbox--label {
+			@apply pt-0.5;
+			}
+		}
+
+		.button--badge {
+			@apply left-auto mt-0 h-2 w-2 p-0 bg-svws right-0.5 top-1.5;
+		}
+	}
+
+	.svws-ui-table-filter--advanced {
+		@apply grid grid-cols-1 gap-2 pt-5 sm:grid-cols-2;
+
+		.svws-ui-toggle {
+			@apply mt-2;
+		}
+	}
+
+	.svws-fachwahlen--has-selection .svws-ui-tbody .svws-ui-td:not(.svws-selected) {
+		@apply bg-white/50 text-black/50 dark:text-black/50 font-normal;
+	}
+
+	.svws-fachwahlen--has-selection .svws-ui-td.svws-selected {
+		@apply font-bold;
+	}
+
 </style>

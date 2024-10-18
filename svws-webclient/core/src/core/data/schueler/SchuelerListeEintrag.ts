@@ -1,6 +1,8 @@
-import { JavaObject } from '../../../java/lang/JavaObject';
+import { JavaLong } from '../../../java/lang/JavaLong';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuelerListeEintrag extends JavaObject {
 
@@ -79,6 +81,25 @@ export class SchuelerListeEintrag extends JavaObject {
 		super();
 	}
 
+	/**
+	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
+	 *
+	 * @param another     das zu vergleichende Objekt
+	 * @return true, falls die Objekte indentisch sind, sonst false
+	 */
+	public equals(another : unknown | null) : boolean {
+		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.schueler.SchuelerListeEintrag')))) && (this.id === (cast_de_svws_nrw_core_data_schueler_SchuelerListeEintrag(another)).id);
+	}
+
+	/**
+	 * Erzeugt den Hashcode zu Objekt auf Basis der id.
+	 *
+	 * @return den HashCode
+	 */
+	public hashCode() : number {
+		return JavaLong.hashCode((this.id));
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.data.schueler.SchuelerListeEintrag';
 	}
@@ -86,6 +107,8 @@ export class SchuelerListeEintrag extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schueler.SchuelerListeEintrag'].includes(name);
 	}
+
+	public static class = new Class<SchuelerListeEintrag>('de.svws_nrw.core.data.schueler.SchuelerListeEintrag');
 
 	public static transpilerFromJSON(json : string): SchuelerListeEintrag {
 		const obj = JSON.parse(json) as Partial<SchuelerListeEintrag>;

@@ -6,6 +6,7 @@ export default defineConfig({
 		globals: true,
 		reporters: ["default", "junit"],
 		outputFile: "build/coverage/junit.xml",
+		setupFiles: "setup.ts",
 		coverage: {
 			provider: "v8",
 			reportsDirectory: "build/coverage",
@@ -18,6 +19,7 @@ export default defineConfig({
 		alias: {
 			"~": resolve(__dirname, "src"),
 			"@core": resolve(__dirname, '../core/src/index.ts'),
+			"@json": resolve(__dirname, "../../svws-asd/src/main/resources/de/svws_nrw/asd/types"),
 		},
 	},
 });

@@ -9,6 +9,7 @@ import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject, cast_java_lang_Object } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import type { Queue } from '../../../java/util/Queue';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
@@ -24,7 +25,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	/**
 	 * Dieses Array enthält die Elemente des MinHeap.
 	 */
-	private _nodes : Array<T | null> = Array(0).fill(null);
+	private _nodes : Array<T | null> = Array(0).fill(null) as unknown as Array<T | null>;
 
 	/**
 	 * Ein Objekt zum Vergleichen von Werten.
@@ -256,7 +257,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	}
 
 	public clear() : void {
-		this._nodes = Array(0).fill(null);
+		this._nodes = Array(0).fill(null) as unknown as Array<T | null>;
 		this._size = 0;
 		this._modCount++;
 	}
@@ -272,9 +273,9 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 		if ((__param0 === undefined)) {
 			return this.copyNodes();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<U> = __param0;
+			const a : Array<U> = __param0 as unknown as Array<U>;
 			if (a.length < this._size)
-				return this.copyNodes();
+				return this.copyNodes() as unknown as Array<U>;
 			System.arraycopy(this._nodes, 0, a, 0, this._size);
 			Arrays.fill(a, this._size, a.length, null);
 			return a;
@@ -310,7 +311,7 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	public toSortedArray() : Array<T> {
 		if (this._size === 0)
-			return Array(0).fill(null);
+			return Array(0).fill(null) as unknown as Array<T>;
 		const copy : MinHeap<T> = new MinHeap<T>(this);
 		const tmp : Array<T> = this.newArray(this._nodes[0], this._size);
 		let current : T | null;
@@ -466,8 +467,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	 */
 	private newArray(elem : T | null, length : number) : Array<T> {
 		if (elem === null)
-			return Array(length).fill(null);
-		return Array(length).fill(null);
+			return Array(length).fill(null) as unknown as Array<T>;
+		return Array(length).fill(null) as unknown as Array<T>;
 	}
 
 	/**
@@ -536,6 +537,8 @@ export class MinHeap<T> extends JavaObject implements Queue<T> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.tree.MinHeap', 'java.util.Collection', 'java.util.Queue', 'java.lang.Iterable'].includes(name);
 	}
+
+	public static class = new Class<MinHeap<any>>('de.svws_nrw.core.adt.tree.MinHeap');
 
 	public [Symbol.iterator](): Iterator<T> {
 		const iter : JavaIterator<T> = this.iterator();

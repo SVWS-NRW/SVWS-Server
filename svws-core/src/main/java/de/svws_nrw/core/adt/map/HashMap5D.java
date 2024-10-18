@@ -214,13 +214,15 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 	 * @param key4 Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key5 Der 5. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 *
+	 * @return der dem Mapping vor dem Entfernen zugeordnete Wert, falls vorhanden.
+	 *
 	 */
-	public void removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
+	public @NotNull V removeOrException(final @NotNull K1 key1, final @NotNull K2 key2, final @NotNull K3 key3, final @NotNull K4 key4, final @NotNull K5 key5) {
 		final HashMap4D<K2, K3, K4, K5, V> map2 = _map.get(key1);
 		if (map2 == null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!");
 
-		map2.removeOrException(key2, key3, key4, key5);
+		return map2.removeOrException(key2, key3, key4, key5);
 	}
 
 	/**
@@ -240,6 +242,34 @@ public class HashMap5D<K1, K2, K3, K4, K5, V> {
 			return;
 
 		map2.remove(key2, key3, key4, key5);
+	}
+
+	/**
+	 * Entfernt das Mapping (key1) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 */
+	public void removeMap1(final @NotNull K1 key1) {
+		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null)
+			return;
+		_map.remove(key1);
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 */
+	public void removeMap2(final @NotNull K1 key1, final @NotNull K2 key2) {
+		HashMap4D<K2, K3, K4, K5, V> map1 = _map.get(key1);
+		if (map1 == null)
+			return;
+		map1.removeMap1(key2);
+		if (map1.isEmpty()) {
+			_map.remove(key1);
+		}
 	}
 
 	/**

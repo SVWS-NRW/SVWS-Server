@@ -1,27 +1,33 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
+import type { RouteApp} from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { type RouteSchuleDatenaustausch } from "~/router/apps/schule/datenaustausch/RouteSchuleDatenaustausch";
 
 import type { SchuleDatenaustauschKurs42Props } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Props";
-import { type AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
+import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteDataSchuleDatenaustauschKurs42 } from "./RouteDataSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenaustauschKurs42Blockung";
 import { routeSchuleDatenaustauschKurs42Raeume } from "./RouteSchuleDatenaustauschKurs42Raeume";
+import { routeSchule } from "../../RouteSchule";
+import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42.vue");
+const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
-export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteSchuleDatenaustausch> {
+export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteApp> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
+		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";
+		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
+		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschKurs42Blockung,
 			routeSchuleDatenaustauschKurs42Raeume
@@ -48,27 +54,11 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42Props {
 		return {
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getTab(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		for (const c of this.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
-	}
-
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

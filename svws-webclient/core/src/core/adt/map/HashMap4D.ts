@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -17,6 +18,15 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	 */
 	public constructor() {
 		super();
+	}
+
+	/**
+	 * Liefert TRUE, falls die Map leer ist.
+	 *
+	 * @return TRUE, falls die Map leer ist.
+	 */
+	public isEmpty() : boolean {
+		return this._map1.isEmpty();
 	}
 
 	/**
@@ -196,8 +206,10 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 * @param key3 Der 3. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 * @param key4 Der 4. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 *
+	 * @return der dem Mapping vor dem Entfernen zugeordnete Wert, falls vorhanden.
 	 */
-	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4) : void {
+	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4) : V {
 		const map2 : JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
@@ -209,7 +221,7 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ") ungültig!")
 		if (!map4.containsKey(key4))
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ", key2=" + key2 + ", key3=" + key3 + ", key4=" + key4 + ") ungültig!")
-		map4.remove(key4);
+		const value : V | null = map4.remove(key4);
 		if (map4.isEmpty()) {
 			map3.remove(key3);
 			if (map3.isEmpty()) {
@@ -219,11 +231,11 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 				}
 			}
 		}
+		return DeveloperNotificationException.ifNull("Wert kann nicht null sein.", value);
 	}
 
 	/**
-	 * Entfernt das Mapping (key1, key2, key3, key4) falls es existiert<br>
-	 * .
+	 * Entfernt das Mapping (key1, key2, key3, key4) falls es existiert<br>.
 	 *
 	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
 	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
@@ -252,6 +264,60 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key3 Der 3. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 */
+	public removeMap3(key1 : K1, key2 : K2, key3 : K3) : void {
+		const map2 : JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return;
+		const map3 : JavaMap<K3, JavaMap<K4, V>> | null = map2.get(key2);
+		if (map3 === null)
+			return;
+		if (!map3.containsKey(key3))
+			return;
+		map3.remove(key3);
+		if (map3.isEmpty()) {
+			map2.remove(key2);
+			if (map2.isEmpty()) {
+				this._map1.remove(key1);
+			}
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2, key3) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 * @param key2 Der 2. Schlüssel des Quadrupels(key1, key2, key3, key4).
+	 */
+	public removeMap2(key1 : K1, key2 : K2) : void {
+		const map2 : JavaMap<K2, JavaMap<K3, JavaMap<K4, V>>> | null = this._map1.get(key1);
+		if (map2 === null)
+			return;
+		if (!map2.containsKey(key2))
+			return;
+		map2.remove(key2);
+		if (map2.isEmpty()) {
+			this._map1.remove(key1);
+		}
+	}
+
+	/**
+	 * Entfernt das Mapping (key1) falls es existiert<br>.
+	 *
+	 * @param key1 Der 1. Schlüssel (key1).
+	 */
+	public removeMap1(key1 : K1) : void {
+		if (!this._map1.containsKey(key1))
+			return;
+		this._map1.remove(key1);
 	}
 
 	/**
@@ -349,6 +415,8 @@ export class HashMap4D<K1, K2, K3, K4, V> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap4D'].includes(name);
 	}
+
+	public static class = new Class<HashMap4D<any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap4D');
 
 }
 

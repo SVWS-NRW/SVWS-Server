@@ -1,9 +1,11 @@
-import type { Schulform, KlassenDaten, Schueler, KlassenListeManager, List, Schulgliederung } from "@core";
+import type { Schulform, KlassenDaten, Schueler, KlassenListeManager, List, Schulgliederung, ServerMode, BenutzerKompetenz } from "@core";
 import type { LehrerListeEintrag } from "@core";
 
 export interface KlassenDatenProps {
 	schulform: Schulform;
 	schulgliederungen: List<Schulgliederung>;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	patch: (data : Partial<KlassenDaten>) => Promise<void>;
 	klassenListeManager: () => KlassenListeManager;
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;

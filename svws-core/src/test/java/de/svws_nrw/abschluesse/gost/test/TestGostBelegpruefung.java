@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.ResourceUtils;
 import de.svws_nrw.core.abschluss.gost.AbiturdatenManager;
 import de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis;
@@ -62,6 +63,7 @@ class TestGostBelegpruefung {
 	 */
 	@BeforeAll
 	static void setup() throws IOException {
+		ASDCoreTypeUtils.initAll();
 		System.out.println("- Lade die Gost-Jahrgänge aus den JSON-Resourcen...");
 		final Map<String, GostJahrgangsdaten> tempTestGostJahrgaenge =
 				ResourceUtils.json2Classes("de.svws_nrw.abschluesse.gost.test", "Jahrgang_", "_GostJahrgangsdaten", GostJahrgangsdaten.class);
@@ -185,7 +187,8 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: EF1-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final GostFaecherManager faecherManager = new GostFaecherManager(gostFaecher, gostFachkombinationen);
+							final GostFaecherManager faecherManager =
+									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager = new AbiturdatenManager(abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();
 							final List<String> log = ergebnis.log;
@@ -227,7 +230,8 @@ class TestGostBelegpruefung {
 						() -> {
 							System.out.println();
 							System.out.println("- Test: Gesamt-Belegprüfung die Abiturdaten " + schueler_id + " des Testjahrgangs " + jahrgang + ":");
-							final GostFaecherManager faecherManager = new GostFaecherManager(gostFaecher, gostFachkombinationen);
+							final GostFaecherManager faecherManager =
+									new GostFaecherManager(gostJahrgangsdaten.abiturjahr - 1, gostFaecher, gostFachkombinationen);
 							final AbiturdatenManager manager =
 									new AbiturdatenManager(abidaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);
 							final GostBelegpruefungErgebnis ergebnis = manager.getBelegpruefungErgebnis();

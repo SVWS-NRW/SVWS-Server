@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerLerngruppe, cast_de_svws_nrw_core_utils_stundenplanblockung_StundenplanblockungManagerLerngruppe } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppe';
 import type { JavaMap } from '../../../java/util/JavaMap';
 
@@ -115,6 +116,8 @@ export class StundenplanblockungManagerLerngruppeMenge extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeMenge'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManagerLerngruppeMenge>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManagerLerngruppeMenge');
 
 }
 

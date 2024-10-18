@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.BooleanPlusMinusDefaultPlusConverter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -41,7 +41,7 @@ public class Tabelle_K_Ankreuzfloskeln extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Jahrgang */
 	public SchemaTabelleSpalte col_Jahrgang = add("Jahrgang", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
 			.setNotNull()
-			.setJavaComment("Jahrgang zu der die Ankreuzfloskel gehört");
+			.setJavaComment("ASD-Jahrgang zu der die Ankreuzfloskel gehört");
 
 	/** Die Definition der Tabellenspalte Gliederung */
 	public SchemaTabelleSpalte col_Gliederung = add("Gliederung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(3)

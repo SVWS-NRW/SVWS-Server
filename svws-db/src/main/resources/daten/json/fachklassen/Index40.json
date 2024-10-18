@@ -1,6 +1,6 @@
 {
 	"index": 40,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Agrarwirtschaft",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Agrarwirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Bautechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Bautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -51,7 +51,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Drucktechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -68,7 +68,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Elektrotechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -85,7 +85,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Ernährung und Hauswirtschaft",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Ernährung und Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -102,7 +102,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Farbtechnik und Raumgestaltung",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Farbtechnik und Raumgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -119,7 +119,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Holztechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -136,7 +136,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Informations- u. Telekomm.technik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Informations- u. Telekomm.technik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -153,7 +153,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Körperpflege",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Körperpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -170,7 +170,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Medien/Medientechnologie",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Medien/Medientechnologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -187,7 +187,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Medizintechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Medizintechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -204,7 +204,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Metalltechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -221,7 +221,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Physik, Chemie, Biologie",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Physik, Chemie, Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -238,7 +238,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Sozial- u. Gesundheitswesen",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Sozial- u. Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -255,7 +255,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Textiltechnik u. Bekleidung",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Textiltechnik u. Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -272,7 +272,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Vermessungstechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Vermessungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -289,7 +289,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Wirtschaft und Verwaltung",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Wirtschaft und Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -306,7 +306,7 @@
 				"bezeichnungM": "Schüler mit Arbeitsverhältnis und Praktikanten - Fahrzeugtechnik",
 				"bezeichnungW": "Schülerinnen mit Arbeitsverhältnis und Praktikantinnen - Fahrzeugtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "101",
@@ -374,7 +374,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Agrarwirtschaft",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Agrarwirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -391,7 +391,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Bautechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Bautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -408,7 +408,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Drucktechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -425,7 +425,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Elektrotechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -442,7 +442,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Ernährung und Hauswirtschaft",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Ernährung und Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -459,7 +459,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Farbtechnik u.Raumgestaltung",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Farbtechnik u.Raumgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -476,7 +476,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Holztechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -493,7 +493,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Informations- u. Telekomm.technik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Informations- u. Telekomm.technik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -510,7 +510,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Körperpflege",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Körperpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -527,7 +527,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Medien/Medientechnologie",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Medien/Medientechnologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -544,7 +544,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Medizintechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Medizintechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -561,7 +561,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Metalltechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -578,7 +578,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Physik, Chemie, Biologie",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Physik, Chemie, Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -595,7 +595,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Sozial- u. Gesundheitswesen",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Sozial- u. Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -612,7 +612,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Textiltechnik und Bekleidung",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Textiltechnik und Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -629,7 +629,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Vermessungstechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Vermessungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -646,7 +646,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Wirtschaft und Verwaltung",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Wirtschaft und Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -663,7 +663,7 @@
 				"bezeichnungM": "Schüler in berufsvorb. Maßnahmen der AV u. freier Träger - Fahrzeugtechnik",
 				"bezeichnungW": "Schülerinnen in berufsvorb. Maßnahmen der AV u. freier Träger - Fahrzeugtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -680,7 +680,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Agrarwirtschaft",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Agrarwirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -697,7 +697,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Bautechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Bautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -714,7 +714,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Drucktechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -731,7 +731,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Elektrotechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -748,7 +748,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Ernährung und Hauswirtschaft",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Ernährung und Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -765,7 +765,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Farbtechnik und Raumgestaltung",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Farbtechnik und Raumgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -782,7 +782,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Holztechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -799,7 +799,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Informations- und Telekommunikationstechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Informations- und Telekommunikationstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -816,7 +816,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Körperpflege",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Körperpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -833,7 +833,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Medien/Medientechnologie",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Medien/Medientechnologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -850,7 +850,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Medizintechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Medizintechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -867,7 +867,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Metalltechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -884,7 +884,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Physik, Chemie, Biologie",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Physik, Chemie, Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -901,7 +901,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Sozial- und Gesundheitswesen",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Sozial- und Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -918,7 +918,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Textiltechnik und Bekleidung",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Textiltechnik und Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -935,7 +935,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Vermessungstechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Vermessungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -952,7 +952,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Wirtschaft und Verwaltung",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Wirtschaft und Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -969,7 +969,7 @@
 				"bezeichnungM": "Schüler ohne Arbeitsverhältnis - Fahrzeugtechnik",
 				"bezeichnungW": "Schülerinnen ohne Arbeitsverhältnis - Fahrzeugtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -986,7 +986,7 @@
 				"bezeichnungM": "Werkstattjahr - Agrarwirtschaft",
 				"bezeichnungW": "Werkstattjahr - Agrarwirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1003,7 +1003,7 @@
 				"bezeichnungM": "Werkstattjahr - Bautechnik",
 				"bezeichnungW": "Werkstattjahr - Bautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1020,7 +1020,7 @@
 				"bezeichnungM": "Werkstattjahr - Drucktechnik",
 				"bezeichnungW": "Werkstattjahr - Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1037,7 +1037,7 @@
 				"bezeichnungM": "Werkstattjahr - Elektrotechnik",
 				"bezeichnungW": "Werkstattjahr - Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1054,7 +1054,7 @@
 				"bezeichnungM": "Werkstattjahr - Ernährung und Hauswirtschaft",
 				"bezeichnungW": "Werkstattjahr - Ernährung und Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1071,7 +1071,7 @@
 				"bezeichnungM": "Werkstattjahr - Farbtechnik und Raumgestaltung",
 				"bezeichnungW": "Werkstattjahr - Farbtechnik und Raumgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1088,7 +1088,7 @@
 				"bezeichnungM": "Werkstattjahr - Holztechnik",
 				"bezeichnungW": "Werkstattjahr - Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1105,7 +1105,7 @@
 				"bezeichnungM": "Werkstattjahr - Informations- und Telekommunikationstechnik",
 				"bezeichnungW": "Werkstattjahr - Informations- und Telekommunikationstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1122,7 +1122,7 @@
 				"bezeichnungM": "Werkstattjahr - Körperpflege",
 				"bezeichnungW": "Werkstattjahr - Körperpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1139,7 +1139,7 @@
 				"bezeichnungM": "Werkstattjahr - Medien/Medientechnologie",
 				"bezeichnungW": "Werkstattjahr - Medien/Medientechnologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1156,7 +1156,7 @@
 				"bezeichnungM": "Werkstattjahr - Medizintechnik",
 				"bezeichnungW": "Werkstattjahr - Medizintechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1173,7 +1173,7 @@
 				"bezeichnungM": "Werkstattjahr - Metalltechnik",
 				"bezeichnungW": "Werkstattjahr - Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1190,7 +1190,7 @@
 				"bezeichnungM": "Werkstattjahr - Physik, Chemie, Biologie",
 				"bezeichnungW": "Werkstattjahr - Physik, Chemie, Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1207,7 +1207,7 @@
 				"bezeichnungM": "Werkstattjahr - Sozial- und Gesundheitswesen",
 				"bezeichnungW": "Werkstattjahr - Sozial- und Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1224,7 +1224,7 @@
 				"bezeichnungM": "Werkstattjahr - Textiltechnik und Bekleidung",
 				"bezeichnungW": "Werkstattjahr - Textiltechnik und Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1241,7 +1241,7 @@
 				"bezeichnungM": "Werkstattjahr - Vermessungstechnik",
 				"bezeichnungW": "Werkstattjahr - Vermessungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1258,7 +1258,7 @@
 				"bezeichnungM": "Werkstattjahr - Wirtschaft und Verwaltung",
 				"bezeichnungW": "Werkstattjahr - Wirtschaft und Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -1275,7 +1275,7 @@
 				"bezeichnungM": "Werkstattjahr - Fahrzeugtechnik",
 				"bezeichnungW": "Werkstattjahr - Fahrzeugtechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "999",

@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -28,7 +29,7 @@ import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
 import de.svws_nrw.db.utils.lupo.mdb.LupoMDB;
 import jakarta.validation.constraints.NotNull;
@@ -70,6 +71,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -93,7 +95,8 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 
 			// Prüfe die Schulform
 			final Schulform schulform = lupoMDB.retrieveSchulform();
-			if ((schulform == null) || (schulform.daten == null) || (!schulform.daten.hatGymOb))
+			final int schuljahr = 2024; // Nehme das Schuljahr 2024 für den Zugriff auf die Statistikdaten
+			if ((schulform == null) || (schulform.daten(schuljahr) == null) || (!schulform.daten(schuljahr).hatGymOb))
 				throw new DeveloperNotificationException("Datenbank-Schema enthält keine Daten für die Gymnasiale Oberstufe (Unzulässige Schulform)");
 
 			final String outPath = "../svws-core/src/test/resources/de/svws_nrw/abschluesse/gost/test";
@@ -118,7 +121,7 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 				final String strSchuelerID = String.format("%04d", abiturdaten.schuelerID);
 				logger.logLn("Generiere Daten für " + strSchuelerID + " des Jahrgangs " + strJahrgangID);
 
-				final GostFaecherManager faecherManager = new GostFaecherManager(gostFaecher, gostFaecherkombinationen);
+				final GostFaecherManager faecherManager = new GostFaecherManager(schuljahr, gostFaecher, gostFaecherkombinationen);
 				AbiturdatenManager manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.EF1);
 				final GostBelegpruefungErgebnis ergebnisEF1 = manager.getBelegpruefungErgebnis();
 				manager = new AbiturdatenManager(abiturdaten, gostJahrgangsdaten, faecherManager, GostBelegpruefungsArt.GESAMT);

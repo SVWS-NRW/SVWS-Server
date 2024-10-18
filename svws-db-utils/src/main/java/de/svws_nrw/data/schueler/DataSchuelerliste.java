@@ -14,26 +14,25 @@ import java.util.stream.Collectors;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListe;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.types.SchuelerStatus;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.data.schule.SchulgliederungKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.gost.DataGostJahrgangsliste;
 import de.svws_nrw.data.jahrgaenge.DataJahrgangsliste;
 import de.svws_nrw.data.klassen.DataKlassendaten;
 import de.svws_nrw.data.kurse.DataKursliste;
-import de.svws_nrw.data.schule.DataSchuljahresabschnitte;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.kurse.DTOKursSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
-import de.svws_nrw.db.dto.current.schild.schule.DTOSchuljahresabschnitte;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.persistence.TypedQuery;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -100,14 +99,15 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * aus den Datenbank-DTOs {@link DTOSchueler} und {@link DTOSchuelerLernabschnittsdaten}.
 	 *
 	 * @param schueler       die DB-Informationen zum Schüler
+	 * @param schuljahr      das Schuljahr
 	 * @param aktAbschnitt   die DB-Informationen zu dem aktuellen Schülerlernabschnitt
 	 * @param mapJahrgaenge  die Jahrgangsdefinitionen, welche ihrer ID zugeordnet sind.
 	 * @param schulform      die Schulform der Schule
 	 *
 	 * @return der Schülerlisteneintrag
 	 */
-	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(final DTOSchueler schueler, final DTOSchuelerLernabschnittsdaten aktAbschnitt,
-			final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
+	public static SchuelerListeEintrag erstelleSchuelerlistenEintrag(final DTOSchueler schueler, final int schuljahr,
+			final DTOSchuelerLernabschnittsdaten aktAbschnitt, final Map<Long, DTOJahrgang> mapJahrgaenge, final Schulform schulform) {
 		final SchuelerListeEintrag eintrag = new SchuelerListeEintrag();
 		eintrag.id = schueler.ID;
 		eintrag.nachname = (schueler.Nachname == null) ? "" : schueler.Nachname;
@@ -131,12 +131,14 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				eintrag.jahrgang = jg.ASDJahrgang;
 			}
 			if (aktAbschnitt.Schulgliederung == null) {
-				eintrag.schulgliederung = Schulgliederung.getDefault(schulform).daten.kuerzel;
+				final Schulgliederung sgl = Schulgliederung.getDefault(schulform);
+				final SchulgliederungKatalogEintrag sglke = (sgl == null) ? null : sgl.daten(schuljahr);
+				eintrag.schulgliederung = (sglke == null) ? "" : sglke.kuerzel;
 			} else {
-				eintrag.schulgliederung = aktAbschnitt.Schulgliederung.daten.kuerzel;
+				eintrag.schulgliederung = aktAbschnitt.Schulgliederung;
 			}
 		}
-		eintrag.status = schueler.Status.id;
+		eintrag.status = schueler.idStatus;
 		eintrag.istDuplikat = schueler.Duplikat;
 		eintrag.externeSchulNr = schueler.ExterneSchulNr;
 		return eintrag;
@@ -158,10 +160,10 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		schueler.vorname = (dto.Vorname == null) ? "" : dto.Vorname;
 		schueler.geschlecht = dto.Geschlecht.id;
 		schueler.abschlussjahrgang = (abschlussjahrgang == null) ? -1 : abschlussjahrgang;
-		schueler.status = dto.Status.id;
+		schueler.status = dto.idStatus;
 		schueler.externeSchulNr = dto.ExterneSchulNr;
 		return schueler;
-	};
+	}
 
 
 	/**
@@ -275,11 +277,6 @@ public final class DataSchuelerliste extends DataManager<Long> {
 				DTOSchuelerLernabschnittsdaten.class,
 				schuelerIDs);
 		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAktAbschnitte = listAktAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
-		final List<Long> listAktSchuljahresabschnitteIDs = listAktAbschnitte.stream().map(a -> a.Schuljahresabschnitts_ID).distinct().toList();
-		final List<DTOSchuljahresabschnitte> listAktSchuljahresabschnitte =
-				conn.queryByKeyList(DTOSchuljahresabschnitte.class, listAktSchuljahresabschnitteIDs);
-		final Map<Long, DTOSchuljahresabschnitte> mapAktSchuljahresabschnitte =
-				listAktSchuljahresabschnitte.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		// Bestimme die Lernabschnitt für den ausgewählten Abschnitt
 		final List<DTOSchuelerLernabschnittsdaten> listGewaehlteAbschnitte = conn.queryList(
 				"SELECT l FROM DTOSchueler s JOIN DTOSchuelerLernabschnittsdaten l ON s.ID IN ?1 AND s.ID = l.Schueler_ID"
@@ -295,22 +292,31 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		}
 		// Bestimme die Jahrgänge der Schule
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final Map<Long, DTOJahrgang> mapJahrgaenge = conn.queryAll(DTOJahrgang.class).stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		// Erstelle die Schüler-Liste und sortiere sie
-		final List<SchuelerListeEintrag> schuelerListe = schueler.stream()
-				.map(s -> erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
-				.sorted(dataComparator)
-				.toList();
+		final List<SchuelerListeEintrag> schuelerListe = new ArrayList<>();
+		for (final DTOSchueler s : schueler) {
+			final DTOSchuelerLernabschnittsdaten sla = mapAbschnitte.get(s.ID);
+			if (sla == null)
+				continue;
+			final Schuljahresabschnitt sja = conn.getUser().schuleGetAbschnittById(sla.Schuljahresabschnitts_ID);
+			if (sja == null)
+				continue;
+			final SchuelerListeEintrag sle = erstelleSchuelerlistenEintrag(s, sja.schuljahr, mapAbschnitte.get(s.ID), mapJahrgaenge, schulform);
+			schuelerListe.add(sle);
+		}
+		schuelerListe.sort(dataComparator);
 		// Ermittle die Kurse, welche von den Schülern belegt wurden.
 		getSchuelerKurse(conn, schuelerListe, abschnitt);
 		// Bestimme das Abiturjahr, sofern es sich um eine Schule mit gymnasialer Oberstufe handelt.
-		if (schule.Schulform.daten.hatGymOb) {
+		if (schulform.daten(conn.getUser().schuleGetAbschnittById(abschnitt).schuljahr).hatGymOb) {
 			for (final SchuelerListeEintrag s : schuelerListe) {
-				final DTOSchuljahresabschnitte schuljahresabschnitt = mapAktSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
+				final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(s.idSchuljahresabschnitt);
 				if (schuljahresabschnitt == null)
 					continue;
-				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung),
-						schuljahresabschnitt.Jahr, s.jahrgang);
+				s.abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
+						schuljahresabschnitt.schuljahr, s.jahrgang);
 			}
 		}
 		// Und gib die Schülerliste mit den belegten Kursen zurück...
@@ -330,14 +336,9 @@ public final class DataSchuelerliste extends DataManager<Long> {
 	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public static SchuelerListe getSchuelerListe(final DBEntityManager conn, final long idSchuljahresabschnitt) throws ApiOperationException {
-		// Bestimme die Schulform
-		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-		if ((schule == null) || (schule.Schulform == null))
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "Die Schulform der Schule konnte nicht ermittelt werden.");
-
 		// Bestimme zunächst alle Schuljahresabschnitte und prüfe, ob die übergeben ID gültig ist
-		final @NotNull Map<@NotNull Long, @NotNull DTOSchuljahresabschnitte> mapSchuljahresabschnitte = DataSchuljahresabschnitte.getDTOMap(conn);
-		if (!mapSchuljahresabschnitte.containsKey(idSchuljahresabschnitt))
+		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(idSchuljahresabschnitt);
+		if (schuljahresabschnitt == null)
 			throw new ApiOperationException(Status.NOT_FOUND, "Es konnte kein Schuljahresabschnitt mit der ID %d gefunden werden"
 					.formatted(idSchuljahresabschnitt));
 
@@ -351,8 +352,8 @@ public final class DataSchuelerliste extends DataManager<Long> {
 		result.kurse.addAll(DataKursliste.getKursListenFuerAbschnitt(conn, idSchuljahresabschnitt, true));
 		result.jahrgaenge.addAll(DataJahrgangsliste.getJahrgangsliste(conn));
 
-		if (schule.Schulform.daten.hatGymOb)
-			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn));
+		if (conn.getUser().schuleHatGymOb())
+			result.jahrgaengeGost.addAll(DataGostJahrgangsliste.getGostJahrgangsliste(conn, schuljahresabschnitt));
 
 		// ermittle ggf. weitere Klassen
 		final Set<Long> idsKlassen = result.klassen.stream().map(k -> k.id).collect(Collectors.toSet());

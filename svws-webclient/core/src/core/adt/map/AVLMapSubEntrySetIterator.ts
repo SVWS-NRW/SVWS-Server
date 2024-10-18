@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { AVLMapSubMap } from '../../../core/adt/map/AVLMapSubMap';
 
@@ -62,6 +63,8 @@ export class AVLMapSubEntrySetIterator<K, V> extends JavaObject implements JavaI
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator'].includes(name);
 	}
+
+	public static class = new Class<AVLMapSubEntrySetIterator<any, any>>('de.svws_nrw.core.adt.map.AVLMapSubEntrySetIterator');
 
 }
 

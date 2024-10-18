@@ -1,6 +1,6 @@
 {
 	"index": 20,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "BV/Agrarwirtschaft",
 				"bezeichnungW": "BV/Agrarwirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "BV/Ausgesiedelte Jugendliche als Förderklasse",
 				"bezeichnungW": "BV/Ausgesiedelte Jugendliche als Förderklasse",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -51,7 +51,7 @@
 				"bezeichnungM": "BV/Bautechnik",
 				"bezeichnungW": "BV/Bautechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -68,7 +68,7 @@
 				"bezeichnungM": "BV/Drucktechnik",
 				"bezeichnungW": "BV/Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "105",
@@ -85,7 +85,7 @@
 				"bezeichnungM": "BV/Elektrotechnik",
 				"bezeichnungW": "BV/Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "106",
@@ -102,7 +102,7 @@
 				"bezeichnungM": "BV/Ernährung und Hauswirtschaft",
 				"bezeichnungW": "BV/Ernährung und Hauswirtschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "107",
@@ -119,7 +119,7 @@
 				"bezeichnungM": "BV/Farbtechnik und Raumgestaltung",
 				"bezeichnungW": "BV/Farbtechnik und Raumgestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "108",
@@ -136,7 +136,7 @@
 				"bezeichnungM": "BV/Holztechnik",
 				"bezeichnungW": "BV/Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "109",
@@ -153,7 +153,7 @@
 				"bezeichnungM": "BV/Informationstechnik",
 				"bezeichnungW": "BV/Informationstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "110",
@@ -170,7 +170,7 @@
 				"bezeichnungM": "BV/Körperpflege",
 				"bezeichnungW": "BV/Körperpflege",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "111",
@@ -204,7 +204,7 @@
 				"bezeichnungM": "BV/Medien",
 				"bezeichnungW": "BV/Medien",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "113",
@@ -221,7 +221,7 @@
 				"bezeichnungM": "BV/Medizintechnik",
 				"bezeichnungW": "BV/Medizintechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "114",
@@ -238,7 +238,7 @@
 				"bezeichnungM": "BV/Metalltechnik",
 				"bezeichnungW": "BV/Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "115",
@@ -272,7 +272,7 @@
 				"bezeichnungM": "BV/Physik,Chemie,Biologie",
 				"bezeichnungW": "BV/Physik,Chemie,Biologie",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "117",
@@ -289,7 +289,7 @@
 				"bezeichnungM": "BV/Sozial- und Gesundheitswesen",
 				"bezeichnungW": "BV/Sozial- und Gesundheitswesen",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "118",
@@ -306,7 +306,7 @@
 				"bezeichnungM": "BV/Textiltechnik und Bekleidung",
 				"bezeichnungW": "BV/Textiltechnik und Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "119",
@@ -323,7 +323,7 @@
 				"bezeichnungM": "BV/Vermessungstechnik",
 				"bezeichnungW": "BV/Vermessungstechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "120",
@@ -340,7 +340,7 @@
 				"bezeichnungM": "BV/Wirtschaft und Verwaltung",
 				"bezeichnungW": "BV/Wirtschaft und Verwaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "999",

@@ -13,6 +13,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.ApiOperationException;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 import jakarta.ws.rs.core.MediaType;
@@ -76,7 +77,7 @@ public final class DataSQLite {
 		// Bestimme den Dateinamen für eine temporäre SQLite-Datei
 		try (APITempDBFile sqlite = new APITempDBFile(DBDriver.SQLITE, conn.getDBSchema(), logger, log, null, false)) {
 			// Erzeuge einen Schema-Manager, der den Export des DB-Schema durchführt
-			final DBSchemaManager srcManager = DBSchemaManager.create(conn.getUser(), true, logger);
+			final DBSchemaManager srcManager = DBSchemaManager.create(conn, true, logger);
 			if (srcManager == null)
 				throw new ApiOperationException(Status.FORBIDDEN);
 
@@ -103,6 +104,8 @@ public final class DataSQLite {
 				logger.logLn(2, "[FEHLER]");
 			logger.logLn("Datei eingelesen.");
 			return response;
+		} catch (final DBException e) {
+			throw new ApiOperationException(Status.FORBIDDEN, e, "Fehler bei der Datenbank-Verbindung.");
 		}
 	}
 
@@ -146,7 +149,7 @@ public final class DataSQLite {
 			// Falls das Schema ist in der SVWS-Konfiguration nicht als SVWS-Schema angelegt wurde, dann verwende die Informationen aus der aktuellen Datenbank-Verbindung.
 			if (tgtConfig == null)
 				tgtConfig = SVWSKonfiguration.get().getRootDBConfig(conn.getUser().getUsername(), conn.getUser().getPassword())
-						.switchSchema(conn.getDBSchema());
+						.switchSchema(PersistenceUnits.SVWS_ROOT, conn.getDBSchema());
 
 			try {
 				final Benutzer srcUser = Benutzer.create(srcConfig);
@@ -157,7 +160,7 @@ public final class DataSQLite {
 					}
 					logger.logLn(0, " [OK]");
 
-					final DBSchemaManager srcManager = DBSchemaManager.create(srcUser, true, logger);
+					final DBSchemaManager srcManager = DBSchemaManager.create(srcConn, true, logger);
 					logger.modifyIndent(2);
 					if (!srcManager.backup.importDBInto(tgtConfig, -1, false, logger))
 						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, simpleResponse(false, log));

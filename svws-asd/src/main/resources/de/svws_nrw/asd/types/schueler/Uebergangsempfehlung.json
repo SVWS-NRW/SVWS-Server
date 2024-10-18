@@ -1,0 +1,70 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "HAUPTSCHULE",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "H",
+			"text": "Hauptschule",
+			"schluessel": "04XX",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "HAUPTSCHULE_REALSCHULE",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 5,
+			"kuerzel": "H/R",
+			"text": "Hauptschule / Realschule (eingeschränkt)",
+			"schluessel": "0410",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "R",
+			"text": "Realschule",
+			"schluessel": "10XX",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "REALSCHULE_GYMNASIUM",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 6,
+			"kuerzel": "R/GY",
+			"text": "Realschule / Gymnasium (eingeschränkt)",
+			"schluessel": "1020",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "GYMNASIUM",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 3,
+			"kuerzel": "GY",
+			"text": "Gymnasium",
+			"schluessel": "20XX",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "KEINE",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 4,
+			"kuerzel": "OHNE",
+			"text": "Keine Empfehlung",
+			"schluessel": "****",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

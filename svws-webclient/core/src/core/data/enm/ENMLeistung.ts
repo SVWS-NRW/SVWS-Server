@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { ENMTeilleistung } from '../../../core/data/enm/ENMTeilleistung';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMLeistung extends JavaObject {
 
@@ -113,6 +114,8 @@ export class ENMLeistung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMLeistung'].includes(name);
 	}
+
+	public static class = new Class<ENMLeistung>('de.svws_nrw.core.data.enm.ENMLeistung');
 
 	public static transpilerFromJSON(json : string): ENMLeistung {
 		const obj = JSON.parse(json) as Partial<ENMLeistung>;

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import type { Comparator } from '../../../java/util/Comparator';
 
 export class IntegerComparator extends JavaObject implements Comparator<number> {
@@ -19,6 +20,8 @@ export class IntegerComparator extends JavaObject implements Comparator<number> 
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplan.IntegerComparator', 'java.util.Comparator'].includes(name);
 	}
+
+	public static class = new Class<IntegerComparator>('de.svws_nrw.core.utils.stundenplan.IntegerComparator');
 
 }
 

@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 
@@ -24,6 +25,8 @@ export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung'].includes(name);
 	}
+
+	public static class = new Class<GostBlockungsergebnisKursSchienenZuordnung>('de.svws_nrw.core.data.gost.GostBlockungsergebnisKursSchienenZuordnung');
 
 	public static transpilerFromJSON(json : string): GostBlockungsergebnisKursSchienenZuordnung {
 		const obj = JSON.parse(json) as Partial<GostBlockungsergebnisKursSchienenZuordnung>;

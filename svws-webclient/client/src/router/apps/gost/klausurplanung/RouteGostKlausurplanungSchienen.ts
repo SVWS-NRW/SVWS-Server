@@ -1,6 +1,6 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, GostHalbjahr, GostKlausurplanManager, Schulform, ServerMode, DeveloperNotificationException } from "@core";
+import { BenutzerKompetenz, GostHalbjahr, ServerMode, DeveloperNotificationException } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/apps/gost/klausurplanung/RouteGostKlausurplanung";
@@ -8,33 +8,43 @@ import { routeGostKlausurplanung, type RouteGostKlausurplanung } from "~/router/
 import type { GostKlausurplanungSchienenProps } from "~/components/gost/klausurplanung/SGostKlausurplanungSchienenProps";
 import { routeError } from "~/router/error/RouteError";
 import { routeApp } from "../../RouteApp";
+import { api } from "~/router/Api";
+import { schulformenGymOb } from "~/router/RouteHelper";
 
 const SGostKlausurplanungSchienen = () => import("~/components/gost/klausurplanung/SGostKlausurplanungSchienen.vue");
 
 export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKlausurplanung> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [ BenutzerKompetenz.KEINE ], "gost.klausurplanung.schienen", "schienen", SGostKlausurplanungSchienen);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_ANSEHEN_FUNKTION,
+			BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN
+		], "gost.klausurplanung.schienen", "schienen/:idtermin(\\d+)?", SGostKlausurplanungSchienen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schienen";
 	}
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		// Prüfe nochmals Abiturjahrgang, Halbjahr und ID der Blockung
-		if (to_params.abiturjahr instanceof Array || to_params.halbjahr instanceof Array)
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Die Parameter dürfen keine Arrays sein"));
-		const abiturjahr = to_params.abiturjahr === undefined ? undefined : parseInt(to_params.abiturjahr);
-		const halbjahr = (to_params.halbjahr === undefined) ? undefined : GostHalbjahr.fromID(parseInt(to_params.halbjahr)) || undefined;
-		if ((abiturjahr === undefined) || (halbjahr === undefined))
-			return routeError.getRoute(new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein."));
+		try {
+			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
+			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			const termin = routeGostKlausurplanung.data.manager.terminGetByIdOrNull(idtermin ?? -1) ?? undefined;
+			routeGostKlausurplanung.data.terminSelected.value = termin ?? undefined;
+			if ((abiturjahr === undefined) || (halbjahr === null))
+				throw new DeveloperNotificationException("Fehler: Abiturjahr und Halbjahr müssen als Parameter der Route an dieser Stelle vorhanden sein.");
+		} catch (e) {
+			return routeError.getRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));
+		}
 	}
 
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
+	public getRoute(abiturjahr: number, halbjahr: number, idtermin: number | undefined ) : RouteLocationRaw {
+		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr, idtermin }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostKlausurplanungSchienenProps {
 		return {
+			benutzerKompetenzen: api.benutzerKompetenzen,
 			jahrgangsdaten: routeGostKlausurplanung.data.jahrgangsdaten,
 			halbjahr: routeGostKlausurplanung.data.halbjahr,
 			kMan: () => routeGostKlausurplanung.data.manager,
@@ -46,7 +56,11 @@ export class RouteGostKlausurplanungSchienen extends RouteNode<any, RouteGostKla
 			erzeugeKursklausurenAusVorgaben: routeGostKlausurplanung.data.erzeugeKursklausurenAusVorgaben,
 			blockenKursklausuren: routeGostKlausurplanung.data.blockenKursklausuren,
 			quartalsauswahl: routeGostKlausurplanung.data.quartalsauswahl,
+			terminSelected: routeGostKlausurplanung.data.terminSelected,
 			gotoVorgaben: routeGostKlausurplanung.data.gotoVorgaben,
+			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
+			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
+			gotoSchienen: routeGostKlausurplanung.data.gotoSchienen,
 		}
 	}
 

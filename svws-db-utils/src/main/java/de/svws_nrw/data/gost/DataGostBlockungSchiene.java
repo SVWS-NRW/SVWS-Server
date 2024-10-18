@@ -91,10 +91,7 @@ public final class DataGostBlockungSchiene extends DataManager<Long> {
 			throw new ApiOperationException(Status.NOT_FOUND);
 		// Prüfe, ob die Blockung nur das Vorlage-Ergebnis hat
 		final DTOGostBlockung blockung = conn.queryByKey(DTOGostBlockung.class, schiene.Blockung_ID);
-		final DTOGostBlockungZwischenergebnis vorlage = DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
-		if (vorlage == null)
-			throw new ApiOperationException(Status.BAD_REQUEST,
-					"Die Schiene kann nicht angepasst werden, da bei der Blockungsdefinition schon berechnete Ergebnisse existieren.");
+		DataGostBlockungsdaten.pruefeNurVorlageErgebnis(conn, blockung);
 		for (final Entry<String, Object> entry : map.entrySet()) {
 			final String key = entry.getKey();
 			final Object value = entry.getValue();

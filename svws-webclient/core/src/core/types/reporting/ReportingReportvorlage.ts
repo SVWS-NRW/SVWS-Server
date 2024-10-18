@@ -1,5 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 
 export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
@@ -16,39 +17,49 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	public static readonly GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_v_KLAUSURTERMINE_MIT_KURSEN", 0, "GostKlausurplanung-KlausurtermineMitKursen");
 
 	/**
+	 * Report-Vorlage: GOSt - Klausurplanung - Schueler-Klausuren
+	 */
+	public static readonly GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KLAUSURPLANUNG_v_SCHUELER_MIT_KLAUSUREN", 1, "GostKlausurplanung-SchuelerMitKlausuren");
+
+	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurs-Kurschüler
 	 */
-	public static readonly GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN", 1, "GostKursplanung-KursMitKursschuelern");
+	public static readonly GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURS_MIT_KURSSCHUELERN", 2, "GostKursplanung-KursMitKursschuelern");
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Kurse-Statistikwerte
 	 */
-	public static readonly GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN", 2, "GostKursplanung-KurseMitStatistikwerten");
+	public static readonly GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_KURSE_MIT_STATISTIKWERTEN", 3, "GostKursplanung-KurseMitStatistikwerten");
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN", 3, "GostKursplanung-SchuelerMitKursen");
+	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_KURSEN", 4, "GostKursplanung-SchuelerMitKursen");
 
 	/**
 	 * Report-Vorlage: GOSt - Kursplanung - Schüler-Schienen-Kurse
 	 */
-	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 4, "GostKursplanung-SchuelerMitSchienenKursen");
+	public static readonly GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN : ReportingReportvorlage = new ReportingReportvorlage("GOST_KURSPLANUNG_v_SCHUELER_MIT_SCHIENEN_KURSEN", 5, "GostKursplanung-SchuelerMitSchienenKursen");
 
 	/**
 	 * Report-Vorlage: GOSt - Abitur - APO - Anlage 12 (Abiturzeugnis)
 	 */
-	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 5, "Schueler-GostAbiturApoAnlage12");
+	public static readonly SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12 : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_ABITUR_APO_ANLAGE_12", 6, "Schueler-GostAbiturApoAnlage12");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Ergebnisübersicht
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 6, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_ERGEBNISUEBERSICHT", 7, "Schueler-GostLaufbahnplanungErgebnisuebersicht");
 
 	/**
 	 * Report-Vorlage: GOSt - Laufbahnplanung - Wahlbogen
 	 */
-	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 7, "Schueler-GostLaufbahnplanungWahlbogen");
+	public static readonly SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_GOST_LAUFBAHNPLANUNG_WAHLBOGEN", 8, "Schueler-GostLaufbahnplanungWahlbogen");
+
+	/**
+	 * Report-Vorlage: Schüler - Stammdaten - Liste
+	 */
+	public static readonly SCHUELER_v_STAMMDATEN_LISTE : ReportingReportvorlage = new ReportingReportvorlage("SCHUELER_v_STAMMDATEN_LISTE", 9, "Schueler-Stammdatenliste");
 
 	/**
 	 * Die Bezeichnung der Report-Vorlage
@@ -116,6 +127,8 @@ export class ReportingReportvorlage extends JavaEnum<ReportingReportvorlage> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.reporting.ReportingReportvorlage', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<ReportingReportvorlage>('de.svws_nrw.core.types.reporting.ReportingReportvorlage');
 
 }
 

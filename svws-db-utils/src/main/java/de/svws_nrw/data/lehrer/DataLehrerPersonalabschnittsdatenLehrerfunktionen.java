@@ -4,9 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
-import de.svws_nrw.core.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
+import de.svws_nrw.asd.data.lehrer.LehrerPersonalabschnittsdatenLehrerfunktion;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -35,16 +34,13 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	}
 
 
-	/**
-	 * Lambda-Ausdruck zum Umwandeln eines Datenbank-DTOs {@link DTOLehrerFunktion} in einen Core-DTO {@link LehrerPersonalabschnittsdatenLehrerfunktion}.
-	 */
-	private static final Function<DTOLehrerFunktion, LehrerPersonalabschnittsdatenLehrerfunktion> dtoMapper = (final DTOLehrerFunktion dto) -> {
+	private static LehrerPersonalabschnittsdatenLehrerfunktion map(final DTOLehrerFunktion dto) {
 		final LehrerPersonalabschnittsdatenLehrerfunktion daten = new LehrerPersonalabschnittsdatenLehrerfunktion();
 		daten.id = dto.ID;
 		daten.idAbschnittsdaten = dto.Abschnitt_ID;
 		daten.idFunktion = dto.Funktion_ID;
 		return daten;
-	};
+	}
 
 	@Override
 	public Response getAll() {
@@ -65,7 +61,7 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 	 * @return die Liste mit den Lehrerfunktionen
 	 */
 	public static List<LehrerPersonalabschnittsdatenLehrerfunktion> getByLehrerabschnittsdatenId(final DBEntityManager conn,
-			final Long idLehrerabschnittsdaten) {
+			final long idLehrerabschnittsdaten) {
 		final List<LehrerPersonalabschnittsdatenLehrerfunktion> result = new ArrayList<>();
 		// Bestimme die Lehrerfunktionen für die Lehrerabschnittsdaten
 		final List<DTOLehrerFunktion> dtos = conn.queryList(DTOLehrerFunktion.QUERY_BY_ABSCHNITT_ID, DTOLehrerFunktion.class, idLehrerabschnittsdaten);
@@ -73,7 +69,7 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 			return result;
 		// Konvertiere sie und füge sie zur Liste hinzu
 		for (final DTOLehrerFunktion dto : dtos)
-			result.add(dtoMapper.apply(dto));
+			result.add(map(dto));
 		return result;
 	}
 
@@ -84,7 +80,7 @@ public final class DataLehrerPersonalabschnittsdatenLehrerfunktionen extends Dat
 		final DTOLehrerFunktion dto = conn.queryByKey(DTOLehrerFunktion.class, id);
 		if (dto == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final LehrerPersonalabschnittsdatenLehrerfunktion daten = dtoMapper.apply(dto);
+		final LehrerPersonalabschnittsdatenLehrerfunktion daten = map(dto);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

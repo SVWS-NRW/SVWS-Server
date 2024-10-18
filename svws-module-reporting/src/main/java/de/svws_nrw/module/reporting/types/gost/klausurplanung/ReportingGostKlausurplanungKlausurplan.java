@@ -10,12 +10,12 @@ import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
 
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurplan.</p>
- * <p>Sie enthält die Daten zu einem Klausurplan, d. h. beispielsweise zu den Terminen.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKlausurplanungKlausurplan.
  */
 public class ReportingGostKlausurplanungKlausurplan {
+
+	/** Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt. */
+	protected List<Long> idsFilterSchueler;
 
 	/** Eine Liste, die alle Termine des Klausurplanes beinhaltet. */
 	protected List<ReportingGostKlausurplanungKlausurtermin> klausurtermine;
@@ -40,10 +40,11 @@ public class ReportingGostKlausurplanungKlausurplan {
 	 * @param kursklausuren 	Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
 	 * @param schueler 			Eine Liste, die alle Schüler des Klausurplanes beinhaltet.
 	 * @param schuelerklausuren Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
+	 * @param idsFilterSchueler Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
 	 */
 	public ReportingGostKlausurplanungKlausurplan(final List<ReportingGostKlausurplanungKlausurtermin> klausurtermine, final List<ReportingKurs> kurse,
 			final List<ReportingGostKlausurplanungKursklausur> kursklausuren, final List<ReportingSchueler> schueler,
-			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren) {
+			final List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren, final List<Long> idsFilterSchueler) {
 
 		// Fülle die Basislisten mit den übergebenen Daten.
 		this.schueler = (schueler != null) ? schueler : new ArrayList<>();
@@ -51,6 +52,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 		this.klausurtermine = (klausurtermine != null) ? klausurtermine : new ArrayList<>();
 		this.kursklausuren = (kursklausuren != null) ? kursklausuren : new ArrayList<>();
 		this.schuelerklausuren = (schuelerklausuren != null) ? schuelerklausuren : new ArrayList<>();
+		this.idsFilterSchueler = (idsFilterSchueler != null) ? idsFilterSchueler : new ArrayList<>();
 	}
 
 
@@ -144,6 +146,17 @@ public class ReportingGostKlausurplanungKlausurplan {
 	}
 
 	/**
+	 * Gibt eine Liste mit Schülern zurück, deren IDs in der Filterliste dieses Klausurplans enthalten sind. Ist die Liste leer, werden alle Schüler zurückgegeben.
+	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren. Oder alle Schüler bei leerer Filterliste.
+	 */
+	public List<ReportingSchueler> schuelerGefiltert() {
+		if (idsFilterSchueler.isEmpty())
+			return this.schueler;
+		else
+			return schueler.stream().filter(s -> idsFilterSchueler.contains(s.id())).toList();
+	}
+
+	/**
 	 * Gibt die Schülerklausur zur übergebenen ID zurück
 	 * @param  id 	Die ID der Schülerklausur
 	 * @return 		Die Schülerklausur zur ID oder null, wenn nicht vorhanden.
@@ -157,6 +170,14 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 
 	// ##### Getter #####
+
+	/**
+	 * Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 * @return Inhalt des Feldes idsFilterSchueler
+	 */
+	public List<Long> idsFilterSchueler() {
+		return idsFilterSchueler;
+	}
 
 	/**
 	 * Eine Liste, die alle Termine des Klausurplanes beinhaltet.

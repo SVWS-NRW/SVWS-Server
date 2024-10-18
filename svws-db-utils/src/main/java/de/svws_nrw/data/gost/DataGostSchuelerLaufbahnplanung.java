@@ -40,14 +40,15 @@ import de.svws_nrw.core.data.schueler.Sprachbelegung;
 import de.svws_nrw.core.data.schueler.Sprachpruefung;
 import de.svws_nrw.core.logger.LogConsumerList;
 import de.svws_nrw.core.logger.Logger;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
+import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.core.utils.gost.GostFaecherManager;
-import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.data.faecher.DBUtilsFaecherGost;
 import de.svws_nrw.data.schueler.DBUtilsSchueler;
@@ -71,13 +72,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 
 /**
- * Diese Klasse erweitert den abstrakten {@link DataManager} für den
+ * Diese Klasse erweitert den abstrakten {@link DataManagerRevised} für den
  * Core-DTO {@link Abiturdaten}.
  */
-public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
+public final class DataGostSchuelerLaufbahnplanung extends DataManagerRevised<Long, Long, Abiturdaten> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link Abiturdaten}.
+	 * Erstellt einen neuen {@link DataManagerRevised} für den Core-DTO {@link Abiturdaten}.
 	 *
 	 * @param conn   die Datenbank-Verbindung für den Datenbankzugriff
 	 */
@@ -85,29 +86,27 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		super(conn);
 	}
 
-	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+	private void checkFunktionsbezogeneKompetenz(final Integer abiturjahrgang) throws ApiOperationException {
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN,
+				Set.of(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)))
+			checkBenutzerFunktionsbezogeneKompetenzAbiturjahrgang(abiturjahrgang);
 	}
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Response get(final Long schueler_id) throws ApiOperationException {
-		if (schueler_id == null)
-			throw new ApiOperationException(Status.NOT_FOUND);
+	protected Abiturdaten map(final Long idSchueler) throws ApiOperationException {
+		if (idSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Die Schüler-ID darf nicht null sein.");
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
-		final Abiturdaten daten = DBUtilsGostLaufbahn.get(conn, schueler_id);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return DBUtilsGostLaufbahn.get(conn, idSchueler);
 	}
 
 	@Override
-	public Response patch(final Long schueler_id, final InputStream is) {
-		throw new UnsupportedOperationException();
+	public Abiturdaten getById(final Long idSchueler) throws ApiOperationException {
+		final Abiturdaten daten = map(idSchueler);
+		checkFunktionsbezogeneKompetenz(daten.abiturjahr);
+		return daten;
 	}
+
 
 	/**
 	 * Ermittelt die Fachwahl für die gymnasiale Oberstufe zu einem Fach von dem angegebenen Schüler.
@@ -183,13 +182,13 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 						final boolean valid = (fw == null)
 								|| (fw.equals("M")) || (fw.equals("S"))
 								|| (((fw.equals("LK")) || (fw.equals("ZK"))) && (!halbjahr.istEinfuehrungsphase()))
-								|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikFach.daten.kuerzelASD)));
+								|| ((fw.equals("AT")) && ("SP".equals(fach.StatistikKuerzel)));
 						if (!valid)
 							throw new ApiOperationException(Status.CONFLICT);
 						return fw;
 					}
 					for (final DTOSchuelerLeistungsdaten leistung : leistungen) {
-						final ZulaessigeKursart zulkursart = ZulaessigeKursart.getByASDKursart(leistung.Kursart);
+						final ZulaessigeKursart zulkursart = ZulaessigeKursart.data().getWertByKuerzel(leistung.Kursart);
 						final GostKursart kursart = GostKursart.fromKursart(zulkursart);
 						if (kursart == null)
 							continue;
@@ -216,7 +215,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 									return fw;
 							}
 							case "AT" -> {
-								if ("SP".equals(fach.StatistikFach.daten.kuerzelASD) && (leistung.NotenKrz == Note.ATTEST))
+								if ("SP".equals(fach.StatistikKuerzel) && (Note.data().getWertByKuerzel(leistung.NotenKrz) == Note.ATTEST))
 									return fw;
 							}
 							default -> throw new ApiOperationException(Status.CONFLICT);
@@ -231,9 +230,9 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		final boolean valid = (fw == null)
 				|| (fw.equals("M")) || (fw.equals("S"))
 				|| (fw.equals("LK") && !halbjahr.istEinfuehrungsphase()
-						&& !GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(fach.StatistikFach.daten.kuerzelASD))
+						&& !GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hatKuerzel(fach.StatistikKuerzel))
 				|| (fw.equals("ZK") && !halbjahr.istEinfuehrungsphase())
-				|| (fw.equals("AT") && "SP".equals(fach.StatistikFach.daten.kuerzelASD));
+				|| (fw.equals("AT") && "SP".equals(fach.StatistikKuerzel));
 		if (!valid)
 			throw new ApiOperationException(Status.CONFLICT);
 		return fw;
@@ -338,7 +337,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	private GostLaufbahnplanungDaten getLaufbahnplanungsdaten(final DTOSchueler dtoSchueler) throws ApiOperationException {
 		// Lese die Daten aus der Datenbank
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		final List<DTOGostJahrgangFachkombinationen> kombis = conn
 				.queryList(DTOGostJahrgangFachkombinationen.QUERY_BY_ABI_JAHRGANG, DTOGostJahrgangFachkombinationen.class, abidaten.abiturjahr);
 		if (kombis == null)
@@ -520,7 +519,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		}
 		// Lese zunächst die Abiturdaten des Schülers ein, welche in der Datenbank gespeichert sind.
 		final Abiturdaten abidaten = DBUtilsGostLaufbahn.get(conn, dtoSchueler.ID);
-		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(conn, abidaten.abiturjahr);
+		final GostFaecherManager gostFaecher = DBUtilsFaecherGost.getFaecherManager(abidaten.schuljahrAbitur, conn, abidaten.abiturjahr);
 		// Prüfe zunächst, ob der Abiturjahrgang in der Datenbank existiert und mit dem des Schülers übereinstimmt
 		if (abidaten.abiturjahr != laufbahnplanungsdaten.abiturjahr) {
 			logger.logLn("Fehler: Das Abiturjahrgang der Planungsdatei stimmt nicht mit dem Abiturjahrgang des Schülers überein.");
@@ -905,6 +904,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 	public Response pruefeBelegungAbiturjahrgang(final int abiturjahr, final GostBelegpruefungsArt pruefungsArt) throws ApiOperationException {
 		// Prüfe, ob die Schule eine gymnasiale Oberstufe hat und ob der Schüler überhaupt existiert.
 		DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final int schuljahr = abiturjahr - 1;
 		final List<DTOSchueler> listSchuelerDTOs = (new DataGostJahrgangSchuelerliste(conn, abiturjahr)).getSchuelerDTOs();
 
 		// Erstelle das DTO für die Eregbnisrückmeldung
@@ -914,15 +914,16 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 		final @NotNull GostJahrgangsdaten jahrgangsdaten = DataGostJahrgangsdaten.getJahrgangsdaten(conn, abiturjahr);
 
 		// Bestimme die Fächer, welche in dem Abiturjahrgang vorhanden sind.
-		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(conn, abiturjahr);
+		final @NotNull GostFaecherManager faecherManager = DBUtilsFaecherGost.getFaecherManager(schuljahr, conn, abiturjahr);
 
 		// Bestimme die nicht erlaubten und die geforderten Fächerkombinationen des Abiturjahrgangs
 		faecherManager.addFachkombinationenAll(DataGostJahrgangFachkombinationen.getFachkombinationen(conn, abiturjahr));
 
 		// Führe für alle Schüler nacheinander die Belegprüfung durch
 		for (final DTOSchueler dtoSchueler : listSchuelerDTOs) {
-			if ((dtoSchueler.Status != SchuelerStatus.AKTIV) && (dtoSchueler.Status != SchuelerStatus.EXTERN)
-					&& (dtoSchueler.Status != SchuelerStatus.NEUAUFNAHME) && (dtoSchueler.Status != SchuelerStatus.WARTELISTE))
+			final SchuelerStatus status = SchuelerStatus.data().getWertByID(dtoSchueler.idStatus);
+			if ((status != SchuelerStatus.AKTIV) && (status != SchuelerStatus.EXTERN) && (status != SchuelerStatus.NEUAUFNAHME)
+					&& (status != SchuelerStatus.WARTELISTE))
 				continue;
 
 			// Bestimme die Laufbahndaten des Schülers
@@ -939,7 +940,7 @@ public final class DataGostSchuelerLaufbahnplanung extends DataManager<Long> {
 			ergebnisse.schueler.id = dtoSchueler.ID;
 			ergebnisse.schueler.vorname = dtoSchueler.Vorname;
 			ergebnisse.schueler.nachname = dtoSchueler.Nachname;
-			ergebnisse.schueler.status = dtoSchueler.Status.id;
+			ergebnisse.schueler.status = dtoSchueler.idStatus;
 			ergebnisse.schueler.geschlecht = dtoSchueler.Geschlecht.id;
 
 			// Schreibe das Ergebnis in die Rückmeldung

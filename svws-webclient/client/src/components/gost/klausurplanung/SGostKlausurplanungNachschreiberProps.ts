@@ -10,10 +10,12 @@ import type {
 	GostKlausurenUpdate,
 	GostJahrgangsdaten,
 	Schuljahresabschnitt,
+	BenutzerKompetenz,
 } from "@core";
 import type { WritableComputedRef } from "vue";
 
 export interface GostKlausurplanungNachschreiberProps {
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
 	jahrgangsdaten: GostJahrgangsdaten;
 	halbjahr: GostHalbjahr;
 	kMan: () => GostKlausurplanManager;
@@ -26,4 +28,7 @@ export interface GostKlausurplanungNachschreiberProps {
 	updateKlausurblockung: (update: GostKlausurenUpdate) => Promise<void>;
 	zeigeAlleJahrgaenge: () => boolean;
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
+	gotoNachschreiber: (abiturjahr: number, halbjahr: GostHalbjahr) => Promise<void>;
+	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 }

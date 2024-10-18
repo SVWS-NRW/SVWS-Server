@@ -3,6 +3,7 @@ package de.svws_nrw.core.kursblockung.test;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.base.CsvReader;
 import de.svws_nrw.base.kurs42.Kurs42DataBlockplan;
 import de.svws_nrw.base.kurs42.Kurs42DataFachwahlen;
@@ -70,7 +71,8 @@ public class Kurs42Converter {
 			if (!mapFaecher.containsKey(sFachKuerzel)) {
 				final GostFach gFach = new GostFach();
 				gFach.id = mapFaecher.size();
-				gFach.kuerzel = sFachKuerzel;
+				gFach.kuerzelAnzeige = sFachKuerzel;
+				gFach.kuerzel = Fach.data().getWertBySchluessel(sFachKuerzel) == null ? Fach.D.daten(2024).kuerzel : sFachKuerzel;
 				mapFaecher.put(sFachKuerzel, gFach);
 			}
 
@@ -178,7 +180,7 @@ public class Kurs42Converter {
 			gDaten.schienen.add(gSchiene);
 		}
 
-		final GostFaecherManager fManager = new GostFaecherManager();
+		final GostFaecherManager fManager = new GostFaecherManager(2024);
 		fManager.addAll(mapFaecher.values());
 
 		this._manager = new GostBlockungsdatenManager(gDaten, fManager);

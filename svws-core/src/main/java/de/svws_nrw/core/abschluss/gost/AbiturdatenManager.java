@@ -10,6 +10,8 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import de.svws_nrw.asd.types.Note;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Allgemeines;
 import de.svws_nrw.core.abschluss.gost.belegpruefung.Deutsch;
@@ -34,8 +36,6 @@ import de.svws_nrw.core.data.gost.GostJahrgangFachkombination;
 import de.svws_nrw.core.data.gost.GostJahrgangsdaten;
 import de.svws_nrw.core.data.gost.GostSchuelerFachwahl;
 import de.svws_nrw.core.data.schueler.Sprachendaten;
-import de.svws_nrw.core.types.Note;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
 import de.svws_nrw.core.types.gost.GostAbiturFach;
 import de.svws_nrw.core.types.gost.GostBesondereLernleistung;
 import de.svws_nrw.core.types.gost.GostFachbereich;
@@ -230,6 +230,26 @@ public class AbiturdatenManager {
 	 */
 	public @NotNull Sprachendaten getSprachendaten() {
 		return abidaten.sprachendaten;
+	}
+
+
+	/**
+	 * Liefert das Abiturjahr
+	 *
+	 * @return das Abiturjahr
+	 */
+	public int getAbiturjahr() {
+		return abidaten.abiturjahr;
+	}
+
+
+	/**
+	 * Liefert das Schuljahr, in dem das Abitur gemacht wird
+	 *
+	 * @return das Schuljahr
+	 */
+	public int getSchuljahr() {
+		return abidaten.schuljahrAbitur;
 	}
 
 
@@ -1390,15 +1410,13 @@ public class AbiturdatenManager {
 	 *
 	 * @return die Menge der Statistik-Fächer
 	 */
-	private @NotNull Set<ZulaessigesFach> getMengeStatistikFaecher(final @NotNull List<AbiturFachbelegung> fachbelegungen) {
-		final @NotNull HashSet<ZulaessigesFach> faecher = new HashSet<>();
+	private @NotNull Set<Fach> getMengeStatistikFaecher(final @NotNull List<AbiturFachbelegung> fachbelegungen) {
+		final @NotNull HashSet<Fach> faecher = new HashSet<>();
 		for (final AbiturFachbelegung fb : fachbelegungen) {
 			final GostFach fach = faecherManager.get(fb.fachID);
 			if (fach == null)
 				continue;
-			final @NotNull ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-			if (zulFach != ZulaessigesFach.DEFAULT)
-				faecher.add(zulFach);
+			faecher.add(Fach.getBySchluesselOrDefault(fach.kuerzel));
 		}
 		return faecher;
 	}
@@ -1418,10 +1436,10 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		final @NotNull Set<ZulaessigesFach> faecher = getMengeStatistikFaecher(fachbelegungen);
+		final @NotNull Set<Fach> faecher = getMengeStatistikFaecher(fachbelegungen);
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
-		for (final ZulaessigesFach zulFach : faecher) {
+		for (final Fach zulFach : faecher) {
 			boolean vorhanden = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;
@@ -1429,7 +1447,7 @@ public class AbiturdatenManager {
 					final GostFach fbFach = faecherManager.get(fb.fachID);
 					if (fbFach == null)
 						continue;
-					final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+					final @NotNull Fach fbZulFach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 					final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 					if ((zulFach == fbZulFach) && (belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
 						belegung_vorhanden = true;
@@ -1448,12 +1466,12 @@ public class AbiturdatenManager {
 	}
 
 
-	private boolean istBelegungDurchgaengigSchriftlichInQPhase(final @NotNull ZulaessigesFach zulFach, final @NotNull GostHalbjahr halbjahr,
+	private boolean istBelegungDurchgaengigSchriftlichInQPhase(final @NotNull Fach zulFach, final @NotNull GostHalbjahr halbjahr,
 			final @NotNull AbiturFachbelegung fb) {
 		final GostFach fbFach = faecherManager.get(fb.fachID);
 		if (fbFach == null)
 			return false;
-		final @NotNull ZulaessigesFach fbZulFach = ZulaessigesFach.getByKuerzelASD(fbFach.kuerzel);
+		final @NotNull Fach fbZulFach = Fach.getBySchluesselOrDefault(fbFach.kuerzel);
 		if (zulFach == fbZulFach) {
 			final AbiturFachbelegungHalbjahr belegungHalbjahr = fb.belegungen[halbjahr.id];
 			if ((belegungHalbjahr != null) && (!istNullPunkteBelegungInQPhase(belegungHalbjahr))) {
@@ -1483,10 +1501,10 @@ public class AbiturdatenManager {
 		if (fachbelegungen == null)
 			return 0;
 		// Bestimme zunächst die Menge der unterschiedlichen Statistik-Fächer
-		final @NotNull Set<ZulaessigesFach> faecher = getMengeStatistikFaecher(fachbelegungen);
+		final @NotNull Set<Fach> faecher = getMengeStatistikFaecher(fachbelegungen);
 		// Bestimme nun die Anzahl der Fachbelegungen, die in den Halbjahren existieren.
 		int count = 0;
-		for (final ZulaessigesFach zulFach : faecher) {
+		for (final Fach zulFach : faecher) {
 			boolean vorhanden = true;
 			for (final GostHalbjahr halbjahr : GostHalbjahr.values()) {
 				boolean belegung_vorhanden = false;

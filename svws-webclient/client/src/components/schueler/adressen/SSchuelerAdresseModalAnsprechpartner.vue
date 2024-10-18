@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner } from "@core";
 	import { ref } from 'vue';
+	import type { BetriebAnsprechpartner } from "@core";
 
 	const props = defineProps<{
 		ansprechpartner: BetriebAnsprechpartner;

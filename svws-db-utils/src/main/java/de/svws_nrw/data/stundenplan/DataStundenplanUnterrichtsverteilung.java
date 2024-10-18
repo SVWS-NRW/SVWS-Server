@@ -50,26 +50,40 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.BAD_REQUEST, "Eine Anfrage zu einem Stundenplan mit der ID null ist unzulässig.");
-		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, id);
+		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(getUnterrichtsverteilung(conn, id)).build();
+	}
+
+	/**
+	 * Bestimmt zu dem Stundenplan mit der angegebenen ID die Unterrichtsverteilung.
+	 *
+	 * @param conn            die Datenbank-Verbindung
+	 * @param idStundenplan   die ID des Stundenplans
+	 *
+	 * @return die Unterrichtsverteilung
+	 *
+	 * @throws ApiOperationException  im Fehlerfall
+	 */
+	public static StundenplanUnterrichtsverteilung getUnterrichtsverteilung(final DBEntityManager conn, final long idStundenplan) throws ApiOperationException {
+		final DTOStundenplan stundenplan = conn.queryByKey(DTOStundenplan.class, idStundenplan);
 		if (stundenplan == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(id));
-		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, id);
-		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, id);
-		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, id);
-		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, id);
-		final List<StundenplanKurs> kurse = DataStundenplanKurse.getKurse(conn, id);
-		final List<StundenplanKlassenunterricht> klassenunterricht = DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, id);
+			throw new ApiOperationException(Status.NOT_FOUND, "Es wurde kein Stundenplan mit der ID %d gefunden.".formatted(idStundenplan));
+		final List<StundenplanLehrer> lehrer = DataStundenplanLehrer.getLehrer(conn, idStundenplan, true);
+		final List<StundenplanSchueler> schueler = DataStundenplanSchueler.getSchueler(conn, idStundenplan);
+		final List<StundenplanFach> faecher = DataStundenplanFaecher.getFaecher(conn, idStundenplan);
+		final List<StundenplanKlasse> klassen = DataStundenplanKlassen.getKlassen(conn, idStundenplan);
+		final List<StundenplanKurs> kurse = DataStundenplanKurse.getKurse(conn, idStundenplan);
+		final List<StundenplanKlassenunterricht> klassenunterricht = DataStundenplanKlassenunterricht.getKlassenunterrichte(conn, idStundenplan);
 		// Prüfe, ob bei den Klassen oder Kursen Lehrer zugeordnet sind, deren ID in der Lehrer-Liste nicht vorhanden ist und füge diese ggf. hinzu
 		final List<Long> idsLehrer = lehrer.stream().map(l -> l.id).toList();
 		final List<Long> idsLehrerFehlende = Stream.concat(
 				kurse.stream().flatMap(k -> k.lehrer.stream()),
 				klassenunterricht.stream().flatMap(ku -> ku.lehrer.stream()))
-				.filter(l -> !idsLehrer.contains(l)).toList();
+				.distinct().filter(l -> !idsLehrer.contains(l)).toList();
 		if (!idsLehrerFehlende.isEmpty()) {
 			final List<DTOLehrer> lehrerFehlende = conn.queryByKeyList(DTOLehrer.class, idsLehrerFehlende);
 			if (lehrerFehlende.size() != idsLehrerFehlende.size())
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"Nicht alle Lehrer des Stundenplans mit der ID %d konnten auch in der Lehrer-Tabelle gefunden werden.".formatted(id));
+						"Nicht alle Lehrer des Stundenplans mit der ID %d konnten auch in der Lehrer-Tabelle gefunden werden.".formatted(idStundenplan));
 			lehrer.addAll(lehrerFehlende.stream().map(l -> {
 				final StundenplanLehrer sl = DataStundenplanLehrer.dtoMapper.apply(l);
 				sl.kuerzel = "*" + sl.kuerzel;
@@ -82,12 +96,12 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 				kurse.stream().flatMap(k -> k.schueler.stream()),
 				klassenunterricht.stream().flatMap(ku -> ku.schueler.stream())),
 				klassen.stream().flatMap(k -> k.schueler.stream()))
-				.filter(s -> !idsSchueler.contains(s)).toList();
+				.distinct().filter(s -> !idsSchueler.contains(s)).toList();
 		if (!idsSchuelerFehlende.isEmpty()) {
 			final List<DTOSchueler> schuelerFehlende = conn.queryByKeyList(DTOSchueler.class, idsSchuelerFehlende);
 			if (schuelerFehlende.size() != idsSchuelerFehlende.size())
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
-						"Nicht alle Schüler des Stundenplans mit der ID %d konnten auch in der Schüler-Tabelle gefunden werden.".formatted(id));
+						"Nicht alle Schüler des Stundenplans mit der ID %d konnten auch in der Schüler-Tabelle gefunden werden.".formatted(idStundenplan));
 			schueler.addAll(schuelerFehlende.stream().map(s -> DataStundenplanSchueler.dtoMapper.apply(s)).toList());
 		}
 		// Erstelle das Core-DTO-Objekt für die Response
@@ -99,7 +113,7 @@ public final class DataStundenplanUnterrichtsverteilung extends DataManager<Long
 		daten.klassen.addAll(klassen);
 		daten.kurse.addAll(kurse);
 		daten.klassenunterricht.addAll(klassenunterricht);
-		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
+		return daten;
 	}
 
 

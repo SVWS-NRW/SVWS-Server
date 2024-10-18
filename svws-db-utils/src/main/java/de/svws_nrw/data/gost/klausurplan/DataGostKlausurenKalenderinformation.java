@@ -111,7 +111,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * @param is das Objekt
 	 *
 	 * @return Eine Response mit der neuen Gost-KlausurenKalenderinformation
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response create(final InputStream is) throws ApiOperationException {
 		final ObjLongConsumer<DTOGostKlausurenKalenderinformationen> initDTO = (dto, id) -> dto.ID = id;
@@ -124,7 +124,7 @@ public final class DataGostKlausurenKalenderinformation extends DataManager<Long
 	 * @param id die ID der zu löschenden KlausurenKalenderinformation
 	 *
 	 * @return die Response
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	public Response delete(final Long id) throws ApiOperationException {
 		return super.deleteBasic(id, DTOGostKlausurenKalenderinformationen.class, dtoMapper);

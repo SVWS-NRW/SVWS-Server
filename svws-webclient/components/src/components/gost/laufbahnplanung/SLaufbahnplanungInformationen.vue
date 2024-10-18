@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-table v-if="belegungsHinweise.size()" :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Informationen zur Laufbahn'}]" type="navigation">
+	<svws-ui-table v-if="belegungsHinweise.size()" :no-data="false" :items="[]" :columns="[{key: 'icon', label: ' ', fixedWidth: 1.8},{key: 'beschreibung', label: 'Informationen zur Laufbahn'}]"
+		type="navigation" :scroll>
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">Informationen zur Laufbahn</div>
@@ -33,14 +34,17 @@
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
-	}>();
+		scroll?: boolean;
+	}>(), {
+		scroll: false,
+	});
 
 	const belegungsHinweise: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
 		for (const fehler of props.fehlerliste())
-			if (!!fehler && GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.HINWEIS)
 				res.add(fehler);
 		return res;
 	});

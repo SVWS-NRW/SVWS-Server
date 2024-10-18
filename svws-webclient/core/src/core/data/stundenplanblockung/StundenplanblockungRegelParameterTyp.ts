@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanblockungRegelParameterTyp extends JavaEnum<StundenplanblockungRegelParameterTyp> {
 
@@ -82,6 +83,8 @@ export class StundenplanblockungRegelParameterTyp extends JavaEnum<Stundenplanbl
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungRegelParameterTyp>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungRegelParameterTyp');
 
 }
 

@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ConcurrentModificationException } from '../../../java/util/ConcurrentModificationException';
 import { LinkedCollection, cast_de_svws_nrw_core_adt_collection_LinkedCollection } from '../../../core/adt/collection/LinkedCollection';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
+import { Class } from '../../../java/lang/Class';
 import { NoSuchElementException } from '../../../java/util/NoSuchElementException';
 import { LinkedCollectionElement } from '../../../core/adt/collection/LinkedCollectionElement';
 import { UnsupportedOperationException } from '../../../java/lang/UnsupportedOperationException';
@@ -66,6 +67,8 @@ export class LinkedCollectionIterator<E> extends JavaObject implements JavaItera
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.Iterator', 'de.svws_nrw.core.adt.collection.LinkedCollectionIterator'].includes(name);
 	}
+
+	public static class = new Class<LinkedCollectionIterator<any>>('de.svws_nrw.core.adt.collection.LinkedCollectionIterator');
 
 }
 

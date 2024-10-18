@@ -7,10 +7,11 @@ import { LogLevel } from '../../../core/logger/LogLevel';
 import type { Predicate } from '../../../java/util/function/Predicate';
 import { GEAbschlussFaecher } from '../../../core/data/abschluss/GEAbschlussFaecher';
 import { AbschlussErgebnis } from '../../../core/data/abschluss/AbschlussErgebnis';
-import { SchulabschlussAllgemeinbildend } from '../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend } from '../../../asd/types/schule/SchulabschlussAllgemeinbildend';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ServiceAbschlussMSA } from '../../../core/abschluss/ge/ServiceAbschlussMSA';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import { AbschlussFaecherGruppen } from '../../../core/abschluss/ge/AbschlussFaecherGruppen';
@@ -286,6 +287,8 @@ export class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ'].includes(name);
 	}
+
+	public static class = new Class<ServiceBerechtigungMSAQ>('de.svws_nrw.core.abschluss.ge.ServiceBerechtigungMSAQ');
 
 }
 

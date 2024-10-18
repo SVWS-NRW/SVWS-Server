@@ -1,10 +1,7 @@
 import type { KursListeManager } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
+import type { TabManager } from "@ui";
 
 export interface KurseAppProps {
 	kursListeManager: () => KursListeManager;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
 }

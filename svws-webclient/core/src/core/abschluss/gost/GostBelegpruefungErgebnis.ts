@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostBelegpruefungErgebnisFehler } from '../../../core/abschluss/gost/GostBelegpruefungErgebnisFehler';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBelegpruefungErgebnis extends JavaObject {
 
@@ -32,6 +33,8 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis'].includes(name);
 	}
+
+	public static class = new Class<GostBelegpruefungErgebnis>('de.svws_nrw.core.abschluss.gost.GostBelegpruefungErgebnis');
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungErgebnis {
 		const obj = JSON.parse(json) as Partial<GostBelegpruefungErgebnis>;

@@ -3,10 +3,31 @@ import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
 import { NumberFormatException } from '../../../java/lang/NumberFormatException';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import type { Comparator } from '../../../java/util/Comparator';
 
 export class SchuldateiUtils extends JavaObject {
+
+	/**
+	 * Das Anfangs-Schuljahr in einem Zeitraum, der abgibt, dass der Wert schon immer gültig war
+	 */
+	public static readonly _immerGueltigAb : number = 1980;
+
+	/**
+	 * Das End-Schuljahr in einem Zeitraum, der abgibt, dass der Wert in seiner Gültigkeit noch nicht eingeschränkt ist
+	 */
+	public static readonly _immerGueltigBis : number = 9999;
+
+	/**
+	 * Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge
+	 */
+	public static readonly _comparatorSchuldateieintragZeitraumDescending : Comparator<SchuldateiEintrag> = { compare : (a: SchuldateiEintrag, b: SchuldateiEintrag) => {
+		if (JavaObject.equalsTranspiler(b.gueltigab, (a.gueltigab)))
+			return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
+		return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
+	} };
 
 
 	private constructor() {
@@ -39,9 +60,26 @@ export class SchuldateiUtils extends JavaObject {
 				throw new NumberFormatException("Die Angabe des Monats ist fehlerhaft.")
 			result[2] = JavaInteger.parseInt(dmy[2]);
 			return result;
-		} catch(nfe) {
+		} catch(nfe : any) {
 			throw new IllegalArgumentException("Der Datumswert '" + date! + "' ist fehlerhaft.")
 		}
+	}
+
+	/**
+	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 *
+	 * @param date		das Datum als String
+	 *
+	 * @return @NotNull INTEGER  das Schuljahr. 1980 für gilt seit immer (jahr .lte. 1980), 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
+	 */
+	public static schuljahrAusDatum(date : string) : number {
+		const dmy : Array<number> = SchuldateiUtils.splitDate(date);
+		let jahr : number = dmy[2];
+		if (dmy[1] < 8)
+			jahr--;
+		return jahr;
 	}
 
 	/**
@@ -74,6 +112,33 @@ export class SchuldateiUtils extends JavaObject {
 			return false;
 		cmp = JavaInteger.compare(dmyA[0], dmyB[0]);
 		return (cmp < 0);
+	}
+
+	/**
+	 * Gibt den Vergleichswert der beiden Daten wie bei einem Comparator zurück
+	 * Die Strings werden in der Form 'DD.MM.YYYY' erwartet
+	 *
+	 * @param a   das Datum a
+	 * @param b   das Datum b
+	 *
+	 * @return -1,0,1  wie beim Comparator
+	 *
+	 * @throws IllegalArgumentException wenn die Datumsangaben fehlerhaft sind
+	 */
+	public static compare(a : string | null, b : string | null) : number {
+		if ((a === null) || (JavaString.isBlank(a)))
+			return 1;
+		if ((b === null) || (JavaString.isBlank(b)))
+			return -1;
+		const dmyA : Array<number> = SchuldateiUtils.splitDate(a);
+		const dmyB : Array<number> = SchuldateiUtils.splitDate(b);
+		let cmp : number = JavaInteger.compare(dmyA[2], dmyB[2]);
+		if (cmp !== 0)
+			return cmp;
+		cmp = JavaInteger.compare(dmyA[1], dmyB[1]);
+		if (cmp !== 0)
+			return cmp;
+		return JavaInteger.compare(dmyA[0], dmyB[0]);
 	}
 
 	/**
@@ -124,6 +189,8 @@ export class SchuldateiUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.schulen.v1.utils.SchuldateiUtils'].includes(name);
 	}
+
+	public static class = new Class<SchuldateiUtils>('de.svws_nrw.schulen.v1.utils.SchuldateiUtils');
 
 }
 

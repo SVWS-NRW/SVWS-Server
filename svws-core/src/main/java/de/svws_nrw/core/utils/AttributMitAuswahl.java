@@ -190,7 +190,7 @@ public class AttributMitAuswahl<K, V> {
 	public void addAll(final @NotNull List<V> values) {
 		boolean added = false;
 		for (final @NotNull V value : values)
-			added = added || addInternal(value);
+			added = addInternal(value) || added;
 		if ((added) && (_eventHandlerListeGeaendert != null))
 			this._eventHandlerListeGeaendert.run();
 	}
@@ -249,7 +249,7 @@ public class AttributMitAuswahl<K, V> {
 	public void removeAll(final @NotNull List<V> values) {
 		boolean removed = false;
 		for (final @NotNull V value : values)
-			removed = removed || removeInternal(value);
+			removed = removeInternal(value) || removed;
 		if (!removed)
 			return;
 		if (_eventHandlerListeGeaendert != null)

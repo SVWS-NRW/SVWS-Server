@@ -2,6 +2,7 @@ import { JavaObject } from '../../java/lang/JavaObject';
 import { Random } from '../../java/util/Random';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import type { Predicate } from '../../java/util/function/Predicate';
 
@@ -219,6 +220,8 @@ export class ListUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.ListUtils'].includes(name);
 	}
+
+	public static class = new Class<ListUtils>('de.svws_nrw.core.utils.ListUtils');
 
 }
 

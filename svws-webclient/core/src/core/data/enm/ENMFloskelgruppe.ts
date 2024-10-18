@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMFloskel, cast_de_svws_nrw_core_data_enm_ENMFloskel } from '../../../core/data/enm/ENMFloskel';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMFloskelgruppe extends JavaObject {
 
@@ -37,6 +38,8 @@ export class ENMFloskelgruppe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMFloskelgruppe'].includes(name);
 	}
+
+	public static class = new Class<ENMFloskelgruppe>('de.svws_nrw.core.data.enm.ENMFloskelgruppe');
 
 	public static transpilerFromJSON(json : string): ENMFloskelgruppe {
 		const obj = JSON.parse(json) as Partial<ENMFloskelgruppe>;

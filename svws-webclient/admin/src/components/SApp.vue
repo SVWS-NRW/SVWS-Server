@@ -62,7 +62,6 @@
 								</div>
 							</div>
 						</svws-ui-header>
-						<svws-ui-router-tab-bar :routes="loadingSkeletonRoutes" :hidden="[]" :model-value="selectedRoute" class="loading-skeleton" />
 					</template>
 					<template v-else>
 						<router-view :key="app.name" />
@@ -75,29 +74,23 @@
 
 <script setup lang="ts">
 
-	import type { AuswahlChildData } from './AuswahlChildData';
 	import type { AppProps } from './SAppProps';
 	import { ref } from "vue";
 	import { version } from '../../version';
+	import type { TabData } from '../../../ui/src/components/App/TabData';
 
 	const props = defineProps<AppProps>();
 
 	const pendingSetApp = ref('');
 
-	const loadingSkeletonRoutes = [
-		{ path: '/', name: '', component: { render: () => null }, meta: { text: 'Daten laden…' } },
-		{ path: '/loading', name: 'loading2', component: { render: () => null }, meta: { text: '' } },
-	];
-	const selectedRoute = loadingSkeletonRoutes[0];
-
-	function isVisible(item: AuswahlChildData) : boolean {
+	function isVisible(item: TabData) : boolean {
 		if ((item.name === 'config') && (!props.isServerAdmin))
 			return false;
 		return true;
 	}
 
-	function is_active(current: AuswahlChildData): boolean {
-		const routename = props.app.name?.toString().split('.')[0];
+	function is_active(current: TabData): boolean {
+		const routename = props.app.name.split('.')[0];
 		const title = current.text;
 		if (routename !== current.name)
 			return false;
@@ -106,7 +99,7 @@
 		return true;
 	}
 
-	async function startSetApp(app: AuswahlChildData) {
+	async function startSetApp(app: TabData) {
 		pendingSetApp.value = app.text;
 		await props.setApp(app);
 		pendingSetApp.value = '';

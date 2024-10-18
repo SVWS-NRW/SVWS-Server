@@ -9,6 +9,7 @@ import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 import { HashSet } from '../../../../java/util/HashSet';
 
@@ -117,7 +118,7 @@ export class AbiFaecher extends GostBelegpruefung {
 		const lk1fach : GostFach | null = this.manager.getFach(lk1);
 		const ab3 : AbiturFachbelegung | null = (this.mapAbiturFachbelegungen === null) ? null : this.mapAbiturFachbelegungen.get(GostAbiturFach.AB3);
 		const ab3fach : GostFach | null = this.manager.getFach(ab3);
-		if (((lk1fach !== null) && (GostFachbereich.SPORT.hat(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hat(ab3fach.kuerzel))))
+		if (((lk1fach !== null) && (GostFachbereich.SPORT.hatKuerzel(lk1fach.kuerzel))) || ((ab3fach !== null) && (GostFachbereich.SPORT.hatKuerzel(ab3fach.kuerzel))))
 			this.addFehler(GostBelegungsfehler.ABI_15);
 	}
 
@@ -215,6 +216,8 @@ export class AbiFaecher extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<AbiFaecher>('de.svws_nrw.core.abschluss.gost.belegpruefung.AbiFaecher');
 
 }
 

@@ -1,14 +1,13 @@
 package de.svws_nrw.data.schule;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.core.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
-import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.data.schule.SchulabschlussBerufsbildendKatalogEintrag;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 
@@ -31,7 +30,7 @@ public final class DataKatalogSchulabschluesseBerufsbildend extends DataManager<
 	public Response getAll() {
 		final ArrayList<SchulabschlussBerufsbildendKatalogEintrag> daten = new ArrayList<>();
 		for (final SchulabschlussBerufsbildend abschlussart : SchulabschlussBerufsbildend.values())
-			daten.addAll(Arrays.asList(abschlussart.historie));
+			daten.addAll(abschlussart.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

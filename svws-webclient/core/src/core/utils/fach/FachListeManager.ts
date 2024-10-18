@@ -1,16 +1,17 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { FachDaten } from '../../../core/data/fach/FachDaten';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { FachUtils } from '../../../core/utils/fach/FachUtils';
 import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class FachListeManager extends AuswahlManager<number, FachDaten, FachDaten> {
 
@@ -144,6 +145,8 @@ export class FachListeManager extends AuswahlManager<number, FachDaten, FachDate
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.fach.FachListeManager'].includes(name);
 	}
+
+	public static class = new Class<FachListeManager>('de.svws_nrw.core.utils.fach.FachListeManager');
 
 }
 

@@ -55,7 +55,7 @@ export class Throwable extends Error implements TranspiledObject {
 	}
 
 	public getClass<T extends TranspiledObject>() : Class<T> {
-		return new Class(this);
+		return new Class(this.transpilerCanonicalName());
 	}
 
 	public hashCode() : number {

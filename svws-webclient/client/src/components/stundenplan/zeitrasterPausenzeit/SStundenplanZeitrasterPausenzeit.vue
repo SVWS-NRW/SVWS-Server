@@ -1,11 +1,11 @@
 <template>
 	<div class="page--content page--content--full">
-		<stundenplan-ansicht-planung :manager="stundenplanManager" :add-zeitraster :remove-zeitraster @selected:updated="setSelection" :import-zeitraster :schulform>
+		<stundenplan-ansicht-planung :manager="stundenplanManager" :add-zeitraster :remove-zeitraster :set-selection :import-zeitraster :set-settings-defaults :schulform :selected>
 			<span class="opacity-50" v-if="!selected"><span class="icon i-ri-information-line inline-block -mt-0.5" /> Im Zeitraster klicken, um einen Eintrag, Pausenzeit, Wochentag oder Stunde auszuwählen.</span>
-			<stundenplan-detail-zeitrastereintrag :patch-zeitraster :remove-zeitraster :item :stundenplan-manager v-if="(item instanceof StundenplanZeitraster)" />
-			<stundenplan-detail-pausenzeit :patch-pausenzeit :remove-pausenzeiten :item :stundenplan-manager v-if="(item instanceof StundenplanPausenzeit)" :list-lehrer :list-aufsichtsbereiche />
-			<stundenplan-detail-wochentag :remove-zeitraster :add-zeitraster :remove-pausenzeiten :item :stundenplan-manager v-if="(item instanceof Wochentag)" />
-			<stundenplan-detail-stunde :patch-zeitraster :remove-zeitraster :add-zeitraster :item :stundenplan-manager v-if="(typeof item === 'number')" />
+			<stundenplan-detail-zeitrastereintrag :patch-zeitraster :remove-zeitraster :selected :stundenplan-manager v-if="(selected instanceof StundenplanZeitraster)" />
+			<stundenplan-detail-pausenzeit :patch-pausenzeit :remove-pausenzeiten :selected :stundenplan-manager v-if="(selected instanceof StundenplanPausenzeit)" :list-lehrer />
+			<stundenplan-detail-wochentag :remove-zeitraster :add-zeitraster :remove-pausenzeiten :selected :stundenplan-manager v-if="(selected instanceof Wochentag)" />
+			<stundenplan-detail-stunde :set-selection :patch-zeitraster :remove-zeitraster :add-zeitraster :selected :stundenplan-manager v-if="(typeof selected === 'number')" />
 		</stundenplan-ansicht-planung>
 	</div>
 </template>
@@ -14,12 +14,10 @@
 
 	import type { StundenplanZeitrasterPausenzeitProps } from "./SStundenplanZeitrasterPausenzeitProps";
 	import { Wochentag, StundenplanZeitraster, StundenplanPausenzeit } from "@core";
-	import { computed } from "vue";
 
 	const props = defineProps<StundenplanZeitrasterPausenzeitProps>();
 
-	const listAufsichtsbereiche = computed(()=> props.stundenplanManager().aufsichtsbereichGetMengeAsList());
-	const item = computed(() => props.selected());
+	// const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 </script>
 

@@ -4,6 +4,7 @@ import { GostBelegpruefungsArt } from '../../../../core/abschluss/gost/GostBeleg
 import { GostSchriftlichkeit } from '../../../../core/types/gost/GostSchriftlichkeit';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegpruefung } from '../../../../core/abschluss/gost/GostBelegpruefung';
 import { AbiturdatenManager } from '../../../../core/abschluss/gost/AbiturdatenManager';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
@@ -83,6 +84,8 @@ export class Naturwissenschaften extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften', 'de.svws_nrw.core.abschluss.gost.GostBelegpruefung'].includes(name);
 	}
+
+	public static class = new Class<Naturwissenschaften>('de.svws_nrw.core.abschluss.gost.belegpruefung.Naturwissenschaften');
 
 }
 

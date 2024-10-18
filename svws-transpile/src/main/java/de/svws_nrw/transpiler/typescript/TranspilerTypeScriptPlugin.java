@@ -235,8 +235,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final StringBuilder sb = new StringBuilder(node.getName().toString());
 		if (withBounds) {
 			final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
+			final boolean hasTsObjectAnnotation = Transpiler.hasTsObjectAnnotation(node.getAnnotations(), unit);
 			final boolean hasNotNullAnnotation = !Transpiler.hasAllowNullAnnotation(node.getAnnotations(), unit);
-			if ((node.getBounds() != null) && (!node.getBounds().isEmpty())) {
+			if (hasTsObjectAnnotation) {
+				sb.append(" extends JavaObject");
+				transpiler.getTranspilerUnit(node).imports.put("Object", "java.lang");
+			} else if ((node.getBounds() != null) && (!node.getBounds().isEmpty())) {
 				sb.append(" extends ");
 				boolean first = true;
 				for (final Tree type : node.getBounds()) {
@@ -443,10 +447,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled member select statement
 	 */
 	public String convertMemberSelect(final MemberSelectTree node) {
-		if ("class".equals(node.getIdentifier().toString())) {
-			transpiler.getTranspilerUnit(node).imports.put("Class", "java.lang");
-			return "new Class<" + node.getExpression().toString() + ">(" + node.getExpression().toString() + ".prototype)";
-		}
 		final String result = switch (node.getExpression().toString()) {
 			case strBoolean -> switch (node.getIdentifier().toString()) {
 				case "parseBoolean" -> "JavaBoolean.parseBoolean";
@@ -792,8 +792,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					}
 					case final ConstantCaseLabelTree cclt -> {
 						if ((node.getExpression() instanceof final ParenthesizedTree pt) && (pt.getExpression() instanceof final IdentifierTree swit)) {
-							final VariableTree varNode = transpiler.getDeclaration(swit);
-							final TypeNode typeNode = new TypeNode(this, varNode.getType(), true, transpiler.hasNotNullAnnotation(varNode));
+							final TypeNode typeNode;
+							if ("this".equals(swit.toString())) {
+								typeNode = new TypeNode(this, transpiler.getClass(swit), true, true);
+							} else {
+								final VariableTree varNode = transpiler.getDeclaration(swit);
+								typeNode = new TypeNode(this, varNode.getType(), true, true);
+							}
 							if (first) {
 								sb.append(System.lineSeparator()).append(getIndent());
 								first = false;
@@ -1290,7 +1295,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final VariableTree param = node.getParameter();
 		if (param == null)
 			throw new TranspilerException("Transpiler Error: Catch clause without a parameter variable is not supported.");
-		String result = "catch(" + param.getName().toString() + ") {" + System.lineSeparator();
+		String result = "catch(" + param.getName().toString() + " : any) {" + System.lineSeparator();
 		indentC++;
 		result += convertBlock(node.getBlock(), false, null);
 		indentC--;
@@ -1830,6 +1835,26 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 
 
 	/**
+	 * Appends the attribute class specifying the objects class for simulating
+	 * part of Javas refelction API.
+	 *
+	 * @param node   the class tree node
+	 *
+	 * @return the class attribute code as a string
+	 */
+	public String appendClassAttribute(final ClassTree node) {
+		if (transpiler.getElement(node) instanceof final TypeElement te) {
+			transpiler.getTranspilerUnit(node).imports.put("Class", "java.lang");
+			final String typeParams = (node.getTypeParameters() == null) || (node.getTypeParameters().isEmpty())
+					? "" : node.getTypeParameters().stream().map(tp -> "any").collect(Collectors.joining(", ", "<", ">"));
+			return getIndent() + "public static class = new Class<" + te.getSimpleName() + typeParams + ">('" + te.getQualifiedName() + "');"
+					+ System.lineSeparator();
+		}
+		throw new TranspilerException("Transpiler Error: Type Element expected.");
+	}
+
+
+	/**
 	 * Appends a method to the transpiled class code for simulating the Java instanceof
 	 * operator. This is required to support instanceof checks on interfaces that
 	 * are not available in typescript since the underlying javascript does not
@@ -2029,7 +2054,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2071,7 +2096,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2186,7 +2211,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!obj." + attribute.getName() + ") {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2228,7 +2253,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (!type.isNotNull()) {
 					sb.append(getIndent() + "if (!a) {" + System.lineSeparator());
 					indentC++;
-					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null';" + System.lineSeparator());
+					sb.append(getIndent() + "result += '\"" + attribute.getName() + "\" : null'" + endline);
 					indentC--;
 					sb.append(getIndent() + "} else {" + System.lineSeparator());
 					indentC++;
@@ -2407,8 +2432,14 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			transpileDefaultMethodParamsAddImports(unit, method.getParameters());
 			final String methodParams = convertDefaultMethodParameters(method, resolved);
 			transpileDefaultMethodImplementationsAddImports(unit, List.of(method.getReturnType()));
-			final TypeNode returnType = new TypeNode(this, method.getReturnType(), true, Transpiler.hasNotNullAnnotation(method), resolved);
-			final String returnTypeStr = returnType.transpile(false);
+			boolean methodHasNotNull = Transpiler.hasNotNullAnnotation(method);
+			if (Transpiler.hasAllowNullAnnotation(method))
+				methodHasNotNull = false;
+			final TypeNode returnType = new TypeNode(this, method.getReturnType(), true, methodHasNotNull, resolved);
+			String returnTypeStr = returnType.transpile(false);
+			if ((method.getReturnType() instanceof final TypeVariable tv) && (returnTypeStr.equals(tv.asElement().getSimpleName().toString()))
+					&& (!methodHasNotNull))
+				returnTypeStr += " | null";
 			// TODO the methods type parameters
 			sb.append(getIndent()).append("public ").append(methodName).append("(").append(methodParams).append(") : ").append(returnTypeStr).append(" {")
 					.append(System.lineSeparator());
@@ -2422,15 +2453,9 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				sb.append(defaultMethodName);
 				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new ArrayList<>()).add(defaultMethodName);
 			}
-			sb.append("(");
-			boolean first = true;
-			for (final var param : method.getParameters()) {
-				if (first)
-					first = false;
-				else
-					sb.append(", ");
-				sb.append(param.getSimpleName().toString());
-			}
+			sb.append("(this");
+			for (final var param : method.getParameters())
+				sb.append(", ").append(param.getSimpleName().toString());
 			sb.append(");");
 			sb.append(System.lineSeparator());
 			indentC--;
@@ -2509,6 +2534,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
 		sb.append(System.lineSeparator());
+		sb.append(appendClassAttribute(node));
+		sb.append(System.lineSeparator());
+
+		if ("CoreTypeSimple".equals(node.getSimpleName().toString()))
+			transpileDefaultMethodImplementations(sb, node);
 
 		if (transpiler.hasTranspilerDTOAnnotation(node)) {
 			sb.append(appendTranspilerFromJSON(node));
@@ -2694,6 +2724,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		sb.append(appendTranspilerCanonicalName(node));
 		sb.append(System.lineSeparator());
 		sb.append(appendIsTranspiledInstanceOf(node));
+		sb.append(System.lineSeparator());
+		sb.append(appendClassAttribute(node));
 		sb.append(System.lineSeparator());
 
 		indentC--;

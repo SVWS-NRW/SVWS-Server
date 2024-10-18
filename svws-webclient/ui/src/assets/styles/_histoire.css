@@ -14,12 +14,13 @@ html {
 	contain: layout;
 }
 
-.histoire-generic-render-story.dark {
-	@apply bg-black text-white;
+.histoire-generic-render-story.dark,
+.dark .htw-border {
+	@apply bg-ui text-ui;
 }
 
 .htw-dark .bind-preview-bg {
-	@apply bg-black !important;
+	@apply bg-ui;
 }
 
 .htw-m-auto {

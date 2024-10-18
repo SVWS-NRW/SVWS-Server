@@ -71,6 +71,20 @@ public final class ExpressionClassType extends ExpressionType {
 
 
 	/**
+	 * Creates a new expression annotation type instance from the specified paramaters.
+	 *
+	 * @param name          the annotation name
+	 * @param packageName   the packagename of the annotation
+	 *
+	 * @return the new expression class type instance
+	 */
+	public static ExpressionClassType getExpressionAnnotationType(final String name, final String packageName) {
+		return new ExpressionClassType(Kind.ANNOTATION_TYPE, name, packageName);
+	}
+
+
+
+	/**
 	 * Creates a new expression class type instance for the unknown super class.
 	 *
 	 * @return the new expression class type instance
@@ -221,6 +235,8 @@ public final class ExpressionClassType extends ExpressionType {
 			if (elementKind == ElementKind.CLASS) {
 				// TODO Type Parameters ?
 				return new ExpressionClassType(Kind.CLASS, tree.getIdentifier().toString(), tree.getExpression().toString());
+			} else if (elementKind == ElementKind.ENUM) {
+				return new ExpressionClassType(Kind.ENUM, tree.getIdentifier().toString(), tree.getExpression().toString());
 			} else if (elementKind == ElementKind.INTERFACE) {
 				return new ExpressionClassType(Kind.INTERFACE, tree.getIdentifier().toString(), tree.getExpression().toString());
 			} else

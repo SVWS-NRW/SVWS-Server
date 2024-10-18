@@ -1,14 +1,19 @@
 import type { WritableComputedRef } from "vue";
 import type { GostBlockungsdatenManager, GostBlockungsergebnisManager, GostBlockungSchiene, GostBlockungKurs, GostBlockungKursLehrer, GostFaecherManager,
 	GostHalbjahr, LehrerListeEintrag, GostStatistikFachwahl, GostBlockungsergebnisKurs, GostJahrgangsdaten, ApiFile,
-	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet } from "@core";
+	GostBlockungsergebnisKursSchuelerZuordnungUpdate, GostBlockungRegelUpdate, JavaSet, BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import type { GostKursplanungSchuelerFilter } from "./GostKursplanungSchuelerFilter";
 import type { ApiStatus } from "~/components/ApiStatus";
 import type { DownloadPDFTypen } from "./DownloadPDFTypen";
 
 export interface GostKursplanungProps {
+	schulform: Schulform;
+	serverMode: ServerMode;
+	benutzerKompetenzen: Set<BenutzerKompetenz>,
+	benutzerKompetenzenAbiturjahrgaenge: Set<number>;
 	getDatenmanager: () => GostBlockungsdatenManager;
 	getKursauswahl: () => JavaSet<number>,
+	setKursauswahl: (value: JavaSet<number>) => void;
 	getErgebnismanager: () => GostBlockungsergebnisManager;
 	addBlockung: () => Promise<void>;
 	restoreBlockung: () => Promise<void>;

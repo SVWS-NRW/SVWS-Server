@@ -1,6 +1,6 @@
 <template>
-	<div class="page--content select-none">
-		<Teleport to=".svws-sub-nav-target" v-if="isMounted">
+	<div class="page--content select-none w-full h-full grid-rows-1">
+		<Teleport to=".svws-sub-nav-target" v-if="isMounted && hatUpdateKompetenz">
 			<svws-ui-sub-nav>
 				<svws-ui-button @click="modus = !modus" title="Modus wechseln" type="transparent">
 					<span :class="[modus ? 'icon-sm i-ri-play-line' : 'icon-sm i-ri-speed-line']" />
@@ -8,10 +8,11 @@
 				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
-		<svws-ui-table :items="zuordnungen" :columns="colsZuordnungen" clickable @update:clicked="toggleWochentyp" />
-		<div>
-			<svws-ui-table :items="summen" />
+		<div class="w-full h-full flex flex-col">
+			<div v-if="hatUpdateKompetenz">Zum Ändern der Kalenderwoche die jeweilige Zeile anklicken</div>
+			<svws-ui-table :items :columns :clickable="hatUpdateKompetenz" @update:clicked="toggleWochentyp" scroll />
 		</div>
+		<svws-ui-table :items="summen" />
 	</div>
 </template>
 
@@ -20,9 +21,11 @@
 	import { onMounted, ref, computed } from "vue";
 	import type { StundenplanKalenderwochenProps } from "./SStundenplanKalenderwochenProps";
 	import type { StundenplanKalenderwochenzuordnung } from "@core";
-	import { ArrayList, DateUtils } from "@core";
+	import { ArrayList, BenutzerKompetenz, DateUtils } from "@core";
 
 	const props = defineProps<StundenplanKalenderwochenProps>();
+
+	const hatUpdateKompetenz = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.STUNDENPLAN_AENDERN));
 
 	async function nextWochentyp(kw: StundenplanKalenderwochenzuordnung) {
 		const kalenderwochenZuordnung = new ArrayList<StundenplanKalenderwochenzuordnung>();
@@ -36,7 +39,7 @@
 		await props.patchKalenderwochenzuordnungen(kalenderwochenZuordnung);
 	}
 
-	async function toggleWochentyp(value: { zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: string, wochentyp: string }) {
+	async function toggleWochentyp(value: { zuordnung: StundenplanKalenderwochenzuordnung }) {
 		await nextWochentyp(value.zuordnung);
 	}
 
@@ -56,14 +59,14 @@
 		return result;
 	});
 
-	const colsZuordnungen = [
+	const columns = [
 		{ key: "kalenderwoche", label: "Kalenderwoche", span: 1 },
 		{ key: "montag", label: "Montag", span: 1 },
 		{ key: "sonntag", label: "Sonntag", span: 1 },
 		{ key: "wochentyp", label: "Wochentyp", span: 1 },
 	]
 
-	const zuordnungen = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }>>(() => {
+	const items = computed<Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }>>(() => {
 		const result : Array<{ zuordnung: StundenplanKalenderwochenzuordnung, kalenderwoche: number, montag: string, sonntag: string, wochentyp: string }> = [];
 		for (const zuordnung of props.stundenplanManager().kalenderwochenzuordnungGetMengeAsList()) {
 			result.push({

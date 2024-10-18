@@ -1,0 +1,71 @@
+{
+	"version": 2,
+	"daten": [ {
+		"bezeichner": "ID_100",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"schluessel": "100",
+			"kuerzel": "100",
+			"text": "Beschäftigungsphase Sabbatjahr",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_110",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"schluessel": "110",
+			"kuerzel": "110",
+			"text": "Mehrarbeit (angeordnet und regelmäßig)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_150",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"schluessel": "150",
+			"kuerzel": "150",
+			"text": "Aufrundung der Pflichtstundenzahl wegen Abrundung im folgenden Schuljahr ",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_160",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"schluessel": "160",
+			"kuerzel": "160",
+			"text": "Überschreitung der Pflichtstundenzahl aus organisatorischen Gründen (z. B. Epochenunterricht)",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	},{
+		"bezeichner": "ID_165",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"schluessel": "165",
+			"kuerzel": "165",
+			"text": "Überschreitung der Pflichtstundenzahl wegen COVID-19",
+			"gueltigVon": null,
+			"gueltigBis": 2022
+		} ]
+	},{
+		"bezeichner": "ID_170",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"schluessel": "170",
+			"kuerzel": "170",
+			"text": "Überschreitung der Pflichtstundenzahl wegen Pflichstunden-Bandbreite",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}
+		

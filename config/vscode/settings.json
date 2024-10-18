@@ -1,4 +1,13 @@
 {
-    "java.format.settings.url": "./config/eclipse/Eclipse_Formatter.xml",
-    "java.format.settings.profile": "SVWS-Server-Formatter"
+	"java.format.settings.url": "./config/eclipse/Eclipse_Formatter.xml",
+	"java.format.settings.profile": "SVWS-Server-Formatter",
+	"java.cleanup.actions": [
+		"addOverride",
+		"addDeprecated",
+		"invertEquals",
+		"addFinalModifier",
+		"lambdaExpressionFromAnonymousClass",
+		"renameFileToType"
+	],
+	"java.saveActions.cleanup": true
 }

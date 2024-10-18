@@ -5,24 +5,22 @@
 			'text-input--invalid': (isValid === false),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
+			'text-input--select': isSelectInput,
 			'text-input--statistics': statistics,
 			'text-input--search': type === 'search',
 			'text-input--date': type === 'date',
-			'text-input--number': type === 'number',
 			'text-input-component--headless': headless,
 			'col-span-full': span === 'full',
 			'col-span-2': span === '2',
 		}">
 		<span v-if="url" data-before="https://" class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 opacity-60 before:content-[attr(data-before)]" />
 		<span class="icon i-ri-search-line text-input--search-icon" v-if="type === 'search'" />
-		<input ref="input"
+		<div v-if="readonly && !isSelectInput" :class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }">
+			{{ data }}
+		</div>
+		<input v-else ref="input"
 			v-focus
-			:class="{
-				'text-input--control': !headless,
-				'text-input--headless': headless,
-				'text-input--rounded': rounded,
-				'text-input--prefix': url,
-			}"
+			:class="{ 'text-input--control': !headless, 'text-input--headless': headless, 'text-input--rounded': rounded, 'text-input--prefix': url, }"
 			v-bind="{ ...$attrs }"
 			:type="type"
 			:value="data"
@@ -34,16 +32,15 @@
 			@input="onInput"
 			@keyup.enter="onKeyEnter"
 			@blur="onBlur">
-		<span v-if="placeholder && !headless && type !== 'search'"
-			:id="labelId"
-			class="text-input--placeholder"
-			:class="{
-				'text-input--placeholder--required': required,
-				'text-input--placeholder--prefix': url
-			}">
+		<span v-if="placeholder && !headless && (type !== 'search')" :id="labelId" class="text-input--placeholder"
+			:class="{ 'text-input--placeholder--required': required, 'text-input--placeholder--prefix': url }">
 			<span>{{ placeholder }}</span>
 			<span class="icon-xs i-ri-alert-line ml-0.5 icon-error" v-if="(isValid === false)" />
-			<span v-if="maxLen" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid, 'opacity-50': maxLenValid}">{{ maxLen ? ` (${data?.toLocaleString() ? data?.toLocaleString().length + '/' : 'maximal '}${maxLen} Zeichen)` : '' }}</span>
+			<span v-if="(maxLen !== undefined) || (minLen !== undefined)" class="inline-flex ml-1 gap-1" :class="{'text-error': !maxLenValid || !minLenValid, 'opacity-50': maxLenValid || minLenValid}">
+				{{ (maxLen !== undefined) && (minLen === undefined) ? ` (max. ${maxLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen === undefined) ? ` (mind. ${minLen} Zeichen)` : '' }}
+				{{ (minLen !== undefined) && (maxLen !== undefined) ? ` (zwischen ${minLen} und ${maxLen} Zeichen)` : '' }}
+			</span>
 			<span v-if="statistics" class="cursor-pointer">
 				<svws-ui-tooltip position="right">
 					<span class="inline-flex items-center">
@@ -56,22 +53,17 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="removable && type === 'date'" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" />
+		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
 		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
-		<span v-if="type === 'number' && input" class="svws-input-stepper">
-			<button role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': $attrs?.min === input?.value || ($attrs?.min === '0' && !input?.value)}"><span class="icon i-ri-subtract-line" /></button>
-			<button role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': $attrs?.max === input?.value}"><span class="icon i-ri-add-line" /></button>
-		</span>
 	</label>
 </template>
 
 
 <script setup lang="ts">
 
-	import type { InputType, InputDataType } from "../types";
-	import { ref, computed, watch, type ComputedRef, type Ref } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount } from "vue";
 	import { genId } from "../utils";
 
 	defineOptions({
@@ -81,19 +73,21 @@
 	const input = ref<null | HTMLInputElement>(null);
 
 	const props = withDefaults(defineProps<{
-		type?: InputType;
-		modelValue?: InputDataType;
+		type?: "text" | "date" | "email" | "search" | "tel" | "password";
+		modelValue?: string | null;
 		placeholder?: string;
 		statistics?: boolean;
-		valid?: (value: InputDataType) => boolean;
+		valid?: (value: string | null) => boolean;
 		disabled?: boolean;
 		required?: boolean;
 		readonly?: boolean;
 		headless?: boolean;
+		isSelectInput? : boolean;
 		focus?: boolean;
 		rounded?: boolean;
 		url?: boolean;
 		maxLen?: number;
+		minLen?: number;
 		span?: 'full' | '2';
 		removable?: boolean;
 	}>(), {
@@ -106,18 +100,20 @@
 		required: false,
 		readonly: false,
 		headless: false,
+		isSelectInput: false,
 		focus: false,
 		rounded: false,
 		url: false,
 		maxLen: undefined,
+		minLen: undefined,
 		span: undefined,
 		removable: false,
 	});
 
 	const emit = defineEmits<{
-		"update:modelValue": [value: string]; // TODO use InputDataType
-		"change": [value: string]; // TODO use InputDataType
-		"blur": [value: string]; // TODO use InputDataType
+		"update:modelValue": [value: string | null];
+		"change": [value: string | null];
+		"blur": [value: string | null];
 	}>();
 
 	const vFocus = {
@@ -127,80 +123,64 @@
 		}
 	};
 
-	const data = ref<InputDataType>(props.modelValue);
+	const data = ref<string | null>(null);
+	onBeforeMount(() => data.value = props.modelValue);
 
-	watch(() => props.modelValue, (value: InputDataType) => updateData(value), { immediate: false });
+	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
-	function validatorEmail(value: string) {
-		if (value === '')
-			return true;
-		return (
-			// eslint-disable-next-line no-useless-escape
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
-			// eslint-disable-next-line no-useless-escape
-			/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
-		);
-	}
+	const validatorEmail = (value: string | null) : boolean => ((value === null) || (value === '')) ? true : (
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))[^@]?$/.test(value) ||
+		/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
+	);
 
-	const isValid = computed(()=>{
+	const isValid = computed((): boolean => {
 		let tmpIsValid = true;
-		if ((props.required === true) && (data.value === null))
-			return false;
-		if ((props.type === "email") && (typeof data.value === 'string'))
-			tmpIsValid = validatorEmail(data.value);
-		if (tmpIsValid && (props.maxLen !== undefined) && (data.value !== null) && (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen))
+		if (props.required && ((data.value === null) || (data.value === '')))
 			tmpIsValid = false;
-		if (tmpIsValid && (data.value !== null || data.value !== '' || data.value !== undefined))
+		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value))
+			tmpIsValid = false;
+		if (tmpIsValid && props.type === "email")
+			tmpIsValid = validatorEmail(data.value ?? '');
+		if (tmpIsValid)
 			tmpIsValid = props.valid(data.value);
+
 		return tmpIsValid;
 	})
 
-	function updateData(value: InputDataType) {
+	function updateData(value: string | null) {
 		if (data.value !== value) {
 			data.value = value;
-			emit("update:modelValue", String(data.value)); // TODO do not use String()
+			emit("update:modelValue", data.value);
 		}
 	}
 
-	const maxLenValid = computed(() => {
-		if ((props.maxLen === undefined) || (data.value === null))
+	const minLenValid = computed((): boolean => {
+		if ((props.minLen === undefined) || ((data.value === null) && (props.minLen <= 0)))
 			return true;
-		return (typeof data.value === 'string') && (data.value.toLocaleString().length <= props.maxLen);
+		return (data.value !== null) && (data.value.toLocaleString().length >= props.minLen);
 	})
 
-	const emailValid = computed(() => {
-		if ((props.type === "email") && (typeof data.value === 'string'))
-			return validatorEmail(data.value);
-		return true;
-	});
+	const maxLenValid = computed((): boolean => {
+		if ((props.maxLen === undefined) || (data.value === null))
+			return true;
+		return data.value.toLocaleString().length <= props.maxLen;
+	})
 
 	function onInput(event: Event) {
 		const value = (event.target as HTMLInputElement).value;
 		if (value !== data.value)
-			updateData(props.type === "number" ? Number(value) : value);
-	}
-
-	function onInputNumber(stepDirection: string) {
-		if (input.value === null)
-			return;
-
-		if (stepDirection === 'up') {
-			input.value.stepUp();
-		} else if (stepDirection === 'down') {
-			input.value.stepDown();
-		}
-		updateData(Number(input.value.value));
+			updateData(value);
 	}
 
 	function onBlur(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value)); // TODO do not use String()
-		emit("blur", String(data.value)); // TODO do not use String()
+			emit("change", data.value);
+		emit("blur", data.value);
 	}
 
 	function onKeyEnter(event: Event) {
 		if (props.modelValue !== data.value)
-			emit("change", String(data.value)); // TODO do not use String()
+			emit("change", data.value);
 	}
 
 	function reset() {
@@ -213,10 +193,10 @@
 
 	const labelId = genId();
 
-	const content = computed<InputDataType>(() => data.value);
+	const content = computed<string | null>(() => data.value);
 
 	defineExpose<{
-		content: ComputedRef<InputDataType>,
+		content: ComputedRef<string | null>,
 		input: Ref<HTMLInputElement | null>,
 		reset: () => void;
 		doFocus: () => void;
@@ -226,6 +206,7 @@
 
 
 <style lang="postcss">
+
 	.text-input-component {
 		@apply flex;
 		@apply relative;
@@ -240,22 +221,22 @@
 			}
 		}
 
-    &:focus {
-      @apply outline-none;
-    }
+		&:focus {
+			@apply outline-none;
+		}
 
-    input {
-      @apply cursor-text overflow-ellipsis;
+		input {
+			@apply cursor-text overflow-ellipsis;
 
-      &[type="email"],
-      &[type="tel"] {
-        @apply pr-[1.6rem];
-      }
+			&[type="email"],
+			&[type="tel"] {
+				@apply pr-[1.6rem];
+			}
 
-      &:focus {
-        @apply outline-none;
-      }
-    }
+			&:focus {
+				@apply outline-none;
+			}
+		}
 	}
 
 	.text-input-component .icon.svws-icon {
@@ -270,49 +251,49 @@
 		}
 	}
 
-  .text-input-component {
-    &:hover,
-    &:focus-within {
-      .svws-icon.icon {
-        @apply opacity-50;
-      }
-    }
-  }
+	.text-input-component:not(.text-input--readonly) {
+		&:hover,
+		&:focus-within {
+			.svws-icon.icon {
+				@apply opacity-50;
+			}
+		}
+	}
 
-  .text-input--date {
-    .svws-ui-table & {
-      input {
-        @apply -my-0.5;
-      }
-    }
+	.text-input--date {
+		.svws-ui-table & {
+			input {
+				@apply -my-0.5;
+			}
+		}
 
-    .text-input--control {
-      @apply pr-0;
-    }
+		.text-input--control {
+			@apply pr-0;
+		}
 
-    .svws-icon {
-      @apply w-7;
-    }
+		.svws-icon {
+			@apply w-7;
+		}
 
-    &.text-input-component--headless,
-    .svws-ui-table .svws-ui-tbody .svws-ui-td & {
-      @apply my-auto -ml-1;
+		&.text-input-component--headless,
+		.svws-ui-table .svws-ui-tbody .svws-ui-td & {
+			@apply my-auto -ml-1;
 
-      .svws-icon.icon {
-        @apply w-6 h-6 -top-1 right-0 relative;
-      }
-    }
+			.svws-icon.icon {
+				@apply w-6 h-6 -top-1 right-0 relative;
+			}
+		}
 
-    &:focus-within {
-      .svws-icon.icon {
-        @apply opacity-75;
-      }
-    }
-  }
+		&:focus-within {
+			.svws-icon.icon {
+				@apply opacity-75;
+			}
+		}
+	}
 
-  .text-input--statistics .svws-icon.icon {
-    @apply text-violet-500 opacity-50;
-  }
+	.text-input--statistics .svws-icon.icon {
+		@apply text-violet-500 opacity-50;
+	}
 
 	.text-input--invalid .svws-icon {
 		@apply text-error;
@@ -386,6 +367,14 @@
 		@apply border-violet-500;
 	}
 
+	.text-input--readonly:not(.text-input--select):hover .text-input--control {
+		@apply border-black/5 dark:border-white/5;
+	}
+
+	.text-input--readonly.text-input--filled:not(.text-input--select):hover .text-input--control {
+		@apply border-black/25 dark:border-white/25;
+	}
+
 	.text-input--control--multiselect-tags {
 		@apply border-b-0 rounded-b-none pt-1 pb-0;
 	}
@@ -399,9 +388,9 @@
 	.text-input--search {
 		@apply relative;
 
-    &.text-input--filled {
-      @apply text-svws;
-    }
+		&.text-input--filled {
+			@apply text-svws;
+		}
 
 		&-icon {
 			@apply absolute left-2 opacity-25;
@@ -415,7 +404,7 @@
 			.text-input-component:focus-within &,
 			.text-input--filled & {
 				@apply opacity-100;
-        transform: translateY(-50%) scale(100%);
+				transform: translateY(-50%) scale(100%);
 			}
 		}
 
@@ -457,7 +446,7 @@
 		}
 	}
 
-	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):hover .text-input--placeholder {
+	.text-input-component:not(.text-input--filled):not(:focus-within):not(.text-input--disabled):not(.text-input--readonly):hover .text-input--placeholder {
 		@apply opacity-100;
 	}
 
@@ -496,7 +485,7 @@
 	}
 
 	.text-input--disabled {
-		@apply cursor-not-allowed;
+		@apply cursor-default;
 
 		.text-input--placeholder {
 			@apply text-black/25 dark:text-white/25;
@@ -543,6 +532,11 @@
 
 	.text-input--inline {
 		@apply cursor-text underline decoration-dotted underline-offset-2;
+	}
+
+	.text-input-component .icon.svws-icon--remove:focus-visible {
+		-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+		filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	}
 
 </style>

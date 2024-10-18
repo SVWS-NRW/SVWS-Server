@@ -1,4 +1,4 @@
-import type { Schuljahresabschnitt } from "../../../../core/src/core/data/schule/Schuljahresabschnitt";
+import type { Schuljahresabschnitt } from "../../../../core/src/asd/data/schule/Schuljahresabschnitt";
 
 /**
  * Dieses Interface stellt die Daten und Methoden zur Steuerung der
@@ -21,7 +21,7 @@ export interface AbschnittAuswahlDaten {
 	schule: Schuljahresabschnitt;
 
 	/** Die Methode zum Setzen des aktuellen Schuljahresabschnittes */
-	set: (abschnitt: Schuljahresabschnitt) => void;
+	set: (abschnitt: Schuljahresabschnitt) => Promise<void>;
 
 }
 

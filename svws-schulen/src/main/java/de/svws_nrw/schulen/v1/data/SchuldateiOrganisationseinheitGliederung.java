@@ -14,21 +14,21 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class SchuldateiOrganisationseinheitGliederung extends SchuldateiEintrag {
 
+	/** Die Schulnummer. */
+	@Schema(description = "die Schulnummer", example = "100001")
+	public @NotNull String schulnummer = "";
+
 	/** Die ID des Gliederungs-Eintrages. */
 	@Schema(description = "die ID des Gliederungs-Eintrages", example = "4711")
 	public Integer id;
 
-	/** Die Schulnummer. */
-	@Schema(description = "die Schulnummer", example = "100001")
-	public @NotNull Integer schulnummer = 0;
-
 	/** Die Gliederung */
 	@Schema(description = "die Gliederung", example = "G01")
-	public String gliederung;
+	public @NotNull String gliederung = "";
 
 	/** Der Förderschwerpunkt */
 	@Schema(description = "der Förderschwerpunkt", example = "LB")
-	public String foerderschwerpunkt;
+	public @NotNull String foerderschwerpunkt = "";
 
 
 	/**

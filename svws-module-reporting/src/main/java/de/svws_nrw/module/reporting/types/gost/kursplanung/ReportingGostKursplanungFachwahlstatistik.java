@@ -3,57 +3,54 @@ package de.svws_nrw.module.reporting.types.gost.kursplanung;
 import de.svws_nrw.module.reporting.types.fach.ReportingFach;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik.</p>
- * <p>Sie enthält die Daten zu den Fachwahlen eines Halbjahres der Kursplanung der gymnasialen Oberstufe.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ GostKursplanungFachwahlstatistik.
  */
 public class ReportingGostKursplanungFachwahlstatistik {
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart LK. */
-	protected int differenzKursgroessenLK = 0;
+	protected int differenzKursgroessenLK;
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart GK. */
-	protected int differenzKursgroessenGK = 0;
+	protected int differenzKursgroessenGK;
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart ZK. */
-	protected int differenzKursgroessenZK = 0;
+	protected int differenzKursgroessenZK;
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart PJK. */
-	protected int differenzKursgroessenPJK = 0;
+	protected int differenzKursgroessenPJK;
 
 	/** Die Kursgrößendifferenz des Faches für die Kursart VTF. */
-	protected int differenzKursgroessenVTF = 0;
+	protected int differenzKursgroessenVTF;
 
 	/** Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden. */
 	protected ReportingFach fach;
 
 	/** Die Gesamtzahl der Wahlen als Leistungskurs. */
-	protected int wahlenLK = 0;
+	protected int wahlenLK;
 
 	/** Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs. */
-	protected int wahlenGK = 0;
+	protected int wahlenGK;
 
 	/** Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs. */
-	protected int wahlenGKMuendlich = 0;
+	protected int wahlenGKMuendlich;
 
 	/** Die Anzahl der Wahlen als schriftlicher Grundkurs. */
-	protected int wahlenGKSchriftlich = 0;
+	protected int wahlenGKSchriftlich;
 
 	/** Die Anzahl der Wahlen als drittes Abiturfach. */
-	protected int wahlenAB3 = 0;
+	protected int wahlenAB3;
 
 	/** Die Anzahl der Wahlen als viertes Abiturfach. */
-	protected int wahlenAB4 = 0;
+	protected int wahlenAB4;
 
 	/** Die Anzahl der Wahlen als Zusatzkurs. */
-	protected int wahlenZK = 0;
+	protected int wahlenZK;
 
 	/** Die Anzahl der Wahlen als Projektkurs. */
-	protected int wahlenPJK = 0;
+	protected int wahlenPJK;
 
 	/** Die Anzahl der Wahlen als Vertiefungskurs. */
-	protected int wahlenVTF = 0;
+	protected int wahlenVTF;
 
 
 	/**

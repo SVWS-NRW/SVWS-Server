@@ -1,20 +1,21 @@
 import { JavaLong } from '../../../../java/lang/JavaLong';
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostSchuelerklausur extends JavaObject {
 
 	/**
-	 * Die ID des Stundenplans.
+	 * Die ID der Schülerklausur.
 	 */
 	public id : number = -1;
 
 	/**
-	 * Die textuelle Beschreibung des Stundenplans.
+	 * Die ID der zugehörigen Kursklausur.
 	 */
 	public idKursklausur : number = -1;
 
 	/**
-	 * Das Zeitraster des Stundenplans.
+	 * Die ID des zugehörigen Schülers.
 	 */
 	public idSchueler : number = -1;
 
@@ -24,6 +25,9 @@ export class GostSchuelerklausur extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -35,7 +39,7 @@ export class GostSchuelerklausur extends JavaObject {
 	 * @return true, falls die Objekte indentisch sind, sonst false
 	 */
 	public equals(another : unknown | null) : boolean {
-		return (another !== null) && (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausur(another)).id);
+		return (((another instanceof JavaObject) && (another.isTranspiledInstanceOf('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur')))) && (this.id === (cast_de_svws_nrw_core_data_gost_klausurplanung_GostSchuelerklausur(another)).id);
 	}
 
 	/**
@@ -54,6 +58,8 @@ export class GostSchuelerklausur extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur'].includes(name);
 	}
+
+	public static class = new Class<GostSchuelerklausur>('de.svws_nrw.core.data.gost.klausurplanung.GostSchuelerklausur');
 
 	public static transpilerFromJSON(json : string): GostSchuelerklausur {
 		const obj = JSON.parse(json) as Partial<GostSchuelerklausur>;

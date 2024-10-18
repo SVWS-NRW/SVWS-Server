@@ -176,7 +176,7 @@
 	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanSchiene } from "../../../../core/src/core/data/stundenplan/StundenplanSchiene";
 	import type { StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
 	import { cast_de_svws_nrw_core_data_stundenplan_StundenplanKurs } from "../../../../core/src/core/data/stundenplan/StundenplanKurs";
-	import { ZulaessigesFach } from "../../../../core/src/core/types/fach/ZulaessigesFach";
+	import { Fach } from "../../../../core/src/asd/types/fach/Fach";
 	import { ArrayList, cast_java_util_ArrayList } from "../../../../core/src/java/util/ArrayList";
 	import { HashMap } from "../../../../core/src/java/util/HashMap";
 	import { HashMap2D } from "../../../../core/src/core/adt/map/HashMap2D";
@@ -325,7 +325,7 @@
 		return (dragOverPos.value.wochentag === wochentag.id) && (dragOverPos.value.stunde === stunde);
 	}
 
-	const getWochentyp = computed(()=> props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
+	const getWochentyp = computed(() => props.wochentyp() === 0 ? props.manager().getWochenTypModell() : [props.wochentyp()])
 
 	const hatWochentypen = computed<boolean>(() => (props.manager().getWochenTypModell() > 0));
 
@@ -410,16 +410,8 @@
 					zende = z.stundenende;
 			}
 		}
-		let rowStart = 0;
-		let rowEnd = 10;
-		if ((zbeginn !== null) && (zende !== null)) {
-			rowStart = (zbeginn - beginn.value) / props.zeitrasterSteps;
-			rowEnd = (zende - beginn.value) / props.zeitrasterSteps;
-		}
-		if (props.hideZeitachse) {
-			rowStart = stunde - 1;
-			rowEnd = stunde;
-		}
+		const rowStart = props.hideZeitachse ? (stunde -1) : (zbeginn - beginn.value) / props.zeitrasterSteps;
+		const rowEnd = props.hideZeitachse ? stunde : (zende - beginn.value) / props.zeitrasterSteps;
 
 		return "grid-row-start: " + (Math.round(rowStart) + 1) + "; grid-row-end: " + (Math.round(rowEnd) + 1) + "; grid-column: 1;";
 	}
@@ -448,7 +440,7 @@
 	}
 
 	function getBgColor(fach: string): string {
-		return ZulaessigesFach.getByKuerzelASD(fach).getHMTLFarbeRGB();
+		return Fach.getBySchluesselOrDefault(fach).getHMTLFarbeRGB(props.manager().getSchuljahr());
 	}
 
 	const draggable = computed<boolean>(() => props.useDragAndDrop);

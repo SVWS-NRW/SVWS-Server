@@ -5,6 +5,7 @@ import { StundenplanblockungKlasse } from '../../../core/data/stundenplanblockun
 import { ArrayList } from '../../../java/util/ArrayList';
 import { StundenplanblockungFach } from '../../../core/data/stundenplanblockung/StundenplanblockungFach';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungStundenelement } from '../../../core/data/stundenplanblockung/StundenplanblockungStundenelement';
 import { StundenplanblockungRaum } from '../../../core/data/stundenplanblockung/StundenplanblockungRaum';
 
@@ -67,6 +68,8 @@ export class StundenplanblockungLerngruppe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLerngruppe'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungLerngruppe>('de.svws_nrw.core.data.stundenplanblockung.StundenplanblockungLerngruppe');
 
 	public static transpilerFromJSON(json : string): StundenplanblockungLerngruppe {
 		const obj = JSON.parse(json) as Partial<StundenplanblockungLerngruppe>;

@@ -47,7 +47,7 @@ task transpile(type: JavaExec) {
 
 assemble.dependsOn transpile
 
-/*
+
 apply from: "$rootDir/publish-helper.gradle"
 
 publishing {
@@ -61,4 +61,4 @@ publishing {
     }
   }
 }
-*/
+

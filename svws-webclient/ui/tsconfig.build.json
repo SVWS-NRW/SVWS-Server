@@ -13,5 +13,5 @@
 		"components.d.ts",
 		"auto-imports.d.ts"
 	],
-	"exclude": ["**/*.story.vue", "src/histoire.setup.ts"]
+	"exclude": ["**/*.story.vue", "**/*.test.ts", "src/histoire.setup.ts"]
 }

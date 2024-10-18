@@ -22,7 +22,7 @@
 	import { GostKursart, GostBlockungSchiene } from "@core";
 
 	const props = defineProps<{
-		getErgebnisManager: () => GostBlockungsergebnisManager;
+		getErgebnismanager: () => GostBlockungsergebnisManager;
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	}>();
 
@@ -43,8 +43,8 @@
 	async function regel_hinzufuegen(value: boolean) {
 		showModal().value = false;
 		const update = value === true
-			? props.getErgebnisManager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
-			: props.getErgebnisManager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
+			? props.getErgebnismanager().regelupdateCreate_01_KURSART_SPERRE_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
+			: props.getErgebnismanager().regelupdateCreate_06_KURSART_ALLEIN_IN_SCHIENEN_VON_BIS(kursart.value.id, von.value.nummer, bis.value.nummer)
 		await props.regelnUpdate(update);
 	}
 

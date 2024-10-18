@@ -1,7 +1,7 @@
 package de.svws_nrw.db.converter.current;
 
 import jakarta.persistence.Converter;
-import de.svws_nrw.core.types.Geschlecht;
+import de.svws_nrw.asd.types.Geschlecht;
 import de.svws_nrw.db.converter.DBAttributeConverter;
 
 

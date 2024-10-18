@@ -4,12 +4,12 @@
 		<div class="svws-ui-stundenplan--head">
 			<slot name="kwAuswahl">
 				<div class="col-span-2 inline-flex gap-1 items-center justify-center print:pl-2 print:justify-start font-bold text-headline-md pb-0.5">
-					KW {{ kalenderwoche.value.kw || '–' }}
+					KW {{ kalenderwoche().kw || '–' }}
 				</div>
 			</slot>
 			<!-- Daneben werden die einzelnen Wochentage des Stundenplans angezeigt -->
 			<div v-for="wochentag in wochentagRange" :key="wochentag.id" class="font-bold my-auto w-full inline-flex items-center justify-center tabular-nums">
-				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag)) }}
+				<span class="opacity-50 uppercase mr-2">{{ wochentage[wochentag.id].slice(0, 2) }}</span> {{ DateUtils.gibDatumGermanFormat(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag)) }}
 			</div>
 		</div>
 		<!-- Die Daten des Stundenplans -->
@@ -48,12 +48,15 @@
 				<!-- Darstellung des Unterrichtes in dem Zeitraster -->
 				<template v-for="stunde in zeitrasterRange" :key="stunde">
 					<template v-if="manager().zeitrasterGetByWochentagAndStundeOrNull(wochentag.id, stunde)">
-						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 bg-opacity-0' : ''" :style="posZeitraster(wochentag, stunde)"
-							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))" @drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
-							<div v-if="kurseGefiltert(wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-30 pointer-events-none">
+						<div class="svws-ui-stundenplan--stunde flex-row relative" :class="dragData && dragData() !== undefined ? 'z-20 bg-opacity-0' : ''"
+							:style="posZeitraster(wochentag, stunde)"
+							@dragover="checkDropZoneZeitraster($event, manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))"
+							@dragleave="checkDropZoneZeitraster($event, undefined)"
+							@drop="onDrop(manager().zeitrasterGetByWochentagAndStundeOrException(wochentag.id, stunde))">
+							<div v-if="kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde).size()" class="svws-ui-stundenplan--unterricht border-dashed border-black/50 flex absolute inset-1 w-auto bg-white/80 z-30 pointer-events-none">
 								<div class="flex flex-col items-start justify-between mx-auto font-normal w-full opacity-75">
-									<span class="text-button">{{ [...kurseGefiltert(wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
-									<span v-if="dragData !== undefined && sumSchreiber(wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(wochentag, stunde) }}</span>
+									<span class="text-button">{{ [...kurseGefiltert(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde)].map(kurs => kursInfos(kurs)).join(", ") }}</span>
+									<span v-if="dragData !== undefined && sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) > 0" class="inline-flex gap-0.5 text-button font-normal"><span class="icon i-ri-group-line" />{{ sumSchreiber(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), wochentag, stunde) }}</span>
 								</div>
 							</div>
 						</div>
@@ -70,7 +73,7 @@
 						</template>
 					</div>
 				</template>
-				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche.value, wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
+				<template v-for="item in kMan().terminGruppierteUeberschneidungenGetMengeByDatumAndAbijahr(manager().datumGetByKwzAndWochentag(kalenderwoche(), wochentag), zeigeAlleJahrgaenge() ? null : jahrgangsdaten.abiturjahr)">
 					<template v-for="(termin, index) in item" :key="termin.id">
 						<div class="svws-ui-stundenplan--unterricht flex flex-grow cursor-grab p-[2px] relative text-center z-10 border-transparent"
 							:style="posKlausurtermin(termin) +
@@ -85,7 +88,7 @@
 									: ''
 								)"
 							:data="termin"
-							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr"
+							:draggable="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate"
 							@dragstart="onDrag(termin)"
 							@dragend="onDrag(undefined)">
 							<div class="bg-white/40 dark:bg-black bg-highlight border w-full h-full rounded-lg overflow-hidden flex items-center justify-center relative group"
@@ -93,18 +96,20 @@
 									'bg-light border-black/20 dark:border-white/25': dragData !== undefined,
 									'shadow border-black/10 dark:border-white/10': dragData === undefined,
 								}">
-								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr" />
+								<span class="icon i-ri-draggable absolute top-1 left-0 z-10 opacity-50 group-hover:opacity-100" v-if="termin.abijahr === jahrgangsdaten.abiturjahr && hatKompetenzUpdate" />
 								<div class="absolute inset-0 flex w-full flex-col pointer-events-none opacity-80 bg-white" :style="{background: kursklausurMouseOver() !== undefined && kursklausurMouseOver()!.idTermin === termin.id ? 'none' : getBgColors(termin)}" />
 								<span v-if="zeigeAlleJahrgaenge()" class="absolute top-1.5 right-1.5 z-10 font-bold text-sm opacity-50">{{ GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(termin.abijahr, routeApp.data.aktAbschnitt.value.schuljahr, halbjahr.halbjahr)?.jahrgang }}</span>
-								<!-- TODO: Immer nur 1 Tooltip gleichzeitig geöffnet lassen, automatisch schließen wenn anderer Termin geöffnet wird -->
 								<svws-ui-tooltip :hover="false" position="right-start" class="!items-start h-full mr-auto" :indicator="false" :class="{'!cursor-grab': termin.abijahr === jahrgangsdaten.abiturjahr, '!cursor-pointer': termin.abijahr !== jahrgangsdaten.abiturjahr}">
 									<span class="z-10 relative p-1 leading-tight cursor-pointer font-medium text-left mt-6 pb-0 hyphens-auto">
 										<span class="line-clamp-4">{{ terminBezeichnung(termin) }}</span>
 									</span>
 									<template #content>
-										<s-gost-klausurplanung-termin :termin="termin"
+										<s-gost-klausurplanung-termin :termin
+											:benutzer-kompetenzen
 											in-tooltip
-											:k-man="kMan">
+											:goto-kalenderdatum
+											:goto-raumzeit-termin
+											:k-man>
 											<template #datum><span /></template>
 										</s-gost-klausurplanung-termin>
 									</template>
@@ -122,7 +127,7 @@
 <script setup lang="ts">
 
 	import type { GostKlausurtermin, Wochentag, StundenplanPausenaufsicht } from "@core";
-	import {type List, type StundenplanPausenzeit, DeveloperNotificationException, DateUtils, ZulaessigesFach, GostJahrgangsdaten, GostJahrgang, GostHalbjahr} from "@core";
+	import {type List, type StundenplanPausenzeit, DateUtils, Fach, GostHalbjahr, BenutzerKompetenz} from "@core";
 	import { computed } from "vue";
 	import type { SGostKlausurplanungKalenderStundenplanAnsichtProps } from "./SGostKlausurplanungKalenderStundenplanAnsichtProps";
 	import { routeApp } from "~/router/apps/RouteApp";
@@ -136,13 +141,14 @@
 		dragData: () => undefined,
 	});
 
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const terminBezeichnung = (termin: GostKlausurtermin) => {
 		if (termin.bezeichnung !== null && termin.bezeichnung.length > 0)
 			return termin.bezeichnung;
 		if (!termin.istHaupttermin)
 			return "Nachschreibtermin";
-		if (props.kMan().kursklausurGetMengeByTermin(termin).size())
+		if (props.kMan().kursklausurGetMengeByTermin(termin).size() > 0)
 			return [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k)).join(", ")
 		return "Klausurtermin";
 	}
@@ -275,7 +281,7 @@
 			return "#f2f4f5";
 
 		const klausuren = [...props.kMan().kursklausurGetMengeByTermin(termin)].map(k => props.kMan().kursKurzbezeichnungByKursklausur(k).split('-')[0])
-		const colors = klausuren.map(kuerzel => ZulaessigesFach.getByKuerzelASD(kuerzel || null).getHMTLFarbeRGBA(1.0));
+		const colors = klausuren.map(kuerzel => Fach.getBySchluesselOrDefault(kuerzel).getHMTLFarbeRGBA(props.jahrgangsdaten.abiturjahr-1, 1.0));
 
 		let gradient = '';
 

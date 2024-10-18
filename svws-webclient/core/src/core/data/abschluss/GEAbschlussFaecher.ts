@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class GEAbschlussFaecher extends JavaObject {
 
@@ -37,6 +38,8 @@ export class GEAbschlussFaecher extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.abschluss.GEAbschlussFaecher'].includes(name);
 	}
+
+	public static class = new Class<GEAbschlussFaecher>('de.svws_nrw.core.data.abschluss.GEAbschlussFaecher');
 
 	public static transpilerFromJSON(json : string): GEAbschlussFaecher {
 		const obj = JSON.parse(json) as Partial<GEAbschlussFaecher>;

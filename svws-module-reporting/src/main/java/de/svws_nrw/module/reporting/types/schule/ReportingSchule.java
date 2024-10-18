@@ -1,13 +1,9 @@
 package de.svws_nrw.module.reporting.types.schule;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.</p>
- * <p>Sie enthält alle Daten zur Schule, insbesondere deren Schuljahresabschnitte und Stammdaten.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Schule.
  */
 public class ReportingSchule {
 
@@ -36,7 +32,7 @@ public class ReportingSchule {
 	protected String bezeichnungSchuljahresabschnitt;
 
 	/** Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Halbjahr, 2. Halbjahr) */
-	protected List<String> bezeichnungenSchuljahresabschnitte = new ArrayList<>();
+	protected List<String> bezeichnungenSchuljahresabschnitte;
 
 	/** Die Dauer einer Unterrichtseinheit in Minuten. */
 	protected long dauerUnterrichtseinheit;
@@ -60,7 +56,7 @@ public class ReportingSchule {
 	protected String plz;
 
 	/** Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind. */
-	protected List<ReportingSchuljahresabschnitt> schuljahresabschnitte = new ArrayList<>();
+	protected List<ReportingSchuljahresabschnitt> schuljahresabschnitte;
 
 	/** Die Schulform der Schule */
 	protected String schulform;

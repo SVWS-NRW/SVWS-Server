@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class SatOutput extends JavaObject {
 
@@ -125,6 +126,8 @@ export class SatOutput extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.sat.SatOutput'].includes(name);
 	}
+
+	public static class = new Class<SatOutput>('de.svws_nrw.core.adt.sat.SatOutput');
 
 }
 

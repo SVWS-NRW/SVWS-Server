@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class BenutzergruppeDaten extends JavaObject {
 
@@ -36,6 +37,8 @@ export class BenutzergruppeDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.benutzer.BenutzergruppeDaten'].includes(name);
 	}
+
+	public static class = new Class<BenutzergruppeDaten>('de.svws_nrw.core.data.benutzer.BenutzergruppeDaten');
 
 	public static transpilerFromJSON(json : string): BenutzergruppeDaten {
 		const obj = JSON.parse(json) as Partial<BenutzergruppeDaten>;

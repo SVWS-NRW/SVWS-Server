@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject {
 
@@ -13,6 +14,9 @@ export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject
 	anzahl_zusatztermine : number = 0;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -43,6 +47,8 @@ export class KlausurblockungNachschreiberAlgorithmusBewertung extends JavaObject
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmusBewertung'].includes(name);
 	}
+
+	public static class = new Class<KlausurblockungNachschreiberAlgorithmusBewertung>('de.svws_nrw.core.utils.gost.klausurplanung.KlausurblockungNachschreiberAlgorithmusBewertung');
 
 }
 

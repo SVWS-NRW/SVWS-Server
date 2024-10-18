@@ -1,5 +1,6 @@
 <template>
-	<svws-ui-table :items="[]" :no-data="false" no-data-text="" :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]" type="navigation">
+	<svws-ui-table :items="[]" :no-data="false" no-data-text="" :columns="[{key: 'icon', label: '0', fixedWidth: 1.8, align: 'center'},{key: 'beschreibung', label: 'Laufbahnfehler'}]"
+		type="navigation" :scroll>
 		<template #header>
 			<div class="svws-ui-tr" role="row">
 				<div class="svws-ui-td col-span-full" role="columnheader">
@@ -30,7 +31,6 @@
 
 <script setup lang="ts">
 
-	import type { ComputedRef} from 'vue';
 	import { computed } from 'vue';
 	import type { List } from '../../../../../core/src/java/util/List';
 	import type { GostBelegpruefungErgebnisFehler } from '../../../../../core/src/core/abschluss/gost/GostBelegpruefungErgebnisFehler';
@@ -38,21 +38,20 @@
 	import { GostBelegungsfehlerArt } from '../../../../../core/src/core/abschluss/gost/GostBelegungsfehlerArt';
 	import { ArrayList } from '../../../../../core/src/java/util/ArrayList';
 
-	const props = defineProps<{
+	const props = withDefaults(defineProps<{
 		fehlerliste: () => List<GostBelegpruefungErgebnisFehler>;
 		belegpruefungsArt: () => GostBelegpruefungsArt;
-	}>();
+		scroll?: boolean;
+	}>(), {
+		scroll: false,
+	});
 
-	const belegungsfehler: ComputedRef<List<GostBelegpruefungErgebnisFehler>> = computed(() => {
+	const belegungsfehler = computed<List<GostBelegpruefungErgebnisFehler>>(() => {
 		const res = new ArrayList<GostBelegpruefungErgebnisFehler>();
 		for (const fehler of props.fehlerliste())
-			if (!!fehler &&
-				(GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.BELEGUNG ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHRIFTLICHKEIT ||
-					GostBelegungsfehlerArt.fromKuerzel(fehler.art) ===
-					GostBelegungsfehlerArt.SCHULSPEZIFISCH))
+			if (GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.BELEGUNG
+				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHRIFTLICHKEIT
+				|| GostBelegungsfehlerArt.fromKuerzel(fehler.art) === GostBelegungsfehlerArt.SCHULSPEZIFISCH)
 				res.add(fehler);
 		return res;
 	});

@@ -1,7 +1,8 @@
 import { AbschlussManagerBerufsbildend } from '../../../../core/abschluss/AbschlussManagerBerufsbildend';
-import { SchulabschlussAllgemeinbildend } from '../../../../core/types/schule/SchulabschlussAllgemeinbildend';
+import { SchulabschlussAllgemeinbildend } from '../../../../asd/types/schule/SchulabschlussAllgemeinbildend';
 import { Service } from '../../../../core/Service';
-import { Sprachreferenzniveau } from '../../../../core/types/fach/Sprachreferenzniveau';
+import { Class } from '../../../../java/lang/Class';
+import { Sprachreferenzniveau } from '../../../../asd/types/fach/Sprachreferenzniveau';
 import { AbschlussErgebnisBerufsbildend } from '../../../../core/data/abschluss/AbschlussErgebnisBerufsbildend';
 import { BKAnlageAFaecher } from '../../../../core/abschluss/bk/a/BKAnlageAFaecher';
 import { LogLevel } from '../../../../core/logger/LogLevel';
@@ -31,7 +32,7 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 				return AbschlussManagerBerufsbildend.getErgebnis(false, AbschlussManagerBerufsbildend.getDurchschnitt(input), false, SchulabschlussAllgemeinbildend.OA);
 			}
 		this.logger.logLn(LogLevel.INFO, " erreicht.");
-		if ((input.englischGeR === null) || (Sprachreferenzniveau.B1.vergleiche(input.englischGeR) < 0)) {
+		if ((input.englischGeR === null) || (Sprachreferenzniveau.B1.compareByKuerzel(input.englischGeR) < 0)) {
 			if (input.englischGeR === null) {
 				this.logger.logLn(LogLevel.INFO, "Das Sprachreferenzniveau in Englisch wurde nicht angegeben. Eine Prüfung auf MSA ist daher nicht möglich.");
 			} else {
@@ -62,6 +63,8 @@ export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErg
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service', 'de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss'].includes(name);
 	}
+
+	public static class = new Class<BKAnlageA01Abschluss>('de.svws_nrw.core.abschluss.bk.a.BKAnlageA01Abschluss');
 
 }
 

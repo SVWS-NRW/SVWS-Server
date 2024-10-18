@@ -1,6 +1,5 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
@@ -9,6 +8,7 @@ import { RouteDataConfig } from "~/router/apps/config/RouteDataConfig";
 
 import type { ConfigAppProps } from "~/components/config/SConfigAppProps";
 import { api } from "~/router/Api";
+import { ServerMode } from "../../../../../core/src/core/types/ServerMode";
 
 const SConfigApp = () => import("~/components/config/SConfigApp.vue")
 

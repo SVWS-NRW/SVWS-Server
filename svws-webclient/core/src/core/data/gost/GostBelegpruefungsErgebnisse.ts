@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import { GostBelegpruefungErgebnis } from '../../../core/abschluss/gost/GostBelegpruefungErgebnis';
+import { Class } from '../../../java/lang/Class';
 
 export class GostBelegpruefungsErgebnisse extends JavaObject {
 
@@ -26,6 +27,8 @@ export class GostBelegpruefungsErgebnisse extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse'].includes(name);
 	}
+
+	public static class = new Class<GostBelegpruefungsErgebnisse>('de.svws_nrw.core.data.gost.GostBelegpruefungsErgebnisse');
 
 	public static transpilerFromJSON(json : string): GostBelegpruefungsErgebnisse {
 		const obj = JSON.parse(json) as Partial<GostBelegpruefungsErgebnisse>;

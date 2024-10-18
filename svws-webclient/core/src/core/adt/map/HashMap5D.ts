@@ -4,6 +4,7 @@ import { HashMap } from '../../../java/util/HashMap';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { HashMap4D } from '../../../core/adt/map/HashMap4D';
@@ -194,12 +195,14 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	 * @param key3 Der 3. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key4 Der 4. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
 	 * @param key5 Der 5. Schlüssel des Quintupels(key1, key2, key3, key4, key5).
+	 *
+	 * @return der dem Mapping vor dem Entfernen zugeordnete Wert, falls vorhanden.
 	 */
-	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4, key5 : K5) : void {
+	public removeOrException(key1 : K1, key2 : K2, key3 : K3, key4 : K4, key5 : K5) : V {
 		const map2 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
 		if (map2 === null)
 			throw new DeveloperNotificationException("Pfad (key1=" + key1 + ") ungültig!")
-		map2.removeOrException(key2, key3, key4, key5);
+		return map2.removeOrException(key2, key3, key4, key5);
 	}
 
 	/**
@@ -217,6 +220,34 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 		if (map2 === null)
 			return;
 		map2.remove(key2, key3, key4, key5);
+	}
+
+	/**
+	 * Entfernt das Mapping (key1) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 */
+	public removeMap1(key1 : K1) : void {
+		let map1 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null)
+			return;
+		this._map.remove(key1);
+	}
+
+	/**
+	 * Entfernt das Mapping (key1, key2) falls es existiert<br>
+	 *
+	 * @param key1  Der 1. Schlüssel.
+	 * @param key2  Der 2. Schlüssel.
+	 */
+	public removeMap2(key1 : K1, key2 : K2) : void {
+		let map1 : HashMap4D<K2, K3, K4, K5, V> | null = this._map.get(key1);
+		if (map1 === null)
+			return;
+		map1.removeMap1(key2);
+		if (map1.isEmpty()) {
+			this._map.remove(key1);
+		}
 	}
 
 	/**
@@ -313,6 +344,8 @@ export class HashMap5D<K1, K2, K3, K4, K5, V> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.HashMap5D'].includes(name);
 	}
+
+	public static class = new Class<HashMap5D<any, any, any, any, any, any>>('de.svws_nrw.core.adt.map.HashMap5D');
 
 }
 

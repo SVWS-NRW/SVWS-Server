@@ -1,11 +1,10 @@
 package de.svws_nrw.data.faecher;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.fach.FachgruppenKatalogEintrag;
-import de.svws_nrw.core.types.fach.Fachgruppe;
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
@@ -32,9 +31,9 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 
 	@Override
 	public Response getAll() {
-		final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
+		final ArrayList<FachgruppeKatalogEintrag> daten = new ArrayList<>();
 		for (final Fachgruppe gruppe : Fachgruppe.values())
-			daten.addAll(Arrays.asList(gruppe.historie));
+			daten.addAll(gruppe.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -43,12 +42,13 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 		final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 		if (schule == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final var gruppen = Fachgruppe.get(schule.Schulform);
-		if (gruppen == null)
+		final ArrayList<FachgruppeKatalogEintrag> daten = new ArrayList<>();
+		for (final Fachgruppe gruppe : Fachgruppe.values())
+			for (final FachgruppeKatalogEintrag eintrag : gruppe.historie())
+				if (eintrag.schulformen.contains(schule.SchulformKuerzel))
+					daten.add(eintrag);
+		if (daten.isEmpty())
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final ArrayList<FachgruppenKatalogEintrag> daten = new ArrayList<>();
-		for (final Fachgruppe gruppe : gruppen)
-			daten.addAll(Arrays.asList(gruppe.historie));
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 
@@ -56,7 +56,7 @@ public final class DataKatalogFachgruppen extends DataManager<Long> {
 	public Response get(final Long id) throws ApiOperationException {
 		if (id == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		final FachgruppenKatalogEintrag daten = Fachgruppe.getKatalogEintragByID(id);
+		final FachgruppeKatalogEintrag daten = Fachgruppe.data().getEintragByID(id);
 		if (daten == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();

@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -12,6 +13,7 @@ import de.svws_nrw.core.logger.LogConsumerConsole;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.utils.schema.DBSchemaManager;
 
 
@@ -66,6 +68,7 @@ public class CreateSchema {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -116,7 +119,7 @@ public class CreateSchema {
 			final String tgtPwd = cmdLine.getValue("tp", "svwsadmin");
 			final String tgtRootUser = cmdLine.getValue("tq", null);
 			final String tgtRootPwd = cmdLine.getValue("tr", "svwsadmin");
-			final DBConfig tgtConfig = new DBConfig(tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true, 0, 0);
+			final DBConfig tgtConfig = new DBConfig(PersistenceUnits.SVWS_ROOT, tgtDrv, tgtLoc, tgtDB, false, tgtUser, tgtPwd, true, true);
 
 			// Führe das Erstellen mithilfe des Schema-Managers durch.
 			DBSchemaManager.createNewSchema(tgtConfig, tgtRootUser, tgtRootPwd, maxUpdateRevision, logger);

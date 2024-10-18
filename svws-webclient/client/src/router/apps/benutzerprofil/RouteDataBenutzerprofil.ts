@@ -26,14 +26,6 @@ export class RouteDataBenutzerprofil extends RouteData<RouteStateBenutzerprofil>
 		return this._state.value.benutzerEMailDaten;
 	}
 
-	get backticks(): boolean {
-		return api.config.getValue("benutzerprofil.notifications.backticks") === 'true';
-	}
-
-	setBackticks = async (value: boolean) => {
-		await api.config.setValue('benutzerprofil.notifications.backticks', value ? "true" : "false");
-	}
-
 	public patch = async (data: Partial<BenutzerDaten>) => {
 		console.log("TODO: Benutzerdaten patchen")
 		//api.server.patch

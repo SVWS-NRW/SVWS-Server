@@ -6,9 +6,10 @@ import java.util.Map;
 import java.util.Set;
 
 import de.svws_nrw.core.data.schueler.SchuelerLeistungsdaten;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
 import de.svws_nrw.data.DataManagerRevised;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
@@ -40,19 +41,23 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 	}
 
 	@Override
-	protected void initDTO(final DTOSchuelerLeistungsdaten dto, final Long newId) throws ApiOperationException {
+	protected void initDTO(final DTOSchuelerLeistungsdaten dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
 		dto.ID = newId;
 	}
 
 
 	@Override
 	public SchuelerLeistungsdaten map(final DTOSchuelerLeistungsdaten dto) {
+		// Bestimme der zugehörigen Lernabschnitt für die Schuljahresabschnitts-ID, um eine korrekte Validierung der Einträge beim Mapping vornehmen zu können
+		final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
+		final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
+		// Mappe das DTO-Objekt
 		final SchuelerLeistungsdaten daten = new SchuelerLeistungsdaten();
 		daten.id = dto.ID;
 		daten.lernabschnittID = dto.Abschnitt_ID;
 		daten.fachID = dto.Fach_ID;
 		daten.kursID = dto.Kurs_ID;
-		daten.kursart = (dto.Kursart == null) ? ZulaessigeKursart.PUK.daten.kuerzel : dto.Kursart;
+		daten.kursart = (dto.Kursart == null) ? ZulaessigeKursart.PUK.daten(abschnitt.schuljahr).kuerzel : dto.Kursart;
 		try {
 			daten.abifach = (dto.AbiFach == null) ? null : Integer.parseInt(dto.AbiFach);
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
@@ -65,8 +70,10 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 		daten.zusatzkraftID = dto.Zusatzkraft_ID;
 		daten.zusatzkraftWochenstunden = (dto.WochenstdZusatzkraft == null) ? 0 : dto.WochenstdZusatzkraft;
 		daten.aufZeugnis = (dto.AufZeugnis == null) || dto.AufZeugnis;
-		daten.note = (dto.NotenKrz == null) ? Note.KEINE.kuerzel : dto.NotenKrz.kuerzel;
-		daten.noteQuartal = (dto.NotenKrzQuartal == null) ? Note.KEINE.kuerzel : dto.NotenKrzQuartal.kuerzel;
+		final Note note = (dto.NotenKrz == null) ? Note.KEINE : Note.data().getWertByKuerzel(dto.NotenKrz);
+		daten.note = note.daten(abschnitt.schuljahr).kuerzel;
+		final Note noteQuartal = (dto.NotenKrzQuartal == null) ? Note.KEINE : Note.data().getWertByKuerzel(dto.NotenKrzQuartal);
+		daten.noteQuartal = noteQuartal.daten(abschnitt.schuljahr).kuerzel;
 		daten.istGemahnt = (dto.Warnung != null) && dto.Warnung; // TODO bestimme ggf. aus Halbjahr zuvor
 		daten.mahndatum = dto.Warndatum;
 		daten.istEpochal = (dto.VorherAbgeschl != null) && dto.VorherAbgeschl;
@@ -91,15 +98,19 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			dto.Fachlehrer_ID = kurs.Lehrer_ID;
 			// Passe ggf. die Kursart an, wenn sie sich geändert hat
 			if ((kurs.KursartAllg != null) && (!kurs.KursartAllg.equals(dto.KursartAllg))) {
-				final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(kurs.KursartAllg);
+				// Bestimme zunächst den Schuljahresabschnitt für Validierungszwecke
+				final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
+				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
+				// Und bestimme nun die Zulässigen Kursarten
+				final @NotNull List<@NotNull ZulaessigeKursart> kursarten = ZulaessigeKursart.getByAllgemeinerKursart(abschnitt.schuljahr, kurs.KursartAllg);
 				dto.KursartAllg = kurs.KursartAllg;
-				if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzel)) { // Speziallfall Gesamtschule E-Kurs
-					dto.Kursart = ZulaessigeKursart.E.daten.kuerzel;
-				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten.kuerzel)) { // Speziallfall Gesamtschule G-Kurs
-					dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten.kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
-					dto.Kursart = ZulaessigeKursart.G.daten.kuerzel;
-				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
+				if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten(abschnitt.schuljahr).kuerzel)) { // Speziallfall Gesamtschule E-Kurs
+					dto.Kursart = ZulaessigeKursart.E.daten(abschnitt.schuljahr).kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.G.daten(abschnitt.schuljahr).kuerzel)) { // Speziallfall Gesamtschule G-Kurs
+					dto.Kursart = ZulaessigeKursart.G.daten(abschnitt.schuljahr).kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.E.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gesamtschule DK-Kurs -> nehme G als Default
+					dto.Kursart = ZulaessigeKursart.G.daten(abschnitt.schuljahr).kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.GKM.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe GK -> Berücksichtige Abiturfach, Default GKM
 					ZulaessigeKursart kursart = ZulaessigeKursart.GKM;
 					if ("1".equals(dto.AbiFach) || "2".equals(dto.AbiFach))
 						dto.AbiFach = null;
@@ -107,15 +118,15 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 						kursart = ZulaessigeKursart.AB3;
 					else if ("4".equals(dto.AbiFach))
 						kursart = ZulaessigeKursart.AB4;
-					dto.Kursart = kursart.daten.kuerzel;
-				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten.kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
-					dto.Kursart = ZulaessigeKursart.LK1.daten.kuerzel;
+					dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
+				} else if (kurs.KursartAllg.equals(ZulaessigeKursart.LK1.daten(abschnitt.schuljahr).kuerzelAllg)) { // Spezialfall Gymnasiale Oberstufe LK -> Berücksichtige Abiturfach, Default LK1
+					dto.Kursart = ZulaessigeKursart.LK1.daten(abschnitt.schuljahr).kuerzel;
 					if ("2".equals(dto.AbiFach))
-						dto.Kursart = ZulaessigeKursart.LK2.daten.kuerzel;
+						dto.Kursart = ZulaessigeKursart.LK2.daten(abschnitt.schuljahr).kuerzel;
 					if (dto.AbiFach == null)
 						dto.AbiFach = "1";
 				} else {
-					dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten.kuerzel;
+					dto.Kursart = kursarten.isEmpty() ? null : kursarten.get(0).daten(abschnitt.schuljahr).kuerzel;
 				}
 			}
 		}
@@ -150,11 +161,13 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			case "kursID" -> mapKursID(dto, JSONMapper.convertToLong(value, true));
 			case "kursart" -> {
 				final String strKursart = JSONMapper.convertToString(value, true, false, null);
-				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.getByASDKursart(strKursart);
+				final ZulaessigeKursart kursart = (strKursart == null) ? ZulaessigeKursart.PUK : ZulaessigeKursart.data().getWertByKuerzel(strKursart);
 				if (kursart == null)
 					throw new ApiOperationException(Status.CONFLICT);
-				dto.Kursart = kursart.daten.kuerzel;
-				dto.KursartAllg = kursart.daten.kuerzelAllg;
+				final DTOSchuelerLernabschnittsdaten dtoAbschnitt = conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, dto.Abschnitt_ID);
+				final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoAbschnitt.Schuljahresabschnitts_ID);
+				dto.Kursart = kursart.daten(abschnitt.schuljahr).kuerzel;
+				dto.KursartAllg = kursart.daten(abschnitt.schuljahr).kuerzelAllg;
 			}
 			case "abifach" -> {
 				final Integer abiFach = JSONMapper.convertToInteger(value, true);
@@ -179,8 +192,18 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 			}
 			case "zusatzkraftWochenstunden" -> dto.WochenstdZusatzkraft = JSONMapper.convertToIntegerInRange(value, true, 0, 1000);
 			case "aufZeugnis" -> dto.AufZeugnis = JSONMapper.convertToBoolean(value, false);
-			case "note" -> dto.NotenKrz = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null));
-			case "noteQuartal" -> dto.NotenKrzQuartal = Note.fromKuerzel(JSONMapper.convertToString(value, true, true, null));
+			case "note" -> {
+				final String str = JSONMapper.convertToString(value, true, true, null);
+				if (Note.fromKuerzel(str) == null)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
+				dto.NotenKrz = str;
+			}
+			case "noteQuartal" -> {
+				final String str = JSONMapper.convertToString(value, true, true, null);
+				if (Note.fromKuerzel(str) == null)
+					throw new ApiOperationException(Status.BAD_REQUEST, "Das Notenkürzel ist ungültig");
+				dto.NotenKrzQuartal = str;
+			}
 			case "istGemahnt" -> dto.Warnung = JSONMapper.convertToBoolean(value, false);
 			case "mahndatum" -> {
 				final String strMahndatum = JSONMapper.convertToString(value, true, false, null);
@@ -219,7 +242,7 @@ public final class DataSchuelerLeistungsdaten extends DataManagerRevised<Long, D
 	 * @throws ApiOperationException   im Fehlerfall, wenn der Benutzer nicht alle Rechte zum Zugriff auf die übergebene Lernabschnitte hat (503 - FORBIDDEN)
 	 */
 	private void checkFunktionsbezogeneKompetenzAufLernabschnitt(final List<Long> idsLernabschnitte) throws ApiOperationException {
-		if (checkBenutzerFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
+		if (hatBenutzerNurFunktionsbezogeneKompetenz(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_FUNKTIONSBEZOGEN_AENDERN,
 				Set.of(BenutzerKompetenz.SCHUELER_LEISTUNGSDATEN_ALLE_AENDERN))) {
 			final List<DTOSchuelerLernabschnittsdaten> lernabschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, idsLernabschnitte);
 			for (final DTOSchuelerLernabschnittsdaten lernabschnitt : lernabschnitte)

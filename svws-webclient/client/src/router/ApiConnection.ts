@@ -48,6 +48,9 @@ export class ApiConnection {
 	// Enthält die Klassen-IDs, auf denen der Benutzer aufgrund einer Klassen- oder Abteilungsleitung funktionsbezogene Kompetenzen hat
 	protected _kompetenzenKlasse = shallowRef<Set<number> | undefined>(undefined);
 
+	// Enthält die Abiturjahrgänge, bei denen der Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
+	protected _kompetenzenAbiturjahrgaenge = shallowRef<Set<number> | undefined>(undefined);
+
 	// Die aktuelle Konfiguration der Schule, sofern ein Login stattgefunden hat
 	protected _config = ref<Config | undefined>(undefined);
 
@@ -56,6 +59,9 @@ export class ApiConnection {
 
 	// Der Modus, in welchem der Server betrieben wird
 	protected _serverMode = shallowRef<ServerMode>(ServerMode.STABLE)
+
+	// Die Map mit den CoreTypeDaten
+	protected _mapCoreTypeNameJsonData = ref<Map<string, string> | undefined>(undefined);
 
 
 	public constructor() {
@@ -119,11 +125,18 @@ export class ApiConnection {
 		return this._kompetenzenKlasse.value;
 	}
 
+	// Die Abiturjahrgänge, auf denen der angemeldete Benutzer als Beratungslehrer funktionsbezogene Kompetenzen hat
+	get kompetenzenAbiturjahrgaenge(): Set<number> {
+		if (this._kompetenzenAbiturjahrgaenge.value === undefined)
+			throw new DeveloperNotificationException("Ein Benutzer muss angemeldet sein, damit dessen funktionsbezogene Kompetenzen ermittelt werden können.");
+		return this._kompetenzenAbiturjahrgaenge.value;
+	}
+
 	// Gibt die Konfiguration für den angemeldeten Benutzer zurück, sofern ein Login stattgefunden hat
 	get config(): Config {
 		if (this._config.value === undefined)
 			throw new DeveloperNotificationException("Eine Konfiguration ist nicht vorhanden.");
-		return this._config.value;
+		return this._config.value as Config;
 	}
 
 	// Gibt den Modus zurück, in welchem der Server betrieben wird.
@@ -137,6 +150,18 @@ export class ApiConnection {
 		if (aes === undefined)
 			throw new DeveloperNotificationException("Das AES-Objekt ist nicht definiert")
 		return aes;
+	}
+
+	// gibt die Map mit den CoreType-Daten zurück
+	get mapCoreTypeNameJsonData(): Map<string, string> {
+		if (this._mapCoreTypeNameJsonData.value === undefined)
+			throw new DeveloperNotificationException("Eine KMap mi den CoreTypeDaten ist nicht vorhanden.");
+		return this._mapCoreTypeNameJsonData.value;
+	}
+
+	//** Setzt die Map mit den CoreTypeDaten */
+	set mapCoreTypeNameJsonData(map: Map<string, string>) {
+		this._mapCoreTypeNameJsonData.value = map;
 	}
 
 	/**
@@ -204,7 +229,7 @@ export class ApiConnection {
 		console.log(`Verbinde zum SVWS-Server unter https://${host}...`);
 		try {
 			const list = await this.connect(host);
-			if (url.port)
+			if (url.port.length > 0)
 				localStorage.setItem("SVWS-Client Port", url.port);
 			return list;
 		} catch (error) {
@@ -303,6 +328,22 @@ export class ApiConnection {
 
 
 	/**
+	 * Ermittelt, die Menge an Abiturjahrgängen, bei denen der Benutzer als Beratungslehrer
+	 * funktionsbezogene Kompetenzen hat.
+	 *
+	 * @param daten   die Daten des Benutzers
+	 *
+	 * @returns die Menge an Abiturjahrgängen
+	 */
+	protected getKompetenzenAbiturjahrgaenge(daten: BenutzerDaten): Set<number> {
+		const result = new Set<number>();
+		for (const id of daten.kompetenzenAbiturjahrgaenge)
+			result.add(id);
+		return result;
+	}
+
+
+	/**
 	 * Liest die Client-Konfiguration vom Server und erstellt das zugehörige
 	 * TypeScript-Objekt.
 	 *
@@ -348,6 +389,7 @@ export class ApiConnection {
 			this._istAdmin.value = this.getIstAdmin(this._benutzerdaten.value);
 			this._kompetenzen.value = this.getKompetenzen(this._benutzerdaten.value);
 			this._kompetenzenKlasse.value = this.getKompetenzenKlasse(this._benutzerdaten.value);
+			this._kompetenzenAbiturjahrgaenge.value = this.getKompetenzenAbiturjahrgaenge(this._benutzerdaten.value);
 			this._serverMode.value = ServerMode.getByText(await this._api.getServerModus());
 			await this.getConfig();
 		} catch (error) {
@@ -357,6 +399,7 @@ export class ApiConnection {
 			this._istAdmin.value = undefined;
 			this._kompetenzen.value = undefined;
 			this._kompetenzenKlasse.value = undefined;
+			this._kompetenzenAbiturjahrgaenge.value = undefined;
 			this.config.mapGlobal = new Map();
 			this.config.mapUser = new Map();
 			this._stammdaten.value = {stammdaten: undefined};
@@ -372,7 +415,7 @@ export class ApiConnection {
 	 */
 	init = async (): Promise<boolean> => {
 		try {
-			if (this._api && this._schema)
+			if (this._api && (this._schema !== undefined))
 				this._stammdaten.value.stammdaten = await this._api.getSchuleStammdaten(this._schema);
 			return true;
 		} catch(error) {
@@ -391,6 +434,7 @@ export class ApiConnection {
 		this._istAdmin.value = undefined;
 		this._kompetenzen.value = undefined;
 		this._kompetenzenKlasse.value = undefined;
+		this._kompetenzenAbiturjahrgaenge.value = undefined;
 		this._username = "";
 		this._password = "";
 		this._schema_api = undefined;

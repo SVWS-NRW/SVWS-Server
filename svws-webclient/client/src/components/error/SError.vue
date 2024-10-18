@@ -25,7 +25,7 @@
 				<svws-ui-header>
 					<div class="flex items-center">
 						<div>
-							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name }}</span>
+							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name ?? 'Fehler' }}</span>
 							<br>
 							<span class="opacity-40">
 								<template v-if="code !== undefined">
@@ -42,7 +42,14 @@
 					<div class="svws-ui-tab-content">
 						<div class="page--content">
 							<svws-ui-content-card :title="error?.message">
-								<pre>{{ error.stack }}</pre>
+								<svws-ui-input-wrapper>
+									<svws-ui-button type="primary" @click="copyToClipboard">
+										<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+										<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
+										<span class="icon i-ri-check-line icon-primary" v-else /> Fehlermeldung kopieren
+									</svws-ui-button>
+									<pre>{{ error.stack }}</pre>
+								</svws-ui-input-wrapper>
 							</svws-ui-content-card>
 						</div>
 					</div>
@@ -55,12 +62,69 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
+	import type { SimpleOperationResponse} from "@core";
+	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from "@core";
+
+	type CapturedError = {
+		id: number;
+		name: string;
+		message: string;
+		stack: string | string[];
+		log: SimpleOperationResponse | null;
+	};
 
 	const props = defineProps<ErrorProps>();
+	const copied = ref<boolean|null>(null);
 
 	function goBack() {
 		window.history.back();
+	}
+
+	async function createCapturedError(): Promise<CapturedError> {
+		const reason = props.error;
+		if (reason === undefined)
+			return { id: 0, name: "Unbekannter Fehler", message: "Ein Fehler verhindert den weiteren Ablauf des SVWS-Client, der Fehler ist jedoch unbekannt", stack: "", log: null };
+		console.warn(reason);
+		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
+		let message = reason.message;
+		let log = null;
+		if (reason instanceof DeveloperNotificationException)
+			name = "Programmierfehler: Bitte melden Sie diesen Fehler."
+		else if (reason instanceof UserNotificationException)
+			name = "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
+		else if (reason instanceof OpenApiError) {
+			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
+			if (reason.response instanceof Response) {
+				try {
+					let res;
+					if (reason.response.headers.get('content-type') === 'application/json') {
+						res = await reason.response.json();
+						if ('log' in res && 'success' in res)
+							log = res satisfies SimpleOperationResponse;
+					}
+					else
+						res = await reason.response.text();
+					if (res.length > 0)
+						message = res;
+					else
+						message += ' - Status: '+reason.response.status;
+				} catch(e) { void e }
+			}
+		}
+		return { id: 0, name, message, stack: reason.stack?.split("\n") || '', log }
+	}
+
+	async function copyToClipboard() {
+		const capturedError = await createCapturedError();
+		const json = JSON.stringify({ env: { mode: props.api.mode.text, version: props.api.version, commit: props.api.githash, kompetenzen: props.benutzerKompetenzen.values().toArray().toString() }, capturedError }, null, 2);
+		try {
+			await navigator.clipboard.writeText("```json\n"+json+"\n```");
+		} catch(e) {
+			copied.value = false;
+		}
+		copied.value = true;
 	}
 
 	function reloadClient() {

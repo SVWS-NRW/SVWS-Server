@@ -8,34 +8,42 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import de.svws_nrw.config.SVWSKonfiguration;
-import de.svws_nrw.core.data.fach.FachKatalogEintrag;
-import de.svws_nrw.core.data.schule.HerkunftKatalogEintrag;
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.fach.FachKatalogEintrag;
+import de.svws_nrw.asd.data.fach.FachgruppeKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangKatalogEintrag;
+import de.svws_nrw.asd.data.schueler.HerkunftBildungsgangTypKatalogEintrag;
+import de.svws_nrw.core.data.schule.HerkunftSchulformKatalogEintrag;
+import de.svws_nrw.core.data.schule.HerkunftSonstigeKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintrag;
 import de.svws_nrw.core.data.schule.HerkunftsartKatalogEintragBezeichnung;
-import de.svws_nrw.core.data.schule.SchulformKatalogEintrag;
-import de.svws_nrw.core.data.schule.SchulformSchulgliederung;
+import de.svws_nrw.asd.data.schule.SchulformKatalogEintrag;
+import de.svws_nrw.asd.data.schule.SchulformSchulgliederung;
 import de.svws_nrw.core.logger.Logger;
 import de.svws_nrw.core.types.KursFortschreibungsart;
-import de.svws_nrw.core.types.Note;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.types.PersonalTyp;
-import de.svws_nrw.core.types.fach.Fachgruppe;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.klassen.Klassenart;
-import de.svws_nrw.core.types.kurse.ZulaessigeKursart;
-import de.svws_nrw.core.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.types.fach.Fachgruppe;
+import de.svws_nrw.asd.types.fach.Fach;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.klassen.Klassenart;
+import de.svws_nrw.asd.types.kurse.ZulaessigeKursart;
+import de.svws_nrw.asd.types.lehrer.LehrerLeitungsfunktion;
+import de.svws_nrw.asd.types.schueler.HerkunftBildungsgang;
+import de.svws_nrw.asd.types.schueler.HerkunftBildungsgangTyp;
 import de.svws_nrw.core.types.schueler.Einschulungsart;
-import de.svws_nrw.core.types.schueler.Herkunft;
+import de.svws_nrw.core.types.schueler.HerkunftSchulform;
+import de.svws_nrw.core.types.schueler.HerkunftSonstige;
 import de.svws_nrw.core.types.schueler.Herkunftsarten;
-import de.svws_nrw.core.types.schule.AllgemeinbildendOrganisationsformen;
+import de.svws_nrw.asd.types.schule.AllgemeinbildendOrganisationsformen;
 import de.svws_nrw.core.types.schule.AllgemeineMerkmale;
-import de.svws_nrw.core.types.schule.BerufskollegOrganisationsformen;
+import de.svws_nrw.asd.types.schule.BerufskollegOrganisationsformen;
 import de.svws_nrw.core.types.schule.Nationalitaeten;
-import de.svws_nrw.core.types.schule.Religion;
-import de.svws_nrw.core.types.schule.Schulform;
-import de.svws_nrw.core.types.schule.Schulgliederung;
-import de.svws_nrw.core.types.schule.WeiterbildungskollegOrganisationsformen;
-import de.svws_nrw.db.Benutzer;
+import de.svws_nrw.asd.types.schule.Religion;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.WeiterbildungskollegOrganisationsformen;
+import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
 import de.svws_nrw.db.dto.current.schema.DTOSchemaCoreTypeVersion;
@@ -95,31 +103,33 @@ public class DBCoreTypeUpdater {
 		this._schemaManager = schemaManager;
 		this._logger = schemaManager.getLogger();
 		this._status = schemaManager.getSchemaStatus();
-		tables.add(new CoreTypeTable("Fachgruppen", Fachgruppe.VERSION, updateFachgruppen));
+		tables.add(new CoreTypeTable("Fachgruppen", Fachgruppe.data().getVersion(), updateFachgruppen));
 		tables.add(new CoreTypeTable("KursFortschreibungsarten", KursFortschreibungsart.VERSION, updateKursFortschreibungsarten));
-		tables.add(new CoreTypeTable("Schulformen", Schulform.VERSION, updateSchulformen));
+		tables.add(new CoreTypeTable("Schulformen", Schulform.data().getVersion(), updateSchulformen));
 		tables.add(new CoreTypeTable("PersonalTypen", PersonalTyp.VERSION, updatePersonalTypen));
 		tables.add(new CoreTypeTable("Nationalitaeten_Keys", Nationalitaeten.VERSION, updateNationalitaeten_Keys));
-		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.VERSION, updateJahrgaengeKeys));
-		tables.add(new CoreTypeTable("Noten", Note.VERSION, updateNoten));
-		tables.add(new CoreTypeTable("Herkunft", Herkunft.VERSION, updateHerkuenfte));
-		tables.add(new CoreTypeTable("Herkunft_Keys", Herkunft.VERSION, updateHerkuenfteKeys));
-		tables.add(new CoreTypeTable("Herkunft_Schulformen", Herkunft.VERSION, updateHerkuenfteSchulformen));
+		tables.add(new CoreTypeTable("Jahrgaenge_Keys", Jahrgaenge.data().getVersion(), updateJahrgaengeKeys));
+		tables.add(new CoreTypeTable("Noten", Note.data().getVersion(), updateNoten));
+		final long versionHerkuenfte = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
+				+ HerkunftSchulform.VERSION;
+		tables.add(new CoreTypeTable("Herkunft", versionHerkuenfte, updateHerkuenfte));
+		tables.add(new CoreTypeTable("Herkunft_Keys", versionHerkuenfte, updateHerkuenfteKeys));
+		tables.add(new CoreTypeTable("Herkunft_Schulformen", versionHerkuenfte, updateHerkuenfteSchulformen));
 		tables.add(new CoreTypeTable("Herkunftsart", Herkunftsarten.VERSION, updateHerkunftsarten));
 		tables.add(new CoreTypeTable("Herkunftsart_Keys", Herkunftsarten.VERSION, updateHerkunftsartenKeys));
 		tables.add(new CoreTypeTable("Herkunftsart_Schulformen", Herkunftsarten.VERSION, updateHerkunftsartenSchulformen));
-		tables.add(new CoreTypeTable("KlassenartenKatalog_Keys", Klassenart.VERSION, updateKlassenartenKeys));
-		tables.add(new CoreTypeTable("KursartenKatalog_Keys", ZulaessigeKursart.VERSION, updateKursartenKeys));
-		tables.add(new CoreTypeTable("FachKatalog", ZulaessigesFach.VERSION, updateZulaessigeFaecher));
-		tables.add(new CoreTypeTable("FachKatalog_Keys", ZulaessigesFach.VERSION, updateZulaessigeFaecherKeys));
-		tables.add(new CoreTypeTable("FachKatalog_Schulformen", ZulaessigesFach.VERSION, updateZulaessigeFaecherSchulformen));
+		tables.add(new CoreTypeTable("KlassenartenKatalog_Keys", Klassenart.data().getVersion(), updateKlassenartenKeys));
+		tables.add(new CoreTypeTable("KursartenKatalog_Keys", ZulaessigeKursart.data().getVersion(), updateKursartenKeys));
+		tables.add(new CoreTypeTable("FachKatalog", Fach.data().getVersion(), updateZulaessigeFaecher));
+		tables.add(new CoreTypeTable("FachKatalog_Keys", Fach.data().getVersion(), updateZulaessigeFaecherKeys));
+		tables.add(new CoreTypeTable("FachKatalog_Schulformen", Fach.data().getVersion(), updateZulaessigeFaecherSchulformen));
 		tables.add(new CoreTypeTable("EinschulungsartKatalog_Keys", Einschulungsart.VERSION, updateEinschulungsartenKeys));
-		tables.add(new CoreTypeTable("Religionen_Keys", Religion.VERSION, updateReligionenKeys));
+		tables.add(new CoreTypeTable("Religionen_Keys", Religion.data().getVersion(), updateReligionenKeys));
 		tables.add(new CoreTypeTable("AllgemeineMerkmaleKatalog_Keys", AllgemeineMerkmale.VERSION, updateAllgemeineMerkmaleKeys));
-		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.VERSION
-				+ WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
+		tables.add(new CoreTypeTable("OrganisationsformenKatalog_Keys", BerufskollegOrganisationsformen.data().getVersion()
+				+ WeiterbildungskollegOrganisationsformen.data().getVersion() + AllgemeinbildendOrganisationsformen.data().getVersion(),
 				updateOrganisationsformenKeys));
-		tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.VERSION, updateLehrerLeitungsfunktionenKeys));
+		tables.add(new CoreTypeTable("LehrerLeitungsfunktion_Keys", LehrerLeitungsfunktion.data().getVersion(), updateLehrerLeitungsfunktionenKeys));
 	}
 
 
@@ -128,15 +138,16 @@ public class DBCoreTypeUpdater {
 	 * Version in der Datenbank übereinstimmt.
 	 *
 	 * @return true, falls die Core-Types in der DB aktuell sind, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean isUptodate() {
-		try (DBEntityManager conn = _schemaManager.getUser().getEntityManager()) {
-			_status.update(conn);
-			for (final CoreTypeTable entry : tables)
-				if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
-					return false;
-			return true;
-		}
+	public boolean isUptodate() throws DBException {
+		final DBEntityManager conn = _schemaManager.getConnection();
+		_status.update(conn);
+		for (final CoreTypeTable entry : tables)
+			if ((entry.name == null) || (!pruefeVersion(conn, entry.name, entry.version)))
+				return false;
+		return true;
 	}
 
 
@@ -202,27 +213,25 @@ public class DBCoreTypeUpdater {
 	/**
 	 * Aktualisiert die Core-Types im Schema schrittweise auf die angegebene Revision.
 	 *
-	 * @param user         der Datenbank-Benutzer für den Verbindungsaufbau zur Datenbank
+	 * @param conn         die Datenbankverbindung ohne aktive Transaktion
 	 * @param lockSchema   gibt an, on das Schema für den Update-Prozess gesperrt werden soll. Dies ist z.B. nicht
 	 *                     notwendig, wenn der Update-Prozess im Rahmen einer Migration gestartet wird.
 	 * @param rev          die Datenbank-Revision auf welche aktualisiert wird
 	 *
 	 * @return true im Erfolgsfall, sonst false
 	 */
-	public boolean update(final Benutzer user, final boolean lockSchema, final long rev) {
-		try (DBEntityManager conn = user.getEntityManager()) {
-			try {
-				conn.transactionBegin();
-				boolean result = update(conn, lockSchema, rev);
-				if (result && (!conn.transactionCommit()))
-					result = false;
-				return result;
-			} catch (final Exception e) {
-				e.printStackTrace();
-				return false;
-			} finally {
-				conn.transactionRollback();
-			}
+	public boolean updateNewTransaction(final DBEntityManager conn, final boolean lockSchema, final long rev) {
+		try {
+			conn.transactionBegin();
+			boolean result = update(conn, lockSchema, rev);
+			if (result && (!conn.transactionCommit()))
+				result = false;
+			return result;
+		} catch (final Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			conn.transactionRollback();
 		}
 	}
 
@@ -263,14 +272,15 @@ public class DBCoreTypeUpdater {
 				if (pruefeVersion(conn, tab.name(), ct.getCoreTypeVersion()))
 					continue;
 				_logger.logLn(strAktualisiereTabelle + tab.name());
-				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(), ct.getSQLInsert(status_revision));
+				updateCoreTypeTabelle(conn, tab.name(), ct.getCoreTypeName(), ct.getCoreTypeVersion(),
+						ct.getSQLInsert(status_revision, conn.getDBDriver() == DBDriver.SQLITE));
 			}
 			// TODO unten deprecated: Aktualisiere ggf. die Daten der einzelnen Core-Types
 			for (final CoreTypeTable entry : tables)
 				if (!pruefeVersion(conn, entry.name, entry.version))
 					entry.updater.accept(conn, _logger);
 			return true;
-		} catch (@SuppressWarnings("unused") final Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			return false;
 		} finally {
@@ -301,10 +311,7 @@ public class DBCoreTypeUpdater {
 	 */
 	private static void updateCoreTypeTabelle(final DBEntityManager conn, final String tabname, final String typename, final long version,
 			final String sqlInsert) {
-		// Lösche alle Daten
-		conn.transactionNativeDelete("DELETE FROM " + tabname);
-		conn.transactionFlush();
-		// Füge die aktuellen Daten des Core-Types ein
+		// Aktualisiere die Daten des Core-Types
 		conn.transactionNativeUpdate(sqlInsert);
 		conn.transactionFlush();
 		// Aktualsiere die Core-Type-Version in der entsprechenden Tabelle
@@ -330,25 +337,33 @@ public class DBCoreTypeUpdater {
 		sql.append(tabname);
 		sql.append(
 				"(ID, Fachbereich, SchildFgID, FG_Bezeichnung, FG_Kuerzel, Schulformen, FarbeR, FarbeG, FarbeB, Sortierung, FuerZeugnis, gueltigVon, gueltigBis) ");
-		final Fachgruppe[] values = Fachgruppe.values();
-		for (int i = 0; i < values.length; i++) {
-			final Fachgruppe f = values[i];
-			sql.append((i == 0) ? strValues : ", (");
-			sql.append(f.daten.id).append(",");
-			sql.append(f.daten.nummer).append(",");
-			sql.append(f.daten.idSchild).append(",");
-			sql.append("'").append(f.daten.bezeichnung).append("'").append(",");
-			sql.append("'").append(f.daten.kuerzel).append("'").append(",");
-			sql.append("'").append(f.getSchulformen().stream().map(s -> s.daten.kuerzel).collect(Collectors.joining(","))).append("'").append(",");
-			sql.append(f.daten.farbe.red).append(",");
-			sql.append(f.daten.farbe.green).append(",");
-			sql.append(f.daten.farbe.blue).append(",");
-			sql.append(f.daten.sortierung).append(",");
-			sql.append(f.daten.fuerZeugnis ? 1 : 0).append(",");
-			sql.append(f.daten.gueltigVon).append(",");
-			sql.append(f.daten.gueltigBis).append(")");
+		boolean isFirst = true;
+		for (final Fachgruppe fg : Fachgruppe.values()) {
+			for (final FachgruppeKatalogEintrag fgke : fg.historie()) {
+				if (isFirst) {
+					sql.append(strValues);
+					isFirst = false;
+				} else
+					sql.append(", (");
+				sql.append(fgke.id).append(",");
+				sql.append(fgke.nummer).append(",");
+				sql.append(fgke.schluessel).append(",");
+				sql.append("'").append(fgke.text).append("'").append(",");
+				sql.append("'").append(fgke.kuerzel).append("'").append(",");
+				sql.append("'").append(fgke.schulformen.stream().collect(Collectors.joining(","))).append("'").append(",");
+				sql.append(fgke.farbe.red).append(",");
+				sql.append(fgke.farbe.green).append(",");
+				sql.append(fgke.farbe.blue).append(",");
+				sql.append(fgke.sortierung).append(",");
+				sql.append(fgke.fuerZeugnis ? 1 : 0).append(",");
+				sql.append(fgke.gueltigVon).append(",");
+				sql.append(fgke.gueltigBis).append(")");
+			}
 		}
-		updateCoreTypeTabelle(conn, tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Fachbereich=VALUES(Fachbereich), SchildFgID=VALUES(SchildFgID), FG_Bezeichnung=VALUES(FG_Bezeichnung), FG_Kuerzel=VALUES(FG_Kuerzel), Schulformen=VALUES(Schulformen), FarbeR=VALUES(FarbeR), FarbeG=VALUES(FarbeG), FarbeB=VALUES(FarbeB), Sortierung=VALUES(Sortierung), FuerZeugnis=VALUES(FuerZeugnis), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		updateCoreTypeTabelle(conn, tabname, Fachgruppe.class.getCanonicalName(), Fachgruppe.data().getVersion(), sql.toString());
 	};
 
 
@@ -363,7 +378,7 @@ public class DBCoreTypeUpdater {
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
 		final Jahrgaenge[] values = Jahrgaenge.values();
-		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> Arrays.stream(jg.historie)).map(jg -> jg.kuerzel).collect(Collectors.toSet())
+		final String[] jg_kuerzel = Arrays.stream(values).flatMap(jg -> jg.historie().stream()).map(jg -> jg.kuerzel).collect(Collectors.toSet())
 				.toArray(new String[0]);
 		boolean isFirst = true;
 		for (final String kuerzel : jg_kuerzel) {
@@ -371,7 +386,9 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(kuerzel).append("'").append(")");
 		}
-		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, Jahrgaenge.class.getCanonicalName(), Jahrgaenge.data().getVersion(), sql.toString());
 	};
 
 
@@ -395,6 +412,9 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		updateCoreTypeTabelle(conn, tabname, KursFortschreibungsart.class.getCanonicalName(), KursFortschreibungsart.VERSION, sql.toString());
 	};
 
@@ -416,6 +436,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(code).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE DEStatisCode=VALUES(DEStatisCode)");
 		updateCoreTypeTabelle(conn, tabname, Nationalitaeten.class.getCanonicalName(), Nationalitaeten.VERSION, sql.toString());
 	};
 
@@ -430,32 +452,36 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, IstTendenznote, Text, AufZeugnis, Notenpunkte, TextLaufbahnSII, AufLaufbahnSII, Sortierung, gueltigVon, gueltigBis) ");
-		final Note[] values = Note.values();
 		boolean isFirst = true;
-		for (final Note n : values) {
+		for (final Note n : Note.values()) {
 			if (n == Note.KEINE)
 				continue;
-			sql.append(isFirst ? strValues : ", (");
-			isFirst = false;
-			sql.append(n.id).append(",");
-			sql.append("'").append(n.kuerzel).append("'").append(",");
-			sql.append(n.hatTendenz()).append(",");
-			sql.append("'").append(n.text).append("'").append(",");
-			sql.append("--------------------".equals(n.textZeugnis)).append(",");
-			sql.append(n.notenpunkte).append(",");
-			if (n.notenpunkte != null)
-				sql.append("'").append(String.format("%02d", n.notenpunkte)).append("'").append(",");
-			else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST))
-				sql.append("'").append(n.kuerzel).append("'").append(",");
-			else
-				sql.append(strNullValue);
-			sql.append((n.notenpunkte != null) || (n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN)
-					|| (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)).append(",");
-			sql.append(n.sortierung).append(",");
-			sql.append(n.gueltigVon).append(",");
-			sql.append(n.gueltigBis).append(")");
+			for (final NoteKatalogEintrag nke : n.historie()) {
+				sql.append(isFirst ? strValues : ", (");
+				isFirst = false;
+				sql.append(nke.id).append(",");
+				sql.append("'").append(nke.kuerzel).append("'").append(",");
+				sql.append(Note.eintragHatTendenz(nke)).append(",");
+				sql.append("'").append(nke.text).append("'").append(",");
+				sql.append("--------------------".equals(nke.textZeugnis)).append(",");
+				sql.append(nke.notenpunkte).append(",");
+				if (nke.notenpunkte != null)
+					sql.append("'").append(String.format("%02d", nke.notenpunkte)).append("'").append(",");
+				else if ((n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN) || (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST))
+					sql.append("'").append(nke.kuerzel).append("'").append(",");
+				else
+					sql.append(strNullValue);
+				sql.append((nke.notenpunkte != null) || (n == Note.E3_TEILGENOMMEN) || (n == Note.E2_MIT_ERFOLG_TEILGENOMMEN)
+						|| (n == (Note.E3_TEILGENOMMEN)) || (n == Note.ATTEST)).append(",");
+				sql.append(nke.sortierung).append(",");
+				sql.append(nke.gueltigVon).append(",");
+				sql.append(nke.gueltigBis).append(")");
+			}
 		}
-		updateCoreTypeTabelle(conn, tabname, Note.class.getCanonicalName(), Note.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), IstTendenznote=VALUES(IstTendenznote), Text=VALUES(Text), AufZeugnis=VALUES(AufZeugnis), Notenpunkte=VALUES(Notenpunkte), TextLaufbahnSII=VALUES(TextLaufbahnSII), AufLaufbahnSII=VALUES(AufLaufbahnSII), Sortierung=VALUES(Sortierung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		updateCoreTypeTabelle(conn, tabname, Note.class.getCanonicalName(), Note.data().getVersion(), sql.toString());
 	};
 
 
@@ -479,6 +505,9 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		updateCoreTypeTabelle(conn, tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
 	};
 
@@ -496,22 +525,25 @@ public class DBCoreTypeUpdater {
 		final Schulform[] values = Schulform.values();
 		boolean isFirst = true;
 		for (final Schulform schulform : values) {
-			for (final SchulformKatalogEintrag sf : schulform.historie) {
+			for (final SchulformKatalogEintrag sf : schulform.historie()) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(sf.id).append(",");
 				sql.append("'").append(sf.kuerzel).append("'").append(",");
-				if (sf.nummer == null)
+				if (sf.schluessel == null)
 					sql.append(strNullValue);
 				else
-					sql.append("'").append(sf.nummer).append("'").append(",");
-				sql.append("'").append(sf.bezeichnung).append("'").append(",");
+					sql.append("'").append(sf.schluessel).append("'").append(",");
+				sql.append("'").append(sf.text).append("'").append(",");
 				sql.append(sf.hatGymOb).append(",");
 				sql.append(sf.gueltigVon).append(",");
 				sql.append(sf.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(conn, tabname, Schulform.class.getCanonicalName(), Schulform.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Nummer=VALUES(Nummer), Bezeichnung=VALUES(Bezeichnung), HatGymOb=VALUES(HatGymOb), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		updateCoreTypeTabelle(conn, tabname, Schulform.class.getCanonicalName(), Schulform.data().getVersion(), sql.toString());
 	};
 
 
@@ -525,20 +557,57 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(ID, Kuerzel, Beschreibung, gueltigVon, gueltigBis) ");
-		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
-		for (final Herkunft herkunft : values) {
-			for (final HerkunftKatalogEintrag h : herkunft.historie) {
+		for (final HerkunftSonstige herkunft : HerkunftSonstige.values()) {
+			for (final HerkunftSonstigeKatalogEintrag h : herkunft.historie) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
-				sql.append(h.id).append(",");
+				sql.append(h.id + 1000000000L).append(",");
 				sql.append("'").append(h.kuerzel).append("'").append(",");
 				sql.append("'").append(h.beschreibung.replace("'", "''")).append("'").append(",");
 				sql.append(h.gueltigVon).append(",");
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		for (final HerkunftBildungsgang herkunft : HerkunftBildungsgang.values()) {
+			for (final HerkunftBildungsgangKatalogEintrag h : herkunft.historie()) {
+				sql.append(isFirst ? strValues : ", (");
+				isFirst = false;
+				sql.append(h.id + 2000000000L).append(",");
+				sql.append("'").append(h.kuerzel).append("'").append(",");
+				sql.append("'").append(h.text.replace("'", "''")).append("'").append(",");
+				sql.append(h.gueltigVon).append(",");
+				sql.append(h.gueltigBis).append(")");
+			}
+		}
+		for (final HerkunftBildungsgangTyp herkunft : HerkunftBildungsgangTyp.values()) {
+			for (final HerkunftBildungsgangTypKatalogEintrag h : herkunft.historie()) {
+				sql.append(isFirst ? strValues : ", (");
+				isFirst = false;
+				sql.append(h.id + 3000000000L).append(",");
+				sql.append("'").append(h.kuerzel).append("'").append(",");
+				sql.append("'").append(h.text.replace("'", "''")).append("'").append(",");
+				sql.append(h.gueltigVon).append(",");
+				sql.append(h.gueltigBis).append(")");
+			}
+		}
+		for (final HerkunftSchulform herkunft : HerkunftSchulform.values()) {
+			for (final HerkunftSchulformKatalogEintrag h : herkunft.historie) {
+				sql.append(isFirst ? strValues : ", (");
+				isFirst = false;
+				sql.append(h.id + 4000000000L).append(",");
+				sql.append("'").append(h.kuerzel).append("'").append(",");
+				sql.append("'").append(h.beschreibung.replace("'", "''")).append("'").append(",");
+				sql.append(h.gueltigVon).append(",");
+				sql.append(h.gueltigBis).append(")");
+			}
+		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Beschreibung=VALUES(Beschreibung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
+				+ HerkunftSchulform.VERSION;
+		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
 	};
 
 
@@ -552,14 +621,24 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(Herkunft.values()).map(h -> h.daten.kuerzel).distinct().toList();
+		final List<String> kuerzel = new ArrayList<>(
+				Stream.concat(Arrays.stream(HerkunftSonstige.values()).map(h -> h.daten.kuerzel).distinct(),
+						Stream.concat(Arrays.stream(HerkunftBildungsgang.values()).flatMap(hb -> hb.historie().stream()).map(h -> h.kuerzel).distinct(),
+								Stream.concat(
+										Arrays.stream(HerkunftBildungsgangTyp.values()).flatMap(hb -> hb.historie().stream()).map(h -> h.kuerzel).distinct(),
+										Arrays.stream(HerkunftSchulform.values()).map(h -> h.daten.kuerzel).distinct()))
+				).distinct().toList());
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
+				+ HerkunftSchulform.VERSION;
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
 	};
 
 
@@ -573,20 +652,52 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(Herkunft_ID, Schulform_Kuerzel) ");
-		final Herkunft[] values = Herkunft.values();
 		boolean isFirst = true;
-		for (final Herkunft herkunft : values) {
-			for (final HerkunftKatalogEintrag h : herkunft.historie) {
-				final List<Schulform> schulformen = h.schulformen.stream().map(Schulform::getByKuerzel).toList();
-				for (final Schulform sf : schulformen) {
+		for (final HerkunftSonstige herkunft : HerkunftSonstige.values()) {
+			for (final HerkunftSonstigeKatalogEintrag h : herkunft.historie) {
+				for (final String sf : h.schulformen) {
 					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
-					sql.append(h.id).append(",");
-					sql.append("'").append(sf.daten.kuerzel).append("'").append(")");
+					sql.append(h.id + 1000000000L).append(",");
+					sql.append("'").append(sf).append("'").append(")");
 				}
 			}
 		}
-		updateCoreTypeTabelle(conn, tabname, Herkunft.class.getCanonicalName(), Herkunft.VERSION, sql.toString());
+		for (final HerkunftBildungsgang herkunft : HerkunftBildungsgang.values()) {
+			for (final HerkunftBildungsgangKatalogEintrag h : herkunft.historie()) {
+				for (final SchulformSchulgliederung sf : h.zulaessig) {
+					sql.append(isFirst ? strValues : ", (");
+					isFirst = false;
+					sql.append(h.id + 2000000000L).append(",");
+					sql.append("'").append(sf.schulform).append("'").append(")");
+				}
+			}
+		}
+		for (final HerkunftBildungsgangTyp herkunft : HerkunftBildungsgangTyp.values()) {
+			for (final HerkunftBildungsgangTypKatalogEintrag h : herkunft.historie()) {
+				for (final SchulformSchulgliederung sf : h.zulaessig) {
+					sql.append(isFirst ? strValues : ", (");
+					isFirst = false;
+					sql.append(h.id + 3000000000L).append(",");
+					sql.append("'").append(sf.schulform).append("'").append(")");
+				}
+			}
+		}
+		for (final HerkunftSchulform herkunft : HerkunftSchulform.values()) {
+			for (final HerkunftSchulformKatalogEintrag h : herkunft.historie) {
+				for (final String sf : h.schulformen) {
+					sql.append(isFirst ? strValues : ", (");
+					isFirst = false;
+					sql.append(h.id + 4000000000L).append(",");
+					sql.append("'").append(sf).append("'").append(")");
+				}
+			}
+		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Herkunft_ID=VALUES(Herkunft_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel)");
+		final long version = HerkunftSonstige.VERSION + HerkunftBildungsgang.data().getVersion() + HerkunftBildungsgangTyp.data().getVersion()
+				+ HerkunftSchulform.VERSION;
+		updateCoreTypeTabelle(conn, tabname, "de.svws_nrw.core.types.schueler.Herkunft", version, sql.toString());
 	};
 
 
@@ -612,6 +723,8 @@ public class DBCoreTypeUpdater {
 				sql.append(h.gueltigBis).append(")");
 			}
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
@@ -633,6 +746,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
@@ -655,12 +770,15 @@ public class DBCoreTypeUpdater {
 					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
 					sql.append(h.id).append(",");
-					sql.append("'").append(Schulform.getByKuerzel(hb.schulform).daten.kuerzel).append("'").append(",");
+					sql.append("'").append(hb.schulform).append("'").append(",");
 					sql.append("'").append(hb.kurzBezeichnung.replace("'", "''")).append("'").append(",");
 					sql.append("'").append(hb.bezeichnung.replace("'", "''")).append("'").append(")");
 				}
 			}
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE Herkunftsart_ID=VALUES(Herkunftsart_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), KurzBezeichnung=VALUES(KurzBezeichnung), Bezeichnung=VALUES(Bezeichnung)");
 		updateCoreTypeTabelle(conn, tabname, Herkunftsarten.class.getCanonicalName(), Herkunftsarten.VERSION, sql.toString());
 	};
 
@@ -675,14 +793,16 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(Klassenart.values()).map(h -> h.daten.kuerzel).distinct().toList();
+		final List<String> kuerzel = Arrays.stream(Klassenart.values()).flatMap(k -> k.historie().stream()).map(h -> h.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(conn, tabname, Klassenart.class.getCanonicalName(), Klassenart.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, Klassenart.class.getCanonicalName(), Klassenart.data().getVersion(), sql.toString());
 	};
 
 
@@ -696,14 +816,16 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).map(h -> h.daten.kuerzel).distinct().toList();
+		final List<String> kuerzel = Arrays.stream(ZulaessigeKursart.values()).flatMap(k -> k.historie().stream()).map(h -> h.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(conn, tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, ZulaessigeKursart.class.getCanonicalName(), ZulaessigeKursart.data().getVersion(), sql.toString());
 	};
 
 
@@ -718,15 +840,14 @@ public class DBCoreTypeUpdater {
 		sql.append(tabname);
 		sql.append(
 				"(ID, KuerzelASD, Bezeichnung, Kuerzel, Aufgabenfeld, Fachgruppe, JahrgangAb, IstFremdsprache, IstHKFS, IstAusRegUFach, IstErsatzPflichtFS, IstKonfKoop, NurSII, ExportASD, gueltigVon, gueltigBis) ");
-		final ZulaessigesFach[] values = ZulaessigesFach.values();
 		boolean isFirst = true;
-		for (final ZulaessigesFach fach : values) {
-			for (final FachKatalogEintrag f : fach.historie) {
+		for (final Fach fach : Fach.values()) {
+			for (final FachKatalogEintrag f : fach.historie()) {
 				sql.append(isFirst ? strValues : ", (");
 				isFirst = false;
 				sql.append(f.id).append(",");
-				sql.append("'").append(f.kuerzelASD).append("'").append(",");
-				sql.append("'").append(f.bezeichnung.replace("'", "''")).append("'").append(",");
+				sql.append("'").append(f.schluessel).append("'").append(",");
+				sql.append("'").append(f.text.replace("'", "''")).append("'").append(",");
 				sql.append("'").append(f.kuerzel).append("'").append(",");
 				if (f.aufgabenfeld == null)
 					sql.append(strNullValue);
@@ -736,10 +857,12 @@ public class DBCoreTypeUpdater {
 					sql.append(strNullValue);
 				else
 					sql.append("'").append(f.fachgruppe).append("'").append(",");
-				if (f.abJahrgang == null)
+				if (f.abJahrgang == null) {
 					sql.append(strNullValue);
-				else
-					sql.append("'").append(f.abJahrgang).append("'").append(",");
+				} else {
+					final Jahrgaenge tmpJahrgang = Jahrgaenge.data().getWertByBezeichner(f.abJahrgang);
+					sql.append("'").append(tmpJahrgang.historie().getLast().kuerzel).append("'").append(",");
+				}
 				sql.append(f.istFremdsprache ? 1 : 0).append(",");
 				sql.append(f.istHKFS ? 1 : 0).append(",");
 				sql.append(f.istAusRegUFach ? 1 : 0).append(",");
@@ -751,7 +874,10 @@ public class DBCoreTypeUpdater {
 				sql.append(f.gueltigBis).append(")");
 			}
 		}
-		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), KuerzelASD=VALUES(KuerzelASD), Bezeichnung=VALUES(Bezeichnung), Kuerzel=VALUES(Kuerzel), Aufgabenfeld=VALUES(Aufgabenfeld), Fachgruppe=VALUES(Fachgruppe), JahrgangAb=VALUES(JahrgangAb), IstFremdsprache=VALUES(IstFremdsprache), IstHKFS=VALUES(IstHKFS), IstAusRegUFach=VALUES(IstAusRegUFach), IstErsatzPflichtFS=VALUES(IstErsatzPflichtFS), IstKonfKoop=VALUES(IstKonfKoop), NurSII=VALUES(NurSII), ExportASD=VALUES(ExportASD), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
 
@@ -765,14 +891,16 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(ZulaessigesFach.values()).map(h -> h.daten.kuerzelASD).distinct().toList();
+		final List<String> kuerzel = Arrays.stream(Fach.values()).flatMap(f -> f.historie().stream()).map(h -> h.schluessel).distinct().toList();
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
 
@@ -786,10 +914,10 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append("(Fach_ID, Schulform_Kuerzel, Schulgliederung_Kuerzel) ");
-		final ZulaessigesFach[] values = ZulaessigesFach.values();
+		final Fach[] values = Fach.values();
 		boolean isFirst = true;
-		for (final ZulaessigesFach fach : values) {
-			for (final FachKatalogEintrag f : fach.historie) {
+		for (final Fach fach : values) {
+			for (final FachKatalogEintrag f : fach.historie()) {
 				for (final SchulformSchulgliederung sfsg : f.zulaessig) {
 					sql.append(isFirst ? strValues : ", (");
 					isFirst = false;
@@ -797,15 +925,18 @@ public class DBCoreTypeUpdater {
 					if (sfsg.schulform == null)
 						sql.append(strNullValue);
 					else
-						sql.append("'").append(Schulform.getByKuerzel(sfsg.schulform).daten.kuerzel).append("'").append(",");
+						sql.append("'").append(sfsg.schulform).append("'").append(",");
 					if (sfsg.gliederung == null)
 						sql.append("'')");
 					else
-						sql.append("'").append(Schulgliederung.getByKuerzel(sfsg.gliederung)).append("'").append(")");
+						sql.append("'").append(Schulgliederung.data().getWertByKuerzel(sfsg.gliederung)).append("'").append(")");
 				}
 			}
 		}
-		updateCoreTypeTabelle(conn, tabname, ZulaessigesFach.class.getCanonicalName(), ZulaessigesFach.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE Fach_ID=VALUES(Fach_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), Schulgliederung_Kuerzel=VALUES(Schulgliederung_Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
 
@@ -826,6 +957,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, Einschulungsart.class.getCanonicalName(), Einschulungsart.VERSION, sql.toString());
 	};
 
@@ -840,14 +973,16 @@ public class DBCoreTypeUpdater {
 		sql.append(strInsertInto);
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
-		final List<String> kuerzel = Arrays.stream(Religion.values()).map(h -> h.daten.kuerzel).distinct().toList();
+		final List<String> kuerzel = Arrays.stream(Religion.values()).flatMap(r -> r.historie().stream()).map(h -> h.kuerzel).distinct().toList();
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
-		updateCoreTypeTabelle(conn, tabname, Religion.class.getCanonicalName(), Religion.VERSION, sql.toString());
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
+		updateCoreTypeTabelle(conn, tabname, Religion.class.getCanonicalName(), Religion.data().getVersion(), sql.toString());
 	};
 
 
@@ -868,6 +1003,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
 	};
 
@@ -884,19 +1021,23 @@ public class DBCoreTypeUpdater {
 		sql.append(tabname);
 		sql.append(strSpaltenNurKuerzel);
 		final List<String> kuerzel = Stream.of(
-				Stream.of(BerufskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
-				Stream.of(WeiterbildungskollegOrganisationsformen.values()).map(h -> h.daten.kuerzel),
-				Stream.of(AllgemeinbildendOrganisationsformen.values()).map(h -> h.daten.kuerzel)).flatMap(o -> o).distinct().toList();
+				Stream.of(BerufskollegOrganisationsformen.values()).flatMap(o -> o.historie().stream()).map(h -> h.kuerzel),
+				Stream.of(WeiterbildungskollegOrganisationsformen.values()).flatMap(o -> o.historie().stream()).map(h -> h.kuerzel),
+				Stream.of(AllgemeinbildendOrganisationsformen.values()).flatMap(o -> o.historie().stream()).map(h -> h.kuerzel)
+		).flatMap(o -> o).distinct().toList();
 		boolean isFirst = true;
 		for (final String k : kuerzel) {
 			sql.append(isFirst ? strValues : ", (");
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname,
 				BerufskollegOrganisationsformen.class.getCanonicalName() + ", " + WeiterbildungskollegOrganisationsformen.class.getCanonicalName() + ", "
 						+ AllgemeinbildendOrganisationsformen.class.getCanonicalName(),
-				BerufskollegOrganisationsformen.VERSION + WeiterbildungskollegOrganisationsformen.VERSION + AllgemeinbildendOrganisationsformen.VERSION,
+				BerufskollegOrganisationsformen.data().getVersion() + WeiterbildungskollegOrganisationsformen.data().getVersion()
+						+ AllgemeinbildendOrganisationsformen.data().getVersion(),
 				sql.toString());
 	};
 
@@ -907,9 +1048,11 @@ public class DBCoreTypeUpdater {
 	private final BiConsumer<DBEntityManager, Logger> updateLehrerLeitungsfunktionenKeys = (final DBEntityManager conn, final Logger logger) -> {
 		final String tabname = "LehrerLeitungsfunktion_Keys";
 		logger.logLn(strAktualisiereTabelle + tabname);
-		updateCoreTypeTabelle(conn, tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.VERSION,
-				Arrays.stream(LehrerLeitungsfunktion.values()).map(h -> "" + h.daten.id).distinct()
-						.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (", ")")));
+
+		updateCoreTypeTabelle(conn, tabname, LehrerLeitungsfunktion.class.getCanonicalName(), LehrerLeitungsfunktion.data().getVersion(),
+				Arrays.stream(LehrerLeitungsfunktion.values()).flatMap(l -> l.historie().stream()).map(h -> "" + h.id).distinct()
+						.collect(Collectors.joining("), (", strInsertInto + tabname + "(ID) VALUES (",
+								") " + ((conn.getDBDriver() != DBDriver.SQLITE) ? " ON DUPLICATE KEY UPDATE ID=VALUES(ID)" : ""))));
 	};
 
 

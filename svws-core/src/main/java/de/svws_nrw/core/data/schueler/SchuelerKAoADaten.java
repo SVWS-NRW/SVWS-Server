@@ -2,7 +2,6 @@ package de.svws_nrw.core.data.schueler;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -17,37 +16,37 @@ public class SchuelerKAoADaten {
 	@Schema(description = "Die ID der KAOA Daten in der Datenbank", example = "126784")
 	public long id = -1L;
 
-	/** Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören. */
-	@Schema(description = "Der Lernabschnitts des Schülers, zu dem diese KAOA Daten gehören.", example = "7522")
-	public long abschnitt = -1L;
+	/** Die ID des Schuljahresabschnitts zu dem diese KAOA Daten gehören. */
+	@Schema(description = "Der Schuljahresabschnitt, zu dem diese KAOA Daten gehören.", example = "42")
+	public long idSchuljahresabschnitt = -1L;
 
-	/** Der Jahrgaeng des Schülers, zu dem diese KAOA Daten gehören. */
-	@Schema(description = "Der Jahrgaeng des Schülers, zu dem diese KAOA Daten gehören.", example = "09")
-	public @NotNull String jahrgang = "";
+	/** Die ID des Jahrgangs des Schülers, zu dem diese KAOA Daten gehören. */
+	@Schema(description = "Die ID des Jahrgangs des Schülers, zu dem diese KAOA Daten gehören.", example = "42")
+	public long idJahrgang = -1L;
 
-	/** Der Kategorie des Schülers, zu dem diese KAOA Daten gehören. */
+	/** Die ID der Kategorie des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Der Kategorie des Schülers, zu dem diese KAOA Daten gehören.", example = "14")
-	public long kategorie = -1L;
+	public long idKategorie = -1L;
 
-	/** Das Merkmal des Schülers, zu dem diese KAOA Daten gehören. */
+	/** Die ID des Merkmals des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Das Merkmal des Schülers, zu dem diese KAOA Daten gehören.", example = "69")
-	public long merkmal = -1L;
+	public long idMerkmal = -1L;
 
-	/** Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören. */
+	/** Die ID des Zusatzmerkmals des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Das Zusatzmerkmal des Schülers, zu dem diese KAOA Daten gehören.", example = "117")
-	public Long zusatzmerkmal;
+	public long idZusatzmerkmal = -1L;
 
-	/** Die Anschlussoption des Schülers, zu dem diese KAOA Daten gehören. */
+	/** Die ID der Anschlussoption des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Die Anschlussoption des Schülers, zu dem diese KAOA Daten gehören.", example = "22")
-	public Long anschlussoption;
+	public Long idAnschlussoption;
 
-	/** Das Berufsfeld des Schülers, zu dem diese KAOA Daten gehören. */
+	/** Die ID de Berufsfelds des Schülers, zu dem diese KAOA Daten gehören. */
 	@Schema(description = "Das Berufsfeld des Schülers, zu dem diese KAOA Daten gehören.", example = "12")
-	public Long berufsfeld;
+	public Long idBerufsfeld;
 
-	/** Ebene4 dieser KAOA Daten */
+	/** Die ID der Ebene4 dieser KAOA Daten */
 	@Schema(description = "Ebene4 dieser KAOA Daten.", example = "4")
-	public Long ebene4;
+	public Long idEbene4;
 
 	/** Die Bemerkung zu diesen KAOA Daten. */
 	@Schema(description = "Die Bemerkung zu diesen KAOA Daten.", example = "text")

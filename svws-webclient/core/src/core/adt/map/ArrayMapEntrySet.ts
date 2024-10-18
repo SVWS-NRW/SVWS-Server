@@ -1,15 +1,16 @@
+import type { JavaSet } from '../../../java/util/JavaSet';
+import { ArrayList } from '../../../java/util/ArrayList';
+import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { JavaMapEntry } from '../../../java/util/JavaMapEntry';
 import { cast_java_util_Map_Entry } from '../../../java/util/JavaMapEntry';
 import { ArrayMapEntrySetIterator } from '../../../core/adt/map/ArrayMapEntrySetIterator';
-import type { JavaSet } from '../../../java/util/JavaSet';
 import { ArrayMapEntry, cast_de_svws_nrw_core_adt_map_ArrayMapEntry } from '../../../core/adt/map/ArrayMapEntry';
 import { NullPointerException } from '../../../java/lang/NullPointerException';
 import type { JavaIterator } from '../../../java/util/JavaIterator';
-import { ArrayList } from '../../../java/util/ArrayList';
-import { ArrayMap, cast_de_svws_nrw_core_adt_map_ArrayMap } from '../../../core/adt/map/ArrayMap';
 import type { Collection } from '../../../java/util/Collection';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { cast_java_util_Map } from '../../../java/util/JavaMap';
 
@@ -91,7 +92,7 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 		if ((__param0 === undefined)) {
 			return this.getEntryList().toArray();
 		} else if (((__param0 !== undefined) && Array.isArray(__param0))) {
-			const a : Array<T> = __param0;
+			const a : Array<T> = __param0 as unknown as Array<T>;
 			return this.getEntryList().toArray(a);
 		} else throw new Error('invalid method overload');
 	}
@@ -173,6 +174,8 @@ export class ArrayMapEntrySet<K, V> extends JavaObject implements JavaSet<JavaMa
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.adt.map.ArrayMapEntrySet', 'java.util.Collection', 'java.util.Set', 'java.lang.Iterable'].includes(name);
 	}
+
+	public static class = new Class<ArrayMapEntrySet<any, any>>('de.svws_nrw.core.adt.map.ArrayMapEntrySet');
 
 	public [Symbol.iterator](): Iterator<JavaMapEntry<any, any>> {
 		const iter : JavaIterator<JavaMapEntry<any, any>> = this.iterator();

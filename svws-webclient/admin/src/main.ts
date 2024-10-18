@@ -19,4 +19,4 @@ app.mixin({
 });
 router.isReady()
 	.then(() => app.mount("#app"))
-	.catch(e => { throw e });
+	.catch((e: unknown) => { throw e });

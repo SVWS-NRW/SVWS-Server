@@ -9,6 +9,9 @@ icon: 'carbon:bookmark'
 # Veraltete Komponenten
 
 Hier werden Komponenten aufgelistet, die nicht mehr verwendet werden und entfernt wurden.
+## ab 0.9.3
+SvwsUiRouterTabBar, SvwsUiRouterTabBarButton, SvwsUiVerticalRouterTabBar
+stattdessen verwendet werden soll SvwsUiTabBar, SvwsUiTabBarVertical
 ## ab 0.8.11
 die unplugin-icons werden nun nicht mehr verwendet, Icons als CSS importieren wie in der Icons-Doku beschrieben
 ## ab 0.8.9

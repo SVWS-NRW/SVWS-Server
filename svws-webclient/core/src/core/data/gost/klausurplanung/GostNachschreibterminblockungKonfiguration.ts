@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostSchuelerklausurTermin } from '../../../../core/data/gost/klausurplanung/GostSchuelerklausurTermin';
 import { GostKlausurtermin } from '../../../../core/data/gost/klausurplanung/GostKlausurtermin';
 
@@ -12,12 +13,12 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	public maxTimeMillis : number = 1000;
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den zu blockenden Schülerklausurterminen.
 	 */
 	public schuelerklausurtermine : List<GostSchuelerklausurTermin> = new ArrayList<GostSchuelerklausurTermin>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den GostKlausurterminen, in die geblockt werden soll.
 	 */
 	public termine : List<GostKlausurtermin> = new ArrayList<GostKlausurtermin>();
 
@@ -32,6 +33,9 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	public _regel_gleiche_fachart_auf_selbe_termine_verteilen : boolean = false;
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -43,6 +47,8 @@ export class GostNachschreibterminblockungKonfiguration extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration'].includes(name);
 	}
+
+	public static class = new Class<GostNachschreibterminblockungKonfiguration>('de.svws_nrw.core.data.gost.klausurplanung.GostNachschreibterminblockungKonfiguration');
 
 	public static transpilerFromJSON(json : string): GostNachschreibterminblockungKonfiguration {
 		const obj = JSON.parse(json) as Partial<GostNachschreibterminblockungKonfiguration>;

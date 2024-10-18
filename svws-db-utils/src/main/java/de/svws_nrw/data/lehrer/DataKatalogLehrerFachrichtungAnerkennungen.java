@@ -1,11 +1,10 @@
 package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.lehrer.LehrerKatalogFachrichtungAnerkennungEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerFachrichtungAnerkennung;
+import de.svws_nrw.asd.data.lehrer.LehrerFachrichtungAnerkennungKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerFachrichtungAnerkennung;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link LehrerKatalogFachrichtungAnerkennungEintrag}.
+ * Core-DTO {@link LehrerFachrichtungAnerkennungKatalogEintrag}.
  */
 public final class DataKatalogLehrerFachrichtungAnerkennungen extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogFachrichtungAnerkennungEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerFachrichtungAnerkennungKatalogEintrag}.
 	 */
 	public DataKatalogLehrerFachrichtungAnerkennungen() {
 		super(null);
@@ -26,9 +25,9 @@ public final class DataKatalogLehrerFachrichtungAnerkennungen extends DataManage
 
 	@Override
 	public Response getAll() {
-		final ArrayList<LehrerKatalogFachrichtungAnerkennungEintrag> daten = new ArrayList<>();
+		final ArrayList<LehrerFachrichtungAnerkennungKatalogEintrag> daten = new ArrayList<>();
 		for (final LehrerFachrichtungAnerkennung status : LehrerFachrichtungAnerkennung.values())
-			daten.addAll(Arrays.asList(status.historie));
+			daten.addAll(status.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

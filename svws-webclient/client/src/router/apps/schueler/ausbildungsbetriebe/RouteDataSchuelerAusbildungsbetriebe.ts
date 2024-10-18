@@ -115,26 +115,26 @@ export class RouteDataSchuelerAusbildungsbetriebe extends RouteData<RouteStateDa
 		let daten;
 		// TODO  Beim Klicken der anderen Zellen wir bei der Patch-Methode anpsrechpartner_wert übergeben.
 		await api.server.patchSchuelerBetriebsdaten(data, api.schema, id);
-		if(data.betrieb_id && this.idSchueler ){
+		if((data.betrieb_id !== undefined) && (this.idSchueler !== undefined)){
 			daten = await api.server.getBetriebStammdaten(api.schema, data.betrieb_id);
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
 			this.setPatchedState( {daten,listSchuelerbetriebe, betrieb} );
 		}
 
-		if( data.ansprechpartner_id !== undefined && this.idSchueler ){
+		if((data.ansprechpartner_id !== undefined) && (this.idSchueler !== undefined)){
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
 			this.setPatchedState( {listSchuelerbetriebe, betrieb} );
 		}
 
-		if( data.allgadranschreiben !== undefined && this.idSchueler ){
+		if((data.allgadranschreiben !== undefined) && (this.idSchueler !== undefined)){
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
 			this.setPatchedState( {listSchuelerbetriebe, betrieb} );
 		}
 
-		if( data.betreuungslehrer_id !== undefined && this.idSchueler ){
+		if((data.betreuungslehrer_id !== undefined) && (this.idSchueler !== undefined)){
 			const listSchuelerbetriebe = await api.server.getSchuelerBetriebe(api.schema, this.idSchueler);
 			const betrieb = await api.server.getSchuelerBetriebsdaten(api.schema,id);
 			this.setPatchedState( {listSchuelerbetriebe, betrieb} );

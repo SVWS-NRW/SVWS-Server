@@ -1,6 +1,6 @@
 {
 	"index": 63,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "177",
@@ -16,7 +16,7 @@
 				"bezeichnung": "Elektroniker/-in für Automatisierungstechnik",
 				"bezeichnungM": "Elektroniker für Automatisierungstechnik",
 				"bezeichnungW": "Elektronikerin für Automatisierungstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2022,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -33,7 +33,7 @@
 				"bezeichnung": "Elektroniker/-in für Betriebstechnik",
 				"bezeichnungM": "Elektroniker für Betriebstechnik",
 				"bezeichnungW": "Elektronikerin für Betriebstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -50,7 +50,7 @@
 				"bezeichnung": "Elektroniker/-in für Geräte und Systeme",
 				"bezeichnungM": "Elektroniker für Geräte und Systeme",
 				"bezeichnungW": "Elektronikerin für Geräte und Systeme",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -68,7 +68,7 @@
 				"bezeichnungM": "Fachinformatiker für Systemintegration",
 				"bezeichnungW": "Fachinformatikerin für Systemintegration",
 				"gueltigVon": null,
-				"gueltigBis": 2019
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "187",
@@ -84,7 +84,7 @@
 				"bezeichnung": "Fachinformatiker/-in - Systemintegration",
 				"bezeichnungM": "Fachinformatiker - Systemintegration",
 				"bezeichnungW": "Fachinformatikerin - Systemintegration",
-				"gueltigVon": null,
+				"gueltigVon": 2017,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -101,7 +101,7 @@
 				"bezeichnung": "Florist/-in",
 				"bezeichnungM": "Florist",
 				"bezeichnungW": "Floristin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -118,7 +118,7 @@
 				"bezeichnung": "Friseur/-in",
 				"bezeichnungM": "Friseur",
 				"bezeichnungW": "Friseurin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -135,7 +135,7 @@
 				"bezeichnung": "Hauswirtschafter/-in",
 				"bezeichnungM": "Hauswirtschafter",
 				"bezeichnungW": "Hauswirtschafterin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -152,7 +152,7 @@
 				"bezeichnung": "Industriemechaniker/-in",
 				"bezeichnungM": "Industriemechaniker",
 				"bezeichnungW": "Industriemechanikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -169,7 +169,7 @@
 				"bezeichnung": "Informations- und Telekommunikationssystemelektroniker/-in",
 				"bezeichnungM": "Informations- und Telekommunikationssystemelektroniker",
 				"bezeichnungW": "Informations- und Telekommunikationssystemelektronikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -186,7 +186,7 @@
 				"bezeichnung": "Koch/Köchin",
 				"bezeichnungM": "Koch",
 				"bezeichnungW": "Köchin",
-				"gueltigVon": null,
+				"gueltigVon": 2022,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -203,7 +203,7 @@
 				"bezeichnung": "Mechatroniker/-in",
 				"bezeichnungM": "Mechatroniker",
 				"bezeichnungW": "Mechatronikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -220,7 +220,7 @@
 				"bezeichnung": "Metallbauer/-in - Konstruktionstechnik",
 				"bezeichnungM": "Metallbauer - Konstruktionstechnik",
 				"bezeichnungW": "Metallbauerin - Konstruktionstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -237,7 +237,7 @@
 				"bezeichnung": "Uhrmacher/-in",
 				"bezeichnungM": "Uhrmacher",
 				"bezeichnungW": "Uhrmacherin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -254,7 +254,7 @@
 				"bezeichnung": "Verkäufer/-in",
 				"bezeichnungM": "Verkäufer",
 				"bezeichnungW": "Verkäuferin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -271,7 +271,7 @@
 				"bezeichnung": "Werkzeugmechaniker/-in",
 				"bezeichnungM": "Werkzeugmechaniker",
 				"bezeichnungW": "Werkzeugmechanikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -288,7 +288,7 @@
 				"bezeichnung": "Zerspanungsmechaniker/-in",
 				"bezeichnungM": "Zerspanungsmechaniker",
 				"bezeichnungW": "Zerspanungsmechanikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -305,7 +305,7 @@
 				"bezeichnung": "Kosmetiker/-in",
 				"bezeichnungM": "Kosmetiker",
 				"bezeichnungW": "Kosmetikerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -322,7 +322,7 @@
 				"bezeichnung": "Fachkraft für Lagerlogistik",
 				"bezeichnungM": "Fachkraft für Lagerlogistik",
 				"bezeichnungW": "Fachkraft für Lagerlogistik",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -339,7 +339,7 @@
 				"bezeichnung": "Fachlagerist/-in",
 				"bezeichnungM": "Fachlagerist",
 				"bezeichnungW": "Fachlageristin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -356,7 +356,7 @@
 				"bezeichnung": "Maschinen- und Anlagenführer/-in",
 				"bezeichnungM": "Maschinen- und Anlagenführer",
 				"bezeichnungW": "Maschinen- und Anlagenführerin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -373,7 +373,7 @@
 				"bezeichnung": "Maßschneider/-in",
 				"bezeichnungM": "Maßschneider",
 				"bezeichnungW": "Maßschneiderin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -390,7 +390,7 @@
 				"bezeichnung": "Änderungsschneider/-in",
 				"bezeichnungM": "Änderungsschneider",
 				"bezeichnungW": "Änderungsschneiderin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -407,7 +407,7 @@
 				"bezeichnung": "Oberflächenbeschichter/-in",
 				"bezeichnungM": "Oberflächenbeschichter",
 				"bezeichnungW": "Oberflächenbeschichterin",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -424,7 +424,7 @@
 				"bezeichnung": "Medizinische/-r Fachangestellte/-r",
 				"bezeichnungM": "Medizinischer Fachangestellter",
 				"bezeichnungW": "Medizinische Fachangestellte",
-				"gueltigVon": null,
+				"gueltigVon": 2019,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -441,7 +441,7 @@
 				"bezeichnung": "Kaufmann/-frau für Büromanagement",
 				"bezeichnungM": "Kaufmann für Büromanagement",
 				"bezeichnungW": "Kauffrau für Büromanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -458,7 +458,7 @@
 				"bezeichnung": "Sonstiger Bildungsgang",
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
+				"gueltigVon": 2016,
 				"gueltigBis": null
 			} ]
 		}

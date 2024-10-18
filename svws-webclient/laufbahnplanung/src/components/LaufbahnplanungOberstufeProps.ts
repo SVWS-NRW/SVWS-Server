@@ -10,7 +10,7 @@ export interface LaufbahnplanungOberstufeProps {
 	setWahl: (fachID: number, wahl: GostSchuelerFachwahl) => Promise<void>;
 	setGostBelegpruefungsArt: (value: 'ef1'|'gesamt'|'auto') => Promise<void>;
 	exportLaufbahnplanung: () => Promise<ApiFile>;
-	importLaufbahnplanung: (data: FormData) => Promise<void>;
+	importLaufbahnplanung: (data: FormData) => Promise<string | null>;
 	schueler: SchuelerListeEintrag,
 	gostJahrgangsdaten: GostJahrgangsdaten;
 	gostBelegpruefungsArt: () => 'ef1'|'gesamt'|'auto';

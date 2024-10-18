@@ -5,6 +5,7 @@ import type { Runnable } from '../../java/lang/Runnable';
 import { ArrayList } from '../../java/util/ArrayList';
 import type { Collection } from '../../java/util/Collection';
 import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import type { JavaMap } from '../../java/util/JavaMap';
 import type { Comparator } from '../../java/util/Comparator';
@@ -185,7 +186,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public addAll(values : List<V>) : void {
 		let added : boolean = false;
 		for (const value of values)
-			added = added || this.addInternal(value);
+			added = this.addInternal(value) || added;
 		if ((added) && (this._eventHandlerListeGeaendert !== null))
 			this._eventHandlerListeGeaendert.run();
 	}
@@ -241,7 +242,7 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	public removeAll(values : List<V>) : void {
 		let removed : boolean = false;
 		for (const value of values)
-			removed = removed || this.removeInternal(value);
+			removed = this.removeInternal(value) || removed;
 		if (!removed)
 			return;
 		if (this._eventHandlerListeGeaendert !== null)
@@ -449,6 +450,8 @@ export class AttributMitAuswahl<K, V> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AttributMitAuswahl'].includes(name);
 	}
+
+	public static class = new Class<AttributMitAuswahl<any, any>>('de.svws_nrw.core.utils.AttributMitAuswahl');
 
 }
 

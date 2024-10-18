@@ -1,471 +1,461 @@
 package de.svws_nrw.data.schueler;
 
-import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Function;
+import java.util.Map;
 
+import de.svws_nrw.asd.data.CoreTypeException;
+import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
+import de.svws_nrw.asd.data.kaoa.KAOAZusatzmerkmalKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.kaoa.KAOAAnschlussoptionen;
+import de.svws_nrw.asd.types.kaoa.KAOABerufsfeld;
+import de.svws_nrw.asd.types.kaoa.KAOAEbene4;
+import de.svws_nrw.asd.types.kaoa.KAOAKategorie;
+import de.svws_nrw.asd.types.kaoa.KAOAMerkmal;
+import de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal;
+import de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmaleOptionsarten;
 import de.svws_nrw.core.data.schueler.SchuelerKAoADaten;
-import de.svws_nrw.core.types.kaoa.KAOAAnschlussoption;
-import de.svws_nrw.core.types.kaoa.KAOABerufsfeld;
-import de.svws_nrw.core.types.kaoa.KAOAEbene4;
-import de.svws_nrw.core.types.kaoa.KAOAKategorie;
-import de.svws_nrw.core.types.kaoa.KAOAMerkmal;
-import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmal;
-import de.svws_nrw.core.types.kaoa.KAOAZusatzmerkmaleOptionsarten;
+import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.data.DataManager;
+import de.svws_nrw.data.DataManagerRevised;
+import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
+import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerKAoADaten;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchuelerLernabschnittsdaten;
+import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.utils.ApiOperationException;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.core.Response.Status;
+
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
  * Core-DTO {@link SchuelerKAoADaten}.
  */
-public final class DataSchuelerKAoADaten extends DataManager<Long> {
+public final class DataSchuelerKAoADaten extends DataManagerRevised<Long, DTOSchuelerKAoADaten, SchuelerKAoADaten> {
+
+	/** Die ID des Schülers, für welchen die KAoA-Daten geprüft werden */
+	private final Long idSchueler;
 
 	/**
-	 * statischer Text
-	 */
-	public static final String NICHT_GEFUNDEN = " nicht gefunden";
-
-	/**
-	 * statischer Text
-	 */
-	public static final String SERVER_ERROR = "Server Error";
-
-	/**
-	 * Erstellt einen neuen Datenmanager mit der angegebenen Verbindung
+	 * Erstellt einen neuen DataSchuelerKAoADaten mit der angegebenen Verbindung.
 	 *
-	 * @param conn die Datenbank-Verbindung, welche vom Daten-Manager benutzt werden soll
+	 * @param conn         DBEntityManager
+	 * @param idSchueler   schuelerId
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public DataSchuelerKAoADaten(final DBEntityManager conn) {
+	public DataSchuelerKAoADaten(final DBEntityManager conn, final Long idSchueler) throws ApiOperationException {
 		super(conn);
+		final DTOSchueler dtoSchueler = this.conn.queryByKey(DTOSchueler.class, idSchueler);
+		if (dtoSchueler == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine SchuelerDaten mit der ID %d gefunden".formatted(idSchueler));
+
+		this.idSchueler = idSchueler;
+		setAttributesNotPatchable(Schema.tab_SchuelerKAoADaten.col_ID.javaAttributName());
 	}
 
 	@Override
-	public Response getAll() {
-		throw new UnsupportedOperationException();
+	protected void initDTO(final DTOSchuelerKAoADaten dto, final Long newId, final Map<String, Object> initAttributes) throws ApiOperationException {
+		dto.id = newId;
 	}
 
 	@Override
-	public Response getList() {
-		throw new UnsupportedOperationException();
+	public void checkBeforeCreation(final Long newID, final Map<String, Object> initAttributes) throws ApiOperationException {
+		final SchuelerKAoADaten schuelerKAoADaten = new SchuelerKAoADaten();
+		schuelerKAoADaten.id = newID;
+		patchCoreDto(schuelerKAoADaten, initAttributes);
+		validateAttributes(schuelerKAoADaten);
 	}
 
 	@Override
-	public Response get(final Long aLong) {
-		throw new UnsupportedOperationException();
+	public void checkBeforePatch(final DTOSchuelerKAoADaten dto, final Map<String, Object> patchAttributes) throws ApiOperationException {
+		final SchuelerKAoADaten schuelerKAoADaten = map(dto);
+		patchCoreDto(schuelerKAoADaten, patchAttributes);
+		validateAttributes(schuelerKAoADaten);
 	}
 
-	@Override
-	public Response patch(final Long aLong, final InputStream is) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * Gibt alle SchuelerKAoADaten zum Schüler zurück
-	 *
-	 * @param id   SchuelerID
-	 *
-	 * @return Liste von SchuelerKAoADaten passend zum Schüler
-	 */
-	public List<SchuelerKAoADaten> getBySchuelerID(final Long id) {
-		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten = conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID,
-				DTOSchuelerLernabschnittsdaten.class, id);
-		final List<Long> schuelerLernabschnittsdatenIds = schuelerLernabschnittsdaten.stream().map(sla -> sla.ID).toList();
-		final List<DTOSchuelerKAoADaten> daten = conn.queryList(DTOSchuelerKAoADaten.QUERY_LIST_BY_ABSCHNITT_ID,
-				DTOSchuelerKAoADaten.class, schuelerLernabschnittsdatenIds);
-		return daten.stream().map(mapSchuelerKAoADaten).toList();
-	}
-
-	/**
-	 * Gibt getBySchuelerID als Response zurück
-	 *
-	 * @param id   SchuelerID
-	 *
-	 * @return getBySchuelerID als Response
-	 */
-	public Response getBySchuelerIDAsResponse(final Long id) {
+	private void patchCoreDto(final SchuelerKAoADaten schuelerKAoADaten, final Map<String, Object> patchAttributes) throws ApiOperationException {
 		try {
-			List<SchuelerKAoADaten> daten = this.getBySchuelerID(id);
-			if ((daten == null) || daten.isEmpty())
-				daten = new ArrayList<>();
-			return Response.status(Response.Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
-		} catch (@SuppressWarnings("unused") final Exception e) {
-			return Response.status(Response.Status.NOT_FOUND).build();
+			final Class<?> clazz = schuelerKAoADaten.getClass();
+			for (final Map.Entry<String, Object> entry : patchAttributes.entrySet()) {
+				final String fieldName = entry.getKey();
+				final Object fieldValue = entry.getValue();
+				final Field field = clazz.getDeclaredField(fieldName);
+				if (fieldValue == null) {
+					field.set(schuelerKAoADaten, null);
+				} else if (field.getType().equals(Long.class) || field.getType().equals(long.class)) {
+					field.set(schuelerKAoADaten, ((Number) fieldValue).longValue());
+				} else {
+					field.set(schuelerKAoADaten, fieldValue);
+				}
+			}
+		} catch (final NoSuchFieldException | IllegalAccessException e) {
+			throw new ApiOperationException(Status.BAD_REQUEST, e.getCause(), "Fehler beim patchen des CoreDto: %s".formatted(e.getMessage()));
 		}
 	}
 
+	@Override
+	public SchuelerKAoADaten getById(final Long id) throws ApiOperationException {
+		final DTOSchuelerKAoADaten dtoSchuelerKAoADaten = conn.queryByKey(DTOSchuelerKAoADaten.class, id);
+		if (dtoSchuelerKAoADaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine SchuelerKAoADaten mit der ID %d gefunden".formatted(id));
 
-	/**
-	 * Mapt DTOSchuelerKAoADaten auf SchuelerKAoADaten
-	 */
-	public static final Function<DTOSchuelerKAoADaten, SchuelerKAoADaten> mapSchuelerKAoADaten = (final DTOSchuelerKAoADaten schuelerKAoADaten) -> {
+		return map(dtoSchuelerKAoADaten);
+	}
+
+	@Override
+	public SchuelerKAoADaten map(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
 		final SchuelerKAoADaten result = new SchuelerKAoADaten();
-		result.id = schuelerKAoADaten.ID;
-		result.kategorie = schuelerKAoADaten.KategorieID;
-		result.merkmal = schuelerKAoADaten.MerkmalID;
-		result.zusatzmerkmal = schuelerKAoADaten.ZusatzmerkmalID;
-		result.anschlussoption = schuelerKAoADaten.AnschlussoptionID;
-		result.ebene4 = schuelerKAoADaten.SBO_Ebene4ID;
-		result.berufsfeld = schuelerKAoADaten.BerufsfeldID;
-		result.jahrgang = schuelerKAoADaten.Jahrgang;
-		result.abschnitt = schuelerKAoADaten.Abschnitt_ID;
-		result.bemerkung = schuelerKAoADaten.Bemerkung;
-		return result;
-	};
-
-	/**
-	 * Gibt den Response für deleteBySchuelerIDAsResponse zurück
-	 *
-	 * @param schuelerKAoAID id des Datensatzes
-	 *
-	 * @return Response
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response deleteBySchuelerKAoAIDAsResponse(final Long schuelerKAoAID) throws ApiOperationException {
-		this.deleteBySchuelerKAoAID(schuelerKAoAID);
-		return buildResponse(null, Response.Status.NO_CONTENT);
-	}
-
-	/**
-	 * Läscht DTOSchuelerKAoADaten für die gegebene id
-	 *
-	 * @param schuelerKAoAID ID der DTOSchuelerKAoADaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	private void deleteBySchuelerKAoAID(final Long schuelerKAoAID) throws ApiOperationException {
-		final DTOSchuelerKAoADaten result = this.conn.queryByKey(DTOSchuelerKAoADaten.class, schuelerKAoAID);
-		if (result == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Datensatz mit der id: " + schuelerKAoAID + NICHT_GEFUNDEN);
-		final boolean success = this.conn.transactionRemove(result);
-		if (!success)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, SERVER_ERROR);
-	}
-
-	/**
-	 * Gibt den Response für createBySchuelerID zurück
-	 *
-	 * @param schuelerid id des Schuelers
-	 * @param daten      die Daten
-	 *
-	 * @return Response
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response createBySchuelerIDAsResponse(final Long schuelerid, final SchuelerKAoADaten daten) throws ApiOperationException {
-		final SchuelerKAoADaten result = this.createBySchuelerID(schuelerid, daten);
-		return buildResponse(result, Response.Status.CREATED);
-	}
-
-	/**
-	 * Legt SchuelerKAoADaten an
-	 *
-	 * @param schuelerid id des Schuelers
-	 * @param daten      die Daten
-	 *
-	 * @return SchuelerKAoADaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public SchuelerKAoADaten createBySchuelerID(final Long schuelerid, final SchuelerKAoADaten daten) throws ApiOperationException {
-		this.validate(schuelerid, daten);
-		daten.id = conn.transactionGetNextID(DTOSchuelerKAoADaten.class);
-		final boolean success = conn.transactionPersist(getDtoSchuelerKAoADaten(daten));
-		if (!success)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, SERVER_ERROR);
-		return daten;
-	}
-
-	/**
-	 * Gibt den Response für patchBySchuelerID zurück
-	 *
-	 * @param schuelerid     id des Schuelers
-	 * @param daten          die Daten
-	 * @param schuelerKAoAID id von SchuelerKAoADaten
-	 *
-	 * @return Response
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public Response putBySchuelerIDAsResponse(final Long schuelerid, final SchuelerKAoADaten daten, final Long schuelerKAoAID) throws ApiOperationException {
-		this.putBySchuelerID(schuelerid, daten, schuelerKAoAID);
-		return buildResponse(null, Response.Status.ACCEPTED);
-	}
-
-	/**
-	 * Erzeugt einen Response
-	 *
-	 * @param result der Response
-	 * @param status der Status code
-	 *
-	 * @return Response
-	 */
-	private static Response buildResponse(final SchuelerKAoADaten result, final Response.Status status) {
-		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(result).build();
-	}
-
-	/**
-	 * Ändert die SchuelerKAoADaten
-	 *
-	 * @param schuelerid     id des Schuelers
-	 * @param daten          die Daten
-	 * @param schuelerKAoAID id von SchuelerKAoADaten
-	 *
-	 * @return SchuelerKAoADaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public SchuelerKAoADaten putBySchuelerID(final Long schuelerid, final SchuelerKAoADaten daten, final Long schuelerKAoAID) throws ApiOperationException {
-		if (!Objects.equals(schuelerKAoAID, daten.id))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Payload id inkorrekt");
-		this.validate(schuelerid, daten);
-
-		final DTOSchuelerKAoADaten result = this.conn.queryByKey(DTOSchuelerKAoADaten.class, schuelerKAoAID);
-		if (result == null)
-			throw new ApiOperationException(Status.NOT_FOUND, "Datensatz mit der id: " + schuelerKAoAID + NICHT_GEFUNDEN);
-
-		getDtoSchuelerKAoADaten(daten, result);
-		final boolean success = this.conn.transactionPersist(result);
-		if (!success)
-			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, SERVER_ERROR);
-		return daten;
-	}
-
-	/**
-	 * Erzeugt DTOSchuelerKAoADaten aus SchuelerKAoADaten
-	 *
-	 * @param daten die SchuelerKAoADaten
-	 *
-	 * @return DTOSchuelerKAoADaten
-	 */
-	private static DTOSchuelerKAoADaten getDtoSchuelerKAoADaten(final SchuelerKAoADaten daten) {
-		final DTOSchuelerKAoADaten result = new DTOSchuelerKAoADaten(daten.id, daten.abschnitt, daten.kategorie);
-		return getDtoSchuelerKAoADaten(daten, result);
-	}
-
-	/**
-	 * Mapt SchuelerKAoADaten auf DTOSchuelerKAoADaten
-	 *
-	 * @param daten  die SchuelerKAoADaten
-	 * @param result die DTOSchuelerKAoADaten
-	 *
-	 * @return die DTOSchuelerKAoADaten
-	 */
-	private static DTOSchuelerKAoADaten getDtoSchuelerKAoADaten(final SchuelerKAoADaten daten, final DTOSchuelerKAoADaten result) {
-		result.MerkmalID = daten.merkmal;
-		result.ZusatzmerkmalID = daten.zusatzmerkmal;
-		result.AnschlussoptionID = daten.anschlussoption;
-		result.SBO_Ebene4ID = daten.ebene4;
-		result.BerufsfeldID = daten.berufsfeld;
-		result.Jahrgang = daten.jahrgang;
-		result.Bemerkung = daten.bemerkung;
-		result.Abschnitt_ID = daten.abschnitt;
-		result.KategorieID = daten.kategorie;
+		result.id = schuelerKAoADaten.id;
+		result.idKategorie = schuelerKAoADaten.idKategorie;
+		result.idMerkmal = schuelerKAoADaten.idMerkmal;
+		result.idZusatzmerkmal = schuelerKAoADaten.idZusatzmerkmal;
+		result.idAnschlussoption = schuelerKAoADaten.idAnschlussoption;
+		result.idEbene4 = schuelerKAoADaten.idEbene4;
+		result.idBerufsfeld = schuelerKAoADaten.idBerufsfeld;
+		result.idJahrgang = getJahrgaengeKatalogEintrag(schuelerKAoADaten).id;
+		result.idSchuljahresabschnitt = getLernabschnittsdaten(schuelerKAoADaten.idLernabschnitt).Schuljahresabschnitts_ID;
+		result.bemerkung = schuelerKAoADaten.bemerkung;
 		return result;
 	}
 
-
 	/**
-	 * validiert SchuelerKAoADaten und holt lernabschnittsdaten aus der Datenbank
+	 * Diese Methode liefert das Schuljahr der gegebenen SchülerKAoADaten.
 	 *
-	 * @param schuelerid die SChueler ID
-	 * @param daten      SchuelerKAoADaten
+	 * @param schuelerKAoADaten   schuelerKAoADaten
 	 *
-	 * @return boolean
+	 * @return schuljahr
 	 *
-	 * @throws ApiOperationException im Fehlerfall
+	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public boolean validate(final Long schuelerid, final SchuelerKAoADaten daten) throws ApiOperationException {
-		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, daten.abschnitt);
-		validateLernabschnittsdaten(schuelerid, lernabschnittsdaten);
-		return validate(daten);
-	}
-
-	/**
-	 * validiert Lernabschnittsdaten
-	 *
-	 * @param schuelerid          id des Schuelers
-	 * @param lernabschnittsdaten DTOSchuelerLernabschnittsdaten
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	protected static void validateLernabschnittsdaten(final Long schuelerid, final DTOSchuelerLernabschnittsdaten lernabschnittsdaten)
-			throws ApiOperationException {
+	private int getSchuljahrByKAoADaten(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten =
+				this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, schuelerKAoADaten.idLernabschnitt);
 		if (lernabschnittsdaten == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "lernabschnittsdaten nicht gefunden");
-		if (!Objects.equals(schuelerid, lernabschnittsdaten.Schueler_ID))
-			throw new ApiOperationException(Status.BAD_REQUEST, "id der lernabschnittsdaten passt nicht zum schueler");
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Keine Lernabschnittsdaten mit der ID %d vorhanden.".formatted(schuelerKAoADaten.idLernabschnitt));
+
+		final Schuljahresabschnitt schuljahresabschnitt =
+				conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(lernabschnittsdaten.Schuljahresabschnitts_ID);
+		return schuljahresabschnitt.schuljahr;
 	}
 
-	/**
-	 * validiert SchuelerKAoADaten
-	 *
-	 * @param daten die SchuelerKAoADaten
-	 *
-	 * @return boolean
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	public static boolean validate(final SchuelerKAoADaten daten) throws ApiOperationException {
-		final KAOAKategorie kategorie = KAOAKategorie.getByID(daten.kategorie);
-		validateKategorie(daten, kategorie);
+	@NotNull
+	JahrgaengeKatalogEintrag getJahrgaengeKatalogEintrag(final DTOSchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+		final int schuljahr = getSchuljahrByKAoADaten(schuelerKAoADaten);
+		final Jahrgaenge jahrgang = Jahrgaenge.data().getWertBySchluessel(schuelerKAoADaten.jahrgang);
+		if (jahrgang == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keinen Jahrgang mit dem Schlüssel %s gefunden.".formatted(schuelerKAoADaten.jahrgang));
 
-		final KAOAMerkmal merkmal = KAOAMerkmal.getByID(daten.merkmal);
-		validateMerkmal(daten, kategorie, merkmal);
-
-		final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.getByID(daten.zusatzmerkmal);
-		validateZusatzmerkmal(daten, merkmal, zusatzmerkmal);
-
-		final KAOAEbene4 ebene4 = KAOAEbene4.getByID(daten.ebene4);
-		validateEbene4(daten, zusatzmerkmal, ebene4);
-
-		final KAOAAnschlussoption anschlussoptionen = KAOAAnschlussoption.getByID(daten.anschlussoption);
-		validateAnschlussoption(daten, zusatzmerkmal, anschlussoptionen);
-
-		final KAOABerufsfeld berufsfeld = KAOABerufsfeld.getByID(daten.berufsfeld);
-		validateBerufsfeld(daten, zusatzmerkmal, berufsfeld);
-
-		validateJahrgang(daten, kategorie);
-
-		return true;
+		final JahrgaengeKatalogEintrag jahrgaengeKatalogEintrag = jahrgang.daten(schuljahr);
+		if (jahrgaengeKatalogEintrag == null)
+			throw new ApiOperationException(Status.NOT_FOUND,
+					"Keinen Jahrgangskatalogeintrag im Schuljahr %d mit dem Schlüssel %s gefunden.".formatted(schuljahr, schuelerKAoADaten.jahrgang));
+		return jahrgaengeKatalogEintrag;
 	}
 
-	/**
-	 * validiert Jahrgang
-	 *
-	 * @param daten     SchuelerKAoADaten
-	 * @param kategorie KAOAKategorie
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	protected static void validateJahrgang(final SchuelerKAoADaten daten, final KAOAKategorie kategorie) throws ApiOperationException {
-		if (!kategorie.daten.jahrgaenge.contains(daten.jahrgang)) {
-			throw new ApiOperationException(Status.BAD_REQUEST, "jahrgaenge ungültig");
-		}
-	}
-
-	/**
-	 * validiert Berufsfeld
-	 *
-	 * @param daten         SchuelerKAoADaten
-	 * @param zusatzmerkmal KAOAZusatzmerkmal
-	 * @param berufsfeld    KAOABerufsfeld
-	 *
-	 * @throws ApiOperationException im Fehlerfall
-	 */
-	protected static void validateBerufsfeld(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOABerufsfeld berufsfeld)
+	@Override
+	protected void mapAttribute(final DTOSchuelerKAoADaten dto, final String name, final Object value, final Map<String, Object> map)
 			throws ApiOperationException {
-		if (KAOAZusatzmerkmaleOptionsarten.BERUFSFELD.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
-			validateValueFound(daten.berufsfeld, berufsfeld, "berufsfeld");
+		switch (name) {
+			case "idJahrgang" -> {
+				final long idJahrgang = JSONMapper.convertToLong(value, false, "Jahrgang");
+				final JahrgaengeKatalogEintrag eintrag = Jahrgaenge.data().getEintragByID(idJahrgang);
+				if (eintrag == null)
+					throw new ApiOperationException(Status.NOT_FOUND, "Der Jahrgang mit der ID %d wurde nicht gefunden".formatted(idJahrgang));
+				dto.jahrgang = eintrag.schluessel;
+			}
+			case "idSchuljahresabschnitt" -> dto.idLernabschnitt = getIdLernabschnitt(JSONMapper.convertToLong(value, false, "Schuljahresabschnitt"));
+			case "idKategorie" -> dto.idKategorie = JSONMapper.convertToLong(value, false, "Kategorie");
+			case "idMerkmal" -> dto.idMerkmal = JSONMapper.convertToLong(value, false, "Merkmal");
+			case "idZusatzmerkmal" -> dto.idZusatzmerkmal = JSONMapper.convertToLong(value, false, "Zusatzmerkmal");
+			case "idEbene4" -> dto.idEbene4 = JSONMapper.convertToLong(value, true, "Ebene4");
+			case "idAnschlussoption" -> dto.idAnschlussoption = JSONMapper.convertToLong(value, true, "Anschlussoption");
+			case "idBerufsfeld" -> dto.idBerufsfeld = JSONMapper.convertToLong(value, true, "Berufsfeld");
+			case "bemerkung" -> dto.bemerkung = JSONMapper.convertToString(value, true, true, null, "Bemerkung");
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, "Die Daten des Patches enthalten das unbekannte Attribut %s.".formatted(name));
 		}
 	}
 
+	@Override
+	public List<SchuelerKAoADaten> getAll() throws ApiOperationException {
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
+				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHUELER_ID, DTOSchuelerLernabschnittsdaten.class, this.idSchueler);
+		final List<Long> schuelerLernabschnittsdatenIds = schuelerLernabschnittsdaten.stream().map(s -> s.ID).toList();
+		final List<DTOSchuelerKAoADaten> dtoSchuelerKAoADaten =
+				conn.queryList(DTOSchuelerKAoADaten.QUERY_LIST_BY_IDLERNABSCHNITT, DTOSchuelerKAoADaten.class, schuelerLernabschnittsdatenIds);
+		final List<SchuelerKAoADaten> result = new ArrayList<>();
+		for (final DTOSchuelerKAoADaten dto : dtoSchuelerKAoADaten)
+			result.add(this.map(dto));
+		return result;
+	}
+
 	/**
-	 * validiert Anschlussoption
+	 * Validiert die Korrektheit der Attribute.
 	 *
-	 * @param daten             SchuelerKAoADaten
-	 * @param zusatzmerkmal     KAOAZusatzmerkmal
-	 * @param anschlussoptionen KAOAAnschlussoptionen
+	 * @param schuelerKAoADaten   SchuelerKAoADaten
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateAnschlussoption(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal,
-			final KAOAAnschlussoption anschlussoptionen) throws ApiOperationException {
-		if (KAOAZusatzmerkmaleOptionsarten.ANSCHLUSSOPTION.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
-			validateValueFound(daten.anschlussoption, anschlussoptionen, "anschlussoption");
-			if ((anschlussoptionen != null) && !anschlussoptionen.daten.anzeigeZusatzmerkmal.contains(zusatzmerkmal.daten.kuerzel)) {
-				throw new ApiOperationException(Status.BAD_REQUEST, "anschlussoptionen passt nicht zum zusatzmerkmal");
+	private void validateAttributes(final SchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+		validateOptionalAttributes(schuelerKAoADaten);
+		validateLernabschnittsdaten(getIdLernabschnitt(schuelerKAoADaten.idSchuljahresabschnitt));
+		final KAOAKategorie kategorie = validateKategorie(schuelerKAoADaten.idKategorie);
+		final int schuljahr = getSchuljahr(schuelerKAoADaten.idSchuljahresabschnitt);
+		validateJahrgang(schuelerKAoADaten.idJahrgang, kategorie, schuljahr);
+		final KAOAMerkmal merkmal = validateMerkmal(schuelerKAoADaten.idMerkmal, kategorie, schuljahr);
+		final KAOAZusatzmerkmal zusatzmerkmal = validateZusatzmerkmal(schuelerKAoADaten.idZusatzmerkmal, merkmal, schuljahr);
+		final KAOAZusatzmerkmalKatalogEintrag eintrag = validateEintragZusatzmerkmal(zusatzmerkmal, schuljahr);
+		final KAOAZusatzmerkmaleOptionsarten optionsart = validateKAoAZusatzmerkmalOptionsarten(eintrag);
+		switch (optionsart) {
+			case SBO_EBENE_4 -> validateEbene4(schuelerKAoADaten.idEbene4, zusatzmerkmal, schuljahr);
+			case ANSCHLUSSOPTION -> validateAnschlussoption(schuelerKAoADaten.idAnschlussoption, zusatzmerkmal, schuljahr);
+			case BERUFSFELD -> validateBerufsfeld(schuelerKAoADaten.idBerufsfeld);
+			case FREITEXT, FREITEXT_BERUF -> validateBemerkung(schuelerKAoADaten.bemerkung);
+			default -> {
+				/* keine Validierung notwendig */
 			}
 		}
 	}
 
+	private int getSchuljahr(final long schuljahresabschnittsId) throws ApiOperationException {
+		try {
+			return conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(schuljahresabschnittsId).schuljahr;
+		} catch (final DeveloperNotificationException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Kein Schuljahresabschnitt zur ID %d gefunden.".formatted(schuljahresabschnittsId));
+		}
+	}
+
+	private static void validateOptionalAttributes(final SchuelerKAoADaten schuelerKAoADaten) throws ApiOperationException {
+		int nonEmptyOptionalAttributeCount = 0;
+		if (schuelerKAoADaten.idAnschlussoption != null)
+			nonEmptyOptionalAttributeCount++;
+		if (schuelerKAoADaten.idEbene4 != null)
+			nonEmptyOptionalAttributeCount++;
+		if (schuelerKAoADaten.idBerufsfeld != null)
+			nonEmptyOptionalAttributeCount++;
+		if ((schuelerKAoADaten.bemerkung != null) && !schuelerKAoADaten.bemerkung.isBlank())
+			nonEmptyOptionalAttributeCount++;
+		if (nonEmptyOptionalAttributeCount > 1) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Die Anzahl vorhandener optionaler Attribute ist größer 1");
+		}
+	}
+
+	private long getIdLernabschnitt(final long idSchuljahresabschnitt) throws ApiOperationException {
+		final List<DTOSchuelerLernabschnittsdaten> schuelerLernabschnittsdaten =
+				conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_SCHULJAHRESABSCHNITTS_ID, DTOSchuelerLernabschnittsdaten.class, idSchuljahresabschnitt);
+		return schuelerLernabschnittsdaten.stream().filter(e -> e.Schueler_ID == idSchueler).filter(e -> e.WechselNr == 0).findFirst().map(e -> e.ID)
+				.orElseThrow(() -> new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten zur IdSchuljahresabschnitt %d gefunden".formatted(idSchuljahresabschnitt)));
+	}
+
 	/**
-	 * validiert Ebene4
+	 * Validiert, ob die Lernabschnittsdaten zum ausgewählten Schüler passen.
 	 *
-	 * @param daten         SchuelerKAoADaten
-	 * @param zusatzmerkmal KAOAZusatzmerkmal
-	 * @param ebene4        KAOAEbene4
+	 * @param idLernabschnitt   idLernabschnitt
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateEbene4(final SchuelerKAoADaten daten, final KAOAZusatzmerkmal zusatzmerkmal, final KAOAEbene4 ebene4)
-			throws ApiOperationException {
-		if (zusatzmerkmal == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "zusatzmerkmal nicht angegeben");
-		if (KAOAZusatzmerkmaleOptionsarten.SBO_EBENE_4.equals(KAOAZusatzmerkmaleOptionsarten.getByKuerzel(zusatzmerkmal.daten.optionsart))) {
-			validateValueFound(daten.ebene4, ebene4, "ebene4");
-			if ((ebene4 != null) && !ebene4.daten.zusatzmerkmal.equals(zusatzmerkmal.daten.kuerzel)) {
-				throw new ApiOperationException(Status.BAD_REQUEST, "ebene4 passt nicht zum zusatzmerkmal");
-			}
+	private void validateLernabschnittsdaten(final long idLernabschnitt) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = getLernabschnittsdaten(idLernabschnitt);
+		if (lernabschnittsdaten.Schueler_ID != idSchueler)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Lernabschnittsdaten mit der ID %d passen nicht zum Schueler mit der ID %d"
+					.formatted(idLernabschnitt, idSchueler));
+	}
+
+	private DTOSchuelerLernabschnittsdaten getLernabschnittsdaten(final long idLernabschnitt) throws ApiOperationException {
+		final DTOSchuelerLernabschnittsdaten lernabschnittsdaten = this.conn.queryByKey(DTOSchuelerLernabschnittsdaten.class, idLernabschnitt);
+		if (lernabschnittsdaten == null)
+			throw new ApiOperationException(Status.NOT_FOUND, "Keine Lernabschnittsdaten mit der ID %d vorhanden.".formatted(idLernabschnitt));
+		return lernabschnittsdaten;
+	}
+
+	/**
+	 * Validiert, ob eine gültige Kategorie ausgewählt wurde.
+	 *
+	 * @param idKategorie   idKategorie
+	 *
+	 * @return KAoAKategorie
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static KAOAKategorie validateKategorie(final long idKategorie) throws ApiOperationException {
+		try {
+			return KAOAKategorie.data().getWertByID(idKategorie);
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Keine KAoAKategorie mit der ID %d vorhanden.".formatted(idKategorie));
 		}
 	}
 
 	/**
-	 * validiert Zusatzmerkmal
+	 * Validiert den Jahrgang (abhängig von der ausgewählten Kategorie).
 	 *
-	 * @param daten         SchuelerKAoADaten
-	 * @param merkmal       KAOAMerkmal
-	 * @param zusatzmerkmal KAOAZusatzmerkmal
+	 * @param idJahrgang   idJahrgang
+	 * @param kategorie    KAOAKategorie
+	 * @param schuljahr    Schuljahr, für das die Daten validiert werden
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateZusatzmerkmal(final SchuelerKAoADaten daten, final KAOAMerkmal merkmal, final KAOAZusatzmerkmal zusatzmerkmal)
+	private static void validateJahrgang(final long idJahrgang, final KAOAKategorie kategorie, final int schuljahr) throws ApiOperationException {
+		try {
+			final JahrgaengeKatalogEintrag eintrag = Jahrgaenge.data().getEintragByID(idJahrgang);
+			if (eintrag == null)
+				throw new ApiOperationException(Status.NOT_FOUND, "Kein Jahrgangseintrag mit der ID %d vorhanden.".formatted(idJahrgang));
+			final Jahrgaenge jahrgang = Jahrgaenge.data().getWertByID(idJahrgang);
+			if (!kategorie.hatJahrgang(schuljahr, jahrgang))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Der Jahrgang mit der ID %d ist nicht in der Kategorie %s für das Schuljahr %d enthalten."
+						.formatted(idJahrgang, kategorie.name(), schuljahr));
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Keine Jahrgang mit der ID %d vorhanden.".formatted(idJahrgang));
+		}
+	}
+
+	/**
+	 * Validiert das Merkmal (abhängig von der ausgewählten Kategorie).
+	 *
+	 * @param idMerkmal    idMerkmal
+	 * @param kategorie    KAOAKategorie
+	 * @param schuljahr    Schuljahr, für das die Daten validiert werden
+	 *
+	 * @return KAOAMerkmal
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static KAOAMerkmal validateMerkmal(final long idMerkmal, final KAOAKategorie kategorie, final int schuljahr) throws ApiOperationException {
+		try {
+			final KAOAMerkmal merkmal = KAOAMerkmal.data().getWertByID(idMerkmal);
+			final KAOAMerkmalKatalogEintrag eintrag = merkmal.daten(schuljahr);
+			if (eintrag == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das Merkmal ist im Schuljahr %d nicht gültig.".formatted(schuljahr));
+			if (!eintrag.kategorie.equals(kategorie.name()))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das KAoAMerkmal mit der ID %d passt nicht zur kategorie mit der ID %d."
+						.formatted(idMerkmal, kategorie.daten(schuljahr).id));
+			return merkmal;
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Kein KAoAMerkmal mit der ID %d vorhanden.".formatted(idMerkmal));
+		}
+	}
+
+	/**
+	 * Validiert das Zusatzmerkmal (abhängig vom ausgewählten Merkmal).
+	 *
+	 * @param idZusatzmerkmal   idZusatzmerkmal
+	 * @param merkmal           KAOAMerkmal
+	 * @param schuljahr         Schuljahr, für das die Daten validiert werden
+	 *
+	 * @return Zusatzmerkmal
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static KAOAZusatzmerkmal validateZusatzmerkmal(final long idZusatzmerkmal, final KAOAMerkmal merkmal, final int schuljahr)
 			throws ApiOperationException {
-		validateValueFound(daten.zusatzmerkmal, zusatzmerkmal, "zusatzmerkmal");
-		if ((zusatzmerkmal != null) && !zusatzmerkmal.daten.merkmal.equals(merkmal.daten.kuerzel))
-			throw new ApiOperationException(Status.BAD_REQUEST, "zusatzmerkmal passt nicht zur merkmal");
+		try {
+			final KAOAZusatzmerkmal zusatzmerkmal = KAOAZusatzmerkmal.data().getWertByID(idZusatzmerkmal);
+			final KAOAZusatzmerkmalKatalogEintrag eintrag = validateEintragZusatzmerkmal(zusatzmerkmal, schuljahr);
+			if (!eintrag.merkmal.equals(merkmal.name()))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Das KAoAZusatzmerkmal mit der ID %d passt nicht zum KAoAMerkmal mit der ID %d."
+						.formatted(idZusatzmerkmal, merkmal.daten(schuljahr).id));
+			return zusatzmerkmal;
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Kein KAoAZusatzmerkmal mit der ID %d vorhanden.".formatted(idZusatzmerkmal));
+		}
 	}
 
 	/**
-	 * validiert Merkmal
+	 * Validiert die Ebene4 (abhängig vom ausgewählten Zusatzmerkmal).
 	 *
-	 * @param daten     SchuelerKAoADaten
-	 * @param kategorie KAOAKategorie
-	 * @param merkmal   KAOAMerkmal
+	 * @param idEbene4        idEbene4
+	 * @param zusatzmerkmal   KAOAZusatzmerkmal
+	 * @param schuljahr       Schuljahr, für das die Daten validiert werden
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateMerkmal(final SchuelerKAoADaten daten, final KAOAKategorie kategorie, final KAOAMerkmal merkmal)
+	private static void validateEbene4(final Long idEbene4, final KAOAZusatzmerkmal zusatzmerkmal, final int schuljahr) throws ApiOperationException {
+		try {
+			if (idEbene4 == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "idEbene4 darf nicht null sein.");
+			final KAOAEbene4 ebene4 = KAOAEbene4.data().getWertByID(idEbene4);
+			if (!ebene4.daten(schuljahr).zusatzmerkmal.equals(zusatzmerkmal.name()))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Ebene4 mit der ID %d passt nicht zum KAoAZusatzmerkmal mit der ID %d."
+						.formatted(idEbene4, zusatzmerkmal.daten(schuljahr).id));
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Keine Ebene4 mit der ID %d vorhanden.".formatted(idEbene4));
+		}
+	}
+
+	/**
+	 * Validiert die Anschlussoption (abhängig vom ausgewählten Zusatzmerkmal).
+	 *
+	 * @param idAnschlussoption   idAnschlussoption
+	 * @param zusatzmerkmal       KAOAZusatzmerkmal
+	 * @param schuljahr           Schuljahr, für das die Daten validiert werden
+	 *
+	 * @throws ApiOperationException im Fehlerfall
+	 */
+	private static void validateAnschlussoption(final Long idAnschlussoption, final KAOAZusatzmerkmal zusatzmerkmal, final int schuljahr)
 			throws ApiOperationException {
-		validateValueFound(daten.merkmal, merkmal, "merkmal");
-		if ((merkmal != null) && !merkmal.daten.kategorie.equals(kategorie.daten.kuerzel))
-			throw new ApiOperationException(Status.BAD_REQUEST, "merkmal passt nicht zur kategorie");
+		try {
+			if (idAnschlussoption == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "idAnschlussoption darf nicht null sein.");
+			final KAOAAnschlussoptionen anschlussoptionen = KAOAAnschlussoptionen.data().getWertByID(idAnschlussoption);
+			if (!anschlussoptionen.daten(schuljahr).anzeigeZusatzmerkmal.contains(zusatzmerkmal.name()))
+				throw new ApiOperationException(Status.BAD_REQUEST, "Die Anschlussoption mit der ID %d passt nicht zum KAoAZusatzmerkmal mit der ID %d."
+						.formatted(idAnschlussoption, zusatzmerkmal.daten(schuljahr).id));
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Keine Anschlussoption mit der ID %d vorhanden.".formatted(idAnschlussoption));
+		}
 	}
 
 	/**
-	 * validiert Kategorie
+	 * Validiert das Berufsfeld (abhängig vom ausgewählten Zusatzmerkmal).
 	 *
-	 * @param daten     SchuelerKAoADaten
-	 * @param kategorie KAOAKategorie
+	 * @param idBerufsfeld    idBerufsfeld
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateKategorie(final SchuelerKAoADaten daten, final KAOAKategorie kategorie) throws ApiOperationException {
-		if (kategorie == null)
-			throw new ApiOperationException(Status.BAD_REQUEST, "kategorie nicht gefunden");
+	private static void validateBerufsfeld(final Long idBerufsfeld) throws ApiOperationException {
+		try {
+			if (idBerufsfeld == null)
+				throw new ApiOperationException(Status.BAD_REQUEST, "idBerufsfeld darf nicht null sein.");
+			KAOABerufsfeld.data().getWertByID(idBerufsfeld);
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Kein Berufsfeld mit der ID %d vorhanden.".formatted(idBerufsfeld));
+		}
 	}
 
 	/**
-	 * validiert übergebenen Wert
+	 * Validiert die Bemerkung.
 	 *
-	 * @param idFromData id aus daten
-	 * @param obj        Objekt aus dem enum
-	 * @param fieldName  names des Feldes
+	 * @param bemerkung       bemerkung
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	protected static void validateValueFound(final Long idFromData, final Object obj, final String fieldName) throws ApiOperationException {
-		if ((idFromData != null) && (obj == null))
-			throw new ApiOperationException(Status.BAD_REQUEST, fieldName + NICHT_GEFUNDEN);
+	private static void validateBemerkung(final String bemerkung) throws ApiOperationException {
+		if ((bemerkung == null) || bemerkung.trim().isEmpty())
+			throw new ApiOperationException(Status.BAD_REQUEST, "Bemerkung darf nicht null sein.");
+	}
+
+	private static KAOAZusatzmerkmaleOptionsarten validateKAoAZusatzmerkmalOptionsarten(final KAOAZusatzmerkmalKatalogEintrag eintragZusatzmerkmal)
+			throws ApiOperationException {
+		try {
+			return KAOAZusatzmerkmaleOptionsarten.data().getWertByBezeichner(eintragZusatzmerkmal.optionsart);
+		} catch (final CoreTypeException e) {
+			throw new ApiOperationException(Status.NOT_FOUND, e.getCause(), "Kein Optionsart für den Bezeichner %s vorhanden."
+					.formatted(eintragZusatzmerkmal.optionsart));
+		}
+	}
+
+	private static KAOAZusatzmerkmalKatalogEintrag validateEintragZusatzmerkmal(final KAOAZusatzmerkmal zusatzmerkmal, final int schuljahr)
+			throws ApiOperationException {
+		final var eintragZusatzmerkmal = zusatzmerkmal.daten(schuljahr);
+		if (eintragZusatzmerkmal == null)
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Zusatzmerkmal ist im Schuljahr %d nicht gültig.".formatted(schuljahr));
+		return eintragZusatzmerkmal;
 	}
 
 }

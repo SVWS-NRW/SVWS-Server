@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { type List, LogData, Logger, LogLevel, LogConsumerList } from "@core";
+import { LogData, Logger, LogLevel, LogConsumerList } from "@core";
 
 describe("Logger Class", () => {
 	test("is Logger instance", () => {
@@ -120,25 +120,25 @@ describe("Logger: Working with logs", () => {
 	});
 	test("Log size", () => {
 		log.logLn(0, "Eine erste Zeile im Log.");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		expect(data.size()).toBe(1);
 	});
 	test("Log instance", () => {
 		log.logLn(0, "Eine erste Zeile im Log.");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog).toBeInstanceOf(LogData);
 	});
 	test("logged text", () => {
 		log.logLn(0, "Eine erste Zeile im Log.");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("Eine erste Zeile im Log.");
 	});
 	test("log: LogData", () => {
 		const logdata = new LogData(LogLevel.DEBUG, 2, true, "Test Data");
 		log.log(logdata);
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("  Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
@@ -147,7 +147,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("log: LogLevel, indent, text", () => {
 		log.log(LogLevel.DEBUG, 4, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("    Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
@@ -156,7 +156,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("log: LogLevel, text", () => {
 		log.log(LogLevel.DEBUG, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
@@ -165,7 +165,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("log: indent, text", () => {
 		log.log(3, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("   Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
@@ -174,7 +174,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("log: text", () => {
 		log.log("Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
@@ -183,7 +183,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("logLn: LogLevel, indent, text", () => {
 		log.logLn(LogLevel.DEBUG, 4, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("    Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
@@ -192,7 +192,7 @@ describe("Logger: Working with logs", () => {
 	});
 	test("logLn: LogLevel, text", () => {
 		log.logLn(LogLevel.DEBUG, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.DEBUG);
@@ -201,16 +201,16 @@ describe("Logger: Working with logs", () => {
 	});
 	test("logLn: indent, text", () => {
 		log.logLn(3, "Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("   Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);
-    	expect(firstlog.isNewLine()).toBe(true);
+		expect(firstlog.isNewLine()).toBe(true);
 		//expect(firstlog.toString()).toBe("{kommt noch}");
 	});
 	test("logLn: text", () => {
 		log.logLn("Test Data");
-		const data = logConsumer.getLogData() as List<LogData>;
+		const data = logConsumer.getLogData();
 		const firstlog = data.get(0);
 		expect(firstlog.getText()).toBe("Test Data");
 		expect(firstlog.getLevel()).toBe(LogLevel.INFO);

@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
+import { Class } from '../../../java/lang/Class';
 import { SatInput } from '../../../core/adt/sat/SatInput';
 import { SatOutput } from '../../../core/adt/sat/SatOutput';
 
@@ -33,6 +34,8 @@ export abstract class SatSolver extends JavaObject implements JavaFunction<SatIn
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['java.util.function.Function', 'de.svws_nrw.core.adt.sat.SatSolver'].includes(name);
 	}
+
+	public static class = new Class<SatSolver>('de.svws_nrw.core.adt.sat.SatSolver');
 
 }
 

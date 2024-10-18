@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { BKFachklassenSchluessel } from '../../../core/data/bk/BKFachklassenSchluessel';
 
 export class BKFBFach extends JavaObject {
@@ -47,6 +48,8 @@ export class BKFBFach extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.bk.BKFBFach'].includes(name);
 	}
+
+	public static class = new Class<BKFBFach>('de.svws_nrw.core.data.bk.BKFBFach');
 
 	public static transpilerFromJSON(json : string): BKFBFach {
 		const obj = JSON.parse(json) as Partial<BKFBFach>;

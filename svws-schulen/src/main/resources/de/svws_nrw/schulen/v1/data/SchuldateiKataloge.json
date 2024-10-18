@@ -3,15 +3,6 @@
 		{
 			"katalog": "ArtDerAdresse",
 			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "Art der Adresse nicht vergeben/noch kein Schulbetrieb",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.07.2023",
-			"geaendertam": "22.11.2023 07:00:00"
-		},
-		{
-			"katalog": "ArtDerAdresse",
-			"schluessel": "",
 			"wert": "0",
 			"bezeichnung": "keine Art der Adresse",
 			"gueltigab": "01.01.1970",
@@ -95,7 +86,7 @@
 			"schluessel": "",
 			"wert": "9",
 			"bezeichnung": "außerschulischer Lernort",
-			"gueltigab": "01.08.2022",
+			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "12.10.2022 09:30:00"
 		},
@@ -170,24 +161,6 @@
 			"gueltigab": "01.08.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2022 10:30:00"
-		},
-		{
-			"katalog": "Attribut",
-			"schluessel": "",
-			"wert": "9",
-			"bezeichnung": "<frei>",
-			"gueltigab": "01.08.2019",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "21.10.2020 11:15:00"
-		},
-		{
-			"katalog": "Attribut",
-			"schluessel": "",
-			"wert": "10",
-			"bezeichnung": "<frei>",
-			"gueltigab": "01.01.2013",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "23.06.2022 14:00:00"
 		},
 		{
 			"katalog": "Attribut",
@@ -431,15 +404,6 @@
 			"gueltigab": "01.08.2014",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "04.04.2022 11:00:00"
-		},
-		{
-			"katalog": "Attribut",
-			"schluessel": "",
-			"wert": "38",
-			"bezeichnung": "<frei>",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "18.06.2024 11:00:00"
 		},
 		{
 			"katalog": "Attribut",
@@ -946,10 +910,118 @@
 			"geaendertam": "23.06.2022 14:30:00"
 		},
 		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "",
+			"bezeichnung": "",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "26.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "EZ",
+			"bezeichnung": "Förderschwerpunkt emotionale und soziale Entwicklung",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "GB",
+			"bezeichnung": "Förderschwerpunkt geistige Entwicklung",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "GH",
+			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Gehörlos",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "17.07.2023 00:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "SG",
+			"bezeichnung": "Förderschwerpunkt Hören und Kommunikation - Schwerhörig",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "17.07.2023 00:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "KB",
+			"bezeichnung": "Förderschwerpunkt körperliche und motorische Entwicklung",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "LB",
+			"bezeichnung": "Förderschwerpunkt Lernen",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "BL",
+			"bezeichnung": "Förderschwerpunkt Sehen - Blind",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "SH",
+			"bezeichnung": "Förderschwerpunkt Sehen - Sehbehindert",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "SB",
+			"bezeichnung": "Förderschwerpunkt Sprache",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "11.05.2021 09:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "XX",
+			"bezeichnung": "kein Förderschwerpunkt",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "26.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Foerderschwerpunkt",
+			"schluessel": "",
+			"wert": "KR",
+			"bezeichnung": "Klinikschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "05.04.2022 07:00:00"
+		},
+		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "EVB",
-			"bezeichnung": "Evangelische Bekenntnisschule",
+			"wert": "GY8",
+			"bezeichnung": "(gymnasiale SI G8)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -957,8 +1029,26 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "GMS",
-			"bezeichnung": "Gemeinschaftsschule (nur Grundschulverbund)",
+			"wert": "G8A",
+			"bezeichnung": "(gymnasiale SI G8) auslaufend",
+			"gueltigab": "01.02.2019",
+			"gueltigbis": "31.07.2030",
+			"geaendertam": "20.03.2019 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "GY9",
+			"bezeichnung": "(gymnasiale SI G9)",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "20.03.2019 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "G02",
+			"bezeichnung": "Abendgymnasium",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -966,8 +1056,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "JUB",
-			"bezeichnung": "Jüdische Bekenntnisschule",
+			"wert": "R02",
+			"bezeichnung": "Abendrealschule",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -975,89 +1065,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "MEB",
-			"bezeichnung": "Mennonitische Bekenntnisschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "RKB",
-			"bezeichnung": "Römisch-katholische Bekenntnisschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "WAS",
-			"bezeichnung": "Weltanschauungsschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 02",
-			"bezeichnung": "SF 02",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "R",
-			"bezeichnung": "Realschule (Schulen im organisatorischen Verbund)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 04",
-			"bezeichnung": "SF 04",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 06",
-			"bezeichnung": "SF 06",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "R00",
-			"bezeichnung": "Realschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 08",
-			"bezeichnung": "SF 08",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "H",
-			"bezeichnung": "Hauptschule (Schulen im organisatorischen Verbund)",
+			"wert": "G01",
+			"bezeichnung": "Aufbaugymnasium",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1074,89 +1083,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SF 10",
-			"bezeichnung": "SF 10",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "OST",
-			"bezeichnung": "Gymnasiale SII (nur fortgeführte gymnasiale Oberstufe)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "PI",
-			"bezeichnung": "Primarstufe Integrierte Form",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SI",
-			"bezeichnung": "Sekundarstufe Integrierte Form",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 13",
-			"bezeichnung": "SF 13",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "GGS",
-			"bezeichnung": "Integrierte Form (entstanden aus GM)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "GGY",
-			"bezeichnung": "Gymnasialbildungsgang (entstanden aus GM)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "GRH",
-			"bezeichnung": "Teilintegrierte Form (entstanden aus GM)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
 			"wert": "HA",
 			"bezeichnung": "Auslaufender Hauptschulzweig",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "P",
-			"bezeichnung": "Primarzweig (Schulversuch Primarzweig an einer Sekundarschule)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1173,8 +1101,26 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SKB",
-			"bezeichnung": "Kooperative Form Grundebene im Jahrgang",
+			"wert": "H02",
+			"bezeichnung": "Berufsbildung nur Jahrgänge 11-12",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "23.06.2022 09:45:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "H01",
+			"bezeichnung": "Berufsgrundbildung Jahrgänge 7 - 10",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "23.06.2022 09:45:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "EVB",
+			"bezeichnung": "Evangelische Bekenntnisschule",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1182,8 +1128,17 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SKE",
-			"bezeichnung": "Kooperative Form Erweiterungsebene",
+			"wert": "C07",
+			"bezeichnung": "Fachoberschule für Wirtschaft",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.07.2017",
+			"geaendertam": "23.06.2022 09:45:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "GMS",
+			"bezeichnung": "Gemeinschaftsschule (nur Grundschulverbund)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1191,8 +1146,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SKG",
-			"bezeichnung": "Kooperative Form schulformbezogen gymnasial",
+			"wert": "GGY",
+			"bezeichnung": "Gymnasialbildungsgang (entstanden aus GM)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1200,8 +1155,17 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SKH",
-			"bezeichnung": "kooperative Form schulformbezogen Hauptschule",
+			"wert": "OST",
+			"bezeichnung": "Gymnasiale SII (entstanden aus GM)",
+			"gueltigab": "01.01.2020",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "07.01.2020 10:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "OST2",
+			"bezeichnung": "Gymnasiale SII (nur fortgeführte gymnasiale Oberstufe)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1209,26 +1173,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SKR",
-			"bezeichnung": "Kooperative Form schulformbezogen Realschule",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "ST",
-			"bezeichnung": "Teilintegrierte Form",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "SF 14",
-			"bezeichnung": "SF 14",
+			"wert": "OST3",
+			"bezeichnung": "Gymnasiale SII (OST einer Schule nur zugeordnet, wenn diese über eine eigene gymnasiale Oberstufe verfügt)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1245,8 +1191,35 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SRH",
-			"bezeichnung": "Teilintegrierte Form (entstanden aus SK)",
+			"wert": "H",
+			"bezeichnung": "Hauptschule (Schulen im organisatorischen Verbund)",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "K02a",
+			"bezeichnung": "Hiberniakolleg Semester 1-6",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "23.06.2022 09:45:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SI",
+			"bezeichnung": "Integrierte Form",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "GGS",
+			"bezeichnung": "Integrierte Form (entstanden aus GM)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1263,8 +1236,8 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "SF 15",
-			"bezeichnung": "SF 15",
+			"wert": "GS7",
+			"bezeichnung": "Integrierte Form SI ab Jahrgang 7",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1290,8 +1263,44 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "GS7",
-			"bezeichnung": "Integrierte Form SI ab Jahrgang 7",
+			"wert": "RH7",
+			"bezeichnung": "Integrierte Form von Realschul- und Hauptschulzweig ab Jahrgang 7",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "JUB",
+			"bezeichnung": "Jüdische Bekenntnisschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "K02",
+			"bezeichnung": "Kolleg",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SKE",
+			"bezeichnung": "Kooperative Form Erweiterungsebene",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SKB",
+			"bezeichnung": "Kooperative Form Grundebene im Jahrgang",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1326,8 +1335,161 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "RH7",
-			"bezeichnung": "Integrierte Form von Realschul- und Hauptschulzweig ab Jahrgang 7",
+			"wert": "SKG",
+			"bezeichnung": "Kooperative Form schulformbezogen gymnasial",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SKH",
+			"bezeichnung": "kooperative Form schulformbezogen Hauptschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SKR",
+			"bezeichnung": "Kooperative Form schulformbezogen Realschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "MEB",
+			"bezeichnung": "Mennonitische Bekenntnisschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "PI",
+			"bezeichnung": "Primarstufe Integrierte Form",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "P",
+			"bezeichnung": "Primarzweig (Schulversuch Primarzweig an einer Sekundarschule)",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "R00",
+			"bezeichnung": "Realschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "R",
+			"bezeichnung": "Realschule (Schulen im organisatorischen Verbund)",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "RKB",
+			"bezeichnung": "Römisch-katholische Bekenntnisschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SIa",
+			"bezeichnung": "Sekundarstufe Integrierte Form",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 02",
+			"bezeichnung": "SF 02",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 04",
+			"bezeichnung": "SF 04",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 06",
+			"bezeichnung": "SF 06",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 08",
+			"bezeichnung": "SF 08",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 10",
+			"bezeichnung": "SF 10",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 13",
+			"bezeichnung": "SF 13",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 14",
+			"bezeichnung": "SF 14",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SF 15",
+			"bezeichnung": "SF 15",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1353,33 +1515,6 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "H01",
-			"bezeichnung": "Berufsgrundbildung Jahrgänge 7 - 10",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "23.06.2022 09:45:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "H02",
-			"bezeichnung": "Berufsbildung nur Jahrgänge 11-12",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "23.06.2022 09:45:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "K02",
-			"bezeichnung": "Hiberniakolleg Semester 1-6",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "23.06.2022 09:45:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
 			"wert": "SF 18",
 			"bezeichnung": "SF 18",
 			"gueltigab": "01.01.1970",
@@ -1389,62 +1524,17 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "G01",
-			"bezeichnung": "Aufbaugymnasium",
+			"wert": "SF 19",
+			"bezeichnung": "SF 19",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "GY8",
-			"bezeichnung": "(gymnasiale SI G8)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "GY9",
-			"bezeichnung": "(gymnasiale SI G9)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
+			"geaendertam": "01.02.2021 09:45:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
 			"wert": "SF 20",
 			"bezeichnung": "SF 20",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "C07",
-			"bezeichnung": "Fachoberschule für Wirtschaft",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.07.2017",
-			"geaendertam": "23.06.2022 09:45:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "G02",
-			"bezeichnung": "Abendgymnasium",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "22.03.2018 00:00:00"
-		},
-		{
-			"katalog": "Gliederung",
-			"schluessel": "",
-			"wert": "R02",
-			"bezeichnung": "Abendrealschule",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.03.2018 00:00:00"
@@ -1515,20 +1605,38 @@
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "G8A",
-			"bezeichnung": "(gymnasiale SI G8) auslaufend",
-			"gueltigab": "01.02.2019",
-			"gueltigbis": "31.07.2025",
-			"geaendertam": "20.03.2019 00:00:00"
+			"wert": "ST",
+			"bezeichnung": "Teilintegrierte Form",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
 		},
 		{
 			"katalog": "Gliederung",
 			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "SF 19",
+			"wert": "GRH",
+			"bezeichnung": "Teilintegrierte Form (entstanden aus GM)",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
-			"geaendertam": "01.02.2021 09:45:00"
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "SRH",
+			"bezeichnung": "Teilintegrierte Form (entstanden aus SK)",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
+		},
+		{
+			"katalog": "Gliederung",
+			"schluessel": "",
+			"wert": "WAS",
+			"bezeichnung": "Weltanschauungsschule",
+			"gueltigab": "01.01.1970",
+			"gueltigbis": "31.12.9999",
+			"geaendertam": "22.03.2018 00:00:00"
 		},
 		{
 			"katalog": "Hauptstandortadresse",
@@ -1614,7 +1722,7 @@
 		{
 			"katalog": "LiegenschaftArt",
 			"schluessel": "",
-			"wert": "2",
+			"wert": "0",
 			"bezeichnung": "weitere Adresse",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
@@ -1643,7 +1751,7 @@
 			"schluessel": "",
 			"wert": "3",
 			"bezeichnung": "Schwerpunktschule",
-			"gueltigab": "01.06.2019",
+			"gueltigab": "01.06.2015",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "18.06.2019 11:00:00"
 		},
@@ -1670,7 +1778,7 @@
 			"schluessel": "",
 			"wert": "6",
 			"bezeichnung": "Studienkolleg für ausländische Studierende",
-			"gueltigab": "01.08.2019",
+			"gueltigab": "01.08.1973",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "21.12.2022 08:00:00"
 		},
@@ -1715,7 +1823,7 @@
 			"schluessel": "",
 			"wert": "11",
 			"bezeichnung": "Konfessionelle Kooperation",
-			"gueltigab": "01.08.2018",
+			"gueltigab": "01.08.1974",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "23.03.2020 08:00:00"
 		},
@@ -2085,7 +2193,7 @@
 			"wert": "4",
 			"bezeichnung": "Nachgeordnete Landesbehörde",
 			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.08.2004",
+			"gueltigbis": "31.12.9999",
 			"geaendertam": "28.02.2020 10:40:00"
 		},
 		{
@@ -2251,42 +2359,6 @@
 			"geaendertam": "18.04.2016 00:00:00"
 		},
 		{
-			"katalog": "SchliessungGrund",
-			"schluessel": "",
-			"wert": "01",
-			"bezeichnung": "Normale Auflösung",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "24.05.2017 00:00:00"
-		},
-		{
-			"katalog": "SchliessungGrund",
-			"schluessel": "",
-			"wert": "02",
-			"bezeichnung": "Auflösung durch Zusammenlegung",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "24.05.2017 00:00:00"
-		},
-		{
-			"katalog": "SchliessungGrund",
-			"schluessel": "",
-			"wert": "03",
-			"bezeichnung": "Auflösung durch Umwandlung in eine Schule anderer Schulform",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "24.05.2017 00:00:00"
-		},
-		{
-			"katalog": "SchliessungGrund",
-			"schluessel": "",
-			"wert": "",
-			"bezeichnung": "",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "27.03.2018 15:15:15"
-		},
-		{
 			"katalog": "Schulart",
 			"schluessel": "",
 			"wert": "053",
@@ -2391,7 +2463,7 @@
 			"wert": "GMS",
 			"bezeichnung": "Gemeinschaftsschule",
 			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.07.2009",
+			"gueltigbis": "31.12.9999",
 			"geaendertam": "08.05.2024 07:00:00"
 		},
 		{
@@ -2505,7 +2577,7 @@
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
-			"wert": "AS#",
+			"wert": "ASFW",
 			"bezeichnung": "Freie Waldorfschule allgemeinbildender und Förderschulbereich",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
@@ -2514,7 +2586,7 @@
 		{
 			"katalog": "Schulart",
 			"schluessel": "",
-			"wert": "S#",
+			"wert": "SFW",
 			"bezeichnung": "Freie Waldorfschule Förderschulbereich",
 			"gueltigab": "01.01.1970",
 			"gueltigbis": "31.12.9999",
@@ -2654,60 +2726,6 @@
 			"gueltigab": "01.01.1980",
 			"gueltigbis": "31.12.9999",
 			"geaendertam": "22.08.2023 13:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "195",
-			"bezeichnung": "Bezirksregierung Düsseldorf",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "395",
-			"bezeichnung": "Bezirksregierung Köln",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "595",
-			"bezeichnung": "Bezirksregierung Münster",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "795",
-			"bezeichnung": "Bezirksregierung Datmold",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "995",
-			"bezeichnung": "Bezirksregierung Arnsberg",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
-		},
-		{
-			"katalog": "Schulaufsicht",
-			"schluessel": "",
-			"wert": "999",
-			"bezeichnung": "Sonstige (z.B. Ministerien)",
-			"gueltigab": "01.01.1970",
-			"gueltigbis": "31.12.9999",
-			"geaendertam": "26.08.2016 00:00:00"
 		},
 		{
 			"katalog": "Schulform",

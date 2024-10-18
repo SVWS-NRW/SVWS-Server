@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "CredentialsLernplattformen")
-@JsonPropertyOrder({"ID", "LernplattformID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PashwordHash", "RSAPublicKey", "RSAPrivateKey", "AES"})
+@JsonPropertyOrder({"ID", "LernplattformID", "Benutzername", "BenutzernamePseudonym", "Initialkennwort", "PashwordHash", "RSAPublicKey", "RSAPrivateKey", "AES", "SchulnrEigner"})
 public final class MigrationDTOCredentialsLernplattformen {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -87,6 +87,12 @@ public final class MigrationDTOCredentialsLernplattformen {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes AES */
 	public static final String QUERY_LIST_BY_AES = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.AES IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOCredentialsLernplattformen e WHERE e.SchulnrEigner IN ?1";
+
 	/** ID des Datensatzes für die externen Account-Credentials (Lernplattformen) */
 	@Id
 	@Column(name = "ID")
@@ -132,6 +138,11 @@ public final class MigrationDTOCredentialsLernplattformen {
 	@Column(name = "AES")
 	@JsonProperty
 	public String AES;
+
+	/** DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
+	@Column(name = "SchulnrEigner")
+	@JsonProperty
+	public Integer SchulnrEigner;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOCredentialsLernplattformen ohne eine Initialisierung der Attribute.
@@ -195,7 +206,7 @@ public final class MigrationDTOCredentialsLernplattformen {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOCredentialsLernplattformen(ID=" + this.ID + ", LernplattformID=" + this.LernplattformID + ", Benutzername=" + this.Benutzername + ", BenutzernamePseudonym=" + this.BenutzernamePseudonym + ", Initialkennwort=" + this.Initialkennwort + ", PashwordHash=" + this.PashwordHash + ", RSAPublicKey=" + this.RSAPublicKey + ", RSAPrivateKey=" + this.RSAPrivateKey + ", AES=" + this.AES + ")";
+		return "MigrationDTOCredentialsLernplattformen(ID=" + this.ID + ", LernplattformID=" + this.LernplattformID + ", Benutzername=" + this.Benutzername + ", BenutzernamePseudonym=" + this.BenutzernamePseudonym + ", Initialkennwort=" + this.Initialkennwort + ", PashwordHash=" + this.PashwordHash + ", RSAPublicKey=" + this.RSAPublicKey + ", RSAPrivateKey=" + this.RSAPrivateKey + ", AES=" + this.AES + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

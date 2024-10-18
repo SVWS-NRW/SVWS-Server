@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 import de.svws_nrw.core.data.SimpleOperationResponse;
 import de.svws_nrw.core.data.klassen.KlassenDaten;
-import de.svws_nrw.core.data.klassen.KlassenartKatalogEintrag;
+import de.svws_nrw.asd.data.klassen.KlassenartKatalogEintrag;
 import de.svws_nrw.core.types.ServerMode;
 import de.svws_nrw.core.types.benutzer.BenutzerKompetenz;
 import de.svws_nrw.data.JSONMapper;
@@ -91,12 +91,12 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).getByIdAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ANSEHEN);
 	}
 
 
 	/**
-	 * Die	nAPI-Methode für das Patchen einer Klasse.
+	 * Die API-Methode für das Patchen einer Klasse.
 	 *
 	 * @param schema    das Datenbankschema, auf welches der Patch ausgeführt werden soll
 	 * @param id        die Datenbank-ID zur Identifikation der Klasse
@@ -123,7 +123,7 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).patchAsResponse(id, is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -151,7 +151,7 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).addAsResponse(is),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_AENDERN);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -177,7 +177,7 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).deleteAsResponse(id),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -204,7 +204,7 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransactionOnErrorSimpleResponse(conn -> new DataKlassendaten(conn).deleteMultipleAsResponse(JSONMapper.toListOfLong(is)),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KATALOG_EINTRAEGE_LOESCHEN);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 
@@ -254,7 +254,7 @@ public class APIKlassen {
 			@Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(conn -> new DataKlassendaten(conn).setDefaultSortierung(abschnitt),
 				request, ServerMode.STABLE,
-				BenutzerKompetenz.KEINE);
+				BenutzerKompetenz.UNTERRICHTSVERTEILUNG_ALLGEMEIN_AENDERN);
 	}
 
 }

@@ -80,7 +80,7 @@
 			</div>
 		</template>
 	</svws-ui-app-layout>
-	<s-notifications :backticks="() => true" />
+	<s-notifications />
 </template>
 
 <script setup lang="ts">
@@ -122,7 +122,7 @@
 	// Restore
 	function onFileChanged(event: Event) {
 		const target = event.target as HTMLInputElement;
-		if ((target !== null) && (target.files !== null) && (target.files.length > 0))
+		if ((target.files !== null) && (target.files.length > 0))
 			file.value = target.files[0];
 	}
 
@@ -180,13 +180,13 @@
 		const list = [];
 		for (const i of items)
 			if (i.SchulNr.includes(search.toLocaleLowerCase())
-				|| i.KurzBez?.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+				|| ((i.KurzBez !== null) && i.KurzBez.toLocaleLowerCase().includes(search.toLocaleLowerCase())))
 				list.push(i);
 		return list;
 	}
 
 	async function init() {
-		if (schule.value === null || schule.value === undefined)
+		if (schule.value === undefined)
 			return;
 		isLoading.value = true;
 		status.value = await props.initSchule(schule.value);

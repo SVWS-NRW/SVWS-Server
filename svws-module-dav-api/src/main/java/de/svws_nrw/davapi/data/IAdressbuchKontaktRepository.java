@@ -3,7 +3,7 @@ package de.svws_nrw.davapi.data;
 import de.svws_nrw.core.data.adressbuch.AdressbuchEintrag;
 import de.svws_nrw.core.data.adressbuch.AdressbuchKontakt;
 import de.svws_nrw.core.data.adressbuch.Telefonnummer;
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.dto.current.schild.katalog.DTOOrt;
 import de.svws_nrw.db.dto.current.schild.schueler.DTOSchueler;
@@ -28,8 +28,9 @@ public interface IAdressbuchKontaktRepository {
 	/**
 	 * Filter für SchuelerDTOs
 	 */
-	Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && ((s.Status == SchuelerStatus.AKTIV)
-			|| (s.Status == SchuelerStatus.EXTERN) || (s.Status == SchuelerStatus.NEUAUFNAHME));
+	Predicate<DTOSchueler> SCHUELER_FILTER = s -> !s.Geloescht && ((SchuelerStatus.data().getWertByKuerzel("" + s.idStatus) == SchuelerStatus.AKTIV)
+			|| (SchuelerStatus.data().getWertByKuerzel("" + s.idStatus) == SchuelerStatus.EXTERN)
+			|| (SchuelerStatus.data().getWertByKuerzel("" + s.idStatus) == SchuelerStatus.NEUAUFNAHME));
 
 	/**
 	 * Ermittelt eine Liste aller Kontakte aus einem Adressbuch mir der angegebenen

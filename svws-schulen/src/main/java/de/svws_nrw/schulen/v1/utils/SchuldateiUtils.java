@@ -1,5 +1,7 @@
 package de.svws_nrw.schulen.v1.utils;
 
+import java.util.Comparator;
+
 import de.svws_nrw.schulen.v1.data.SchuldateiEintrag;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,6 +13,22 @@ public final class SchuldateiUtils {
 	private SchuldateiUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}
+
+
+	/** Das Anfangs-Schuljahr in einem Zeitraum, der abgibt, dass der Wert schon immer gültig war */
+	public static final int _immerGueltigAb = 1980;
+
+	/** Das End-Schuljahr in einem Zeitraum, der abgibt, dass der Wert in seiner Gültigkeit noch nicht eingeschränkt ist */
+	public static final int _immerGueltigBis = 9999;
+
+
+	/** Der Comparator zur Sortierung der Zeiträume gueltigab - gueltigbis in absteigender Reihenfolge*/
+	public static final @NotNull Comparator<SchuldateiEintrag> _comparatorSchuldateieintragZeitraumDescending =
+			(final @NotNull SchuldateiEintrag a, final @NotNull SchuldateiEintrag b) -> {
+				if (b.gueltigab.equals(a.gueltigab))
+					return SchuldateiUtils.compare(b.gueltigbis, a.gueltigbis);
+				return SchuldateiUtils.compare(b.gueltigab, a.gueltigab);
+			};
 
 
 	/**
@@ -41,6 +59,24 @@ public final class SchuldateiUtils {
 		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			throw new IllegalArgumentException("Der Datumswert '" + date + "' ist fehlerhaft.");
 		}
+	}
+
+
+	/**
+	 * Ermittlung des Schuljahres in der Zeitpunkt des angegebenen Datumstrings liegt
+	 *
+	 * @param date		das Datum als String
+	 *
+	 * @return @NotNull INTEGER  das Schuljahr. 1980 für gilt seit immer (jahr .lte. 1980), 9999 gilt für immer (Jahr .gte. 3000), sonst das Schuljahr
+	 *
+	 * @throws IllegalArgumentException im Fehlerfall
+	 */
+	public static @NotNull Integer schuljahrAusDatum(final @NotNull String date) throws IllegalArgumentException {
+		final @NotNull int[] dmy = splitDate(date);
+		int jahr = dmy[2];
+		if (dmy[1] < 8)
+			jahr--;
+		return jahr;
 	}
 
 
@@ -76,6 +112,36 @@ public final class SchuldateiUtils {
 			return false;
 		cmp = Integer.compare(dmyA[0], dmyB[0]);
 		return (cmp < 0);
+	}
+
+
+	/**
+	 * Gibt den Vergleichswert der beiden Daten wie bei einem Comparator zurück
+	 * Die Strings werden in der Form 'DD.MM.YYYY' erwartet
+	 *
+	 * @param a   das Datum a
+	 * @param b   das Datum b
+	 *
+	 * @return -1,0,1  wie beim Comparator
+	 *
+	 * @throws IllegalArgumentException wenn die Datumsangaben fehlerhaft sind
+	 */
+	public static int compare(final String a, final String b) throws IllegalArgumentException {
+		// Wenn a leer ist, dann wird a als unendlich spät angesehen => nicht früher
+		if ((a == null) || (a.isBlank()))
+			return 1;
+		// Wenn b leer ist, dann wird b als unendlich spät angesehen, und außerdem ist a nicht leer => früher
+		if ((b == null) || (b.isBlank()))
+			return -1;
+		final @NotNull int[] dmyA = splitDate(a);
+		final @NotNull int[] dmyB = splitDate(b);
+		int cmp = Integer.compare(dmyA[2], dmyB[2]);
+		if (cmp != 0)
+			return cmp;
+		cmp = Integer.compare(dmyA[1], dmyB[1]);
+		if (cmp != 0)
+			return cmp;
+		return Integer.compare(dmyA[0], dmyB[0]);
 	}
 
 

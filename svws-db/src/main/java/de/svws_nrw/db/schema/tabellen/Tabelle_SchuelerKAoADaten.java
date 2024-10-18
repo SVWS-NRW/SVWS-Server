@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaFremdschluesselAktionen;
@@ -17,6 +17,7 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte ID */
 	public SchemaTabelleSpalte col_ID = add("ID", SchemaDatentypen.BIGINT, true)
 			.setNotNull()
+			.setJavaName("id")
 			.setJavaComment("ID des KAOA-Eintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte Schueler_ID */
@@ -28,39 +29,48 @@ public class Tabelle_SchuelerKAoADaten extends SchemaTabelle {
 	/** Die Definition der Tabellenspalte Abschnitt_ID */
 	public SchemaTabelleSpalte col_Abschnitt_ID = add("Abschnitt_ID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
+			.setJavaName("idLernabschnitt")
 			.setJavaComment("ID der zugehörigen Schülerlernabschnittsdaten");
 
 	/** Die Definition der Tabellenspalte Jahrgang */
 	public SchemaTabelleSpalte col_Jahrgang = add("Jahrgang", SchemaDatentypen.VARCHAR, false).setDatenlaenge(2)
+			.setJavaName("jahrgang")
 			.setJavaComment("Jahrgang des KAOA-Eintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte KategorieID */
 	public SchemaTabelleSpalte col_KategorieID = add("KategorieID", SchemaDatentypen.BIGINT, false)
 			.setNotNull()
+			.setJavaName("idKategorie")
 			.setJavaComment("ID der Kategorie des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte MerkmalID */
 	public SchemaTabelleSpalte col_MerkmalID = add("MerkmalID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idMerkmal")
 			.setJavaComment("ID des Merkmal des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte ZusatzmerkmalID */
 	public SchemaTabelleSpalte col_ZusatzmerkmalID = add("ZusatzmerkmalID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idZusatzmerkmal")
 			.setJavaComment("ID des Zusatzmerkmal des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte AnschlussoptionID */
 	public SchemaTabelleSpalte col_AnschlussoptionID = add("AnschlussoptionID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idAnschlussoption")
 			.setJavaComment("ID der Anschlussoption des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte BerufsfeldID */
 	public SchemaTabelleSpalte col_BerufsfeldID = add("BerufsfeldID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idBerufsfeld")
 			.setJavaComment("ID des Berufsfeld des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte SBO_Ebene4ID */
 	public SchemaTabelleSpalte col_SBO_Ebene4ID = add("SBO_Ebene4ID", SchemaDatentypen.BIGINT, false)
+			.setJavaName("idEbene4")
 			.setJavaComment("ID der Ebene4 des KAOA-Eintrags beim Schüler FK");
 
 	/** Die Definition der Tabellenspalte Bemerkung */
 	public SchemaTabelleSpalte col_Bemerkung = add("Bemerkung", SchemaDatentypen.VARCHAR, false).setDatenlaenge(255)
+			.setJavaName("bemerkung")
 			.setJavaComment("Bemerkung des KAOA-Eintrags beim Schüler");
 
 	/** Die Definition der Tabellenspalte SchulnrEigner */

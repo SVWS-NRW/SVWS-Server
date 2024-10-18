@@ -7,8 +7,8 @@
 				</button>
 			</div>
 			<div ref="contentEl" class="router-vertical-tab-bar--content">
-				<svws-ui-router-tab-bar-button v-for="(route, index) in props.routes" :route="route" :selected="selected"
-					:hidden="isHidden(index)" @select="select(route)" :key="index" />
+				<svws-ui-router-tab-bar-button v-for="(route, index) in props.tabs" :route="route" :selected="props.tab"
+					:hidden="isHidden(index)" @select="setTab(route)" :key="index" />
 			</div>
 			<div v-if="!state.scrolledMax"
 				class="router-vertical-tab-bar--scroll-button-background router-vertical-tab-bar--scroll-button-background-down">
@@ -24,17 +24,16 @@
 </template>
 
 <script lang="ts" setup>
-	import type { WritableComputedRef } from 'vue';
-	import { computed, onMounted, onUnmounted, onUpdated, ref } from 'vue';
-	import type { RouteRecordRaw } from "vue-router";
+
+	import { onMounted, onUnmounted, onUpdated, ref } from 'vue';
+	import type { TabData } from './TabData';
 
 	const props = defineProps<{
-		routes: RouteRecordRaw[]
-		hidden: boolean[] | undefined
-		modelValue: RouteRecordRaw
+		tabs: TabData[];
+		hidden: boolean[] | undefined;
+		tab: TabData;
+		setTab: (tab: TabData) => Promise<void>;
 	}>();
-
-	const emit = defineEmits<{ (e: 'update:modelValue', value: RouteRecordRaw): void, }>();
 
 	type ComponentData = {
 		scrolled: boolean;
@@ -44,17 +43,9 @@
 	}
 
 	const contentEl = ref();
-	const selected: WritableComputedRef<RouteRecordRaw> = computed({
-		get() : RouteRecordRaw {
-			return props.modelValue;
-		},
-		set(value: RouteRecordRaw ) {
-			emit('update:modelValue', value);
-		}
-	});
 
 	function isHidden(index: number) {
-		if ((props.hidden === undefined) || props.hidden[index] === undefined)
+		if (props.hidden?.[index] === undefined)
 			return false;
 		return props.hidden[index];
 	}
@@ -101,31 +92,28 @@
 		});
 	}
 
-	function select(route: RouteRecordRaw) {
-		selected.value = route;
-	}
-
 </script>
 
 
 <style lang="postcss">
-    .svws-ui-tabs--vertical {
-        @apply flex flex-row flex-grow items-start;
+
+	.svws-ui-tabs--vertical {
+		@apply flex flex-row flex-grow items-start;
 		@apply w-full;
-    }
+	}
 
-    .router-vertical-tab-bar--panel {
-        @apply flex-grow overflow-y-auto;
-    }
+	.router-vertical-tab-bar--panel {
+		@apply flex-grow overflow-y-auto;
+	}
 
-    .router-vertical-tab-bar--wrapper {
+	.router-vertical-tab-bar--wrapper {
 		@apply flex flex-col flex-shrink items-start;
 		@apply overflow-hidden;
 		@apply relative;
 		@apply mr-8;
-    }
+	}
 
-    .router-vertical-tab-bar--content {
+	.router-vertical-tab-bar--content {
 		@apply bg-light rounded-md p-[2px];
 		@apply flex flex-col items-center;
 		@apply overflow-y-scroll;
@@ -149,45 +137,45 @@
 				@apply bottom-0 border-b-0 border-r-2 h-full pointer-events-none;
 			}
 		}
-    }
+	}
 
-    .router-vertical-tab-bar--content::-webkit-scrollbar {
-        display: none;
-        /* Remove Scrollbar in Chromium basesd Browsers */
-    }
+	.router-vertical-tab-bar--content::-webkit-scrollbar {
+		display: none;
+		/* Remove Scrollbar in Chromium basesd Browsers */
+	}
 
-    .router-vertical-tab-bar--scroll-button-background {
+	.router-vertical-tab-bar--scroll-button-background {
 		@apply absolute z-20;
 		@apply w-full;
 		@apply pointer-events-none;
 		@apply from-transparent via-light to-light;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button-background-down {
+	.router-vertical-tab-bar--scroll-button-background-down {
 		@apply bg-gradient-to-b;
 		@apply pt-8;
 		@apply rounded-b-full;
 		bottom: 0.875rem;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button-background-up {
+	.router-vertical-tab-bar--scroll-button-background-up {
 		@apply bg-gradient-to-t;
 		@apply pb-8;
 		@apply rounded-t-full;
 		top: 0.875rem;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button {
+	.router-vertical-tab-bar--scroll-button {
 		@apply w-full;
 		@apply inline-flex items-center justify-center;
 		@apply pointer-events-auto;
 		@apply py-3.5;
 		@apply rounded-full;
 		@apply text-black;
-    }
+	}
 
-    .router-vertical-tab-bar--scroll-button:focus {
+	.router-vertical-tab-bar--scroll-button:focus {
 		@apply outline-none ring ring-inset ring-primary ring-opacity-75;
-    }
+	}
 
 </style>

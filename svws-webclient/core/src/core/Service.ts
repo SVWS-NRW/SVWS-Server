@@ -1,5 +1,6 @@
 import { JavaObject } from '../java/lang/JavaObject';
 import { LogConsumerList } from '../core/logger/LogConsumerList';
+import { Class } from '../java/lang/Class';
 import { Logger } from '../core/logger/Logger';
 
 export abstract class Service<T_IN, T_OUT> extends JavaObject {
@@ -59,6 +60,8 @@ export abstract class Service<T_IN, T_OUT> extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.Service'].includes(name);
 	}
+
+	public static class = new Class<Service<any, any>>('de.svws_nrw.core.Service');
 
 }
 

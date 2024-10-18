@@ -70,6 +70,16 @@ class Api {
 		return githash;
 	}
 
+	/** Gibt die Map der CoreTypeDaten zurück */
+	get mapCoreTypeNameJsonData(): Map<string, string> {
+		return this.conn.mapCoreTypeNameJsonData
+	}
+
+	/** Setzt die Map der CoreTypeDaten zurück */
+	setMapCoreTypeNameJsonData = (map: Map<string, string>) => {
+		this.conn.mapCoreTypeNameJsonData = map;
+	}
+
 	/**
 	 * Setzt den Hostnamen des SVWS-Server für den Verbindungsaufbau.
 	 *
@@ -196,6 +206,17 @@ class Api {
 
 
 	/**
+	 * Die Menge an Abiturjahrgängen, bei denen der angemeldete Benutzer als Beratungslehrer
+	 * funktionsbezogene Kompetenzen hat.
+	 *
+	 * @throws {Error} falls kein Benutzer angemeldet ist
+	 */
+	public get benutzerKompetenzenAbiturjahrgaenge(): Set<number> {
+		return this.conn.kompetenzenAbiturjahrgaenge;
+	}
+
+
+	/**
 	 * Gibt den Typ des Benutzers zurück.
 	 *
 	 * @throws {Error} falls kein Benutzer angemeldet ist oder der Benutzer-Typ ungültig ist
@@ -207,6 +228,7 @@ class Api {
 		return typ;
 	}
 
+
 	/**
 	 * Gibt an, ob es sich bei dem Benutzer um einen Lehrer-Benutzer handelt.
 	 *
@@ -217,6 +239,7 @@ class Api {
 			throw new DeveloperNotificationException("Der Benutzer ist kein Lehrer, weshalb keine Lehrer-ID ermittelt werden kann.");
 		return this.benutzerdaten.typID;
 	}
+
 
 	/// --- Die Konfiguration
 
@@ -244,7 +267,7 @@ class Api {
 	 * @returns die Schulform
 	 */
 	public get schulform(): Schulform {
-		const schulform = Schulform.getByKuerzel(this.conn.schuleStammdaten.schulform);
+		const schulform = Schulform.data().getWertByKuerzel(this.conn.schuleStammdaten.schulform);
 		if (schulform === null)
 			throw new DeveloperNotificationException("In den Schul-Stammdaten ist eine ungültige Schulform eingetragen.");
 		return schulform;
@@ -257,7 +280,7 @@ class Api {
 	 * @returns eine Liste mit den Schulgliederungen
 	 */
 	public get schulgliederungen(): List<Schulgliederung> {
-		return Schulgliederung.get(this.schulform);
+		return Schulgliederung.getBySchuljahrAndSchulform(this.abschnitt.schuljahr, this.schulform);
 	}
 
 	/**
@@ -319,7 +342,7 @@ class Api {
 	 * @returns der Schuljahresabschnitt
 	 */
 	public getAbschnittBySchuljahrUndHalbjahr(schuljahr: number, halbjahr: number, quartal: number = 1): Schuljahresabschnitt | undefined {
-		const abschnitt = this.hatQuartalsModus() ? (halbjahr - 1) * 2 + quartal : halbjahr;
+		const abschnitt = this.hatQuartalsModus() ? ((halbjahr - 1) * 2) + quartal : halbjahr;
 		return this.getAbschnittBySchuljahrUndAbschnitt(schuljahr, abschnitt);
 	}
 
@@ -422,7 +445,7 @@ class Api {
 	 *
 	 * @returns die Rückgabe der API-Funktion
 	 */
-	public call = <T extends Array<any>, U>(func: (...params: T) => U, data?: ApiPendingData) => {
+	public call = <T extends Array<any>, U>(func: (...params: T) => Promise<U>, data?: ApiPendingData) => {
 		return async (...params: T): Promise<Awaited<U>> => {
 			this.status.start(data);
 			try {

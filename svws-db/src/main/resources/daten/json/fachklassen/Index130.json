@@ -1,6 +1,6 @@
 {
 	"index": 130,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -13,11 +13,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "Agrarwirtschaft",
+				"bezeichnungM": "Agrarwirtschaft",
+				"bezeichnungW": "Agrarwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1153001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "Agrarwirtschaft, Bio- und Umwelttechnologie",
 				"bezeichnungM": "Agrarwirtschaft, Bio- und Umwelttechnologie",
 				"bezeichnungW": "Agrarwirtschaft, Bio- und Umwelttechnologie",
-				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +47,7 @@
 				"bezeichnungM": "Bau- und Holztechnik",
 				"bezeichnungW": "Bau- und Holztechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "103",
@@ -51,7 +64,7 @@
 				"bezeichnungM": "Drucktechnik",
 				"bezeichnungW": "Drucktechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "104",
@@ -68,7 +81,7 @@
 				"bezeichnungM": "Elektrotechnik",
 				"bezeichnungW": "Elektrotechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "105",
@@ -85,7 +98,7 @@
 				"bezeichnungM": "Ernährung und Hauswirschaft",
 				"bezeichnungW": "Ernährung und Hauswirschaft",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "106",
@@ -102,7 +115,7 @@
 				"bezeichnungM": "Fremdsprachenkorrespondent",
 				"bezeichnungW": "Fremdsprachenkorrespondentin",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "107",
@@ -119,7 +132,7 @@
 				"bezeichnungM": "Gestaltung",
 				"bezeichnungW": "Gestaltung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "108",
@@ -136,7 +149,7 @@
 				"bezeichnungM": "Metalltechnik",
 				"bezeichnungW": "Metalltechnik",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "109",
@@ -166,11 +179,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "Sozial- u. Gesundheitswesen",
+				"bezeichnungM": "Sozial- u. Gesundheitswesen",
+				"bezeichnungW": "Sozial- u. Gesundheitswesen",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1162001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "Gesundheit und Soziales",
 				"bezeichnungM": "Gesundheit und Soziales",
 				"bezeichnungW": "Gesundheit und Soziales",
-				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "111",
@@ -187,7 +213,7 @@
 				"bezeichnungM": "Textiltechnik und Bekleidung",
 				"bezeichnungW": "Textiltechnik und Bekleidung",
 				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "112",
@@ -200,11 +226,24 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "Wirtschaft und Verwaltung",
+				"bezeichnungM": "Wirtschaft und Verwaltung",
+				"bezeichnungW": "Wirtschaft und Verwaltung",
+				"gueltigVon": null,
+				"gueltigBis": 2012
+			}, {
+				"id": 1164001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WV",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
 				"bezeichnungM": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
 				"bezeichnungW": "Wirtschaft und Verwaltung (Höhere Handelsschule)",
-				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "113",
@@ -220,8 +259,8 @@
 				"bezeichnung": "Labor- und Verfahrenstechnik",
 				"bezeichnungM": "Labor- und Verfahrenstechnik",
 				"bezeichnungW": "Labor- und Verfahrenstechnik",
-				"gueltigVon": null,
-				"gueltigBis": 2015
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
 			} ]
 		}, {
 			"schluessel": "999",

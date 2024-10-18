@@ -2,13 +2,9 @@ package de.svws_nrw.db.dto.current.schild.schueler;
 
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
-import de.svws_nrw.db.converter.current.NoteConverterFromInteger;
 import de.svws_nrw.db.converter.current.SprachpruefungniveauConverter;
-import de.svws_nrw.db.converter.current.SprachreferenzniveauConverter;
 
-import de.svws_nrw.core.types.Note;
 import de.svws_nrw.core.types.fach.Sprachpruefungniveau;
-import de.svws_nrw.core.types.fach.Sprachreferenzniveau;
 
 
 import jakarta.persistence.Cacheable;
@@ -24,12 +20,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterSerializer;
 import de.svws_nrw.csv.converter.current.Boolean01ConverterDeserializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromIntegerSerializer;
-import de.svws_nrw.csv.converter.current.NoteConverterFromIntegerDeserializer;
 import de.svws_nrw.csv.converter.current.SprachpruefungniveauConverterSerializer;
 import de.svws_nrw.csv.converter.current.SprachpruefungniveauConverterDeserializer;
-import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterSerializer;
-import de.svws_nrw.csv.converter.current.SprachreferenzniveauConverterDeserializer;
 
 /**
  * Diese Klasse dient als DTO für die Datenbanktabelle SchuelerSprachpruefungen.
@@ -223,18 +215,12 @@ public final class DTOSchuelerSprachpruefungen {
 	/** Das Sprachreferenzniveau der Sprachprüfung gemäß GeR */
 	@Column(name = "Referenzniveau")
 	@JsonProperty
-	@Convert(converter = SprachreferenzniveauConverter.class)
-	@JsonSerialize(using = SprachreferenzniveauConverterSerializer.class)
-	@JsonDeserialize(using = SprachreferenzniveauConverterDeserializer.class)
-	public Sprachreferenzniveau Referenzniveau;
+	public String Referenzniveau;
 
 	/** Note der Sprachprüfung, die herangezogen werden kann, falls die Note der Sprachprüfung an die Stelle einer Fremdsprachennote tritt */
 	@Column(name = "NotePruefung")
 	@JsonProperty
-	@Convert(converter = NoteConverterFromInteger.class)
-	@JsonSerialize(using = NoteConverterFromIntegerSerializer.class)
-	@JsonDeserialize(using = NoteConverterFromIntegerDeserializer.class)
-	public Note NotePruefung;
+	public Integer NotePruefung;
 
 	/**
 	 * Erstellt ein neues Objekt der Klasse DTOSchuelerSprachpruefungen ohne eine Initialisierung der Attribute.

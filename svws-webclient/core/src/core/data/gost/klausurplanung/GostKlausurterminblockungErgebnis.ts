@@ -2,15 +2,19 @@ import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostKlausurterminblockungErgebnisTermin } from '../../../../core/data/gost/klausurplanung/GostKlausurterminblockungErgebnisTermin';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurterminblockungErgebnis extends JavaObject {
 
 	/**
-	 * Eine Liste der Termine-Ergebnisse
+	 * Ein Array mit den GostKlausurterminblockungErgebnisTerminen.
 	 */
 	public termine : List<GostKlausurterminblockungErgebnisTermin> = new ArrayList<GostKlausurterminblockungErgebnisTermin>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -22,6 +26,8 @@ export class GostKlausurterminblockungErgebnis extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurterminblockungErgebnis>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurterminblockungErgebnis');
 
 	public static transpilerFromJSON(json : string): GostKlausurterminblockungErgebnis {
 		const obj = JSON.parse(json) as Partial<GostKlausurterminblockungErgebnis>;

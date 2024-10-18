@@ -1,10 +1,11 @@
-import type { GostJahrgang } from "@core";
-import type { AuswahlChildData } from "../AuswahlChildData";
+import type { GostJahrgang, Schuljahresabschnitt } from "@core";
+import type { TabManager } from "@ui";
 
 export interface GostAppProps {
+	schuljahresabschnitt: () => Schuljahresabschnitt;
 	auswahl: GostJahrgang | undefined;
-	setTab: (value: AuswahlChildData) => Promise<void>;
-	tab: AuswahlChildData;
-	tabs: AuswahlChildData[];
-	tabsHidden: boolean[];
+	tabManager: () => TabManager;
+	creationModeEnabled: boolean;
+	gruppenprozesseEnabled: boolean;
+	selected: () => GostJahrgang[];
 }

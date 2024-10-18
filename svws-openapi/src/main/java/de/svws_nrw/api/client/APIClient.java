@@ -1,5 +1,13 @@
 package de.svws_nrw.api.client;
 
+import java.io.IOException;
+
+import de.svws_nrw.api.ResourceFile;
+import de.svws_nrw.api.ResourceFileManager;
+import de.svws_nrw.asd.utils.json.JsonReader;
+import de.svws_nrw.core.logger.Logger;
+import de.svws_nrw.db.utils.ApiOperationException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
@@ -7,10 +15,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
-import de.svws_nrw.api.ResourceFile;
-import de.svws_nrw.api.ResourceFileManager;
-import de.svws_nrw.db.utils.ApiOperationException;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Die Klasse spezifiziert die Schnittstelle für den Zugriff auf den SVWS-Client.
@@ -421,6 +425,82 @@ public class APIClient {
 	@Path("/assets/{name}.svg")
 	public Response getClientFileAssetsSVG(@PathParam("name") final String name) {
 		return getFile("assets/" + name + ".svg");
+	}
+
+
+	/**
+	 * Gib eine JSON-Datei für die Core-Type-Daten zurück.
+	 *
+	 * @param name  der name des Core-Types
+	 *
+	 * @return die HTTP-Response mit dem JSON-Katalog des Core-Types
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/types/{name}.json")
+	public Response getJSONKatalog(@PathParam("name") final String name) {
+		try {
+			final String json = switch (name) {
+				case "Schulform" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Schulform.json");
+				case "BerufskollegAnlage" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegAnlage.json");
+				case "AllgemeinbildendOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/AllgemeinbildendOrganisationsformen.json");
+				case "BerufskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegOrganisationsformen.json");
+				case "WeiterbildungskollegOrganisationsformen" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegOrganisationsformen.json");
+				case "SchulabschlussAllgemeinbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussAllgemeinbildend.json");
+				case "SchulabschlussBerufsbildend" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/SchulabschlussBerufsbildend.json");
+				case "HerkunftBildungsgang" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgang.json");
+				case "HerkunftBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/HerkunftBildungsgangTyp.json");
+				case "Jahrgaenge" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/Jahrgaenge.json");
+				case "PrimarstufeSchuleingangsphaseBesuchsjahre" -> JsonReader.fromResource("de/svws_nrw/asd/types/jahrgang/PrimarstufeSchuleingangsphaseBesuchsjahre.json");
+				case "Religion" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Religion.json");
+				case "Kindergartenbesuch" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Kindergartenbesuch.json");
+				case "SchuelerStatus" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/SchuelerStatus.json");
+				case "Note" -> JsonReader.fromResource("de/svws_nrw/asd/types/Note.json");
+				case "Sprachreferenzniveau" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Sprachreferenzniveau.json");
+				case "BerufskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/BerufskollegBildungsgangTyp.json");
+				case "WeiterbildungskollegBildungsgangTyp" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/WeiterbildungskollegBildungsgangTyp.json");
+				case "Schulgliederung" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Schulgliederung.json");
+				case "Fachgruppe" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fachgruppe.json");
+				case "Fach" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/Fach.json");
+				case "LehrerAbgangsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAbgangsgrund.json");
+				case "LehrerBeschaeftigungsart" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerBeschaeftigungsart.json");
+				case "LehrerEinsatzstatus" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerEinsatzstatus.json");
+				case "LehrerFachrichtung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerFachrichtung.json");
+				case "LehrerLehrbefaehigung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehrbefaehigung.json");
+				case "LehrerFachrichtungAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerFachrichtungAnerkennung.json");
+				case "LehrerLehramt" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehramt.json");
+				case "LehrerLehramtAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehramtAnerkennung.json");
+				case "LehrerLehrbefaehigungAnerkennung" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLehrbefaehigungAnerkennung.json");
+				case "LehrerLeitungsfunktion" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerLeitungsfunktion.json");
+				case "LehrerRechtsverhaeltnis" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerRechtsverhaeltnis.json");
+				case "LehrerZugangsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerZugangsgrund.json");
+				case "BilingualeSprache" -> JsonReader.fromResource("de/svws_nrw/asd/types/fach/BilingualeSprache.json");
+				case "KAOABerufsfeld" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOABerufsfeld.json");
+				case "KAOAMerkmaleOptionsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAMerkmaleOptionsarten.json");
+				case "KAOAZusatzmerkmaleOptionsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAZusatzmerkmaleOptionsarten.json");
+				case "KAOAEbene4" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAEbene4.json");
+				case "KAOAZusatzmerkmal" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAZusatzmerkmal.json");
+				case "KAOAAnschlussoptionen" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAAnschlussoptionen.json");
+				case "KAOAKategorie" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAKategorie.json");
+				case "KAOAMerkmal" -> JsonReader.fromResource("de/svws_nrw/asd/types/kaoa/KAOAMerkmal.json");
+				case "Klassenart" -> JsonReader.fromResource("de/svws_nrw/asd/types/klassen/Klassenart.json");
+				case "Uebergangsempfehlung" -> JsonReader.fromResource("de/svws_nrw/asd/types/schueler/Uebergangsempfehlung.json");
+				case "ZulaessigeKursart" -> JsonReader.fromResource("de/svws_nrw/asd/types/kurse/ZulaessigeKursart.json");
+				case "Foerderschwerpunkt" -> JsonReader.fromResource("de/svws_nrw/asd/types/schule/Foerderschwerpunkt.json");
+				case "LehrerAnrechnungsgrund" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerAnrechnungsgrund.json");
+				case "LehrerMehrleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMehrleistungsarten.json");
+				case "LehrerMinderleistungsarten" -> JsonReader.fromResource("de/svws_nrw/asd/types/lehrer/LehrerMinderleistungsarten.json");
+				case "ValidatorenFehlerartKontext" -> JsonReader.fromResource("de/svws_nrw/asd/validate/ValidatorenFehlerartKontext.json");
+				default -> null;
+			};
+			if (json == null)
+				return Response.status(Status.NOT_FOUND).build();
+			return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(json).build();
+		} catch (final IOException e) {
+			Logger.global().logLn("Fehler beim Einlesen der Core-Type-JSON-Kataloge!");
+			Logger.global().logLn(e.getMessage());
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 }

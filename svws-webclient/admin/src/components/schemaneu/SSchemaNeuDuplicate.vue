@@ -1,7 +1,7 @@
 <template>
-	<svws-ui-action-button title="Auswahl duplizieren" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function :disabled="(user === 'root') || (schema.length === 0) || (user.length === 0) || (password.length === 0)" :is-loading="loadingFunction().value" :is-active>
+	<svws-ui-action-button :title="`Schema „${schema}“ duplizieren`" description="Dupliziert das aktuell ausgewählte Schema in ein neues Schema." icon="i-ri-file-copy-line" action-label="Duplizieren" :action-function :disabled="(user === 'root') || (schemaNeu.length === 0) || (user.length === 0) || (password.length === 0) || (schema === schemaNeu)" :is-loading="loadingFunction().value" :is-active>
 		<div class="input-wrapper">
-			<svws-ui-text-input v-model.trim="schema" placeholder="Name des neuen Schemas" />
+			<svws-ui-text-input v-model.trim="schemaNeu" placeholder="Name des neuen Schemas" />
 			<svws-ui-spacing />
 			<svws-ui-text-input v-model.trim="user" required placeholder="Benutzername" :valid="validatorUsername" />
 			<svws-ui-text-input v-model.trim="password" required placeholder="Passwort" />
@@ -12,19 +12,20 @@
 <script setup lang="ts">
 
 	import { ref, type ShallowRef } from "vue";
-	import type { List, SimpleOperationResponse } from "@core";
-	import type { InputDataType } from "@ui";
+	import type { SimpleOperationResponse } from "../../../../core/src/core/data/SimpleOperationResponse";
+	import type { List } from "../../../../core/src/java/util/List";
 
 	const props = defineProps<{
-		duplicateSchema:  (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
+		duplicateSchema: (formData: FormData, schema: string) => Promise<SimpleOperationResponse>;
 		logsFunction: () => ShallowRef<List<string | null> | undefined>;
 		statusFunction: () => ShallowRef<boolean | undefined>;
 		loadingFunction: () => ShallowRef<boolean>;
-		validatorUsername: (username: InputDataType) => boolean;
+		validatorUsername: (username: string | null) => boolean;
 		isActive: boolean;
+		schema: string;
 	}>();
 
-	const schema = ref<string>("");
+	const schemaNeu = ref<string>('');
 	const user = ref<string>('');
 	const password = ref<string>('');
 
@@ -33,11 +34,11 @@
 		const formData = new FormData();
 		formData.append('schemaUsername', user.value);
 		formData.append('schemaUserPassword', password.value);
-		const result = await props.duplicateSchema(formData, schema.value);
+		const result = await props.duplicateSchema(formData, schemaNeu.value);
 		props.logsFunction().value = result.log;
 		props.statusFunction().value = result.success;
 		props.loadingFunction().value = false;
-		schema.value = '';
+		schemaNeu.value = '';
 	}
 
 </script>

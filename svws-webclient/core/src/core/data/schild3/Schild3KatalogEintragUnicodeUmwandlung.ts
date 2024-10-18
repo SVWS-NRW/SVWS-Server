@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 
@@ -49,6 +50,8 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung'].includes(name);
 	}
+
+	public static class = new Class<Schild3KatalogEintragUnicodeUmwandlung>('de.svws_nrw.core.data.schild3.Schild3KatalogEintragUnicodeUmwandlung');
 
 	public static transpilerFromJSON(json : string): Schild3KatalogEintragUnicodeUmwandlung {
 		const obj = JSON.parse(json) as Partial<Schild3KatalogEintragUnicodeUmwandlung>;

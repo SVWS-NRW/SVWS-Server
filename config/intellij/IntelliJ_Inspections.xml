@@ -62,6 +62,7 @@
     <inspection_tool class="LocalCanBeFinal" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup">
       <option name="REPORT_VARIABLES" value="true" />
       <option name="REPORT_PARAMETERS" value="true" />
+      <option name="REPORT_IMPLICIT_FINALS" value="false" />
     </inspection_tool>
     <inspection_tool class="LongLiteralsEndingWithLowercaseL" enabled="true" level="Cleanup" enabled_by_default="true" editorAttributes="Cleanup" />
     <inspection_tool class="ManualArrayCopy" enabled="true" level="TEXT ATTRIBUTES" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />

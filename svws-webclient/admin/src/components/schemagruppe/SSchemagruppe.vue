@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20">
+		<div v-if="auswahlGruppe.length > 0" class="flex flex-col gap-y-16 lg:gap-y-20">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Schemata löschen." icon="i-ri-delete-bin-line"
 				:action-function="removeSchemata" action-label="Löschen" :is-loading="apiStatus.pending" :is-active="currentAction === 'delete'"
 				:action-disabled="!checkDeletable[0]" @click="toggleDelete">
@@ -15,6 +15,7 @@
 				</template>
 			</svws-ui-action-button>
 		</div>
+		<div v-else class="flex"><svws-ui-spinner spinning /><span>&nbsp;Laden des zuletzt ausgewählten Schemas …</span></div>
 	</div>
 </template>
 
@@ -22,7 +23,8 @@
 
 	import { ref, computed } from "vue";
 	import type { SchemagruppeProps } from "./SSchemagruppeProps";
-	import { type List, ArrayList } from "@core";
+	import type { List } from "../../../../core/src/java/util/List";
+	import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 
 	const props = defineProps<SchemagruppeProps>();
 
@@ -33,7 +35,7 @@
 	}
 
 	const checkDeletable = computed<[boolean, List<string>]>(() => {
-		let log : List<string> = new ArrayList();
+		const log : List<string> = new ArrayList();
 		let result : boolean = true;
 		if (currentAction.value === 'delete') {
 			for (const schema of props.auswahlGruppe) {

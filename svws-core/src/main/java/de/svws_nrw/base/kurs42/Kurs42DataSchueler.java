@@ -2,7 +2,7 @@ package de.svws_nrw.base.kurs42;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import de.svws_nrw.core.types.SchuelerStatus;
+import de.svws_nrw.asd.types.schueler.SchuelerStatus;
 
 /**
  * Diese Klasse dient als DTO für die CSV-Tabelle {@code Schueler.txt} eines Kurs42-Textdatei-Exportes. In dieser Datei

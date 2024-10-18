@@ -18,7 +18,7 @@ import { RouteDataLehrer } from "~/router/apps/lehrer/RouteDataLehrer";
 
 import type { LehrerAppProps } from "~/components/lehrer/SLehrerAppProps";
 import type { LehrerAuswahlProps } from "~/components/lehrer/SLehrerAuswahlProps";
-import type { AuswahlChildData } from "~/components/AuswahlChildData";
+import type { TabData } from "@ui";
 import { routeError } from "~/router/error/RouteError";
 
 
@@ -44,33 +44,32 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
-		const idSchuljahresabschnitt = RouteNode.getIntParam(to_params, "idSchuljahresabschnitt");
-		if (idSchuljahresabschnitt instanceof Error)
-			return routeError.getRoute(idSchuljahresabschnitt);
-		if (idSchuljahresabschnitt === undefined)
-			return routeError.getRoute(new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt."));
-		const id = RouteNode.getIntParam(to_params, "id");
-		if (id instanceof Error)
-			return routeError.getRoute(id);
-		if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt)
-			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-		const eintrag = (id !== undefined) ? this.data.lehrerListeManager.liste.get(id) : null;
-		await this.data.setLehrer(eintrag);
-		if (!this.data.lehrerListeManager.hasDaten()) {
-			if (id === undefined) {
-				const listFiltered = this.data.lehrerListeManager.filtered();
-				if (listFiltered.isEmpty())
-					return;
-				return this.getChildRoute(listFiltered.get(0).id, from);
+		try {
+			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
+			if (idSchuljahresabschnitt === undefined)
+				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt)
+				await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			const eintrag = (id !== undefined) ? this.data.lehrerListeManager.liste.get(id) : null;
+			await this.data.setLehrer(eintrag);
+			if (!this.data.lehrerListeManager.hasDaten()) {
+				if (id === undefined) {
+					const listFiltered = this.data.lehrerListeManager.filtered();
+					if (listFiltered.isEmpty())
+						return;
+					return this.getChildRoute(listFiltered.get(0).id, from);
+				}
+				return this.getRoute();
 			}
-			return this.getRoute();
+			if (to.name === this.name)
+				return this.getChildRoute(this.data.lehrerListeManager.daten().id, from);
+			if (!to.name.startsWith(this.data.view.name))
+				for (const child of this.children)
+					if (to.name.startsWith(child.name))
+						this.data.setView(child, this.children);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
 		}
-		if (to.name === this.name)
-			return this.getChildRoute(this.data.lehrerListeManager.daten().id, from);
-		if (!to.name.startsWith(this.data.view.name))
-			for (const child of this.children)
-				if (to.name.startsWith(child.name))
-					this.data.setView(child, this.children);
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
@@ -97,27 +96,11 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 	public getProps(to: RouteLocationNormalized): LehrerAppProps {
 		return {
 			lehrerListeManager: () => this.data.lehrerListeManager,
-			// Props für die Navigation
-			setTab: this.setTab,
-			tab: this.getTab(),
-			tabs: this.getTabs(),
-			tabsHidden: this.children_hidden().value,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
 		};
 	}
 
-	private getTab(): AuswahlChildData {
-		return { name: this.data.view.name, text: this.data.view.text };
-	}
-
-	private getTabs(): AuswahlChildData[] {
-		const result: AuswahlChildData[] = [];
-		for (const c of super.children)
-			if (c.hatEineKompetenz() && c.hatSchulform())
-				result.push({ name: c.name, text: c.text });
-		return result;
-	}
-
-	private setTab = async (value: AuswahlChildData) => {
+	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name)
 			return;
 		const node = RouteNode.getNodeByName(value.name);

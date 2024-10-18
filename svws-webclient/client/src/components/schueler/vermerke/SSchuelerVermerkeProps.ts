@@ -8,4 +8,5 @@ export interface SchuelerVermerkeProps {
 	add: () => Promise<void>;
 	remove: (idVermerk: number) => Promise<void>;
 	apiStatus: ApiStatus;
+	autofocus: boolean;
 }

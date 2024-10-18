@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { GostFach } from '../../../../core/data/gost/GostFach';
+import { Fach } from '../../../../asd/types/fach/Fach';
 import { AbiturFachbelegung } from '../../../../core/data/gost/AbiturFachbelegung';
 import { GostFachUtils } from '../../../../core/utils/gost/GostFachUtils';
 import { ArrayList } from '../../../../java/util/ArrayList';
@@ -11,8 +12,8 @@ import { DeveloperNotificationException } from '../../../../core/exceptions/Deve
 import { GostKursart } from '../../../../core/types/gost/GostKursart';
 import { GostFachbereich } from '../../../../core/types/gost/GostFachbereich';
 import { GostHalbjahr } from '../../../../core/types/gost/GostHalbjahr';
-import { ZulaessigesFach } from '../../../../core/types/fach/ZulaessigesFach';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 import { GostBelegungsfehler } from '../../../../core/abschluss/gost/GostBelegungsfehler';
 import { HashSet } from '../../../../java/util/HashSet';
 
@@ -168,8 +169,8 @@ export class Projektkurse extends GostBelegpruefung {
 				const lf : GostFach | null = this.manager.getFach(leitfach1);
 				if (lf === null)
 					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
-				const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
-				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (JavaObject.equalsTranspiler(zf, (ZulaessigesFach.PX)) || JavaObject.equalsTranspiler(zf, (ZulaessigesFach.VX)))))
+				const zf : Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown)))
 					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;
 			}
@@ -177,8 +178,8 @@ export class Projektkurse extends GostBelegpruefung {
 				const lf : GostFach | null = this.manager.getFach(leitfach2);
 				if (lf === null)
 					throw new DeveloperNotificationException("Interner Fehler: Das Leitfach mit der angegebenen ID existiert nicht als Fach der gymnasialen Oberstufe in diesem Jahrgang.")
-				const zf : ZulaessigesFach = ZulaessigesFach.getByKuerzelASD(lf.kuerzel);
-				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (JavaObject.equalsTranspiler(zf, (ZulaessigesFach.PX)) || JavaObject.equalsTranspiler(zf, (ZulaessigesFach.VX)))))
+				const zf : Fach | null = Fach.getBySchluesselOrDefault(lf.kuerzel);
+				if ((GostFachbereich.LITERARISCH_KUENSTLERISCH_ERSATZ.hat(lf) || (zf as unknown === Fach.PX as unknown) || (zf as unknown === Fach.VX as unknown)))
 					this.addFehler(GostBelegungsfehler.PF_19);
 				continue;
 			}
@@ -287,6 +288,8 @@ export class Projektkurse extends GostBelegpruefung {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.gost.GostBelegpruefung', 'de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse'].includes(name);
 	}
+
+	public static class = new Class<Projektkurse>('de.svws_nrw.core.abschluss.gost.belegpruefung.Projektkurse');
 
 }
 

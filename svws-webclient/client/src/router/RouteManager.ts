@@ -9,6 +9,7 @@ import { routeInit } from "~/router/init/RouteInit";
 import { routeLogin } from "~/router/login/RouteLogin";
 import { routeError } from "~/router/error/RouteError";
 import { DeveloperNotificationException, ServerMode } from "@core";
+import { RoutingStatus } from "~/router/RoutingStatus";
 
 interface RouteStateError {
 	code: number | undefined;
@@ -81,16 +82,53 @@ export class RouteManager {
 	 *
 	 * @param to   die Ziel-Route
 	 */
-	public static async doRoute(to: RouteLocationRaw) {
-		const manager = RouteManager._instance;
-		if (manager === undefined)
-			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
+	public static async doRoute(to: RouteLocationRaw): Promise<RoutingStatus> {
+		const manager = this.getInstanceOrException();
 		// Ignoriere Aufruf, wenn der manager bereits in einem Routing-Vorgang ist. Dies kann sonst das aktuelle Routing canceln
 		// und zu ungültigen Zuständen führen
 		if (manager.active)
-			return;
+			return RoutingStatus.STOPPED_ROUTING_IS_ACTIVE;
+
+		// Prüfen, ob ein Checkpoint betreten wurde, an dem gestoppt werden muss, um die doCheckpoint() Hook auszuführen
+		const currentNode = manager._node;
+		if (currentNode?.isCheckpointActive() === true) {
+			await currentNode.doCheckpoint(to);
+			return RoutingStatus.STOPPED_CHECKPOINT_ACTIVATED;
+		}
+
 		// Führe das Routing durch...
-		await manager.router.push(to);
+		const routingResult = await manager.router.push(to);
+		return (routingResult === undefined) ? RoutingStatus.SUCCESS : RoutingStatus.ERROR;
+	}
+
+	/**
+	 * Das ursprüngliche Routing, dass durch den aktiven Checkpoint gestoppt wurde, wird fortgeführt.
+	 * Hinweis: Der Aufruf funktioniert nur erstmalig, nach dem ein Checkpoint im aktiven Zustand betreten wurde.
+	 */
+	public static async continueRoutingAfterCheckpoint(): Promise<RoutingStatus> {
+		const currentRoute = this.getInstanceOrException()._node;
+		if (currentRoute === undefined)
+			throw new DeveloperNotificationException("Es kann kein Routing nach einem Checkpoint fortgeführt werden, da die aktuelle RouteNode undefined ist.");
+
+		const currentCheckpoint = currentRoute.checkpoint;
+		if (currentCheckpoint === undefined)
+			throw new DeveloperNotificationException(`Es kann kein Routing nach einem Checkpoint fortgeführt werden, da für diese RouteNode ${currentRoute.name} kein Checkpoint definiert wurde.`);
+
+		const destinationRoute = currentCheckpoint.originallyDestinationRoute;
+		if (destinationRoute === undefined)
+			return RoutingStatus.STOPPED_CHECKPOINT_DESTINATION_ROUTE_MISSING;
+
+		// clean/remove checkpoint destination route for next checkpoint activation to prevent problems
+		currentCheckpoint.originallyDestinationRoute = undefined;
+		return RouteManager.doRoute(destinationRoute);
+	}
+
+	public static getInstanceOrException() : RouteManager {
+		const manager = RouteManager._instance;
+		if (manager === undefined)
+			throw new DeveloperNotificationException("Unzulässiger Zugriff auf den RouteManager, bevor eine Instanz erzeugt wurde.");
+
+		return manager;
 	}
 
 	/**
@@ -351,7 +389,7 @@ export class RouteManager {
 
 // Initialisiere den Router
 export const router = createRouter({
-	history: createWebHashHistory(import.meta.env.BASE_URL ?? "/"),
+	history: createWebHashHistory(import.meta.env.BASE_URL),
 	routes: [ ]
 });
 

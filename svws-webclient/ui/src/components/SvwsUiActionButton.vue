@@ -1,19 +1,19 @@
 <template>
 	<div :class="{'svws-active': isActive}" class="svws-ui-action-button">
-		<button role="button" class="svws-ui-action-button--button" @click="e => $emit('click', e)">
+		<button role="button" class="svws-ui-action-button--button" @click="e => emit('click', e)">
 			<div class="svws-icon">
 				<slot name="icon">
 					<span class="icon" :class="[icon]" />
 				</slot>
 			</div>
-			<div class="flex flex-col overflow-x-hidden">
+			<div class="flex flex-col overflow-x-hidden overflow-y-hidden">
 				<div class="svws-title" :class="{'my-auto': !description}">{{ title }}</div>
 				<div v-if="description" class="svws-description">{{ description }}</div>
 			</div>
 		</button>
 		<div v-if="isActive" class="p-4" :class="{'pt-5': $slots.default}">
 			<slot />
-			<svws-ui-button v-if="actionFunction" :disabled="actionDisabled || isLoading" title="Aktion ausführen" @click="actionFunction" :is-loading="isLoading" :class="{'mt-8': $slots.default}">
+			<svws-ui-button v-if="actionFunction !== undefined" :disabled="actionDisabled || isLoading" title="Aktion ausführen" @click="actionFunction" :is-loading="isLoading" :class="{'mt-8': $slots.default}">
 				<template v-if="isLoading">
 					<svws-ui-spinner spinning />
 				</template>

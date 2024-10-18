@@ -17,8 +17,7 @@
 					<svws-ui-input-number placeholder="externe Schüler" :model-value="getErgebnismanager().getOfKursAnzahlSchuelerDummy(kurs.id)" @update:model-value="updateExterne" :min="0" headless :disabled="apiStatus.pending" />
 				</div>
 			</div>
-			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs="kurs" :map-lehrer="mapLehrer" :get-datenmanager="getDatenmanager"
-				:add-lehrer-regel="addLehrerRegel" :add-kurs-lehrer="addKursLehrer" :remove-kurs-lehrer="removeKursLehrer" />
+			<s-gost-kursplanung-kursansicht-modal-zusatzkraefte :kurs :map-lehrer :get-datenmanager :add-lehrer-regel="addLehrerRegel" :add-kurs-lehrer :remove-kurs-lehrer />
 			<div class="flex flex-col gap-1 my-auto">
 				<div class="flex items-center gap-4">
 					<span class="text-sm font-bold">Schienen:</span>

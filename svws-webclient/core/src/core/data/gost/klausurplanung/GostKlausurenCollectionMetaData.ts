@@ -5,30 +5,34 @@ import { SchuelerListeEintrag } from '../../../../core/data/schueler/SchuelerLis
 import { LehrerListeEintrag } from '../../../../core/data/lehrer/LehrerListeEintrag';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurenCollectionMetaData extends JavaObject {
 
 	/**
-	 * Die Liste der Klausurvorgaben.
+	 * Ein Array mit den Daten der Fächer.
 	 */
 	public faecher : List<GostFach> = new ArrayList<GostFach>();
 
 	/**
-	 * Die Liste der Kursklausuren.
+	 * Ein Array mit den Daten der Schüler.
 	 */
 	public schueler : List<SchuelerListeEintrag> = new ArrayList<SchuelerListeEintrag>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Daten der Lehrer.
 	 */
 	public lehrer : List<LehrerListeEintrag> = new ArrayList<LehrerListeEintrag>();
 
 	/**
-	 * Die Liste der Schülerklausuren.
+	 * Ein Array mit den Daten der Kurse.
 	 */
 	public kurse : List<KursDaten> = new ArrayList<KursDaten>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -40,6 +44,8 @@ export class GostKlausurenCollectionMetaData extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenCollectionMetaData>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenCollectionMetaData');
 
 	public static transpilerFromJSON(json : string): GostKlausurenCollectionMetaData {
 		const obj = JSON.parse(json) as Partial<GostKlausurenCollectionMetaData>;

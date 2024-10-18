@@ -2,20 +2,24 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
 import { KlassenDaten } from '../../../core/data/klassen/KlassenDaten';
 import { SchuelerListeEintrag } from '../../../core/data/schueler/SchuelerListeEintrag';
+import { SchuelerStatusKatalogEintrag } from '../../../asd/data/schueler/SchuelerStatusKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { KlassenUtils } from '../../../core/utils/klassen/KlassenUtils';
 import { SchuelerUtils } from '../../../core/utils/schueler/SchuelerUtils';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { JahrgangsDaten } from '../../../core/data/jahrgang/JahrgangsDaten';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
-import { SchuelerStatus } from '../../../core/types/SchuelerStatus';
+import { SchuelerStatus } from '../../../asd/types/schueler/SchuelerStatus';
 import type { Comparator } from '../../../java/util/Comparator';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
-import { Pair } from '../../../core/adt/Pair';
+import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
@@ -24,8 +28,9 @@ import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
 import { Schueler } from '../../../core/data/schueler/Schueler';
 import type { Runnable } from '../../../java/lang/Runnable';
 import { JavaLong } from '../../../java/lang/JavaLong';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 
 export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, KlassenDaten> {
 
@@ -48,6 +53,11 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	private readonly _mapKlasseInSchulgliederung : HashMap2D<string, number, KlassenDaten> = new HashMap2D<string, number, KlassenDaten>();
 
 	private readonly _mapKlasseByKuerzel : HashMap<string, KlassenDaten> = new HashMap<string, KlassenDaten>();
+
+	/**
+	 * Die ausgewählte Klassenleitung
+	 */
+	public auswahlKlassenLeitung : LehrerListeEintrag | null = null;
 
 	/**
 	 * Das Filter-Attribut für die Jahrgänge
@@ -77,7 +87,12 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	public readonly schulgliederungen : AttributMitAuswahl<string, Schulgliederung>;
 
-	private static readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => sg.daten.kuerzel };
+	private readonly _schulgliederungToId : JavaFunction<Schulgliederung, string> = { apply : (sg: Schulgliederung) => {
+		const sglke : SchulgliederungKatalogEintrag | null = sg.daten(this.getSchuljahr());
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", sg.name(), this.getSchuljahr()))
+		return sglke.kuerzel;
+	} };
 
 	private static readonly _comparatorSchulgliederung : Comparator<Schulgliederung> = { compare : (a: Schulgliederung, b: Schulgliederung) => a.ordinal() - b.ordinal() };
 
@@ -86,7 +101,12 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	public readonly schuelerstatus : AttributMitAuswahl<number, SchuelerStatus>;
 
-	private static readonly _schuelerstatusToId : JavaFunction<SchuelerStatus, number> = { apply : (s: SchuelerStatus) => s.id };
+	private readonly _schuelerstatusToId : JavaFunction<SchuelerStatus, number> = { apply : (s: SchuelerStatus) => {
+		const sske : SchuelerStatusKatalogEintrag | null = s.daten(this.getSchuljahr());
+		if (sske === null)
+			throw new IllegalArgumentException(JavaString.format("Der Schülerstatus %s ist in dem Schuljahr %d nicht gültig.", s.name(), this.getSchuljahr()))
+		return JavaInteger.parseInt(sske.kuerzel);
+	} };
 
 	private static readonly _comparatorSchuelerStatus : Comparator<SchuelerStatus> = { compare : (a: SchuelerStatus, b: SchuelerStatus) => a.ordinal() - b.ordinal() };
 
@@ -114,13 +134,14 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, klassen : List<KlassenDaten>, schueler : List<SchuelerListeEintrag>, jahrgaenge : List<JahrgangsDaten>, lehrer : List<LehrerListeEintrag>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, klassen, KlassenUtils.comparator, KlassenListeManager._klasseToId, KlassenListeManager._klasseToId, Arrays.asList(new Pair("klassen", true), new Pair("schueleranzahl", true)));
-		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), KlassenListeManager._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
+		this.schuelerstatus = new AttributMitAuswahl(Arrays.asList(...SchuelerStatus.values()), this._schuelerstatusToId, KlassenListeManager._comparatorSchuelerStatus, this._eventHandlerFilterChanged);
 		this.schueler = new AttributMitAuswahl(schueler, KlassenListeManager._schuelerToId, SchuelerUtils.comparator, this._eventSchuelerAuswahlChanged);
 		this.jahrgaenge = new AttributMitAuswahl(jahrgaenge, KlassenListeManager._jahrgangToId, JahrgangsUtils.comparator, this._eventHandlerFilterChanged);
 		this.lehrer = new AttributMitAuswahl(lehrer, KlassenListeManager._lehrerToId, LehrerUtils.comparator, this._eventHandlerFilterChanged);
-		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.get(schulform);
-		this.schulgliederungen = new AttributMitAuswahl(gliederungen, KlassenListeManager._schulgliederungToId, KlassenListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
+		const gliederungen : List<Schulgliederung> = (schulform === null) ? Arrays.asList(...Schulgliederung.values()) : Schulgliederung.getBySchuljahrAndSchulform(this.getSchuljahr(), schulform);
+		this.schulgliederungen = new AttributMitAuswahl(gliederungen, this._schulgliederungToId, KlassenListeManager._comparatorSchulgliederung, this._eventHandlerFilterChanged);
 		this.initKlassen();
+		this.auswahlKlassenLeitung = null;
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.AKTIV);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.EXTERN);
 		this.schuelerstatus.auswahlAdd(SchuelerStatus.NEUAUFNAHME);
@@ -154,6 +175,10 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 			eintrag.kuerzel = daten.kuerzel;
 			updateEintrag = true;
 		}
+		if (this.auswahlKlassenLeitung !== null) {
+			this.auswahlKlassenLeitung = null;
+			updateEintrag = true;
+		}
 		this._filteredSchuelerListe = null;
 		return updateEintrag;
 	}
@@ -182,7 +207,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	/**
 	 * Setzt die Filtereinstellung auf nur sichtbare Klassen.
 	 *
-	 * @param value   true, wenn der Filter aktiviert werden soll, und ansonsten false
+	 * @param value   true, wenn der Filter aktiviert werden soll und ansonsten false
 	 */
 	public setFilterNurSichtbar(value : boolean) : void {
 		this._filterNurSichtbar = value;
@@ -195,7 +220,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @param a   der erste Eintrag
 	 * @param b   der zweite Eintrag
 	 *
-	 * @return das Ergebnis des Vergleichs (-1 kleine, 0 gleich und 1 größer)
+	 * @return das Ergebnis des Vergleichs (-1 kleiner, 0 gleich und 1 größer)
 	 */
 	protected compareAuswahl(a : KlassenDaten, b : KlassenDaten) : number {
 		for (const criteria of this._order) {
@@ -258,6 +283,24 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	}
 
 	/**
+	 * Gibt die ausgewählte Klassenleitung zurück
+	 *
+	 * @return die ausgewählte Klassenleitung
+	 */
+	public getAuswahlKlassenLeitung() : LehrerListeEintrag | null {
+		return this.auswahlKlassenLeitung;
+	}
+
+	/**
+	 * Setzt die angegebene Lehrkraft zur ausgewählten Klassenleitung
+	 *
+	 * @param klassenLeitung neue ausgewählte Klassenleitung
+	 */
+	public setAuswahlKlassenLeitung(klassenLeitung : LehrerListeEintrag | null) : void {
+		this.auswahlKlassenLeitung = klassenLeitung;
+	}
+
+	/**
 	 * Gibt die Klassendaten anhand des übergebenen Kürzels zurück.
 	 * Ist das Kürzel ungültig, so wird null zurückgegeben.
 	 *
@@ -271,7 +314,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 
 	/**
 	 * Erhöht, bzw. senkt die Position der Klassenleitung mit der angegebenen Lehrer-ID auf der lokalen Klassenleitungs-Liste.
-	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächst-höher-stehenden (bzw. nächst-tiefer-stehenden) Eintrag
+	 * Dabei wird der Reihenfolgen-Wert zwischen dem nächstgrößeren (bzw. nächskleineren) Eintrag
 	 * und dem angegebenen Eintrag getauscht.
 	 *
 	 * @param klassenleitungen   die Liste der Klassenleitungen
@@ -279,7 +322,7 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 * @param erhoehe            true, falls die Klassenleitung eine höhere Position auf der Klassenleitungs-Liste haben soll,
 	 *                           false, wenn sie eine tiefere Position auf der Klassenleitungs-Liste haben soll.
 	 *
-	 * @return true, falls Änderungen durchgeführt wurden, und ansonsten false
+	 * @return true, falls Änderungen durchgeführt wurden und ansonsten false
 	 *
 	 * @throws DeveloperNotificationException wenn die Klassen-Daten oder die übergebene Lehrer-ID ungültig sind
 	 */
@@ -305,6 +348,58 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 		return true;
 	}
 
+	/**
+	 * Wenn das Kürzel nicht leer, für den Schuljahresabschnitt einzigartig und zwischen 1 und 15 Zeichen lang ist,
+	 * wird <code>true</code>, andernfalls <code>false</code> zurückgegeben.
+	 *
+	 * @param kuerzel das Kürzel der Klasse
+	 *
+	 * @return <code>true</code> wenn Kürzel der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateKuerzel(kuerzel : string | null) : boolean {
+		if ((kuerzel === null) || JavaString.isBlank(kuerzel) || (kuerzel.trim().length > 15))
+			return false;
+		for (const klasse of this.liste.list())
+			if ((this.auswahlID() !== klasse.id) && JavaObject.equalsTranspiler(klasse.kuerzel, (kuerzel.trim())))
+				return false;
+		return true;
+	}
+
+	/**
+	 * Die Beschreibung ist optional und darf maximal 150 Zeichen lang sein.
+	 *
+	 * @param beschreibung die Beschreibung der Klasse
+	 *
+	 * @return <code>true</code> wenn Beschreibung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateBeschreibung(beschreibung : string | null) : boolean {
+		if (beschreibung === null)
+			return true;
+		return beschreibung.trim().length <= 150;
+	}
+
+	/**
+	 * Der Sortierungsindex darf nicht <code>null</code> sein und muss größer gleich 0 sein.
+	 *
+	 * @param sortierung der Sortierungsindex der Klasse
+	 *
+	 * @return <code>true</code> wenn Sortierung der Klasse gültig ist, ansonsten <code>false</code>
+	 */
+	public validateSortierung(sortierung : number | null) : boolean {
+		return (sortierung !== null) && (sortierung >= 0);
+	}
+
+	/**
+	 * Methode übernimmt Filterinformationen aus dem übergebenen {@link KlassenListeManager}
+	 *
+	 * @param srcManager Manager, aus dem die Filterinformationen übernommen werden
+	 */
+	public useFilter(srcManager : KlassenListeManager) : void {
+		this.jahrgaenge.setAuswahl(srcManager.jahrgaenge);
+		this.lehrer.setAuswahl(srcManager.lehrer);
+		this.schulgliederungen.setAuswahl(srcManager.schulgliederungen);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.core.utils.klassen.KlassenListeManager';
 	}
@@ -312,6 +407,8 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.klassen.KlassenListeManager'].includes(name);
 	}
+
+	public static class = new Class<KlassenListeManager>('de.svws_nrw.core.utils.klassen.KlassenListeManager');
 
 }
 

@@ -1,0 +1,70 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "KEINE",
+		"idHistorie": 1,
+		"historie": [ {
+			"id": 1,
+			"kuerzel": "",
+			"text": "keine",
+			"schluessel": "",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "ANSCHLUSSOPTION",
+		"idHistorie": 2,
+		"historie": [ {
+			"id": 2,
+			"kuerzel": "Anschlussoption",
+			"text": "Anschlussoption",
+			"schluessel": "Anschlussoption",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "BERUFSFELD",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3,
+			"kuerzel": "Berufsfeld",
+			"text": "Berufsfeld",
+			"schluessel": "Berufsfeld",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FREITEXT",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4,
+			"kuerzel": "Freitext",
+			"text": "Freitext",
+			"schluessel": "Freitext",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "FREITEXT_BERUF",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5,
+			"kuerzel": "Freitext Beruf",
+			"text": "Freitext Beruf",
+			"schluessel": "Freitext Beruf",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "SBO_EBENE_4",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 6,
+			"kuerzel": "SBO EB4",
+			"text": "SBO EB4",
+			"schluessel": "SBO EB4",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

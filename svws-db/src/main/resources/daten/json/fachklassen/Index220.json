@@ -1,6 +1,6 @@
 {
 	"index": 220,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -152,7 +152,7 @@
 				"bezeichnung": "FS Agrarwirtschaft Gartenbau - Produktion und Vermarktung",
 				"bezeichnungM": "FS Agrarwirtschaft Gartenbau - Produktion und Vermarktung",
 				"bezeichnungW": "FS Agrarwirtschaft Gartenbau - Produktion und Vermarktung",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -169,7 +169,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Gartenbau Stufe I - Dienstleistungsgartenbau",
 				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau Stufe I - Dienstleistungsgartenbau",
 				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau Stufe I - Dienstleistungsgartenbau",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -186,7 +186,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Gartenbau Stufe II - Dienstleistungsgartenbau",
 				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau Stufe II - Dienstleistungsgartenbau",
 				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau Stufe II - Dienstleistungsgartenbau",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -203,7 +203,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Gartenbau Stufe I - Produktion und Vermarktung",
 				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau Stufe I - Produktion und Vermarktung",
 				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau Stufe I - Produktion und Vermarktung",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -220,7 +220,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Gartenbau Stufe II - Produktion und Vermarktung",
 				"bezeichnungM": "FS Agrarwirtschaft/Gartenbau Stufe II - Produktion und Vermarktung",
 				"bezeichnungW": "FS Agrarwirtschaft/Gartenbau Stufe II - Produktion und Vermarktung",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -238,7 +238,7 @@
 				"bezeichnungM": "FS Agrarwirtschaft Ländliche Hauswirtschaft Stufe I",
 				"bezeichnungW": "FS Agrarwirtschaft Ländliche Hauswirtschaft Stufe I",
 				"gueltigVon": null,
-				"gueltigBis": 2011
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "102",
@@ -255,7 +255,7 @@
 				"bezeichnungM": "FS Agrarwirtschaft Ländliche Hauswirtschaft Stufe II",
 				"bezeichnungW": "FS Agrarwirtschaft Ländliche Hauswirtschaft Stufe II",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "103",
@@ -296,6 +296,32 @@
 			"schluessel2": "01",
 			"historie": [ {
 				"id": 1493000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "LW",
+				"ebene3": "OL",
+				"bezeichnung": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe I",
+				"bezeichnungM": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe I",
+				"bezeichnungW": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe I",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1493001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "LW",
+				"ebene3": "OL",
+				"bezeichnung": "FS Agrarwirtschaft Landwirtschaft Stufe I – Ökologischer Landbau",
+				"bezeichnungM": "FS Agrarwirtschaft Landwirtschaft Stufe I – Ökologischer Landbau",
+				"bezeichnungW": "FS Agrarwirtschaft Landwirtschaft Stufe I – Ökologischer Landbau",
+				"gueltigVon": 2012,
+				"gueltigBis": 2014
+			}, {
+				"id": 1493002,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "A",
 				"berufsfeld": "AW",
@@ -305,7 +331,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Ökologischer Landbau",
 				"bezeichnungM": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Ökologischer Landbau",
 				"bezeichnungW": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Ökologischer Landbau",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -313,6 +339,32 @@
 			"schluessel2": "02",
 			"historie": [ {
 				"id": 1494000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "LW",
+				"ebene3": "OL",
+				"bezeichnung": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe II",
+				"bezeichnungM": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe II",
+				"bezeichnungW": "FS Agrarwirtschaft Landwirtschaft Ökologischer Landbau Stufe II",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1494001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": "AW",
+				"ebene2": "LW",
+				"ebene3": "OL",
+				"bezeichnung": "FS Agrarwirtschaft Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
+				"bezeichnungM": "FS Agrarwirtschaft Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
+				"bezeichnungW": "FS Agrarwirtschaft Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
+				"gueltigVon": 2012,
+				"gueltigBis": 2014
+			}, {
+				"id": 1494002,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "A",
 				"berufsfeld": "AW",
@@ -322,7 +374,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
 				"bezeichnungM": "FS Agrarwirtschaft/Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
 				"bezeichnungW": "FS Agrarwirtschaft/Landwirtschaft Stufe II (Höhere Landbauschule) - Ökologischer Landbau",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -339,7 +391,7 @@
 				"bezeichnung": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Agrarservice",
 				"bezeichnungM": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Agrarservice",
 				"bezeichnungW": "FS Agrarwirtschaft/Landwirtschaft Stufe I (Landwirtschaftsschule) - Agrarservice",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -347,6 +399,45 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1496000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft Stufe I",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft Stufe I",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Hauswirtschaft Stufe I",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1496001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Ernährung u. Hauswirtschaft/Großhaushalt Stufe I",
+				"bezeichnungM": "FS Ernährung u. Hauswirtschaft/Großhaushalt Stufe I",
+				"bezeichnungW": "FS Ernährung u. Hauswirtschaft/Großhaushalt Stufe I",
+				"gueltigVon": 2012,
+				"gueltigBis": 2012
+			}, {
+				"id": 1496002,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "E",
+				"berufsfeld": "EH",
+				"ebene1": "EV",
+				"ebene2": "GO",
+				"ebene3": null,
+				"bezeichnung": "FS Hauswirtschaft/Großhaushalt Stufe I",
+				"bezeichnungM": "FS Hauswirtschaft/Großhaushalt Stufe I",
+				"bezeichnungW": "FS Hauswirtschaft/Großhaushalt Stufe I",
+				"gueltigVon": 2013,
+				"gueltigBis": 2014
+			}, {
+				"id": 1496003,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "E",
 				"berufsfeld": "EH",
@@ -356,7 +447,7 @@
 				"bezeichnung": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt Stufe I",
 				"bezeichnungM": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt Stufe I",
 				"bezeichnungW": "FS Ernährungs- und Versorgungsmanagement/Großhaushalt Stufe I",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -391,7 +482,7 @@
 				"bezeichnungM": "FS Sozialwesen - Heilerziehungshilfe",
 				"bezeichnungW": "FS Sozialwesen - Heilerziehungshilfe",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "108",
@@ -475,7 +566,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang f. Absolventen/Absolventinnen v. FS - Heilpädagogik (Schulversuch)",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang f. Absolventen v. FS - Heilpädagogik (Schulversuch)",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang f. Absolventinnen v. FS - Heilpädagogik (Schulversuch)",
-				"gueltigVon": null,
+				"gueltigVon": 2020,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -493,7 +584,7 @@
 				"bezeichnungM": "FS Technik/Aufbaubildungsgang Lichttechnik f. staatl. gepr. Techniker",
 				"bezeichnungW": "FS Technik/Aufbaubildungsgang Lichttechnik f. staatl. gepr. Technikerinnen",
 				"gueltigVon": null,
-				"gueltigBis": 2012
+				"gueltigBis": 2011
 			} ]
 		}, {
 			"schluessel": "113",
@@ -561,13 +652,26 @@
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang f. Absolv. v. FS - Technik",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang f. Absolv. v. FS - Technik",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "117",
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1509000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "AB",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Betriebswirtschaft",
+				"bezeichnungM": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Betriebswirtschaft",
+				"bezeichnungW": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Betriebswirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			}, {
+				"id": 1509001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WI",
@@ -577,7 +681,7 @@
 				"bezeichnung": "FS Wirtschaft/Aufbaubildungsgang f. staatl. gepr. Techn. - Betriebswirtschaft",
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang f. staatl. gepr. Techn. - Betriebswirtschaft",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang f. staatl. gepr. Techn. - Betriebswirtschaft",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -602,6 +706,32 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1511000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "UM",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Aufbaulehrgang f. st. gepr. Betriebswirte - Unternehmensmanagement",
+				"bezeichnungM": "FS Wirtschaft/Aufbaulehrgang f. st. gepr. Betriebswirte - Unternehmensmanagement",
+				"bezeichnungW": "FS Wirtschaft/Aufbaulehrgang f. st. gepr. Betriebswirte - Unternehmensmanagement",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1511001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "UM",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Unternehmensmanagement",
+				"bezeichnungM": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Unternehmensmanagement",
+				"bezeichnungW": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Unternehmensmanagement",
+				"gueltigVon": 2012,
+				"gueltigBis": 2014
+			}, {
+				"id": 1511002,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WI",
@@ -611,7 +741,7 @@
 				"bezeichnung": "FS Wirtschaft/Aufbaubildungsgang Unternehmensmanagement",
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang Unternehmensmanagement",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang Unternehmensmanagement",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -653,6 +783,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1514000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "W",
+				"berufsfeld": "WI",
+				"ebene1": "WI",
+				"ebene2": "CO",
+				"ebene3": null,
+				"bezeichnung": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Controlling",
+				"bezeichnungM": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Controlling",
+				"bezeichnungW": "FS Wirtschaft/Aufbaulehrgang f. staatl. gepr. Techn. – Controlling",
+				"gueltigVon": null,
+				"gueltigBis": 2014
+			}, {
+				"id": 1514001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "W",
 				"berufsfeld": "WI",
@@ -662,7 +805,7 @@
 				"bezeichnung": "FS Wirtschaft/Aufbaubildungsgang Controlling",
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang Controlling",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang Controlling",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -727,10 +870,23 @@
 				"ebene1": null,
 				"ebene2": null,
 				"ebene3": null,
+				"bezeichnung": "FS Agrarwirtschaft Forstwirtschaft",
+				"bezeichnungM": "FS Agrarwirtschaft Forstwirtschaft",
+				"bezeichnungW": "FS Agrarwirtschaft Forstwirtschaft",
+				"gueltigVon": null,
+				"gueltigBis": 2011
+			}, {
+				"id": 1518001,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "A",
+				"berufsfeld": "AW",
+				"ebene1": null,
+				"ebene2": null,
+				"ebene3": null,
 				"bezeichnung": "FS Agrarwirtschaft Forstwirtschaft Stufe I",
 				"bezeichnungM": "FS Agrarwirtschaft Forstwirtschaft Stufe I",
 				"bezeichnungW": "FS Agrarwirtschaft Forstwirtschaft Stufe I",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -764,7 +920,7 @@
 				"bezeichnung": "FS Technik/Aufbaubildungsgang \"Technisches Wirtschaftsmanagement\" f. staatl. gepr. Techniker/-innen",
 				"bezeichnungM": "FS Technik/Aufbaubildungsgang \"Technisches Wirtschaftsmanagement\" f. staatl. gepr. Techniker",
 				"bezeichnungW": "FS Technik/Aufbaubildungsgang \"Technisches Wirtschaftsmanagement\" f. staatl. gepr. Technikerinnen",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -781,7 +937,7 @@
 				"bezeichnung": "FS Sozialwesen - Aufbaubildungsgang f. staatlich geprüfte Erzieher/-innen",
 				"bezeichnungM": "FS Sozialwesen - Aufbaubildungsgang f. staatlich geprüfte Erzieher",
 				"bezeichnungW": "FS Sozialwesen - Aufbaubildungsgang f. staatlich geprüfte Erzieherinnen",
-				"gueltigVon": null,
+				"gueltigVon": 2004,
 				"gueltigBis": 2013
 			} ]
 		}, {
@@ -789,16 +945,29 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1522000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "MF",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen – Aufbaubildungsgang f. Absolventen v. FS – Musikalische Förderung",
+				"bezeichnungM": "FS Sozialwesen – Aufbaubildungsgang f. Absolventen v. FS – Musikalische Förderung",
+				"bezeichnungW": "FS Sozialwesen – Aufbaubildungsgang f. Absolventen v. FS – Musikalische Förderung",
+				"gueltigVon": 2005,
+				"gueltigBis": 2011
+			}, {
+				"id": 1522001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "S",
 				"berufsfeld": "SG",
 				"ebene1": "SW",
 				"ebene2": "MF",
 				"ebene3": null,
-				"bezeichnung": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
-				"bezeichnungM": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
-				"bezeichnungW": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
-				"gueltigVon": null,
+				"bezeichnung": "FS Sozialwesen/Aufbaubg. f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
+				"bezeichnungM": "FS Sozialwesen/Aufbaubg. f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
+				"bezeichnungW": "FS Sozialwesen/Aufbaubg. f. Abs. v. FS - Musikalische Förderung im sozialpädag. Arbeitsfeld",
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -815,7 +984,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang Bewegung und Gesundheit (Bewegungsförderung)",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang Bewegung und Gesundheit (Bewegungsförderung)",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang Bewegung und Gesundheit (Bewegungsförderung)",
-				"gueltigVon": null,
+				"gueltigVon": 2005,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -832,7 +1001,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Naturwissenschaftlich-techn. Früherziehung",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Naturwissenschaftlich-techn. Früherziehung",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Naturwissenschaftlich-techn. Früherziehung",
-				"gueltigVon": null,
+				"gueltigVon": 2005,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -849,7 +1018,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Praxisanleitung",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Praxisanleitung",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Praxisanleitung",
-				"gueltigVon": null,
+				"gueltigVon": 2005,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -857,6 +1026,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1526000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "OG",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsgrundschule",
+				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsgrundschule",
+				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsgrundschule",
+				"gueltigVon": 2005,
+				"gueltigBis": 2011
+			}, {
+				"id": 1526001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "S",
 				"berufsfeld": "SG",
@@ -866,7 +1048,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsschule",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsschule",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang f. Abs. v. FS - Offene Ganztagsschule",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -883,7 +1065,7 @@
 				"bezeichnung": "FS Sozialwesen - Aufbaubildungsgang f. Abs. v. FS - Religiöse Erziehung im Kindes- und Jugendalter",
 				"bezeichnungM": "FS Sozialwesen - Aufbaubildungsgang f. Abs. v. FS - Religiöse Erziehung im Kindes- und Jugendalter",
 				"bezeichnungW": "FS Sozialwesen - Aufbaubildungsgang f. Abs. v. FS - Religiöse Erziehung im Kindes- und Jugendalter",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -900,7 +1082,7 @@
 				"bezeichnung": "FS Wirtschaft/Aufbaubildungsgang Internationale Rechnungslegung und Besteuerung",
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang Internationale Rechnungslegung und Besteuerung",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang Internationale Rechnungslegung und Besteuerung",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -917,7 +1099,7 @@
 				"bezeichnung": "FS Technik/Aufbaubildungsgang Augenoptik",
 				"bezeichnungM": "FS Technik/Aufbaubildungsgang Augenoptik",
 				"bezeichnungW": "FS Technik/Aufbaubildungsgang Augenoptik",
-				"gueltigVon": null,
+				"gueltigVon": 2006,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -925,6 +1107,19 @@
 			"schluessel2": "00",
 			"historie": [ {
 				"id": 1530000,
+				"istAusgelaufen": true,
+				"berufsfeldGruppe": "S",
+				"berufsfeld": "SG",
+				"ebene1": "SW",
+				"ebene2": "BE",
+				"ebene3": null,
+				"bezeichnung": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Betreuung, Bildung und Erziehung in Tageseinr. f. Kinder",
+				"bezeichnungM": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Betreuung, Bildung und Erziehung in Tageseinr. f. Kinder",
+				"bezeichnungW": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Betreuung, Bildung und Erziehung in Tageseinr. f. Kinder",
+				"gueltigVon": 2006,
+				"gueltigBis": 2011
+			}, {
+				"id": 1530001,
 				"istAusgelaufen": false,
 				"berufsfeldGruppe": "S",
 				"berufsfeld": "SG",
@@ -934,7 +1129,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung, Erziehung u. Betreuung in Tageseinr. f. Kinder",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung, Erziehung u. Betreuung in Tageseinr. f. Kinder",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung, Erziehung u. Betreuung in Tageseinr. f. Kinder",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -951,7 +1146,7 @@
 				"bezeichnung": "FS Wirtschaft/Aufbaubildungsgang International Business Communication",
 				"bezeichnungM": "FS Wirtschaft/Aufbaubildungsgang International Business Communication",
 				"bezeichnungW": "FS Wirtschaft/Aufbaubildungsgang International Business Communication",
-				"gueltigVon": null,
+				"gueltigVon": 2007,
 				"gueltigBis": 2011
 			} ]
 		}, {
@@ -968,7 +1163,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für heilpäd. Förderung mit dem Pferd",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für heilpäd. Förderung mit dem Pferd",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für heilpäd. Förderung mit dem Pferd",
-				"gueltigVon": null,
+				"gueltigVon": 2008,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -985,7 +1180,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang zur Fachkraft für Beratung und Anleitung in der Pflege",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang zur Fachkraft für Beratung und Anleitung in der Pflege",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang zur Fachkraft für Beratung und Anleitung in der Pflege",
-				"gueltigVon": null,
+				"gueltigVon": 2011,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1002,7 +1197,7 @@
 				"bezeichnung": "FS Agrarwirtschaft Floristik",
 				"bezeichnungM": "FS Agrarwirtschaft Floristik",
 				"bezeichnungW": "FS Agrarwirtschaft Floristik",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": 2012
 			} ]
 		}, {
@@ -1019,7 +1214,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung und Schulvorbereitung in Tageseinr. für Kinder",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung und Schulvorbereitung in Tageseinr. für Kinder",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubg.  f. Abs. v. FS - Bildung und Schulvorbereitung in Tageseinr. für Kinder",
-				"gueltigVon": null,
+				"gueltigVon": 2012,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1036,7 +1231,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang Inklusive Pädagogik",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang Inklusive Pädagogik",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang Inklusive Pädagogik",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1053,7 +1248,7 @@
 				"bezeichnung": "FS Technik/Aufbaubildungsgang Produktionslogistik",
 				"bezeichnungM": "FS Technik/Aufbaubildungsgang Produktionslogistik",
 				"bezeichnungW": "FS Technik/Aufbaubildungsgang Produktionslogistik",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1070,7 +1265,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang Existenzgründung",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang Existenzgründung",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang Existenzgründung",
-				"gueltigVon": null,
+				"gueltigVon": 2013,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1087,7 +1282,7 @@
 				"bezeichnung": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für inklusive Bildungs- und Erziehungsarbeit",
 				"bezeichnungM": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für inklusive Bildungs- und Erziehungsarbeit",
 				"bezeichnungW": "FS Sozialwesen/Aufbaubildungsgang Fachkraft für inklusive Bildungs- und Erziehungsarbeit",
-				"gueltigVon": null,
+				"gueltigVon": 2015,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1104,7 +1299,7 @@
 				"bezeichnung": "FS Technik/Aufbaubildungsgang Digitale Produktionstechnik",
 				"bezeichnungM": "FS Technik/Aufbaubildungsgang Digitale Produktionstechnik",
 				"bezeichnungW": "FS Technik/Aufbaubildungsgang Digitale Produktionstechnik",
-				"gueltigVon": null,
+				"gueltigVon": 2017,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1121,7 +1316,7 @@
 				"bezeichnung": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik (Schulversuch)",
 				"bezeichnungM": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik (Schulversuch)",
 				"bezeichnungW": "FS Technik/Automatisierungstechnik mit Schwerpunkt digitale Produktionstechnik (Schulversuch)",
-				"gueltigVon": null,
+				"gueltigVon": 2020,
 				"gueltigBis": null
 			} ]
 		}, {
@@ -1140,23 +1335,6 @@
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": 2022,
 				"gueltigBis": null
-			} ]
-		}, {
-			"schluessel": "999",
-			"schluessel2": "01",
-			"historie": [ {
-				"id": 1543000,
-				"istAusgelaufen": true,
-				"berufsfeldGruppe": "X",
-				"berufsfeld": "XX",
-				"ebene1": null,
-				"ebene2": null,
-				"ebene3": null,
-				"bezeichnung": "Sonstiger Bildungsgang",
-				"bezeichnungM": "Sonstiger Bildungsgang",
-				"bezeichnungW": "Sonstiger Bildungsgang",
-				"gueltigVon": null,
-				"gueltigBis": 2010
 			} ]
 		}
 	]

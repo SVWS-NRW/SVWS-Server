@@ -4,6 +4,7 @@ import { StundenplanblockungManagerLehrkraftMenge } from '../../../core/utils/st
 import { StundenplanblockungManagerLerngruppeMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerLerngruppeMenge';
 import { StundenplanblockungManagerRaumMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerRaumMenge';
 import { StundenplanblockungManagerKopplungMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKopplungMenge';
+import { Class } from '../../../java/lang/Class';
 import { StundenplanblockungManagerSchule } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerSchule';
 import { StundenplanblockungManagerStatistik } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerStatistik';
 import { StundenplanblockungManagerKlasseMenge } from '../../../core/utils/stundenplanblockung/StundenplanblockungManagerKlasseMenge';
@@ -120,6 +121,8 @@ export class StundenplanblockungManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManager'].includes(name);
 	}
+
+	public static class = new Class<StundenplanblockungManager>('de.svws_nrw.core.utils.stundenplanblockung.StundenplanblockungManager');
 
 }
 

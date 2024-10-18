@@ -1,8 +1,7 @@
 package de.svws_nrw.data.schule;
 
 import de.svws_nrw.core.data.schule.ReligionEintrag;
-import de.svws_nrw.core.data.schule.ReligionKatalogEintrag;
-import de.svws_nrw.core.types.schule.Religion;
+import de.svws_nrw.asd.types.schule.Religion;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
@@ -134,8 +133,8 @@ public final class DataReligionen extends DataManager<Long> {
 			Map.entry("kuerzel", (conn, dto, value, map) -> {
 				dto.StatistikKrz = JSONMapper.convertToString(value, true, true, Schema.tab_K_Religion.col_StatistikKrz.datenlaenge());
 				if (dto.StatistikKrz != null) {
-					final ReligionKatalogEintrag rke = Religion.getByKuerzel(dto.StatistikKrz).daten;
-					if (rke == null)
+					final Religion r = Religion.data().getWertByKuerzel(dto.StatistikKrz);
+					if (r == null)
 						throw new ApiOperationException(Status.NOT_FOUND,
 								"Eine Religion mit dem  Kürzel " + dto.StatistikKrz + " existiert in der amtlichen Schulstatistik nicht.");
 				}
@@ -158,9 +157,7 @@ public final class DataReligionen extends DataManager<Long> {
 
 	private static final Set<String> requiredCreateAttributes = Set.of("kuerzel");
 
-	private final ObjLongConsumer<DTOKonfession> initDTO = (dto, id) -> {
-		dto.ID = id;
-	};
+	private final ObjLongConsumer<DTOKonfession> initDTO = (dto, id) -> dto.ID = id;
 
 
 	/**

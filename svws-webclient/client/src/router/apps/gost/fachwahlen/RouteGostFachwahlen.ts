@@ -1,6 +1,7 @@
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
 
-import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
+import type { DeveloperNotificationException} from "@core";
+import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 import { routeGost, type RouteGost} from "~/router/apps/gost/RouteGost";
@@ -20,6 +21,8 @@ import type { GostFachwahlenProps } from "~/components/gost/fachwahlen/SGostFach
 import { RouteManager } from "~/router/RouteManager";
 import { routeSchuelerLaufbahnplanung } from "../../schueler/laufbahnplanung/RouteSchuelerLaufbahnplanung";
 import { routeApp } from "../../RouteApp";
+import { schulformenGymOb } from "~/router/RouteHelper";
+import { routeError } from "~/router/error/RouteError";
 
 
 const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahlen.vue");
@@ -27,7 +30,7 @@ const SGostFachwahlen = () => import("~/components/gost/fachwahlen/SGostFachwahl
 export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, RouteGost> {
 
 	public constructor() {
-		super(Schulform.getMitGymOb(), [
+		super(schulformenGymOb, [
 			BenutzerKompetenz.ABITUR_ANSEHEN_ALLGEMEIN,
 			BenutzerKompetenz.ABITUR_ANSEHEN_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
@@ -55,23 +58,29 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (params?.abiturjahr instanceof Array)
-			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = (params === undefined) || !params.abiturjahr ? null : parseInt(params.abiturjahr);
-		if ((abiturjahr === null) || (abiturjahr === -1))
-			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
-		return false;
+		try {
+			const { abiturjahr } = params !== undefined ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
+			if ((abiturjahr === undefined) || (abiturjahr === -1))
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
+			return false;
+		} catch(e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to_params.abiturjahr instanceof Array)
-			return new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
-		const abiturjahr = (to_params.abiturjahr === undefined) ? undefined : parseInt(to_params.abiturjahr);
-		if (abiturjahr === undefined || abiturjahr === -1)
-			return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: routeGost.data.mapAbiturjahrgaenge.values().next().value.abiturjahr }};
-		await this.data.setEintrag(abiturjahr);
-		if (to.name === this.name)
-			return this.defaultChild!.getRoute(abiturjahr);
+		try {
+			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
+			if (abiturjahr === undefined || abiturjahr === -1) {
+				const [ jahrgang ] = routeGost.data.mapAbiturjahrgaenge.values();
+				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: jahrgang.abiturjahr }};
+			}
+			await this.data.setEintrag(abiturjahr);
+			if (to.name === this.name)
+				return this.defaultChild!.getRoute(abiturjahr);
+		} catch (e) {
+			return routeError.getRoute(e as DeveloperNotificationException);
+		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
@@ -89,6 +98,7 @@ export class RouteGostFachwahlen extends RouteNode<RouteDataGostFachwahlen, Rout
 	public getProps(to: RouteLocationNormalized): GostFachwahlenProps {
 		return {
 			fachwahlstatistik: this.data.fachwahlstatistik,
+			faecherManager: routeGost.data.faecherManager,
 			doSelect: this.data.doSelect,
 			selected: () => this.data.auswahl,
 		};

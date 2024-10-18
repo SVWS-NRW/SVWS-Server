@@ -1,76 +1,74 @@
 <template>
-	<svws-ui-content-card>
-		<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns="cols" has-background>
-			<template #header>
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
-						<span>Angebotene Fächer</span>
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider col-span-2" role="columnheader">
-						Leitfächer
-					</div>
-					<div class="svws-ui-td svws-divider svws-align-center col-span-6" role="columnheader">
-						Wählbar
-					</div>
-					<div class="svws-ui-td svws-align-center col-span-2" role="columnheader">
-						Abitur
-					</div>
+	<svws-ui-table :items="faecherManager().faecher()" :no-data="false" :columns has-background scroll class="h-full">
+		<template #header>
+			<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-td svws-divider col-span-4" role="columnheader">
+					<span>Angebotene Fächer</span>
 				</div>
-				<div class="svws-ui-tr" role="row">
-					<div class="svws-ui-td">
-						Kürzel
-					</div>
-					<div class="svws-ui-td">
-						Bezeichnung
-					</div>
-					<div class="svws-ui-td svws-align-center">
-						<span class="svws-no-padding">Neu</span>
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider">
-						<svws-ui-tooltip>
-							<span>WS</span>
-							<template #content>
-								Wochenstunden
-							</template>
-						</svws-ui-tooltip>
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						EF.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						EF.2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						Q1.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q1.2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						Q2.1
-					</div>
-					<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
-						Q2.2
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						GK
-					</div>
-					<div class="svws-ui-td svws-align-center svws-no-padding">
-						LK
-					</div>
+				<div class="svws-ui-td svws-align-center svws-divider col-span-2" role="columnheader">
+					Leitfächer
 				</div>
-			</template>
-			<template #rowCustom="{ row: fach }">
-				<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr="abiturjahr" :patch-fach="patchFach" :faecher-manager="faecherManager" />
-			</template>
-		</svws-ui-table>
-	</svws-ui-content-card>
+				<div class="svws-ui-td svws-divider svws-align-center col-span-6" role="columnheader">
+					Wählbar
+				</div>
+				<div class="svws-ui-td svws-align-center col-span-2" role="columnheader">
+					Abitur
+				</div>
+			</div>
+			<div class="svws-ui-tr" role="row">
+				<div class="svws-ui-td">
+					Kürzel
+				</div>
+				<div class="svws-ui-td">
+					Bezeichnung
+				</div>
+				<div class="svws-ui-td svws-align-center">
+					<span class="svws-no-padding">Neu</span>
+				</div>
+				<div class="svws-ui-td svws-align-center svws-divider">
+					<svws-ui-tooltip>
+						<span>WS</span>
+						<template #content>
+							Wochenstunden
+						</template>
+					</svws-ui-tooltip>
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					1
+				</div>
+				<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+					2
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					EF.1
+				</div>
+				<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+					EF.2
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					Q1.1
+				</div>
+				<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+					Q1.2
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					Q2.1
+				</div>
+				<div class="svws-ui-td svws-align-center svws-divider svws-no-padding">
+					Q2.2
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					GK
+				</div>
+				<div class="svws-ui-td svws-align-center svws-no-padding">
+					LK
+				</div>
+			</div>
+		</template>
+		<template #rowCustom="{ row: fach }">
+			<s-row-gost-faecher :key="fach.hashCode()" :fach-id="fach.id" :abiturjahr :patch-fach :faecher-manager :hat-update-kompetenz />
+		</template>
+	</svws-ui-table>
 </template>
 
 <script setup lang="ts">
@@ -82,9 +80,10 @@
 		faecherManager: () => GostFaecherManager;
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
+		hatUpdateKompetenz: boolean;
 	}>();
 
-	const cols: DataTableColumn[] = [
+	const columns: DataTableColumn[] = [
 		{ key: "Kuerzel", label: "Kürzel", span: 0.25, minWidth: 5 },
 		{ key: "Fach", label: "Fach", span: 1, minWidth: 12},
 		{ key: "Neu", label: "Neu", align: 'center', span: 0.1, minWidth: 2.5 },

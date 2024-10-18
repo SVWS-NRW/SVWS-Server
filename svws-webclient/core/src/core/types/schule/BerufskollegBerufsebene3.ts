@@ -1,6 +1,7 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { BerufskollegBerufsebeneKatalogEintrag } from '../../../core/data/schule/BerufskollegBerufsebeneKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
+import { Class } from '../../../java/lang/Class';
 
 export class BerufskollegBerufsebene3 extends JavaEnum<BerufskollegBerufsebene3> {
 
@@ -478,6 +479,8 @@ export class BerufskollegBerufsebene3 extends JavaEnum<BerufskollegBerufsebene3>
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.BerufskollegBerufsebene3', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<BerufskollegBerufsebene3>('de.svws_nrw.core.types.schule.BerufskollegBerufsebene3');
 
 }
 

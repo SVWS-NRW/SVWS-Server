@@ -3,6 +3,7 @@ import { KursblockungAlgorithmusPermanentK, cast_de_svws_nrw_core_kursblockung_K
 import { Random } from '../../java/util/Random';
 import { GostBlockungsdatenManager } from '../../core/utils/gost/GostBlockungsdatenManager';
 import { KursblockungDynDaten } from '../../core/kursblockung/KursblockungDynDaten';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 
@@ -68,6 +69,8 @@ export class KursblockungAlgorithmusPermanentKOptimiereBest extends Kursblockung
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentK', 'de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKOptimiereBest'].includes(name);
 	}
+
+	public static class = new Class<KursblockungAlgorithmusPermanentKOptimiereBest>('de.svws_nrw.core.kursblockung.KursblockungAlgorithmusPermanentKOptimiereBest');
 
 }
 

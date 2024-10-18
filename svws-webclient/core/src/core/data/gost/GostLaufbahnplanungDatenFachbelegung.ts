@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
+import { Class } from '../../../java/lang/Class';
 
 export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 
@@ -35,6 +36,8 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung'].includes(name);
 	}
+
+	public static class = new Class<GostLaufbahnplanungDatenFachbelegung>('de.svws_nrw.core.data.gost.GostLaufbahnplanungDatenFachbelegung');
 
 	public static transpilerFromJSON(json : string): GostLaufbahnplanungDatenFachbelegung {
 		const obj = JSON.parse(json) as Partial<GostLaufbahnplanungDatenFachbelegung>;

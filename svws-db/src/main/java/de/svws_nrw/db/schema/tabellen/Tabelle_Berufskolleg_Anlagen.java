@@ -3,7 +3,7 @@ package de.svws_nrw.db.schema.tabellen;
 import java.util.Arrays;
 import java.util.Collection;
 
-import de.svws_nrw.core.types.schule.BerufskollegAnlage;
+import de.svws_nrw.asd.types.schule.BerufskollegAnlage;
 import de.svws_nrw.db.schema.SchemaDatentypen;
 import de.svws_nrw.db.schema.SchemaRevisionen;
 import de.svws_nrw.db.schema.SchemaTabelle;
@@ -55,10 +55,10 @@ public class Tabelle_Berufskolleg_Anlagen extends SchemaTabelle {
 		setJavaSubPackage("schild.schule");
 		setJavaClassName("DTOBerufskollegAnlagen");
 		setJavaComment("Informationen Anlagen des Berufskollegs");
-		setCoreType(new SchemaTabelleCoreType(this, BerufskollegAnlage.class, BerufskollegAnlage.VERSION, rev -> Arrays
+		setCoreType(new SchemaTabelleCoreType(this, BerufskollegAnlage.class, BerufskollegAnlage.data().getVersion(), rev -> Arrays
 				.stream(BerufskollegAnlage.values())
-				.map(a -> Arrays.stream(a.historie)
-						.map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.bezeichnung + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
+				.map(a -> a.historie().stream()
+						.map(h -> h.id + ",'" + h.kuerzel + "'" + ",'" + h.text + "'" + "," + h.gueltigVon + "," + h.gueltigBis)
 						.toList())
 				.flatMap(Collection::stream).toList()));
 	}

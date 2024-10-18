@@ -1,4 +1,5 @@
 import "./assets/styles/index.css";
+import "./assets/styles/colors.css";
 
 export { default as SvwsUiActionButton } from "./components/SvwsUiActionButton.vue"
 export { default as SvwsUiButton } from "./components/SvwsUiButton.vue";
@@ -30,17 +31,29 @@ export { default as SvwsUiHeader } from "./components/App/SvwsUiHeader.vue";
 export { default as SvwsUiSubNav } from "./components/App/SvwsUiSubNav.vue";
 export { default as SvwsUiContentCard } from "./components/App/SvwsUiContentCard.vue";
 export { default as SvwsUiModal } from "./components/App/SvwsUiModal.vue";
+export { default as SvwsUiCheckpointModal } from "./components/App/SvwsUiCheckpointModal.vue";
 // App.Sidebar
 export { default as SvwsUiMenu } from "./components/App/Sidebar/SvwsUiMenu.vue";
 export { default as SvwsUiMenuHeader } from "./components/App/Sidebar/SvwsUiMenuHeader.vue";
 export { default as SvwsUiMenuItem } from "./components/App/Sidebar/SvwsUiMenuItem.vue";
 export { default as SvwsUiSecondaryMenu } from "./components/App/Sidebar/SvwsUiSecondaryMenu.vue";
+export { default as SvwsUiSecondaryMenuNavigation } from "./components/App/Sidebar/SvwsUiSecondaryMenuNavigation.vue";
 // App.Router
+export { default as SvwsUiTabBar } from "./components/App/SvwsUiTabBar.vue";
+export { default as SvwsUiTabBarVertical } from "./components/App/SvwsUiTabBarVertical.vue";
+// DEPRECATED
 export { default as SvwsUiRouterTabBar } from "./components/App/SvwsUiRouterTabBar.vue";
 export { default as SvwsUiRouterTabBarButton } from "./components/App/SvwsUiRouterTabBarButton.vue";
 export { default as SvwsUiRouterVerticalTabBar } from "./components/App/SvwsUiRouterVerticalTabBar.vue";
-// DEPRECATED
 
 
 // Type exorts
-export type { DataTableColumn, InputDataType, SortByAndOrder } from "./types";
+export type { DataTableColumn, SortByAndOrder } from "./types";
+export type { TabData } from "./components/App/TabData";
+
+// Class exports
+export { TabManager } from "./components/App/TabManager";
+export { Checkpoint } from "./components/Checkpoint";
+
+// Enums
+export { ViewType } from "./components/ViewType";

@@ -3,6 +3,7 @@ import { GEAbschlussFach } from '../../../core/data/abschluss/GEAbschlussFach';
 import { StringBuilder } from '../../../java/lang/StringBuilder';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { GELeistungsdifferenzierteKursart } from '../../../core/types/ge/GELeistungsdifferenzierteKursart';
 import { AbschlussManager } from '../../../core/abschluss/AbschlussManager';
 import type { Predicate } from '../../../java/util/function/Predicate';
@@ -216,6 +217,8 @@ export class AbschlussFaecherGruppe extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe'].includes(name);
 	}
+
+	public static class = new Class<AbschlussFaecherGruppe>('de.svws_nrw.core.abschluss.ge.AbschlussFaecherGruppe');
 
 }
 

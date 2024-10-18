@@ -10,7 +10,7 @@ import de.svws_nrw.core.abschluss.gost.GostBelegungsfehler;
 import de.svws_nrw.core.data.gost.AbiturFachbelegung;
 import de.svws_nrw.core.data.gost.AbiturFachbelegungHalbjahr;
 import de.svws_nrw.core.data.gost.GostFach;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
@@ -211,10 +211,10 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 			addFehler(GostBelegungsfehler.ZK_13);
 
 		// Prüfe, ob der Zusatzkurs in dem Fach angeboten wird.
-		final @NotNull ZulaessigesFach zFach = ZulaessigesFach.getByKuerzelASD(fach.kuerzel);
-		if ((zFach == ZulaessigesFach.GE) && (!manager.istErlaubtZusatzkursGE()))
+		final Fach zFach = Fach.getBySchluesselOrDefault(fach.kuerzel);
+		if ((zFach == Fach.GE) && (!manager.istErlaubtZusatzkursGE()))
 			addFehler(GostBelegungsfehler.ZK_14);
-		if ((zFach == ZulaessigesFach.SW) && (!manager.istErlaubtZusatzkursSW()))
+		if ((zFach == Fach.SW) && (!manager.istErlaubtZusatzkursSW()))
 			addFehler(GostBelegungsfehler.ZK_15);
 
 		// Bestimme die Halbjahre des Zusatzkurses
@@ -241,9 +241,9 @@ public final class GesellschaftswissenschaftenUndReligion extends GostBelegpruef
 		}
 		// Prüfe, ob der Beginn des Zusatzkurse der Einstellung bei dem Jahrgang entspricht
 		if (!halbjahre.isEmpty()) {
-			if ((zFach == ZulaessigesFach.GE) && (manager.getBeginnZusatzkursGE() != halbjahre.get(0)))
+			if ((zFach == Fach.GE) && (manager.getBeginnZusatzkursGE() != halbjahre.get(0)))
 				addFehler(GostBelegungsfehler.ZK_16);
-			if ((zFach == ZulaessigesFach.SW) && (manager.getBeginnZusatzkursSW() != halbjahre.get(0)))
+			if ((zFach == Fach.SW) && (manager.getBeginnZusatzkursSW() != halbjahre.get(0)))
 				addFehler(GostBelegungsfehler.ZK_17);
 		}
 	}

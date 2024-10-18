@@ -2,9 +2,11 @@ import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ReformpaedagogikKatalogEintrag } from '../../../core/data/schule/ReformpaedagogikKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 
 export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
@@ -73,7 +75,7 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	/**
 	 * Die Schulformen, bei welchen die Reformpädagogik vorkommt
 	 */
-	private readonly schulformen : Array<ArrayList<Schulform>>;
+	private readonly schulformen : Array<ArrayList<string>>;
 
 	/**
 	 * Erzeugt eine Reformpädagogik in der Aufzählung.
@@ -86,14 +88,11 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 		Reformpaedagogik.all_values_by_name.set(name, this);
 		this.historie = historie;
 		this.daten = historie[historie.length - 1];
-		this.schulformen = Array(historie.length).fill(null);
+		this.schulformen = Array(historie.length).fill(null) as unknown as Array<ArrayList<string>>;
 		for (let i : number = 0; i < historie.length; i++) {
 			this.schulformen[i] = new ArrayList();
-			for (const kuerzel of historie[i].schulformen) {
-				const sf : Schulform | null = Schulform.getByKuerzel(kuerzel);
-				if (sf !== null)
-					this.schulformen[i].add(sf);
-			}
+			for (const kuerzel of historie[i].schulformen)
+				this.schulformen[i].add(kuerzel);
 		}
 	}
 
@@ -154,24 +153,25 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	 *
 	 * @return eine Liste der Schulformen
 	 */
-	public getSchulformen() : List<Schulform> {
+	public getSchulformen() : List<string> {
 		return this.schulformen[this.historie.length - 1];
 	}
 
 	/**
 	 * Liefert alle möglichen Reformpädagogik-Einträge für die angegeben Schulform.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return die bei der Schulform zulässigen Reformpädagogik-Einträge
 	 */
-	public static get(schulform : Schulform | null) : List<Reformpaedagogik> {
+	public static get(schuljahr : number, schulform : Schulform | null) : List<Reformpaedagogik> {
 		const result : ArrayList<Reformpaedagogik> = new ArrayList<Reformpaedagogik>();
 		if (schulform === null)
 			return result;
 		const gliederungen : Array<Reformpaedagogik> = Reformpaedagogik.values();
 		for (const gliederung of gliederungen) {
-			if (gliederung.hasSchulform(schulform))
+			if (gliederung.hasSchulform(schuljahr, schulform))
 				result.add(gliederung);
 		}
 		return result;
@@ -200,16 +200,20 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	/**
 	 * Prüft, ob bei der Schulform diese Reformpädagogik vorkommen kann oder nicht.
 	 *
+	 * @param schuljahr   das Schuljahr, auf welches sich die Abfrage bezieht
 	 * @param schulform   die Schulform
 	 *
 	 * @return true, falls die Reformpädagogik bei der Schulform vorkommen kann und ansonsten false
 	 */
-	public hasSchulform(schulform : Schulform | null) : boolean {
-		if ((schulform === null) || (schulform.daten === null))
+	public hasSchulform(schuljahr : number, schulform : Schulform | null) : boolean {
+		if (schulform === null)
+			return false;
+		const sfe : SchulformKatalogEintrag | null = schulform.daten(schuljahr);
+		if (sfe === null)
 			return false;
 		if (this.daten.schulformen !== null) {
 			for (const sfKuerzel of this.daten.schulformen) {
-				if (JavaObject.equalsTranspiler(sfKuerzel, (schulform.daten.kuerzel)))
+				if (JavaObject.equalsTranspiler(sfKuerzel, (sfe.kuerzel)))
 					return true;
 			}
 		}
@@ -244,6 +248,8 @@ export class Reformpaedagogik extends JavaEnum<Reformpaedagogik> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Reformpaedagogik', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Reformpaedagogik>('de.svws_nrw.core.types.schule.Reformpaedagogik');
 
 }
 

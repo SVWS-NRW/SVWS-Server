@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 
-	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
 	import { computed } from "vue";
+	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, SchuelerBetriebsdaten } from "@core";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
@@ -64,12 +64,12 @@
 	});
 
 	const praktikum = computed<boolean>({
-		get: () => props.betrieb.praktikum === null ? false : props.betrieb.praktikum,
+		get: () => props.betrieb.praktikum,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ praktikum: value }, props.betrieb.id)
 	});
 
 	const anschreiben = computed<boolean>({
-		get: () => props.betrieb.allgadranschreiben === null ? false : props.betrieb.allgadranschreiben,
+		get: () => props.betrieb.allgadranschreiben,
 		set: (value) => void props.patchSchuelerBetriebsdaten({ allgadranschreiben: value }, props.betrieb.id)
 	});
 

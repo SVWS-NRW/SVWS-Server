@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursAufteilung;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostKursart;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
@@ -233,14 +233,15 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		if ((fach.StatistikFach == ZulaessigesFach.VF) || (!fach.IstOberstufenFach))
-			throw new ApiOperationException(Status.CONFLICT);
+		final Fach fachStatistik = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
+		if ((fachStatistik == Fach.VF) || (!fach.IstOberstufenFach))
+			throw new ApiOperationException(Status.CONFLICT, "Es handelt sich nicht um ein Fach der gymnasialen Oberstufe.");
 		// Bestimme die Kursart
 		GostKursart kursart = GostKursart.fromID(idKursart);
 		if (kursart == GostKursart.GK) {  // Korrigiere ggf. für Vertiefungs- und Projektkurse
-			if (fach.StatistikFach == ZulaessigesFach.VX)
+			if (fachStatistik == Fach.VX)
 				kursart = GostKursart.VTF;
-			else if (fach.StatistikFach == ZulaessigesFach.PX)
+			else if (fachStatistik == Fach.PX)
 				kursart = GostKursart.PJK;
 		}
 		// Bestimme die ID, für welche der Datensatz eingefügt wird
@@ -470,14 +471,15 @@ public final class DataGostBlockungKurs extends DataManager<Long> {
 		final DTOFach fach = conn.queryByKey(DTOFach.class, idFach);
 		if (fach == null)
 			throw new ApiOperationException(Status.NOT_FOUND);
-		if ((fach.StatistikFach == ZulaessigesFach.VF) || (!fach.IstOberstufenFach))
-			throw new ApiOperationException(Status.CONFLICT);
+		final Fach fachStatistik = Fach.getBySchluesselOrDefault(fach.StatistikKuerzel);
+		if ((fachStatistik == Fach.VF) || (!fach.IstOberstufenFach))
+			throw new ApiOperationException(Status.CONFLICT, "Es handelt sich nicht um ein Fach der gymnasialen Oberstufe.");
 		// Bestimme die Kursart
 		GostKursart kursart = GostKursart.fromID(idKursart);
 		if (kursart == GostKursart.GK) {
-			if (fach.StatistikFach == ZulaessigesFach.VX)
+			if (fachStatistik == Fach.VX)
 				kursart = GostKursart.VTF;
-			if (fach.StatistikFach == ZulaessigesFach.PX)
+			if (fachStatistik == Fach.PX)
 				kursart = GostKursart.PJK;
 		}
 		// Bestimme die Kurse der Blockung, welche das Kriterium erfüllen und löschen Kurs mit der höchsten Kursnummer

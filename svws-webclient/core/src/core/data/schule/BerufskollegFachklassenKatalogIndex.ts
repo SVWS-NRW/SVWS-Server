@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule/BerufskollegFachklassenKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 
@@ -32,6 +33,8 @@ export class BerufskollegFachklassenKatalogIndex extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogIndex'].includes(name);
 	}
+
+	public static class = new Class<BerufskollegFachklassenKatalogIndex>('de.svws_nrw.core.data.schule.BerufskollegFachklassenKatalogIndex');
 
 	public static transpilerFromJSON(json : string): BerufskollegFachklassenKatalogIndex {
 		const obj = JSON.parse(json) as Partial<BerufskollegFachklassenKatalogIndex>;

@@ -336,8 +336,8 @@ public final class ABPSchuldaten {
 			return lupoSchuldaten;
 		final ABPSchuldaten schuldaten = new ABPSchuldaten();
 		schuldaten.Schulnr = "" + schule.SchulNr;
-		schuldaten.SchulformKrz = ((schule.Schulform == null) || (schule.Schulform.daten == null)) ? null : schule.Schulform.daten.kuerzel;
-		schuldaten.SchulformBez = ((schule.Schulform == null) || (schule.Schulform.daten == null)) ? null : schule.Schulform.daten.bezeichnung;
+		schuldaten.SchulformKrz = schule.SchulformKuerzel;
+		schuldaten.SchulformBez = schule.SchulformBez;
 		schuldaten.Bezeichnung1 = schule.Bezeichnung1;
 		schuldaten.Bezeichnung2 = schule.Bezeichnung2;
 		schuldaten.Bezeichnung3 = schule.Bezeichnung3;

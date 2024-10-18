@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
 import { ArrayList } from '../../../../java/util/ArrayList';
 import type { List } from '../../../../java/util/List';
+import { Class } from '../../../../java/lang/Class';
 
 export class GostKlausurenUpdate extends JavaObject {
 
@@ -15,6 +16,9 @@ export class GostKlausurenUpdate extends JavaObject {
 	public listKlausurtermineNachschreiberZugelassenFalse : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Default-Konstruktor
+	 */
 	public constructor() {
 		super();
 	}
@@ -26,6 +30,8 @@ export class GostKlausurenUpdate extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate'].includes(name);
 	}
+
+	public static class = new Class<GostKlausurenUpdate>('de.svws_nrw.core.data.gost.klausurplanung.GostKlausurenUpdate');
 
 	public static transpilerFromJSON(json : string): GostKlausurenUpdate {
 		const obj = JSON.parse(json) as Partial<GostKlausurenUpdate>;

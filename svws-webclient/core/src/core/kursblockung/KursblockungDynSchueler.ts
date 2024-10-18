@@ -8,6 +8,7 @@ import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 import { Random } from '../../java/util/Random';
 import { KursblockungMatrix } from '../../core/kursblockung/KursblockungMatrix';
+import { Class } from '../../java/lang/Class';
 import { Arrays } from '../../java/util/Arrays';
 import { HashSet } from '../../java/util/HashSet';
 
@@ -646,6 +647,8 @@ export class KursblockungDynSchueler extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynSchueler'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynSchueler>('de.svws_nrw.core.kursblockung.KursblockungDynSchueler');
 
 }
 

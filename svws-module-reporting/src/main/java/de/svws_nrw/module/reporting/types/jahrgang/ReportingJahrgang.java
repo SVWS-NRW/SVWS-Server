@@ -1,16 +1,13 @@
 package de.svws_nrw.module.reporting.types.jahrgang;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.svws_nrw.module.reporting.types.klasse.ReportingKlasse;
 import de.svws_nrw.module.reporting.types.schueler.ReportingSchueler;
+import de.svws_nrw.module.reporting.types.schule.ReportingSchuljahresabschnitt;
 
 /**
- * <p>Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.</p>
- * <p>Sie enthält die Daten zum Jahrgang so wie dessen Schüler.</p>
- * <p>Diese Klasse ist als reiner Datentyp konzipiert, d. h. sie hat keine Anbindung an die Datenbank. Sie dient als Super-Klasse
- * einer Proxy-Klasse, welche die Getter in Teilen überschreibt und dort die Daten aus der Datenbank nachlädt.</p>
+ * Basis-Klasse im Rahmen des Reportings für Daten vom Typ Jahrgang.
  */
 public class ReportingJahrgang {
 
@@ -24,7 +21,7 @@ public class ReportingJahrgang {
 	protected Long gueltigVon;
 
 	/** Die Daten des Folgejahrgangs. */
-	protected ReportingJahrgang folgejahrgang = null;
+	protected ReportingJahrgang folgejahrgang;
 
 	/** Die ID des Jahrgangs. */
 	protected long id;
@@ -33,7 +30,7 @@ public class ReportingJahrgang {
 	protected Long idFolgejahrgang;
 
 	/** Liste der Klassen des Jahrgangs. */
-	protected List<ReportingKlasse> klassen = new ArrayList<>();
+	protected List<ReportingKlasse> klassen;
 
 	/** Das Kürzel des Jahrgangs. */
 	protected String kuerzel;
@@ -48,7 +45,10 @@ public class ReportingJahrgang {
 	protected boolean istSichtbar;
 
 	/** Liste der Schüler des Jahrgangs. */
-	protected List<ReportingSchueler> schueler = new ArrayList<>();
+	protected List<ReportingSchueler> schueler;
+
+	/** Der Schuljahresabschnitt zu diesem Jahrgang. */
+	protected ReportingSchuljahresabschnitt schuljahresabschnitt;
 
 	/** Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge. */
 	protected int sortierung;
@@ -67,11 +67,13 @@ public class ReportingJahrgang {
 	 * @param kuerzelStatistik Das dem Jahrgang zugeordnete Statistik-Kürzel.
 	 * @param istSichtbar Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
 	 * @param schueler Liste der Schüler des Jahrgangs.
+	 * @param schuljahresabschnitt Der Schuljahresabschnitt zu diesem Jahrgang.
 	 * @param sortierung Die Sortierreihenfolge des Jahrgangs in der Liste der Jahrgänge.
 	 */
 	public ReportingJahrgang(final String bezeichnung, final Long gueltigBis, final Long gueltigVon, final ReportingJahrgang folgejahrgang, final long id,
 			final Long idFolgejahrgang, final List<ReportingKlasse> klassen, final String kuerzel, final String kuerzelSchulgliederung,
-			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler, final int sortierung) {
+			final String kuerzelStatistik, final boolean istSichtbar, final List<ReportingSchueler> schueler,
+			final ReportingSchuljahresabschnitt schuljahresabschnitt, final int sortierung) {
 		this.bezeichnung = bezeichnung;
 		this.gueltigBis = gueltigBis;
 		this.gueltigVon = gueltigVon;
@@ -84,6 +86,7 @@ public class ReportingJahrgang {
 		this.kuerzelStatistik = kuerzelStatistik;
 		this.istSichtbar = istSichtbar;
 		this.schueler = schueler;
+		this.schuljahresabschnitt = schuljahresabschnitt;
 		this.sortierung = sortierung;
 	}
 
@@ -185,6 +188,14 @@ public class ReportingJahrgang {
 	 */
 	public List<ReportingSchueler> schueler() {
 		return schueler;
+	}
+
+	/**
+	 * Der Schuljahresabschnitt zu diesem Jahrgang.
+	 * @return Inhalt des Feldes schuljahresabschnitt
+	 */
+	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
+		return schuljahresabschnitt;
 	}
 
 	/**

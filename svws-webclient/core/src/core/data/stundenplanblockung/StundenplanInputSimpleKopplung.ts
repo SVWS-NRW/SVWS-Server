@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanInputSimpleKopplung extends JavaObject {
 
@@ -30,6 +31,8 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKopplung'].includes(name);
 	}
+
+	public static class = new Class<StundenplanInputSimpleKopplung>('de.svws_nrw.core.data.stundenplanblockung.StundenplanInputSimpleKopplung');
 
 	public static transpilerFromJSON(json : string): StundenplanInputSimpleKopplung {
 		const obj = JSON.parse(json) as Partial<StundenplanInputSimpleKopplung>;

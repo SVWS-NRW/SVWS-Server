@@ -5,7 +5,8 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["./src/*"],
-		}
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
 	},
 	"include": [
 		"*.ts",
@@ -13,7 +14,8 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"../ui/src/",
-		"../components/src/"
+		"../components/src/",
+		"../core/src/**/*.ts",
 	],
 	"exclude": [
 		"tailwind.config.js",

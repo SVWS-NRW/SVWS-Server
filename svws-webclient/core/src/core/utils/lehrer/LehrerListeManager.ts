@@ -1,10 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap2D } from '../../../core/adt/map/HashMap2D';
-import { LehrerPersonaldaten } from '../../../core/data/lehrer/LehrerPersonaldaten';
+import { LehrerPersonaldaten } from '../../../asd/data/lehrer/LehrerPersonaldaten';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
-import { LehrerStammdaten } from '../../../core/data/lehrer/LehrerStammdaten';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { PersonalTyp } from '../../../core/types/PersonalTyp';
@@ -13,13 +13,14 @@ import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import type { JavaFunction } from '../../../java/util/function/JavaFunction';
 import { LehrerListeEintrag } from '../../../core/data/lehrer/LehrerListeEintrag';
 import { LehrerUtils } from '../../../core/utils/lehrer/LehrerUtils';
-import { LehrerPersonalabschnittsdaten } from '../../../core/data/lehrer/LehrerPersonalabschnittsdaten';
+import { LehrerPersonalabschnittsdaten } from '../../../asd/data/lehrer/LehrerPersonalabschnittsdaten';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
 import type { JavaMap } from '../../../java/util/JavaMap';
-import { Schuljahresabschnitt } from '../../../core/data/schule/Schuljahresabschnitt';
-import { Pair } from '../../../core/adt/Pair';
+import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import { Pair } from '../../../asd/adt/Pair';
 
 export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintrag, LehrerStammdaten> {
 
@@ -298,6 +299,8 @@ export class LehrerListeManager extends AuswahlManager<number, LehrerListeEintra
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.AuswahlManager', 'de.svws_nrw.core.utils.lehrer.LehrerListeManager'].includes(name);
 	}
+
+	public static class = new Class<LehrerListeManager>('de.svws_nrw.core.utils.lehrer.LehrerListeManager');
 
 }
 

@@ -3,6 +3,7 @@ package de.svws_nrw.db.utils.app;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.base.shell.CommandLineException;
 import de.svws_nrw.base.shell.CommandLineOption;
 import de.svws_nrw.base.shell.CommandLineParser;
@@ -33,6 +34,7 @@ public class ImportKurs42Blockung {
 	 */
 	public static void main(final String[] args) {
 		logger.addConsumer(new LogConsumerConsole());
+		ASDCoreTypeUtils.initAll();
 
 		// Lese die Kommandozeilenparameter ein
 		final CommandLineParser cmdLine = new CommandLineParser(args, logger);
@@ -52,14 +54,7 @@ public class ImportKurs42Blockung {
 			final DBConfig cfg = SVWSKonfiguration.get().getDBConfig(schema);
 
 			// Lege einen Benutzer für den Datenbank-Zugriff an
-			final Benutzer user;
-			try {
-				user = Benutzer.create(cfg);
-			} catch (@SuppressWarnings("unused") final DBException db) {
-				logger.logLn("Fehler beim Erstellen der Datenbankverbindung zur SVWS-DB. Sind die Anmeldedaten korrekt?");
-				return;
-			}
-
+			final Benutzer user = Benutzer.create(cfg);
 			// Lese den Pfad für das Verzeichnis der Kurs42-Dateien ein
 			final String filename = cmdLine.getValue("d", "");
 			final Path path = Paths.get(filename);
@@ -67,6 +62,8 @@ public class ImportKurs42Blockung {
 			// Führe den Import aus
 			try (DBEntityManager conn = user.getEntityManager()) {
 				DataKurs42.importKurs42(conn, logger, path);
+			} catch (@SuppressWarnings("unused") final DBException db) {
+				logger.logLn("Fehler beim Erstellen der Datenbankverbindung zur SVWS-DB. Sind die Anmeldedaten korrekt?");
 			}
 		} catch (final CommandLineException e) {
 			cmdLine.printOptionsAndExit(1, e.getMessage());

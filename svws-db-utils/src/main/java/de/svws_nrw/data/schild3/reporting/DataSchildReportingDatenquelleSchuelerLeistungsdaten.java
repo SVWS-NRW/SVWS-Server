@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import de.svws_nrw.asd.data.NoteKatalogEintrag;
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
+import de.svws_nrw.asd.types.Note;
 import de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerLeistungsdaten;
 import de.svws_nrw.core.types.schild3.SchildReportingAttributTyp;
 import de.svws_nrw.db.DBEntityManager;
@@ -36,10 +39,10 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 	@Override
 	List<SchildReportingSchuelerLeistungsdaten> getDaten(final DBEntityManager conn, final List<Long> params) throws ApiOperationException {
 		// Prüfe, ob die Lernabschnittsdaten in der DB vorhanden sind
-		final Map<Long, DTOSchuelerLernabschnittsdaten> abschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, params)
+		final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = conn.queryByKeyList(DTOSchuelerLernabschnittsdaten.class, params)
 				.stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		for (final Long abschnittID : params)
-			if (abschnitte.get(abschnittID) == null)
+			if (mapAbschnitte.get(abschnittID) == null)
 				throw new ApiOperationException(Status.NOT_FOUND,
 						"Parameter der Abfrage ungültig: Ein Schülerlernabschnitt mit der ID " + abschnittID + " existiert nicht.");
 
@@ -76,6 +79,8 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 							String.format(meldungsvorlageDatenInkonsistent, "Fachlehrer", dto.Fachlehrer_ID, dto.ID));
 				lehrerKuerzel = dtoLehrer.Kuerzel;
 			}
+			final DTOSchuelerLernabschnittsdaten dtoLernabschnitt = mapAbschnitte.get(dto.Abschnitt_ID);
+			final Schuljahresabschnitt abschnitt = conn.getUser().schuleGetSchuljahresabschnittByIdOrDefault(dtoLernabschnitt.Schuljahresabschnitts_ID);
 			final DTOKurs dtoKurs = mapKurse.get(dto.Kurs_ID);
 			final SchildReportingSchuelerLeistungsdaten data = new SchildReportingSchuelerLeistungsdaten();
 			data.id = dto.ID;
@@ -89,9 +94,11 @@ public final class DataSchildReportingDatenquelleSchuelerLeistungsdaten extends 
 			data.kurs = (dtoKurs == null) ? "" : dtoKurs.KurzBez;
 			data.kursart = dto.Kursart;
 			data.kursartAllg = (dtoKurs == null) ? dto.KursartAllg : dtoKurs.KursartAllg;
-			data.note = dto.NotenKrz.text;
-			data.noteKuerzel = dto.NotenKrz.kuerzel;
-			data.notePunkte = dto.NotenKrz.notenpunkte;
+			final Note note = Note.data().getWertByKuerzel(dto.NotenKrz);
+			final NoteKatalogEintrag noteEintrag = note.daten(abschnitt.schuljahr);
+			data.note = noteEintrag.text;
+			data.noteKuerzel = noteEintrag.kuerzel;
+			data.notePunkte = noteEintrag.notenpunkte;
 			data.sortierungAllg = dtoFach.SortierungAllg;
 			data.sortierungSekII = dtoFach.SortierungSekII;
 			result.add(data);

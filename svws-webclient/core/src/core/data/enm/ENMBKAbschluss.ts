@@ -2,6 +2,7 @@ import { JavaObject } from '../../../java/lang/JavaObject';
 import { ENMBKFach } from '../../../core/data/enm/ENMBKFach';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMBKAbschluss extends JavaObject {
 
@@ -82,6 +83,8 @@ export class ENMBKAbschluss extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMBKAbschluss'].includes(name);
 	}
+
+	public static class = new Class<ENMBKAbschluss>('de.svws_nrw.core.data.enm.ENMBKAbschluss');
 
 	public static transpilerFromJSON(json : string): ENMBKAbschluss {
 		const obj = JSON.parse(json) as Partial<ENMBKAbschluss>;

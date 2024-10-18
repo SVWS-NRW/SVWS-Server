@@ -1,16 +1,17 @@
 import { SchuldateiEintrag } from '../../../schulen/v1/data/SchuldateiEintrag';
+import { Class } from '../../../java/lang/Class';
 
 export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
+
+	/**
+	 * Die Schulnummer.
+	 */
+	public schulnummer : string = "";
 
 	/**
 	 * Die ID des Adress-Eintrags.
 	 */
 	public id : number = 0;
-
-	/**
-	 * Die Schulnummer.
-	 */
-	public schulnummer : number = 0;
 
 	/**
 	 * Die Nummer der Liegenschaft der Organisationseinheit
@@ -55,12 +56,12 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	/**
 	 * Der Adresstyp
 	 */
-	public adresstypeid : number | null = null;
+	public adresstypeid : string = "";
 
 	/**
 	 * Das Standortkennzeichen
 	 */
-	public standortkennzeichen : number = 0;
+	public standortkennzeichen : string = "";
 
 	/**
 	 * Das Adresskennzeichnen des Teilstandorts (ein Buchstabe)
@@ -88,18 +89,20 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		return ['de.svws_nrw.schulen.v1.data.SchuldateiEintrag', 'de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitAdresse'].includes(name);
 	}
 
+	public static class = new Class<SchuldateiOrganisationseinheitAdresse>('de.svws_nrw.schulen.v1.data.SchuldateiOrganisationseinheitAdresse');
+
 	public static transpilerFromJSON(json : string): SchuldateiOrganisationseinheitAdresse {
 		const obj = JSON.parse(json) as Partial<SchuldateiOrganisationseinheitAdresse>;
 		const result = new SchuldateiOrganisationseinheitAdresse();
 		result.gueltigab = (obj.gueltigab === undefined) ? null : obj.gueltigab === null ? null : obj.gueltigab;
 		result.gueltigbis = (obj.gueltigbis === undefined) ? null : obj.gueltigbis === null ? null : obj.gueltigbis;
 		result.geaendertam = (obj.geaendertam === undefined) ? null : obj.geaendertam === null ? null : obj.geaendertam;
-		if (obj.id === undefined)
-			throw new Error('invalid json format, missing attribute id');
-		result.id = obj.id;
 		if (obj.schulnummer === undefined)
 			throw new Error('invalid json format, missing attribute schulnummer');
 		result.schulnummer = obj.schulnummer;
+		if (obj.id === undefined)
+			throw new Error('invalid json format, missing attribute id');
+		result.id = obj.id;
 		if (obj.liegenschaft === undefined)
 			throw new Error('invalid json format, missing attribute liegenschaft');
 		result.liegenschaft = obj.liegenschaft;
@@ -124,7 +127,9 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		if (obj.koordinatehochwert === undefined)
 			throw new Error('invalid json format, missing attribute koordinatehochwert');
 		result.koordinatehochwert = obj.koordinatehochwert;
-		result.adresstypeid = (obj.adresstypeid === undefined) ? null : obj.adresstypeid === null ? null : obj.adresstypeid;
+		if (obj.adresstypeid === undefined)
+			throw new Error('invalid json format, missing attribute adresstypeid');
+		result.adresstypeid = obj.adresstypeid;
 		if (obj.standortkennzeichen === undefined)
 			throw new Error('invalid json format, missing attribute standortkennzeichen');
 		result.standortkennzeichen = obj.standortkennzeichen;
@@ -142,8 +147,8 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
 		result += '"strasse" : ' + JSON.stringify(obj.strasse) + ',';
 		result += '"postleitzahl" : ' + JSON.stringify(obj.postleitzahl) + ',';
@@ -152,8 +157,8 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		result += '"qualitaetverortung" : ' + obj.qualitaetverortung.toString() + ',';
 		result += '"koordinaterechtswert" : ' + obj.koordinaterechtswert.toString() + ',';
 		result += '"koordinatehochwert" : ' + obj.koordinatehochwert.toString() + ',';
-		result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid.toString()) + ',';
-		result += '"standortkennzeichen" : ' + obj.standortkennzeichen.toString() + ',';
+		result += '"adresstypeid" : ' + JSON.stringify(obj.adresstypeid) + ',';
+		result += '"standortkennzeichen" : ' + JSON.stringify(obj.standortkennzeichen) + ',';
 		result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen) + ',';
 		result += '"hauptstandortadresse" : ' + JSON.stringify(obj.hauptstandortadresse) + ',';
 		result = result.slice(0, -1);
@@ -172,11 +177,11 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 		if (obj.geaendertam !== undefined) {
 			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
+		if (obj.schulnummer !== undefined) {
+			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
+		}
 		if (obj.id !== undefined) {
 			result += '"id" : ' + obj.id.toString() + ',';
-		}
-		if (obj.schulnummer !== undefined) {
-			result += '"schulnummer" : ' + obj.schulnummer.toString() + ',';
 		}
 		if (obj.liegenschaft !== undefined) {
 			result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
@@ -203,10 +208,10 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 			result += '"koordinatehochwert" : ' + obj.koordinatehochwert.toString() + ',';
 		}
 		if (obj.adresstypeid !== undefined) {
-			result += '"adresstypeid" : ' + ((!obj.adresstypeid) ? 'null' : obj.adresstypeid.toString()) + ',';
+			result += '"adresstypeid" : ' + JSON.stringify(obj.adresstypeid) + ',';
 		}
 		if (obj.standortkennzeichen !== undefined) {
-			result += '"standortkennzeichen" : ' + obj.standortkennzeichen.toString() + ',';
+			result += '"standortkennzeichen" : ' + JSON.stringify(obj.standortkennzeichen) + ',';
 		}
 		if (obj.adresskennzeichen !== undefined) {
 			result += '"adresskennzeichen" : ' + JSON.stringify(obj.adresskennzeichen) + ',';

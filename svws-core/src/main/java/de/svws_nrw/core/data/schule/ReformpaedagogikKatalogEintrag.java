@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import de.svws_nrw.transpiler.TranspilerDTO;
-import de.svws_nrw.core.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulform;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.xml.bind.annotation.XmlRootElement;
@@ -66,7 +66,8 @@ public class ReformpaedagogikKatalogEintrag {
 		this.kuerzel = kuerzel;
 		this.bezeichnung = bezeichnung;
 		for (final @NotNull Schulform schulform : schulformen)
-			this.schulformen.add(schulform.daten.kuerzel);
+			if (!this.schulformen.contains(schulform.name()))
+				this.schulformen.add(schulform.name());
 		this.gueltigVon = gueltigVon;
 		this.gueltigBis = gueltigBis;
 	}

@@ -112,13 +112,13 @@ public final class DataBenutzerliste extends DataManager<Long> {
 	 */
 	private final Comparator<BenutzerListeEintrag> dataComparator = (a, b) -> {
 		final Collator collator = Collator.getInstance(Locale.GERMAN);
-		if ((a.anzeigename == null) && (b.anzeigename != null))
+		if ((a.name == null) && (b.name != null))
 			return -1;
-		else if ((a.anzeigename != null) && (b.anzeigename == null))
+		else if ((a.name != null) && (b.name == null))
 			return 1;
-		else if ((a.anzeigename == null) && (b.anzeigename == null))
+		else if ((a.name == null) && (b.name == null))
 			return 0;
-		return collator.compare(a.anzeigename, b.anzeigename);
+		return collator.compare(a.name, b.name);
 	};
 
 }

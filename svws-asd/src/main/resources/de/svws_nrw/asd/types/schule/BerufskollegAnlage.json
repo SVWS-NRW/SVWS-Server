@@ -1,0 +1,92 @@
+{
+	"version": 1,
+	"daten": [ {
+		"bezeichner": "A",
+		"idHistorie": 1,
+		"historie": [ {
+			"id" : 1000,
+			"schluessel": "1", 
+			"kuerzel": "A", 
+			"text": "Fachklassen duales System und Ausbildungsvorbereitung", 
+			"gueltigVon": null, 
+			"gueltigBis": null
+		} ]
+	}, {	
+		"bezeichner": "B",
+		"idHistorie": 2,
+		"historie": [ {
+			"id" : 2000,
+			"schluessel": "2",
+			"kuerzel": "B",
+			"text": "Berufsfachschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "C",
+		"idHistorie": 3,
+		"historie": [ {
+			"id": 3000,
+			"schluessel": "3",
+			"kuerzel": "C",
+			"text": "Berufsfachschule und Fachoberschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "D",
+		"idHistorie": 4,
+		"historie": [ {
+			"id": 4000,
+			"schluessel": "4",
+			"kuerzel": "D",
+			"text": "Berufliches Gymnasium und Fachoberschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "E",
+		"idHistorie": 5,
+		"historie": [ {
+			"id": 5000,
+			"schluessel": "5",
+			"kuerzel": "E",
+			"text": "Fachschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "H",
+		"idHistorie": 6,
+		"historie": [ {
+			"id": 7000,
+			"schluessel": "7",
+			"kuerzel": "H",
+			"text": "Bildungsgänge an freien Waldorfschulen / Hiberniakolleg",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "X",
+		"idHistorie": 7,
+		"historie": [ {
+			"id": 24000,
+			"schluessel": "24",
+			"kuerzel": "X",
+			"text": "Ehemalige Kollegschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	}, {
+		"bezeichner": "Z",
+		"idHistorie": 8,
+		"historie": [ {
+			"id": 26000,
+			"schluessel": "26",
+			"kuerzel": "Z",
+			"text": "Kooperationsklasse Hauptschule",
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+	} ]
+}

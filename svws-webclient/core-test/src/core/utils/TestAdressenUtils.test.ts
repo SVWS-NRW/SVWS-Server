@@ -17,9 +17,9 @@ describe('AdressenUtils', () => {
 				const parts = line.trim().split(";");
 				const daten : TestdatenSplitStrasse = new TestdatenSplitStrasse();
 				for (let i = 0; i < parts.length; i++) {
-					if (parts[i].slice(0, 1) === '"')
+					if (parts[i].startsWith('"'))
 						parts[i] = parts[i].slice(1);
-					if (parts[i].slice(-1) === '"')
+					if (parts[i].endsWith('"'))
 						parts[i] = parts[i].slice(0, parts[i].length - 1);
 				}
 				daten.strasse = parts[0];

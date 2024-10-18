@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -95,8 +95,6 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 			""",
 			Schema.tab_SchuelerEinzelleistungen, Schema.tab_EnmTeilleistungen);
 
-	// TODO Trigger für SQLite
-
 
 	/**
 	 * Erstellt die Schema-Definition für die Tabelle EnmTeilleistungen.
@@ -109,6 +107,7 @@ public class Tabelle_EnmTeilleistungen extends SchemaTabelle {
 		setJavaClassName("DTOEnmTeilleistungen");
 		setJavaComment("Diese Tabelle beinhaltet die Zeitstempel, wann an den für das ENM relevanten Spalten "
 				+ "der Datenbanktabelle für Teilleistungen Änderungen vorgenommen wurden.");
+		setVeraltet(SchemaRevisionen.REV_25);
 	}
 
 }

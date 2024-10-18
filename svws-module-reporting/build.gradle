@@ -6,6 +6,7 @@ compileJava.dependsOn(":svws-core:assemble")
 compileJava.dependsOn(":svws-db-utils:assemble")
 
 dependencies {
+	implementation project(':svws-asd')
 	implementation project(':svws-core')
     implementation project(':svws-db')
     implementation project(':svws-db-dto')

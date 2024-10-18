@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 
 import type { SchuleDatenaustauschUntisStundenplanProps } from "~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisStundenplanProps";
-import { api } from "~/router/Api";
 import { type RouteSchuleDatenaustauschUntis, routeSchuleDatenaustauschUntis } from "./RouteSchuleDatenaustauschUntis";
 
 const SSchuleDatenaustauschUntisStundenplan = () => import("~/components/schule/datenaustausch/untis/SSchuleDatenaustauschUntisStundenplan.vue");

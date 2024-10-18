@@ -1,6 +1,6 @@
 <template>
 	<div class="svws-ui-dropdown-list" id="svws-ui-dropdown-list-id"
-		:class="{'svws-statistik': statistics, 'svws-type-tags': tags}"
+		:class="{'svws-statistik': statistics}"
 		:style="{ position: strategy, top: floatingTop, left: floatingLeft }"
 		ref="floating">
 		<ul :id="listIdPrefix"
@@ -42,16 +42,15 @@
 
 	import type { Strategy } from "@floating-ui/vue";
 	import type { Ref, ShallowRef } from "vue";
-	import { ref, shallowRef, toRef, computed } from "vue";
+	import { ref, shallowRef, computed } from "vue";
 	import { genId } from "../utils";
 
 	const props = withDefaults(defineProps<{
 		statistics?: boolean;
 		selectedItemList?: Set<Item>;
-		tags?: boolean;
 		filteredList: Item[] | Iterable<Item>;
 		itemText?: (item: Item) => string;
-		selectItem?: (item: Item | null | undefined) => void;
+		selectItem?: (item: Item) => void;
 		strategy: Strategy;
 		floatingLeft: string;
 		floatingTop: string;
@@ -59,25 +58,21 @@
 		highlightItem?: Item;
 	}>(),{
 		statistics: false,
-		tags: false,
 		itemText: (item: Item) => "",
-		selectItem: (item: Item | undefined | null) => undefined,
+		selectItem: (item: Item) => undefined,
 		searchText: "",
 		selectedItemList: () => new Set<Item>(),
 		highlightItem: undefined,
-	})
+	});
 
 	const floating = ref(null);
-	const tags = toRef(props, 'tags');
 
 	const listIdPrefix = genId();
 
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const activeItemIndex = ref(-1);
 
-	const listEmpty = computed(()=> {
-		if (props.filteredList === undefined)
-			return true;
+	const listEmpty = computed(() => {
 		for (const _ of props.filteredList)
 			return false;
 		return true;
@@ -97,47 +92,47 @@
 
 <style lang="postcss">
 
-.svws-ui-dropdown-list {
-	@apply w-full z-50 min-w-[11rem];
-	@apply rounded-lg border border-black/25 dark:border-white/25 bg-white dark:bg-black;
-  @apply shadow-xl;
-}
+	.svws-ui-dropdown-list {
+		@apply w-full z-50 min-w-[11rem];
+		@apply rounded-lg border border-black/25 dark:border-white/25 bg-white dark:bg-black;
+		@apply shadow-xl;
+	}
 
-.svws-ui-dropdown-list--items {
-	@apply overflow-y-auto overflow-x-hidden flex flex-col gap-px pt-1 px-1 pb-1;
-	max-height: 24rem;
-}
+	.svws-ui-dropdown-list--items {
+		@apply overflow-y-auto overflow-x-hidden flex flex-col gap-px pt-1 px-1 pb-1;
+		max-height: 24rem;
+	}
 
-.svws-ui-dropdown-list--item {
-  @apply rounded px-2 py-1.5 inline-flex items-start justify-between gap-0.5 text-base font-medium cursor-pointer;
+	.svws-ui-dropdown-list--item {
+		@apply rounded px-2 py-1.5 inline-flex items-start justify-between gap-0.5 text-base font-medium cursor-pointer;
 
-  &.svws-selected {
-    @apply bg-svws/5 dark:bg-svws/10 text-svws font-bold;
+		&.svws-selected {
+			@apply bg-svws/5 dark:bg-svws/10 text-svws font-bold;
 
-    .svws-statistik & {
-      @apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
-    }
-  }
+			.svws-statistik & {
+				@apply bg-violet-500/5 dark:bg-violet-500/10 text-violet-500;
+			}
+		}
 
-  &:not(.svws-selected) {
-    &.svws-active,
-    &:hover,
-    &:focus-visible {
-      @apply bg-black/10 dark:bg-white/10;
-    }
-  }
+		&:not(.svws-selected) {
+			&.svws-active,
+			&:hover,
+			&:focus-visible {
+				@apply bg-black/10 dark:bg-white/10;
+			}
+		}
 
-  &.svws-active {
-    @apply ring-2 ring-black/25 dark:ring-white/25;
+		&.svws-active {
+			@apply ring-2 ring-black/25 dark:ring-white/25;
 
-    &.svws-selected {
-      @apply ring-svws/25 dark:ring-svws/25;
+			&.svws-selected {
+				@apply ring-svws/25 dark:ring-svws/25;
 
-      .svws-statistik & {
-        @apply ring-violet-500/25 dark:ring-violet-500/25;
-      }
-    }
-  }
-}
+				.svws-statistik & {
+					@apply ring-violet-500/25 dark:ring-violet-500/25;
+				}
+			}
+		}
+	}
 
 </style>

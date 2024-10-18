@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +40,25 @@ public final class JSONMapper {
 
 	/** Der Jackson2-Objekt-Mapper für das Konvertieren */
 	public static final ObjectMapper mapper = new ObjectMapper();
+
+	/** Der Formatter für TimeStamp-Strings */
+	public static final DateTimeFormatter tsFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd HH:mm:ss")
+			.appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true).toFormatter();
+
+
+	/**
+	 * Formatiert die Ausgabe und gibt den Namen des Attributes dabei mit an.
+	 *
+	 * @param message    die Nachricht
+	 * @param attrName   der Name des Attributes, sofern bekannt - sonst null
+	 *
+	 * @return die ggf. angepasste Nachricht
+	 */
+	private static String formatMessage(final String message, final String attrName) {
+		if ((attrName == null) || (attrName.isBlank()))
+			return message;
+		return "Attribut %s: %s".formatted(attrName, message);
+	}
 
 
 	/**
@@ -248,7 +272,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen Double-Wert, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen Double-Wert, sofern es sich um ein
 	 * Number-Objekt handelt.
 	 *
 	 * @param obj   das zu konvertierende Objekt
@@ -279,38 +303,51 @@ public final class JSONMapper {
 		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
 	}
 
-
 	/**
-	 * Konvertiert das übergeben Objekt in einen Long-Wert, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen Long-Wert, sofern es sich um ein
 	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
 	 *
-	 * @param obj   das zu konvertierende Objekt
+	 * @param obj        das zu konvertierende Objekt
 	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param attrName   der Name des Attributes oder null
+	 *
+	 * @return das konvertierte Long-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static Long convertToLong(final Object obj, final boolean nullable, final String attrName) throws ApiOperationException {
+		if ((obj == null) && nullable) {
+			return null;
+		}
+		return switch (obj) {
+			case final Byte b -> b.longValue();
+			case final Short s -> s.longValue();
+			case final Integer i -> i.longValue();
+			case final Long l -> l;
+			case null -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt", attrName));
+			default -> throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Fehler beim Konvertieren zu Long", attrName));
+		};
+	}
+
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen Long-Wert, sofern es sich um ein
+	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
+	 *
+	 * @param obj           das zu konvertierende Objekt
+	 * @param nullable      gibt an, ob das Ergebnis auch null sein darf oder nicht
 	 *
 	 * @return das konvertierte Long-Objekt
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
 	public static Long convertToLong(final Object obj, final boolean nullable) throws ApiOperationException {
-		if (obj == null) {
-			if (nullable)
-				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
-		}
-		if (obj instanceof final Byte b)
-			return b.longValue();
-		if (obj instanceof final Short s)
-			return s.longValue();
-		if (obj instanceof final Integer i)
-			return i.longValue();
-		if (obj instanceof final Long l)
-			return l.longValue();
-		throw new ApiOperationException(Status.BAD_REQUEST, "Fehler beim Konvertieren zu Long");
+		return convertToLong(obj, nullable, null);
 	}
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen Integer-Wert, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen Integer-Wert, sofern es sich um ein
 	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
 	 *
 	 * @param obj        das zu konvertierende Objekt
@@ -339,7 +376,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen Integer-Wert, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen Integer-Wert, sofern es sich um ein
 	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
 	 * Dabei wird geprüft, ob der wert innerhalb des übergebenen Intervalls [lower, upper[ liegt
 	 *
@@ -373,7 +410,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen Boolean-Wert.
+	 * Konvertiert das übergebene Objekt in einen Boolean-Wert.
 	 *
 	 * @param obj        das zu konvertierende Objekt
 	 * @param nullable   gibt an, ob das Ergebnis auch null sein darf oder nicht
@@ -395,7 +432,70 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen String, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in ein LocalDateTime, sofern es sich um ein
+	 * LocalDateTime-Objekt handelt.
+	 *
+	 * @param obj          das zu konvertierende Objekt
+	 * @param nullable     gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 *
+	 * @return das konvertierte LocalDateTime-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static LocalDateTime convertToLocalDateTime(final Object obj, final boolean nullable)
+			throws ApiOperationException {
+		if (obj == null) {
+			if (nullable)
+				return null;
+			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
+		}
+		if (!(obj instanceof String))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein String erwartet, aber keiner übergeben.");
+		if ("".equals(obj))
+			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer String ist hier nicht erlaubt.");
+		try {
+			return LocalDateTime.parse((String) obj, tsFormatter);
+		} catch (final DateTimeParseException dtpe) {
+			throw new ApiOperationException(Status.BAD_REQUEST, "Das Format des Zeitstempels ist ungültig: %s".formatted(dtpe.getMessage()));
+		}
+	}
+
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen String, sofern es sich um ein
+	 * String-Objekt handelt.
+	 *
+	 * @param obj          das zu konvertierende Objekt
+	 * @param nullable     gibt an, ob das Ergebnis auch null sein darf oder nicht
+	 * @param allowEmpty   gibt an, ob auch leere Strings erlaubt sind oder nicht
+	 * @param maxLength    die maximal erlaubte Länge des Strings, null falls keine Begrenzung vorliegt
+	 * @param attrName     der Name des Attributs oder null
+	 *
+	 * @return das konvertierte Long-Objekt
+	 *
+	 * @throws ApiOperationException   im Fehlerfall
+	 */
+	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer maxLength, final String attrName)
+			throws ApiOperationException {
+		if (obj == null) {
+			if (nullable)
+				return null;
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Der Wert null ist nicht erlaubt.", attrName));
+		}
+		if (!(obj instanceof String))
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Es wurde ein String erwartet, aber keiner übergeben.", attrName));
+		if ("".equals(obj) && !allowEmpty)
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Ein leerer String ist hier nicht erlaubt.", attrName));
+		final String result = (String) obj;
+		if ((maxLength != null) && (result.length() > maxLength))
+			throw new ApiOperationException(Status.BAD_REQUEST, formatMessage("Die Länge des Strings ist auf %d Zeichen limitiert."
+					.formatted(maxLength), attrName));
+		return result;
+	}
+
+
+	/**
+	 * Konvertiert das übergebene Objekt in einen String, sofern es sich um ein
 	 * String-Objekt handelt.
 	 *
 	 * @param obj          das zu konvertierende Objekt
@@ -409,24 +509,12 @@ public final class JSONMapper {
 	 */
 	public static String convertToString(final Object obj, final boolean nullable, final boolean allowEmpty, final Integer maxLength)
 			throws ApiOperationException {
-		if (obj == null) {
-			if (nullable)
-				return null;
-			throw new ApiOperationException(Status.BAD_REQUEST, "Der Wert null ist nicht erlaubt.");
-		}
-		if (!(obj instanceof String))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Es wurde ein String erwartet, aber keiner übergeben.");
-		if ("".equals(obj) && !allowEmpty)
-			throw new ApiOperationException(Status.BAD_REQUEST, "Ein leerer String ist hier nicht erlaubt.");
-		final String result = (String) obj;
-		if ((maxLength != null) && (result.length() > maxLength))
-			throw new ApiOperationException(Status.BAD_REQUEST, "Die Länge des Strings ist auf " + maxLength + " Zeichen limitiert.");
-		return result;
+		return convertToString(obj, nullable, allowEmpty, maxLength, null);
 	}
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen boolean-Array, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen boolean-Array, sofern es sich um ein
 	 * boolean-Array handelt.
 	 *
 	 * @param obj          das zu konvertierende Objekt
@@ -462,7 +550,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in einen String-Array, sofern es sich um ein
+	 * Konvertiert das übergebene Objekt in einen String-Array, sofern es sich um ein
 	 * String-Array handelt.
 	 *
 	 * @param obj          das zu konvertierende Objekt
@@ -498,7 +586,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in eine Liste von Long-Werten, sofern es sich beim Inhalt um ein
+	 * Konvertiert das übergebene Objekt in eine Liste von Long-Werten, sofern es sich beim Inhalt um ein
 	 * Number-Objekt handelt, welches keinen float oder double-Wert repräsentiert.
 	 *
 	 * @param listObj    das zu konvertierende ListenObjekt
@@ -534,7 +622,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in eine Liste von Integer-Werten, sofern es sich beim Inhalt um ein
+	 * Konvertiert das übergebene Objekt in eine Liste von Integer-Werten, sofern es sich beim Inhalt um ein
 	 * Number-Objekt handelt, welches keinen long, float oder double-Wert repräsentiert.
 	 *
 	 * @param listObj    das zu konvertierende ListenObjekt
@@ -569,7 +657,7 @@ public final class JSONMapper {
 
 
 	/**
-	 * Konvertiert das übergeben Objekt in eine Liste von DTOs, sofern es sich beim Inhalt um ein
+	 * Konvertiert das übergebene Objekt in eine Liste von DTOs, sofern es sich beim Inhalt um ein
 	 * ensprechendes DTO-Objekt handelt.
 	 *
 	 * @param <T>        der DTO-Typ

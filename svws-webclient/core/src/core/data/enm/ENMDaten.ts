@@ -7,8 +7,10 @@ import { ArrayList } from '../../../java/util/ArrayList';
 import { ENMLerngruppe } from '../../../core/data/enm/ENMLerngruppe';
 import { ENMLehrer } from '../../../core/data/enm/ENMLehrer';
 import { ENMSchueler } from '../../../core/data/enm/ENMSchueler';
+import { ENMAnkreuzkompetenzenKatalog } from '../../../core/data/enm/ENMAnkreuzkompetenzenKatalog';
 import { ENMFoerderschwerpunkt } from '../../../core/data/enm/ENMFoerderschwerpunkt';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import { ENMNote } from '../../../core/data/enm/ENMNote';
 import { ENMFloskelgruppe } from '../../../core/data/enm/ENMFloskelgruppe';
 
@@ -110,6 +112,11 @@ export class ENMDaten extends JavaObject {
 	public faecher : List<ENMFach> = new ArrayList<ENMFach>();
 
 	/**
+	 * Der Katalog der Ankreuzkompetenzen (Grundschulzeugnisse und Inklusionszeugnisse)
+	 */
+	public ankreuzkompetenzen : ENMAnkreuzkompetenzenKatalog = new ENMAnkreuzkompetenzenKatalog();
+
+	/**
 	 * Die Informationen zu den Teilleistungsarten, die in der Notendatei vorhanden sind.
 	 */
 	public teilleistungsarten : List<ENMTeilleistungsart> = new ArrayList<ENMTeilleistungsart>();
@@ -136,6 +143,8 @@ export class ENMDaten extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMDaten'].includes(name);
 	}
+
+	public static class = new Class<ENMDaten>('de.svws_nrw.core.data.enm.ENMDaten');
 
 	public static transpilerFromJSON(json : string): ENMDaten {
 		const obj = JSON.parse(json) as Partial<ENMDaten>;
@@ -203,6 +212,9 @@ export class ENMDaten extends JavaObject {
 				result.faecher.add(ENMFach.transpilerFromJSON(JSON.stringify(elem)));
 			}
 		}
+		if (obj.ankreuzkompetenzen === undefined)
+			throw new Error('invalid json format, missing attribute ankreuzkompetenzen');
+		result.ankreuzkompetenzen = ENMAnkreuzkompetenzenKatalog.transpilerFromJSON(JSON.stringify(obj.ankreuzkompetenzen));
 		if (obj.teilleistungsarten !== undefined) {
 			for (const elem of obj.teilleistungsarten) {
 				result.teilleistungsarten.add(ENMTeilleistungsart.transpilerFromJSON(JSON.stringify(elem)));
@@ -291,6 +303,7 @@ export class ENMDaten extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
+		result += '"ankreuzkompetenzen" : ' + ENMAnkreuzkompetenzenKatalog.transpilerToJSON(obj.ankreuzkompetenzen) + ',';
 		result += '"teilleistungsarten" : [ ';
 		for (let i = 0; i < obj.teilleistungsarten.size(); i++) {
 			const elem = obj.teilleistungsarten.get(i);
@@ -427,6 +440,9 @@ export class ENMDaten extends JavaObject {
 					result += ',';
 			}
 			result += ' ]' + ',';
+		}
+		if (obj.ankreuzkompetenzen !== undefined) {
+			result += '"ankreuzkompetenzen" : ' + ENMAnkreuzkompetenzenKatalog.transpilerToJSON(obj.ankreuzkompetenzen) + ',';
 		}
 		if (obj.teilleistungsarten !== undefined) {
 			result += '"teilleistungsarten" : [ ';

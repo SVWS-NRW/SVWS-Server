@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { PersonTyp } from '../../../core/types/schule/PersonTyp';
+import { Class } from '../../../java/lang/Class';
 
 export class Einwilligungsart extends JavaObject {
 
@@ -50,6 +51,8 @@ export class Einwilligungsart extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schule.Einwilligungsart'].includes(name);
 	}
+
+	public static class = new Class<Einwilligungsart>('de.svws_nrw.core.data.schule.Einwilligungsart');
 
 	public static transpilerFromJSON(json : string): Einwilligungsart {
 		const obj = JSON.parse(json) as Partial<Einwilligungsart>;

@@ -7,7 +7,7 @@ configurations {
 }
  
 dependencies {
-	implementation 'org.codehaus.plexus:plexus-utils:3.4.1'
+	implementation 'org.codehaus.plexus:plexus-utils:4.0.1'
 }
 
 checkstyleMain.enabled = false
@@ -35,4 +35,17 @@ task testTranspilerCore(type: NpmRun) {
 
 check.dependsOn testTranspilerCore
 
+apply from: "$rootDir/publish-helper.gradle"
+
+publishing {
+  publications {
+    publishJava(MavenPublication) {
+      artifactId = 'svws-transpile'
+      pom {
+        name = 'SVWS Bibliothek für das Transpilieren von Java-Code nach Typecript.'
+        description = 'Diese Bibliothek ermöglicht das Transpilieren von Java-Code nach Typecript.'
+      }
+    }
+  }
+}
 

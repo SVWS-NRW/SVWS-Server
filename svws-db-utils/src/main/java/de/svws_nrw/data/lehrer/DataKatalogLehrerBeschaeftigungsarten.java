@@ -1,11 +1,10 @@
 package de.svws_nrw.data.lehrer;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import de.svws_nrw.core.data.lehrer.LehrerKatalogBeschaeftigungsartEintrag;
-import de.svws_nrw.core.types.lehrer.LehrerBeschaeftigungsart;
+import de.svws_nrw.asd.data.lehrer.LehrerBeschaeftigungsartKatalogEintrag;
+import de.svws_nrw.asd.types.lehrer.LehrerBeschaeftigungsart;
 import de.svws_nrw.data.DataManager;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,12 +12,12 @@ import jakarta.ws.rs.core.Response.Status;
 
 /**
  * Diese Klasse erweitert den abstrakten {@link DataManager} für den
- * Core-DTO {@link LehrerKatalogBeschaeftigungsartEintrag}.
+ * Core-DTO {@link LehrerBeschaeftigungsartKatalogEintrag}.
  */
 public final class DataKatalogLehrerBeschaeftigungsarten extends DataManager<Long> {
 
 	/**
-	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerKatalogBeschaeftigungsartEintrag}.
+	 * Erstellt einen neuen {@link DataManager} für den Core-DTO {@link LehrerBeschaeftigungsartKatalogEintrag}.
 	 */
 	public DataKatalogLehrerBeschaeftigungsarten() {
 		super(null);
@@ -27,9 +26,9 @@ public final class DataKatalogLehrerBeschaeftigungsarten extends DataManager<Lon
 
 	@Override
 	public Response getAll() {
-		final ArrayList<LehrerKatalogBeschaeftigungsartEintrag> daten = new ArrayList<>();
+		final ArrayList<LehrerBeschaeftigungsartKatalogEintrag> daten = new ArrayList<>();
 		for (final LehrerBeschaeftigungsart art : LehrerBeschaeftigungsart.values())
-			daten.addAll(Arrays.asList(art.historie));
+			daten.addAll(art.historie());
 		return Response.status(Status.OK).type(MediaType.APPLICATION_JSON).entity(daten).build();
 	}
 

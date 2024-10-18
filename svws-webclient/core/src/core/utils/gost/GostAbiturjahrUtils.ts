@@ -1,8 +1,10 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { IllegalStateException } from '../../../java/lang/IllegalStateException';
 import { JahrgangsUtils } from '../../../core/utils/jahrgang/JahrgangsUtils';
-import { Schulform } from '../../../core/types/schule/Schulform';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulform } from '../../../asd/types/schule/Schulform';
+import { SchulformKatalogEintrag } from '../../../asd/data/schule/SchulformKatalogEintrag';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 import { GostJahrgang } from '../../../core/data/gost/GostJahrgang';
 import type { Comparator } from '../../../java/util/Comparator';
@@ -44,7 +46,8 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 * @return das Kalenderjahr des Abiturs oder null, falls das Jahr des Abiturs nicht bestimmt werden kann.
 	 */
 	public static getGostAbiturjahr(schulform : Schulform, gliederung : Schulgliederung, aktuellesSchuljahr : number, jahrgang : string) : number | null {
-		if ((schulform.daten === null) || (!schulform.daten.hatGymOb))
+		const sfke : SchulformKatalogEintrag | null = schulform.daten(aktuellesSchuljahr);
+		if ((sfke === null) || (!sfke.hatGymOb))
 			return null;
 		let restjahre : number | null = JahrgangsUtils.getRestlicheJahre(schulform, gliederung, jahrgang);
 		if (restjahre === null)
@@ -67,7 +70,8 @@ export class GostAbiturjahrUtils extends JavaObject {
 	 * @return der Statistik-Jahrgang zu dem angegeben Abiturjahrgang
 	 */
 	public static getGostAbiturjahrJahrgang(schulform : Schulform, gliederung : Schulgliederung, schuljahr : number, abiturjahr : number) : string | null {
-		if ((schulform.daten === null) || (!schulform.daten.hatGymOb))
+		const sfke : SchulformKatalogEintrag | null = schulform.daten(schuljahr);
+		if ((sfke === null) || (!sfke.hatGymOb))
 			return null;
 		const restlicheJahre : number = abiturjahr - schuljahr;
 		if (restlicheJahre <= 1)
@@ -92,6 +96,8 @@ export class GostAbiturjahrUtils extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.gost.GostAbiturjahrUtils'].includes(name);
 	}
+
+	public static class = new Class<GostAbiturjahrUtils>('de.svws_nrw.core.utils.gost.GostAbiturjahrUtils');
 
 }
 

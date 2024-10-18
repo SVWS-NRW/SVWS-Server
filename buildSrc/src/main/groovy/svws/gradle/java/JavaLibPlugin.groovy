@@ -33,7 +33,7 @@ class JavaLibPlugin implements Plugin<Project> {
 		def versionSQLite = '3.46.0.0';
 		def versionUCanAccess = '5.1.1';
 		def versionJackcess = '4.0.6';
-		def versionMySQL = '8.4.0';
+		def versionMySQL = '9.0.0';
 		def versionMSSQL = '12.6.0.jre11';
 		project.configurations.create('database');
 		project.dependencies.add('database', 'jakarta.persistence:jakarta.persistence-api:' + versionPersistenceAPI);
@@ -44,11 +44,13 @@ class JavaLibPlugin implements Plugin<Project> {
 		project.dependencies.add('database', 'com.healthmarketscience.jackcess:jackcess:' + versionJackcess);
 		project.dependencies.add('database', 'com.mysql:mysql-connector-j:' + versionMySQL);
 		project.dependencies.add('database', 'com.microsoft.sqlserver:mssql-jdbc:' + versionMSSQL);
+		// vulnerability fix for: com.mysql:mysql-connector-j:9.0.0 -> pin com.google.protobuf:protobuf-java:4.28.2
+		project.dependencies.add('database', 'com.google.protobuf:protobuf-java:4.28.2');
 	}
 
 
 	void addJacksonConfiguration() {
-		def version = "2.17.1";
+		def version = "2.16.2";
 		project.configurations.create('jackson');
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-annotations:' + version);
 		project.dependencies.add('jackson', 'com.fasterxml.jackson.core:jackson-core:' + version);
@@ -60,7 +62,7 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addJettyConfiguration() {
-		def version = "12.0.11";
+		def version = "12.0.14";
 		def versionServletApi = "6.1.0";
 		project.configurations.create('jetty');
 		project.dependencies.add('jetty', 'jakarta.servlet:jakarta.servlet-api:' + versionServletApi);
@@ -74,13 +76,15 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addPdfConfiguration() {
-		def version = "3.0.0";
-		def openHtmlToPdfVersion = "1.1.4";
+		def version = "3.0.3";
+		def openHtmlToPdfVersion = "1.1.22";
 		project.configurations.create('pdf');
 		project.dependencies.add('pdf', 'org.apache.pdfbox:pdfbox:' + version);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
-		project.dependencies.add('pdf', 'at.datenwort.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-core:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-pdfbox:' + openHtmlToPdfVersion);
+		project.dependencies.add('pdf', 'io.github.openhtmltopdf:openhtmltopdf-svg-support:' + openHtmlToPdfVersion);
+		// vulnerability fix for: io.github.openhtmltopdf:openhtmltopdf-svg-support:1.1.22 -> pin commons-io:commons-io:2.17.0
+		project.dependencies.add('pdf', 'commons-io:commons-io:2.17.0');
 	}
 
 
@@ -92,12 +96,14 @@ class JavaLibPlugin implements Plugin<Project> {
 
 
 	void addRestEasyConfiguration() {
-		def version = "6.2.9.Final";
+		def version = "6.2.10.Final";
 		project.configurations.create('resteasy');
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-core:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jackson2-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-multipart-provider:' + version);
 		project.dependencies.add('resteasy', 'org.jboss.resteasy:resteasy-jaxb-provider:' + version);
+		// vulnerability fix for: org.jboss.resteasy:resteasy-multipart-provider:6.2.10.Final -> pin commons-io:commons-io:2.17.0
+		project.dependencies.add('resteasy', 'commons-io:commons-io:2.17.0');
 	}
 
 

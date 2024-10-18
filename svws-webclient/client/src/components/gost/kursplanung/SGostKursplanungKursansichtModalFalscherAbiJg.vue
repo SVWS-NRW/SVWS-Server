@@ -1,7 +1,7 @@
 <template>
 	<slot :open-modal="openModal" />
 	<svws-ui-modal :show="showModal" size="small" class="hidden">
-		<template #modalTitle>Ungültige Abiturjahrgänge für das Abitujahr {{ getErgebnismanager().getParent().daten().abijahrgang }}</template>
+		<template #modalTitle>Ungültige Abiturjahrgänge für das Abiturjahr {{ getErgebnismanager().getParent().daten().abijahrgang }}</template>
 		<template #modalDescription>
 			Sollen folgende Schüler mit einem falschen Abiturjahrgang aus ihren Kursen entfernt werden?
 			<svws-ui-table selectable v-model="selected" :items="getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang()" disable-footer :columns="[{key: 'id', label: 'Schüler',}, {key: 'abschlussjahrgang', label: 'Abiturjahr'}]">
@@ -32,8 +32,7 @@
 		regelnUpdate: (update: GostBlockungRegelUpdate) => Promise<void>;
 	}>();
 
-	// eslint-disable-next-line vue/no-setup-props-reactivity-loss
-	const selected = shallowRef<Schueler[]>(props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().toArray() as Schueler[]);
+	const selected = shallowRef<Schueler[]>([]);
 	const _showModal = shallowRef<boolean>(false);
 	const showModal = () => _showModal;
 
@@ -51,7 +50,7 @@
 		selected.value = [];
 	}
 
-	const openModal = () => {
+	function openModal() {
 		selected.value = props.getErgebnismanager().getOfSchuelerMengeMitAbweichendemAbijahrgang().toArray() as Schueler[];
 		showModal().value = true;
 	}

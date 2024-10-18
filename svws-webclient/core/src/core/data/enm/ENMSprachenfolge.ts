@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
+import { Class } from '../../../java/lang/Class';
 
 export class ENMSprachenfolge extends JavaObject {
 
@@ -64,6 +65,8 @@ export class ENMSprachenfolge extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.enm.ENMSprachenfolge'].includes(name);
 	}
+
+	public static class = new Class<ENMSprachenfolge>('de.svws_nrw.core.data.enm.ENMSprachenfolge');
 
 	public static transpilerFromJSON(json : string): ENMSprachenfolge {
 		const obj = JSON.parse(json) as Partial<ENMSprachenfolge>;

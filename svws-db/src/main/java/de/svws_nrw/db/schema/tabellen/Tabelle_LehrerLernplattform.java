@@ -1,6 +1,6 @@
 package de.svws_nrw.db.schema.tabellen;
 
-import de.svws_nrw.core.adt.Pair;
+import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.db.converter.current.Boolean01Converter;
 import de.svws_nrw.db.schema.Schema;
 import de.svws_nrw.db.schema.SchemaDatentypen;
@@ -29,12 +29,21 @@ public class Tabelle_LehrerLernplattform extends SchemaTabelle {
 	public SchemaTabelleSpalte col_CredentialID = add("CredentialID", SchemaDatentypen.BIGINT, false)
 			.setJavaComment("CredentialD für den Lernplattform-Datensatz");
 
+	/** Die Definition der Tabellenspalte EinwilligungenAbgefragt */
+	public SchemaTabelleSpalte col_EinwilligungenAbgefragt = add("EinwilligungenAbgefragt", SchemaDatentypen.INT, false)
+			.setDefault("0")
+			.setNotNull()
+			.setConverter(Boolean01Converter.class)
+			.setJavaComment("Einwilligung wurde abgefragt")
+			.setVeraltet(SchemaRevisionen.REV_1);
+
 	/** Die Definition der Tabellenspalte EinwilligungAbgefragt */
 	public SchemaTabelleSpalte col_EinwilligungAbgefragt = add("EinwilligungAbgefragt", SchemaDatentypen.INT, false)
 			.setDefault("0")
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
-			.setJavaComment("Einwilligung wurde abgefragt");
+			.setJavaComment("Einwilligung wurde abgefragt")
+			.setRevision(SchemaRevisionen.REV_1);
 
 	/** Die Definition der Tabellenspalte EinwilligungNutzung */
 	public SchemaTabelleSpalte col_EinwilligungNutzung = add("EinwilligungNutzung", SchemaDatentypen.INT, false)
@@ -56,6 +65,12 @@ public class Tabelle_LehrerLernplattform extends SchemaTabelle {
 			.setNotNull()
 			.setConverter(Boolean01Converter.class)
 			.setJavaComment("Einwilligung zur Videokonferenz liegt vor");
+
+	/** Die Definition der Tabellenspalte SchulnrEigner */
+	public SchemaTabelleSpalte col_SchulnrEigner = add("SchulnrEigner", SchemaDatentypen.INT, false)
+			.setVeraltet(SchemaRevisionen.REV_1)
+			.setJavaComment("DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank"
+					+ " gespeichert werden");
 
 
 	/** Die Definition des Fremdschlüssels LehrerLernplattform_Lehrer_FK */

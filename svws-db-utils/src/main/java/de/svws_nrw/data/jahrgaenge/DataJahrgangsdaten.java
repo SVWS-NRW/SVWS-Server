@@ -1,14 +1,14 @@
 package de.svws_nrw.data.jahrgaenge;
 
 import de.svws_nrw.core.data.jahrgang.JahrgangsDaten;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.data.DTOMapper;
 import de.svws_nrw.data.DataBasicMapper;
 import de.svws_nrw.data.DataManager;
 import de.svws_nrw.data.JSONMapper;
 import de.svws_nrw.db.DBEntityManager;
-import de.svws_nrw.db.dto.current.schild.schule.DTOEigeneSchule;
 import de.svws_nrw.db.dto.current.schild.schule.DTOJahrgang;
 import de.svws_nrw.db.utils.ApiOperationException;
 import jakarta.ws.rs.core.MediaType;
@@ -45,7 +45,7 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 		daten.kuerzel = jahrgang.InternKrz;
 		daten.kuerzelStatistik = jahrgang.ASDJahrgang;
 		daten.bezeichnung = jahrgang.ASDBezeichnung;
-		daten.kuerzelSchulgliederung = jahrgang.Gliederung.daten.kuerzel;
+		daten.kuerzelSchulgliederung = jahrgang.GliederungKuerzel;
 		daten.idFolgejahrgang = jahrgang.Folgejahrgang_ID;
 		daten.anzahlRestabschnitte = jahrgang.AnzahlRestabschnitte;
 		daten.sortierung = jahrgang.Sortierung;
@@ -110,23 +110,25 @@ public final class DataJahrgangsdaten extends DataManager<Long> {
 			}),
 			Map.entry("kuerzel", (conn, dto, value, map) -> dto.InternKrz = JSONMapper.convertToString(value, true, true, 20)),
 			Map.entry("kuerzelStatistik", (conn, dto, value, map) -> {
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
 				final String strJahrgang = JSONMapper.convertToString(value, true, false, 2);
-				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.getByKuerzel(strJahrgang);
+				final Jahrgaenge jahrgang = (strJahrgang == null) ? null : Jahrgaenge.data().getWertBySchluessel(strJahrgang);
 				if ((jahrgang == null) && (strJahrgang != null))
 					throw new ApiOperationException(Status.CONFLICT);
-				dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten.kuerzel;
-				dto.ASDBezeichnung = (jahrgang == null) ? null : jahrgang.getBezeichnung(schule.Schulform);
+				final int schuljahr = conn.getUser().schuleGetSchuljahr();
+				dto.ASDJahrgang = (jahrgang == null) ? null : jahrgang.daten(schuljahr).kuerzel;
+				final JahrgaengeKatalogEintrag jke = (jahrgang == null) ? null : jahrgang.getBySchulform(schuljahr, conn.getUser().schuleGetSchulform());
+				dto.ASDBezeichnung = (jke == null) ? null : jke.text;
 			}),
 			Map.entry("bezeichnung", (conn, dto, value, map) -> dto.ASDBezeichnung = JSONMapper.convertToString(value, true, true, 100)),
 			Map.entry("sortierung", (conn, dto, value, map) -> dto.Sortierung = JSONMapper.convertToInteger(value, true)),
 			Map.entry("kuerzelSchulgliederung", (conn, dto, value, map) -> {
 				final String str = JSONMapper.convertToString(value, true, false, null);
-				final DTOEigeneSchule schule = conn.querySingle(DTOEigeneSchule.class);
-				final Schulgliederung sgl = Schulgliederung.getBySchulformAndKuerzel(schule.Schulform, str);
+				final Schulgliederung sgl = Schulgliederung.data().getWertByKuerzel(str);
 				if ((sgl == null) && (str != null))
-					throw new ApiOperationException(Status.CONFLICT);
-				dto.Gliederung = sgl;
+					throw new ApiOperationException(Status.CONFLICT, "Das Kürzel für die Schulgliederung ist ungültig.");
+				if ((sgl == null) || !sgl.hatSchulform(conn.getUser().schuleGetSchuljahr(), conn.getUser().schuleGetSchulform()))
+					throw new ApiOperationException(Status.CONFLICT, "Die Schulgliederung ist für die Schulform nicht gültig.");
+				dto.GliederungKuerzel = str;
 			}),
 			Map.entry("idFolgejahrgang", (conn, dto, value, map) -> {
 				final Long idFolgejahrgang = JSONMapper.convertToLong(value, true);

@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</svws-ui-header>
-		<svws-ui-router-tab-bar :routes="routes" v-model="selectedRoute" :hidden="hidden">
+		<svws-ui-tab-bar :tab-manager>
 			<template v-if="selectedRoute.name === 'dashboard'">
 				<div class="page--content--dashboard">
 					<svws-ui-dashboard-tile :span="2" color="transparent" title="Adresse">
@@ -69,20 +69,20 @@
 					<svws-ui-dashboard-tile color="dark" number="516" number-label="Fehler insgesamt">
 						Relevante Daten für die Statistik müssen noch korrigiert werden.
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Schülerdaten" number="351" number-label="zu korrigieren" @click="() => selectedRoute = routes[1]" clickable>
+					<svws-ui-dashboard-tile title="Schülerdaten" number="351" number-label="zu korrigieren" @click="setTab({ name: 'Schüler', text: 'Schüler' })" clickable>
 						1.421 Schüler angemeldet
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Lehrerdaten" number="51" number-label="zu korrigieren" @click="() => selectedRoute = routes[2]" clickable>
+					<svws-ui-dashboard-tile title="Lehrerdaten" number="51" number-label="zu korrigieren" @click="setTab({ name: 'Lehrer', text: 'Lehrer' })" clickable>
 						121 Lehrkräfte angestellt
 					</svws-ui-dashboard-tile>
-					<svws-ui-dashboard-tile title="Unterrichtsdaten" number="32" number-label="zu korrigieren" @click="() => selectedRoute = routes[3]" clickable>
+					<svws-ui-dashboard-tile title="Unterrichtsdaten" number="32" number-label="zu korrigieren" @click="setTab({ name: 'Unterrichts', text: 'Unterricht' })" clickable>
 						80 Kurse angeboten
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
 			<template v-if="selectedRoute.name !== 'dashboard'">
 				<div class="page--content--dashboard">
-					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${selectedRoute.name}daten`">
+					<svws-ui-dashboard-tile :span="2" color="transparent" :title="`${tabManager().tab.name}daten`">
 						<p>
 							Dieser Bereich ist aktuell nur eine Vorschau. Alle Inhalte sind Beispiele und keine aktuellen Daten aus dem Client.
 						</p>
@@ -156,7 +156,7 @@
 					</svws-ui-dashboard-tile>
 				</div>
 			</template>
-		</svws-ui-router-tab-bar>
+		</svws-ui-tab-bar>
 	</div>
 	<div v-else class="app--content--placeholder">
 		<span class="icon i-ri-bar-chart-2-line" />
@@ -164,56 +164,56 @@
 </template>
 
 <script setup lang="ts">
-	import type { ComputedRef } from "vue";
+
+	import {computed, ref} from "vue";
 	import type {StatistikAppProps} from "./SStatistikAppProps";
-	import type { DataTableColumn } from "@ui";
-	import {computed, h, ref} from "vue";
+	import { type TabData, type DataTableColumn, TabManager } from "@ui";
 
 	const props = defineProps<StatistikAppProps>();
 
-	const schulname: ComputedRef<string> = computed(() => {
-		const name = props.schule?.bezeichnung1;
-		return name ? name : "Schule";
+	const schulname = computed(() => {
+		const name = props.schule.bezeichnung1;
+		return (name.length > 0) ? name : "Schule";
 	});
 
-	const schulNr: ComputedRef<string> = computed(() => {
-		const nr = props.schule?.schulNr;
-		return nr ? nr.toString() : "#";
+	const schulNr = computed(() => {
+		const nr = props.schule.schulNr;
+		return nr.toString();
 	});
 
-	const schulform: ComputedRef<string> = computed(() => {
-		const form = props.schule?.schulform;
-		return form ? form : "";
+	const schulform = computed(() => {
+		const form = props.schule.schulform;
+		return form;
 	});
 
-	const adresse: ComputedRef<string> = computed(() => {
-		const strassenname = props.schule?.strassenname;
-		const hausnummer = props.schule?.hausnummer;
-		const hausnummerZusatz = props.schule?.hausnummerZusatz;
-		const plz = props.schule?.plz;
-		const ort = props.schule?.ort;
+	const adresse = computed(() => {
+		const strassenname = props.schule.strassenname;
+		const hausnummer = props.schule.hausnummer;
+		const hausnummerZusatz = props.schule.hausnummerZusatz;
+		const plz = props.schule.plz;
+		const ort = props.schule.ort;
 
-		return `${strassenname} ${hausnummer}${hausnummerZusatz ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
+		return `${strassenname} ${hausnummer}${hausnummerZusatz !== null ? " " + hausnummerZusatz : ""}\n${plz} ${ort}`;
 	});
 
-	const telefon: ComputedRef<string> = computed(() => {
-		const telefon = props.schule?.telefon;
-		return telefon ? telefon : "";
+	const telefon = computed(() => {
+		const telefon = props.schule.telefon;
+		return telefon;
 	});
 
-	const fax: ComputedRef<string> = computed(() => {
-		const fax = props.schule?.fax;
-		return fax ? fax : "";
+	const fax = computed(() => {
+		const fax = props.schule.fax;
+		return fax;
 	});
 
-	const email: ComputedRef<string> = computed(() => {
-		const email = props.schule?.email;
-		return email ? email : "";
+	const email = computed(() => {
+		const email = props.schule.email;
+		return email;
 	});
 
-	const webAdresse: ComputedRef<string> = computed(() => {
-		const webAdresse = props.schule?.webAdresse;
-		return webAdresse ? webAdresse : "";
+	const webAdresse = computed(() => {
+		const webAdresse = props.schule.webAdresse;
+		return webAdresse;
 	});
 
 	const data = true;
@@ -226,15 +226,18 @@
 		{ key: "fehlerart", label: "Typ", tooltip: "Harter Fehler, Muss-Fehler oder Hinweis", span: 0.25, fixedWidth: 4 },
 	];
 
-	const routes = [
-		{ path: "/", name: "dashboard", component: { render: () => h("h1", "Dashboard") }, meta: { text: "Übersicht" } },
-		{ path: "/schueler", name: "Schüler", component: { render: () => h("h1", "Schüler") }, meta: { text: "Schüler" } },
-		{ path: "/lehrkraefte", name: "Lehrer", component: { render: () => h("h1", "Lehrkräfte") }, meta: { text: "Lehrkräfte" } },
-		{ path: "/unterricht", name: "Unterrichts", component: { render: () => h("h1", "Unterricht") }, meta: { text: "Unterricht" } },
-	];
+	async function setTab(tab: TabData) {
+		selectedRoute.value = tab;
+	}
 
-	const hidden = ref([false, false, false]);
-	const selectedRoute = ref(routes[0]);
+	const tabManager = () => new TabManager([
+		{ name: "dashboard", text: "Übersicht" },
+		{ name: "Schüler", text: "Schüler" },
+		{ name: "Lehrer", text: "Lehrkräfte" },
+		{ name: "Unterrichts", text: "Unterricht" },
+	], { name: "dashboard", text: "Übersicht" }, setTab);
+
+	const selectedRoute = ref(tabManager().tab);
 
 </script>
 

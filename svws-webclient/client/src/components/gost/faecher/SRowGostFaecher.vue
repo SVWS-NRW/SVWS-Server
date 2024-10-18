@@ -9,10 +9,11 @@
 			<span class="line-clamp-1 break-all leading-tight -my-0.5">{{ fach.bezeichnung }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" disabled v-model="fach.istFremdSpracheNeuEinsetzend">
+			<!-- TODO Dieses Input ist immer disabled? -->
+			<input :disabled="!hatUpdateKompetenz || true" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="fach.istFremdSpracheNeuEinsetzend">
 		</div>
-		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs }" @click="set_pjk_stunden">
-			<div v-if="istProjektkurs" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded">
+		<div role="cell" class="svws-ui-td svws-align-center svws-divider svws-no-padding" :class="{ 'cursor-pointer': istProjektkurs && hatUpdateKompetenz }" @click="set_pjk_stunden">
+			<div v-if="istProjektkurs && hatUpdateKompetenz" class="flex items-center gap-0.5 border border-black/25 border-dashed hover:border-black/50 hover:border-solid hover:bg-white my-auto p-[0.1rem] rounded" @keydown.enter="set_pjk_stunden" tabindex="0">
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 2, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 3}">2</span>
 				<span class="opacity-50">/</span>
 				<span :class="{ 'opacity-100 font-bold': fach.wochenstundenQualifikationsphase === 3, 'opacity-25 hover:opacity-100 font-medium': fach.wochenstundenQualifikationsphase === 2}">3</span>
@@ -20,36 +21,36 @@
 			<span v-else class="my-auto">{{ fach.wochenstundenQualifikationsphase }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td">
-			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && hatLeitfach1 && hatUpdateKompetenz" removable headless v-model="leitfach1" :items="leitfaecher1" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach1Kuerzel}">{{ fach.projektKursLeitfach1Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-divider">
-			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
+			<svws-ui-select v-if="istJahrgangAllgemein && istProjektkurs && hatUpdateKompetenz" removable headless v-model="leitfach2" :items="leitfaecher2" :item-text="(i: GostFach) => i.kuerzelAnzeige ?? '–'" />
 			<span v-else class="px-2 text-center w-full" :class="{'opacity-25': !fach.projektKursLeitfach2Kuerzel}">{{ fach.projektKursLeitfach2Kuerzel || '—' }}</span>
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
+			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef1">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider" :class="{'svws-disabled': !ef_moeglich}">
-			<input v-if="ef_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
+			<input v-if="ef_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="ef2">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q11">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q11">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q12">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q12">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q21">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q21">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center svws-divider">
-			<input type="checkbox" class="svws-ui-checkbox svws-headless" v-model="q22">
+			<input type="checkbox" :disabled="!hatUpdateKompetenz" class="svws-ui-checkbox svws-headless" v-model="q22">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_gk_moeglich}">
-			<input v-if="abi_gk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
+			<input v-if="abi_gk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiGK">
 		</div>
 		<div role="cell" class="svws-ui-td svws-align-center" :class="{'svws-disabled': !abi_lk_moeglich}">
-			<input v-if="abi_lk_moeglich" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
+			<input v-if="abi_lk_moeglich" :disabled="!hatUpdateKompetenz" type="checkbox" class="svws-ui-checkbox svws-headless" v-model="abiLK">
 		</div>
 	</div>
 </template>
@@ -58,20 +59,23 @@
 	import type { List, GostFach, GostFaecherManager} from "@core";
 	import type { ComputedRef, WritableComputedRef } from "vue";
 	import { computed } from "vue";
-	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, ZulaessigesFach } from "@core";
+	import { ArrayList, DeveloperNotificationException, Fachgruppe, Jahrgaenge, Fach } from "@core";
 
 	const props = defineProps<{
 		patchFach: (data: Partial<GostFach>, fach_id: number) => Promise<void>;
 		abiturjahr: number;
 		fachId: number;
 		faecherManager: () => GostFaecherManager;
+		hatUpdateKompetenz: boolean;
 	}>();
+
+	const schuljahr = computed<number>(() => props.faecherManager().getSchuljahr());
 
 	async function doPatch(data: Partial<GostFach>) {
 		await props.patchFach(data, props.fachId);
 	}
 
-	const fach = computed(()=> {
+	const fach = computed(() => {
 		const fach = props.faecherManager().get(props.fachId);
 		if (fach === null)
 			throw new DeveloperNotificationException("Fehler, es gibt kein gültiges Fach.");
@@ -79,7 +83,7 @@
 	})
 
 	function istPJK(fach: GostFach) : boolean {
-		return ZulaessigesFach.getByKuerzelASD(fach.kuerzel).getFachgruppe() === Fachgruppe.FG_PX;
+		return Fach.getBySchluesselOrDefault(fach.kuerzel).getFachgruppe(schuljahr.value) === Fachgruppe.FG_PX;
 	}
 
 	const leitfaecher1: ComputedRef<List<GostFach>> = computed(() => {
@@ -104,20 +108,20 @@
 		get: () => {
 			if (fach.value.projektKursLeitfach1ID === null)
 				return undefined;
-			let result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
+			const result = props.faecherManager().get(fach.value.projektKursLeitfach1ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id || null })
+		set: (value) => void doPatch({ projektKursLeitfach1ID: value?.id ?? null })
 	});
 
 	const leitfach2: WritableComputedRef<GostFach | undefined> = computed({
 		get: () => {
 			if (fach.value.projektKursLeitfach2ID === null)
 				return undefined;
-			let result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
+			const result = props.faecherManager().get(fach.value.projektKursLeitfach2ID);
 			return result === null ? undefined : result;
 		},
-		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id || null })
+		set: (value) => void doPatch({ projektKursLeitfach2ID: value?.id ?? null })
 	});
 
 	const istJahrgangAllgemein: ComputedRef<boolean> = computed(() => props.abiturjahr < 0);
@@ -125,29 +129,28 @@
 	const istProjektkurs: ComputedRef<boolean> = computed(() => istPJK(fach.value));
 
 	const hatLeitfach1: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return (fg === Fachgruppe.FG_VX) || (fg === Fachgruppe.FG_PX);
 	});
 
-	const bgColor: ComputedRef<string> = computed(() => ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB());
-	/*const bgColorNichtMoeglich: ComputedRef<string> = computed(() => `color-mix(in srgb, ${ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getHMTLFarbeRGB()}, rgb(170,170,170)`);*/
+	const bgColor: ComputedRef<string> = computed(() => Fach.getBySchluesselOrDefault(fach.value.kuerzel).getHMTLFarbeRGB(schuljahr.value));
 
 	const ef_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return !((fg === Fachgruppe.FG_ME) || (fg === Fachgruppe.FG_PX));
 	});
 
 	const abi_gk_moeglich: ComputedRef<boolean> = computed(() => {
-		const fg = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel).getFachgruppe();
+		const fg = Fach.getBySchluesselOrDefault(fach.value.kuerzel).getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 
 	const abi_lk_moeglich: ComputedRef<boolean> = computed(() => {
-		const f = ZulaessigesFach.getByKuerzelASD(fach.value.kuerzel);
-		if ((f.getJahrgangAb() === Jahrgaenge.JG_EF) ||
+		const f = Fach.getBySchluesselOrDefault(fach.value.kuerzel);
+		if ((f.getJahrgangAb(schuljahr.value) === Jahrgaenge.EF) ||
 			((fach.value.biliSprache !== null) && (fach.value.biliSprache !== "D")))
 			return false;
-		const fg = f.getFachgruppe();
+		const fg = f.getFachgruppe(schuljahr.value);
 		return (fg !== Fachgruppe.FG_ME) && (fg !== Fachgruppe.FG_VX) && (fg !== Fachgruppe.FG_PX);
 	});
 

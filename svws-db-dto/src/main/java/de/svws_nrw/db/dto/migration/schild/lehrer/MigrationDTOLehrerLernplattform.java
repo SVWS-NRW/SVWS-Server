@@ -28,7 +28,7 @@ import de.svws_nrw.csv.converter.migration.MigrationBoolean01ConverterDeserializ
 @IdClass(MigrationDTOLehrerLernplattformPK.class)
 @Cacheable(DBEntityManager.use_db_caching)
 @Table(name = "LehrerLernplattform")
-@JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz"})
+@JsonPropertyOrder({"LehrerID", "LernplattformID", "CredentialID", "EinwilligungenAbgefragt", "EinwilligungNutzung", "EinwilligungAudiokonferenz", "EinwilligungVideokonferenz", "SchulnrEigner"})
 public final class MigrationDTOLehrerLernplattform {
 
 	/** Die Datenbankabfrage für alle DTOs */
@@ -58,11 +58,11 @@ public final class MigrationDTOLehrerLernplattform {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes CredentialID */
 	public static final String QUERY_LIST_BY_CREDENTIALID = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.CredentialID IN ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungAbgefragt */
-	public static final String QUERY_BY_EINWILLIGUNGABGEFRAGT = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt = ?1";
+	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungenAbgefragt */
+	public static final String QUERY_BY_EINWILLIGUNGENABGEFRAGT = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungenAbgefragt = ?1";
 
-	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungAbgefragt */
-	public static final String QUERY_LIST_BY_EINWILLIGUNGABGEFRAGT = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungAbgefragt IN ?1";
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungenAbgefragt */
+	public static final String QUERY_LIST_BY_EINWILLIGUNGENABGEFRAGT = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungenAbgefragt IN ?1";
 
 	/** Die Datenbankabfrage für DTOs anhand des Attributes EinwilligungNutzung */
 	public static final String QUERY_BY_EINWILLIGUNGNUTZUNG = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungNutzung = ?1";
@@ -82,6 +82,12 @@ public final class MigrationDTOLehrerLernplattform {
 	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes EinwilligungVideokonferenz */
 	public static final String QUERY_LIST_BY_EINWILLIGUNGVIDEOKONFERENZ = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.EinwilligungVideokonferenz IN ?1";
 
+	/** Die Datenbankabfrage für DTOs anhand des Attributes SchulnrEigner */
+	public static final String QUERY_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.SchulnrEigner = ?1";
+
+	/** Die Datenbankabfrage für DTOs anhand einer Liste von Werten des Attributes SchulnrEigner */
+	public static final String QUERY_LIST_BY_SCHULNREIGNER = "SELECT e FROM MigrationDTOLehrerLernplattform e WHERE e.SchulnrEigner IN ?1";
+
 	/** LehrerID für den Lernplattform-Datensatz */
 	@Id
 	@Column(name = "LehrerID")
@@ -100,12 +106,12 @@ public final class MigrationDTOLehrerLernplattform {
 	public Long CredentialID;
 
 	/** Einwilligung wurde abgefragt */
-	@Column(name = "EinwilligungAbgefragt")
+	@Column(name = "EinwilligungenAbgefragt")
 	@JsonProperty
 	@Convert(converter = MigrationBoolean01Converter.class)
 	@JsonSerialize(using = MigrationBoolean01ConverterSerializer.class)
 	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
-	public Boolean EinwilligungAbgefragt;
+	public Boolean EinwilligungenAbgefragt;
 
 	/** Einwilligung zur Nutzung liegt vor */
 	@Column(name = "EinwilligungNutzung")
@@ -131,6 +137,11 @@ public final class MigrationDTOLehrerLernplattform {
 	@JsonDeserialize(using = MigrationBoolean01ConverterDeserializer.class)
 	public Boolean EinwilligungVideokonferenz;
 
+	/** DEPRECATED: Die Schulnummer zu welcher der Datensatz gehört – wird benötigt, wenn mehrere Schulen in einem Schema der Datenbank gespeichert werden */
+	@Column(name = "SchulnrEigner")
+	@JsonProperty
+	public Integer SchulnrEigner;
+
 	/**
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerLernplattform ohne eine Initialisierung der Attribute.
 	 */
@@ -142,12 +153,12 @@ public final class MigrationDTOLehrerLernplattform {
 	 * Erstellt ein neues Objekt der Klasse MigrationDTOLehrerLernplattform ohne eine Initialisierung der Attribute.
 	 * @param LehrerID   der Wert für das Attribut LehrerID
 	 * @param LernplattformID   der Wert für das Attribut LernplattformID
-	 * @param EinwilligungAbgefragt   der Wert für das Attribut EinwilligungAbgefragt
+	 * @param EinwilligungenAbgefragt   der Wert für das Attribut EinwilligungenAbgefragt
 	 * @param EinwilligungNutzung   der Wert für das Attribut EinwilligungNutzung
 	 * @param EinwilligungAudiokonferenz   der Wert für das Attribut EinwilligungAudiokonferenz
 	 * @param EinwilligungVideokonferenz   der Wert für das Attribut EinwilligungVideokonferenz
 	 */
-	public MigrationDTOLehrerLernplattform(final Long LehrerID, final Long LernplattformID, final Boolean EinwilligungAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
+	public MigrationDTOLehrerLernplattform(final Long LehrerID, final Long LernplattformID, final Boolean EinwilligungenAbgefragt, final Boolean EinwilligungNutzung, final Boolean EinwilligungAudiokonferenz, final Boolean EinwilligungVideokonferenz) {
 		if (LehrerID == null) {
 			throw new NullPointerException("LehrerID must not be null");
 		}
@@ -156,10 +167,10 @@ public final class MigrationDTOLehrerLernplattform {
 			throw new NullPointerException("LernplattformID must not be null");
 		}
 		this.LernplattformID = LernplattformID;
-		if (EinwilligungAbgefragt == null) {
-			throw new NullPointerException("EinwilligungAbgefragt must not be null");
+		if (EinwilligungenAbgefragt == null) {
+			throw new NullPointerException("EinwilligungenAbgefragt must not be null");
 		}
-		this.EinwilligungAbgefragt = EinwilligungAbgefragt;
+		this.EinwilligungenAbgefragt = EinwilligungenAbgefragt;
 		if (EinwilligungNutzung == null) {
 			throw new NullPointerException("EinwilligungNutzung must not be null");
 		}
@@ -215,7 +226,7 @@ public final class MigrationDTOLehrerLernplattform {
 	 */
 	@Override
 	public String toString() {
-		return "MigrationDTOLehrerLernplattform(LehrerID=" + this.LehrerID + ", LernplattformID=" + this.LernplattformID + ", CredentialID=" + this.CredentialID + ", EinwilligungAbgefragt=" + this.EinwilligungAbgefragt + ", EinwilligungNutzung=" + this.EinwilligungNutzung + ", EinwilligungAudiokonferenz=" + this.EinwilligungAudiokonferenz + ", EinwilligungVideokonferenz=" + this.EinwilligungVideokonferenz + ")";
+		return "MigrationDTOLehrerLernplattform(LehrerID=" + this.LehrerID + ", LernplattformID=" + this.LernplattformID + ", CredentialID=" + this.CredentialID + ", EinwilligungenAbgefragt=" + this.EinwilligungenAbgefragt + ", EinwilligungNutzung=" + this.EinwilligungNutzung + ", EinwilligungAudiokonferenz=" + this.EinwilligungAudiokonferenz + ", EinwilligungVideokonferenz=" + this.EinwilligungVideokonferenz + ", SchulnrEigner=" + this.SchulnrEigner + ")";
 	}
 
 }

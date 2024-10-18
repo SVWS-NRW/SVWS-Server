@@ -1,10 +1,11 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
-import { Schulform } from '../../../core/types/schule/Schulform';
+import { Schulform } from '../../../asd/types/schule/Schulform';
 import { HerkunftsschulnummerKatalogEintrag } from '../../../core/data/schule/HerkunftsschulnummerKatalogEintrag';
-import { Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { Class } from '../../../java/lang/Class';
 import { Arrays } from '../../../java/util/Arrays';
-import { Pair } from '../../../core/adt/Pair';
+import { Pair } from '../../../asd/adt/Pair';
 
 export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 
@@ -207,6 +208,8 @@ export class Herkunftsschulnummern extends JavaEnum<Herkunftsschulnummern> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.schule.Herkunftsschulnummern', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<Herkunftsschulnummern>('de.svws_nrw.core.types.schule.Herkunftsschulnummern');
 
 }
 

@@ -46,4 +46,11 @@ public class GostKlausurraumstunde {
 		return Long.hashCode(id);
 	}
 
+	/**
+	 * Default-Konstruktor
+	 */
+	public GostKlausurraumstunde() {
+		super();
+	}
+
 }

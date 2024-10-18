@@ -1,6 +1,6 @@
 <template>
 	<svws-ui-content-card title="Beschäftigungen">
-		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns="cols" clickable no-data-text="Noch kein Schülerbetrieb vorhanden.">
+		<svws-ui-table :items="[]" :no-data="listSchuelerbetriebe().size() === 0" :columns clickable no-data-text="Noch kein Schülerbetrieb vorhanden.">
 			<template #header(Anschreiben)>
 				<svws-ui-tooltip>
 					<span class="icon i-ri-mail-send-line" />
@@ -11,9 +11,7 @@
 			</template>
 			<template #body>
 				<div class="svws-ui-tr" role="row" v-for="(betrieb, index) in listSchuelerbetriebe()" :key="betrieb.id" @click="select(betrieb)" :class="{'svws-clicked': clickedBetrieb ? clickedBetrieb === betrieb.id : index === 0}">
-					<s-card-schueler-beschaeftigung-tabelle :betrieb="betrieb" :map-beschaeftigungsarten="mapBeschaeftigungsarten"
-						:map-lehrer="mapLehrer" :map-betriebe="mapBetriebe" :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)"
-						:patch-schueler-betriebsdaten="patchSchuelerBetriebsdaten" />
+					<s-card-schueler-beschaeftigung-tabelle :betrieb :map-beschaeftigungsarten :map-lehrer :map-betriebe :map-ansprechpartner="getAnsprechpartnervonBetrieb(betrieb.betrieb_id)" :patch-schueler-betriebsdaten />
 				</div>
 			</template>
 		</svws-ui-table>
@@ -22,9 +20,9 @@
 
 <script setup lang="ts">
 
+	import { ref } from "vue";
 	import type { BetriebAnsprechpartner, BetriebListeEintrag, KatalogEintrag, LehrerListeEintrag, List, SchuelerBetriebsdaten } from "@core";
 	import type { DataTableColumn } from "@ui";
-	import { ref } from "vue";
 
 	const props = defineProps<{
 		patchSchuelerBetriebsdaten: (data : Partial<SchuelerBetriebsdaten>, id : number) => Promise<void>;
@@ -39,7 +37,7 @@
 
 	const clickedBetrieb = ref<number | undefined>(undefined);
 
-	const cols: DataTableColumn[] = [
+	const columns: DataTableColumn[] = [
 		{ key: "Betrieb", label: "Betrieb"},
 		{ key: "Beschäftigungsart", label: "Beschäftigungsart"},
 		{ key: "Beginn", label: "Beginn", span: 0.5},
@@ -57,10 +55,10 @@
 	}
 	function getAnsprechpartnervonBetrieb ( id : number): Map<number, BetriebAnsprechpartner>{
 		const t = new Map<number, BetriebAnsprechpartner>();
-		for (let entry of props.mapAnsprechpartner.entries()) {
-			let mapKey = entry[0];
-			let mapValue = entry[1];
-			if( mapValue.betrieb_id === id)
+		for (const entry of props.mapAnsprechpartner.entries()) {
+			const mapKey = entry[0];
+			const mapValue = entry[1];
+			if (mapValue.betrieb_id === id)
 				t.set(mapKey,mapValue)
 		}
 		return t;

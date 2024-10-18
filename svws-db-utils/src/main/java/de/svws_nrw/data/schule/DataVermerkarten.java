@@ -93,7 +93,7 @@ public final class DataVermerkarten extends DataManagerRevised<Long, DTOVermerkA
 
 
 	@Override
-	protected void initDTO(final DTOVermerkArt dtoVermerkArt, final Long vermerkartId) {
+	protected void initDTO(final DTOVermerkArt dtoVermerkArt, final Long vermerkartId, final Map<String, Object> initAttributes) {
 		dtoVermerkArt.ID = vermerkartId;
 	}
 

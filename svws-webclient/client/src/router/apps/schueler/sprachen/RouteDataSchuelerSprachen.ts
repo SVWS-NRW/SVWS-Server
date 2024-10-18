@@ -112,18 +112,17 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 		if ((data.sprache === undefined) || (data.sprache === ""))
 			return null;
 		let pruefung : Sprachpruefung | null = null;
-		for (const p of this._state.value.sprachpruefungen) {
+		for (const p of this._state.value.sprachpruefungen)
 			if (p.sprache === data.sprache) {
 				pruefung = p;
 				break;
 			}
-		}
 		return pruefung;
 	}
 
 	patchSprachpruefung = async (data: Partial<Sprachpruefung>, sprache: string): Promise<void> => {
 		const pruefung = this.getSprachpruefung({sprache});
-		if ((pruefung === null) || (pruefung.sprache === null))
+		if (pruefung === null)
 			return;
 		api.status.start();
 		await api.server.patchSchuelerSprachpruefung(data, api.schema, this.auswahl.id, pruefung.sprache);
@@ -149,7 +148,7 @@ export class RouteDataSchuelerSprachen extends RouteData<RouteStateSchuelerSprac
 	removeSprachpruefung = async (data: Sprachpruefung): Promise<Sprachpruefung> => {
 		// Prüfe, ob die Sprachprüfung existiert
 		const pruefung : Sprachpruefung | null = this.getSprachpruefung(data);
-		if ((pruefung === null) || (pruefung.sprache === null))
+		if (pruefung === null)
 			throw new DeveloperNotificationException("Die zu löschende Sprachpruefung existiert nicht.");
 		// Entferne die Sprachprüfung
 		api.status.start();

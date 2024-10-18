@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { Class } from '../../../java/lang/Class';
 import { JavaString } from '../../../java/lang/JavaString';
 
 export class SprachBelegungSekI extends JavaEnum<SprachBelegungSekI> {
@@ -114,6 +115,8 @@ export class SprachBelegungSekI extends JavaEnum<SprachBelegungSekI> {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.types.fach.SprachBelegungSekI', 'java.lang.Enum', 'java.lang.Comparable'].includes(name);
 	}
+
+	public static class = new Class<SprachBelegungSekI>('de.svws_nrw.core.types.fach.SprachBelegungSekI');
 
 }
 

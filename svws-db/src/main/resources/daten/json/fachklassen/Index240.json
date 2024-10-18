@@ -1,6 +1,6 @@
 {
 	"index": 240,
-	"version": 1,
+	"version": 2,
 	"fachklassen": [
 		{
 			"schluessel": "101",
@@ -17,7 +17,7 @@
 				"bezeichnungM": "FS Sozialwesen - Heilerziehungspflege",
 				"bezeichnungW": "FS Sozialwesen - Heilerziehungspflege",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "102",
@@ -34,7 +34,7 @@
 				"bezeichnungM": "FS Sozialwesen - Sozialpädagogik (berufsbegleitend)",
 				"bezeichnungW": "FS Sozialwesen - Sozialpädagogik (berufsbegleitend)",
 				"gueltigVon": null,
-				"gueltigBis": 2005
+				"gueltigBis": 2003
 			} ]
 		}, {
 			"schluessel": "999",
@@ -51,7 +51,7 @@
 				"bezeichnungM": "Sonstiger Bildungsgang",
 				"bezeichnungW": "Sonstiger Bildungsgang",
 				"gueltigVon": null,
-				"gueltigBis": 2010
+				"gueltigBis": 2003
 			} ]
 		}
 	]

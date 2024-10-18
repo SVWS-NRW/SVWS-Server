@@ -3,11 +3,14 @@ import { BerufskollegFachklassenKatalogEintrag } from '../../../core/data/schule
 import { BerufskollegFachklassenKatalog } from '../../../core/data/schule/BerufskollegFachklassenKatalog';
 import { HashMap } from '../../../java/util/HashMap';
 import { ArrayList } from '../../../java/util/ArrayList';
+import { JavaString } from '../../../java/lang/JavaString';
 import { DeveloperNotificationException } from '../../../core/exceptions/DeveloperNotificationException';
 import { BerufskollegFachklassenKatalogIndex } from '../../../core/data/schule/BerufskollegFachklassenKatalogIndex';
 import { BerufskollegFachklassenKatalogDaten } from '../../../core/data/schule/BerufskollegFachklassenKatalogDaten';
-import { Schulgliederung, cast_de_svws_nrw_core_types_schule_Schulgliederung } from '../../../core/types/schule/Schulgliederung';
+import { Schulgliederung } from '../../../asd/types/schule/Schulgliederung';
+import { SchulgliederungKatalogEintrag } from '../../../asd/data/schule/SchulgliederungKatalogEintrag';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
 
@@ -85,7 +88,9 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 *
 	 * @return die Version
 	 */
-	public getVersion() : number;
+	public getVersion() : number {
+		return this._version;
+	}
 
 	/**
 	 * Gibt die Version der Daten eines Teilkatalog für einen Index zurück.
@@ -94,39 +99,32 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 *
 	 * @return die Version des Teilkatalogs
 	 */
-	public getVersion(index : number) : number;
+	public getVersionByIndex(index : number) : number {
+		const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
+		if (katIndex === null)
+			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
+		return katIndex.version;
+	}
 
 	/**
 	 * Gibt die Version der Daten des Teilkatalog für den Index
 	 * der angegebenen Schulgliederung zurück.
 	 *
+	 * @param schuljahr    das Schuljahr
 	 * @param gliederung   die Schulgliederung
 	 *
 	 * @return die Version des Teilkatalogs
 	 */
-	public getVersion(gliederung : Schulgliederung | null) : number;
-
-	/**
-	 * Implementation for method overloads of 'getVersion'
-	 */
-	public getVersion(__param0? : Schulgliederung | null | number) : number {
-		if ((__param0 === undefined)) {
-			return this._version;
-		} else if (((__param0 !== undefined) && typeof __param0 === "number")) {
-			const index : number = __param0 as number;
-			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-			if (katIndex === null)
-				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
-			return katIndex.version;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
-			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param0);
-			if (gliederung.daten.bkIndex === null)
-				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
-			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
-			if (katIndex === null)
-				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
-			return katIndex.version;
-		} else throw new Error('invalid method overload');
+	public getVersionBySchuljahrAndGliederung(schuljahr : number, gliederung : Schulgliederung) : number {
+		const sglke : SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+		if (sglke.bkIndex === null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.")
+		const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(sglke.bkIndex);
+		if (katIndex === null)
+			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung " + sglke.kuerzel + " bekannt.")
+		return katIndex.version;
 	}
 
 	/**
@@ -138,7 +136,7 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 *
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist.
 	 */
-	public get(kuerzel : string) : BerufskollegFachklassenKatalogEintrag | null {
+	public getByKuerzel(kuerzel : string) : BerufskollegFachklassenKatalogEintrag | null {
 		return this._mapByKuerzel.get(kuerzel);
 	}
 
@@ -162,7 +160,15 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 * @return der Katalog-Eintrag oder null, falls das Kürzel ungültig ist oder der Katalog-Eintrag
 	 *         keine Daten für das übergebene Schuljahr hat
 	 */
-	public getDaten(kuerzel : string, schuljahr : number) : BerufskollegFachklassenKatalogDaten | null;
+	public getDatenByKuerzelAndSchuljahr(kuerzel : string, schuljahr : number) : BerufskollegFachklassenKatalogDaten | null {
+		const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
+		if (eintrag === null)
+			return null;
+		for (const daten of eintrag.historie)
+			if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
+				return daten;
+		return null;
+	}
 
 	/**
 	 * Gibt die Katalog-Daten für die Fachklasse zurück.
@@ -171,26 +177,8 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 *
 	 * @return die Daten für die ID oder null bei einer fehlerhaften ID
 	 */
-	public getDaten(id : number) : BerufskollegFachklassenKatalogDaten | null;
-
-	/**
-	 * Implementation for method overloads of 'getDaten'
-	 */
-	public getDaten(__param0 : number | string, __param1? : number) : BerufskollegFachklassenKatalogDaten | null {
-		if (((__param0 !== undefined) && (typeof __param0 === "string")) && ((__param1 !== undefined) && typeof __param1 === "number")) {
-			const kuerzel : string = __param0;
-			const schuljahr : number = __param1 as number;
-			const eintrag : BerufskollegFachklassenKatalogEintrag | null = this._mapByKuerzel.get(kuerzel);
-			if (eintrag === null)
-				return null;
-			for (const daten of eintrag.historie)
-				if (((daten.gueltigVon === null) || (daten.gueltigVon <= schuljahr)) && ((daten.gueltigBis === null) || (daten.gueltigBis >= schuljahr)))
-					return daten;
-			return null;
-		} else if (((__param0 !== undefined) && typeof __param0 === "number") && (__param1 === undefined)) {
-			const id : number = __param0 as number;
-			return this._mapDatenByID.get(id);
-		} else throw new Error('invalid method overload');
+	public getDatenByID(id : number) : BerufskollegFachklassenKatalogDaten | null {
+		return this._mapDatenByID.get(id);
 	}
 
 	/**
@@ -215,37 +203,32 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	 *
 	 * @return der Teilkatalog
 	 */
-	public getTeilKatalog(index : number) : BerufskollegFachklassenKatalogIndex;
+	public getTeilKatalog(index : number) : BerufskollegFachklassenKatalogIndex {
+		const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
+		if (katIndex === null)
+			throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
+		return katIndex;
+	}
 
 	/**
 	 * Gibt den Teilkatalog des Fachklassen-Index
 	 * für die angegebene Schulgliederung zurück.
 	 *
+	 * @param schuljahr    das Schuljahr, für welches der Teilkatalog bestimmt werden soll
 	 * @param gliederung   die Schulgliederung
 	 *
 	 * @return der Teilkatalog
 	 */
-	public getTeilKatalog(gliederung : Schulgliederung | null) : BerufskollegFachklassenKatalogIndex;
-
-	/**
-	 * Implementation for method overloads of 'getTeilKatalog'
-	 */
-	public getTeilKatalog(__param0 : Schulgliederung | null | number) : BerufskollegFachklassenKatalogIndex {
-		if (((__param0 !== undefined) && typeof __param0 === "number")) {
-			const index : number = __param0 as number;
-			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(index);
-			if (katIndex === null)
-				throw new IllegalArgumentException("Ungültiger Fachklassen-Index.")
-			return katIndex;
-		} else if (((__param0 !== undefined) && ((__param0 instanceof JavaObject) && (__param0.isTranspiledInstanceOf('de.svws_nrw.core.types.schule.Schulgliederung'))) || (__param0 === null))) {
-			const gliederung : Schulgliederung | null = cast_de_svws_nrw_core_types_schule_Schulgliederung(__param0);
-			if (gliederung.daten.bkIndex === null)
-				throw new IllegalArgumentException("Die Schulgliederung " + gliederung.daten.kuerzel + " hat keinen Fachklassen-Index.")
-			const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(gliederung.daten.bkIndex);
-			if (katIndex === null)
-				throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + gliederung.daten.bkIndex + " der Schulgliederung " + gliederung.daten.kuerzel + " bekannt.")
-			return katIndex;
-		} else throw new Error('invalid method overload');
+	public getTeilKatalogBySchuljahrAndGliederung(schuljahr : number, gliederung : Schulgliederung) : BerufskollegFachklassenKatalogIndex {
+		const sglke : SchulgliederungKatalogEintrag | null = gliederung.daten(schuljahr);
+		if (sglke === null)
+			throw new IllegalArgumentException(JavaString.format("Die Schulgliederung %s ist in dem Schuljahr %d nicht gültig.", gliederung.name(), schuljahr))
+		if (sglke.bkIndex === null)
+			throw new IllegalArgumentException("Die Schulgliederung " + sglke.kuerzel + " hat keinen Fachklassen-Index.")
+		const katIndex : BerufskollegFachklassenKatalogIndex | null = this._mapByIndex.get(sglke.bkIndex);
+		if (katIndex === null)
+			throw new IllegalArgumentException("Keine Fachklassen für den Fachklassen-Index " + sglke.bkIndex + " der Schulgliederung " + sglke.kuerzel + " bekannt.")
+		return katIndex;
 	}
 
 	/**
@@ -264,6 +247,8 @@ export class BerufskollegFachklassenManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager'].includes(name);
 	}
+
+	public static class = new Class<BerufskollegFachklassenManager>('de.svws_nrw.core.utils.schule.BerufskollegFachklassenManager');
 
 }
 

@@ -9,8 +9,8 @@ import de.svws_nrw.core.data.schule.AbgangsartKatalog;
 import de.svws_nrw.core.data.schule.AbgangsartKatalogDaten;
 import de.svws_nrw.core.data.schule.AbgangsartKatalogEintrag;
 import de.svws_nrw.core.exceptions.DeveloperNotificationException;
-import de.svws_nrw.core.types.schule.SchulabschlussAllgemeinbildend;
-import de.svws_nrw.core.types.schule.SchulabschlussBerufsbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussAllgemeinbildend;
+import de.svws_nrw.asd.types.schule.SchulabschlussBerufsbildend;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -175,7 +175,7 @@ public class AbgangsartenManager {
 		if ((abschlussart.kuerzel.length() < 0) || (abschlussart.kuerzel.length() > 2))
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		final @NotNull String kuerzelAbschluss = (abschlussart.kuerzel.length() == 1) ? abschlussart.kuerzel : abschlussart.kuerzel.substring(1, 2);
-		return SchulabschlussAllgemeinbildend.getByKuerzelStatistik(kuerzelAbschluss);
+		return SchulabschlussAllgemeinbildend.data().getWertBySchluessel(kuerzelAbschluss);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class AbgangsartenManager {
 			throw new DeveloperNotificationException("Fehlerhafter Katalog-Eintrag: Das Kürzel einer Abgangsart muss entweder ein- oder zweistelig sein.");
 		if (abschlussart.kuerzel.length() == 1)
 			return null;
-		return SchulabschlussBerufsbildend.getByKuerzelStatistik(abschlussart.kuerzel.substring(0, 1));
+		return SchulabschlussBerufsbildend.data().getWertBySchluessel(abschlussart.kuerzel.substring(0, 1));
 	}
 
 }

@@ -7,6 +7,7 @@
 			'border-svws/50 dark:border-svws/50 svws-selected': terminSelected,
 		}">
 		<s-gost-klausurplanung-termin :termin="termin()"
+			:benutzer-kompetenzen
 			:k-man
 			:termin-selected="terminSelected || false"
 			:draggable
@@ -15,6 +16,8 @@
 			:klausur-css-classes
 			:show-schuelerklausuren
 			:patch-klausur
+			:goto-kalenderdatum
+			:goto-raumzeit-termin
 			:create-schuelerklausur-termin>
 			<template #title>
 				<div class="flex gap-2 w-full mb-1">
@@ -26,7 +29,7 @@
 				</div>
 			</template>
 			<template #actions>
-				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
+				<svws-ui-button type="transparent" @click="terminQuartalWechseln" :disabled="!hatKompetenzUpdate || !terminQuartalsWechselMoeglich()" :title="termin().quartal > 0 ? 'Klicken, um alle Quartale zu erlauben' : 'Klicken, um das Quartal festzulegen'" class="group">
 					<template v-if="termin().quartal > 0">
 						<span class="icon i-ri-lock-line opacity-25 group-hover:opacity-75" />{{ termin().quartal }}. Quartal
 					</template>
@@ -36,7 +39,7 @@
 				</svws-ui-button>
 			</template>
 			<template #loeschen>
-				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
+				<svws-ui-button v-if="loescheKlausurtermine !== undefined && termin !== undefined" :disabled="!hatKompetenzUpdate" type="icon" size="small" class="-mr-1" @click="loescheKlausurtermine(Arrays.asList([termin()]));$event.stopPropagation()"><span class="icon i-ri-delete-bin-line -mx-1.5" /></svws-ui-button>
 			</template>
 		</s-gost-klausurplanung-termin>
 	</div>
@@ -44,11 +47,13 @@
 
 <script setup lang="ts">
 	import type { GostKlausurplanungDragData, GostKlausurplanungDropZone } from "./SGostKlausurplanung";
-	import type { GostKlausurenCollectionSkrsKrsData} from "@core";
+	import type { GostHalbjahr, GostKlausurenCollectionSkrsKrsData} from "@core";
+	import { BenutzerKompetenz} from "@core";
 	import { type GostKlausurplanManager, GostKursklausur, type GostKlausurtermin, type List, Arrays, GostSchuelerklausurTermin} from "@core";
 	import { computed } from 'vue';
 
 	const props = withDefaults(defineProps<{
+		benutzerKompetenzen: Set<BenutzerKompetenz>,
 		termin: () => GostKlausurtermin;
 		kMan: () => GostKlausurplanManager;
 		loescheKlausurtermine?: (termine: List<GostKlausurtermin>) => Promise<void>;
@@ -62,10 +67,14 @@
 		createSchuelerklausurTermin: (id: number) => Promise<void>;
 		terminSelected?: boolean;
 		showSchuelerklausuren?: boolean;
+		gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+		gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 	}>(), {
 		loescheKlausurtermine: undefined,
 		showSchuelerklausuren: false,
 	});
+
+	const hatKompetenzUpdate = computed<boolean>(() => props.benutzerKompetenzen.has(BenutzerKompetenz.OBERSTUFE_KLAUSURPLANUNG_AENDERN));
 
 	const klausuren = () => props.kMan().kursklausurGetMengeByTermin(props.termin());
 	const terminTitel = () => kurzBezeichnungenShort;

@@ -1,13 +1,14 @@
 import { JavaObject } from '../../java/lang/JavaObject';
 import { IllegalStateException } from '../../java/lang/IllegalStateException';
 import { GEAbschlussFach } from '../../core/data/abschluss/GEAbschlussFach';
-import { AbschlussErgebnis } from '../../core/data/abschluss/AbschlussErgebnis';
-import { GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher';
-import { SchulabschlussAllgemeinbildend } from '../../core/types/schule/SchulabschlussAllgemeinbildend';
 import { StringBuilder } from '../../java/lang/StringBuilder';
 import { ArrayList } from '../../java/util/ArrayList';
-import type { List } from '../../java/util/List';
 import { GELeistungsdifferenzierteKursart } from '../../core/types/ge/GELeistungsdifferenzierteKursart';
+import { AbschlussErgebnis } from '../../core/data/abschluss/AbschlussErgebnis';
+import { GEAbschlussFaecher } from '../../core/data/abschluss/GEAbschlussFaecher';
+import { SchulabschlussAllgemeinbildend } from '../../asd/types/schule/SchulabschlussAllgemeinbildend';
+import type { List } from '../../java/util/List';
+import { Class } from '../../java/lang/Class';
 import { HashSet } from '../../java/util/HashSet';
 
 export class AbschlussManager extends JavaObject {
@@ -104,8 +105,9 @@ export class AbschlussManager extends JavaObject {
 	 * @return true, falls sie identisch sind und ansonsten false
 	 */
 	public static equalsAbschluesse(a : string | null, b : string | null) : boolean {
-		if ((a === null) || (SchulabschlussAllgemeinbildend.OA.is(a)))
-			return (b === null) || (SchulabschlussAllgemeinbildend.OA.is(b));
+		const oa : SchulabschlussAllgemeinbildend | null = SchulabschlussAllgemeinbildend.OA;
+		if ((a === null) || (oa.is(a)))
+			return (b === null) || (oa.is(b));
 		return JavaObject.equalsTranspiler(a, (b));
 	}
 
@@ -211,6 +213,8 @@ export class AbschlussManager extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.abschluss.AbschlussManager'].includes(name);
 	}
+
+	public static class = new Class<AbschlussManager>('de.svws_nrw.core.abschluss.AbschlussManager');
 
 }
 

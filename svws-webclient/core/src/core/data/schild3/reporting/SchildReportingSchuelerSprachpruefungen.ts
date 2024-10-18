@@ -1,4 +1,5 @@
 import { JavaObject } from '../../../../java/lang/JavaObject';
+import { Class } from '../../../../java/lang/Class';
 
 export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 
@@ -84,6 +85,8 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen'].includes(name);
 	}
+
+	public static class = new Class<SchildReportingSchuelerSprachpruefungen>('de.svws_nrw.core.data.schild3.reporting.SchildReportingSchuelerSprachpruefungen');
 
 	public static transpilerFromJSON(json : string): SchildReportingSchuelerSprachpruefungen {
 		const obj = JSON.parse(json) as Partial<SchildReportingSchuelerSprachpruefungen>;

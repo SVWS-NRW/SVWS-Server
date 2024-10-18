@@ -15,6 +15,7 @@ import de.svws_nrw.db.DBConfig;
 import de.svws_nrw.db.DBDriver;
 import de.svws_nrw.db.DBEntityManager;
 import de.svws_nrw.db.DBException;
+import de.svws_nrw.db.PersistenceUnits;
 import de.svws_nrw.db.schema.dto.DTOInformationSchema;
 import de.svws_nrw.db.schema.dto.DTOInformationUser;
 
@@ -136,8 +137,11 @@ public final class DBRootManager {
 	 * @param nameSchema   das Schema, auf dem der neue Benutzer seine Rechte bekommen soll
 	 *
 	 * @return true, wenn der Benutzer erstellt wurde, sonst false
+	 *
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema) {
+	public static boolean createDBAdminUser(final DBEntityManager conn, final String nameUser, final String pwUser, final String nameSchema)
+			throws DBException {
 		if ((conn == null) || !conn.getDBDriver().hasMultiSchemaSupport())
 			return false;
 		// Prüfe, ob der aktuelle Datenbank-Benutzer überhaupt Rechte auf das Schema hat und sich verbinden kann
@@ -260,9 +264,11 @@ public final class DBRootManager {
 	 *
 	 * @return true, wenn das Schema und der Benutzer erstellt wurden, sonst false
 	 *
-	 * @throws SVWSKonfigurationException falls ein Fehler beim Erstellen oder Anpassen der SVWS-Konfiguration auftritt
+	 * @throws SVWSKonfigurationException   falls ein Fehler beim Erstellen oder Anpassen der SVWS-Konfiguration auftritt
+	 * @throws DBException   wenn ein Verbindungsfehler auftritt
 	 */
-	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema) throws SVWSKonfigurationException {
+	public boolean createDBSchemaWithAdminUser(final String nameUser, final String pwUser, final String nameSchema)
+			throws SVWSKonfigurationException, DBException {
 		// Erstelle zunächst das DB-Schema
 		if (!createDBSchema(nameSchema))
 			return false;
@@ -413,10 +419,12 @@ public final class DBRootManager {
 	 */
 	private static DBConfig getDBRootConfig(final DBDriver driver, final String db_location, final String user_root, final String pw_root) {
 		return switch (driver) {
-			case MARIA_DB, MYSQL -> new DBConfig(driver, db_location, "mysql", false, (user_root == null) ? "root" : user_root, pw_root, true, false, 0, 0);
-			case MDB -> new DBConfig(driver, db_location, null, false, null, "", true, true, 0, 0);
-			case MSSQL -> new DBConfig(driver, db_location, "master", false, (user_root == null) ? "sa" : user_root, pw_root, true, false, 0, 0);
-			case SQLITE -> new DBConfig(driver, db_location, null, false, null, null, true, true, 0, 0);
+			case MARIA_DB, MYSQL ->
+				new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, "mysql", false, (user_root == null) ? "root" : user_root, pw_root, true, false);
+			case MDB -> new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, null, false, null, "", true, true);
+			case MSSQL ->
+				new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, "master", false, (user_root == null) ? "sa" : user_root, pw_root, true, false);
+			case SQLITE -> new DBConfig(PersistenceUnits.SVWS_ROOT, driver, db_location, null, false, null, null, true, true);
 			default -> null;
 		};
 	}
@@ -437,7 +445,7 @@ public final class DBRootManager {
 			final List<String> benutzer = DTOInformationUser.queryNames(conn);
 			if (!benutzer.contains(config.getUsername()))
 				return true;
-			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema("information_schema"));
+			final Benutzer userInformationSchema = Benutzer.create(config.switchSchema(PersistenceUnits.SVWS_ROOT, "information_schema"));
 			try (DBEntityManager tmpConn = userInformationSchema.getEntityManager()) {
 				/* Kein Zugriff über tmpConn nötig... Nur ein Verbindungstest */
 			}
@@ -472,16 +480,7 @@ public final class DBRootManager {
 		if (config.getDBDriver().hasMultiSchemaSupport()) {
 			logger.logLn("-> Verbinde mit einem DB-Root-Manager zu der Ziel-DB...");
 			final DBConfig rootConfig = getDBRootConfig(config.getDBDriver(), config.getDBLocation(), user_root, pw_root);
-			final Benutzer rootUser;
-			try {
-				rootUser = Benutzer.create(rootConfig);
-			} catch (@SuppressWarnings("unused") final DBException db) {
-				logger.logLn(2, " [Fehler]");
-				logger.log(LogLevel.ERROR, 2, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='"
-						+ config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
-				logger.log(LogLevel.ERROR, 2, "Überprüfen Sie das verwendete Kennwort.");
-				return false;
-			}
+			final Benutzer rootUser = Benutzer.create(rootConfig);
 			try (DBEntityManager rootConn = rootUser.getEntityManager()) {
 				logger.modifyIndent(2);
 				logger.log("- ");
@@ -489,6 +488,7 @@ public final class DBRootManager {
 					logger.logLn(0, " [Fehler]");
 					logger.log(LogLevel.ERROR, 0, "Fehler bei der Erstellung der Datenbank-Verbindung (driver='" + config.getDBDriver() + "', schema='"
 							+ config.getDBSchema() + "', location='" + config.getDBLocation() + "', user='" + config.getUsername() + "')");
+					logger.log(LogLevel.ERROR, 0, "Überprüfen Sie das verwendete Kennwort.");
 					throw new DBException("");
 				}
 				logger.logLn(0, "Datenbank-Verbindung erfolgreich aufgebaut (driver='" + config.getDBDriver() + "', schema='" + config.getDBSchema()

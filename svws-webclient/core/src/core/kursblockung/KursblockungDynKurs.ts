@@ -4,6 +4,7 @@ import { Random } from '../../java/util/Random';
 import { LinkedCollection } from '../../core/adt/collection/LinkedCollection';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { KursblockungDynSchueler } from '../../core/kursblockung/KursblockungDynSchueler';
+import { Class } from '../../java/lang/Class';
 import { Logger } from '../../core/logger/Logger';
 import { System } from '../../java/lang/System';
 import { LogLevel } from '../../core/logger/LogLevel';
@@ -577,6 +578,8 @@ export class KursblockungDynKurs extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.kursblockung.KursblockungDynKurs'].includes(name);
 	}
+
+	public static class = new Class<KursblockungDynKurs>('de.svws_nrw.core.kursblockung.KursblockungDynKurs');
 
 }
 

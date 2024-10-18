@@ -1,6 +1,7 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
+import { Class } from '../../../java/lang/Class';
 
 export class StundenplanLehrer extends JavaObject {
 
@@ -41,6 +42,8 @@ export class StundenplanLehrer extends JavaObject {
 	isTranspiledInstanceOf(name : string): boolean {
 		return ['de.svws_nrw.core.data.stundenplan.StundenplanLehrer'].includes(name);
 	}
+
+	public static class = new Class<StundenplanLehrer>('de.svws_nrw.core.data.stundenplan.StundenplanLehrer');
 
 	public static transpilerFromJSON(json : string): StundenplanLehrer {
 		const obj = JSON.parse(json) as Partial<StundenplanLehrer>;

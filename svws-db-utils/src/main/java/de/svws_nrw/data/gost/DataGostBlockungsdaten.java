@@ -13,6 +13,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import de.svws_nrw.asd.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.data.gost.GostBlockungKurs;
 import de.svws_nrw.core.data.gost.GostBlockungKursLehrer;
 import de.svws_nrw.core.data.gost.GostBlockungListeneintrag;
@@ -25,16 +26,16 @@ import de.svws_nrw.core.data.gost.GostStatistikFachwahl;
 import de.svws_nrw.core.data.gost.GostStatistikFachwahlHalbjahr;
 import de.svws_nrw.core.data.schueler.Schueler;
 import de.svws_nrw.core.data.schueler.SchuelerListeEintrag;
-import de.svws_nrw.core.data.schule.Schuljahresabschnitt;
 import de.svws_nrw.core.kursblockung.KursblockungAlgorithmus;
-import de.svws_nrw.core.types.fach.ZulaessigesFach;
+import de.svws_nrw.asd.types.fach.Fach;
 import de.svws_nrw.core.types.gost.GostFachbereich;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
-import de.svws_nrw.core.types.jahrgang.Jahrgaenge;
+import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
-import de.svws_nrw.core.types.schule.Schulgliederung;
+import de.svws_nrw.asd.types.schule.Schulform;
+import de.svws_nrw.asd.types.schule.Schulgliederung;
 import de.svws_nrw.core.utils.gost.GostAbiturjahrUtils;
 import de.svws_nrw.core.utils.gost.GostBlockungsdatenManager;
 import de.svws_nrw.core.utils.gost.GostBlockungsergebnisManager;
@@ -154,6 +155,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 	public static GostBlockungsdatenManager getBlockungsdatenManagerFromDB(final DBEntityManager conn, final Long id) throws ApiOperationException {
 		// Bestimme den aktuellen Schuljahresabschnitt
 		final DTOEigeneSchule schule = DBUtilsGost.pruefeSchuleMitGOSt(conn);
+		final Schulform schulform = Schulform.data().getWertByKuerzel(schule.SchulformKuerzel);
 		final Map<Long, DTOSchuljahresabschnitte> mapSchuljahresabschnitte =
 				conn.queryAll(DTOSchuljahresabschnitte.class).stream().collect(Collectors.toMap(a -> a.ID, a -> a));
 		final DTOSchuljahresabschnitte dtoSchuleSchuljahresabschnitt = mapSchuljahresabschnitte.get(schule.Schuljahresabschnitts_ID);
@@ -284,7 +286,9 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 					schuelerIDs);
 			final Map<Long, DTOSchuelerLernabschnittsdaten> mapAbschnitte = listAbschnitte.stream().collect(Collectors.toMap(l -> l.Schueler_ID, l -> l));
 			final List<SchuelerListeEintrag> tmpSchuelerListe = schuelerDTOs.stream()
-					.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s, mapAbschnitte.get(s.ID), mapJahrgaenge, schule.Schulform))
+					.map(s -> DataSchuelerliste.erstelleSchuelerlistenEintrag(s,
+							mapSchuljahresabschnitte.get(mapAbschnitte.get(s.ID).Schuljahresabschnitts_ID).Jahr,
+							mapAbschnitte.get(s.ID), mapJahrgaenge, schulform))
 					.toList();
 
 			for (final SchuelerListeEintrag s : tmpSchuelerListe) {
@@ -294,7 +298,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 				final DTOSchuljahresabschnitte schuljahresabschnitt = mapSchuljahresabschnitte.get(s.idSchuljahresabschnitt);
 				if (schuljahresabschnitt == null)
 					continue;
-				final int abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schule.Schulform, Schulgliederung.getByKuerzel(s.schulgliederung),
+				final int abiturjahrgang = GostAbiturjahrUtils.getGostAbiturjahr(schulform, Schulgliederung.data().getWertByKuerzel(s.schulgliederung),
 						schuljahresabschnitt.Jahr, s.jahrgang);
 				// Prüfe, ob der Schüler noch an der Schule ist. Wenn ja, dann füge ihn zu der Liste hinzu...
 				if (!DBUtilsGost.pruefeIstAnSchule(dto, blockung.Halbjahr, abiturjahrgang, mapSchuljahresabschnitte))
@@ -438,6 +442,7 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		final GostHalbjahr gostHalbjahr = GostHalbjahr.fromID(halbjahr);
 		if (gostHalbjahr == null)
 			throw new ApiOperationException(Status.CONFLICT);
+		final int schuljahr = gostHalbjahr.getSchuljahrFromAbiturjahr(abiturjahr);
 		final int anzahlSchienen = GostBlockungsdatenManager.schieneGetDefaultAnzahl(gostHalbjahr);
 		final DTOGostJahrgangsdaten abijahrgang = conn.queryByKey(DTOGostJahrgangsdaten.class, abiturjahr);
 		if (abijahrgang == null)
@@ -496,8 +501,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 		long kurseID = (dbKurseID == null) ? 0 : dbKurseID.MaxID;
 		final List<GostBlockungKurs> kursListe_LK_GK_ZK = new ArrayList<>(); // Liste um alle Kurse zusammen hinzuzufügen.
 		for (final GostStatistikFachwahl fw : fachwahlen) {
-			final ZulaessigesFach zulFach = ZulaessigesFach.getByKuerzelASD(fw.kuerzelStatistik);
-			if (zulFach == ZulaessigesFach.VF)
+			final @NotNull Fach zulFach = Fach.getBySchluesselOrDefault(fw.kuerzelStatistik);
+			if (zulFach == Fach.VF)
 				continue;
 			final GostStatistikFachwahlHalbjahr fwHj = fw.fachwahlen[gostHalbjahr.id];
 			final int anzahlLK = (fwHj.wahlenLK + 10) / 20;
@@ -514,12 +519,13 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			// Hinzufügen/Sammeln der GKs
 			for (int i = 1; i <= anzahlGK; i++) {
 				GostKursart kursart = GostKursart.GK;
-				if (zulFach == ZulaessigesFach.VX)
+				if (zulFach == Fach.VX)
 					kursart = GostKursart.VTF;
-				if (zulFach == ZulaessigesFach.PX)
+				if (zulFach == Fach.PX)
 					kursart = GostKursart.PJK;
 				int wstd = 3;
-				if ((kursart == GostKursart.GK) && ((Jahrgaenge.JG_EF == zulFach.getJahrgangAb()) || (Jahrgaenge.JG_11 == zulFach.getJahrgangAb()))) {
+				if ((kursart == GostKursart.GK)
+						&& ((Jahrgaenge.EF == zulFach.getJahrgangAb(schuljahr)) || (Jahrgaenge.JAHRGANG_11 == zulFach.getJahrgangAb(schuljahr)))) {
 					wstd = 4;
 				} else if (kursart == GostKursart.PJK) {
 					// Wochenstunden des PJK anhand der Tabelle GostFaecher bestimmen
@@ -1079,7 +1085,8 @@ public final class DataGostBlockungsdaten extends DataManager<Long> {
 			final List<Long> faecherCheckIDs = faecher.stream().map(f -> f.Fach_ID).toList();
 			final List<DTOFach> faecherCheck = conn.queryByKeyList(DTOFach.class, setFachIDs);
 			for (final DTOFach dtoFach : faecherCheck) {
-				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().containsKey(dtoFach.StatistikFach))) {
+				final @NotNull Fach fach = Fach.getBySchluesselOrDefault(dtoFach.StatistikKuerzel);
+				if (Boolean.FALSE.equals(dtoFach.IstOberstufenFach) && (GostFachbereich.getAlleFaecher().containsKey(fach))) {
 					dtoFach.IstOberstufenFach = true;
 					conn.transactionPersist(dtoFach);
 				}
