@@ -30,6 +30,7 @@
 
 	import { computed } from "vue";
 	import type { List, BenutzerListeEintrag } from "@core";
+	import type { RoutingStatus } from "~/router/RoutingStatus";
 
 	const props = defineProps<{
 		listBenutzer: () => List<BenutzerListeEintrag>;
@@ -37,7 +38,7 @@
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
-		gotoBenutzer: (b_id: number) => Promise<void>;
+		gotoBenutzer: (b_id: number) => Promise<RoutingStatus>;
 		listBenutzerInGruppe: () => List<BenutzerListeEintrag>;
 	}>();
 

@@ -20,13 +20,14 @@
 <script setup lang="ts">
 
 	import type {BenutzerListeEintrag } from "@core";
+	import type { RoutingStatus } from "~/router/RoutingStatus";
 
 	const props = defineProps<{
 		benutzer: BenutzerListeEintrag;
 		spalteLinks : boolean;
 		addBenutzerToBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
 		removeBenutzerFromBenutzergruppe : (benutzer: BenutzerListeEintrag) => Promise<void>;
-		gotoBenutzer: (b_id: number) => Promise<void>;
+		gotoBenutzer: (b_id: number) => Promise<RoutingStatus>;
 	}>();
 
 	async function add() {

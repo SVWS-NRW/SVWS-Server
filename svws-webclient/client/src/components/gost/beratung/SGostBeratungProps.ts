@@ -1,4 +1,5 @@
 import type { AbiturdatenManager, BenutzerDaten, BenutzerKompetenz, GostBelegpruefungErgebnis, GostBeratungslehrer, GostHalbjahr, GostJahrgangsdaten, GostSchuelerFachwahl, LehrerListeEintrag, List, Schulform, ServerMode } from "@core";
+import type { RoutingStatus } from "~/router/RoutingStatus";
 
 export interface GostBeratungProps {
 	schulform: Schulform;
@@ -18,5 +19,5 @@ export interface GostBeratungProps {
 	beratungslehrer: () => List<GostBeratungslehrer>;
 	addBeratungslehrer: (id: number) => Promise<void>;
 	removeBeratungslehrer: (lehrer: GostBeratungslehrer[]) => Promise<void>;
-	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<void>
+	gotoKursblockung: (halbjahr: GostHalbjahr) => Promise<RoutingStatus>;
 }
