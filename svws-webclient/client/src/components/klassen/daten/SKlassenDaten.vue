@@ -31,7 +31,7 @@
 						:items="listeFolgeklassen" :item-text="f => f.kuerzel ?? '---'" removable />
 					<svws-ui-text-input v-else placeholder="Folgeklasse" :model-value="data.kuerzelFolgeklasse === null ? '&nbsp;' : data.kuerzelFolgeklasse" type="text" disabled />
 					<svws-ui-spacing />
-					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="Schulgliederung.data().getWertByID(data.idSchulgliederung)"
+					<svws-ui-select title="Schulgliederung" :disabled="!hatKompetenzUpdate" :model-value="(data.idSchulgliederung < 0) ? undefined : Schulgliederung.data().getWertByID(data.idSchulgliederung)"
 						@update:model-value="value => patchPartial({ idSchulgliederung: value?.daten(schuljahr)?.id ?? -1 })"
 						:items="schulgliederungen" :item-text="f => (f.daten(schuljahr)?.kuerzel ?? '—') + ' - ' + (f.daten(schuljahr)?.text ?? '—')" />
 					<!-- TODO Auswahl der Prüfungsordnungen und :disabled="!hatKompetenzUpdate" -->
