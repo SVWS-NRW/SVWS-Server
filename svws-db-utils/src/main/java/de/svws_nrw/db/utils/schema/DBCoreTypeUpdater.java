@@ -505,8 +505,9 @@ public class DBCoreTypeUpdater {
 			sql.append(p.gueltigVon).append(",");
 			sql.append(p.gueltigBis).append(")");
 		}
-		sql.append(
-				" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Bezeichnung=VALUES(Bezeichnung), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		updateCoreTypeTabelle(conn, tabname, PersonalTyp.class.getCanonicalName(), PersonalTyp.VERSION, sql.toString());
 	};
 
@@ -539,8 +540,9 @@ public class DBCoreTypeUpdater {
 				sql.append(sf.gueltigBis).append(")");
 			}
 		}
-		sql.append(
-				" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Nummer=VALUES(Nummer), Bezeichnung=VALUES(Bezeichnung), HatGymOb=VALUES(HatGymOb), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(
+					" ON DUPLICATE KEY UPDATE ID=VALUES(ID), Kuerzel=VALUES(Kuerzel), Nummer=VALUES(Nummer), Bezeichnung=VALUES(Bezeichnung), HatGymOb=VALUES(HatGymOb), gueltigVon=VALUES(gueltigVon), gueltigBis=VALUES(gueltigBis)");
 		updateCoreTypeTabelle(conn, tabname, Schulform.class.getCanonicalName(), Schulform.data().getVersion(), sql.toString());
 	};
 
@@ -932,7 +934,8 @@ public class DBCoreTypeUpdater {
 			}
 		}
 		if (conn.getDBDriver() != DBDriver.SQLITE)
-			sql.append(" ON DUPLICATE KEY UPDATE Fach_ID=VALUES(Fach_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), Schulgliederung_Kuerzel=VALUES(Schulgliederung_Kuerzel)");
+			sql.append(
+					" ON DUPLICATE KEY UPDATE Fach_ID=VALUES(Fach_ID), Schulform_Kuerzel=VALUES(Schulform_Kuerzel), Schulgliederung_Kuerzel=VALUES(Schulgliederung_Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, Fach.class.getCanonicalName(), Fach.data().getVersion(), sql.toString());
 	};
 
@@ -1000,6 +1003,8 @@ public class DBCoreTypeUpdater {
 			isFirst = false;
 			sql.append("'").append(k).append("')");
 		}
+		if (conn.getDBDriver() != DBDriver.SQLITE)
+			sql.append(" ON DUPLICATE KEY UPDATE Kuerzel=VALUES(Kuerzel)");
 		updateCoreTypeTabelle(conn, tabname, AllgemeineMerkmale.class.getCanonicalName(), AllgemeineMerkmale.VERSION, sql.toString());
 	};
 

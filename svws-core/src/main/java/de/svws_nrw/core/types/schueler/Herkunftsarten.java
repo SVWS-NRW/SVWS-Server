@@ -603,44 +603,6 @@ public enum Herkunftsarten {
 	}),
 
 	/**
-	 * Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))
-	 */
-	UBERGANG_VON_DEUTSCHFOEDERUNG(new HerkunftsartKatalogEintrag[] {
-			new HerkunftsartKatalogEintrag(91000L, "91", Arrays.asList(
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
-					new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Übergang von Deutschförderung",
-							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))")
-			), null, null)
-	}),
-
-	/**
 	 * Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))
 	 */
 	VERBLEIB_DEUTSCHFOEDERUNG(new HerkunftsartKatalogEintrag[] {
@@ -675,6 +637,44 @@ public enum Herkunftsarten {
 							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Verbleib in Deutschförderung",
 							"Verbleib in Deutschförderung (ohne Bildungsgangzuordnung (BASS 13-63 Nr. 3 Nr. 4.1.1))")
+			), null, null)
+	}),
+
+	/**
+	 * Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))
+	 */
+	UBERGANG_VON_DEUTSCHFOEDERUNG(new HerkunftsartKatalogEintrag[] {
+			new HerkunftsartKatalogEintrag(92000L, "92", Arrays.asList(
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.WF, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.G, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GE, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.GY, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.H, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.PS, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.R, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.S, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.KS, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SG, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SK, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.SR, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))"),
+					new HerkunftsartKatalogEintragBezeichnung(Schulform.V, "Übergang von Deutschförderung",
+							"Übergang von Deutschförderung ins Regelsystem (BASS 13-63 Nr. 3 Nr. 4.1.2))")
 			), null, null)
 	}),
 
@@ -1006,7 +1006,7 @@ public enum Herkunftsarten {
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA-Q",
 							"Hauptschulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl. 9 des Gymnasiums)")
 			), null, 2022),
-			new HerkunftsartKatalogEintrag(15000000L, "O", Arrays.asList(
+			new HerkunftsartKatalogEintrag(15000001L, "O", Arrays.asList(
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.FW, "ESA-Q",
 							"Erster Schulabschluss mit Berechtigung zum Besuch der gymnasialen Oberstufe (auch Versetzungszeugnis der Kl.9 des Gymnasiums)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.HI, "ESA-Q",
@@ -1073,7 +1073,7 @@ public enum Herkunftsarten {
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.WB, "HA-IntFö",
 							"Ein dem Hauptschulabschluss vergleichbarer Abschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale Förderklasse)")
 			), null, 2022),
-			new HerkunftsartKatalogEintrag(19000000L, "S", Arrays.asList(
+			new HerkunftsartKatalogEintrag(19000001L, "S", Arrays.asList(
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.BK, "ESA-IntFö",
 							"Erster Schulabschluss mit Berechtigung zum Besuch eines weiterführenden Bildungsgangs im Berufskolleg (nur Internationale  Förderklasse)"),
 					new HerkunftsartKatalogEintragBezeichnung(Schulform.SB, "ESA-IntFö",
@@ -1147,7 +1147,7 @@ public enum Herkunftsarten {
 
 
 	/** Die Version dieses Core-Types, um beim Datenbank Update-Process die Version des Core-Types feststellen zu können. */
-	public static final long VERSION = 4;
+	public static final long VERSION = 5;
 
 	/** Der aktuellen Daten der Herkunftsart, wenn keine Beschränkung der Gültigkeit vorliegen - sonst null */
 	public final @NotNull HerkunftsartKatalogEintrag daten;
