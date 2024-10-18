@@ -719,9 +719,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 */
 	List<Long> getSchuelerIDsByKlassenID(final Long klassenId) {
 		return conn.queryList(DTOSchuelerLernabschnittsdaten.QUERY_BY_KLASSEN_ID, DTOSchuelerLernabschnittsdaten.class, klassenId).stream()
-				.filter(sla -> sla.WechselNr == 0)
-				.map(sla -> sla.Schueler_ID)
-				.toList();
+				.filter(sla -> sla.WechselNr == 0).map(sla -> sla.Schueler_ID).distinct().toList();
 	}
 
 	/**
@@ -878,9 +876,13 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		final SimpleOperationResponse operationResponse = new SimpleOperationResponse();
 		operationResponse.id = dtoKlasse.ID;
 
-		// Die Klasse darf keine Schüler beinhalten. Dies kann an zugeordneten Lernabschnittsdaten geprüft werden
+		// Die Klasse darf keine Schüler beinhalten. Dies kann an zugeordneten Lernabschnittsdaten geprüft werden...
 		final List<Long> schuelerIds = getSchuelerIDsByKlassenID(dtoKlasse.ID);
-		if (!schuelerIds.isEmpty())
+		// ... allerdings sollten zuvor die gelöschten Schüler gefiltert werden, da diese auf die Lösch-Operation keinen Einfluss haben sollten
+		final List<Long> schuelerIdsGeloescht = schuelerIds.isEmpty() ? new ArrayList<>()
+				: conn.queryByKeyList(DTOSchueler.class, schuelerIds).stream().filter(s -> s.Geloescht).map(s -> s.ID).toList();
+		// ... und dann darf die Klasse gelöscht werden, wenn keine nicht gelöschten Schüler der Klasse zugeordnet sind...
+		if (schuelerIds.size() > schuelerIdsGeloescht.size())
 			operationResponse.log.add("Klasse %s (ID: %d) hat noch %d verknüpfte(n) Schüler.".formatted(dtoKlasse.Klasse, dtoKlasse.ID, schuelerIds.size()));
 
 		return operationResponse;
@@ -894,4 +896,5 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 			throw new ApiOperationException(Status.NOT_FOUND, "Es ist kein Teilstandort definiert, es muss mindestens ein Teilstandort hinterlegt sein.");
 		return teilstandort;
 	}
+
 }
