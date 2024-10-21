@@ -67,9 +67,14 @@ export class SchuelerListeEintrag extends JavaObject {
 	public externeSchulNr : string | null = null;
 
 	/**
-	 * Die ID des Schuljahresabschnittes des Schülers.
+	 * Die ID des Schuljahresabschnittes des Eintrags.
 	 */
 	public idSchuljahresabschnitt : number = -1;
+
+	/**
+	 * Die ID des Schuljahresabschnittes des Schülers.
+	 */
+	public idSchuljahresabschnittSchueler : number = -1;
 
 	/**
 	 * Die Liste der IDs der belegten Kurse im aktuellen Abschnit
@@ -148,6 +153,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		if (obj.idSchuljahresabschnitt === undefined)
 			throw new Error('invalid json format, missing attribute idSchuljahresabschnitt');
 		result.idSchuljahresabschnitt = obj.idSchuljahresabschnitt;
+		if (obj.idSchuljahresabschnittSchueler === undefined)
+			throw new Error('invalid json format, missing attribute idSchuljahresabschnittSchueler');
+		result.idSchuljahresabschnittSchueler = obj.idSchuljahresabschnittSchueler;
 		if (obj.kurse !== undefined) {
 			for (const elem of obj.kurse) {
 				result.kurse.add(elem);
@@ -171,6 +179,7 @@ export class SchuelerListeEintrag extends JavaObject {
 		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt! + ',';
+		result += '"idSchuljahresabschnittSchueler" : ' + obj.idSchuljahresabschnittSchueler! + ',';
 		result += '"kurse" : [ ';
 		for (let i = 0; i < obj.kurse.size(); i++) {
 			const elem = obj.kurse.get(i);
@@ -224,6 +233,9 @@ export class SchuelerListeEintrag extends JavaObject {
 		}
 		if (obj.idSchuljahresabschnitt !== undefined) {
 			result += '"idSchuljahresabschnitt" : ' + obj.idSchuljahresabschnitt + ',';
+		}
+		if (obj.idSchuljahresabschnittSchueler !== undefined) {
+			result += '"idSchuljahresabschnittSchueler" : ' + obj.idSchuljahresabschnittSchueler + ',';
 		}
 		if (obj.kurse !== undefined) {
 			result += '"kurse" : [ ';

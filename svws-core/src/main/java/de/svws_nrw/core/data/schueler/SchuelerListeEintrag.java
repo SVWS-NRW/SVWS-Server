@@ -67,9 +67,13 @@ public class SchuelerListeEintrag {
 	@Schema(description = "die Schulnummer eines externen Schülers oder null", example = "null")
 	public String externeSchulNr;
 
+	/** Die ID des Schuljahresabschnittes des Eintrags. */
+	@Schema(description = "die ID des Schuljahresabschnittes des Eintrags", example = "14")
+	public @NotNull Long idSchuljahresabschnitt = -1L;
+
 	/** Die ID des Schuljahresabschnittes des Schülers. */
 	@Schema(description = "die ID des Schuljahresabschnittes des Schülers", example = "14")
-	public @NotNull Long idSchuljahresabschnitt = -1L;
+	public @NotNull Long idSchuljahresabschnittSchueler = -1L;
 
 	/** Die Liste der IDs der belegten Kurse im aktuellen Abschnit  */
 	@ArraySchema(schema = @Schema(implementation = Long.class))

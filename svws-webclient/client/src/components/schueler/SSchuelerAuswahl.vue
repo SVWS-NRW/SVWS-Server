@@ -32,7 +32,8 @@
 				<template #cell(idKlasse)="{ rowData, value }">
 					{{ value === null ? "–" : (schuelerListeManager().klasseGetOrNull(value)?.kuerzel) ?? "–" }}
 					<svws-ui-tooltip v-if="!schuelerListeManager().schuelerIstImSchuljahresabschnitt(rowData.id)" autosize>
-						<span class="icon icon-error i-ri-alert-line" />
+						<span v-if="schuljahresabschnittsauswahl().aktuell === schuljahresabschnittsauswahl().schule" class="icon icon-error i-ri-alert-line" />
+						<span v-else class="icon icon-primary i-ri-information-line" />
 						<template #content>
 							Der Schüler befindet sich nicht in dem ausgewählten Schuljahrsabschnitt, sondern in {{ schuelerListeManager().schuelerSchuljahresabschnittAsString(rowData.id) }}
 						</template>

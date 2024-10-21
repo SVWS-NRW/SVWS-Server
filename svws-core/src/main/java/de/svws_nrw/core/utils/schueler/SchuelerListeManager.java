@@ -305,7 +305,7 @@ public final class SchuelerListeManager extends AuswahlManager<Long, SchuelerLis
 	 */
 	public boolean schuelerIstImSchuljahresabschnitt(final long idSchueler) {
 		final SchuelerListeEintrag schueler = this.liste.get(idSchueler);
-		return (schueler != null) && (schueler.idSchuljahresabschnitt == this._schuljahresabschnitt);
+		return (schueler != null) && (schueler.idSchuljahresabschnittSchueler == this._schuljahresabschnitt);
 	}
 
 
