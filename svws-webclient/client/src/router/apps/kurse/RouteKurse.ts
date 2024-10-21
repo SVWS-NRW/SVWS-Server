@@ -27,7 +27,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		super.text = "Kurse";
 		super.setView("liste", SKurseAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
-			routeKursDaten
+			routeKursDaten,
 		];
 		super.defaultChild = routeKursDaten;
 	}
@@ -70,6 +70,10 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		} catch (e) {
 			return routeError.getRoute(e as DeveloperNotificationException);
 		}
+	}
+
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		this.data.reset();
 	}
 
 	public getRoute(id?: number) : RouteLocationRaw {
