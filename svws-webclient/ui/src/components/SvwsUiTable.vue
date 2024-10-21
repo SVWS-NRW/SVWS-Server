@@ -156,8 +156,8 @@
 						<svws-ui-checkbox :model-value="allRowsSelected" :indeterminate="someNotAllRowsSelected" @update:model-value="toggleBulkSelection" :disabled="typeof noData !== 'undefined' ? noData : noDataCalculated" />
 					</div>
 					<div v-if="count" class="text-sm svws-ui-td font-medium" role="cell">
-						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
-						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/{{ sortedRows.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt</template></template>
+						<template v-if="allRowsSelected && modelValue">Alle {{ modelValue.length - selectedItemsNotListed.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt, {{ modelValue.length }} insgesamt</template></template>
+						<template v-else-if="someNotAllRowsSelected && modelValue">{{ modelValue.length - selectedItemsNotListed.length }}/{{ sortedRows.length }} ausgewählt<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Weitere nicht angezeigt, {{ modelValue.length }} insgesamt</template></template>
 						<template v-else>{{ sortedRows.length === 1 ? '1 Eintrag': `${sortedRows.length} Einträge` }}<template v-if="selectedItemsNotListed.length > 0">, {{ selectedItemsNotListed.length }} Ausgewählte nicht angezeigt</template></template>
 					</div>
 					<div v-if="$slots.actions" class="flex-grow justify-end svws-ui-td" role="cell">

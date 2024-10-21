@@ -47,19 +47,9 @@
 
 	const klassenSubline = computed(() => {
 		const auswahlKlassenList = props.klassenListeManager().liste.auswahlSorted();
-		const leadingKlassenList = [];
-		for (let index = 0; index < auswahlKlassenList.size(); index++) {
-			if (index > 4)
-				break;
-
-			leadingKlassenList.push(auswahlKlassenList.get(index).kuerzel);
-		}
-
-		let subline = leadingKlassenList.join(', ');
 		if (auswahlKlassenList.size() > 5)
-			subline += ` und ${auswahlKlassenList.size() - 5} Weitere`;
-
-		return subline;
+			return `${auswahlKlassenList.size()} Klasse${auswahlKlassenList.size() === 1 ? '':'n'} ausgewählt`;
+		return [...auswahlKlassenList].map(k => k.kuerzel).join(', ');
 	})
 
 	const lehrerkuerzel = computed<string>(() => {

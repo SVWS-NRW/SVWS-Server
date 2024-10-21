@@ -3,16 +3,15 @@
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<template v-if="activeRouteType === ViewType.DEFAULT">
-					<svws-ui-avatar :src="'data:image/png;base64, ' + foto" :alt="foto !== undefined ? 'Foto von ' + vorname + ' ' + nachname : ''" upload capture />
+					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture />
 					<div v-if="schuelerListeManager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>{{ vorname }} {{ nachname }}</span>
 							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-								ID:
-								{{ schuelerListeManager().daten().id }}
+								ID: {{ schuelerListeManager().daten().id }}
 							</svws-ui-badge>
 						</h2>
-						<span class="svws-subline">{{ inputKlasse === null ? '—' : inputKlasse }}</span>
+						<span class="svws-subline">{{ klasse }}</span>
 					</div>
 					<div v-if="schuelerListeManager().daten().keineAuskunftAnDritte" class="svws-headline-wrapper">
 						<span class="icon-xxl icon-error i-ri-alert-line inline-block" />
@@ -57,24 +56,14 @@
 	const props = defineProps<SchuelerAppProps>();
 
 	const schuelerSubline = computed(() => {
-		const auswahlSchuelerList = props.schuelerListeManager().liste.auswahl();
-		const leadingSchuelerList = [];
-		for (let index = 0; index < auswahlSchuelerList.size(); index++) {
-			if (index > 2)
-				break;
-
-			leadingSchuelerList.push(`${auswahlSchuelerList.get(index).vorname} ${auswahlSchuelerList.get(index).nachname}`);
-		}
-
-		let subline = leadingSchuelerList.join(', ');
-		if (auswahlSchuelerList.size() > 3)
-			subline += ` und ${auswahlSchuelerList.size() - 3} Weiter${(auswahlSchuelerList.size() - 3) === 1 ? 'er' : 'e'}`;
-
-		return subline;
+		const auswahlKlassenList = props.schuelerListeManager().liste.auswahlSorted();
+		if (auswahlKlassenList.size() > 3)
+			return `${auswahlKlassenList.size()} Schüler ausgewählt`;
+		return [...auswahlKlassenList].map(k => `${k.vorname} ${k.nachname}`).join(', ');
 	})
 
-	const foto = computed<string | undefined>(() => {
-		return props.schuelerListeManager().daten().foto ?? undefined;
+	const foto = computed<string | null>(() => {
+		return props.schuelerListeManager().daten().foto;
 	});
 
 	const nachname = computed<string>(() => {
@@ -85,10 +74,10 @@
 		return props.schuelerListeManager().daten().vorname;
 	});
 
-	const inputKlasse = computed<string | null>(() => {
+	const klasse = computed<string>(() => {
 		if (!props.schuelerListeManager().hasDaten())
-			return null;
-		return props.schuelerListeManager().klassen.get(props.schuelerListeManager().auswahl().idKlasse)?.kuerzel ?? null;
+			return '—';
+		return props.schuelerListeManager().klassen.get(props.schuelerListeManager().auswahl().idKlasse)?.kuerzel ?? '—';
 	});
 
 </script>
