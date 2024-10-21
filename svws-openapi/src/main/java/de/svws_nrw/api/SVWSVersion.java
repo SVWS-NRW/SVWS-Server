@@ -13,8 +13,11 @@ import de.svws_nrw.base.ResourceUtils;
  */
 public final class SVWSVersion {
 
-	/** Die Version des SVWS-Servers aus der version.properties (cache-Wert)*/
+	/** Die Version des SVWS-Servers aus der version.properties (cache-Wert) */
 	private static String _version = null;
+
+	/** Die erste kompatible Schild-Version aus der version.properties (cache-Wert) */
+	private static String _schildMinVersion = null;
 
 
 	private SVWSVersion() {
@@ -39,6 +42,25 @@ public final class SVWSVersion {
 			}
 		}
 		return _version;
+	}
+
+	/**
+	 * Ermittelt die erste kompatible Schild-Version aus der version.properties.
+	 *
+	 * @return die erste kompatible Schild-Version
+	 */
+	public static String getSchildMinVersion() {
+		if (_schildMinVersion == null) {
+			final Properties versionProperties = new Properties();
+			final Path path = ResourceUtils.getFile("config/version.properties");
+			try (InputStream is = Files.newInputStream(path)) {
+				versionProperties.load(is);
+				_schildMinVersion = versionProperties.getProperty("schild.version");
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return _schildMinVersion;
 	}
 
 }

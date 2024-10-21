@@ -14598,6 +14598,26 @@ export class ApiServer extends BaseApi {
 
 
 	/**
+	 * Implementierung der GET-Methode getSchildMinVersion für den Zugriff auf die URL https://{hostname}/status/schild/minversion
+	 *
+	 * Gibt die erste kompatible Schild-Version zurück.
+	 *
+	 * Mögliche HTTP-Antworten:
+	 *   Code 200: Die erste kompatible Schild-Version
+	 *     - Mime-Type: application/json
+	 *     - Rückgabe-Typ: String
+	 *
+	 * @returns Die erste kompatible Schild-Version
+	 */
+	public async getSchildMinVersion() : Promise<string | null> {
+		const path = "/status/schild/minversion";
+		const result : string = await super.getJSON(path);
+		const text = result;
+		return JSON.parse(text).toString();
+	}
+
+
+	/**
 	 * Implementierung der GET-Methode getServerVersion für den Zugriff auf die URL https://{hostname}/status/version
 	 *
 	 * Gibt die Version des SVWS-Servers zurück.
