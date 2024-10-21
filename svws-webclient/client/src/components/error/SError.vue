@@ -23,33 +23,27 @@
 		<template #main>
 			<div class="app--page">
 				<svws-ui-header>
-					<div class="flex items-center">
-						<div>
-							<span class="inline-flex gap-2"><span class="icon i-ri-alert-fill icon-error" />{{ error?.name ?? 'Fehler' }}</span>
+					<svws-ui-input-wrapper>
+						<div class="flex items-center gap-2">
+							<span class="icon-xl i-ri-alert-fill icon-error" />
+							<span>{{ errorDescription }}</span>
 							<br>
-							<span class="opacity-40">
-								<template v-if="code !== undefined">
-									Fehler {{ code }}
-								</template>
-								<template v-else>
-									Unbekannter Fehlercode
-								</template>
+							<span v-if="code !== undefined" class="opacity-40">
+								Fehler {{ code }}
 							</span>
 						</div>
-					</div>
+						<svws-ui-button type="primary" @click="copyToClipboard">
+							<span class="icon i-ri-file-copy-line" v-if="copied === null" />
+							<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
+							<span class="icon i-ri-check-line icon-primary" v-else /> Fehlermeldung kopieren
+						</svws-ui-button>
+					</svws-ui-input-wrapper>
 				</svws-ui-header>
 				<div class="svws-ui-page" v-if="error !== undefined">
 					<div class="svws-ui-tab-content">
 						<div class="page--content">
-							<svws-ui-content-card :title="error?.message">
-								<svws-ui-input-wrapper>
-									<svws-ui-button type="primary" @click="copyToClipboard">
-										<span class="icon i-ri-file-copy-line" v-if="copied === null" />
-										<span class="icon i-ri-error-warning-fill" v-else-if="copied === false" />
-										<span class="icon i-ri-check-line icon-primary" v-else /> Fehlermeldung kopieren
-									</svws-ui-button>
-									<pre>{{ error.stack }}</pre>
-								</svws-ui-input-wrapper>
+							<svws-ui-content-card :title="error.message">
+								<pre>{{ error.stack }}</pre>
 							</svws-ui-content-card>
 						</div>
 					</div>
@@ -62,7 +56,7 @@
 
 <script setup lang="ts">
 
-	import { ref } from "vue";
+	import { computed, ref } from "vue";
 	import type { ErrorProps } from "./SErrorProps";
 	import type { SimpleOperationResponse} from "@core";
 	import { DeveloperNotificationException, OpenApiError, UserNotificationException } from "@core";
@@ -78,6 +72,16 @@
 	const props = defineProps<ErrorProps>();
 	const copied = ref<boolean|null>(null);
 
+	const errorDescription = computed(() => {
+		if (props.error instanceof DeveloperNotificationException)
+			return "Programmierfehler: Bitte melden Sie diesen Fehler."
+		else if (props.error instanceof UserNotificationException)
+			return "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
+		else if (props.error instanceof OpenApiError)
+			return "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen.";
+		return "Unbekannter Fehler";
+	})
+
 	function goBack() {
 		window.history.back();
 	}
@@ -87,15 +91,10 @@
 		if (reason === undefined)
 			return { id: 0, name: "Unbekannter Fehler", message: "Ein Fehler verhindert den weiteren Ablauf des SVWS-Client, der Fehler ist jedoch unbekannt", stack: "", log: null };
 		console.warn(reason);
-		let name = `Fehler ${reason.name !== 'Error' ? ': ' + reason.name : ''}`;
+		const name = errorDescription.value;
 		let message = reason.message;
 		let log = null;
-		if (reason instanceof DeveloperNotificationException)
-			name = "Programmierfehler: Bitte melden Sie diesen Fehler."
-		else if (reason instanceof UserNotificationException)
-			name = "Nutzungsfehler: Dieser Fehler wurde durch eine nicht vorgesehene Nutzung der verwendeten Funktion hervorgerufen, z.B. durch unmögliche Kombinationen etc.";
-		else if (reason instanceof OpenApiError) {
-			name = "API-Fehler: Dieser Fehler wird durch eine fehlerhafte Kommunikation mit dem Server verursacht. In der Regel bedeutet das, dass die verschickten Daten nicht den Vorgaben entsprechen."
+		if (reason instanceof OpenApiError) {
 			if (reason.response instanceof Response) {
 				try {
 					let res;
