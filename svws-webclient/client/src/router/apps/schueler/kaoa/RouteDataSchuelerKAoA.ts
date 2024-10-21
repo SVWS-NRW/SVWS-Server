@@ -34,17 +34,27 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		return this._state.value.schuelerKAoAManager;
 	}
 
-	patch = async (data : Partial<SchuelerKAoADaten>) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
-		console.log("TODO: Implementierung patch KAoA", data);
+	patchKaoaDaten = async (data : Partial<SchuelerKAoADaten>, idKaoa : number) => {
+		api.status.start()
+		try {
+			//ToDo: Anpassung falls zukünftig Patch das Objekt zurückgeben sollte
+			await api.server.patchKAoADaten(data, api.schema, this.auswahl.id, idKaoa)
+			const kaoaDaten = this.schuelerKaoaManager.liste.getOrException(idKaoa)
+			const patchedObject = Object.assign(kaoaDaten, data);
+			this.schuelerKaoaManager.liste.remove(kaoaDaten)
+			this.schuelerKaoaManager.liste.add(patchedObject)
+			this.commit()
+		} catch (error: OpenApiError) {
+			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
+		}
+		api.status.stop()
 	}
 
 	addKaoaDaten = async (data : Partial<SchuelerKAoADaten>, id : number) => {
 		api.status.start()
 		try {
 			const schuelerKAoADaten = await api.server.addKAoAdaten(data, api.schema, id);
-			this.schuelerKaoaManager.addKaoaDaten(schuelerKAoADaten)
+			this.schuelerKaoaManager.liste.add(schuelerKAoADaten)
 			this.commit()
 		} catch (error: OpenApiError) {
 			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);
@@ -56,7 +66,8 @@ export class RouteDataSchuelerKAoA extends RouteData<RouteStateSchuelerKAoA> {
 		api.status.start()
 		try {
 			await api.server.deleteKAoAdaten(api.schema, idSchueler, idKaoaEntry)
-			this.schuelerKaoaManager.deleteKaoaDaten(idKaoaEntry)
+			const schuelerKAoADaten = this.schuelerKaoaManager.liste.getOrException(idKaoaEntry)
+			this.schuelerKaoaManager.liste.remove(schuelerKAoADaten);
 			this.commit()
 		} catch (error: OpenApiError) {
 			throw new OpenApiError(error, error.toString() + " Fehlercode: " + error.response?.status);

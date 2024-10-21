@@ -52,11 +52,11 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 
 	public getProps(to: RouteLocationNormalized): SchuelerKAoAProps {
 		return {
-			patch: this.data.patch,
 			schuelerKaoaManager: () => this.data.schuelerKaoaManager,
 			auswahl: () => this.data.auswahl,
-			addKaoaDaten: routeSchuelerKAoA.data.addKaoaDaten,
-			deleteKaoaDaten: routeSchuelerKAoA.data.deleteKaoaDaten
+			addKaoaDaten: this.data.addKaoaDaten,
+			patchKaoaDaten: this.data.patchKaoaDaten,
+			deleteKaoaDaten: this.data.deleteKaoaDaten
 		};
 	}
 

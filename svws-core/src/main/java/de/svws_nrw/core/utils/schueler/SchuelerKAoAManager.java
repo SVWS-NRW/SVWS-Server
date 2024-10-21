@@ -2,7 +2,6 @@ package de.svws_nrw.core.utils.schueler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -211,9 +210,8 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	private void processBerufsfelder() {
 		for (final @NotNull KAOABerufsfeld berufsfeld : this._berufsfelder) {
 			final KAOABerufsfeldKatalogEintrag eintrag = berufsfeld.daten(this.getSchuljahr());
-			if (eintrag == null)
-				continue;
-			_berufsfeldEintraege.add(eintrag);
+			if (eintrag != null)
+				_berufsfeldEintraege.add(eintrag);
 		}
 	}
 
@@ -296,25 +294,6 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 		return result;
 	}
 
-	/**
-	 * Fügt der Liste der SchuelerKaoaDaten den Eintrag hinzu
-	 *
-	 * @param eintrag SchuelerKaoaDaten
-	 */
-	public void addKaoaDaten(final @NotNull SchuelerKAoADaten eintrag) {
-		this.liste.add(eintrag);
-	}
-
-	/**
-	 * Löscht den Eintrag aus der Liste der SchuelerKaoaDaten
-	 *
-	 * @param id Id der zu löschenden SchuelerKaoaDaten
-	 */
-	public void deleteKaoaDaten(final long id) {
-		final SchuelerKAoADaten schuelerKAoADaten = this.liste.get(id);
-		if (schuelerKAoADaten != null)
-			this.liste.remove(schuelerKAoADaten);
-	}
 
 	/**
 	 * Gibt alle KAoA Kategorien zurück.
@@ -335,10 +314,8 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die KAoA Kategorien
 	 */
-	public @NotNull List<KAOAKategorieKatalogEintrag> getKAOAKategorienByJahrgangAuswahl(final JahrgaengeKatalogEintrag jahrgaengeEintrag) {
+	public @NotNull List<KAOAKategorieKatalogEintrag> getKAOAKategorienByJahrgangAuswahl(final @NotNull JahrgaengeKatalogEintrag jahrgaengeEintrag) {
 		final @NotNull List<KAOAKategorieKatalogEintrag> result = new ArrayList<>();
-		if (jahrgaengeEintrag == null)
-			return result;
 		final List<KAOAKategorie> kategorien = getKAOAKategorien();
 		for (final KAOAKategorie k : kategorien)
 			if (k.hatJahrgang(this.getSchuljahr(), Jahrgaenge.data().getWertByID(jahrgaengeEintrag.id)))
@@ -353,9 +330,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die KAoA Merkmale
 	 */
-	public @NotNull List<KAOAMerkmalKatalogEintrag> getKAOAMerkmaleByKategorie(final KAOAKategorieKatalogEintrag kategorieEintrag) {
-		if (kategorieEintrag == null)
-			return Collections.emptyList();
+	public @NotNull List<KAOAMerkmalKatalogEintrag> getKAOAMerkmaleByKategorie(final @NotNull KAOAKategorieKatalogEintrag kategorieEintrag) {
 		return MapUtils.getOrCreateArrayList(this._mapMerkmalByKategorie, kategorieEintrag.id);
 	}
 
@@ -366,9 +341,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die Zusatzmerkmale
 	 */
-	public @NotNull List<KAOAZusatzmerkmalKatalogEintrag> getKAOAZusatzmerkmaleByMerkmal(final KAOAMerkmalKatalogEintrag merkmalEintrag) {
-		if (merkmalEintrag == null)
-			return Collections.emptyList();
+	public @NotNull List<KAOAZusatzmerkmalKatalogEintrag> getKAOAZusatzmerkmaleByMerkmal(final @NotNull KAOAMerkmalKatalogEintrag merkmalEintrag) {
 		return MapUtils.getOrCreateArrayList(this._mapZusatzmerkmalByMerkmal, merkmalEintrag.id);
 	}
 
@@ -380,9 +353,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die Anschlussoptionen
 	 */
-	public @NotNull List<KAOAAnschlussoptionenKatalogEintrag> getKAOAAnschlussoptionenByZusatzmerkmal(final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
-		if (zusatzmerkmalEintrag == null)
-			return Collections.emptyList();
+	public @NotNull List<KAOAAnschlussoptionenKatalogEintrag> getKAOAAnschlussoptionenByZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
 		return MapUtils.getOrCreateArrayList(this._mapAnschlussoptionByZusatzmerkmal, zusatzmerkmalEintrag.id);
 	}
 
@@ -393,9 +364,7 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 *
 	 * @return Die Ebene4 Optionen
 	 */
-	public @NotNull List<KAOAEbene4KatalogEintrag> getKAOAEbene4ByZusatzmerkmal(final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
-		if (zusatzmerkmalEintrag == null)
-			return Collections.emptyList();
+	public @NotNull List<KAOAEbene4KatalogEintrag> getKAOAEbene4ByZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
 		return MapUtils.getOrCreateArrayList(this._mapEbene4ByZusatzmerkmal, zusatzmerkmalEintrag.id);
 	}
 
@@ -407,5 +376,4 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	public @NotNull List<KAOABerufsfeldKatalogEintrag> getKAOABerufsfelder() {
 		return _berufsfeldEintraege;
 	}
-
 }
