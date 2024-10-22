@@ -1,5 +1,6 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { JahrgaengeKatalogEintrag } from '../../../asd/data/jahrgang/JahrgaengeKatalogEintrag';
+import type { JavaSet } from '../../../java/util/JavaSet';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { Schulform } from '../../../asd/types/schule/Schulform';
@@ -16,9 +17,11 @@ import { KAOAEbene4KatalogEintrag } from '../../../asd/data/kaoa/KAOAEbene4Katal
 import type { List } from '../../../java/util/List';
 import { KAOAMerkmal } from '../../../asd/types/kaoa/KAOAMerkmal';
 import { IllegalArgumentException } from '../../../java/lang/IllegalArgumentException';
+import { HashSet } from '../../../java/util/HashSet';
 import { Pair } from '../../../asd/adt/Pair';
 import { AttributMitAuswahl } from '../../../core/utils/AttributMitAuswahl';
 import { KAOAAnschlussoptionen } from '../../../asd/types/kaoa/KAOAAnschlussoptionen';
+import { SchuelerLernabschnittListeEintrag } from '../../../core/data/schueler/SchuelerLernabschnittListeEintrag';
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { KAOABerufsfeld } from '../../../asd/types/kaoa/KAOABerufsfeld';
@@ -28,8 +31,8 @@ import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOA
 import { Class } from '../../../java/lang/Class';
 import { KAOABerufsfeldKatalogEintrag } from '../../../asd/data/kaoa/KAOABerufsfeldKatalogEintrag';
 import { Arrays } from '../../../java/util/Arrays';
-import type { JavaMap } from '../../../java/util/JavaMap';
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
+import type { JavaMap } from '../../../java/util/JavaMap';
 import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 import { KAOAZusatzmerkmal } from '../../../asd/types/kaoa/KAOAZusatzmerkmal';
 
@@ -126,9 +129,20 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	public readonly _ebene4 : AttributMitAuswahl<number, KAOAEbene4>;
 
 	/**
-	 * Das Filter-Attribut für die Berufsfelder
+	 * Die Berufsfelder
 	 */
 	private readonly _berufsfelder : List<KAOABerufsfeld>;
+
+	/**
+	 * Die Lernabschnittsdaten
+	 */
+	public readonly _lernabschnitteAuswahl : List<SchuelerLernabschnittListeEintrag>;
+
+	/**
+	 *  Die Schuljahresabschnitte, in denen für den ausgewählten Schüler entsprechende Lernabschnitte und daraus resultierend anhand des Jahrgangs
+	 *  entsprechende KaoaKategorien vorhanden sind.
+	 */
+	public readonly _schuljahresabschnitteFiltered : JavaSet<Schuljahresabschnitt> = new HashSet<Schuljahresabschnitt>();
 
 	/**
 	 *  Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste
@@ -148,13 +162,14 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen KAoA Daten
 	 *
-	 * @param schuljahresabschnitt       Der Schuljahresabschnitt, auf den sich dien KAoA-Daten bezieht
-	 * @param schuljahresabschnittSchule Die Liste der Schuljahresabschnitte
-	 * @param schuljahresabschnitte      Der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
-	 * @param schulform                  Die Schulform der Schule
-	 * @param schuelerKAoA               KAoA Daten des Schülers
+	 * @param schuljahresabschnitt            Der Schuljahresabschnitt, auf den sich dien KAoA-Daten bezieht
+	 * @param schuljahresabschnittSchule      Die Liste der Schuljahresabschnitte
+	 * @param schuljahresabschnitte           Der Schuljahresabschnitt, in welchem sich die Schule aktuell befindet.
+	 * @param schulform                       Die Schulform der Schule
+	 * @param schuelerKAoA                    KAoA Daten des Schülers
+	 * @param lernabschnitteAuswahl    Lernabschnittsdaten des Schülers
 	 */
-	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, schuelerKAoA : List<SchuelerKAoADaten>) {
+	public constructor(schuljahresabschnitt : number, schuljahresabschnittSchule : number, schuljahresabschnitte : List<Schuljahresabschnitt>, schulform : Schulform | null, schuelerKAoA : List<SchuelerKAoADaten>, lernabschnitteAuswahl : List<SchuelerLernabschnittListeEintrag>) {
 		super(schuljahresabschnitt, schuljahresabschnittSchule, schuljahresabschnitte, schulform, schuelerKAoA, SchuelerKAoAManager.comparator, SchuelerKAoAManager._kaoaToId, SchuelerKAoAManager._kaoaToId, Arrays.asList(new Pair("schuljahr", true), new Pair("kategorie", true)));
 		this._kategorien = new AttributMitAuswahl(Arrays.asList(...KAOAKategorie.values()), this._kategorieToId, SchuelerKAoAManager._comparatorKategorie, this._eventHandlerFilterChanged);
 		this._merkmale = new AttributMitAuswahl(Arrays.asList(...KAOAMerkmal.values()), this._merkmalToId, SchuelerKAoAManager._comparatorMerkmal, this._eventHandlerFilterChanged);
@@ -162,7 +177,9 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 		this._anschlussoptionen = new AttributMitAuswahl(Arrays.asList(...KAOAAnschlussoptionen.values()), this._anschlussoptionToId, SchuelerKAoAManager._comparatorAnschlussoptionen, this._eventHandlerFilterChanged);
 		this._berufsfelder = Arrays.asList(...KAOABerufsfeld.values());
 		this._berufsfelder.sort(SchuelerKAoAManager._comparatorBerufsfelder);
+		this._lernabschnitteAuswahl = lernabschnitteAuswahl;
 		this._ebene4 = new AttributMitAuswahl(Arrays.asList(...KAOAEbene4.values()), this._ebene4ToId, SchuelerKAoAManager._comparatorEbene4, this._eventHandlerFilterChanged);
+		this.processSchuljahresabschnitte();
 		this.initKAoA();
 	}
 
@@ -281,19 +298,47 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	}
 
 	/**
-	 * Gibt die KAoA Daten des Schülers aus dem ausgewählten Schuljahresabschnitt zurück. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
-	 *
-	 * @return Die KAoA Daten des Schülers
+	 * Diese Methode gibt eine Liste der Schuljahresabschnitte zurück, in denen es einen Lernabschnitt für den ausgewählten Schüler und entsprechend
+	 * der dazugehörigen Jahrgänge KAOAKategorieEinträge gibt.
 	 */
-	public getSchuelerKAoADatenAuswahl() : List<SchuelerKAoADaten> {
-		const result : List<SchuelerKAoADaten> | null = new ArrayList<SchuelerKAoADaten>();
-		const schuljahresabschnittAuswahl : Schuljahresabschnitt | null = this.getSchuljahresabschnittAuswahl();
-		if (schuljahresabschnittAuswahl === null)
-			throw new DeveloperNotificationException("Kein Schuljahresabschnitt ausgewählt")
-		for (const d of this.liste.list())
-			if (d.idSchuljahresabschnitt === schuljahresabschnittAuswahl.id)
-				result.add(d);
-		return result;
+	private processSchuljahresabschnitte() : void {
+		const availableKuerzelJahrgang : JavaSet<string> | null = new HashSet<string>();
+		for (const kategorie of this._kategorien.list()) {
+			const daten : KAOAKategorieKatalogEintrag | null = kategorie.daten(this.getSchuljahr());
+			if (daten === null)
+				throw new DeveloperNotificationException("keine Kategorie für das Schuljahr gefunden")
+			for (const jahrgang of daten.jahrgaenge)
+				availableKuerzelJahrgang.add(jahrgang.substring(jahrgang.length - 2));
+		}
+		const filteredEintraege : List<SchuelerLernabschnittListeEintrag> | null = new ArrayList<SchuelerLernabschnittListeEintrag>();
+		for (const lernabschnitt of this._lernabschnitteAuswahl) {
+			if (availableKuerzelJahrgang.contains(lernabschnitt.jahrgang))
+				filteredEintraege.add(lernabschnitt);
+		}
+		if (filteredEintraege.isEmpty())
+			throw new DeveloperNotificationException("Keine passenden Kategorien für die vorhandenen Lernabschnitte gefunden")
+		const schuljahresabschnittIDs : JavaSet<number> | null = new HashSet<number>();
+		for (const lernabschnitt of filteredEintraege)
+			schuljahresabschnittIDs.add(lernabschnitt.schuljahresabschnitt);
+		for (const schuljahresabschnitt of this.schuljahresabschnitte.list()) {
+			if (schuljahresabschnittIDs.contains(schuljahresabschnitt.id))
+				this._schuljahresabschnitteFiltered.add(schuljahresabschnitt);
+		}
+	}
+
+	/**
+	 * Gibt des Kürzel vom Jahrgang abhängig vom Schuljahr und der LernabschnittsEinträge des ausgewählten Schülers zurück
+	 *
+	 * @param schuljahr   Schuljahr
+	 *
+	 * @return KürzelJahrgang
+	 */
+	public getKuerzelJahrgangBySchuljahr(schuljahr : number) : string {
+		for (const eintrag of this._lernabschnitteAuswahl) {
+			if ((eintrag.schuljahr === schuljahr))
+				return eintrag.jahrgang;
+		}
+		throw new DeveloperNotificationException(JavaString.format("Kein Jahrgang für das Schuljahr %d gefunden.", schuljahr))
 	}
 
 	/**

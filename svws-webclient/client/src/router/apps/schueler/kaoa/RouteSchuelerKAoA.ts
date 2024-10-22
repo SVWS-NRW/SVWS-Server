@@ -54,9 +54,9 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		return {
 			schuelerKaoaManager: () => this.data.schuelerKaoaManager,
 			auswahl: () => this.data.auswahl,
-			addKaoaDaten: this.data.addKaoaDaten,
-			patchKaoaDaten: this.data.patchKaoaDaten,
-			deleteKaoaDaten: this.data.deleteKaoaDaten
+			add: this.data.add,
+			patch: this.data.patch,
+			delete: this.data.delete
 		};
 	}
 

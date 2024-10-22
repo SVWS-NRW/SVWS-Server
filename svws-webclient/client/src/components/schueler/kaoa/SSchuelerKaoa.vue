@@ -1,7 +1,7 @@
 <!-- eslint-disable @typescript-eslint/consistent-type-imports -->
 <template>
 	<div class="page--content">
-		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().getSchuelerKAoADatenAuswahl()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectEntry(item)">
+		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().liste.list()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectEntry(item)">
 			<template #cell(idJahrgang)="{ value } : { value: number }">
 				<span>{{ getJahrgangFullName(value) }}</span>
 			</template>
@@ -19,7 +19,7 @@
 			<svws-ui-button v-if="currentMode === Mode.DEFAULT" title="AddButton" @click="setMode(Mode.ADD)">
 				<span class="icon i-ri-add-line" />
 			</svws-ui-button>
-			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="PatchButton" @click="patch">
+			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="PatchButton" @click="patchSelectedIDs">
 				<span class="icon i-ri-edit-2-line" />
 			</svws-ui-button>
 			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="DeleteButton" @click="deleteEntry">
@@ -28,7 +28,8 @@
 		</div>
 		<br>
 		<div v-if="currentMode === Mode.ADD || currentMode === Mode.PATCH">
-			<svws-ui-select title="KAoAKategorie" :items="props.schuelerKaoaManager().getKAOAKategorienByJahrgangAuswahl(jahrgangAuswahl)" :item-text="itemText" v-model="selectedKategorie" />
+			<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :item-text="schuljahresabschnittText" v-model="selectedSchuljahresabschnitt"/>
+			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="props.schuelerKaoaManager().getKAOAKategorienByJahrgangAuswahl(selectedJahrgang)" :item-text="itemText" v-model="selectedKategorie" />
 			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(selectedKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
 			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(selectedMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
 			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />
@@ -48,7 +49,7 @@
 <script setup lang="ts">
 	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
 	import {
-		CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten,
+		CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten, Schuljahresabschnitt,
 		KAOAEbene4KatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4
 	} from "@core";
 	import { Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
@@ -57,6 +58,7 @@
 
 	const props = defineProps<SchuelerKAoAProps>();
 	interface SelectedIDs {
+		idSchuljahresabschnitt: number | null;
 		idKategorie: number | null;
 		idMerkmal: number | null;
 		idZusatzmerkmal: number | null;
@@ -64,8 +66,9 @@
 		idAnschlussoption: number | null;
 		idBerufsfeld: number | null;
 		bemerkung: string | null;
-	};
+	}
 	const selectedIDs = ref<SelectedIDs>({
+		idSchuljahresabschnitt: null,
 		idKategorie: null,
 		idMerkmal: null,
 		idZusatzmerkmal: null,
@@ -74,11 +77,20 @@
 		idBerufsfeld: null,
 		bemerkung: null,
 	});
+	const selectedSchuljahresabschnitt = computed({
+		get: () => selectedIDs.value.idSchuljahresabschnitt !== null ? props.schuelerKaoaManager().schuljahresabschnitte.get(selectedIDs.value.idSchuljahresabschnitt) : props.schuelerKaoaManager().schuljahresabschnitte.get(props.auswahl().idSchuljahresabschnitt),
+		set: (val: Schuljahresabschnitt | null) => {
+			resetMandatoryAndOptionalSelectedIDs();
+			selectedIDs.value.idSchuljahresabschnitt = val ? val.id : null;
+		}
+	});
 	const selectedKategorie = computed({
 		get: () => selectedIDs.value.idKategorie !== null ? KAOAKategorie.data().getEintragByID(selectedIDs.value.idKategorie) : null,
 		set: (val: KAOAKategorieKatalogEintrag | null) => {
-			resetMandatoryAndOptionalSelectedIDs();
 			selectedIDs.value.idKategorie = val ? val.id : null;
+			selectedIDs.value.idMerkmal = null;
+			selectedIDs.value.idZusatzmerkmal = null;
+			resetOptionalSelectedIDs();
 		}
 	});
 	const selectedMerkmal = computed({
@@ -121,10 +133,10 @@
 	const showBerufsfeld = computed(() => (selectedZusatzmerkmal.value !== null) && (optionsart.value === 'BERUFSFELD'));
 	const showFreitext = computed(() => (selectedZusatzmerkmal.value !== null) && ((optionsart.value === 'FREITEXT') || (optionsart.value === 'FREITEXT_BERUF')));
 
-	const jahrgangAuswahl = computed (() => Jahrgaenge.data().getWertByKuerzel(props.auswahl().jahrgang)?.daten(schuljahr.value));
-	const schuljahr = computed(() => props.schuelerKaoaManager().getSchuljahr());
+	const selectedJahrgang = computed (() => Jahrgaenge.data().getWertByKuerzel(props.schuelerKaoaManager().getKuerzelJahrgangBySchuljahr(schuljahr.value))?.daten(schuljahr.value));
+	const schuljahr = computed(() => selectedSchuljahresabschnitt.value?.schuljahr);
 	const itemText = computed(() => (i: CoreTypeData) => i.kuerzel + '- ' + i.text);
-
+	const schuljahresabschnittText = (item: Schuljahresabschnitt) => item.schuljahr > 0 ? `${item.schuljahr}/${(item.schuljahr + 1) % 100}.${item.abschnitt}` : "Abschnitt";
 	type ModeType = 'add' | 'patch' | 'default';
 	const Mode = Object.freeze({ADD: 'add' as ModeType, PATCH: 'patch' as ModeType, DEFAULT: 'default' as ModeType});
 	const currentMode = ref(Mode.DEFAULT);
@@ -154,8 +166,8 @@
 		if (!validateRequiredFieldsFilled())
 			return;
 		const data: Partial<SchuelerKAoADaten> = {
-			idSchuljahresabschnitt: props.schuelerKaoaManager().getSchuljahresabschnittAuswahl()?.id,
-			idJahrgang: jahrgangAuswahl.value?.id,
+			idSchuljahresabschnitt: selectedSchuljahresabschnitt.value?.id,
+			idJahrgang: selectedJahrgang.value?.id,
 			idKategorie: selectedKategorie.value?.id,
 			idMerkmal: selectedMerkmal.value?.id,
 			idZusatzmerkmal: selectedZusatzmerkmal.value?.id,
@@ -165,7 +177,7 @@
 			bemerkung: selectedBemerkung.value,
 		};
 		const idSchueler = props.auswahl().id;
-		await props.addKaoaDaten(data, idSchueler);
+		await props.add(data, idSchueler);
 		selectedEntry.value = null;
 		resetMandatoryAndOptionalSelectedIDs();
 		setMode(Mode.DEFAULT);
@@ -173,14 +185,15 @@
 	async function deleteEntry() {
 		if (selectedEntry.value === null || selectedEntry.value === undefined)
 			return;
-		await props.deleteKaoaDaten(props.auswahl().id, selectedEntry.value.id);
+		await props.delete(props.auswahl().id, selectedEntry.value.id);
 		selectedEntry.value = null;
 		setMode(Mode.DEFAULT);
 	}
-	async function patch() {
+	async function patchSelectedIDs() {
 		setMode(Mode.PATCH);
 		if (!selectedEntry.value)
 			return
+		selectedIDs.value.idSchuljahresabschnitt = selectedEntry.value.idSchuljahresabschnitt;
 		selectedIDs.value.idKategorie = selectedEntry.value.idKategorie;
 		selectedIDs.value.idMerkmal = selectedEntry.value.idMerkmal;
 		selectedIDs.value.idZusatzmerkmal = selectedEntry.value.idZusatzmerkmal;
@@ -218,6 +231,7 @@
 		if (!validateRequiredFieldsFilled() || !selectedEntry.value)
 			return false;
 		const data: Partial<SchuelerKAoADaten> = {
+			idSchuljahresabschnitt: selectedSchuljahresabschnitt.value?.id,
 			idKategorie: selectedKategorie.value?.id,
 			idMerkmal: selectedMerkmal.value?.id,
 			idZusatzmerkmal: selectedZusatzmerkmal.value?.id,
@@ -226,10 +240,11 @@
 			idAnschlussoption: selectedIDs.value.idAnschlussoption !== null ? selectedAnschlussoption.value?.id : null,
 			bemerkung: selectedBemerkung.value,
 		};
-		await props.patchKaoaDaten(data, selectedEntry.value.id);
+		await props.patch(data, selectedEntry.value.id);
 		setMode(Mode.DEFAULT);
 	}
 	function resetMandatoryAndOptionalSelectedIDs() {
+		selectedIDs.value.idSchuljahresabschnitt = null;
 		selectedIDs.value.idKategorie = null;
 		selectedIDs.value.idMerkmal = null;
 		selectedIDs.value.idZusatzmerkmal = null;

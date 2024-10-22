@@ -3,7 +3,7 @@ import type { SchuelerKAoADaten, SchuelerKAoAManager, SchuelerListeEintrag} from
 export interface SchuelerKAoAProps {
 	schuelerKaoaManager: () => SchuelerKAoAManager;
 	auswahl: () => SchuelerListeEintrag;
-	addKaoaDaten: (data : Partial<SchuelerKAoADaten>, id : number) => Promise<void>;
-	patchKaoaDaten: (data : Partial<SchuelerKAoADaten>, idKaoaEntry: number) => Promise<void>;
-	deleteKaoaDaten: (idSchueler: number, idKaoaEntry: number) => Promise<void>;
+	add: (data : Partial<SchuelerKAoADaten>, id : number) => Promise<void>;
+	patch: (data : Partial<SchuelerKAoADaten>, idKaoaEntry: number) => Promise<void>;
+	delete: (idSchueler: number, idKaoaEntry: number) => Promise<void>;
 }
