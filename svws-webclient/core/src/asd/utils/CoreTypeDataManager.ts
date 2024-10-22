@@ -149,7 +149,7 @@ export class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 			const coreTypeEntry : U = entry.getKey();
 			const historie : List<T> = entry.getValue();
 			for (const eintrag of historie) {
-				if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr!) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
+				if ((schuljahr !== null) && ((eintrag.gueltigVon === null) || (eintrag.gueltigVon < 2000) || (JavaInteger.compare(eintrag.gueltigVon, schuljahr) <= 0) || ((eintrag.gueltigBis !== null) && (eintrag.gueltigBis > 3000))))
 					throw new CoreTypeException(this._name + ": Die Historie ist fehlerhaft beim Eintrag für " + coreTypeEntry.name() + ". Neuere Historieneinträge müssen weiter unten in der Liste stehen.")
 				schuljahr = (eintrag.gueltigBis === null) ? JavaInteger.MAX_VALUE : eintrag.gueltigBis;
 				if (setIDs.contains(eintrag.id))

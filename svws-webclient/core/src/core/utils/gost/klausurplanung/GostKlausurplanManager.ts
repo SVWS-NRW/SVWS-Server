@@ -851,7 +851,7 @@ export class GostKlausurplanManager extends JavaObject {
 		const idSchuljahresabschnitt : number | null = this.getSchuljahresabschnittIdByTerminOrNull(termin);
 		if (idSchuljahresabschnitt === null)
 			return this.stundenplanManagerGetByDatumLinearSearch(DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
-		return this.stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt!, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
+		return this.stundenplanManagerGetByAbschnittAndDatumOrException(idSchuljahresabschnitt, DeveloperNotificationException.ifNull(JavaString.format("Kein Datum zum Termin %d gefunden.", termin.id), termin.datum));
 	}
 
 	private stundenplanManagerGetByDatumLinearSearch(datum : string) : StundenplanManager {
@@ -3377,7 +3377,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public terminOrExceptionBySchuelerklausurTermin(termin : GostSchuelerklausurTermin) : GostKlausurtermin {
 		if (termin.folgeNr > 0) {
-			return this.terminGetByIdOrException(DeveloperNotificationException.ifNull(JavaString.format("idTermin von Termin %d", termin.id), termin.idTermin)!);
+			return this.terminGetByIdOrException(DeveloperNotificationException.ifNull(JavaString.format("idTermin von Termin %d", termin.id), termin.idTermin));
 		}
 		return this.terminOrExceptionByKursklausur(this.kursklausurBySchuelerklausurTermin(termin));
 	}
@@ -4693,7 +4693,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return der zugehörige {@link StundenplanRaum}
 	 */
 	public stundenplanraumGetByKlausurraum(raum : GostKlausurraum) : StundenplanRaum {
-		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum)!);
+		return this.stundenplanManagerGetByTerminOrException(this.terminGetByIdOrException(raum.idTermin)).raumGetByIdOrException(DeveloperNotificationException.ifNull("StundenplanRaum darf nicht NULL sein", raum.idStundenplanRaum));
 	}
 
 	/**

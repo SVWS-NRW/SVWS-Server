@@ -50,7 +50,7 @@ export class ArrayMapCollectionIterator<K, V> extends JavaObject implements Java
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this.getNextIndex(this._current);
-		const result : V | null = this._map.getValueAt(this._current!);
+		const result : V | null = this._map.getValueAt(this._current);
 		if (result === null)
 			throw new NoSuchElementException()
 		return result;
@@ -63,7 +63,7 @@ export class ArrayMapCollectionIterator<K, V> extends JavaObject implements Java
 	public remove() : void {
 		if (this._current === null)
 			throw new IllegalStateException()
-		this._map.remove(this._map.getKeyAt(this._current!));
+		this._map.remove(this._map.getKeyAt(this._current));
 		this._current = null;
 	}
 

@@ -52,7 +52,7 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this.getNextIndex(this._current);
-		const result : ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(this._current!);
+		const result : ArrayMapEntry<K, V> | null = this._map.getEntryByIndex(this._current);
 		if (result === null)
 			throw new NoSuchElementException()
 		return result;
@@ -65,7 +65,7 @@ export class ArrayMapEntrySetIterator<K, V> extends JavaObject implements JavaIt
 	public remove() : void {
 		if (this._current === null)
 			throw new IllegalStateException()
-		this._map.remove(this._map.getKeyAt(this._current!));
+		this._map.remove(this._map.getKeyAt(this._current));
 		this._current = null;
 	}
 

@@ -50,7 +50,7 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 			throw new NoSuchElementException()
 		this._current = this._next;
 		this._next = this.getNextIndex(this._current);
-		const key : K | null = this._map.getKeyAt(this._current!);
+		const key : K | null = this._map.getKeyAt(this._current);
 		if (key === null)
 			throw new NoSuchElementException()
 		return key;
@@ -63,7 +63,7 @@ export class ArrayMapKeySetIterator<K, V> extends JavaObject implements JavaIter
 	public remove() : void {
 		if (this._current === null)
 			throw new IllegalStateException()
-		this._map.remove(this._map.getKeyAt(this._current!));
+		this._map.remove(this._map.getKeyAt(this._current));
 		this._current = null;
 	}
 

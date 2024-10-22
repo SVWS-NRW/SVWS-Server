@@ -473,7 +473,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 					continue;
 				const list : ArrayList<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>(set);
 				if (wahlkonflikte < 10) {
-					sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist in " + this._parent.toStringSchieneSimple(e.getKey()!) + " in mehreren Kursen:");
+					sb.append(this._parent.toStringSchuelerSimple(idSchueler) + " ist in " + this._parent.toStringSchieneSimple(e.getKey()) + " in mehreren Kursen:");
 					for (let i : number = 0; i < list.size(); i++)
 						sb.append((i === 0 ? "" : ", ") + this._parent.toStringKursSimple(list.get(i).id));
 					sb.append("\n");
@@ -943,7 +943,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(r : GostBlockungRegel) : void {
 		for (const eKurs of this._kursID_to_kurs.values())
 			for (const eSchieneID of eKurs.schienen) {
-				const nr : number = this.getSchieneG(eSchieneID!).nummer;
+				const nr : number = this.getSchieneG(eSchieneID).nummer;
 				const kursart : number = r.parameter.get(0);
 				const schienenNrVon : number = r.parameter.get(1);
 				const schienenNrBis : number = r.parameter.get(2);
@@ -2110,7 +2110,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	 * @return TRUE, falls der Schüler den Status {@link SchuelerStatus#EXTERN} hat.
 	 */
 	private getOfSchuelerHatStatusExtern(idSchueler : number) : boolean {
-		const idStatus : number = this.getSchuelerG(idSchueler!).status;
+		const idStatus : number = this.getSchuelerG(idSchueler).status;
 		const status : SchuelerStatus | null = SchuelerStatus.data().getWertByID(idStatus);
 		return (status as unknown === SchuelerStatus.EXTERN as unknown);
 	}
@@ -2249,7 +2249,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			return false;
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		for (const idSchiene of kurs.schienen)
-			if (this.getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene!).size() > 1)
+			if (this.getOfSchuelerOfSchieneKursmenge(idSchueler, idSchiene).size() > 1)
 				return true;
 		return false;
 	}
@@ -2426,7 +2426,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfKursSchuelermenge(idKurs : number) : List<Schueler> {
 		const list : List<Schueler> = new ArrayList<Schueler>();
 		for (const idSchueler of this.getKursE(idKurs).schueler)
-			list.add(this.getSchuelerG(idSchueler!));
+			list.add(this.getSchuelerG(idSchueler));
 		return list;
 	}
 
@@ -2495,7 +2495,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const set : JavaSet<number> = new HashSet<number>();
 		for (const schiene of this.getOfKursSchienenmenge(idKursID))
 			for (const idSchueler of this.getKursE(idKursID).schueler)
-				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler!, schiene.id).size() > 1)
+				if (this.getOfSchuelerOfSchieneKursmenge(idSchueler, schiene.id).size() > 1)
 					set.add(idSchueler);
 		return set;
 	}
@@ -2590,7 +2590,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			try {
-				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 				if ((fachwahl.abiturfach !== null) && ((fachwahl.abiturfach === 1) || (fachwahl.abiturfach === 2)))
 					summe++;
 			} catch(dne : any) {
@@ -2611,7 +2611,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			try {
-				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 3))
 					summe++;
 			} catch(dne : any) {
@@ -2632,7 +2632,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		let summe : number = 0;
 		for (const idSchueler of this.getKursE(idKurs).schueler) {
 			try {
-				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler!, idKurs);
+				const fachwahl : GostFachwahl = this.getOfSchuelerOfKursFachwahl(idSchueler, idKurs);
 				if ((fachwahl.abiturfach !== null) && (fachwahl.abiturfach === 4))
 					summe++;
 			} catch(dne : any) {
@@ -2919,10 +2919,10 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetDummyMengeAnKursSchienenFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
-			for (const schiene of this.getOfKursSchienenmenge(idKurs!))
-				if (!this.getOfKursOfSchieneIstFixiert(idKurs!, schiene.id)) {
+			for (const schiene of this.getOfKursSchienenmenge(idKurs))
+				if (!this.getOfKursOfSchieneIstFixiert(idKurs, schiene.id)) {
 					const schienenNr : number = this._parent.schieneGet(schiene.id).nummer;
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs!, schienenNr));
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, schienenNr));
 				}
 		return list;
 	}
@@ -2968,9 +2968,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetDummyMengeAnKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
-			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
-				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!))
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs!));
+			for (const schueler of this.getOfKursSchuelermenge(idKurs))
+				if (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
 		return list;
 	}
 
@@ -2985,9 +2985,9 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	private regelGetDummyMengeAnAbiturKursSchuelerFixierungen(listeDerKursIDs : List<number>) : List<GostBlockungRegel> {
 		const list : List<GostBlockungRegel> = new ArrayList<GostBlockungRegel>();
 		for (const idKurs of listeDerKursIDs)
-			for (const schueler of this.getOfKursSchuelermenge(idKurs!))
-				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs!)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs!)))
-					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs!));
+			for (const schueler of this.getOfKursSchuelermenge(idKurs))
+				if ((this.getOfSchuelerOfKursIstAbiturfach(schueler.id, idKurs)) && (!this.getOfSchuelerOfKursIstFixiert(schueler.id, idKurs)))
+					list.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, schueler.id, idKurs));
 		return list;
 	}
 
@@ -3543,7 +3543,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const pair of schuelerKursPaare) {
 			const idSchueler : number = pair.a;
 			const idKurs : number = pair.b;
-			const kurs1 : GostBlockungKurs = this._parent.kursGet(idKurs!);
+			const kurs1 : GostBlockungKurs = this._parent.kursGet(idKurs);
 			const keySperrung : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
 			const regelSperrung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keySperrung);
 			if (regelSperrung !== null)
@@ -3553,7 +3553,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 				const regelFixierung : GostBlockungRegel | null = this._parent.regelGetByLongArrayKeyOrNull(keyFixierung);
 				if (kurs1.id === kurs2.id) {
 					if (regelFixierung === null) {
-						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler!, idKurs!));
+						u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs));
 					}
 				} else {
 					if (regelFixierung !== null) {
@@ -3886,16 +3886,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
 		for (const r11 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0)!, r11.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r11);
 		for (const r12 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0)!, r12.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r12);
 		for (const r13 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0)!, r13.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r13);
 		for (const r14 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0)!, r14.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r14);
 		if ((0 <= idS1) && (idS1 < idS2))
 			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER.typ, idS1, idS2));
@@ -3920,16 +3920,16 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const idS1 : number = Math.min(idSchueler1, idSchueler2);
 		const idS2 : number = Math.max(idSchueler1, idSchueler2);
 		for (const r11 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0)!, r11.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r11.parameter.get(0), r11.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r11);
 		for (const r12 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER_IN_FACH))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0)!, r12.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r12.parameter.get(0), r12.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r12);
 		for (const r13 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0)!, r13.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r13.parameter.get(0), r13.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r13);
 		for (const r14 of this._parent.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER))
-			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0)!, r14.parameter.get(1)!, idS1, idS2))
+			if (GostBlockungsergebnisManager.regelupdateIsEqualPair(r14.parameter.get(0), r14.parameter.get(1), idS1, idS2))
 				u.listEntfernen.add(r14);
 		if ((0 <= idS1) && (idS1 < idS2))
 			u.listHinzuzufuegen.add(DTOUtils.newGostBlockungRegel2(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_MIT_SCHUELER.typ, idS1, idS2));
@@ -5183,7 +5183,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	public getOfSchieneSchuelermengeMitKollisionen(idSchiene : number) : JavaSet<number> {
 		const set : JavaSet<number> = new HashSet<number>();
 		for (const schuelerID of this._schuelerID_to_kollisionen.keySet())
-			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID!, idSchiene).size() > 1)
+			if (this.getOfSchuelerOfSchieneKursmenge(schuelerID, idSchiene).size() > 1)
 				set.add(schuelerID);
 		return set;
 	}
@@ -5397,7 +5397,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		for (const idKurs of idKurse) {
 			const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 			for (const schienenID of kurs.schienen) {
-				const i : JavaIterator<GostBlockungsergebnisKurs> = this.getSchieneE(schienenID!).kurse.iterator();
+				const i : JavaIterator<GostBlockungsergebnisKurs> = this.getSchieneE(schienenID).kurse.iterator();
 				while (i.hasNext())
 					if (i.next().id === kurs.id)
 						i.remove();
@@ -5419,7 +5419,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kursKeep : GostBlockungsergebnisKurs = this.getKursE(idKursID1keep);
 		kursKeep.schueler.addAll(kursDelete.schueler);
 		for (const schienenID of kursDelete.schienen)
-			this.getSchieneE(schienenID!).kurse.remove(kursDelete);
+			this.getSchieneE(schienenID).kurse.remove(kursDelete);
 		this._parent.kursMerge(idKursID1keep, idKursID2delete);
 		this.stateRevalidateEverything();
 	}
@@ -5502,14 +5502,14 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private createComparatorFachartKursartFach() : Comparator<number> {
 		const comp : Comparator<number> = { compare : (a: number, b: number) => {
-			const aKursartID : number = GostKursart.getKursartID(a!);
-			const bKursartID : number = GostKursart.getKursartID(b!);
+			const aKursartID : number = GostKursart.getKursartID(a);
+			const bKursartID : number = GostKursart.getKursartID(b);
 			if (aKursartID < bKursartID)
 				return -1;
 			if (aKursartID > bKursartID)
 				return +1;
-			const aFachID : number = GostKursart.getFachID(a!);
-			const bFachID : number = GostKursart.getFachID(b!);
+			const aFachID : number = GostKursart.getFachID(a);
+			const bFachID : number = GostKursart.getFachID(b);
 			const aFach : GostFach | null = this._parent.faecherManager().get(aFachID);
 			const bFach : GostFach | null = this._parent.faecherManager().get(bFachID);
 			return GostFaecherManager.comp.compare(aFach, bFach);
@@ -5519,15 +5519,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 
 	private createComparatorFachartFachKursart() : Comparator<number> {
 		const comp : Comparator<number> = { compare : (a: number, b: number) => {
-			const aFachID : number = GostKursart.getFachID(a!);
-			const bFachID : number = GostKursart.getFachID(b!);
+			const aFachID : number = GostKursart.getFachID(a);
+			const bFachID : number = GostKursart.getFachID(b);
 			const aFach : GostFach | null = this._parent.faecherManager().get(aFachID);
 			const bFach : GostFach | null = this._parent.faecherManager().get(bFachID);
 			const cmpFach : number = GostFaecherManager.comp.compare(aFach, bFach);
 			if (cmpFach !== 0)
 				return cmpFach;
-			const aKursartID : number = GostKursart.getKursartID(a!);
-			const bKursartID : number = GostKursart.getKursartID(b!);
+			const aKursartID : number = GostKursart.getKursartID(a);
+			const bKursartID : number = GostKursart.getKursartID(b);
 			if (aKursartID < bKursartID)
 				return -1;
 			if (aKursartID > bKursartID)
@@ -5582,8 +5582,8 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		logger.modifyIndent(+4);
 		logger.logLn("----- Kurse sortiert nach Fachart -----");
 		for (const fachartID of this._fachartID_to_kurseList.keySet()) {
-			logger.logLn("FachartID = " + fachartID + " (KD = " + this.getOfFachartKursdifferenz(fachartID!) + ")");
-			for (const kurs of this.getOfFachartKursmenge(fachartID!)) {
+			logger.logLn("FachartID = " + fachartID + " (KD = " + this.getOfFachartKursdifferenz(fachartID) + ")");
+			for (const kurs of this.getOfFachartKursmenge(fachartID)) {
 				logger.logLn("    " + this.getOfKursName(kurs.id) + " : " + kurs.schueler.size() + " SuS");
 			}
 		}

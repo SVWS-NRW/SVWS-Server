@@ -489,67 +489,67 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	private compareRegel_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
 		if (cmpKurs1 !== 0)
 			return cmpKurs1;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Kurs_Nummer(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
 		if (cmpKurs1 !== 0)
 			return cmpKurs1;
-		const cmpSchienenNr : number = JavaLong.compare(a.parameter.get(1)!, b.parameter.get(1)!);
+		const cmpSchienenNr : number = JavaLong.compare(a.parameter.get(1), b.parameter.get(1));
 		if (cmpSchienenNr !== 0)
 			return cmpSchienenNr;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
-		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1)!, b.parameter.get(1)!);
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
 		if (cmpKurs1 !== 0)
 			return cmpKurs1;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Kurs_Kurs(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpKurs1 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(0), b.parameter.get(0));
 		if (cmpKurs1 !== 0)
 			return cmpKurs1;
-		const cmpKurs2 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1)!, b.parameter.get(1)!);
+		const cmpKurs2 : number = this.compareKurs_Kursart_Fach_Nummer(a.parameter.get(1), b.parameter.get(1));
 		if (cmpKurs2 !== 0)
 			return cmpKurs2;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Schueler_Fach(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
-		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1)!, b.parameter.get(1)!);
+		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1), b.parameter.get(1));
 		if (cmpSchueler2 !== 0)
 			return cmpSchueler2;
-		const cmpFach : number = this.compareFach(a.parameter.get(2)!, b.parameter.get(2)!);
+		const cmpFach : number = this.compareFach(a.parameter.get(2), b.parameter.get(2));
 		if (cmpFach !== 0)
 			return cmpFach;
 		return JavaLong.compare(a.id, b.id);
 	}
 
 	private compareRegel_Schueler_Schueler(a : GostBlockungRegel, b : GostBlockungRegel) : number {
-		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0)!, b.parameter.get(0)!);
+		const cmpSchueler1 : number = this.compareSchueler(a.parameter.get(0), b.parameter.get(0));
 		if (cmpSchueler1 !== 0)
 			return cmpSchueler1;
-		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1)!, b.parameter.get(1)!);
+		const cmpSchueler2 : number = this.compareSchueler(a.parameter.get(1), b.parameter.get(1));
 		if (cmpSchueler2 !== 0)
 			return cmpSchueler2;
 		return JavaLong.compare(a.id, b.id);

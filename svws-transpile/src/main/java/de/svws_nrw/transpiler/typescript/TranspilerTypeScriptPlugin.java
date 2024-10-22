@@ -1471,9 +1471,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						if (i >= params.size())
 							throw new TranspilerException("Transpiler Error: Number of parameters in invoked method is to small");
 						final VariableElement param = params.get(i);
-						// append tsValueOf if the parameter type requires a primitive type instead of the wrapper type
-						if (param.asType().getKind().isPrimitive())
-							sb.append("!");
 					} else if (exprTree instanceof final IdentifierTree it) {
 						final Set<ExecutableElement> methods = unit.allLocalMethodElements.get(it.toString());
 						if (methods == null)
@@ -1486,9 +1483,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							if (expressions.size() != methodParams.size())
 								continue; // invalid number of parameters
 							final VariableElement param = methodParams.get(i);
-							// append tsValueOf if the parameter type requires a primitive type instead of the wrapper type
-							if (param.asType().getKind().isPrimitive())
-								sb.append("!");
 						}
 					}
 				}

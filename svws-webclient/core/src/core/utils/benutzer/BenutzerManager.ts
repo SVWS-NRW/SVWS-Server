@@ -87,7 +87,7 @@ export class BenutzerManager extends JavaObject {
 			for (const kID of pDaten.kompetenzen) {
 				if (kID === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
-				const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID!);
+				const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kID);
 				if (komp === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kID + " existiert nicht.")
 				if (this._setKompetenzen.contains(komp))
@@ -111,7 +111,7 @@ export class BenutzerManager extends JavaObject {
 		this._mapGruppen.put(bgd.id, bgd);
 		this._setGruppenIDs.add(bgd.id);
 		for (const kid of bgd.kompetenzen) {
-			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
+			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid);
 			if (komp === null)
 				throw new NullPointerException("Fehlerhafte Daten: Die Kompetenz mit der ID " + kid + " existiert nicht.")
 			this._setKompetenzenAlle.add(komp);
@@ -137,7 +137,7 @@ export class BenutzerManager extends JavaObject {
 		this._mapGruppen.remove(bgd.id);
 		this._setGruppenIDs.remove(bgd.id);
 		for (const kid of bgd.kompetenzen) {
-			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid!);
+			const komp : BenutzerKompetenz | null = BenutzerKompetenz.getByID(kid);
 			if (komp !== null) {
 				const gruppen : ArrayList<BenutzergruppeDaten> | null = this._mapKompetenzenVonGruppe.get(komp);
 				if (gruppen === null)
