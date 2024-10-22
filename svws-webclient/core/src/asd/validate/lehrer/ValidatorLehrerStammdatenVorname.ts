@@ -1,0 +1,52 @@
+import { JavaCharacter } from '../../../java/lang/JavaCharacter';
+import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
+import { Class } from '../../../java/lang/Class';
+import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
+import { Validator } from '../../../asd/validate/Validator';
+
+export class ValidatorLehrerStammdatenVorname extends Validator<LehrerStammdaten> {
+
+
+	/**
+	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
+	 *
+	 * @param daten     die Daten des Validators
+	 * @param kontext   der Kontext des Validators
+	 */
+	public constructor(daten : LehrerStammdaten, kontext : ValidatorKontext) {
+		super(daten, kontext);
+	}
+
+	protected pruefe() : boolean {
+		const vorname : string | null = this.daten().vorname;
+		if ((vorname === null) || (vorname.length === 0)) {
+			this.addFehler("Kein Wert im Feld 'vorname'.");
+			return false;
+		}
+		const success : boolean = true;
+		if (vorname.startsWith("") || vorname.startsWith("\t"))
+			this.addFehler("Vorname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+		if (!JavaCharacter.isUpperCase(vorname.charAt(0)))
+			this.addFehler("Vorname der Lehrkraft: Die erste Stelle des Vornamens muss mit einem Großbuchstaben besetzt sein.");
+		if ((vorname.length > 1) && JavaCharacter.isUpperCase(vorname.charAt(1)))
+			this.addFehler("Vorname der Lehrkraft: Die zweite Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+		if ((vorname.length > 2) && JavaCharacter.isUpperCase(vorname.charAt(2)))
+			this.addFehler("Vorname der Lehrkraft: Die dritte Stelle des Vornamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Vornamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+		return success;
+	}
+
+	transpilerCanonicalName(): string {
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVorname';
+	}
+
+	isTranspiledInstanceOf(name : string): boolean {
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVorname', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+	}
+
+	public static class = new Class<ValidatorLehrerStammdatenVorname>('de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenVorname');
+
+}
+
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLehrerStammdatenVorname(obj : unknown) : ValidatorLehrerStammdatenVorname {
+	return obj as ValidatorLehrerStammdatenVorname;
+}

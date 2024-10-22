@@ -39,4 +39,20 @@ public enum LehrerEinsatzstatus implements @NotNull CoreType<LehrerEinsatzstatus
 		return CoreTypeDataManager.getManager(LehrerEinsatzstatus.class);
 	}
 
+
+	/**
+	 * Gibt den Einsatz-Status zu dem übergebenen Schlüssel zurück. Im Fall von null
+	 * wird der Default-Wert zurückgegeben, dass der Lehrer nur an dieser Stammschule
+	 * tätig ist. Bei einem ungültigen Schlüssel wird null zurückgegeben,
+	 *
+	 * @param schluessel   der Schlüsselwert
+	 *
+	 * @return der zugehörige Einsatzstatus oder null
+	 */
+	public static LehrerEinsatzstatus getBySchluessel(final String schluessel) {
+		if (schluessel == null)
+			return LehrerEinsatzstatus.DEFAULT;
+		return LehrerEinsatzstatus.data().getWertBySchluessel(schluessel);
+	}
+
 }

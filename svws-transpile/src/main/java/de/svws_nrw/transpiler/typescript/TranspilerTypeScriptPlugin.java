@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -506,6 +507,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strMAX_VALUE -> "JavaDouble.MAX_VALUE";
 				case strSIZE -> "JavaDouble.SIZE";
 				case strBYTES -> "JavaDouble.BYTES";
+				default -> null;
+			};
+			case strCharacter -> switch (node.getIdentifier().toString()) {
+				case "isUpperCase" -> "JavaCharacter.isUpperCase";
+				case "isLowerCase" -> "JavaCharacter.isLowerCase";
 				default -> null;
 			};
 			default -> null;
@@ -1538,6 +1544,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		// print the expression to identify the method
 		final StringBuilder sb = new StringBuilder();
 		final ExpressionTree methodExpression = node.getMethodSelect();
+		final TranspilerUnit unit = transpiler.getTranspilerUnit(node);
 		if (methodExpression instanceof final IdentifierTree ident) {
 			// add super method calls in classes without a specified super class
 			if (strSuper.equals(ident.getName().toString())) {
@@ -1621,11 +1628,33 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					};
 				}
 			}
+			// replace some static methods of Set
+			if ((type instanceof final ExpressionClassType classType) && ("java.util.Set".equals(classType.getFullQualifiedName()))) {
+				final Set<String> strMethods = Set.of("of");
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					final String method = switch (ms.getIdentifier().toString()) {
+						case "of" -> "java_util_Set_of";
+						default -> throw new TranspilerException("TranspilerError: Unhandled Set method");
+					};
+					unit.allDefaultMethodImports.computeIfAbsent("java.util.JavaSet", v -> new LinkedHashSet<>()).add(method);
+					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				}
+			}
+			// replace some static methods of List
+			if ((type instanceof final ExpressionClassType classType) && ("java.util.List".equals(classType.getFullQualifiedName()))) {
+				final Set<String> strMethods = Set.of("of");
+				if (strMethods.contains(ms.getIdentifier().toString())) {
+					final String method = switch (ms.getIdentifier().toString()) {
+						case "of" -> "ArrayList.of";  // TODO immutable list in typescript implementieren und davon eine Instanz erzeugen -> siehe auch ImmutableCollections.listFromArray
+						default -> throw new TranspilerException("TranspilerError: Unhandled List method");
+					};
+					unit.imports.put("ArrayList", "java.util");
+					return method + "(" + convertMethodInvocationParameters(node.getArguments(), null, null, true) + ")";
+				}
+			}
 			// replace some Math commands
 			if ((type instanceof final ExpressionClassType classType) && ("java.lang.Math".equals(classType.getFullQualifiedName()))) {
-				final Set<String> strMethods = Set.of(
-						"clamp"
-				);
+				final Set<String> strMethods = Set.of("clamp");
 				if (strMethods.contains(ms.getIdentifier().toString())) {
 					transpiler.getTranspilerUnit(node).imports.put("Math", "java.lang");
 					return switch (ms.getIdentifier().toString()) {
@@ -2451,7 +2480,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final String ifName = te.getQualifiedName().toString();
 				final String defaultMethodName = ifName.replace(".", "_") + "_" + methodName;
 				sb.append(defaultMethodName);
-				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new ArrayList<>()).add(defaultMethodName);
+				unit.allDefaultMethodImports.computeIfAbsent(ifName, v -> new LinkedHashSet<>()).add(defaultMethodName);
 			}
 			sb.append("(this");
 			for (final var param : method.getParameters())
@@ -2803,6 +2832,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				case strLong -> "JavaLong";
 				case strFloat -> "JavaFloat";
 				case strDouble -> "JavaDouble";
+				case strCharacter -> "JavaCharacter";
 				case "Enum" -> "JavaEnum";
 				case "Iterable" -> "JavaIterable";
 				default -> className;
@@ -2895,7 +2925,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			final String importCast = "cast_" + value.replace('.', '_') + "_" + key.replace('.', '_');
 			switch (value + "." + key) {
 				case "java.lang.String", "java.lang.Long", "java.lang.Integer", "java.lang.Short", "java.lang.Byte", "java.lang.Float", "java.lang.Double",
-						"java.lang.Boolean", "java.lang.Enum" -> {
+						"java.lang.Boolean", "java.lang.Character", "java.lang.Enum" -> {
 					final String importName = "Java" + key;
 					final String importLocation = importPathPrefix + "java/lang/Java" + key;
 					final boolean hasClass = body.contains(importName);
@@ -2912,9 +2942,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 					}
 				}
 				case "java.lang.reflect.Array" -> {
-					/**/
-				}
-				case "java.lang.Character" -> {
 					/**/
 				}
 				case "java.lang.Math" -> {
@@ -2947,7 +2974,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							strImports.add(importName);
 						if (hasCast)
 							strImports.add(importCast);
-						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new ArrayList<>()))
+						for (final String m : unit.allDefaultMethodImports.getOrDefault(importFullPackageName + "." + importName, new LinkedHashSet<>()))
 							strImports.add(m);
 						if (!strTypeImports.isEmpty()) {
 							sb.append(strTypeImports.stream()

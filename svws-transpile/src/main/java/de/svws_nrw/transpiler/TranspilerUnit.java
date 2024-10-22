@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -107,7 +108,7 @@ public final class TranspilerUnit {
 	public final Map<IdentifierTree, String> allImports = new HashMap<>();
 
 	/** a map with all imports for default method implementations */
-	public final Map<String, List<String>> allDefaultMethodImports = new HashMap<>();
+	public final Map<String, LinkedHashSet<String>> allDefaultMethodImports = new HashMap<>();
 
 	/** a map with all identifiers in annotations that are not defined locally and must be imported bit are not in the import list of allImports */
 	public final Map<IdentifierTree, String> allImportsForAnnotations = new HashMap<>();
@@ -269,6 +270,7 @@ public final class TranspilerUnit {
 			case "Comparable", "Cloneable", "Override", "System",
 					"Object", "Class",
 					"Enum",
+					"Character",
 					"Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double",
 					"Math", "String", "StringBuilder",
 					"ArrayIndexOutOfBoundsException",

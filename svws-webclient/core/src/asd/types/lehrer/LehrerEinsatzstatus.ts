@@ -54,6 +54,21 @@ export class LehrerEinsatzstatus extends JavaEnum<LehrerEinsatzstatus> implement
 	}
 
 	/**
+	 * Gibt den Einsatz-Status zu dem übergebenen Schlüssel zurück. Im Fall von null
+	 * wird der Default-Wert zurückgegeben, dass der Lehrer nur an dieser Stammschule
+	 * tätig ist. Bei einem ungültigen Schlüssel wird null zurückgegeben,
+	 *
+	 * @param schluessel   der Schlüsselwert
+	 *
+	 * @return der zugehörige Einsatzstatus oder null
+	 */
+	public static getBySchluessel(schluessel : string | null) : LehrerEinsatzstatus | null {
+		if (schluessel === null)
+			return LehrerEinsatzstatus.DEFAULT;
+		return LehrerEinsatzstatus.data().getWertBySchluessel(schluessel);
+	}
+
+	/**
 	 * Returns an array with enumeration values.
 	 *
 	 * @returns the array with enumeration values

@@ -3,19 +3,19 @@ import { StringIndexOutOfBoundsException } from './StringIndexOutOfBoundsExcepti
 
 export interface CharSequence {
 
-    length() : number;
+	length() : number;
 
-    charAt(index : number) : string;
+	charAt(index : number) : string;
 
-    isEmpty() : boolean;
+	isEmpty() : boolean;
 
-    subSequence(start : number, end : number) : CharSequence;
+	subSequence(start : number, end : number) : CharSequence;
 
-    toString() : string | null;
+	toString() : string | null;
 
 }
 
-export function compare(cs1 : CharSequence, cs2 : CharSequence) : number {
+export function compare(cs1 : CharSequence | null, cs2 : CharSequence | null) : number {
 	if ((cs1 === null) || (cs2 === null))
 		throw new NullPointerException();
 	if (cs1 === cs2)
@@ -26,9 +26,9 @@ export function compare(cs1 : CharSequence, cs2 : CharSequence) : number {
 		if (a !== b) {
 			const cpA : number | undefined = a.codePointAt(0);
 			const cpB : number | undefined = b.codePointAt(0);
-			if (!cpA)
+			if (cpA === undefined)
 				throw new StringIndexOutOfBoundsException(0);
-			if (!cpB)
+			if (cpB === undefined)
 				throw new StringIndexOutOfBoundsException(0);
 			return cpA - cpB;
 		}
