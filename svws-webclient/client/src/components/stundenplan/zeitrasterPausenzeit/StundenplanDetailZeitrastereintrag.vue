@@ -41,7 +41,7 @@
 		selected: StundenplanZeitraster;
 		stundenplanManager: () => StundenplanManager;
 		patchZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
-		removeZeitraster: (multi: Iterable<StundenplanZeitraster>) => Promise<void>;
+		removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	}>();
 
 	const schuljahr = computed<number>(() => props.stundenplanManager().getSchuljahr());

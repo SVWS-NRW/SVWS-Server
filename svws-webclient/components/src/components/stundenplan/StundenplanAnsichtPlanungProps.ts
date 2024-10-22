@@ -8,7 +8,7 @@ import type { StundenplanKonfiguration } from "../../../../core/src/core/data/st
 export type StundenplanAnsichtPlanungProps = {
 	manager: () => StundenplanManager;
 	addZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
-	removeZeitraster: (multi: StundenplanZeitraster[]) => Promise<void>;
+	removeZeitraster: (zeitraster: Iterable<StundenplanZeitraster>) => Promise<void>;
 	importZeitraster: undefined | (() => Promise<void>);
 	schulform?: Schulform;
 	setSelection: (value: Wochentag | number | StundenplanZeitraster | StundenplanPausenzeit | undefined) => void;
