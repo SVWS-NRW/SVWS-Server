@@ -58,7 +58,7 @@ public final class ValidatorLehrerStammdatenNachname extends Validator<LehrerSta
 			return false;
 		}
 		final boolean success = true;
-		if (nachname.startsWith("") || nachname.startsWith("\t"))
+		if (nachname.startsWith(" ") || nachname.startsWith("\t"))
 			addFehler("Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
 		final @NotNull String nachnameOhneZusatz = getOhneZusatz(nachname);
 		if (!Character.isUpperCase(nachnameOhneZusatz.charAt(0)))

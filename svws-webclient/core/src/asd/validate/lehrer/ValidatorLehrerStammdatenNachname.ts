@@ -50,7 +50,7 @@ export class ValidatorLehrerStammdatenNachname extends Validator<LehrerStammdate
 			return false;
 		}
 		const success : boolean = true;
-		if (nachname.startsWith("") || nachname.startsWith("\t"))
+		if (nachname.startsWith(" ") || nachname.startsWith("\t"))
 			this.addFehler("Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
 		const nachnameOhneZusatz : string = this.getOhneZusatz(nachname);
 		if (!JavaCharacter.isUpperCase(nachnameOhneZusatz.charAt(0)))
