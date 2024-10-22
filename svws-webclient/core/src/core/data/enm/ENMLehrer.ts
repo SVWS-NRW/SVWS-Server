@@ -79,13 +79,13 @@ export class ENMLehrer extends JavaObject {
 	public static transpilerToJSON(obj : ENMLehrer) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
-		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
-		result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
+		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		result += '"eMailDienstlich" : ' + ((obj.eMailDienstlich === null) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
-		result += '"tsPasswordHash" : ' + ((!obj.tsPasswordHash) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+		result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -97,25 +97,25 @@ export class ENMLehrer extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
+			result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+			result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (obj.geschlecht !== undefined) {
-			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+			result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		}
 		if (obj.eMailDienstlich !== undefined) {
-			result += '"eMailDienstlich" : ' + ((!obj.eMailDienstlich) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
+			result += '"eMailDienstlich" : ' + ((obj.eMailDienstlich === null) ? 'null' : JSON.stringify(obj.eMailDienstlich)) + ',';
 		}
 		if (obj.passwordHash !== undefined) {
 			result += '"passwordHash" : ' + JSON.stringify(obj.passwordHash) + ',';
 		}
 		if (obj.tsPasswordHash !== undefined) {
-			result += '"tsPasswordHash" : ' + ((!obj.tsPasswordHash) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
+			result += '"tsPasswordHash" : ' + ((obj.tsPasswordHash === null) ? 'null' : JSON.stringify(obj.tsPasswordHash)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

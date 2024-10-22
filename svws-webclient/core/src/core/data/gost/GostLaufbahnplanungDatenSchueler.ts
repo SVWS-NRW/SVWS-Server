@@ -109,7 +109,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"bewertetesHalbjahr" : [ ';
 		for (let i = 0; i < obj.bewertetesHalbjahr.length; i++) {
 			const elem = obj.bewertetesHalbjahr[i];
@@ -150,7 +150,7 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 			result += '"geschlecht" : ' + JSON.stringify(obj.geschlecht) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.bewertetesHalbjahr !== undefined) {
 			const a = obj.bewertetesHalbjahr;

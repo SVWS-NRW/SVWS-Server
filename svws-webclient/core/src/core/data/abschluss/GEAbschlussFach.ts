@@ -73,12 +73,12 @@ export class GEAbschlussFach extends JavaObject {
 	public static transpilerToJSON(obj : GEAbschlussFach) : string {
 		let result = '{';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"note" : ' + obj.note.toString() + ',';
-		result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache.toString()) + ',';
-		result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
-		result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich.toString()) + ',';
-		result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen.toString()) + ',';
+		result += '"istFremdsprache" : ' + ((obj.istFremdsprache === null) ? 'null' : obj.istFremdsprache.toString()) + ',';
+		result += '"kursart" : ' + ((obj.kursart === null) ? 'null' : JSON.stringify(obj.kursart)) + ',';
+		result += '"ausgleich" : ' + ((obj.ausgleich === null) ? 'null' : obj.ausgleich.toString()) + ',';
+		result += '"ausgeglichen" : ' + ((obj.ausgeglichen === null) ? 'null' : obj.ausgeglichen.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,22 +90,22 @@ export class GEAbschlussFach extends JavaObject {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.note !== undefined) {
 			result += '"note" : ' + obj.note.toString() + ',';
 		}
 		if (obj.istFremdsprache !== undefined) {
-			result += '"istFremdsprache" : ' + ((!obj.istFremdsprache) ? 'null' : obj.istFremdsprache.toString()) + ',';
+			result += '"istFremdsprache" : ' + ((obj.istFremdsprache === null) ? 'null' : obj.istFremdsprache.toString()) + ',';
 		}
 		if (obj.kursart !== undefined) {
-			result += '"kursart" : ' + ((!obj.kursart) ? 'null' : JSON.stringify(obj.kursart)) + ',';
+			result += '"kursart" : ' + ((obj.kursart === null) ? 'null' : JSON.stringify(obj.kursart)) + ',';
 		}
 		if (obj.ausgleich !== undefined) {
-			result += '"ausgleich" : ' + ((!obj.ausgleich) ? 'null' : obj.ausgleich.toString()) + ',';
+			result += '"ausgleich" : ' + ((obj.ausgleich === null) ? 'null' : obj.ausgleich.toString()) + ',';
 		}
 		if (obj.ausgeglichen !== undefined) {
-			result += '"ausgeglichen" : ' + ((!obj.ausgeglichen) ? 'null' : obj.ausgeglichen.toString()) + ',';
+			result += '"ausgeglichen" : ' + ((obj.ausgeglichen === null) ? 'null' : obj.ausgeglichen.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

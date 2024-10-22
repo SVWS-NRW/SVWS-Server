@@ -50,7 +50,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 				result += ',';
 		}
 		result += ' ]' + ',';
-		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
+		result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -70,7 +70,7 @@ export class GostSchuelerFachwahl extends JavaObject {
 			result += ' ]' + ',';
 		}
 		if (obj.abiturFach !== undefined) {
-			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
+			result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

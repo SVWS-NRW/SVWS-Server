@@ -63,8 +63,8 @@ export class KatalogEintrag extends JavaObject {
 	public static transpilerToJSON(obj : KatalogEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istAenderbar" : ' + obj.istAenderbar.toString() + ',';
 		result = result.slice(0, -1);
@@ -78,10 +78,10 @@ export class KatalogEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.text !== undefined) {
-			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
+			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

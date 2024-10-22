@@ -86,7 +86,7 @@ export class Einwilligungsart extends JavaObject {
 		result += '"sichtbar" : ' + obj.sichtbar.toString() + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		result += '"personTyp" : ' + obj.personTyp.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -111,7 +111,7 @@ export class Einwilligungsart extends JavaObject {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (obj.personTyp !== undefined) {
 			result += '"personTyp" : ' + obj.personTyp.toString() + ',';

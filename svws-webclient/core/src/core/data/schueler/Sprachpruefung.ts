@@ -119,18 +119,18 @@ export class Sprachpruefung extends JavaObject {
 	public static transpilerToJSON(obj : Sprachpruefung) : string {
 		let result = '{';
 		result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
-		result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
-		result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"anspruchsniveauId" : ' + ((obj.anspruchsniveauId === null) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
+		result += '"pruefungsdatum" : ' + ((obj.pruefungsdatum === null) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
+		result += '"ersetzteSprache" : ' + ((obj.ersetzteSprache === null) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
 		result += '"istHSUPruefung" : ' + obj.istHSUPruefung.toString() + ',';
 		result += '"istFeststellungspruefung" : ' + obj.istFeststellungspruefung.toString() + ',';
 		result += '"kannErstePflichtfremdspracheErsetzen" : ' + obj.kannErstePflichtfremdspracheErsetzen.toString() + ',';
 		result += '"kannZweitePflichtfremdspracheErsetzen" : ' + obj.kannZweitePflichtfremdspracheErsetzen.toString() + ',';
 		result += '"kannWahlpflichtfremdspracheErsetzen" : ' + obj.kannWahlpflichtfremdspracheErsetzen.toString() + ',';
 		result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben.toString() + ',';
-		result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.toString()) + ',';
+		result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+		result += '"note" : ' + ((obj.note === null) ? 'null' : obj.note.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -142,16 +142,16 @@ export class Sprachpruefung extends JavaObject {
 			result += '"sprache" : ' + JSON.stringify(obj.sprache) + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.anspruchsniveauId !== undefined) {
-			result += '"anspruchsniveauId" : ' + ((!obj.anspruchsniveauId) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
+			result += '"anspruchsniveauId" : ' + ((obj.anspruchsniveauId === null) ? 'null' : obj.anspruchsniveauId.toString()) + ',';
 		}
 		if (obj.pruefungsdatum !== undefined) {
-			result += '"pruefungsdatum" : ' + ((!obj.pruefungsdatum) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
+			result += '"pruefungsdatum" : ' + ((obj.pruefungsdatum === null) ? 'null' : JSON.stringify(obj.pruefungsdatum)) + ',';
 		}
 		if (obj.ersetzteSprache !== undefined) {
-			result += '"ersetzteSprache" : ' + ((!obj.ersetzteSprache) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
+			result += '"ersetzteSprache" : ' + ((obj.ersetzteSprache === null) ? 'null' : JSON.stringify(obj.ersetzteSprache)) + ',';
 		}
 		if (obj.istHSUPruefung !== undefined) {
 			result += '"istHSUPruefung" : ' + obj.istHSUPruefung.toString() + ',';
@@ -172,10 +172,10 @@ export class Sprachpruefung extends JavaObject {
 			result += '"kannBelegungAlsFortgefuehrteSpracheErlauben" : ' + obj.kannBelegungAlsFortgefuehrteSpracheErlauben.toString() + ',';
 		}
 		if (obj.referenzniveau !== undefined) {
-			result += '"referenzniveau" : ' + ((!obj.referenzniveau) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
+			result += '"referenzniveau" : ' + ((obj.referenzniveau === null) ? 'null' : JSON.stringify(obj.referenzniveau)) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : obj.note.toString()) + ',';
+			result += '"note" : ' + ((obj.note === null) ? 'null' : obj.note.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

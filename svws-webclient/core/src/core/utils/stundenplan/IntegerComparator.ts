@@ -10,7 +10,7 @@ export class IntegerComparator extends JavaObject implements Comparator<number> 
 	}
 
 	public compare(o1 : number, o2 : number) : number {
-		return o1! - o2!;
+		return o1 - o2;
 	}
 
 	transpilerCanonicalName(): string {

@@ -98,7 +98,7 @@ export class LehrerListeEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"personTyp" : ' + JSON.stringify(obj.personTyp) + ',';
@@ -119,7 +119,7 @@ export class LehrerListeEintrag extends JavaObject {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.titel !== undefined) {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+			result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';

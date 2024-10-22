@@ -57,7 +57,7 @@ export class AdressenUtils extends JavaObject {
 			return null;
 		if (JavaObject.equalsTranspiler("", (hausNummer.trim())) && (JavaObject.equalsTranspiler("", (zusatz.trim()))))
 			return name;
-		return name! + " " + hausNummer.trim()! + zusatz.trim()!;
+		return name + " " + hausNummer.trim() + zusatz.trim();
 	}
 
 	transpilerCanonicalName(): string {

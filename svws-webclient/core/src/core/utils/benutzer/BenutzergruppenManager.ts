@@ -54,7 +54,7 @@ export class BenutzergruppenManager extends JavaObject {
 				if (kID === null)
 					throw new NullPointerException("Fehlerhafte Daten: Die Liste der Kompetenzen darf keine Null-Werte enthalten.")
 				if (this._setKompetenzen.contains(kID))
-					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID! + " wurde mehrfach bei der Gruppe eingetragen.")
+					throw new IllegalArgumentException("Die Kompetenz mit der ID " + kID + " wurde mehrfach bei der Gruppe eingetragen.")
 				this._setKompetenzen.add(kID);
 			}
 		} else throw new Error('invalid method overload');

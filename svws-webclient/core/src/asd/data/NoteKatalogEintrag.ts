@@ -66,10 +66,10 @@ export class NoteKatalogEintrag extends CoreTypeData {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
-		result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
+		result += '"notenpunkte" : ' + ((obj.notenpunkte === null) ? 'null' : obj.notenpunkte.toString()) + ',';
 		result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis) + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -91,16 +91,16 @@ export class NoteKatalogEintrag extends CoreTypeData {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		}
 		if (obj.notenpunkte !== undefined) {
-			result += '"notenpunkte" : ' + ((!obj.notenpunkte) ? 'null' : obj.notenpunkte.toString()) + ',';
+			result += '"notenpunkte" : ' + ((obj.notenpunkte === null) ? 'null' : obj.notenpunkte.toString()) + ',';
 		}
 		if (obj.textZeugnis !== undefined) {
 			result += '"textZeugnis" : ' + JSON.stringify(obj.textZeugnis) + ',';

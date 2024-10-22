@@ -86,16 +86,16 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragSchuelerImportExport) : string {
 		let result = '{';
-		result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
-		result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
-		result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
-		result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
-		result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
-		result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
-		result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
-		result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
-		result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
-		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
+		result += '"Tabelle" : ' + ((obj.Tabelle === null) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
+		result += '"TabellenAnzeige" : ' + ((obj.TabellenAnzeige === null) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
+		result += '"MasterTable" : ' + ((obj.MasterTable === null) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
+		result += '"ExpCmd" : ' + ((obj.ExpCmd === null) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
+		result += '"SrcGetFieldsSQL" : ' + ((obj.SrcGetFieldsSQL === null) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
+		result += '"DeleteSQL" : ' + ((obj.DeleteSQL === null) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
+		result += '"DstGetIDSQL" : ' + ((obj.DstGetIDSQL === null) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
+		result += '"HauptFeld" : ' + ((obj.HauptFeld === null) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
+		result += '"DetailFeld" : ' + ((obj.DetailFeld === null) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
+		result += '"Reihenfolge" : ' + ((obj.Reihenfolge === null) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -104,34 +104,34 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragSchuelerImportExport>) : string {
 		let result = '{';
 		if (obj.Tabelle !== undefined) {
-			result += '"Tabelle" : ' + ((!obj.Tabelle) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
+			result += '"Tabelle" : ' + ((obj.Tabelle === null) ? 'null' : JSON.stringify(obj.Tabelle)) + ',';
 		}
 		if (obj.TabellenAnzeige !== undefined) {
-			result += '"TabellenAnzeige" : ' + ((!obj.TabellenAnzeige) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
+			result += '"TabellenAnzeige" : ' + ((obj.TabellenAnzeige === null) ? 'null' : JSON.stringify(obj.TabellenAnzeige)) + ',';
 		}
 		if (obj.MasterTable !== undefined) {
-			result += '"MasterTable" : ' + ((!obj.MasterTable) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
+			result += '"MasterTable" : ' + ((obj.MasterTable === null) ? 'null' : JSON.stringify(obj.MasterTable)) + ',';
 		}
 		if (obj.ExpCmd !== undefined) {
-			result += '"ExpCmd" : ' + ((!obj.ExpCmd) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
+			result += '"ExpCmd" : ' + ((obj.ExpCmd === null) ? 'null' : JSON.stringify(obj.ExpCmd)) + ',';
 		}
 		if (obj.SrcGetFieldsSQL !== undefined) {
-			result += '"SrcGetFieldsSQL" : ' + ((!obj.SrcGetFieldsSQL) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
+			result += '"SrcGetFieldsSQL" : ' + ((obj.SrcGetFieldsSQL === null) ? 'null' : JSON.stringify(obj.SrcGetFieldsSQL)) + ',';
 		}
 		if (obj.DeleteSQL !== undefined) {
-			result += '"DeleteSQL" : ' + ((!obj.DeleteSQL) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
+			result += '"DeleteSQL" : ' + ((obj.DeleteSQL === null) ? 'null' : JSON.stringify(obj.DeleteSQL)) + ',';
 		}
 		if (obj.DstGetIDSQL !== undefined) {
-			result += '"DstGetIDSQL" : ' + ((!obj.DstGetIDSQL) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
+			result += '"DstGetIDSQL" : ' + ((obj.DstGetIDSQL === null) ? 'null' : JSON.stringify(obj.DstGetIDSQL)) + ',';
 		}
 		if (obj.HauptFeld !== undefined) {
-			result += '"HauptFeld" : ' + ((!obj.HauptFeld) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
+			result += '"HauptFeld" : ' + ((obj.HauptFeld === null) ? 'null' : JSON.stringify(obj.HauptFeld)) + ',';
 		}
 		if (obj.DetailFeld !== undefined) {
-			result += '"DetailFeld" : ' + ((!obj.DetailFeld) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
+			result += '"DetailFeld" : ' + ((obj.DetailFeld === null) ? 'null' : JSON.stringify(obj.DetailFeld)) + ',';
 		}
 		if (obj.Reihenfolge !== undefined) {
-			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
+			result += '"Reihenfolge" : ' + ((obj.Reihenfolge === null) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

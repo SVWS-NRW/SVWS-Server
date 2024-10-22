@@ -74,14 +74,14 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragAbiturInfos) : string {
 		let result = '{';
-		result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : JSON.stringify(obj.PrfOrdnung)) + ',';
-		result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : JSON.stringify(obj.AbiFach)) + ',';
-		result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : JSON.stringify(obj.Bedingung)) + ',';
-		result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
-		result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
-		result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"PrfOrdnung" : ' + ((obj.PrfOrdnung === null) ? 'null' : JSON.stringify(obj.PrfOrdnung)) + ',';
+		result += '"AbiFach" : ' + ((obj.AbiFach === null) ? 'null' : JSON.stringify(obj.AbiFach)) + ',';
+		result += '"Bedingung" : ' + ((obj.Bedingung === null) ? 'null' : JSON.stringify(obj.Bedingung)) + ',';
+		result += '"AbiInfoKrz" : ' + ((obj.AbiInfoKrz === null) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
+		result += '"AbiInfoBeschreibung" : ' + ((obj.AbiInfoBeschreibung === null) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
+		result += '"AbiInfoText" : ' + ((obj.AbiInfoText === null) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,28 +90,28 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragAbiturInfos>) : string {
 		let result = '{';
 		if (obj.PrfOrdnung !== undefined) {
-			result += '"PrfOrdnung" : ' + ((!obj.PrfOrdnung) ? 'null' : JSON.stringify(obj.PrfOrdnung)) + ',';
+			result += '"PrfOrdnung" : ' + ((obj.PrfOrdnung === null) ? 'null' : JSON.stringify(obj.PrfOrdnung)) + ',';
 		}
 		if (obj.AbiFach !== undefined) {
-			result += '"AbiFach" : ' + ((!obj.AbiFach) ? 'null' : JSON.stringify(obj.AbiFach)) + ',';
+			result += '"AbiFach" : ' + ((obj.AbiFach === null) ? 'null' : JSON.stringify(obj.AbiFach)) + ',';
 		}
 		if (obj.Bedingung !== undefined) {
-			result += '"Bedingung" : ' + ((!obj.Bedingung) ? 'null' : JSON.stringify(obj.Bedingung)) + ',';
+			result += '"Bedingung" : ' + ((obj.Bedingung === null) ? 'null' : JSON.stringify(obj.Bedingung)) + ',';
 		}
 		if (obj.AbiInfoKrz !== undefined) {
-			result += '"AbiInfoKrz" : ' + ((!obj.AbiInfoKrz) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
+			result += '"AbiInfoKrz" : ' + ((obj.AbiInfoKrz === null) ? 'null' : JSON.stringify(obj.AbiInfoKrz)) + ',';
 		}
 		if (obj.AbiInfoBeschreibung !== undefined) {
-			result += '"AbiInfoBeschreibung" : ' + ((!obj.AbiInfoBeschreibung) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
+			result += '"AbiInfoBeschreibung" : ' + ((obj.AbiInfoBeschreibung === null) ? 'null' : JSON.stringify(obj.AbiInfoBeschreibung)) + ',';
 		}
 		if (obj.AbiInfoText !== undefined) {
-			result += '"AbiInfoText" : ' + ((!obj.AbiInfoText) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
+			result += '"AbiInfoText" : ' + ((obj.AbiInfoText === null) ? 'null' : JSON.stringify(obj.AbiInfoText)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

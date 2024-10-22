@@ -92,14 +92,14 @@ export class BetriebAnsprechpartner extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
-		result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
-		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
-		result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
-		result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
+		result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
+		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"abteilung" : ' + ((obj.abteilung === null) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
+		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"GU_ID" : ' + ((obj.GU_ID === null) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -114,28 +114,28 @@ export class BetriebAnsprechpartner extends JavaObject {
 			result += '"betrieb_id" : ' + obj.betrieb_id.toString() + ',';
 		}
 		if (obj.name !== undefined) {
-			result += '"name" : ' + ((!obj.name) ? 'null' : JSON.stringify(obj.name)) + ',';
+			result += '"name" : ' + ((obj.name === null) ? 'null' : JSON.stringify(obj.name)) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+			result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (obj.anrede !== undefined) {
-			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+			result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
 		if (obj.telefon !== undefined) {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+			result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (obj.email !== undefined) {
-			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (obj.abteilung !== undefined) {
-			result += '"abteilung" : ' + ((!obj.abteilung) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
+			result += '"abteilung" : ' + ((obj.abteilung === null) ? 'null' : JSON.stringify(obj.abteilung)) + ',';
 		}
 		if (obj.titel !== undefined) {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+			result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (obj.GU_ID !== undefined) {
-			result += '"GU_ID" : ' + ((!obj.GU_ID) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
+			result += '"GU_ID" : ' + ((obj.GU_ID === null) ? 'null' : JSON.stringify(obj.GU_ID)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

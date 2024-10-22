@@ -204,7 +204,7 @@ export class SatInput extends JavaObject {
 			const c : number = this.create_var_OR(a, b);
 			list.addLast(c);
 		}
-		return list.removeFirst()!;
+		return list.removeFirst();
 	}
 
 	/**

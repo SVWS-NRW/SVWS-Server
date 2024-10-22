@@ -102,14 +102,14 @@ export class WiedervorlageEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idBenutzer" : ' + obj.idBenutzer.toString() + ',';
-		result += '"idBenutzergruppe" : ' + ((!obj.idBenutzergruppe) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
-		result += '"typPerson" : ' + ((!obj.typPerson) ? 'null' : obj.typPerson.toString()) + ',';
-		result += '"idPerson" : ' + ((!obj.idPerson) ? 'null' : obj.idPerson.toString()) + ',';
+		result += '"idBenutzergruppe" : ' + ((obj.idBenutzergruppe === null) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
+		result += '"typPerson" : ' + ((obj.typPerson === null) ? 'null' : obj.typPerson.toString()) + ',';
+		result += '"idPerson" : ' + ((obj.idPerson === null) ? 'null' : obj.idPerson.toString()) + ',';
 		result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
-		result += '"tsAngelegt" : ' + ((!obj.tsAngelegt) ? 'null' : JSON.stringify(obj.tsAngelegt)) + ',';
-		result += '"tsWiedervorlage" : ' + ((!obj.tsWiedervorlage) ? 'null' : JSON.stringify(obj.tsWiedervorlage)) + ',';
-		result += '"tsErledigt" : ' + ((!obj.tsErledigt) ? 'null' : JSON.stringify(obj.tsErledigt)) + ',';
-		result += '"idBenutzerErledigt" : ' + ((!obj.idBenutzerErledigt) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
+		result += '"tsAngelegt" : ' + ((obj.tsAngelegt === null) ? 'null' : JSON.stringify(obj.tsAngelegt)) + ',';
+		result += '"tsWiedervorlage" : ' + ((obj.tsWiedervorlage === null) ? 'null' : JSON.stringify(obj.tsWiedervorlage)) + ',';
+		result += '"tsErledigt" : ' + ((obj.tsErledigt === null) ? 'null' : JSON.stringify(obj.tsErledigt)) + ',';
+		result += '"idBenutzerErledigt" : ' + ((obj.idBenutzerErledigt === null) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
 		result += '"automatischErledigt" : ' + obj.automatischErledigt.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -125,28 +125,28 @@ export class WiedervorlageEintrag extends JavaObject {
 			result += '"idBenutzer" : ' + obj.idBenutzer.toString() + ',';
 		}
 		if (obj.idBenutzergruppe !== undefined) {
-			result += '"idBenutzergruppe" : ' + ((!obj.idBenutzergruppe) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
+			result += '"idBenutzergruppe" : ' + ((obj.idBenutzergruppe === null) ? 'null' : obj.idBenutzergruppe.toString()) + ',';
 		}
 		if (obj.typPerson !== undefined) {
-			result += '"typPerson" : ' + ((!obj.typPerson) ? 'null' : obj.typPerson.toString()) + ',';
+			result += '"typPerson" : ' + ((obj.typPerson === null) ? 'null' : obj.typPerson.toString()) + ',';
 		}
 		if (obj.idPerson !== undefined) {
-			result += '"idPerson" : ' + ((!obj.idPerson) ? 'null' : obj.idPerson.toString()) + ',';
+			result += '"idPerson" : ' + ((obj.idPerson === null) ? 'null' : obj.idPerson.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
 			result += '"bemerkung" : ' + JSON.stringify(obj.bemerkung) + ',';
 		}
 		if (obj.tsAngelegt !== undefined) {
-			result += '"tsAngelegt" : ' + ((!obj.tsAngelegt) ? 'null' : JSON.stringify(obj.tsAngelegt)) + ',';
+			result += '"tsAngelegt" : ' + ((obj.tsAngelegt === null) ? 'null' : JSON.stringify(obj.tsAngelegt)) + ',';
 		}
 		if (obj.tsWiedervorlage !== undefined) {
-			result += '"tsWiedervorlage" : ' + ((!obj.tsWiedervorlage) ? 'null' : JSON.stringify(obj.tsWiedervorlage)) + ',';
+			result += '"tsWiedervorlage" : ' + ((obj.tsWiedervorlage === null) ? 'null' : JSON.stringify(obj.tsWiedervorlage)) + ',';
 		}
 		if (obj.tsErledigt !== undefined) {
-			result += '"tsErledigt" : ' + ((!obj.tsErledigt) ? 'null' : JSON.stringify(obj.tsErledigt)) + ',';
+			result += '"tsErledigt" : ' + ((obj.tsErledigt === null) ? 'null' : JSON.stringify(obj.tsErledigt)) + ',';
 		}
 		if (obj.idBenutzerErledigt !== undefined) {
-			result += '"idBenutzerErledigt" : ' + ((!obj.idBenutzerErledigt) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
+			result += '"idBenutzerErledigt" : ' + ((obj.idBenutzerErledigt === null) ? 'null' : obj.idBenutzerErledigt.toString()) + ',';
 		}
 		if (obj.automatischErledigt !== undefined) {
 			result += '"automatischErledigt" : ' + obj.automatischErledigt.toString() + ',';

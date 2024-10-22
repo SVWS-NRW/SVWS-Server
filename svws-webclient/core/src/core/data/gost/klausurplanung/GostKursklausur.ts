@@ -94,9 +94,9 @@ export class GostKursklausur extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idVorgabe" : ' + obj.idVorgabe.toString() + ',';
 		result += '"idKurs" : ' + obj.idKurs.toString() + ',';
-		result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
-		result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"idTermin" : ' + ((obj.idTermin === null) ? 'null' : obj.idTermin.toString()) + ',';
+		result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -114,13 +114,13 @@ export class GostKursklausur extends JavaObject {
 			result += '"idKurs" : ' + obj.idKurs.toString() + ',';
 		}
 		if (obj.idTermin !== undefined) {
-			result += '"idTermin" : ' + ((!obj.idTermin) ? 'null' : obj.idTermin.toString()) + ',';
+			result += '"idTermin" : ' + ((obj.idTermin === null) ? 'null' : obj.idTermin.toString()) + ',';
 		}
 		if (obj.startzeit !== undefined) {
-			result += '"startzeit" : ' + ((!obj.startzeit) ? 'null' : obj.startzeit.toString()) + ',';
+			result += '"startzeit" : ' + ((obj.startzeit === null) ? 'null' : obj.startzeit.toString()) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

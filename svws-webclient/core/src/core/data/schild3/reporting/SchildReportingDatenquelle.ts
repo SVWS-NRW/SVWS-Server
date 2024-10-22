@@ -90,10 +90,10 @@ export class SchildReportingDatenquelle extends JavaObject {
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result += '"datenart" : ' + JSON.stringify(obj.datenart) + ',';
-		result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
-		result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
-		result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
-		result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
+		result += '"master" : ' + ((obj.master === null) ? 'null' : JSON.stringify(obj.master)) + ',';
+		result += '"masterattribut" : ' + ((obj.masterattribut === null) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
+		result += '"mastertyp" : ' + ((obj.mastertyp === null) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
+		result += '"linkattribut" : ' + ((obj.linkattribut === null) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		result += '"attribute" : [ ';
 		for (let i = 0; i < obj.attribute.size(); i++) {
 			const elem = obj.attribute.get(i);
@@ -119,16 +119,16 @@ export class SchildReportingDatenquelle extends JavaObject {
 			result += '"datenart" : ' + JSON.stringify(obj.datenart) + ',';
 		}
 		if (obj.master !== undefined) {
-			result += '"master" : ' + ((!obj.master) ? 'null' : JSON.stringify(obj.master)) + ',';
+			result += '"master" : ' + ((obj.master === null) ? 'null' : JSON.stringify(obj.master)) + ',';
 		}
 		if (obj.masterattribut !== undefined) {
-			result += '"masterattribut" : ' + ((!obj.masterattribut) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
+			result += '"masterattribut" : ' + ((obj.masterattribut === null) ? 'null' : JSON.stringify(obj.masterattribut)) + ',';
 		}
 		if (obj.mastertyp !== undefined) {
-			result += '"mastertyp" : ' + ((!obj.mastertyp) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
+			result += '"mastertyp" : ' + ((obj.mastertyp === null) ? 'null' : JSON.stringify(obj.mastertyp)) + ',';
 		}
 		if (obj.linkattribut !== undefined) {
-			result += '"linkattribut" : ' + ((!obj.linkattribut) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
+			result += '"linkattribut" : ' + ((obj.linkattribut === null) ? 'null' : JSON.stringify(obj.linkattribut)) + ',';
 		}
 		if (obj.attribute !== undefined) {
 			result += '"attribute" : [ ';

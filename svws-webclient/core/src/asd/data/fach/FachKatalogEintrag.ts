@@ -131,11 +131,11 @@ export class FachKatalogEintrag extends CoreTypeData {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
-		result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld.toString()) + ',';
-		result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
-		result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : obj.aufgabenfeld.toString()) + ',';
+		result += '"fachgruppe" : ' + ((obj.fachgruppe === null) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
+		result += '"abJahrgang" : ' + ((obj.abJahrgang === null) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
 		result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';
 		result += '"istHKFS" : ' + obj.istHKFS.toString() + ',';
 		result += '"istAusRegUFach" : ' + obj.istAusRegUFach.toString() + ',';
@@ -171,19 +171,19 @@ export class FachKatalogEintrag extends CoreTypeData {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.aufgabenfeld !== undefined) {
-			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : obj.aufgabenfeld.toString()) + ',';
+			result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : obj.aufgabenfeld.toString()) + ',';
 		}
 		if (obj.fachgruppe !== undefined) {
-			result += '"fachgruppe" : ' + ((!obj.fachgruppe) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
+			result += '"fachgruppe" : ' + ((obj.fachgruppe === null) ? 'null' : JSON.stringify(obj.fachgruppe)) + ',';
 		}
 		if (obj.abJahrgang !== undefined) {
-			result += '"abJahrgang" : ' + ((!obj.abJahrgang) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
+			result += '"abJahrgang" : ' + ((obj.abJahrgang === null) ? 'null' : JSON.stringify(obj.abJahrgang)) + ',';
 		}
 		if (obj.istFremdsprache !== undefined) {
 			result += '"istFremdsprache" : ' + obj.istFremdsprache.toString() + ',';

@@ -197,7 +197,7 @@ export class SchuldateiManager extends JavaObject {
 	private getKatalogFromMap(nameKatalog : string) : SchuldateiKatalogManager {
 		const katalog : SchuldateiKatalogManager | null = this._mapKataloge.get(nameKatalog);
 		if (katalog === null)
-			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog! + "'")
+			throw new IllegalArgumentException("Die Kataloge enthält keine Einträge für den Katalog mit dem Namen '" + nameKatalog + "'")
 		return katalog;
 	}
 

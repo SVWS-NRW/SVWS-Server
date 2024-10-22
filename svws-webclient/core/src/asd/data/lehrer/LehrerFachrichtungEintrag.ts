@@ -50,7 +50,7 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idFachrichtung" : ' + obj.idFachrichtung.toString() + ',';
-		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
+		result += '"idAnerkennungsgrund" : ' + ((obj.idAnerkennungsgrund === null) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,7 +65,7 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 			result += '"idFachrichtung" : ' + obj.idFachrichtung.toString() + ',';
 		}
 		if (obj.idAnerkennungsgrund !== undefined) {
-			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
+			result += '"idAnerkennungsgrund" : ' + ((obj.idAnerkennungsgrund === null) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -147,16 +147,16 @@ export class GostJahrgangsdaten extends JavaObject {
 	public static transpilerToJSON(obj : GostJahrgangsdaten) : string {
 		let result = '{';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen.toString() + ',';
-		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
-		result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
+		result += '"textBeratungsbogen" : ' + ((obj.textBeratungsbogen === null) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
+		result += '"textMailversand" : ' + ((obj.textMailversand === null) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
 		result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE.toString() + ',';
-		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
+		result += '"beginnZusatzkursGE" : ' + ((obj.beginnZusatzkursGE === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW.toString() + ',';
-		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+		result += '"beginnZusatzkursSW" : ' + ((obj.beginnZusatzkursSW === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		result += '"anzahlKursblockungen" : [ ';
 		for (let i = 0; i < obj.anzahlKursblockungen.length; i++) {
 			const elem = obj.anzahlKursblockungen[i];
@@ -200,34 +200,34 @@ export class GostJahrgangsdaten extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.halbjahr !== undefined) {
 			result += '"halbjahr" : ' + obj.halbjahr.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.istAbgeschlossen !== undefined) {
 			result += '"istAbgeschlossen" : ' + obj.istAbgeschlossen.toString() + ',';
 		}
 		if (obj.textBeratungsbogen !== undefined) {
-			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
+			result += '"textBeratungsbogen" : ' + ((obj.textBeratungsbogen === null) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		}
 		if (obj.textMailversand !== undefined) {
-			result += '"textMailversand" : ' + ((!obj.textMailversand) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
+			result += '"textMailversand" : ' + ((obj.textMailversand === null) ? 'null' : JSON.stringify(obj.textMailversand)) + ',';
 		}
 		if (obj.hatZusatzkursGE !== undefined) {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE.toString() + ',';
 		}
 		if (obj.beginnZusatzkursGE !== undefined) {
-			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
+			result += '"beginnZusatzkursGE" : ' + ((obj.beginnZusatzkursGE === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		}
 		if (obj.hatZusatzkursSW !== undefined) {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW.toString() + ',';
 		}
 		if (obj.beginnZusatzkursSW !== undefined) {
-			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+			result += '"beginnZusatzkursSW" : ' + ((obj.beginnZusatzkursSW === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		}
 		if (obj.anzahlKursblockungen !== undefined) {
 			const a = obj.anzahlKursblockungen;

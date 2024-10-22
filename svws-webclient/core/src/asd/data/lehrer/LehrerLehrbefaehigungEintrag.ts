@@ -50,7 +50,7 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';
-		result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
+		result += '"idAnerkennungsgrund" : ' + ((obj.idAnerkennungsgrund === null) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -65,7 +65,7 @@ export class LehrerLehrbefaehigungEintrag extends JavaObject {
 			result += '"idLehrbefaehigung" : ' + obj.idLehrbefaehigung.toString() + ',';
 		}
 		if (obj.idAnerkennungsgrund !== undefined) {
-			result += '"idAnerkennungsgrund" : ' + ((!obj.idAnerkennungsgrund) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
+			result += '"idAnerkennungsgrund" : ' + ((obj.idAnerkennungsgrund === null) ? 'null' : obj.idAnerkennungsgrund.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

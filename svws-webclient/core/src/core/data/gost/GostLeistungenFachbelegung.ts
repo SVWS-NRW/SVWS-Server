@@ -128,15 +128,15 @@ export class GostLeistungenFachbelegung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
-		result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
+		result += '"halbjahrKuerzel" : ' + ((obj.halbjahrKuerzel === null) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
 		result += '"abschnittGewertet" : ' + obj.abschnittGewertet.toString() + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
-		result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
-		result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"notenKuerzel" : ' + ((obj.notenKuerzel === null) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
+		result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
@@ -154,7 +154,7 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"schuljahr" : ' + obj.schuljahr.toString() + ',';
 		}
 		if (obj.halbjahrKuerzel !== undefined) {
-			result += '"halbjahrKuerzel" : ' + ((!obj.halbjahrKuerzel) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
+			result += '"halbjahrKuerzel" : ' + ((obj.halbjahrKuerzel === null) ? 'null' : JSON.stringify(obj.halbjahrKuerzel)) + ',';
 		}
 		if (obj.abschnitt !== undefined) {
 			result += '"abschnitt" : ' + obj.abschnitt.toString() + ',';
@@ -163,22 +163,22 @@ export class GostLeistungenFachbelegung extends JavaObject {
 			result += '"abschnittGewertet" : ' + obj.abschnittGewertet.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		}
 		if (obj.notenKuerzel !== undefined) {
-			result += '"notenKuerzel" : ' + ((!obj.notenKuerzel) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
+			result += '"notenKuerzel" : ' + ((obj.notenKuerzel === null) ? 'null' : JSON.stringify(obj.notenKuerzel)) + ',';
 		}
 		if (obj.kursartKuerzel !== undefined) {
-			result += '"kursartKuerzel" : ' + ((!obj.kursartKuerzel) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
+			result += '"kursartKuerzel" : ' + ((obj.kursartKuerzel === null) ? 'null' : JSON.stringify(obj.kursartKuerzel)) + ',';
 		}
 		if (obj.istSchriftlich !== undefined) {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';

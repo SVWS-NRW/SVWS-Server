@@ -69,9 +69,9 @@ export class ReligionEintrag extends JavaObject {
 	public static transpilerToJSON(obj : ReligionEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
-		result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
+		result += '"textZeugnis" : ' + ((obj.textZeugnis === null) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result = result.slice(0, -1);
@@ -85,13 +85,13 @@ export class ReligionEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.text !== undefined) {
-			result += '"text" : ' + ((!obj.text) ? 'null' : JSON.stringify(obj.text)) + ',';
+			result += '"text" : ' + ((obj.text === null) ? 'null' : JSON.stringify(obj.text)) + ',';
 		}
 		if (obj.textZeugnis !== undefined) {
-			result += '"textZeugnis" : ' + ((!obj.textZeugnis) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
+			result += '"textZeugnis" : ' + ((obj.textZeugnis === null) ? 'null' : JSON.stringify(obj.textZeugnis)) + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

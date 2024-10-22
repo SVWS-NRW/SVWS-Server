@@ -156,7 +156,7 @@ export class ValidatorManager extends JavaObject {
 	public static getValidatorHistorie(validator : string) : List<ValidatorFehlerartKontext> {
 		const tmp : List<ValidatorFehlerartKontext> | null = ValidatorManager._data.get(validator);
 		if (tmp === null)
-			throw new CoreTypeException("Der Validator " + validator! + " existiert nicht in 'validatoren.json'.")
+			throw new CoreTypeException("Der Validator " + validator + " existiert nicht in 'validatoren.json'.")
 		return tmp;
 	}
 
@@ -412,7 +412,7 @@ export class ValidatorManager extends JavaObject {
 				return true;
 			if (iObermenge >= listObermenge.size())
 				return false;
-			if (listObermenge.get(iObermenge)! === listUntermenge.get(iUntermenge)!) {
+			if (listObermenge.get(iObermenge) === listUntermenge.get(iUntermenge)) {
 				iObermenge++;
 				iUntermenge++;
 			} else {
@@ -468,7 +468,7 @@ export class ValidatorManager extends JavaObject {
 	 */
 	private static createZeitraum(von : number | null, bis : number | null) : PairNN<number, number> {
 		const v : number = (von === null ? JavaInteger.MIN_VALUE : von);
-		const b : number = (bis === null ? JavaInteger.MAX_VALUE : bis! + 1);
+		const b : number = (bis === null ? JavaInteger.MAX_VALUE : bis + 1);
 		return new PairNN<number, number>(v, b);
 	}
 

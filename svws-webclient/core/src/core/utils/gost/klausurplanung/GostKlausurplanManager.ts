@@ -697,8 +697,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerAddByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string, stundenplanManager : StundenplanManager) : void {
 		this._stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		let kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		let kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
+		const kwjahr : number = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+		const kw : number = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
 			const managerInMap : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
 			if ((managerInMap !== null) && (managerInMap.stundenplanGetID() !== stundenplanManager.stundenplanGetID()))
@@ -779,7 +779,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(idSchuljahresabschnitt : number) : List<StundenplanKalenderwochenzuordnung> {
 		const kwzAll : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
-		for (let manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+		for (const manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
 			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
 		}
 		return kwzAll;
@@ -919,7 +919,7 @@ export class GostKlausurplanManager extends JavaObject {
 	public getMissingHjKlausurdata(abiturjahr : number, halbjahr : number) : List<GostKlausurenCollectionHjData> {
 		const jahrgaenge : List<GostKlausurenCollectionHjData> = new ArrayList<GostKlausurenCollectionHjData>();
 		const abijahreAngefordert : JavaSet<number> = new HashSet<number>();
-		let hjStart : number = (halbjahr % 2 === 0) ? halbjahr : halbjahr - 1;
+		const hjStart : number = (halbjahr % 2 === 0) ? halbjahr : halbjahr - 1;
 		this.addSchuljahresPaare(jahrgaenge, abiturjahr, hjStart, abijahreAngefordert);
 		switch (halbjahr) {
 			case 0:
@@ -2909,8 +2909,11 @@ export class GostKlausurplanManager extends JavaObject {
 	public minKlausurstartzeitByTermin(termin : GostKlausurtermin, includeNachschreiber : boolean) : number {
 		let minStart : number = 1440;
 		const skts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty())
-			return termin.startzeit!;
+		if (skts.isEmpty()) {
+			if (termin.startzeit === null)
+				throw new DeveloperNotificationException("Die Startzeit des Termins darf an dieser Stelle nicht null sein.")
+			return termin.startzeit;
+		}
 		for (const skt of skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
@@ -3531,13 +3534,13 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public startzeitBySchuelerklausurterminOrException(skt : GostSchuelerklausurTermin) : number {
 		if (skt.startzeit !== null)
-			return skt.startzeit!;
+			return skt.startzeit;
 		else
 			if (skt.folgeNr === 0)
 				return this.startzeitByKursklausurOrException(this.kursklausurBySchuelerklausurTermin(skt));
 			else {
 				const idTermin : number = DeveloperNotificationException.ifNull(JavaString.format("idTermin von SchülerklausurTermin %d", skt.id), skt.idTermin).valueOf();
-				return DeveloperNotificationException.ifNull(JavaString.format("startzeit von Termin %d", idTermin), this.terminGetByIdOrException(idTermin).startzeit)!;
+				return DeveloperNotificationException.ifNull(JavaString.format("startzeit von Termin %d", idTermin), this.terminGetByIdOrException(idTermin).startzeit);
 			}
 	}
 
@@ -3568,7 +3571,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die Startzeit der {@link GostKursklausur}
 	 */
 	public startzeitByKursklausurOrException(klausur : GostKursklausur) : number {
-		return (klausur.startzeit !== null) ? klausur.startzeit : DeveloperNotificationException.ifNull(JavaString.format("Startzeit des Termins %d", this.terminOrExceptionByKursklausur(klausur).id), this.terminOrExceptionByKursklausur(klausur).startzeit)!;
+		return (klausur.startzeit !== null) ? klausur.startzeit : DeveloperNotificationException.ifNull(JavaString.format("Startzeit des Termins %d", this.terminOrExceptionByKursklausur(klausur).id), this.terminOrExceptionByKursklausur(klausur).startzeit);
 	}
 
 	/**
@@ -4964,7 +4967,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return die Id des {@link Schuljahresabschnitt}s zum übergebenen Abiturjahrgang und Halbjahr. Falls kein {@link Schuljahresabschnitt} gefunden wird, wird eine <code>DeveloperNotificationException</code> geworfen.
 	 */
 	public getSchuljahresabschnittIdByAbijahrAndHalbjahrOrException(abiJahrgang : number, halbjahr : GostHalbjahr) : number {
-		return this._schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id)!;
+		return this._schuljahresabschnitt_by_abijahr_and_halbjahr.getOrException(abiJahrgang, halbjahr.id);
 	}
 
 	/**

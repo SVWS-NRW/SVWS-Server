@@ -56,11 +56,11 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragLaender) : string {
 		let result = '{';
-		result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
-		result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"Kurztext" : ' + ((obj.Kurztext === null) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
+		result += '"Langtext" : ' + ((obj.Langtext === null) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
+		result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -69,19 +69,19 @@ export class Schild3KatalogEintragLaender extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragLaender>) : string {
 		let result = '{';
 		if (obj.Kurztext !== undefined) {
-			result += '"Kurztext" : ' + ((!obj.Kurztext) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
+			result += '"Kurztext" : ' + ((obj.Kurztext === null) ? 'null' : JSON.stringify(obj.Kurztext)) + ',';
 		}
 		if (obj.Langtext !== undefined) {
-			result += '"Langtext" : ' + ((!obj.Langtext) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
+			result += '"Langtext" : ' + ((obj.Langtext === null) ? 'null' : JSON.stringify(obj.Langtext)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
+			result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

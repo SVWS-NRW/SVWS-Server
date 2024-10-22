@@ -47,8 +47,8 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerSchulbesuchMerkmal) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
-		result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
+		result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
+		result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -60,10 +60,10 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.datumVon !== undefined) {
-			result += '"datumVon" : ' + ((!obj.datumVon) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
+			result += '"datumVon" : ' + ((obj.datumVon === null) ? 'null' : JSON.stringify(obj.datumVon)) + ',';
 		}
 		if (obj.datumBis !== undefined) {
-			result += '"datumBis" : ' + ((!obj.datumBis) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
+			result += '"datumBis" : ' + ((obj.datumBis === null) ? 'null' : JSON.stringify(obj.datumBis)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

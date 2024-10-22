@@ -160,10 +160,10 @@ export class ENMSchueler extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"jahrgangID" : ' + obj.jahrgangID.toString() + ',';
 		result += '"klasseID" : ' + obj.klasseID.toString() + ',';
-		result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
-		result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
-		result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
+		result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+		result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"istZieldifferent" : ' + obj.istZieldifferent.toString() + ',';
 		result += '"istDaZFoerderung" : ' + obj.istDaZFoerderung.toString() + ',';
 		result += '"sprachenfolge" : [ ';
@@ -192,8 +192,8 @@ export class ENMSchueler extends JavaObject {
 		}
 		result += ' ]' + ',';
 		result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
-		result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
-		result += '"bkabschluss" : ' + ((!obj.bkabschluss) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
+		result += '"zp10" : ' + ((obj.zp10 === null) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
+		result += '"bkabschluss" : ' + ((obj.bkabschluss === null) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -211,16 +211,16 @@ export class ENMSchueler extends JavaObject {
 			result += '"klasseID" : ' + obj.klasseID.toString() + ',';
 		}
 		if (obj.nachname !== undefined) {
-			result += '"nachname" : ' + ((!obj.nachname) ? 'null' : JSON.stringify(obj.nachname)) + ',';
+			result += '"nachname" : ' + ((obj.nachname === null) ? 'null' : JSON.stringify(obj.nachname)) + ',';
 		}
 		if (obj.vorname !== undefined) {
-			result += '"vorname" : ' + ((!obj.vorname) ? 'null' : JSON.stringify(obj.vorname)) + ',';
+			result += '"vorname" : ' + ((obj.vorname === null) ? 'null' : JSON.stringify(obj.vorname)) + ',';
 		}
 		if (obj.geschlecht !== undefined) {
-			result += '"geschlecht" : ' + ((!obj.geschlecht) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
+			result += '"geschlecht" : ' + ((obj.geschlecht === null) ? 'null' : JSON.stringify(obj.geschlecht)) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.istZieldifferent !== undefined) {
 			result += '"istZieldifferent" : ' + obj.istZieldifferent.toString() + ',';
@@ -265,10 +265,10 @@ export class ENMSchueler extends JavaObject {
 			result += '"bemerkungen" : ' + ENMLeistungBemerkungen.transpilerToJSON(obj.bemerkungen) + ',';
 		}
 		if (obj.zp10 !== undefined) {
-			result += '"zp10" : ' + ((!obj.zp10) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
+			result += '"zp10" : ' + ((obj.zp10 === null) ? 'null' : ENMZP10.transpilerToJSON(obj.zp10)) + ',';
 		}
 		if (obj.bkabschluss !== undefined) {
-			result += '"bkabschluss" : ' + ((!obj.bkabschluss) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
+			result += '"bkabschluss" : ' + ((obj.bkabschluss === null) ? 'null' : ENMBKAbschluss.transpilerToJSON(obj.bkabschluss)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

@@ -677,8 +677,8 @@ public class GostKlausurplanManager {
 		// TODO: so muss es sein, wenn Stundenpläne sich nicht mehr überscheiden dürfen:
 		// DeveloperNotificationException.ifMap2DPutOverwrites(_stundenplanmanager_by_schuljahresabschnitt_and_datum, idSchuljahresabschnitt, datum, stundenplanManager);
 		_stundenplanmanager_by_schuljahresabschnitt_and_datum.put(idSchuljahresabschnitt, datum, stundenplanManager);
-		int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
-		int kw = DateUtils.gibKwDesDatumsISO8601(datum);
+		final int kwjahr = DateUtils.gibKwJahrDesDatumsISO8601(datum);
+		final int kw = DateUtils.gibKwDesDatumsISO8601(datum);
 		if (_stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, kwjahr, kw)) {
 			final StundenplanManager managerInMap = _stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, kwjahr, kw);
 			if ((managerInMap != null) && (managerInMap.stundenplanGetID() != stundenplanManager.stundenplanGetID()))
@@ -767,7 +767,7 @@ public class GostKlausurplanManager {
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(final long idSchuljahresabschnitt) {
 		final @NotNull List<StundenplanKalenderwochenzuordnung> kwzAll = new ArrayList<>();
-		for (@NotNull StundenplanManager manager : DeveloperNotificationException.ifNull("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d".formatted(idSchuljahresabschnitt), _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
+		for (@NotNull final StundenplanManager manager : DeveloperNotificationException.ifNull("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d".formatted(idSchuljahresabschnitt), _stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
 			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
 		}
 		return kwzAll;
@@ -909,7 +909,7 @@ public class GostKlausurplanManager {
 	    final @NotNull List<GostKlausurenCollectionHjData> jahrgaenge = new ArrayList<>();
 	    final @NotNull Set<Integer> abijahreAngefordert = new HashSet<>();
 
-	    int hjStart = (halbjahr % 2 == 0) ? halbjahr : halbjahr - 1;
+	    final int hjStart = (halbjahr % 2 == 0) ? halbjahr : halbjahr - 1;
 	    addSchuljahresPaare(jahrgaenge, abiturjahr, hjStart, abijahreAngefordert);
 
 	    switch (halbjahr) {
@@ -3134,8 +3134,11 @@ public class GostKlausurplanManager {
 	public int minKlausurstartzeitByTermin(final @NotNull GostKlausurtermin termin, final boolean includeNachschreiber) {
 		int minStart = 1440;
 		final @NotNull List<GostSchuelerklausurTermin> skts = schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty())
+		if (skts.isEmpty()) {
+			if (termin.startzeit == null)
+				throw new DeveloperNotificationException("Die Startzeit des Termins darf an dieser Stelle nicht null sein.");
 			return termin.startzeit;
+		}
 		for (final @NotNull GostSchuelerklausurTermin skt : skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;

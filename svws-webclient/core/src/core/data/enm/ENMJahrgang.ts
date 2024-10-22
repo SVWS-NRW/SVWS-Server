@@ -67,10 +67,10 @@ export class ENMJahrgang extends JavaObject {
 	public static transpilerToJSON(obj : ENMJahrgang) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
-		result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
-		result += '"stufe" : ' + ((!obj.stufe) ? 'null' : JSON.stringify(obj.stufe)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+		result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+		result += '"stufe" : ' + ((obj.stufe === null) ? 'null' : JSON.stringify(obj.stufe)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -83,16 +83,16 @@ export class ENMJahrgang extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.kuerzelAnzeige !== undefined) {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+			result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
 		if (obj.beschreibung !== undefined) {
-			result += '"beschreibung" : ' + ((!obj.beschreibung) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
+			result += '"beschreibung" : ' + ((obj.beschreibung === null) ? 'null' : JSON.stringify(obj.beschreibung)) + ',';
 		}
 		if (obj.stufe !== undefined) {
-			result += '"stufe" : ' + ((!obj.stufe) ? 'null' : JSON.stringify(obj.stufe)) + ',';
+			result += '"stufe" : ' + ((obj.stufe === null) ? 'null' : JSON.stringify(obj.stufe)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

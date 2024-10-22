@@ -237,7 +237,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		let sFach : string = "Fach-ID = " + kurs.fach_id + " (ohne Mapping)";
 		if (gFach !== null)
 			sFach = (gFach.kuerzelAnzeige === null) ? ("Fach-ID = " + kurs.fach_id + " (ohne 'kuerzelAnzeige')") : gFach.kuerzelAnzeige;
-		return "[Kurs " + sFach! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
+		return "[Kurs " + sFach + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix + "]";
 	}
 
 	/**
@@ -251,7 +251,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs | null = this._map_idKurs_kurs.get(idKurs);
 		if (kurs === null)
 			return "[Kurs (" + idKurs + ") ohne Mapping]";
-		return "(" + kurs.id + ") " + this.toStringFachSimple(kurs.fach_id)! + "-" + this.toStringKursartSimple(kurs.kursart)! + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
+		return "(" + kurs.id + ") " + this.toStringFachSimple(kurs.fach_id) + "-" + this.toStringKursartSimple(kurs.kursart) + kurs.nummer + (JavaString.isEmpty(kurs.suffix) ? "" : "-") + kurs.suffix;
 	}
 
 	/**
@@ -279,7 +279,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return eine Kurzdarstellung der Fachart (Fach, Kursart).
 	 */
 	public toStringFachartSimple(idFach : number, kursart : number) : string {
-		return this.toStringFachSimple(idFach)! + "-" + this.toStringKursartSimple(kursart)!;
+		return this.toStringFachSimple(idFach) + "-" + this.toStringKursartSimple(kursart);
 	}
 
 	/**
@@ -292,7 +292,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public toStringFachartSimpleByFachartID(idFachart : number) : string {
 		const idFach : number = GostKursart.getFachID(idFachart);
 		const kursart : number = GostKursart.getKursartID(idFachart);
-		return this.toStringFachSimple(idFach)! + "-" + this.toStringKursartSimple(kursart)!;
+		return this.toStringFachSimple(idFach) + "-" + this.toStringKursartSimple(kursart);
 	}
 
 	/**
@@ -370,7 +370,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * @return eine Kurzdarstellung zur übergebenen Fachwahl eines Schülers.
 	 */
 	public toStringFachwahlSimple(gFachwahl : GostFachwahl) : string | null {
-		return this.toStringSchuelerSimple(gFachwahl.schuelerID)! + " wählt " + this.toStringFachartSimple(gFachwahl.fachID, gFachwahl.kursartID)!;
+		return this.toStringSchuelerSimple(gFachwahl.schuelerID) + " wählt " + this.toStringFachartSimple(gFachwahl.fachID, gFachwahl.kursartID);
 	}
 
 	/**
@@ -965,7 +965,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const gFach : GostFach = this._faecherManager.getOrException(kurs.fach_id);
 		const sSuffix : string = JavaObject.equalsTranspiler("", (kurs.suffix)) ? "" : ("-" + kurs.suffix);
-		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix!;
+		return gFach.kuerzelAnzeige + "-" + GostKursart.fromID(kurs.kursart).kuerzel + kurs.nummer + sSuffix;
 	}
 
 	/**
@@ -1008,7 +1008,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.reihenfolge === reihenfolgeNr)
 				return lehrkraft;
-		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs)! + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
+		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ReihenfolgeNr. " + reihenfolgeNr + "!")
 	}
 
 	/**
@@ -1025,7 +1025,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		for (const lehrkraft of this.kursGetLehrkraefteSortiert(idKurs))
 			if (lehrkraft.id === idLehrkraft)
 				return lehrkraft;
-		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs)! + " keine Lehrkraft mit ID " + idLehrkraft + "!")
+		throw new DeveloperNotificationException("Es gibt im Kurs " + this.toStringKurs(idKurs) + " keine Lehrkraft mit ID " + idLehrkraft + "!")
 	}
 
 	/**
@@ -1142,7 +1142,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kursGetRegelGesperrtInSchiene(idKurs : number, idSchiene : number) : GostBlockungRegel {
 		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE.typ, idKurs, nrSchiene]);
-		return DeveloperNotificationException.ifNull("" + this.toStringKurs(idKurs)! + " ist nicht gesperrt in Schiene " + this.toStringSchiene(idSchiene)! + "!", this._map_multikey_regeln.get(key));
+		return DeveloperNotificationException.ifNull("" + this.toStringKurs(idKurs) + " ist nicht gesperrt in Schiene " + this.toStringSchiene(idSchiene) + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -1186,7 +1186,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kursGetRegelFixierungInSchiene(idKurs : number, idSchiene : number) : GostBlockungRegel {
 		const nrSchiene : number = this.schieneGet(idSchiene).nummer;
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE.typ, idKurs, nrSchiene]);
-		return DeveloperNotificationException.ifNull(this.toStringKurs(idKurs)! + " ist nicht fixiert in Schiene " + this.toStringSchiene(idSchiene)! + "!", this._map_multikey_regeln.get(key));
+		return DeveloperNotificationException.ifNull(this.toStringKurs(idKurs) + " ist nicht fixiert in Schiene " + this.toStringSchiene(idSchiene) + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -1346,8 +1346,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 		const kurs : GostBlockungKurs = this.kursGet(idKurs);
 		const listOfLehrer : List<GostBlockungKursLehrer> = kurs.lehrer;
 		for (const lehrkraft of listOfLehrer) {
-			DeveloperNotificationException.ifTrue(this.toStringKurs(idKurs)! + " hat bereits " + this.toStringLehrkraft(lehrkraft.id)!, lehrkraft.id === neueLehrkraft.id);
-			DeveloperNotificationException.ifTrue(this.toStringKurs(idKurs)! + " hat bereits " + this.toStringLehrkraft(lehrkraft.id)! + " mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === neueLehrkraft.reihenfolge);
+			DeveloperNotificationException.ifTrue(this.toStringKurs(idKurs) + " hat bereits " + this.toStringLehrkraft(lehrkraft.id), lehrkraft.id === neueLehrkraft.id);
+			DeveloperNotificationException.ifTrue(this.toStringKurs(idKurs) + " hat bereits " + this.toStringLehrkraft(lehrkraft.id) + " mit Reihenfolge " + lehrkraft.reihenfolge, lehrkraft.reihenfolge === neueLehrkraft.reihenfolge);
 		}
 		listOfLehrer.add(neueLehrkraft);
 		listOfLehrer.sort(GostBlockungsdatenManager._compLehrkraefte);
@@ -1370,7 +1370,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				listOfLehrer.remove(listOfLehrer.get(i));
 				return;
 			}
-		throw new DeveloperNotificationException(this.toStringKurs(idKurs)! + " enthält nicht " + this.toStringLehrkraft(idAlteLehrkraft)!)
+		throw new DeveloperNotificationException(this.toStringKurs(idKurs) + " enthält nicht " + this.toStringLehrkraft(idAlteLehrkraft))
 	}
 
 	/**
@@ -1537,7 +1537,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 				schiene.nummer--;
 		for (let index : number = 0; index < this._daten.schienen.size(); index++) {
 			const schiene : GostBlockungSchiene = this._daten.schienen.get(index);
-			DeveloperNotificationException.ifTrue(this.toStringSchiene(schiene.id)! + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!", schiene.nummer !== (index + 1));
+			DeveloperNotificationException.ifTrue(this.toStringSchiene(schiene.id) + " bei Index " + index + " hat nicht Nr. " + (index + 1) + "!", schiene.nummer !== (index + 1));
 		}
 		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
 		if (iRegel === null)
@@ -1587,11 +1587,11 @@ export class GostBlockungsdatenManager extends JavaObject {
 	private regelCheck(regel : GostBlockungRegel) : void {
 		DeveloperNotificationException.ifInvalidID("Regel.id", regel.id);
 		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
-		DeveloperNotificationException.ifTrue(this.toStringRegel(regel.id)! + " hat unbekannten Typ (" + regel.typ + ")!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
+		DeveloperNotificationException.ifTrue(this.toStringRegel(regel.id) + " hat unbekannten Typ (" + regel.typ + ")!", typ as unknown === GostKursblockungRegelTyp.UNDEFINIERT as unknown);
 		const multikey : LongArrayKey = GostBlockungsdatenManager.regelToMultikey(regel);
 		if (this._map_multikey_regeln.containsKey(multikey)) {
 			const sb : StringBuilder = new StringBuilder();
-			sb.append(this.toStringRegel(regel.id)! + " existiert bereits mit den Parametern: ");
+			sb.append(this.toStringRegel(regel.id) + " existiert bereits mit den Parametern: ");
 			for (let i : number = 0; i < regel.parameter.size(); i++)
 				sb.append("[" + (i === 0 ? "" : ", ") + regel.parameter.get(i) + "]");
 		}
@@ -2211,7 +2211,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetRegelVerbotenInKurs(idSchueler : number, idKurs : number) : GostBlockungRegel {
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS.typ, idSchueler, idKurs]);
-		return DeveloperNotificationException.ifNull(this.toStringSchueler(idSchueler)! + " hat gar kein Verbot für " + this.toStringKurs(idKurs)! + "!", this._map_multikey_regeln.get(key));
+		return DeveloperNotificationException.ifNull(this.toStringSchueler(idSchueler) + " hat gar kein Verbot für " + this.toStringKurs(idKurs) + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**
@@ -2239,7 +2239,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public schuelerGetRegelFixiertInKurs(idSchueler : number, idKurs : number) : GostBlockungRegel {
 		const key : LongArrayKey = new LongArrayKey([GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ, idSchueler, idKurs]);
-		return DeveloperNotificationException.ifNull(this.toStringSchueler(idSchueler)! + " hat gar keine Fixierung für " + this.toStringKurs(idKurs)! + "!", this._map_multikey_regeln.get(key));
+		return DeveloperNotificationException.ifNull(this.toStringSchueler(idSchueler) + " hat gar keine Fixierung für " + this.toStringKurs(idKurs) + "!", this._map_multikey_regeln.get(key));
 	}
 
 	/**

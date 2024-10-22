@@ -74,14 +74,14 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragVersetzungsvermerke) : string {
 		let result = '{';
-		result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
-		result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
-		result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
-		result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
-		result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
-		result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"Nr" : ' + ((obj.Nr === null) ? 'null' : JSON.stringify(obj.Nr)) + ',';
+		result += '"Klartext" : ' + ((obj.Klartext === null) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
+		result += '"StatistikKrz" : ' + ((obj.StatistikKrz === null) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
+		result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
+		result += '"Schulform" : ' + ((obj.Schulform === null) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
+		result += '"StatistikKrzNeu" : ' + ((obj.StatistikKrzNeu === null) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -90,28 +90,28 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragVersetzungsvermerke>) : string {
 		let result = '{';
 		if (obj.Nr !== undefined) {
-			result += '"Nr" : ' + ((!obj.Nr) ? 'null' : JSON.stringify(obj.Nr)) + ',';
+			result += '"Nr" : ' + ((obj.Nr === null) ? 'null' : JSON.stringify(obj.Nr)) + ',';
 		}
 		if (obj.Klartext !== undefined) {
-			result += '"Klartext" : ' + ((!obj.Klartext) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
+			result += '"Klartext" : ' + ((obj.Klartext === null) ? 'null' : JSON.stringify(obj.Klartext)) + ',';
 		}
 		if (obj.StatistikKrz !== undefined) {
-			result += '"StatistikKrz" : ' + ((!obj.StatistikKrz) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
+			result += '"StatistikKrz" : ' + ((obj.StatistikKrz === null) ? 'null' : JSON.stringify(obj.StatistikKrz)) + ',';
 		}
 		if (obj.Sortierung !== undefined) {
-			result += '"Sortierung" : ' + ((!obj.Sortierung) ? 'null' : obj.Sortierung.toString()) + ',';
+			result += '"Sortierung" : ' + ((obj.Sortierung === null) ? 'null' : obj.Sortierung.toString()) + ',';
 		}
 		if (obj.Schulform !== undefined) {
-			result += '"Schulform" : ' + ((!obj.Schulform) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
+			result += '"Schulform" : ' + ((obj.Schulform === null) ? 'null' : JSON.stringify(obj.Schulform)) + ',';
 		}
 		if (obj.StatistikKrzNeu !== undefined) {
-			result += '"StatistikKrzNeu" : ' + ((!obj.StatistikKrzNeu) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
+			result += '"StatistikKrzNeu" : ' + ((obj.StatistikKrzNeu === null) ? 'null' : JSON.stringify(obj.StatistikKrzNeu)) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

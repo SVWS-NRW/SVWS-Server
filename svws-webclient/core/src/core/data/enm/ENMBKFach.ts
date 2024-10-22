@@ -107,14 +107,14 @@ export class ENMBKFach extends JavaObject {
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
 		result += '"lehrerID" : ' + obj.lehrerID.toString() + ',';
 		result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
-		result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
-		result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
+		result += '"vornote" : ' + ((obj.vornote === null) ? 'null' : JSON.stringify(obj.vornote)) + ',';
+		result += '"noteSchriftlichePruefung" : ' + ((obj.noteSchriftlichePruefung === null) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		result += '"muendlichePruefung" : ' + obj.muendlichePruefung.toString() + ',';
 		result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig.toString() + ',';
-		result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
+		result += '"noteMuendlichePruefung" : ' + ((obj.noteMuendlichePruefung === null) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
 		result += '"istSchriftlichBerufsabschluss" : ' + obj.istSchriftlichBerufsabschluss.toString() + ',';
-		result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
-		result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
+		result += '"noteBerufsabschluss" : ' + ((obj.noteBerufsabschluss === null) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
+		result += '"abschlussnote" : ' + ((obj.abschlussnote === null) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,10 +132,10 @@ export class ENMBKFach extends JavaObject {
 			result += '"istSchriftlich" : ' + obj.istSchriftlich.toString() + ',';
 		}
 		if (obj.vornote !== undefined) {
-			result += '"vornote" : ' + ((!obj.vornote) ? 'null' : JSON.stringify(obj.vornote)) + ',';
+			result += '"vornote" : ' + ((obj.vornote === null) ? 'null' : JSON.stringify(obj.vornote)) + ',';
 		}
 		if (obj.noteSchriftlichePruefung !== undefined) {
-			result += '"noteSchriftlichePruefung" : ' + ((!obj.noteSchriftlichePruefung) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
+			result += '"noteSchriftlichePruefung" : ' + ((obj.noteSchriftlichePruefung === null) ? 'null' : JSON.stringify(obj.noteSchriftlichePruefung)) + ',';
 		}
 		if (obj.muendlichePruefung !== undefined) {
 			result += '"muendlichePruefung" : ' + obj.muendlichePruefung.toString() + ',';
@@ -144,16 +144,16 @@ export class ENMBKFach extends JavaObject {
 			result += '"muendlichePruefungFreiwillig" : ' + obj.muendlichePruefungFreiwillig.toString() + ',';
 		}
 		if (obj.noteMuendlichePruefung !== undefined) {
-			result += '"noteMuendlichePruefung" : ' + ((!obj.noteMuendlichePruefung) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
+			result += '"noteMuendlichePruefung" : ' + ((obj.noteMuendlichePruefung === null) ? 'null' : JSON.stringify(obj.noteMuendlichePruefung)) + ',';
 		}
 		if (obj.istSchriftlichBerufsabschluss !== undefined) {
 			result += '"istSchriftlichBerufsabschluss" : ' + obj.istSchriftlichBerufsabschluss.toString() + ',';
 		}
 		if (obj.noteBerufsabschluss !== undefined) {
-			result += '"noteBerufsabschluss" : ' + ((!obj.noteBerufsabschluss) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
+			result += '"noteBerufsabschluss" : ' + ((obj.noteBerufsabschluss === null) ? 'null' : JSON.stringify(obj.noteBerufsabschluss)) + ',';
 		}
 		if (obj.abschlussnote !== undefined) {
-			result += '"abschlussnote" : ' + ((!obj.abschlussnote) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
+			result += '"abschlussnote" : ' + ((obj.abschlussnote === null) ? 'null' : JSON.stringify(obj.abschlussnote)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

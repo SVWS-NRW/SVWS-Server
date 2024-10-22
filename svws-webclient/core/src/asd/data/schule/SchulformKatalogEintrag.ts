@@ -52,8 +52,8 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result += '"hatGymOb" : ' + obj.hatGymOb.toString() + ',';
 		result = result.slice(0, -1);
 		result += '}';
@@ -75,10 +75,10 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 			result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		if (obj.hatGymOb !== undefined) {
 			result += '"hatGymOb" : ' + obj.hatGymOb.toString() + ',';

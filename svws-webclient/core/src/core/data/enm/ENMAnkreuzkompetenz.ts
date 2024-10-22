@@ -74,7 +74,7 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"istFachkompetenz" : ' + obj.istFachkompetenz.toString() + ',';
-		result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
+		result += '"fachID" : ' + ((obj.fachID === null) ? 'null' : obj.fachID.toString()) + ',';
 		result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';
 		result += '"text" : ' + JSON.stringify(obj.text) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
@@ -92,7 +92,7 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 			result += '"istFachkompetenz" : ' + obj.istFachkompetenz.toString() + ',';
 		}
 		if (obj.fachID !== undefined) {
-			result += '"fachID" : ' + ((!obj.fachID) ? 'null' : obj.fachID.toString()) + ',';
+			result += '"fachID" : ' + ((obj.fachID === null) ? 'null' : obj.fachID.toString()) + ',';
 		}
 		if (obj.jahrgang !== undefined) {
 			result += '"jahrgang" : ' + JSON.stringify(obj.jahrgang) + ',';

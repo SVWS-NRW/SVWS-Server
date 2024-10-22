@@ -63,7 +63,7 @@ export class BKBildungsplanKatalogEintrag extends JavaObject {
 
 	public static transpilerToJSON(obj : BKBildungsplanKatalogEintrag) : string {
 		let result = '{';
-		result += '"index" : ' + obj.index! + ',';
+		result += '"index" : ' + obj.index + ',';
 		result += '"schluessel" : ' + JSON.stringify(obj.schluessel) + ',';
 		result += '"version" : ' + obj.version.toString() + ',';
 		result += '"historie" : [ ';

@@ -191,28 +191,28 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerSchulbesuchsdaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"vorigeSchulnummer" : ' + ((!obj.vorigeSchulnummer) ? 'null' : JSON.stringify(obj.vorigeSchulnummer)) + ',';
-		result += '"vorigeAllgHerkunft" : ' + ((!obj.vorigeAllgHerkunft) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
-		result += '"vorigeEntlassdatum" : ' + ((!obj.vorigeEntlassdatum) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
-		result += '"vorigeEntlassjahrgang" : ' + ((!obj.vorigeEntlassjahrgang) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
-		result += '"vorigeArtLetzteVersetzung" : ' + ((!obj.vorigeArtLetzteVersetzung) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
-		result += '"vorigeBemerkung" : ' + ((!obj.vorigeBemerkung) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
-		result += '"vorigeEntlassgrundID" : ' + ((!obj.vorigeEntlassgrundID) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
-		result += '"vorigeAbschlussartID" : ' + ((!obj.vorigeAbschlussartID) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
-		result += '"entlassungDatum" : ' + ((!obj.entlassungDatum) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
-		result += '"entlassungJahrgang" : ' + ((!obj.entlassungJahrgang) ? 'null' : JSON.stringify(obj.entlassungJahrgang)) + ',';
-		result += '"entlassungGrundID" : ' + ((!obj.entlassungGrundID) ? 'null' : obj.entlassungGrundID.toString()) + ',';
-		result += '"entlassungAbschlussartID" : ' + ((!obj.entlassungAbschlussartID) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
-		result += '"aufnehmdendSchulnummer" : ' + ((!obj.aufnehmdendSchulnummer) ? 'null' : JSON.stringify(obj.aufnehmdendSchulnummer)) + ',';
-		result += '"aufnehmdendWechseldatum" : ' + ((!obj.aufnehmdendWechseldatum) ? 'null' : JSON.stringify(obj.aufnehmdendWechseldatum)) + ',';
-		result += '"aufnehmdendBestaetigt" : ' + ((!obj.aufnehmdendBestaetigt) ? 'null' : obj.aufnehmdendBestaetigt.toString()) + ',';
-		result += '"grundschuleEinschulungsjahr" : ' + ((!obj.grundschuleEinschulungsjahr) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
-		result += '"grundschuleEinschulungsartID" : ' + ((!obj.grundschuleEinschulungsartID) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
-		result += '"grundschuleJahreEingangsphase" : ' + ((!obj.grundschuleJahreEingangsphase) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
-		result += '"grundschuleUebergangsempfehlungID" : ' + ((!obj.grundschuleUebergangsempfehlungID) ? 'null' : obj.grundschuleUebergangsempfehlungID.toString()) + ',';
-		result += '"sekIWechsel" : ' + ((!obj.sekIWechsel) ? 'null' : obj.sekIWechsel.toString()) + ',';
-		result += '"sekIErsteSchulform" : ' + ((!obj.sekIErsteSchulform) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
-		result += '"sekIIWechsel" : ' + ((!obj.sekIIWechsel) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+		result += '"vorigeSchulnummer" : ' + ((obj.vorigeSchulnummer === null) ? 'null' : JSON.stringify(obj.vorigeSchulnummer)) + ',';
+		result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
+		result += '"vorigeEntlassdatum" : ' + ((obj.vorigeEntlassdatum === null) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
+		result += '"vorigeEntlassjahrgang" : ' + ((obj.vorigeEntlassjahrgang === null) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
+		result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
+		result += '"vorigeBemerkung" : ' + ((obj.vorigeBemerkung === null) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
+		result += '"vorigeEntlassgrundID" : ' + ((obj.vorigeEntlassgrundID === null) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
+		result += '"vorigeAbschlussartID" : ' + ((obj.vorigeAbschlussartID === null) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
+		result += '"entlassungDatum" : ' + ((obj.entlassungDatum === null) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
+		result += '"entlassungJahrgang" : ' + ((obj.entlassungJahrgang === null) ? 'null' : JSON.stringify(obj.entlassungJahrgang)) + ',';
+		result += '"entlassungGrundID" : ' + ((obj.entlassungGrundID === null) ? 'null' : obj.entlassungGrundID.toString()) + ',';
+		result += '"entlassungAbschlussartID" : ' + ((obj.entlassungAbschlussartID === null) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
+		result += '"aufnehmdendSchulnummer" : ' + ((obj.aufnehmdendSchulnummer === null) ? 'null' : JSON.stringify(obj.aufnehmdendSchulnummer)) + ',';
+		result += '"aufnehmdendWechseldatum" : ' + ((obj.aufnehmdendWechseldatum === null) ? 'null' : JSON.stringify(obj.aufnehmdendWechseldatum)) + ',';
+		result += '"aufnehmdendBestaetigt" : ' + ((obj.aufnehmdendBestaetigt === null) ? 'null' : obj.aufnehmdendBestaetigt.toString()) + ',';
+		result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
+		result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
+		result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+		result += '"grundschuleUebergangsempfehlungID" : ' + ((obj.grundschuleUebergangsempfehlungID === null) ? 'null' : obj.grundschuleUebergangsempfehlungID.toString()) + ',';
+		result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
+		result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
+		result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
 		result += '"merkmale" : [ ';
 		for (let i = 0; i < obj.merkmale.size(); i++) {
 			const elem = obj.merkmale.get(i);
@@ -240,70 +240,70 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.vorigeSchulnummer !== undefined) {
-			result += '"vorigeSchulnummer" : ' + ((!obj.vorigeSchulnummer) ? 'null' : JSON.stringify(obj.vorigeSchulnummer)) + ',';
+			result += '"vorigeSchulnummer" : ' + ((obj.vorigeSchulnummer === null) ? 'null' : JSON.stringify(obj.vorigeSchulnummer)) + ',';
 		}
 		if (obj.vorigeAllgHerkunft !== undefined) {
-			result += '"vorigeAllgHerkunft" : ' + ((!obj.vorigeAllgHerkunft) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
+			result += '"vorigeAllgHerkunft" : ' + ((obj.vorigeAllgHerkunft === null) ? 'null' : JSON.stringify(obj.vorigeAllgHerkunft)) + ',';
 		}
 		if (obj.vorigeEntlassdatum !== undefined) {
-			result += '"vorigeEntlassdatum" : ' + ((!obj.vorigeEntlassdatum) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
+			result += '"vorigeEntlassdatum" : ' + ((obj.vorigeEntlassdatum === null) ? 'null' : JSON.stringify(obj.vorigeEntlassdatum)) + ',';
 		}
 		if (obj.vorigeEntlassjahrgang !== undefined) {
-			result += '"vorigeEntlassjahrgang" : ' + ((!obj.vorigeEntlassjahrgang) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
+			result += '"vorigeEntlassjahrgang" : ' + ((obj.vorigeEntlassjahrgang === null) ? 'null' : JSON.stringify(obj.vorigeEntlassjahrgang)) + ',';
 		}
 		if (obj.vorigeArtLetzteVersetzung !== undefined) {
-			result += '"vorigeArtLetzteVersetzung" : ' + ((!obj.vorigeArtLetzteVersetzung) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
+			result += '"vorigeArtLetzteVersetzung" : ' + ((obj.vorigeArtLetzteVersetzung === null) ? 'null' : JSON.stringify(obj.vorigeArtLetzteVersetzung)) + ',';
 		}
 		if (obj.vorigeBemerkung !== undefined) {
-			result += '"vorigeBemerkung" : ' + ((!obj.vorigeBemerkung) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
+			result += '"vorigeBemerkung" : ' + ((obj.vorigeBemerkung === null) ? 'null' : JSON.stringify(obj.vorigeBemerkung)) + ',';
 		}
 		if (obj.vorigeEntlassgrundID !== undefined) {
-			result += '"vorigeEntlassgrundID" : ' + ((!obj.vorigeEntlassgrundID) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
+			result += '"vorigeEntlassgrundID" : ' + ((obj.vorigeEntlassgrundID === null) ? 'null' : obj.vorigeEntlassgrundID.toString()) + ',';
 		}
 		if (obj.vorigeAbschlussartID !== undefined) {
-			result += '"vorigeAbschlussartID" : ' + ((!obj.vorigeAbschlussartID) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
+			result += '"vorigeAbschlussartID" : ' + ((obj.vorigeAbschlussartID === null) ? 'null' : JSON.stringify(obj.vorigeAbschlussartID)) + ',';
 		}
 		if (obj.entlassungDatum !== undefined) {
-			result += '"entlassungDatum" : ' + ((!obj.entlassungDatum) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
+			result += '"entlassungDatum" : ' + ((obj.entlassungDatum === null) ? 'null' : JSON.stringify(obj.entlassungDatum)) + ',';
 		}
 		if (obj.entlassungJahrgang !== undefined) {
-			result += '"entlassungJahrgang" : ' + ((!obj.entlassungJahrgang) ? 'null' : JSON.stringify(obj.entlassungJahrgang)) + ',';
+			result += '"entlassungJahrgang" : ' + ((obj.entlassungJahrgang === null) ? 'null' : JSON.stringify(obj.entlassungJahrgang)) + ',';
 		}
 		if (obj.entlassungGrundID !== undefined) {
-			result += '"entlassungGrundID" : ' + ((!obj.entlassungGrundID) ? 'null' : obj.entlassungGrundID.toString()) + ',';
+			result += '"entlassungGrundID" : ' + ((obj.entlassungGrundID === null) ? 'null' : obj.entlassungGrundID.toString()) + ',';
 		}
 		if (obj.entlassungAbschlussartID !== undefined) {
-			result += '"entlassungAbschlussartID" : ' + ((!obj.entlassungAbschlussartID) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
+			result += '"entlassungAbschlussartID" : ' + ((obj.entlassungAbschlussartID === null) ? 'null' : JSON.stringify(obj.entlassungAbschlussartID)) + ',';
 		}
 		if (obj.aufnehmdendSchulnummer !== undefined) {
-			result += '"aufnehmdendSchulnummer" : ' + ((!obj.aufnehmdendSchulnummer) ? 'null' : JSON.stringify(obj.aufnehmdendSchulnummer)) + ',';
+			result += '"aufnehmdendSchulnummer" : ' + ((obj.aufnehmdendSchulnummer === null) ? 'null' : JSON.stringify(obj.aufnehmdendSchulnummer)) + ',';
 		}
 		if (obj.aufnehmdendWechseldatum !== undefined) {
-			result += '"aufnehmdendWechseldatum" : ' + ((!obj.aufnehmdendWechseldatum) ? 'null' : JSON.stringify(obj.aufnehmdendWechseldatum)) + ',';
+			result += '"aufnehmdendWechseldatum" : ' + ((obj.aufnehmdendWechseldatum === null) ? 'null' : JSON.stringify(obj.aufnehmdendWechseldatum)) + ',';
 		}
 		if (obj.aufnehmdendBestaetigt !== undefined) {
-			result += '"aufnehmdendBestaetigt" : ' + ((!obj.aufnehmdendBestaetigt) ? 'null' : obj.aufnehmdendBestaetigt.toString()) + ',';
+			result += '"aufnehmdendBestaetigt" : ' + ((obj.aufnehmdendBestaetigt === null) ? 'null' : obj.aufnehmdendBestaetigt.toString()) + ',';
 		}
 		if (obj.grundschuleEinschulungsjahr !== undefined) {
-			result += '"grundschuleEinschulungsjahr" : ' + ((!obj.grundschuleEinschulungsjahr) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
+			result += '"grundschuleEinschulungsjahr" : ' + ((obj.grundschuleEinschulungsjahr === null) ? 'null' : obj.grundschuleEinschulungsjahr.toString()) + ',';
 		}
 		if (obj.grundschuleEinschulungsartID !== undefined) {
-			result += '"grundschuleEinschulungsartID" : ' + ((!obj.grundschuleEinschulungsartID) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
+			result += '"grundschuleEinschulungsartID" : ' + ((obj.grundschuleEinschulungsartID === null) ? 'null' : obj.grundschuleEinschulungsartID.toString()) + ',';
 		}
 		if (obj.grundschuleJahreEingangsphase !== undefined) {
-			result += '"grundschuleJahreEingangsphase" : ' + ((!obj.grundschuleJahreEingangsphase) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
+			result += '"grundschuleJahreEingangsphase" : ' + ((obj.grundschuleJahreEingangsphase === null) ? 'null' : obj.grundschuleJahreEingangsphase.toString()) + ',';
 		}
 		if (obj.grundschuleUebergangsempfehlungID !== undefined) {
-			result += '"grundschuleUebergangsempfehlungID" : ' + ((!obj.grundschuleUebergangsempfehlungID) ? 'null' : obj.grundschuleUebergangsempfehlungID.toString()) + ',';
+			result += '"grundschuleUebergangsempfehlungID" : ' + ((obj.grundschuleUebergangsempfehlungID === null) ? 'null' : obj.grundschuleUebergangsempfehlungID.toString()) + ',';
 		}
 		if (obj.sekIWechsel !== undefined) {
-			result += '"sekIWechsel" : ' + ((!obj.sekIWechsel) ? 'null' : obj.sekIWechsel.toString()) + ',';
+			result += '"sekIWechsel" : ' + ((obj.sekIWechsel === null) ? 'null' : obj.sekIWechsel.toString()) + ',';
 		}
 		if (obj.sekIErsteSchulform !== undefined) {
-			result += '"sekIErsteSchulform" : ' + ((!obj.sekIErsteSchulform) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
+			result += '"sekIErsteSchulform" : ' + ((obj.sekIErsteSchulform === null) ? 'null' : JSON.stringify(obj.sekIErsteSchulform)) + ',';
 		}
 		if (obj.sekIIWechsel !== undefined) {
-			result += '"sekIIWechsel" : ' + ((!obj.sekIIWechsel) ? 'null' : obj.sekIIWechsel.toString()) + ',';
+			result += '"sekIIWechsel" : ' + ((obj.sekIIWechsel === null) ? 'null' : obj.sekIIWechsel.toString()) + ',';
 		}
 		if (obj.merkmale !== undefined) {
 			result += '"merkmale" : [ ';

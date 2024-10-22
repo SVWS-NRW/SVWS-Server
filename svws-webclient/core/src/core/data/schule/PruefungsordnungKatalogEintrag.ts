@@ -148,14 +148,14 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
-		result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
+		result += '"kuerzelSchild" : ' + ((obj.kuerzelSchild === null) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
 		result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
-		result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr.toString()) + ',';
+		result += '"gvJahr" : ' + ((obj.gvJahr === null) ? 'null' : obj.gvJahr.toString()) + ',';
 		result += '"gvNr" : ' + JSON.stringify(obj.gvNr) + ',';
 		result += '"gvSeiten" : ' + JSON.stringify(obj.gvSeiten) + ',';
 		result += '"link" : ' + JSON.stringify(obj.link) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -170,13 +170,13 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 			result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		}
 		if (obj.kuerzelSchild !== undefined) {
-			result += '"kuerzelSchild" : ' + ((!obj.kuerzelSchild) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
+			result += '"kuerzelSchild" : ' + ((obj.kuerzelSchild === null) ? 'null' : JSON.stringify(obj.kuerzelSchild)) + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
 			result += '"bezeichnung" : ' + JSON.stringify(obj.bezeichnung) + ',';
 		}
 		if (obj.gvJahr !== undefined) {
-			result += '"gvJahr" : ' + ((!obj.gvJahr) ? 'null' : obj.gvJahr.toString()) + ',';
+			result += '"gvJahr" : ' + ((obj.gvJahr === null) ? 'null' : obj.gvJahr.toString()) + ',';
 		}
 		if (obj.gvNr !== undefined) {
 			result += '"gvNr" : ' + JSON.stringify(obj.gvNr) + ',';
@@ -188,10 +188,10 @@ export class PruefungsordnungKatalogEintrag extends JavaObject {
 			result += '"link" : ' + JSON.stringify(obj.link) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

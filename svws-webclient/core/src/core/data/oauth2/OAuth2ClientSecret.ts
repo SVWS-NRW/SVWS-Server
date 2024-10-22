@@ -53,9 +53,9 @@ export class OAuth2ClientSecret extends JavaObject {
 	public static transpilerToJSON(obj : OAuth2ClientSecret) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"authServer" : ' + ((!obj.authServer) ? 'null' : JSON.stringify(obj.authServer)) + ',';
-		result += '"clientID" : ' + ((!obj.clientID) ? 'null' : JSON.stringify(obj.clientID)) + ',';
-		result += '"clientSecret" : ' + ((!obj.clientSecret) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
+		result += '"authServer" : ' + ((obj.authServer === null) ? 'null' : JSON.stringify(obj.authServer)) + ',';
+		result += '"clientID" : ' + ((obj.clientID === null) ? 'null' : JSON.stringify(obj.clientID)) + ',';
+		result += '"clientSecret" : ' + ((obj.clientSecret === null) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,13 +67,13 @@ export class OAuth2ClientSecret extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.authServer !== undefined) {
-			result += '"authServer" : ' + ((!obj.authServer) ? 'null' : JSON.stringify(obj.authServer)) + ',';
+			result += '"authServer" : ' + ((obj.authServer === null) ? 'null' : JSON.stringify(obj.authServer)) + ',';
 		}
 		if (obj.clientID !== undefined) {
-			result += '"clientID" : ' + ((!obj.clientID) ? 'null' : JSON.stringify(obj.clientID)) + ',';
+			result += '"clientID" : ' + ((obj.clientID === null) ? 'null' : JSON.stringify(obj.clientID)) + ',';
 		}
 		if (obj.clientSecret !== undefined) {
-			result += '"clientSecret" : ' + ((!obj.clientSecret) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
+			result += '"clientSecret" : ' + ((obj.clientSecret === null) ? 'null' : JSON.stringify(obj.clientSecret)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

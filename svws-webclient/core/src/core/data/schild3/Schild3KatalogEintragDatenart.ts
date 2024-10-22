@@ -62,12 +62,12 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 
 	public static transpilerToJSON(obj : Schild3KatalogEintragDatenart) : string {
 		let result = '{';
-		result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
-		result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
-		result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
-		result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
-		result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
-		result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+		result += '"DatenartKrz" : ' + ((obj.DatenartKrz === null) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
+		result += '"Datenart" : ' + ((obj.Datenart === null) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
+		result += '"Tabellenname" : ' + ((obj.Tabellenname === null) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
+		result += '"Reihenfolge" : ' + ((obj.Reihenfolge === null) ? 'null' : obj.Reihenfolge.toString()) + ',';
+		result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
+		result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -76,22 +76,22 @@ export class Schild3KatalogEintragDatenart extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<Schild3KatalogEintragDatenart>) : string {
 		let result = '{';
 		if (obj.DatenartKrz !== undefined) {
-			result += '"DatenartKrz" : ' + ((!obj.DatenartKrz) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
+			result += '"DatenartKrz" : ' + ((obj.DatenartKrz === null) ? 'null' : JSON.stringify(obj.DatenartKrz)) + ',';
 		}
 		if (obj.Datenart !== undefined) {
-			result += '"Datenart" : ' + ((!obj.Datenart) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
+			result += '"Datenart" : ' + ((obj.Datenart === null) ? 'null' : JSON.stringify(obj.Datenart)) + ',';
 		}
 		if (obj.Tabellenname !== undefined) {
-			result += '"Tabellenname" : ' + ((!obj.Tabellenname) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
+			result += '"Tabellenname" : ' + ((obj.Tabellenname === null) ? 'null' : JSON.stringify(obj.Tabellenname)) + ',';
 		}
 		if (obj.Reihenfolge !== undefined) {
-			result += '"Reihenfolge" : ' + ((!obj.Reihenfolge) ? 'null' : obj.Reihenfolge.toString()) + ',';
+			result += '"Reihenfolge" : ' + ((obj.Reihenfolge === null) ? 'null' : obj.Reihenfolge.toString()) + ',';
 		}
 		if (obj.gueltigVon !== undefined) {
-			result += '"gueltigVon" : ' + ((!obj.gueltigVon) ? 'null' : obj.gueltigVon.toString()) + ',';
+			result += '"gueltigVon" : ' + ((obj.gueltigVon === null) ? 'null' : obj.gueltigVon.toString()) + ',';
 		}
 		if (obj.gueltigBis !== undefined) {
-			result += '"gueltigBis" : ' + ((!obj.gueltigBis) ? 'null' : obj.gueltigBis.toString()) + ',';
+			result += '"gueltigBis" : ' + ((obj.gueltigBis === null) ? 'null' : obj.gueltigBis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

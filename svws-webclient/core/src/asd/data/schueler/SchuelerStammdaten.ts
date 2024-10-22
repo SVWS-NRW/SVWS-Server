@@ -323,42 +323,42 @@ export class SchuelerStammdaten extends JavaObject {
 	public static transpilerToJSON(obj : SchuelerStammdaten) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+		result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"alleVornamen" : ' + JSON.stringify(obj.alleVornamen) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
-		result += '"geburtsdatum" : ' + ((!obj.geburtsdatum) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
-		result += '"geburtsort" : ' + ((!obj.geburtsort) ? 'null' : JSON.stringify(obj.geburtsort)) + ',';
-		result += '"geburtsname" : ' + ((!obj.geburtsname) ? 'null' : JSON.stringify(obj.geburtsname)) + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
-		result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
-		result += '"telefonMobil" : ' + ((!obj.telefonMobil) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
-		result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
-		result += '"emailSchule" : ' + ((!obj.emailSchule) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
-		result += '"staatsangehoerigkeit2ID" : ' + ((!obj.staatsangehoerigkeit2ID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
-		result += '"religionID" : ' + ((!obj.religionID) ? 'null' : obj.religionID.toString()) + ',';
+		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
+		result += '"geburtsort" : ' + ((obj.geburtsort === null) ? 'null' : JSON.stringify(obj.geburtsort)) + ',';
+		result += '"geburtsname" : ' + ((obj.geburtsname === null) ? 'null' : JSON.stringify(obj.geburtsname)) + ',';
+		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
+		result += '"ortsteilID" : ' + ((obj.ortsteilID === null) ? 'null' : obj.ortsteilID.toString()) + ',';
+		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"telefonMobil" : ' + ((obj.telefonMobil === null) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
+		result += '"emailPrivat" : ' + ((obj.emailPrivat === null) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
+		result += '"emailSchule" : ' + ((obj.emailSchule === null) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
+		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+		result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		result += '"druckeKonfessionAufZeugnisse" : ' + obj.druckeKonfessionAufZeugnisse.toString() + ',';
-		result += '"religionabmeldung" : ' + ((!obj.religionabmeldung) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
-		result += '"religionanmeldung" : ' + ((!obj.religionanmeldung) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
+		result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
+		result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
-		result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : obj.zuzugsjahr.toString()) + ',';
-		result += '"geburtsland" : ' + ((!obj.geburtsland) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
-		result += '"verkehrspracheFamilie" : ' + ((!obj.verkehrspracheFamilie) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
-		result += '"geburtslandVater" : ' + ((!obj.geburtslandVater) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
-		result += '"geburtslandMutter" : ' + ((!obj.geburtslandMutter) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+		result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
+		result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
+		result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
+		result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
+		result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
 		result += '"status" : ' + obj.status.toString() + ',';
 		result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
-		result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
-		result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID.toString()) + ',';
-		result += '"haltestelleID" : ' + ((!obj.haltestelleID) ? 'null' : obj.haltestelleID.toString()) + ',';
-		result += '"anmeldedatum" : ' + ((!obj.anmeldedatum) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
-		result += '"aufnahmedatum" : ' + ((!obj.aufnahmedatum) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
+		result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
+		result += '"fahrschuelerArtID" : ' + ((obj.fahrschuelerArtID === null) ? 'null' : obj.fahrschuelerArtID.toString()) + ',';
+		result += '"haltestelleID" : ' + ((obj.haltestelleID === null) ? 'null' : obj.haltestelleID.toString()) + ',';
+		result += '"anmeldedatum" : ' + ((obj.anmeldedatum === null) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
+		result += '"aufnahmedatum" : ' + ((obj.aufnahmedatum === null) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
 		result += '"istVolljaehrig" : ' + obj.istVolljaehrig.toString() + ',';
 		result += '"istSchulpflichtErfuellt" : ' + obj.istSchulpflichtErfuellt.toString() + ',';
 		result += '"istBerufsschulpflichtErfuellt" : ' + obj.istBerufsschulpflichtErfuellt.toString() + ',';
@@ -377,7 +377,7 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.foto !== undefined) {
-			result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+			result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
@@ -392,76 +392,76 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		}
 		if (obj.geburtsdatum !== undefined) {
-			result += '"geburtsdatum" : ' + ((!obj.geburtsdatum) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
+			result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
 		if (obj.geburtsort !== undefined) {
-			result += '"geburtsort" : ' + ((!obj.geburtsort) ? 'null' : JSON.stringify(obj.geburtsort)) + ',';
+			result += '"geburtsort" : ' + ((obj.geburtsort === null) ? 'null' : JSON.stringify(obj.geburtsort)) + ',';
 		}
 		if (obj.geburtsname !== undefined) {
-			result += '"geburtsname" : ' + ((!obj.geburtsname) ? 'null' : JSON.stringify(obj.geburtsname)) + ',';
+			result += '"geburtsname" : ' + ((obj.geburtsname === null) ? 'null' : JSON.stringify(obj.geburtsname)) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (obj.hausnummer !== undefined) {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
 		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (obj.wohnortID !== undefined) {
-			result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
+			result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
 		}
 		if (obj.ortsteilID !== undefined) {
-			result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
+			result += '"ortsteilID" : ' + ((obj.ortsteilID === null) ? 'null' : obj.ortsteilID.toString()) + ',';
 		}
 		if (obj.telefon !== undefined) {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+			result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (obj.telefonMobil !== undefined) {
-			result += '"telefonMobil" : ' + ((!obj.telefonMobil) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
+			result += '"telefonMobil" : ' + ((obj.telefonMobil === null) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
 		}
 		if (obj.emailPrivat !== undefined) {
-			result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
+			result += '"emailPrivat" : ' + ((obj.emailPrivat === null) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
 		}
 		if (obj.emailSchule !== undefined) {
-			result += '"emailSchule" : ' + ((!obj.emailSchule) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
+			result += '"emailSchule" : ' + ((obj.emailSchule === null) ? 'null' : JSON.stringify(obj.emailSchule)) + ',';
 		}
 		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
 		}
 		if (obj.staatsangehoerigkeit2ID !== undefined) {
-			result += '"staatsangehoerigkeit2ID" : ' + ((!obj.staatsangehoerigkeit2ID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
+			result += '"staatsangehoerigkeit2ID" : ' + ((obj.staatsangehoerigkeit2ID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeit2ID)) + ',';
 		}
 		if (obj.religionID !== undefined) {
-			result += '"religionID" : ' + ((!obj.religionID) ? 'null' : obj.religionID.toString()) + ',';
+			result += '"religionID" : ' + ((obj.religionID === null) ? 'null' : obj.religionID.toString()) + ',';
 		}
 		if (obj.druckeKonfessionAufZeugnisse !== undefined) {
 			result += '"druckeKonfessionAufZeugnisse" : ' + obj.druckeKonfessionAufZeugnisse.toString() + ',';
 		}
 		if (obj.religionabmeldung !== undefined) {
-			result += '"religionabmeldung" : ' + ((!obj.religionabmeldung) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
+			result += '"religionabmeldung" : ' + ((obj.religionabmeldung === null) ? 'null' : JSON.stringify(obj.religionabmeldung)) + ',';
 		}
 		if (obj.religionanmeldung !== undefined) {
-			result += '"religionanmeldung" : ' + ((!obj.religionanmeldung) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
+			result += '"religionanmeldung" : ' + ((obj.religionanmeldung === null) ? 'null' : JSON.stringify(obj.religionanmeldung)) + ',';
 		}
 		if (obj.hatMigrationshintergrund !== undefined) {
 			result += '"hatMigrationshintergrund" : ' + obj.hatMigrationshintergrund.toString() + ',';
 		}
 		if (obj.zuzugsjahr !== undefined) {
-			result += '"zuzugsjahr" : ' + ((!obj.zuzugsjahr) ? 'null' : obj.zuzugsjahr.toString()) + ',';
+			result += '"zuzugsjahr" : ' + ((obj.zuzugsjahr === null) ? 'null' : obj.zuzugsjahr.toString()) + ',';
 		}
 		if (obj.geburtsland !== undefined) {
-			result += '"geburtsland" : ' + ((!obj.geburtsland) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
+			result += '"geburtsland" : ' + ((obj.geburtsland === null) ? 'null' : JSON.stringify(obj.geburtsland)) + ',';
 		}
 		if (obj.verkehrspracheFamilie !== undefined) {
-			result += '"verkehrspracheFamilie" : ' + ((!obj.verkehrspracheFamilie) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
+			result += '"verkehrspracheFamilie" : ' + ((obj.verkehrspracheFamilie === null) ? 'null' : JSON.stringify(obj.verkehrspracheFamilie)) + ',';
 		}
 		if (obj.geburtslandVater !== undefined) {
-			result += '"geburtslandVater" : ' + ((!obj.geburtslandVater) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
+			result += '"geburtslandVater" : ' + ((obj.geburtslandVater === null) ? 'null' : JSON.stringify(obj.geburtslandVater)) + ',';
 		}
 		if (obj.geburtslandMutter !== undefined) {
-			result += '"geburtslandMutter" : ' + ((!obj.geburtslandMutter) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
+			result += '"geburtslandMutter" : ' + ((obj.geburtslandMutter === null) ? 'null' : JSON.stringify(obj.geburtslandMutter)) + ',';
 		}
 		if (obj.status !== undefined) {
 			result += '"status" : ' + obj.status.toString() + ',';
@@ -470,19 +470,19 @@ export class SchuelerStammdaten extends JavaObject {
 			result += '"istDuplikat" : ' + obj.istDuplikat.toString() + ',';
 		}
 		if (obj.externeSchulNr !== undefined) {
-			result += '"externeSchulNr" : ' + ((!obj.externeSchulNr) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
+			result += '"externeSchulNr" : ' + ((obj.externeSchulNr === null) ? 'null' : JSON.stringify(obj.externeSchulNr)) + ',';
 		}
 		if (obj.fahrschuelerArtID !== undefined) {
-			result += '"fahrschuelerArtID" : ' + ((!obj.fahrschuelerArtID) ? 'null' : obj.fahrschuelerArtID.toString()) + ',';
+			result += '"fahrschuelerArtID" : ' + ((obj.fahrschuelerArtID === null) ? 'null' : obj.fahrschuelerArtID.toString()) + ',';
 		}
 		if (obj.haltestelleID !== undefined) {
-			result += '"haltestelleID" : ' + ((!obj.haltestelleID) ? 'null' : obj.haltestelleID.toString()) + ',';
+			result += '"haltestelleID" : ' + ((obj.haltestelleID === null) ? 'null' : obj.haltestelleID.toString()) + ',';
 		}
 		if (obj.anmeldedatum !== undefined) {
-			result += '"anmeldedatum" : ' + ((!obj.anmeldedatum) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
+			result += '"anmeldedatum" : ' + ((obj.anmeldedatum === null) ? 'null' : JSON.stringify(obj.anmeldedatum)) + ',';
 		}
 		if (obj.aufnahmedatum !== undefined) {
-			result += '"aufnahmedatum" : ' + ((!obj.aufnahmedatum) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
+			result += '"aufnahmedatum" : ' + ((obj.aufnahmedatum === null) ? 'null' : JSON.stringify(obj.aufnahmedatum)) + ',';
 		}
 		if (obj.istVolljaehrig !== undefined) {
 			result += '"istVolljaehrig" : ' + obj.istVolljaehrig.toString() + ',';

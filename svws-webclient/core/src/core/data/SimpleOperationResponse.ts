@@ -52,7 +52,7 @@ export class SimpleOperationResponse extends JavaObject {
 
 	public static transpilerToJSON(obj : SimpleOperationResponse) : string {
 		let result = '{';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+		result += '"id" : ' + ((obj.id === null) ? 'null' : obj.id.toString()) + ',';
 		result += '"success" : ' + obj.success.toString() + ',';
 		result += '"log" : [ ';
 		for (let i = 0; i < obj.log.size(); i++) {
@@ -70,7 +70,7 @@ export class SimpleOperationResponse extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<SimpleOperationResponse>) : string {
 		let result = '{';
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+			result += '"id" : ' + ((obj.id === null) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.success !== undefined) {
 			result += '"success" : ' + obj.success.toString() + ',';

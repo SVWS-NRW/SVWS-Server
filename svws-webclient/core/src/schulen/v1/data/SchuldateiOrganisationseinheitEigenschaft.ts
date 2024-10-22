@@ -70,11 +70,11 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheitEigenschaft) : string {
 		let result = '{';
-		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
-		result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+		result += '"id" : ' + ((obj.id === null) ? 'null' : obj.id.toString()) + ',';
 		result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';
 		result += '"beschreibung" : ' + JSON.stringify(obj.beschreibung) + ',';
 		result += '"detail" : ' + JSON.stringify(obj.detail) + ',';
@@ -86,19 +86,19 @@ export class SchuldateiOrganisationseinheitEigenschaft extends SchuldateiEintrag
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitEigenschaft>) : string {
 		let result = '{';
 		if (obj.gueltigab !== undefined) {
-			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+			result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
 		if (obj.gueltigbis !== undefined) {
-			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+			result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
 		if (obj.geaendertam !== undefined) {
-			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+			result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		}
 		if (obj.id !== undefined) {
-			result += '"id" : ' + ((!obj.id) ? 'null' : obj.id.toString()) + ',';
+			result += '"id" : ' + ((obj.id === null) ? 'null' : obj.id.toString()) + ',';
 		}
 		if (obj.eigenschaft !== undefined) {
 			result += '"eigenschaft" : ' + JSON.stringify(obj.eigenschaft) + ',';

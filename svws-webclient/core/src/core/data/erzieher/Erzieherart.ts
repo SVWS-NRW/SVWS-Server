@@ -41,7 +41,7 @@ export class Erzieherart extends JavaObject {
 	public static transpilerToJSON(obj : Erzieherart) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -53,7 +53,7 @@ export class Erzieherart extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

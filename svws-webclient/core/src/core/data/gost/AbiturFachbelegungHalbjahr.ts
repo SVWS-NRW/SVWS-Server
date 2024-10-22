@@ -107,14 +107,14 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 		result += '"halbjahrKuerzel" : ' + JSON.stringify(obj.halbjahrKuerzel) + ',';
 		result += '"kursartKuerzel" : ' + JSON.stringify(obj.kursartKuerzel) + ',';
 		result += '"schriftlich" : ' + obj.schriftlich.toString() + ',';
-		result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
-		result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+		result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+		result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
 		result += '"fehlstundenGesamt" : ' + obj.fehlstundenGesamt.toString() + ',';
 		result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
-		result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
-		result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet.toString()) + ',';
-		result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
+		result += '"notenkuerzel" : ' + ((obj.notenkuerzel === null) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
+		result += '"block1gewertet" : ' + ((obj.block1gewertet === null) ? 'null' : obj.block1gewertet.toString()) + ',';
+		result += '"block1kursAufZeugnis" : ' + ((obj.block1kursAufZeugnis === null) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,10 +132,10 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 			result += '"schriftlich" : ' + obj.schriftlich.toString() + ',';
 		}
 		if (obj.biliSprache !== undefined) {
-			result += '"biliSprache" : ' + ((!obj.biliSprache) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
+			result += '"biliSprache" : ' + ((obj.biliSprache === null) ? 'null' : JSON.stringify(obj.biliSprache)) + ',';
 		}
 		if (obj.lehrer !== undefined) {
-			result += '"lehrer" : ' + ((!obj.lehrer) ? 'null' : obj.lehrer.toString()) + ',';
+			result += '"lehrer" : ' + ((obj.lehrer === null) ? 'null' : obj.lehrer.toString()) + ',';
 		}
 		if (obj.wochenstunden !== undefined) {
 			result += '"wochenstunden" : ' + obj.wochenstunden.toString() + ',';
@@ -147,13 +147,13 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 			result += '"fehlstundenUnentschuldigt" : ' + obj.fehlstundenUnentschuldigt.toString() + ',';
 		}
 		if (obj.notenkuerzel !== undefined) {
-			result += '"notenkuerzel" : ' + ((!obj.notenkuerzel) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
+			result += '"notenkuerzel" : ' + ((obj.notenkuerzel === null) ? 'null' : JSON.stringify(obj.notenkuerzel)) + ',';
 		}
 		if (obj.block1gewertet !== undefined) {
-			result += '"block1gewertet" : ' + ((!obj.block1gewertet) ? 'null' : obj.block1gewertet.toString()) + ',';
+			result += '"block1gewertet" : ' + ((obj.block1gewertet === null) ? 'null' : obj.block1gewertet.toString()) + ',';
 		}
 		if (obj.block1kursAufZeugnis !== undefined) {
-			result += '"block1kursAufZeugnis" : ' + ((!obj.block1kursAufZeugnis) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
+			result += '"block1kursAufZeugnis" : ' + ((obj.block1kursAufZeugnis === null) ? 'null' : obj.block1kursAufZeugnis.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

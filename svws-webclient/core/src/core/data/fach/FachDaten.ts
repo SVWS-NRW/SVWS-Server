@@ -182,8 +182,8 @@ export class FachDaten extends JavaObject {
 		result += '"istOberstufenFach" : ' + obj.istOberstufenFach.toString() + ',';
 		result += '"istPruefungsordnungsRelevant" : ' + obj.istPruefungsordnungsRelevant.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
-		result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
-		result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+		result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
+		result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';
 		result += '"aufZeugnis" : ' + obj.aufZeugnis.toString() + ',';
 		result += '"bezeichnungZeugnis" : ' + JSON.stringify(obj.bezeichnungZeugnis) + ',';
@@ -225,10 +225,10 @@ export class FachDaten extends JavaObject {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		}
 		if (obj.aufgabenfeld !== undefined) {
-			result += '"aufgabenfeld" : ' + ((!obj.aufgabenfeld) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
+			result += '"aufgabenfeld" : ' + ((obj.aufgabenfeld === null) ? 'null' : JSON.stringify(obj.aufgabenfeld)) + ',';
 		}
 		if (obj.bilingualeSprache !== undefined) {
-			result += '"bilingualeSprache" : ' + ((!obj.bilingualeSprache) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
+			result += '"bilingualeSprache" : ' + ((obj.bilingualeSprache === null) ? 'null' : JSON.stringify(obj.bilingualeSprache)) + ',';
 		}
 		if (obj.istNachpruefungErlaubt !== undefined) {
 			result += '"istNachpruefungErlaubt" : ' + obj.istNachpruefungErlaubt.toString() + ',';

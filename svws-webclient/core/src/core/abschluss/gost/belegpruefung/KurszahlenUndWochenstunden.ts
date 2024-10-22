@@ -149,13 +149,13 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					if (kurszahlenHalbjahr === null)
 						kurszahlenHalbjahr = new ArrayMap(GostKursart.values());
 					const kurszahlAlt : number | null = kurszahlenHalbjahr.get(kursart);
-					kurszahlenHalbjahr.put(kursart, (kurszahlAlt === null) ? 1 : (kurszahlAlt! + 1));
+					kurszahlenHalbjahr.put(kursart, (kurszahlAlt === null) ? 1 : (kurszahlAlt + 1));
 				}
 				if (istAnrechenbarHalbjahr && !istNullPunkteBelegungInQPhase && ((kursart as unknown === GostKursart.GK as unknown) || (halbjahr.istQualifikationsphase() && ((kursart as unknown === GostKursart.ZK as unknown) || ((kursart as unknown === GostKursart.PJK as unknown) && (projektkurse.istAnrechenbar(fachbelegungHalbjahr))))))) {
 					const kurszahlAnrechenbar : number | null = this.kurszahlenAnrechenbar.get(halbjahr);
-					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar! + 1));
+					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
 					const kurszahlGK : number | null = this.kurszahlenGrundkurse.get(halbjahr);
-					this.kurszahlenGrundkurse.put(halbjahr, (kurszahlGK === null) ? 1 : (kurszahlGK! + 1));
+					this.kurszahlenGrundkurse.put(halbjahr, (kurszahlGK === null) ? 1 : (kurszahlGK + 1));
 					if (istAnrechenbar) {
 						if (halbjahr.istQualifikationsphase()) {
 							this.blockIAnzahlGrundkurse++;
@@ -166,9 +166,9 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 				if (halbjahr.istQualifikationsphase() && !istNullPunkteBelegungInQPhase && (kursart as unknown === GostKursart.LK as unknown)) {
 					istLKFach = true;
 					const kurszahlLK : number | null = this.kurszahlenLeistungskurse.get(halbjahr);
-					this.kurszahlenLeistungskurse.put(halbjahr, (kurszahlLK === null) ? 1 : (kurszahlLK! + 1));
+					this.kurszahlenLeistungskurse.put(halbjahr, (kurszahlLK === null) ? 1 : (kurszahlLK + 1));
 					const kurszahlAnrechenbar : number | null = this.kurszahlenAnrechenbar.get(halbjahr);
-					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar! + 1));
+					this.kurszahlenAnrechenbar.put(halbjahr, (kurszahlAnrechenbar === null) ? 1 : (kurszahlAnrechenbar + 1));
 					this.blockIAnzahlLeistungskurse++;
 					this.blockIAnzahlAnrechenbar++;
 				}
@@ -200,17 +200,17 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 					}
 				}
 				const wochenstundenAlt : number | null = this.wochenstunden.get(halbjahr);
-				this.wochenstunden.put(halbjahr, (wochenstundenAlt === null) ? stunden : (wochenstundenAlt! + stunden));
+				this.wochenstunden.put(halbjahr, (wochenstundenAlt === null) ? stunden : (wochenstundenAlt + stunden));
 				if (halbjahr.istEinfuehrungsphase()) {
 					if (istAnrechenbar) {
 						const kurszahlEF : number | null = this.kurszahlenEinfuehrungsphase.get(kursart);
-						this.kurszahlenEinfuehrungsphase.put(kursart, (kurszahlEF === null) ? 1 : (kurszahlEF! + 1));
+						this.kurszahlenEinfuehrungsphase.put(kursart, (kurszahlEF === null) ? 1 : (kurszahlEF + 1));
 					}
 					this.wochenstundenEinfuehrungsphase += stunden;
 				} else {
 					if (istAnrechenbar && !istNullPunkteBelegungInQPhase) {
 						const kurszahlQ : number | null = this.kurszahlenQualifikationsphase.get(kursart);
-						this.kurszahlenQualifikationsphase.put(kursart, (kurszahlQ === null) ? 1 : (kurszahlQ! + 1));
+						this.kurszahlenQualifikationsphase.put(kursart, (kurszahlQ === null) ? 1 : (kurszahlQ + 1));
 					}
 					this.wochenstundenQualifikationsphase += stunden;
 				}
@@ -397,7 +397,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = kurszahlenHalbjahr.get(kursart);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -413,7 +413,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = this.kurszahlenGrundkurse.get(halbjahr);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -429,7 +429,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = this.kurszahlenLeistungskurse.get(halbjahr);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -445,7 +445,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = this.kurszahlenAnrechenbar.get(halbjahr);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -461,7 +461,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = this.kurszahlenEinfuehrungsphase.get(kursart);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -477,7 +477,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		const kurszahl : number | null = this.kurszahlenQualifikationsphase.get(kursart);
 		if (kurszahl === null)
 			return 0;
-		return kurszahl!;
+		return kurszahl;
 	}
 
 	/**
@@ -520,7 +520,7 @@ export class KurszahlenUndWochenstunden extends GostBelegpruefung {
 		let stunden : number | null = this.wochenstunden.get(halbjahr);
 		if (stunden === null)
 			stunden = 0;
-		return stunden!;
+		return stunden;
 	}
 
 	/**

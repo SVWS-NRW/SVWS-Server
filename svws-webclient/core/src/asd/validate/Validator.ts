@@ -92,7 +92,7 @@ export abstract class Validator<T extends JavaObject> extends JavaObject {
 				if (!this.pruefe())
 					success = false;
 			} catch(e : any) {
-				this.addFehler("Unerwarteter Fehler bei der Validierung: " + e.getMessage()!);
+				this.addFehler("Unerwarteter Fehler bei der Validierung: " + e.getMessage());
 			}
 		}
 		return success;

@@ -960,7 +960,7 @@ export class StundenplanManager extends JavaObject {
 					const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
 					const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 					const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
-					const minuten : number = ende! - beginn!;
+					const minuten : number = ende - beginn;
 					summe_minuten += (u.wochentyp === 0) ? (minuten * faktor) : minuten;
 				}
 				const wochenminuten : number = summe_minuten / faktor;
@@ -977,7 +977,7 @@ export class StundenplanManager extends JavaObject {
 				const z : StundenplanZeitraster = DeveloperNotificationException.ifMapGetIsNull(this._zeitraster_by_id, u.idZeitraster);
 				const ende : number = DeveloperNotificationException.ifNull("z.stundenende", z.stundenende);
 				const beginn : number = DeveloperNotificationException.ifNull("z.stundenbeginn", z.stundenbeginn);
-				const minuten : number = ende! - beginn!;
+				const minuten : number = ende - beginn;
 				summe_minuten += (u.wochentyp === 0) ? (minuten * faktor) : minuten;
 			}
 			const wochenminuten : number = summe_minuten / faktor;
@@ -1384,7 +1384,7 @@ export class StundenplanManager extends JavaObject {
 		const jahrBis : number = infoBis[6];
 		const kwVon : number = infoVon[5];
 		const kwBis : number = infoBis[5];
-		DeveloperNotificationException.ifTrue("Das Start-Datum '" + this._stundenplanGueltigAb! + "' ist größer als das End-Datum '" + this._stundenplanGueltigBis! + "'!", (jahrVon > jahrBis) || ((jahrVon === jahrBis) && (kwVon > kwBis)));
+		DeveloperNotificationException.ifTrue("Das Start-Datum '" + this._stundenplanGueltigAb + "' ist größer als das End-Datum '" + this._stundenplanGueltigBis + "'!", (jahrVon > jahrBis) || ((jahrVon === jahrBis) && (kwVon > kwBis)));
 		for (let jahr : number = jahrVon; jahr <= jahrBis; jahr++) {
 			const von : number = (jahr === jahrVon) ? kwVon : 1;
 			const bis : number = (jahr === jahrBis) ? kwBis : DateUtils.gibKalenderwochenOfJahr(jahr);
@@ -2415,7 +2415,7 @@ export class StundenplanManager extends JavaObject {
 		const sMoGer : string = DateUtils.gibDatumGermanFormat(sMo);
 		const sSoGer : string = DateUtils.gibDatumGermanFormat(sSo);
 		const sJahrKW : string = "KW " + kwz.kw;
-		return sJahrKW! + " (" + sMoGer! + "–" + sSoGer! + ")";
+		return sJahrKW + " (" + sMoGer + "–" + sSoGer + ")";
 	}
 
 	/**
@@ -3966,7 +3966,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es an dem Wochentag eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
 	 */
 	public pausenzeitHatSchnittMitZeitrasterByWochentag(wochentag : number) : boolean {
-		return MapUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag, wochentag, false)!;
+		return MapUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag, wochentag, false);
 	}
 
 	/**
@@ -3978,7 +3978,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es an dem Wochentag bei der Klasse eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
 	 */
 	public pausenzeitHatSchnittMitZeitrasterByWochentagAndKlassenId(wochentag : number, idKlasse : number) : boolean {
-		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse, wochentag, idKlasse, false)!;
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idKlasse, wochentag, idKlasse, false);
 	}
 
 	/**
@@ -3990,7 +3990,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es an dem Wochentag bei dem Schueler eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
 	 */
 	public pausenzeitHatSchnittMitZeitrasterByWochentagAndSchuelerId(wochentag : number, idSchueler : number) : boolean {
-		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler, wochentag, idSchueler, false)!;
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idSchueler, wochentag, idSchueler, false);
 	}
 
 	/**
@@ -4002,7 +4002,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es an dem Wochentag bei der Lehrkraft eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
 	 */
 	public pausenzeitHatSchnittMitZeitrasterByWochentagAndLehrerId(wochentag : number, idLehrer : number) : boolean {
-		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer, wochentag, idLehrer, false)!;
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idLehrer, wochentag, idLehrer, false);
 	}
 
 	/**
@@ -4014,7 +4014,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return TRUE, falls es an dem Wochentag bei dem Jahrgang eine Überschneidung zwischen Pausenzeiten und Zeitrastern gibt.
 	 */
 	public pausenzeitHatSchnittMitZeitrasterByWochentagAndJahrgangId(wochentag : number, idJahrgang : number) : boolean {
-		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang, wochentag, idJahrgang, false)!;
+		return Map2DUtils.getOrDefault(this._pausenzeitHatSchnittMitZeitraster_by_wochentag_idJahrgang, wochentag, idJahrgang, false);
 	}
 
 	/**
@@ -5039,7 +5039,7 @@ export class StundenplanManager extends JavaObject {
 		const zahl : number = wochenTyp - 1;
 		const z2 : number = Math.trunc(zahl / 26);
 		const z1 : number = zahl - (z2 * 26);
-		return StringUtils.numberToLetterIndex1(z2)! + StringUtils.numberToLetterIndex0(z1)!;
+		return StringUtils.numberToLetterIndex1(z2) + StringUtils.numberToLetterIndex0(z1);
 	}
 
 	/**
@@ -5054,7 +5054,7 @@ export class StundenplanManager extends JavaObject {
 	public stundenplanGetWochenTypAsString(wochenTyp : number) : string {
 		if (wochenTyp <= 0)
 			return "Alle Wochen";
-		return this.stundenplanGetWochenTypAsStringKurz(wochenTyp)! + "-Woche";
+		return this.stundenplanGetWochenTypAsStringKurz(wochenTyp) + "-Woche";
 	}
 
 	/**
@@ -5882,12 +5882,12 @@ export class StundenplanManager extends JavaObject {
 		let sKl : string | null = this.unterrichtGetByIDStringOfKlassen(idUnterricht);
 		let sRa : string | null = this.unterrichtGetByIDStringOfRaeume(idUnterricht);
 		let sSc : string | null = this.unterrichtGetByIDStringOfSchienen(idUnterricht);
-		sLe = JavaString.isEmpty(sLe) ? "" : (", " + sLe!);
-		sFa = JavaString.isEmpty(sFa) ? "" : (", " + sFa!);
-		sKl = JavaString.isEmpty(sKl) ? "" : (", " + sKl!);
-		sRa = JavaString.isEmpty(sRa) ? "" : (", " + sRa!);
-		sSc = JavaString.isEmpty(sSc) ? "" : (", " + sSc!);
-		return idUnterricht + sLe! + sFa! + sKl! + sRa! + sSc!;
+		sLe = JavaString.isEmpty(sLe) ? "" : (", " + sLe);
+		sFa = JavaString.isEmpty(sFa) ? "" : (", " + sFa);
+		sKl = JavaString.isEmpty(sKl) ? "" : (", " + sKl);
+		sRa = JavaString.isEmpty(sRa) ? "" : (", " + sRa);
+		sSc = JavaString.isEmpty(sSc) ? "" : (", " + sSc);
+		return idUnterricht + sLe + sFa + sKl + sRa + sSc;
 	}
 
 	/**
@@ -6105,9 +6105,9 @@ export class StundenplanManager extends JavaObject {
 			const sWochentagVon : string = listWochentagVon.get(i);
 			const sWochentagBis : string = listWochentagBis.get(i);
 			if (JavaObject.equalsTranspiler(sWochentagVon, (sWochentagBis)))
-				listUhrzeit.set(i, sWochentagVon! + " " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon + " " + sUhrzeit);
 			else
-				listUhrzeit.set(i, sWochentagVon! + "–" + sWochentagBis! + " " + sUhrzeit!);
+				listUhrzeit.set(i, sWochentagVon + "–" + sWochentagBis + " " + sUhrzeit);
 		}
 		return listUhrzeit;
 	}
@@ -6118,7 +6118,7 @@ export class StundenplanManager extends JavaObject {
 			return "???";
 		const sBeginn : string = (zeitraster.stundenbeginn === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenbeginn);
 		const sEnde : string = (zeitraster.stundenende === null) ? "??:??" : DateUtils.getStringOfUhrzeitFromMinuten(zeitraster.stundenende);
-		return sBeginn! + "–" + sEnde! + " Uhr";
+		return sBeginn + "–" + sEnde + " Uhr";
 	}
 
 	/**

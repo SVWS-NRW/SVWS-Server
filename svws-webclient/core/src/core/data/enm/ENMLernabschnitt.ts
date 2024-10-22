@@ -90,15 +90,15 @@ export class ENMLernabschnitt extends JavaObject {
 	public static transpilerToJSON(obj : ENMLernabschnitt) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
-		result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
-		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
-		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
-		result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
-		result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
-		result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
-		result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
-		result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
+		result += '"fehlstundenGesamt" : ' + ((obj.fehlstundenGesamt === null) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
+		result += '"tsFehlstundenGesamt" : ' + ((obj.tsFehlstundenGesamt === null) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
+		result += '"fehlstundenGesamtUnentschuldigt" : ' + ((obj.fehlstundenGesamtUnentschuldigt === null) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
+		result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((obj.tsFehlstundenGesamtUnentschuldigt === null) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
+		result += '"pruefungsordnung" : ' + ((obj.pruefungsordnung === null) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
+		result += '"lernbereich1note" : ' + ((obj.lernbereich1note === null) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
+		result += '"lernbereich2note" : ' + ((obj.lernbereich2note === null) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
+		result += '"foerderschwerpunkt1" : ' + ((obj.foerderschwerpunkt1 === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
+		result += '"foerderschwerpunkt2" : ' + ((obj.foerderschwerpunkt2 === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -110,31 +110,31 @@ export class ENMLernabschnitt extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.fehlstundenGesamt !== undefined) {
-			result += '"fehlstundenGesamt" : ' + ((!obj.fehlstundenGesamt) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
+			result += '"fehlstundenGesamt" : ' + ((obj.fehlstundenGesamt === null) ? 'null' : obj.fehlstundenGesamt.toString()) + ',';
 		}
 		if (obj.tsFehlstundenGesamt !== undefined) {
-			result += '"tsFehlstundenGesamt" : ' + ((!obj.tsFehlstundenGesamt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
+			result += '"tsFehlstundenGesamt" : ' + ((obj.tsFehlstundenGesamt === null) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamt)) + ',';
 		}
 		if (obj.fehlstundenGesamtUnentschuldigt !== undefined) {
-			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((!obj.fehlstundenGesamtUnentschuldigt) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
+			result += '"fehlstundenGesamtUnentschuldigt" : ' + ((obj.fehlstundenGesamtUnentschuldigt === null) ? 'null' : obj.fehlstundenGesamtUnentschuldigt.toString()) + ',';
 		}
 		if (obj.tsFehlstundenGesamtUnentschuldigt !== undefined) {
-			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((!obj.tsFehlstundenGesamtUnentschuldigt) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
+			result += '"tsFehlstundenGesamtUnentschuldigt" : ' + ((obj.tsFehlstundenGesamtUnentschuldigt === null) ? 'null' : JSON.stringify(obj.tsFehlstundenGesamtUnentschuldigt)) + ',';
 		}
 		if (obj.pruefungsordnung !== undefined) {
-			result += '"pruefungsordnung" : ' + ((!obj.pruefungsordnung) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
+			result += '"pruefungsordnung" : ' + ((obj.pruefungsordnung === null) ? 'null' : JSON.stringify(obj.pruefungsordnung)) + ',';
 		}
 		if (obj.lernbereich1note !== undefined) {
-			result += '"lernbereich1note" : ' + ((!obj.lernbereich1note) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
+			result += '"lernbereich1note" : ' + ((obj.lernbereich1note === null) ? 'null' : JSON.stringify(obj.lernbereich1note)) + ',';
 		}
 		if (obj.lernbereich2note !== undefined) {
-			result += '"lernbereich2note" : ' + ((!obj.lernbereich2note) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
+			result += '"lernbereich2note" : ' + ((obj.lernbereich2note === null) ? 'null' : JSON.stringify(obj.lernbereich2note)) + ',';
 		}
 		if (obj.foerderschwerpunkt1 !== undefined) {
-			result += '"foerderschwerpunkt1" : ' + ((!obj.foerderschwerpunkt1) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
+			result += '"foerderschwerpunkt1" : ' + ((obj.foerderschwerpunkt1 === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt1)) + ',';
 		}
 		if (obj.foerderschwerpunkt2 !== undefined) {
-			result += '"foerderschwerpunkt2" : ' + ((!obj.foerderschwerpunkt2) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
+			result += '"foerderschwerpunkt2" : ' + ((obj.foerderschwerpunkt2 === null) ? 'null' : JSON.stringify(obj.foerderschwerpunkt2)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

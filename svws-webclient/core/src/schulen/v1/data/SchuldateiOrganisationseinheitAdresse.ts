@@ -144,9 +144,9 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 
 	public static transpilerToJSON(obj : SchuldateiOrganisationseinheitAdresse) : string {
 		let result = '{';
-		result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
-		result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
-		result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+		result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+		result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+		result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"liegenschaft" : ' + obj.liegenschaft.toString() + ',';
@@ -169,13 +169,13 @@ export class SchuldateiOrganisationseinheitAdresse extends SchuldateiEintrag {
 	public static transpilerToJSONPatch(obj : Partial<SchuldateiOrganisationseinheitAdresse>) : string {
 		let result = '{';
 		if (obj.gueltigab !== undefined) {
-			result += '"gueltigab" : ' + ((!obj.gueltigab) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
+			result += '"gueltigab" : ' + ((obj.gueltigab === null) ? 'null' : JSON.stringify(obj.gueltigab)) + ',';
 		}
 		if (obj.gueltigbis !== undefined) {
-			result += '"gueltigbis" : ' + ((!obj.gueltigbis) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
+			result += '"gueltigbis" : ' + ((obj.gueltigbis === null) ? 'null' : JSON.stringify(obj.gueltigbis)) + ',';
 		}
 		if (obj.geaendertam !== undefined) {
-			result += '"geaendertam" : ' + ((!obj.geaendertam) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
+			result += '"geaendertam" : ' + ((obj.geaendertam === null) ? 'null' : JSON.stringify(obj.geaendertam)) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';

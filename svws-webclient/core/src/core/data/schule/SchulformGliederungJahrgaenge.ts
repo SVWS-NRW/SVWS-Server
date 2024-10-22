@@ -53,7 +53,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public static transpilerToJSON(obj : SchulformGliederungJahrgaenge) : string {
 		let result = '{';
 		result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
-		result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
+		result += '"gliederung" : ' + ((obj.gliederung === null) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		result += '"jahrgaenge" : [ ';
 		for (let i = 0; i < obj.jahrgaenge.size(); i++) {
 			const elem = obj.jahrgaenge.get(i);
@@ -73,7 +73,7 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 			result += '"schulform" : ' + JSON.stringify(obj.schulform) + ',';
 		}
 		if (obj.gliederung !== undefined) {
-			result += '"gliederung" : ' + ((!obj.gliederung) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
+			result += '"gliederung" : ' + ((obj.gliederung === null) ? 'null' : JSON.stringify(obj.gliederung)) + ',';
 		}
 		if (obj.jahrgaenge !== undefined) {
 			result += '"jahrgaenge" : [ ';

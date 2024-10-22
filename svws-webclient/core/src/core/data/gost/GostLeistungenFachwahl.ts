@@ -60,8 +60,8 @@ export class GostLeistungenFachwahl extends JavaObject {
 
 	public static transpilerToJSON(obj : GostLeistungenFachwahl) : string {
 		let result = '{';
-		result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
-		result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
+		result += '"fach" : ' + ((obj.fach === null) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
+		result += '"abiturfach" : ' + ((obj.abiturfach === null) ? 'null' : obj.abiturfach.toString()) + ',';
 		result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';
 		result += '"belegungen" : [ ';
 		for (let i = 0; i < obj.belegungen.size(); i++) {
@@ -79,10 +79,10 @@ export class GostLeistungenFachwahl extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<GostLeistungenFachwahl>) : string {
 		let result = '{';
 		if (obj.fach !== undefined) {
-			result += '"fach" : ' + ((!obj.fach) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
+			result += '"fach" : ' + ((obj.fach === null) ? 'null' : GostFach.transpilerToJSON(obj.fach)) + ',';
 		}
 		if (obj.abiturfach !== undefined) {
-			result += '"abiturfach" : ' + ((!obj.abiturfach) ? 'null' : obj.abiturfach.toString()) + ',';
+			result += '"abiturfach" : ' + ((obj.abiturfach === null) ? 'null' : obj.abiturfach.toString()) + ',';
 		}
 		if (obj.istFSNeu !== undefined) {
 			result += '"istFSNeu" : ' + obj.istFSNeu.toString() + ',';

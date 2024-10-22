@@ -73,9 +73,9 @@ export class ENMKlasse extends JavaObject {
 	public static transpilerToJSON(obj : ENMKlasse) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
-		result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.toString()) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+		result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"klassenlehrer" : [ ';
 		for (let i = 0; i < obj.klassenlehrer.size(); i++) {
@@ -96,13 +96,13 @@ export class ENMKlasse extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.kuerzelAnzeige !== undefined) {
-			result += '"kuerzelAnzeige" : ' + ((!obj.kuerzelAnzeige) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
+			result += '"kuerzelAnzeige" : ' + ((obj.kuerzelAnzeige === null) ? 'null' : JSON.stringify(obj.kuerzelAnzeige)) + ',';
 		}
 		if (obj.idJahrgang !== undefined) {
-			result += '"idJahrgang" : ' + ((!obj.idJahrgang) ? 'null' : obj.idJahrgang.toString()) + ',';
+			result += '"idJahrgang" : ' + ((obj.idJahrgang === null) ? 'null' : obj.idJahrgang.toString()) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

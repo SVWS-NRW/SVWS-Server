@@ -86,13 +86,13 @@ export class ENMTeilleistung extends JavaObject {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"artID" : ' + obj.artID.toString() + ',';
-		result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
-		result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
-		result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
-		result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
-		result += '"tsBemerkung" : ' + ((!obj.tsBemerkung) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
-		result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
-		result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
+		result += '"tsArtID" : ' + ((obj.tsArtID === null) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
+		result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
+		result += '"tsDatum" : ' + ((obj.tsDatum === null) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
+		result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+		result += '"tsBemerkung" : ' + ((obj.tsBemerkung === null) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
+		result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
+		result += '"tsNote" : ' + ((obj.tsNote === null) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -107,25 +107,25 @@ export class ENMTeilleistung extends JavaObject {
 			result += '"artID" : ' + obj.artID.toString() + ',';
 		}
 		if (obj.tsArtID !== undefined) {
-			result += '"tsArtID" : ' + ((!obj.tsArtID) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
+			result += '"tsArtID" : ' + ((obj.tsArtID === null) ? 'null' : JSON.stringify(obj.tsArtID)) + ',';
 		}
 		if (obj.datum !== undefined) {
-			result += '"datum" : ' + ((!obj.datum) ? 'null' : JSON.stringify(obj.datum)) + ',';
+			result += '"datum" : ' + ((obj.datum === null) ? 'null' : JSON.stringify(obj.datum)) + ',';
 		}
 		if (obj.tsDatum !== undefined) {
-			result += '"tsDatum" : ' + ((!obj.tsDatum) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
+			result += '"tsDatum" : ' + ((obj.tsDatum === null) ? 'null' : JSON.stringify(obj.tsDatum)) + ',';
 		}
 		if (obj.bemerkung !== undefined) {
-			result += '"bemerkung" : ' + ((!obj.bemerkung) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
+			result += '"bemerkung" : ' + ((obj.bemerkung === null) ? 'null' : JSON.stringify(obj.bemerkung)) + ',';
 		}
 		if (obj.tsBemerkung !== undefined) {
-			result += '"tsBemerkung" : ' + ((!obj.tsBemerkung) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
+			result += '"tsBemerkung" : ' + ((obj.tsBemerkung === null) ? 'null' : JSON.stringify(obj.tsBemerkung)) + ',';
 		}
 		if (obj.note !== undefined) {
-			result += '"note" : ' + ((!obj.note) ? 'null' : JSON.stringify(obj.note)) + ',';
+			result += '"note" : ' + ((obj.note === null) ? 'null' : JSON.stringify(obj.note)) + ',';
 		}
 		if (obj.tsNote !== undefined) {
-			result += '"tsNote" : ' + ((!obj.tsNote) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
+			result += '"tsNote" : ' + ((obj.tsNote === null) ? 'null' : JSON.stringify(obj.tsNote)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

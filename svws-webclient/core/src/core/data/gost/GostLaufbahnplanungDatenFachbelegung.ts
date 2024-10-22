@@ -62,7 +62,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	public static transpilerToJSON(obj : GostLaufbahnplanungDatenFachbelegung) : string {
 		let result = '{';
 		result += '"fachID" : ' + obj.fachID.toString() + ',';
-		result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
+		result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
 		result += '"kursart" : [ ';
 		for (let i = 0; i < obj.kursart.length; i++) {
 			const elem = obj.kursart[i];
@@ -90,7 +90,7 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 			result += '"fachID" : ' + obj.fachID.toString() + ',';
 		}
 		if (obj.abiturFach !== undefined) {
-			result += '"abiturFach" : ' + ((!obj.abiturFach) ? 'null' : obj.abiturFach.toString()) + ',';
+			result += '"abiturFach" : ' + ((obj.abiturFach === null) ? 'null' : obj.abiturFach.toString()) + ',';
 		}
 		if (obj.kursart !== undefined) {
 			const a = obj.kursart;

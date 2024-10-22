@@ -196,24 +196,24 @@ export class LehrerStammdaten extends JavaObject {
 		result += '"id" : ' + obj.id.toString() + ',';
 		result += '"kuerzel" : ' + JSON.stringify(obj.kuerzel) + ',';
 		result += '"personalTyp" : ' + JSON.stringify(obj.personalTyp) + ',';
-		result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
-		result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
-		result += '"amtsbezeichnung" : ' + ((!obj.amtsbezeichnung) ? 'null' : JSON.stringify(obj.amtsbezeichnung)) + ',';
+		result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+		result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
+		result += '"amtsbezeichnung" : ' + ((obj.amtsbezeichnung === null) ? 'null' : JSON.stringify(obj.amtsbezeichnung)) + ',';
 		result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
 		result += '"vorname" : ' + JSON.stringify(obj.vorname) + ',';
 		result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
-		result += '"geburtsdatum" : ' + ((!obj.geburtsdatum) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
-		result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
-		result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
-		result += '"telefonMobil" : ' + ((!obj.telefonMobil) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
-		result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
-		result += '"emailDienstlich" : ' + ((!obj.emailDienstlich) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
-		result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+		result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
+		result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
+		result += '"ortsteilID" : ' + ((obj.ortsteilID === null) ? 'null' : obj.ortsteilID.toString()) + ',';
+		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"telefonMobil" : ' + ((obj.telefonMobil === null) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
+		result += '"emailPrivat" : ' + ((obj.emailPrivat === null) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
+		result += '"emailDienstlich" : ' + ((obj.emailDienstlich === null) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
+		result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result += '"istRelevantFuerStatistik" : ' + obj.istRelevantFuerStatistik.toString() + ',';
 		result += '"leitungsfunktionen" : [ ';
@@ -241,13 +241,13 @@ export class LehrerStammdaten extends JavaObject {
 			result += '"personalTyp" : ' + JSON.stringify(obj.personalTyp) + ',';
 		}
 		if (obj.anrede !== undefined) {
-			result += '"anrede" : ' + ((!obj.anrede) ? 'null' : JSON.stringify(obj.anrede)) + ',';
+			result += '"anrede" : ' + ((obj.anrede === null) ? 'null' : JSON.stringify(obj.anrede)) + ',';
 		}
 		if (obj.titel !== undefined) {
-			result += '"titel" : ' + ((!obj.titel) ? 'null' : JSON.stringify(obj.titel)) + ',';
+			result += '"titel" : ' + ((obj.titel === null) ? 'null' : JSON.stringify(obj.titel)) + ',';
 		}
 		if (obj.amtsbezeichnung !== undefined) {
-			result += '"amtsbezeichnung" : ' + ((!obj.amtsbezeichnung) ? 'null' : JSON.stringify(obj.amtsbezeichnung)) + ',';
+			result += '"amtsbezeichnung" : ' + ((obj.amtsbezeichnung === null) ? 'null' : JSON.stringify(obj.amtsbezeichnung)) + ',';
 		}
 		if (obj.nachname !== undefined) {
 			result += '"nachname" : ' + JSON.stringify(obj.nachname) + ',';
@@ -259,40 +259,40 @@ export class LehrerStammdaten extends JavaObject {
 			result += '"geschlecht" : ' + obj.geschlecht.toString() + ',';
 		}
 		if (obj.geburtsdatum !== undefined) {
-			result += '"geburtsdatum" : ' + ((!obj.geburtsdatum) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
+			result += '"geburtsdatum" : ' + ((obj.geburtsdatum === null) ? 'null' : JSON.stringify(obj.geburtsdatum)) + ',';
 		}
 		if (obj.staatsangehoerigkeitID !== undefined) {
-			result += '"staatsangehoerigkeitID" : ' + ((!obj.staatsangehoerigkeitID) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
+			result += '"staatsangehoerigkeitID" : ' + ((obj.staatsangehoerigkeitID === null) ? 'null' : JSON.stringify(obj.staatsangehoerigkeitID)) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (obj.hausnummer !== undefined) {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
 		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (obj.wohnortID !== undefined) {
-			result += '"wohnortID" : ' + ((!obj.wohnortID) ? 'null' : obj.wohnortID.toString()) + ',';
+			result += '"wohnortID" : ' + ((obj.wohnortID === null) ? 'null' : obj.wohnortID.toString()) + ',';
 		}
 		if (obj.ortsteilID !== undefined) {
-			result += '"ortsteilID" : ' + ((!obj.ortsteilID) ? 'null' : obj.ortsteilID.toString()) + ',';
+			result += '"ortsteilID" : ' + ((obj.ortsteilID === null) ? 'null' : obj.ortsteilID.toString()) + ',';
 		}
 		if (obj.telefon !== undefined) {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+			result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (obj.telefonMobil !== undefined) {
-			result += '"telefonMobil" : ' + ((!obj.telefonMobil) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
+			result += '"telefonMobil" : ' + ((obj.telefonMobil === null) ? 'null' : JSON.stringify(obj.telefonMobil)) + ',';
 		}
 		if (obj.emailPrivat !== undefined) {
-			result += '"emailPrivat" : ' + ((!obj.emailPrivat) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
+			result += '"emailPrivat" : ' + ((obj.emailPrivat === null) ? 'null' : JSON.stringify(obj.emailPrivat)) + ',';
 		}
 		if (obj.emailDienstlich !== undefined) {
-			result += '"emailDienstlich" : ' + ((!obj.emailDienstlich) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
+			result += '"emailDienstlich" : ' + ((obj.emailDienstlich === null) ? 'null' : JSON.stringify(obj.emailDienstlich)) + ',';
 		}
 		if (obj.foto !== undefined) {
-			result += '"foto" : ' + ((!obj.foto) ? 'null' : JSON.stringify(obj.foto)) + ',';
+			result += '"foto" : ' + ((obj.foto === null) ? 'null' : JSON.stringify(obj.foto)) + ',';
 		}
 		if (obj.istSichtbar !== undefined) {
 			result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';

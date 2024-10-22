@@ -53,9 +53,9 @@ export class ENMTeilleistungsart extends JavaObject {
 	public static transpilerToJSON(obj : ENMTeilleistungsart) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
-		result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
-		result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.toString()) + ',';
+		result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+		result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
+		result += '"gewichtung" : ' + ((obj.gewichtung === null) ? 'null' : obj.gewichtung.toString()) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -67,13 +67,13 @@ export class ENMTeilleistungsart extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.bezeichnung !== undefined) {
-			result += '"bezeichnung" : ' + ((!obj.bezeichnung) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
+			result += '"bezeichnung" : ' + ((obj.bezeichnung === null) ? 'null' : JSON.stringify(obj.bezeichnung)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
-			result += '"sortierung" : ' + ((!obj.sortierung) ? 'null' : obj.sortierung.toString()) + ',';
+			result += '"sortierung" : ' + ((obj.sortierung === null) ? 'null' : obj.sortierung.toString()) + ',';
 		}
 		if (obj.gewichtung !== undefined) {
-			result += '"gewichtung" : ' + ((!obj.gewichtung) ? 'null' : obj.gewichtung.toString()) + ',';
+			result += '"gewichtung" : ' + ((obj.gewichtung === null) ? 'null' : obj.gewichtung.toString()) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

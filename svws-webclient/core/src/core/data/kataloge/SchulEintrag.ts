@@ -139,20 +139,20 @@ export class SchulEintrag extends JavaObject {
 	public static transpilerToJSON(obj : SchulEintrag) : string {
 		let result = '{';
 		result += '"id" : ' + obj.id.toString() + ',';
-		result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
-		result += '"kurzbezeichnung" : ' + ((!obj.kurzbezeichnung) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
+		result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+		result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
 		result += '"name" : ' + JSON.stringify(obj.name) + ',';
-		result += '"schulformID" : ' + ((!obj.schulformID) ? 'null' : obj.schulformID.toString()) + ',';
-		result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
-		result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
-		result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
-		result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
-		result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
-		result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
-		result += '"fax" : ' + ((!obj.fax) ? 'null' : JSON.stringify(obj.fax)) + ',';
-		result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
-		result += '"schulleiter" : ' + ((!obj.schulleiter) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
+		result += '"schulformID" : ' + ((obj.schulformID === null) ? 'null' : obj.schulformID.toString()) + ',';
+		result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+		result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+		result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+		result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
+		result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
+		result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+		result += '"fax" : ' + ((obj.fax === null) ? 'null' : JSON.stringify(obj.fax)) + ',';
+		result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
+		result += '"schulleiter" : ' + ((obj.schulleiter === null) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
 		result += '"sortierung" : ' + obj.sortierung.toString() + ',';
 		result += '"istSichtbar" : ' + obj.istSichtbar.toString() + ',';
 		result = result.slice(0, -1);
@@ -166,10 +166,10 @@ export class SchulEintrag extends JavaObject {
 			result += '"id" : ' + obj.id.toString() + ',';
 		}
 		if (obj.kuerzel !== undefined) {
-			result += '"kuerzel" : ' + ((!obj.kuerzel) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
+			result += '"kuerzel" : ' + ((obj.kuerzel === null) ? 'null' : JSON.stringify(obj.kuerzel)) + ',';
 		}
 		if (obj.kurzbezeichnung !== undefined) {
-			result += '"kurzbezeichnung" : ' + ((!obj.kurzbezeichnung) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
+			result += '"kurzbezeichnung" : ' + ((obj.kurzbezeichnung === null) ? 'null' : JSON.stringify(obj.kurzbezeichnung)) + ',';
 		}
 		if (obj.schulnummer !== undefined) {
 			result += '"schulnummer" : ' + JSON.stringify(obj.schulnummer) + ',';
@@ -178,34 +178,34 @@ export class SchulEintrag extends JavaObject {
 			result += '"name" : ' + JSON.stringify(obj.name) + ',';
 		}
 		if (obj.schulformID !== undefined) {
-			result += '"schulformID" : ' + ((!obj.schulformID) ? 'null' : obj.schulformID.toString()) + ',';
+			result += '"schulformID" : ' + ((obj.schulformID === null) ? 'null' : obj.schulformID.toString()) + ',';
 		}
 		if (obj.strassenname !== undefined) {
-			result += '"strassenname" : ' + ((!obj.strassenname) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
+			result += '"strassenname" : ' + ((obj.strassenname === null) ? 'null' : JSON.stringify(obj.strassenname)) + ',';
 		}
 		if (obj.hausnummer !== undefined) {
-			result += '"hausnummer" : ' + ((!obj.hausnummer) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
+			result += '"hausnummer" : ' + ((obj.hausnummer === null) ? 'null' : JSON.stringify(obj.hausnummer)) + ',';
 		}
 		if (obj.hausnummerZusatz !== undefined) {
-			result += '"hausnummerZusatz" : ' + ((!obj.hausnummerZusatz) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
+			result += '"hausnummerZusatz" : ' + ((obj.hausnummerZusatz === null) ? 'null' : JSON.stringify(obj.hausnummerZusatz)) + ',';
 		}
 		if (obj.plz !== undefined) {
-			result += '"plz" : ' + ((!obj.plz) ? 'null' : JSON.stringify(obj.plz)) + ',';
+			result += '"plz" : ' + ((obj.plz === null) ? 'null' : JSON.stringify(obj.plz)) + ',';
 		}
 		if (obj.ort !== undefined) {
-			result += '"ort" : ' + ((!obj.ort) ? 'null' : JSON.stringify(obj.ort)) + ',';
+			result += '"ort" : ' + ((obj.ort === null) ? 'null' : JSON.stringify(obj.ort)) + ',';
 		}
 		if (obj.telefon !== undefined) {
-			result += '"telefon" : ' + ((!obj.telefon) ? 'null' : JSON.stringify(obj.telefon)) + ',';
+			result += '"telefon" : ' + ((obj.telefon === null) ? 'null' : JSON.stringify(obj.telefon)) + ',';
 		}
 		if (obj.fax !== undefined) {
-			result += '"fax" : ' + ((!obj.fax) ? 'null' : JSON.stringify(obj.fax)) + ',';
+			result += '"fax" : ' + ((obj.fax === null) ? 'null' : JSON.stringify(obj.fax)) + ',';
 		}
 		if (obj.email !== undefined) {
-			result += '"email" : ' + ((!obj.email) ? 'null' : JSON.stringify(obj.email)) + ',';
+			result += '"email" : ' + ((obj.email === null) ? 'null' : JSON.stringify(obj.email)) + ',';
 		}
 		if (obj.schulleiter !== undefined) {
-			result += '"schulleiter" : ' + ((!obj.schulleiter) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
+			result += '"schulleiter" : ' + ((obj.schulleiter === null) ? 'null' : JSON.stringify(obj.schulleiter)) + ',';
 		}
 		if (obj.sortierung !== undefined) {
 			result += '"sortierung" : ' + obj.sortierung.toString() + ',';

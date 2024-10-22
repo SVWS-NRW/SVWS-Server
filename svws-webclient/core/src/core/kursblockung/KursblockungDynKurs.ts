@@ -551,7 +551,7 @@ export class KursblockungDynKurs extends JavaObject {
 	 */
 	debug(schuelerArr : Array<KursblockungDynSchueler>) : void {
 		this.logger.modifyIndent(+4);
-		this.logger.logLn(this.toString()! + " --> " + this.schuelerAnzahl + " SuS.");
+		this.logger.logLn(this.toString() + " --> " + this.schuelerAnzahl + " SuS.");
 		for (const s of schuelerArr) {
 			const kurse : Array<KursblockungDynKurs | null> = s.gibKurswahlen();
 			for (const kurs of kurse)

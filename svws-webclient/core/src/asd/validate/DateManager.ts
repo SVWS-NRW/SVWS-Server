@@ -204,26 +204,26 @@ export class DateManager extends JavaObject {
 		if (isoDate === null)
 			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.")
 		const d : Array<string | null> = isoDate.split("-");
-		const strError : string = "Das Datumsformat '" + isoDate! + "' ist nicht konform zu ISO8601";
+		const strError : string = "Das Datumsformat '" + isoDate + "' ist nicht konform zu ISO8601";
 		if (d.length !== 3)
-			throw new InvalidDateException(strError! + ": Es ist nicht durch zwei Bindestriche unterteilt.")
+			throw new InvalidDateException(strError + ": Es ist nicht durch zwei Bindestriche unterteilt.")
 		let jahr : number;
 		try {
 			jahr = JavaInteger.parseInt(d[0]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError! + ": Der Teil vor dem ersten Bindestrich muss eine Zahl sein und sollte das Jahr angeben", e)
+			throw new InvalidDateException(strError + ": Der Teil vor dem ersten Bindestrich muss eine Zahl sein und sollte das Jahr angeben", e)
 		}
 		let monat : number;
 		try {
 			monat = JavaInteger.parseInt(d[1]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError! + ": Der mittlere Teil zwischen den Bindestrichen muss eine Zahl sein und sollte den Monat angeben", e)
+			throw new InvalidDateException(strError + ": Der mittlere Teil zwischen den Bindestrichen muss eine Zahl sein und sollte den Monat angeben", e)
 		}
 		let tag : number;
 		try {
 			tag = JavaInteger.parseInt(d[2]);
 		} catch(e : any) {
-			throw new InvalidDateException(strError! + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e)
+			throw new InvalidDateException(strError + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e)
 		}
 		return new DateManager(tag, monat, jahr);
 	}

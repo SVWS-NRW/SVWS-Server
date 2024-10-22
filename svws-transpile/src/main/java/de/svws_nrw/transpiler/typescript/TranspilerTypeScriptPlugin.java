@@ -418,25 +418,16 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		};
 		if (result != null)
 			return result;
-		// check whether a String or a Number expression needs a .valueOf call in typescript
-		String valueOf = "";
-		if ((type instanceof final ExpressionClassType classType) && ((classType.isNumberType()) || (classType.isString()))) {
-			final Tree parent = transpiler.getParent(node);
-			if ((parent instanceof final BinaryTree bt) && ((bt.getKind() == Kind.MULTIPLY) || (bt.getKind() == Kind.DIVIDE)
-					|| (bt.getKind() == Kind.REMAINDER) || (bt.getKind() == Kind.PLUS) || (bt.getKind() == Kind.MINUS)
-					|| (bt.getKind() == Kind.LEFT_SHIFT) || (bt.getKind() == Kind.RIGHT_SHIFT) || (bt.getKind() == Kind.UNSIGNED_RIGHT_SHIFT)))
-				valueOf = "!";
-		}
 		// check whether we have a case identifier of a switch statement where we have to add the class/enumeration name
 		if ((type instanceof final ExpressionClassType classType)
 				&& ((transpiler.getParent(node) instanceof CaseTree) || (transpiler.getParent(node) instanceof ConstantCaseLabelTree))) {
-			return classType.toString() + "." + node.getName().toString() + valueOf;
+			return classType.toString() + "." + node.getName().toString();
 		}
 		if (!transpiler.isClassMember(node))
-			return node.getName().toString() + valueOf;
+			return node.getName().toString();
 		if (transpiler.isStaticClassMember(node))
-			return transpiler.getClass(node).getSimpleName().toString() + "." + node.getName().toString() + valueOf;
-		return "this." + node.getName().toString() + valueOf;
+			return transpiler.getClass(node).getSimpleName().toString() + "." + node.getName().toString();
+		return "this." + node.getName().toString();
 	}
 
 
@@ -1242,7 +1233,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	public String convertReturn(final ReturnTree node) {
 		if (node.getExpression() == null)
 			return "return;";
-		String converted = convertExpression(node.getExpression());
+		final String converted = convertExpression(node.getExpression());
 		final ExpressionType type = transpiler.getExpressionType(node.getExpression());
 		if ((type instanceof final ExpressionClassType ect) && (ect.isPrimitiveOrBoxedPrimitive())) {
 			final Tree parent = transpiler.getMethod(node);
@@ -1253,8 +1244,6 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				final TypeNode returnType = method.getReturnType();
 				if (returnType == null)
 					throw new TranspilerException("Transpiler Error: Method return type expected while handling boxed return type.");
-				if (returnType.isPrimitive())
-					converted += "!";
 			} else if (parent instanceof LambdaExpressionTree) {
 				throw new TranspilerException("Transpiler Error: Handling boxed return types for lambda expressions not yet supported");
 			}
@@ -1603,8 +1592,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						&& (type instanceof final ExpressionClassType ect)) {
 					final String expression = convertExpression(ms.getExpression());
 					if ("java.lang.Double".equals(ect.getFullQualifiedName()) || ("java.lang.Float".equals(ect.getFullQualifiedName())))
-						return "Math.trunc(" + expression + "!)";
-					return expression + "!";
+						return "Math.trunc(" + expression + ")";
+					return expression;
 				}
 			}
 			// replace String methods...
@@ -1720,18 +1709,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			throw new TranspilerException("Transpiler Error: Unhandled method expression type of kind " + methodExpression.getKind() + ".");
 		}
 
-		// check whether the result type is String an the parent tree node requires a valueOf() call in TypeScript
-		String valueOf = "";
-		final ExpressionType type = transpiler.getExpressionType(node);
-		if ((type instanceof final ExpressionClassType ect) && ("java.lang.String".equals(ect.getFullQualifiedName()))) {
-			final Tree parent = transpiler.getParent(node);
-			if ((parent instanceof final BinaryTree bt) && (bt.getKind() == Kind.PLUS))
-				valueOf = "!";
-		}
-
 		// print arguments for the method call
 		sb.append(convertMethodInvocationParameters(node.getArguments(), null, null, false));
-		sb.append(valueOf);
 		return sb.toString();
 	}
 
@@ -2080,13 +2059,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
-					sb.append(getIndent() + addAttrName + " + " + objAttr + "!" + endline);
+					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -2181,7 +2160,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + type.getNoDeclarationType().transpile(true)
 							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}
@@ -2237,13 +2216,13 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + JSON.stringify(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : JSON.stringify(" + objAttr + "))" + endline);
 				}
 			} else if (type.isNumberClass() || type.isBoolean()) {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + objAttr + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + objAttr + ".toString())" + endline);
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + objAttr + ".toString())" + endline);
 				}
 			} else if (type.isCollectionType()) {
 				// TODO notNull, Collection initialisiert
@@ -2338,7 +2317,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 				if (type.isNotNull()) {
 					sb.append(getIndent() + addAttrName + " + " + type.transpile(true) + ".transpilerToJSON(" + objAttr + ")" + endline);
 				} else {
-					sb.append(getIndent() + addAttrName + " + ((!" + objAttr + ") ? 'null' : " + type.getNoDeclarationType().transpile(true)
+					sb.append(getIndent() + addAttrName + " + ((" + objAttr + " === null) ? 'null' : " + type.getNoDeclarationType().transpile(true)
 							+ ".transpilerToJSON(" + objAttr + "))" + endline);
 				}
 			}

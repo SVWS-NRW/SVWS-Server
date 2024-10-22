@@ -110,20 +110,20 @@ export class ENMLeistungBemerkungen extends JavaObject {
 
 	public static transpilerToJSON(obj : ENMLeistungBemerkungen) : string {
 		let result = '{';
-		result += '"ASV" : ' + ((!obj.ASV) ? 'null' : JSON.stringify(obj.ASV)) + ',';
-		result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
-		result += '"AUE" : ' + ((!obj.AUE) ? 'null' : JSON.stringify(obj.AUE)) + ',';
-		result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
-		result += '"ZB" : ' + ((!obj.ZB) ? 'null' : JSON.stringify(obj.ZB)) + ',';
-		result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
-		result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
-		result += '"tsLELS" : ' + ((!obj.tsLELS) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
-		result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
-		result += '"tsSchulformEmpf" : ' + ((!obj.tsSchulformEmpf) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
-		result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
-		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
-		result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
-		result += '"tsFoerderbemerkungen" : ' + ((!obj.tsFoerderbemerkungen) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
+		result += '"ASV" : ' + ((obj.ASV === null) ? 'null' : JSON.stringify(obj.ASV)) + ',';
+		result += '"tsASV" : ' + ((obj.tsASV === null) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
+		result += '"AUE" : ' + ((obj.AUE === null) ? 'null' : JSON.stringify(obj.AUE)) + ',';
+		result += '"tsAUE" : ' + ((obj.tsAUE === null) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
+		result += '"ZB" : ' + ((obj.ZB === null) ? 'null' : JSON.stringify(obj.ZB)) + ',';
+		result += '"tsZB" : ' + ((obj.tsZB === null) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
+		result += '"LELS" : ' + ((obj.LELS === null) ? 'null' : JSON.stringify(obj.LELS)) + ',';
+		result += '"tsLELS" : ' + ((obj.tsLELS === null) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
+		result += '"schulformEmpf" : ' + ((obj.schulformEmpf === null) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
+		result += '"tsSchulformEmpf" : ' + ((obj.tsSchulformEmpf === null) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
+		result += '"individuelleVersetzungsbemerkungen" : ' + ((obj.individuelleVersetzungsbemerkungen === null) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
+		result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((obj.tsIndividuelleVersetzungsbemerkungen === null) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
+		result += '"foerderbemerkungen" : ' + ((obj.foerderbemerkungen === null) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
+		result += '"tsFoerderbemerkungen" : ' + ((obj.tsFoerderbemerkungen === null) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
 		result = result.slice(0, -1);
 		result += '}';
 		return result;
@@ -132,46 +132,46 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	public static transpilerToJSONPatch(obj : Partial<ENMLeistungBemerkungen>) : string {
 		let result = '{';
 		if (obj.ASV !== undefined) {
-			result += '"ASV" : ' + ((!obj.ASV) ? 'null' : JSON.stringify(obj.ASV)) + ',';
+			result += '"ASV" : ' + ((obj.ASV === null) ? 'null' : JSON.stringify(obj.ASV)) + ',';
 		}
 		if (obj.tsASV !== undefined) {
-			result += '"tsASV" : ' + ((!obj.tsASV) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
+			result += '"tsASV" : ' + ((obj.tsASV === null) ? 'null' : JSON.stringify(obj.tsASV)) + ',';
 		}
 		if (obj.AUE !== undefined) {
-			result += '"AUE" : ' + ((!obj.AUE) ? 'null' : JSON.stringify(obj.AUE)) + ',';
+			result += '"AUE" : ' + ((obj.AUE === null) ? 'null' : JSON.stringify(obj.AUE)) + ',';
 		}
 		if (obj.tsAUE !== undefined) {
-			result += '"tsAUE" : ' + ((!obj.tsAUE) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
+			result += '"tsAUE" : ' + ((obj.tsAUE === null) ? 'null' : JSON.stringify(obj.tsAUE)) + ',';
 		}
 		if (obj.ZB !== undefined) {
-			result += '"ZB" : ' + ((!obj.ZB) ? 'null' : JSON.stringify(obj.ZB)) + ',';
+			result += '"ZB" : ' + ((obj.ZB === null) ? 'null' : JSON.stringify(obj.ZB)) + ',';
 		}
 		if (obj.tsZB !== undefined) {
-			result += '"tsZB" : ' + ((!obj.tsZB) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
+			result += '"tsZB" : ' + ((obj.tsZB === null) ? 'null' : JSON.stringify(obj.tsZB)) + ',';
 		}
 		if (obj.LELS !== undefined) {
-			result += '"LELS" : ' + ((!obj.LELS) ? 'null' : JSON.stringify(obj.LELS)) + ',';
+			result += '"LELS" : ' + ((obj.LELS === null) ? 'null' : JSON.stringify(obj.LELS)) + ',';
 		}
 		if (obj.tsLELS !== undefined) {
-			result += '"tsLELS" : ' + ((!obj.tsLELS) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
+			result += '"tsLELS" : ' + ((obj.tsLELS === null) ? 'null' : JSON.stringify(obj.tsLELS)) + ',';
 		}
 		if (obj.schulformEmpf !== undefined) {
-			result += '"schulformEmpf" : ' + ((!obj.schulformEmpf) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
+			result += '"schulformEmpf" : ' + ((obj.schulformEmpf === null) ? 'null' : JSON.stringify(obj.schulformEmpf)) + ',';
 		}
 		if (obj.tsSchulformEmpf !== undefined) {
-			result += '"tsSchulformEmpf" : ' + ((!obj.tsSchulformEmpf) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
+			result += '"tsSchulformEmpf" : ' + ((obj.tsSchulformEmpf === null) ? 'null' : JSON.stringify(obj.tsSchulformEmpf)) + ',';
 		}
 		if (obj.individuelleVersetzungsbemerkungen !== undefined) {
-			result += '"individuelleVersetzungsbemerkungen" : ' + ((!obj.individuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
+			result += '"individuelleVersetzungsbemerkungen" : ' + ((obj.individuelleVersetzungsbemerkungen === null) ? 'null' : JSON.stringify(obj.individuelleVersetzungsbemerkungen)) + ',';
 		}
 		if (obj.tsIndividuelleVersetzungsbemerkungen !== undefined) {
-			result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((!obj.tsIndividuelleVersetzungsbemerkungen) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
+			result += '"tsIndividuelleVersetzungsbemerkungen" : ' + ((obj.tsIndividuelleVersetzungsbemerkungen === null) ? 'null' : JSON.stringify(obj.tsIndividuelleVersetzungsbemerkungen)) + ',';
 		}
 		if (obj.foerderbemerkungen !== undefined) {
-			result += '"foerderbemerkungen" : ' + ((!obj.foerderbemerkungen) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
+			result += '"foerderbemerkungen" : ' + ((obj.foerderbemerkungen === null) ? 'null' : JSON.stringify(obj.foerderbemerkungen)) + ',';
 		}
 		if (obj.tsFoerderbemerkungen !== undefined) {
-			result += '"tsFoerderbemerkungen" : ' + ((!obj.tsFoerderbemerkungen) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
+			result += '"tsFoerderbemerkungen" : ' + ((obj.tsFoerderbemerkungen === null) ? 'null' : JSON.stringify(obj.tsFoerderbemerkungen)) + ',';
 		}
 		result = result.slice(0, -1);
 		result += '}';

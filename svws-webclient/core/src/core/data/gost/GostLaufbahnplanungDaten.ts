@@ -176,12 +176,12 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 		result += '"schulBezeichnung3" : ' + JSON.stringify(obj.schulBezeichnung3) + ',';
 		result += '"anmerkungen" : ' + JSON.stringify(obj.anmerkungen) + ',';
 		result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
-		result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
-		result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
+		result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+		result += '"textBeratungsbogen" : ' + ((obj.textBeratungsbogen === null) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE.toString() + ',';
-		result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
+		result += '"beginnZusatzkursGE" : ' + ((obj.beginnZusatzkursGE === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW.toString() + ',';
-		result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+		result += '"beginnZusatzkursSW" : ' + ((obj.beginnZusatzkursSW === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		result += '"beratungslehrer" : [ ';
 		for (let i = 0; i < obj.beratungslehrer.size(); i++) {
 			const elem = obj.beratungslehrer.get(i);
@@ -243,22 +243,22 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 			result += '"abiturjahr" : ' + obj.abiturjahr.toString() + ',';
 		}
 		if (obj.jahrgang !== undefined) {
-			result += '"jahrgang" : ' + ((!obj.jahrgang) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
+			result += '"jahrgang" : ' + ((obj.jahrgang === null) ? 'null' : JSON.stringify(obj.jahrgang)) + ',';
 		}
 		if (obj.textBeratungsbogen !== undefined) {
-			result += '"textBeratungsbogen" : ' + ((!obj.textBeratungsbogen) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
+			result += '"textBeratungsbogen" : ' + ((obj.textBeratungsbogen === null) ? 'null' : JSON.stringify(obj.textBeratungsbogen)) + ',';
 		}
 		if (obj.hatZusatzkursGE !== undefined) {
 			result += '"hatZusatzkursGE" : ' + obj.hatZusatzkursGE.toString() + ',';
 		}
 		if (obj.beginnZusatzkursGE !== undefined) {
-			result += '"beginnZusatzkursGE" : ' + ((!obj.beginnZusatzkursGE) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
+			result += '"beginnZusatzkursGE" : ' + ((obj.beginnZusatzkursGE === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursGE)) + ',';
 		}
 		if (obj.hatZusatzkursSW !== undefined) {
 			result += '"hatZusatzkursSW" : ' + obj.hatZusatzkursSW.toString() + ',';
 		}
 		if (obj.beginnZusatzkursSW !== undefined) {
-			result += '"beginnZusatzkursSW" : ' + ((!obj.beginnZusatzkursSW) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
+			result += '"beginnZusatzkursSW" : ' + ((obj.beginnZusatzkursSW === null) ? 'null' : JSON.stringify(obj.beginnZusatzkursSW)) + ',';
 		}
 		if (obj.beratungslehrer !== undefined) {
 			result += '"beratungslehrer" : [ ';

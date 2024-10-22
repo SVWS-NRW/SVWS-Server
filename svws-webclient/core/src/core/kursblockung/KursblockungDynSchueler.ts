@@ -203,7 +203,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		for (const fachart of this.fachartArr)
 			if (fachart.gibFach().id === idFach)
 				return fachart;
-		throw new DeveloperNotificationException(this.representation! + " hat kein Fach mit ID = " + idFach + "!")
+		throw new DeveloperNotificationException(this.representation + " hat kein Fach mit ID = " + idFach + "!")
 	}
 
 	/**
@@ -535,7 +535,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		for (const kurs of this.fachartZuKurs) {
 			if (kurs === null)
 				continue;
-			this._logger.logLn("    " + kurs.toString()! + "    " + Arrays.toString(kurs.gibSchienenLage())!);
+			this._logger.logLn("    " + kurs.toString() + "    " + Arrays.toString(kurs.gibSchienenLage()));
 			for (const schiene of kurs.gibSchienenLage())
 				if (!setSchienenLage.add(schiene)) {
 					this._logger.logLn("Kollision");
@@ -555,7 +555,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		const fachart1 : KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2 : KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr())
-			throw new DeveloperNotificationException("Regel 11:" + this.representation! + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
+			throw new DeveloperNotificationException("Regel 11:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
 		fachart1.regel_schueler_zusammen_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
 
@@ -569,7 +569,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		const fachart1 : KursblockungDynFachart = this.gibFachartZuFachID(idFach);
 		const fachart2 : KursblockungDynFachart = that.gibFachartZuFachID(idFach);
 		if (fachart1.gibNr() !== fachart2.gibNr())
-			throw new DeveloperNotificationException("Regel 12:" + this.representation! + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
+			throw new DeveloperNotificationException("Regel 12:" + this.representation + " bei " + fachart1 + " und " + that.representation + " bei " + fachart2 + " haben nicht die selbe Kursart!")
 		fachart1.regel_schueler_verbieten_mit_schueler(this.internalSchuelerID, that.internalSchuelerID);
 	}
 
@@ -623,7 +623,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.statistik.aktionNichtwahlenVeraendern(-1);
 		this.nichtwahlen--;
 		for (const nr of kurs.gibSchienenLage()) {
-			DeveloperNotificationException.ifTrue("FEHLER: Schienen-Doppelbelegung! " + this.representation!, this.schieneBelegt[nr]);
+			DeveloperNotificationException.ifTrue("FEHLER: Schienen-Doppelbelegung! " + this.representation, this.schieneBelegt[nr]);
 			this.schieneBelegt[nr] = true;
 		}
 		this.fachartZuKurs[fachartIndex] = kurs;
@@ -634,7 +634,7 @@ export class KursblockungDynSchueler extends JavaObject {
 		this.statistik.aktionNichtwahlenVeraendern(+1);
 		this.nichtwahlen++;
 		for (const nr of kurs.gibSchienenLage()) {
-			DeveloperNotificationException.ifTrue("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation!, !this.schieneBelegt[nr]);
+			DeveloperNotificationException.ifTrue("FEHLER: Kurs ist gar nicht in Schiene ! " + this.representation, !this.schieneBelegt[nr]);
 			this.schieneBelegt[nr] = false;
 		}
 		this.fachartZuKurs[fachartIndex] = null;
