@@ -976,6 +976,8 @@ public final class TranspilerUnit {
 				case final TypeCastTree typeCast -> allExpressionTypes.put(typeCast, ExpressionType.getExpressionType(transpiler, typeCast.getType()));
 				case final LambdaExpressionTree lambdaExpression ->
 					allExpressionTypes.put(lambdaExpression, ExpressionTypeLambda.getExpressionTypeLambda(transpiler, lambdaExpression));
+				case final SwitchExpressionTree switchExpression ->
+					allExpressionTypes.put(switchExpression, ExpressionType.getExpressionType(transpiler, switchExpression));
 				// TODO MemberReferenceTree
 				default -> {
 					/* do nothing */

@@ -57,17 +57,25 @@ public final class ValidatorLehrerStammdatenNachname extends Validator<LehrerSta
 			addFehler("Kein Wert im Feld 'nachname'.");
 			return false;
 		}
-		final boolean success = true;
-		if (nachname.startsWith(" ") || nachname.startsWith("\t"))
+		boolean success = true;
+		if (nachname.startsWith(" ") || nachname.startsWith("\t")) {
 			addFehler("Nachname der Lehrkraft: Die Eintragung des Nachnamens muss linksbündig erfolgen (ohne vorangestellte Leerzeichen oder Tabs).");
+			success = false;
+		}
 		final @NotNull String nachnameOhneZusatz = getOhneZusatz(nachname);
-		if (!Character.isUpperCase(nachnameOhneZusatz.charAt(0)))
+		if (!Character.isUpperCase(nachnameOhneZusatz.charAt(0))) {
 			addFehler("Nachname der Lehrkraft: Die erste Stelle des Nachnamens muss - ggf. im Anschluss an einen Namenszusatz, wie z.B. \"von\" -  mit einem Großbuchstaben besetzt sein.");
-		if ((nachnameOhneZusatz.length() > 1) && Character.isUpperCase(nachnameOhneZusatz.charAt(1)))
+			success = false;
+		}
+		if ((nachnameOhneZusatz.length() > 1) && Character.isUpperCase(nachnameOhneZusatz.charAt(1))) {
 			addFehler("Die zweite Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+			success = false;
+		}
 		if ((nachnameOhneZusatz.length() > 2) && Character.isUpperCase(nachnameOhneZusatz.charAt(2))
-				&& !Set.of("A'", "D'", "M'", "O'", "Mc").contains(nachnameOhneZusatz.substring(0, 2)))
+				&& !Set.of("A'", "D'", "M'", "O'", "Mc").contains(nachnameOhneZusatz.substring(0, 2))) {
 			addFehler("Nachname der Lehrkraft: Die dritte Stelle des Nachnamens ist mit einem Großbuchstaben besetzt. Bitte stellen sie sicher, dass nur der erste Buchstabe des Nachnamens ein Großbuchstabe ist. Bitte schreiben Sie auf ihn folgende Buchstaben klein.");
+			success = false;
+		}
 		return success;
 	}
 

@@ -222,6 +222,8 @@ export { Schulgliederung } from './asd/types/schule/Schulgliederung';
 export { WeiterbildungskollegBildungsgangTyp } from './asd/types/schule/WeiterbildungskollegBildungsgangTyp';
 export { WeiterbildungskollegOrganisationsformen } from './asd/types/schule/WeiterbildungskollegOrganisationsformen';
 export { CoreTypeDataManager } from './asd/utils/CoreTypeDataManager';
+export { DateManager } from './asd/validate/DateManager';
+export { InvalidDateException } from './asd/validate/InvalidDateException';
 export { Validator } from './asd/validate/Validator';
 export { ValidatorException } from './asd/validate/ValidatorException';
 export { ValidatorFehler } from './asd/validate/ValidatorFehler';

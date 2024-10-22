@@ -811,8 +811,10 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 							} else {
 								sb.append(" else ");
 							}
-							sb.append("if (").append(tmpExprVar).append(" === ").append(typeNode.transpile(true)).append(".").append(cclt.toString())
-									.append(") {");
+							sb.append("if (").append(tmpExprVar).append(" === ");
+							if (!typeNode.isPrimitive())
+								sb.append(typeNode.transpile(true)).append(".");
+							sb.append(cclt.toString()).append(") {");
 							indentC++;
 							final boolean isBlock = ct.getBody() instanceof BlockTree;
 							sb.append(System.lineSeparator());
@@ -853,8 +855,11 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 						sb.append(" else {");
 						indentC++;
 						final boolean isBlock = ct.getBody() instanceof BlockTree;
+						final boolean isThrow = ct.getBody() instanceof ThrowTree;
 						sb.append(System.lineSeparator());
-						if (!isBlock)
+						if (isThrow)
+							sb.append(getIndent());
+						else if (!isBlock)
 							sb.append(getIndent()).append(tmpVar).append(" = ");
 						switch (ct.getBody()) {
 							case final BlockTree bt -> sb.append(convertBlock(bt, false, tmpVar));
@@ -885,6 +890,7 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 	 * @return the transpiled string if the expression was transpiled successfully and null otherwise
 	 */
 	public String convertExpression(final ExpressionTree node) {
+		final Tree parent = transpiler.getParent(node);
 		return switch (node) {
 			case final BinaryTree b -> convertBinaryOperator(b);
 			case final AssignmentTree a -> convertAssignment(a);
@@ -902,7 +908,12 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 			case final TypeCastTree tc -> convertTypeCast(tc);
 			case final LambdaExpressionTree le -> convertLambdaExpression(le);
 			case final InstanceOfTree io -> convertInstanceOf(io);
-			case final SwitchExpressionTree se -> convertSwitchExpression(se, null);
+			case final SwitchExpressionTree se -> switch (parent) {
+				case final ReturnTree rt -> convertSwitchExpression(se, null);
+				case final AssignmentTree at -> convertSwitchExpression(se, convertExpression(at.getVariable()));
+				default -> throw new TranspilerException(
+						"Transpiler Error: The parent-node of kind " + parent.getKind() + " is not yet supported for an switch expression.");
+			};
 			default -> throw new TranspilerException("Transpiler Error: The node of kind " + node.getKind() + " is not yet supported for an expression.");
 		};
 	}
@@ -1019,6 +1030,8 @@ public final class TranspilerTypeScriptPlugin extends TranspilerLanguagePlugin {
 		final ExpressionTree expression = node.getExpression();
 		final String strVariable = convertExpression(variable);
 		String strExpression = convertExpression(expression);
+		if (expression instanceof SwitchExpressionTree)
+			return strExpression;
 		final ExpressionType typeVariable = transpiler.getExpressionType(variable);
 		final ExpressionType typeExpression = transpiler.getExpressionType(expression);
 		if ((typeVariable == null) || (typeExpression == null))

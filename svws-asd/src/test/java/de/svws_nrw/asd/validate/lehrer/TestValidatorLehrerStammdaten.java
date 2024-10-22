@@ -44,7 +44,7 @@ class TestValidatorLehrerStammdaten {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(schuleTestdaten_001, true);
 		final ValidatorLehrerStammdaten validator = new ValidatorLehrerStammdaten(lehrerTestdaten_002, kontext);
-		assertEquals(true, validator.run());
+		assertEquals(false, validator.run());
 	}
 
 }
