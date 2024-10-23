@@ -224,6 +224,7 @@ public class StundenplanManager {
 
 	// StundenplanKalenderwochenzuordnung
 	private @NotNull HashMap<Long, StundenplanKalenderwochenzuordnung> _kwz_by_id = new HashMap<>();
+	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_ungueltige_sortiert = new ArrayList<>();
 	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert = new ArrayList<>();
 	private @NotNull List<StundenplanKalenderwochenzuordnung> _kwzmenge_sortiert_invers = new ArrayList<>();
 	private @NotNull HashMap2D<Integer, Integer, StundenplanKalenderwochenzuordnung> _kwz_by_jahr_and_kw = new HashMap2D<>();
@@ -1442,18 +1443,28 @@ public class StundenplanManager {
 					kwz.jahr = jahr;
 					kwz.kw = kw;
 					kwz.wochentyp = kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
-					// Hinzufügen
+					// Hinzufügen (Pseudo - Objekt)
 					DeveloperNotificationException.ifMap2DPutOverwrites(_kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
 					_kwzmenge_sortiert.add(kwz);
 				}
 		}
-
 		_kwzmenge_sortiert.sort(_compKWZ);
 
 		// Inverse Liste aufbauen
 		_kwzmenge_sortiert_invers = new ArrayList<>();
 		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwzmenge_sortiert)
 			_kwzmenge_sortiert_invers.addFirst(kwz);
+
+		// Ungültige Liste aufbauen
+		_kwzmenge_ungueltige_sortiert = new ArrayList<>();
+		for (final @NotNull StundenplanKalenderwochenzuordnung kwz : _kwz_by_id.values()) {
+			// Die ID ist wegen '_kwz_by_id' garantiert gültig.
+			final boolean istKleiner = (kwz.jahr < jahrVon) || ((kwz.jahr == jahrVon) && (kwz.kw < kwVon));
+			final boolean istGroesser = (kwz.jahr > jahrBis) || ((kwz.jahr == jahrBis) && (kwz.kw > kwBis));
+			if (istKleiner || istGroesser)
+				_kwzmenge_ungueltige_sortiert.add(kwz);
+		}
+		_kwzmenge_ungueltige_sortiert.sort(_compKWZ);
 	}
 
 	private void update_klassenmenge() {
@@ -2561,6 +2572,17 @@ public class StundenplanManager {
 	 */
 	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeByWochentyp(final int wochentyp) {
 		return MapUtils.getOrCreateArrayList(_kwzmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 * <br>Hinweis: Wenn die Map Objekte enthält, dann haben diese eine gültige Datenbank-ID.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 */
+	public @NotNull List<StundenplanKalenderwochenzuordnung> kalenderwochenzuordnungGetMengeUngueltige() {
+		return _kwzmenge_ungueltige_sortiert;
 	}
 
 	/**

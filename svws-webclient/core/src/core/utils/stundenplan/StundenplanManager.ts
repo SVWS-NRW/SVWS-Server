@@ -213,6 +213,8 @@ export class StundenplanManager extends JavaObject {
 
 	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap<number, StundenplanKalenderwochenzuordnung>();
 
+	private _kwzmenge_ungueltige_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+
 	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
 	private _kwzmenge_sortiert_invers : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
@@ -1403,6 +1405,14 @@ export class StundenplanManager extends JavaObject {
 		this._kwzmenge_sortiert_invers = new ArrayList();
 		for (const kwz of this._kwzmenge_sortiert)
 			this._kwzmenge_sortiert_invers.addFirst(kwz);
+		this._kwzmenge_ungueltige_sortiert = new ArrayList();
+		for (const kwz of this._kwz_by_id.values()) {
+			const istKleiner : boolean = (kwz.jahr < jahrVon) || ((kwz.jahr === jahrVon) && (kwz.kw < kwVon));
+			const istGroesser : boolean = (kwz.jahr > jahrBis) || ((kwz.jahr === jahrBis) && (kwz.kw > kwBis));
+			if (istKleiner || istGroesser)
+				this._kwzmenge_ungueltige_sortiert.add(kwz);
+		}
+		this._kwzmenge_ungueltige_sortiert.sort(StundenplanManager._compKWZ);
 	}
 
 	private update_klassenmenge() : void {
@@ -2364,6 +2374,17 @@ export class StundenplanManager extends JavaObject {
 	 */
 	public kalenderwochenzuordnungGetMengeByWochentyp(wochentyp : number) : List<StundenplanKalenderwochenzuordnung> {
 		return MapUtils.getOrCreateArrayList(this._kwzmenge_by_wochentyp, wochentyp);
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 * <br>Hinweis: Wenn die Map Objekte enthält, dann haben diese eine gültige Datenbank-ID.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
+	 */
+	public kalenderwochenzuordnungGetMengeUngueltige() : List<StundenplanKalenderwochenzuordnung> {
+		return this._kwzmenge_ungueltige_sortiert;
 	}
 
 	/**
