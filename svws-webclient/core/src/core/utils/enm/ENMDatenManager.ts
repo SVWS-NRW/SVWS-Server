@@ -173,7 +173,7 @@ export class ENMDatenManager extends JavaObject {
 		const noten : List<Note> = Note.data().getWerteBySchuljahr(schuljahr);
 		for (const note of noten) {
 			const nke : NoteKatalogEintrag | null = note.daten(schuljahr);
-			if (nke === null)
+			if ((nke === null) || (nke.id < 0))
 				continue;
 			const enmNote : ENMNote = new ENMNote();
 			enmNote.id = nke.id as number;
