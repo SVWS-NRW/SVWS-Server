@@ -2,7 +2,7 @@ import { computed } from "vue";
 
 import type { AES } from "~/utils/crypto/aes";
 import type { Config } from "~/components/Config";
-import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode} from "@core";
+import type { List, DBSchemaListeEintrag, ApiServer, LehrerListeEintrag, SchuelerListeEintrag, KlassenDaten, KursDaten, JahrgangsDaten, SchuleStammdaten, Schuljahresabschnitt, BenutzerDaten, BenutzerKompetenz, ServerMode, ValidatorKontext} from "@core";
 import { Schulform, Schulgliederung, BenutzerTyp, OpenApiError, SimpleOperationResponse, DeveloperNotificationException } from "@core";
 
 import { ApiConnection } from "~/router/ApiConnection";
@@ -253,12 +253,21 @@ class Api {
 	/// --- Informationen zu der Schule, bei der der Benutzer eingeloggt ist
 
 	/**
-	 * Gibt die Stammdaten der Schule zurück.
+	 * Gibt die Stammdaten der Schule zurück, sofern bereits ein Login stattgefunden hat.
 	 *
 	 * @returns die Stammdaten
 	 */
 	public get schuleStammdaten(): SchuleStammdaten {
 		return this.conn.schuleStammdaten;
+	}
+
+	/**
+	 * Gibt den Validator-Kontext für die Validierung von Statistik-relevanten Daten zurück.
+	 *
+	 * @returns der Validator-Kontext
+	 */
+	public get validatorKontext(): ValidatorKontext {
+		return this.conn.validatorKontext;
 	}
 
 	/**

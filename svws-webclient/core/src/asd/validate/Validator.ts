@@ -1,3 +1,4 @@
+import { StringBuilder } from '../../java/lang/StringBuilder';
 import { ArrayList } from '../../java/util/ArrayList';
 import { ValidatorFehler } from '../../asd/validate/ValidatorFehler';
 import type { List } from '../../java/util/List';
@@ -114,6 +115,21 @@ export abstract class Validator<T extends JavaObject> extends JavaObject {
 	 */
 	public getFehler() : List<ValidatorFehler<any>> {
 		return new ArrayList<ValidatorFehler<any>>(this._fehler);
+	}
+
+	/**
+	 * Gibt die Fehler als Fehlertext für die Nutzung im Client zurück.
+	 *
+	 * @return der Fehlertext
+	 */
+	public getClientFehlertext() : string {
+		if (this._fehler.isEmpty())
+			return "Relevant für die Statistik";
+		const sb : StringBuilder = new StringBuilder();
+		sb.append("Fehler:\n");
+		for (const fehler of this._fehler)
+			sb.append(" - ").append(fehler.getFehlermeldung()).append("\n");
+		return sb.toString();
 	}
 
 	/**

@@ -8,11 +8,13 @@
 				</svws-ui-input-wrapper>
 				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
-				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data.nachname" @change="nachname => patch({nachname: nachname ?? undefined})" required />
-				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data.vorname" @change="vorname => patch({vorname: vorname ?? undefined})" required />
+				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data.nachname" @change="nachname => patch({nachname: nachname ?? undefined})"
+					required statistics :valid="() => validateNachname.valid" :statistics-text="validateNachname.text" />
+				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data.vorname" @change="vorname => patch({vorname: vorname ?? undefined})"
+					required statistics :valid="() => validateVorname.valid" :statistics-text="validateVorname.text" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
-				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data.geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required />
+				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data.geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics />
 				<svws-ui-select title="Staatsangehörigkeit" :disabled="!hatUpdateKompetenz" v-model="inputStaatsangehoerigkeit" :items="Nationalitaeten.values()"
 					:item-text="i => i.daten.staatsangehoerigkeit" :item-sort="staatsangehoerigkeitKatalogEintragSort"
 					:item-filter="staatsangehoerigkeitKatalogEintragFilter" required autocomplete />
@@ -54,10 +56,26 @@
 	import { computed } from "vue";
 	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
-	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz } from "@core";
+	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz,
+		ValidatorLehrerStammdatenNachname, ValidatorLehrerStammdatenVorname, ValidatorLehrerStammdatenGeburtsdatum } from "@core";
 	import { staatsangehoerigkeitKatalogEintragFilter, staatsangehoerigkeitKatalogEintragSort, orte_filter, orte_sort, ortsteilSort } from "~/utils/helfer";
 
 	const props = defineProps<LehrerIndividualdatenProps>();
+
+	const validateNachname = computed<{ valid: boolean, text: string }>(() => {
+		const validator = new ValidatorLehrerStammdatenNachname(props.lehrerListeManager().daten(), props.validatorKontext());
+		return { valid: validator.run(), text: validator.getClientFehlertext() };
+	});
+
+	const validateVorname = computed<{ valid: boolean, text: string }>(() => {
+		const validator = new ValidatorLehrerStammdatenVorname(props.lehrerListeManager().daten(), props.validatorKontext());
+		return { valid: validator.run(), text: validator.getClientFehlertext() };
+	});
+
+	const validateGeburtsdatum = computed<{ valid: boolean, text: string }>(() => {
+		const validator = new ValidatorLehrerStammdatenGeburtsdatum(props.lehrerListeManager().daten(), props.validatorKontext());
+		return { valid: validator.run(), text: validator.getClientFehlertext() };
+	});
 
 	const schuljahr = computed<number>(() => props.lehrerListeManager().getSchuljahr());
 

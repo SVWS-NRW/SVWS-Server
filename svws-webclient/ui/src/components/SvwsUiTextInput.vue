@@ -48,7 +48,7 @@
 						<span class="icon i-ri-alert-fill" v-if="data === '' || data === null || data === undefined" />
 					</span>
 					<template #content>
-						Relevant für die Statistik
+						{{ statisticsText }}
 					</template>
 				</svws-ui-tooltip>
 			</span>
@@ -77,6 +77,7 @@
 		modelValue?: string | null;
 		placeholder?: string;
 		statistics?: boolean;
+		statisticsText?: string;
 		valid?: (value: string | null) => boolean;
 		disabled?: boolean;
 		required?: boolean;
@@ -95,6 +96,7 @@
 		modelValue: null,
 		placeholder: "",
 		statistics: false,
+		statisticsText: "Relevant für die Statistik",
 		valid: () => true,
 		disabled: false,
 		required: false,
@@ -143,7 +145,6 @@
 			tmpIsValid = validatorEmail(data.value ?? '');
 		if (tmpIsValid)
 			tmpIsValid = props.valid(data.value);
-
 		return tmpIsValid;
 	})
 

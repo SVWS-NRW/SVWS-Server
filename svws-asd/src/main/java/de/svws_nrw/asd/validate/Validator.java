@@ -116,6 +116,23 @@ public abstract class Validator<@TsObject T> {
 		return new ArrayList<>(_fehler);
 	}
 
+
+	/**
+	 * Gibt die Fehler als Fehlertext für die Nutzung im Client zurück.
+	 *
+	 * @return der Fehlertext
+	 */
+	public @NotNull String getClientFehlertext() {
+		if (_fehler.isEmpty())
+			return "Relevant für die Statistik";
+		final @NotNull StringBuilder sb = new StringBuilder();
+		sb.append("Fehler:\n");
+		for (final ValidatorFehler<?> fehler : _fehler)
+			sb.append(" - ").append(fehler.getFehlermeldung()).append("\n");
+		return sb.toString();
+	}
+
+
 	/**
 	 * Führt die Prüfung der Daten aus. Befüllt ggf. die Fehlerliste, falls
 	 * es zu Fehlern kommt.

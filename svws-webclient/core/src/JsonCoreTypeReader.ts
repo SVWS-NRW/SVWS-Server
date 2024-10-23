@@ -101,6 +101,8 @@ import { HashMap } from "./java/util/HashMap";
 import { HashSet } from "./java/util/HashSet";
 import type { List } from "./java/util/List";
 import { BaseApi } from "./api/BaseApi";
+import { ValidatorFehlerartKontext } from "./asd/validate/ValidatorFehlerartKontext";
+import { ValidatorManager } from "./asd/validate/ValidatorManager";
 
 interface JsonCoreTypeEntry<T> {
 	bezeichner: string;
@@ -118,6 +120,17 @@ interface JsonCoreTypeDataResult<T> {
 	mapData: HashMap<string, List<T>>;
 	mapHistorienIDs: HashMap<string, number>;
 }
+
+interface JsonValidatorFehlerartEntry {
+	validator: string;
+	historie: ValidatorFehlerartKontext[];
+}
+
+interface JsonValidatorFehlerartData {
+	version: number;
+	daten: JsonValidatorFehlerartEntry[];
+}
+
 
 
 export class JsonCoreTypeReader {
@@ -147,10 +160,10 @@ export class JsonCoreTypeReader {
 
 	private read<T>(name: string, mapper: (json: string) => T): JsonCoreTypeDataResult<T> {
 		if (name === "")
-			throw new DeveloperNotificationException("Für das Einlesen eines CoreTypes muss ein gültiger Name angegeben werden");
+			throw new DeveloperNotificationException("Für das Einlesen eines Core-Types muss ein gültiger Name angegeben werden");
 		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
 		if (json === undefined)
-			throw new DeveloperNotificationException(`Für den den CoreType "${name}" liegen keine JSON Daten vor. Wurde die Map mit den CoreType-Daten gefüllt?`);
+			throw new DeveloperNotificationException(`Für den Core-Type "${name}" liegen keine JSON Daten vor. Wurde die Map mit den CoreType-Daten gefüllt?`);
 		const data: JsonCoreTypeData<T> = JSON.parse(json);
 		const idsHistorien = new HashSet<number>();
 		const result = <JsonCoreTypeDataResult<T>>{
@@ -163,7 +176,7 @@ export class JsonCoreTypeReader {
 			const idHistorie = eintrag.idHistorie;
 			const historie = eintrag.historie;
 			if (idsHistorien.contains(idHistorie))
-				throw new DeveloperNotificationException("Fehler beim Einlesen der CoreType-Daten für den Core-Type " + name);
+				throw new DeveloperNotificationException("Fehler beim Einlesen der Core-Type-Daten für den Core-Type " + name);
 			idsHistorien.add(idHistorie);
 			result.mapHistorienIDs.put(bezeichner, idHistorie);
 			const list = new ArrayList<T>();
@@ -476,9 +489,28 @@ export class JsonCoreTypeReader {
 	}
 
 	public readValidatorenFehlerartKontext() {
-		// TODO
-		// const data = this.readValidator('ValidatorenFehlerartKontext', (json) => ValidatorFehlerartKontext.transpilerFromJSON(json));
-		// ValidatorManager.init(data.version, data.mapData);
+		const name = "ValidatorenFehlerartKontext";
+		const json: string | undefined = this.mapCoreTypeNameJsonData.get(name);
+		if (json === undefined)
+			throw new DeveloperNotificationException(`Für die Validator-Fehlerarten "${name}" liegen keine JSON Daten vor. Wurde die Map mit den Daten gefüllt?`);
+		const data: JsonValidatorFehlerartData = JSON.parse(json);
+		const nameValidatoren = new HashSet<string>();
+		const mapData = new HashMap<string, List<ValidatorFehlerartKontext>>();
+		for (const eintrag of data.daten) {
+			const validator = eintrag.validator;
+			const historie = eintrag.historie;
+			if (nameValidatoren.contains(validator))
+				throw new DeveloperNotificationException("Fehler beim Einlesen der Fehlerarten für die Validatoren " + name);
+			nameValidatoren.add(validator);
+			const list = new ArrayList<ValidatorFehlerartKontext>();
+			mapData.put(validator, list);
+			for (const obj of historie) {
+				const tmpJson = JSON.stringify(obj);
+				const deserialized = ValidatorFehlerartKontext.transpilerFromJSON(tmpJson);
+				list.add(deserialized);
+			}
+		}
+		ValidatorManager.init(data.version, mapData);
 	}
 
 	public async loadAll() : Promise<Map<string, string>> {
