@@ -18,8 +18,8 @@ public final class ValidatorLehrerPersonalabschnittdatenPflichtstundensoll exten
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLehrerPersonalabschnittdatenPflichtstundensoll(@NotNull final LehrerPersonalabschnittsdaten daten,
-			@NotNull final ValidatorKontext kontext) {
+	public ValidatorLehrerPersonalabschnittdatenPflichtstundensoll(final @NotNull LehrerPersonalabschnittsdaten daten,
+			final @NotNull ValidatorKontext kontext) {
 		super(daten, kontext);
 	}
 
@@ -31,15 +31,18 @@ public final class ValidatorLehrerPersonalabschnittdatenPflichtstundensoll exten
 			addFehler("Kein Wert im Feld 'pflichtstundensoll'.");
 			return false;
 		}
-		final boolean success = true;
-		if ((pflichtstundensoll <= 0.0) || (pflichtstundensoll > 41.0)) {
+		boolean success = true;
+		if ((pflichtstundensoll < 0.0) || (pflichtstundensoll > 41.0)) {
 			addFehler("Unzulässiger Wert im Feld 'pflichtstundensoll'. Zulässig sind im Stundenmodell Werte im Bereich von 0,00 bis 41,00 Wochenstunden. "
 					+ "Im Minutenmodell zwischen 0,00 und 1845,00 Minuten.");
+			success = false;
 		}
 		final LehrerEinsatzstatus einsatzstatus = LehrerEinsatzstatus.getBySchluessel(daten().einsatzstatus);
-		if ((einsatzstatus == LehrerEinsatzstatus.B) && (pflichtstundensoll == 0.0))
+		if ((einsatzstatus == LehrerEinsatzstatus.B) && (pflichtstundensoll == 0.0)) {
 			addFehler("Bei Lehrkräften, die von einer anderen Schule abgeordnet wurden (Einsatzstatus = 'B'), darf das Pflichtstundensoll"
 					+ " nicht 0,00 betragen.");
+			success = false;
+		}
 		return success;
 	}
 

@@ -19,8 +19,8 @@ public final class ValidatorLehrerStammdatenNachname extends Validator<LehrerSta
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLehrerStammdatenNachname(@NotNull final LehrerStammdaten daten,
-			@NotNull final ValidatorKontext kontext) {
+	public ValidatorLehrerStammdatenNachname(final @NotNull LehrerStammdaten daten,
+			final @NotNull ValidatorKontext kontext) {
 		super(daten, kontext);
 	}
 

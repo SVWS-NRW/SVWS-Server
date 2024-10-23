@@ -42,6 +42,17 @@
 			"gueltigBis": null
 		} ]
     }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenGeburtsdatum",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
 		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerStammdatenNachname",
 		"historie": [ {
 			"zebras": true,
@@ -71,6 +82,17 @@
 			"hart": [],
 			"muss": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
 			"hinweis": [],
+			"gueltigVon": null,
+			"gueltigBis": null
+		} ]
+    }, {
+		"validator": "de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum",
+		"historie": [ {
+			"zebras": true,
+			"svws": true,
+			"hart": [],
+			"muss": [],
+			"hinweis": ["G", "H", "V", "S", "KS", "R", "PS", "SK", "GE", "FW", "HI", "WF", "GY", "WB", "BK", "SR", "SG", "SB"],
 			"gueltigVon": null,
 			"gueltigBis": null
 		} ]

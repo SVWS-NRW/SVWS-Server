@@ -1,4 +1,5 @@
 import { ValidatorLehrerStammdatenNachname } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenNachname';
+import { ValidatorLehrerStammdatenGeburtsdatum } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenGeburtsdatum';
 import { LehrerStammdaten } from '../../../asd/data/lehrer/LehrerStammdaten';
 import { Class } from '../../../java/lang/Class';
 import { ValidatorLehrerStammdatenVorname } from '../../../asd/validate/lehrer/ValidatorLehrerStammdatenVorname';
@@ -18,6 +19,7 @@ export class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten> {
 		super(daten, kontext);
 		this._validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
 		this._validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
+		this._validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));
 	}
 
 	protected pruefe() : boolean {

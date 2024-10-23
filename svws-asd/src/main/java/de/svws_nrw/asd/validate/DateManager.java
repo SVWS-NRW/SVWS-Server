@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
  * Für die Lesbarkeit in Textausgaben steht auch die Möglichkeit des deutschen
  * Datumsformates zur Verfügung.
  */
-public final class DateManager {
+public final class DateManager implements Comparable<DateManager> {
 
 	/** Der Tag im Monat (1-31) - je nach Monat */
 	private final int tag;
@@ -160,15 +160,32 @@ public final class DateManager {
 
 
 	/**
-	 * Erstellt einen neuen Date-Manager für das angegebene Datum im ISO-Format
+	 * Erstellt einen neuen Date-Manager für das angegebene Datum mit den angegebenen Werten.
 	 *
-	 * @param isoDate
+	 * @param jahr    das Jahr (z.B. 2024)
+	 * @param monat   der Monat (z.B. 8 für August)
+	 * @param tag     der Tag im Monat (z.B. 31)
 	 *
 	 * @return der Manager
 	 *
-	 * @throws InvalidDateException falls das Datumsformat fehlerhaft ist
+	 * @throws InvalidDateException falls das Datum fehlerhaft ist
 	 */
-	public static DateManager from(final String isoDate) throws InvalidDateException {
+	public static @NotNull DateManager fromValues(final int jahr, final int monat, final int tag) throws InvalidDateException {
+		// Erstelle den Manager und gib diesen zurück
+		return new DateManager(tag, monat, jahr);
+	}
+
+
+	/**
+	 * Erstellt einen neuen Date-Manager für das angegebene Datum im ISO-Format 8601
+	 *
+	 * @param isoDate   Das Datum im ISO-Format
+	 *
+	 * @return der Manager
+	 *
+	 * @throws InvalidDateException falls das Datumsformat oder das Datum fehlerhaft ist
+	 */
+	public static @NotNull DateManager from(final String isoDate) throws InvalidDateException {
 		if (isoDate == null)
 			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.");
 		final @NotNull String[] d = isoDate.split("-");
@@ -198,6 +215,36 @@ public final class DateManager {
 		}
 		// Erstelle den Manager und gib diesen zurück
 		return new DateManager(tag, monat, jahr);
+	}
+
+
+	@Override
+	public int compareTo(final DateManager other) {
+		if (other == null)
+			return 1;
+		int tmp = Integer.compare(this.jahr, other.jahr);
+		if (tmp != 0)
+			return tmp;
+		tmp = Integer.compare(this.monat, other.monat);
+		if (tmp != 0)
+			return tmp;
+		return Integer.compare(this.tag, other.tag);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return (jahr * 10000) + (monat * 100) + tag;
+	}
+
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if ((obj != null) && (obj instanceof DateManager))
+			return (this.compareTo((DateManager) obj) == 0);
+		return false;
 	}
 
 
@@ -292,6 +339,43 @@ public final class DateManager {
 	 */
 	public int getKalenderwochenjahr() {
 		return kalenderwochenjahr;
+	}
+
+
+	/**
+	 * Bestimmt das Alter einer Person, die am Datum dieses Managers geboren ist
+	 * anhand des Datums im übergebenen Manager.
+	 *
+	 * @param other   der andere Manager
+	 *
+	 * @return das Alter einer Person, die am Datum dieses Managers geboren an dem
+	 *     gegebenen Datum
+	 *
+	 * @throws InvalidDateException falls das übergebene Datum früher liegt als
+	 *     das Geburtsdatum des Managers
+	 */
+	public int getAlter(final @NotNull DateManager other) throws InvalidDateException {
+		final int cmp = compareTo(other);
+		if (cmp < 0)
+			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum."
+					+ " Eine Altersbestimmung ist so nicht möglich.");
+		final int tmp = other.jahr - this.jahr;
+		if ((other.monat < this.monat) || ((other.monat == this.monat) && (other.tag < this.tag)))
+			return tmp - 1;
+		return tmp;
+	}
+
+
+	/**
+	 * Prüft, ob das Datum in dem Interval [von; bis] liegt.
+	 *
+	 * @param von   das erste Jahr, welches akzeptiert wird
+	 * @param bis   das letzte Jahr, welches akzeptiert wird
+	 *
+	 * @return true, falls das Datum in dem Bereich liegt, und ansonsten false
+	 */
+	public boolean istInJahren(final int von, final int bis) {
+		return (von <= this.jahr) && (this.jahr <= bis);
 	}
 
 }

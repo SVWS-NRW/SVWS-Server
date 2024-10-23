@@ -59,4 +59,19 @@ public enum LehrerRechtsverhaeltnis implements @NotNull CoreType<LehrerRechtsver
 		return CoreTypeDataManager.getManager(LehrerRechtsverhaeltnis.class);
 	}
 
+
+	/**
+	 * Gibt das Rechtsverhältnis zu dem übergebenen Schlüssel zurück. Bei einem ungültigen Schlüssel
+	 * wird null zurückgegeben,
+	 *
+	 * @param schluessel   der Schlüsselwert
+	 *
+	 * @return das zugehörige Rechtsverhältnis oder null
+	 */
+	public static LehrerRechtsverhaeltnis getBySchluessel(final String schluessel) {
+		if (schluessel == null)
+			return null;
+		return LehrerRechtsverhaeltnis.data().getWertBySchluessel(schluessel);
+	}
+
 }

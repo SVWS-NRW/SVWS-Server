@@ -17,10 +17,11 @@ public final class ValidatorLehrerStammdaten extends Validator<LehrerStammdaten>
 	 * @param daten     die Daten des Validators
 	 * @param kontext   der Kontext des Validators
 	 */
-	public ValidatorLehrerStammdaten(@NotNull final LehrerStammdaten daten, @NotNull final ValidatorKontext kontext) {
+	public ValidatorLehrerStammdaten(final @NotNull LehrerStammdaten daten, final @NotNull ValidatorKontext kontext) {
 		super(daten, kontext);
 		_validatoren.add(new ValidatorLehrerStammdatenNachname(daten, kontext));
 		_validatoren.add(new ValidatorLehrerStammdatenVorname(daten, kontext));
+		_validatoren.add(new ValidatorLehrerStammdatenGeburtsdatum(daten, kontext));
 	}
 
 	@Override

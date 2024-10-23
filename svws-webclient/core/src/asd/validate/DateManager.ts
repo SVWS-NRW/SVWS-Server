@@ -1,9 +1,10 @@
-import { JavaObject } from '../../java/lang/JavaObject';
 import { JavaInteger } from '../../java/lang/JavaInteger';
+import type { Comparable } from '../../java/lang/Comparable';
 import { InvalidDateException } from '../../asd/validate/InvalidDateException';
+import { JavaObject } from '../../java/lang/JavaObject';
 import { Class } from '../../java/lang/Class';
 
-export class DateManager extends JavaObject {
+export class DateManager extends JavaObject implements Comparable<DateManager> {
 
 	/**
 	 * Der Tag im Monat (1-31) - je nach Monat
@@ -192,15 +193,30 @@ export class DateManager extends JavaObject {
 	}
 
 	/**
-	 * Erstellt einen neuen Date-Manager für das angegebene Datum im ISO-Format
+	 * Erstellt einen neuen Date-Manager für das angegebene Datum mit den angegebenen Werten.
 	 *
-	 * @param isoDate
+	 * @param jahr    das Jahr (z.B. 2024)
+	 * @param monat   der Monat (z.B. 8 für August)
+	 * @param tag     der Tag im Monat (z.B. 31)
 	 *
 	 * @return der Manager
 	 *
-	 * @throws InvalidDateException falls das Datumsformat fehlerhaft ist
+	 * @throws InvalidDateException falls das Datum fehlerhaft ist
 	 */
-	public static from(isoDate : string | null) : DateManager | null {
+	public static fromValues(jahr : number, monat : number, tag : number) : DateManager {
+		return new DateManager(tag, monat, jahr);
+	}
+
+	/**
+	 * Erstellt einen neuen Date-Manager für das angegebene Datum im ISO-Format 8601
+	 *
+	 * @param isoDate   Das Datum im ISO-Format
+	 *
+	 * @return der Manager
+	 *
+	 * @throws InvalidDateException falls das Datumsformat oder das Datum fehlerhaft ist
+	 */
+	public static from(isoDate : string | null) : DateManager {
 		if (isoDate === null)
 			throw new InvalidDateException("Es muss ein Datum angegeben werden. null ist nicht zulässig.")
 		const d : Array<string | null> = isoDate.split("-");
@@ -226,6 +242,30 @@ export class DateManager extends JavaObject {
 			throw new InvalidDateException(strError + ": Der letzte Teil hinter dem zweiten Bindestrich muss eine Zahl sein und sollte den Tag angeben", e)
 		}
 		return new DateManager(tag, monat, jahr);
+	}
+
+	public compareTo(other : DateManager | null) : number {
+		if (other === null)
+			return 1;
+		let tmp : number = JavaInteger.compare(this.jahr, other.jahr);
+		if (tmp !== 0)
+			return tmp;
+		tmp = JavaInteger.compare(this.monat, other.monat);
+		if (tmp !== 0)
+			return tmp;
+		return JavaInteger.compare(this.tag, other.tag);
+	}
+
+	public hashCode() : number {
+		return (this.jahr * 10000) + (this.monat * 100) + this.tag;
+	}
+
+	public equals(obj : unknown | null) : boolean {
+		if (this as unknown === obj as unknown)
+			return true;
+		if ((obj !== null) && (((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.asd.validate.DateManager')))))
+			return (this.compareTo(cast_de_svws_nrw_asd_validate_DateManager(obj)) === 0);
+		return false;
 	}
 
 	/**
@@ -313,12 +353,46 @@ export class DateManager extends JavaObject {
 		return this.kalenderwochenjahr;
 	}
 
+	/**
+	 * Bestimmt das Alter einer Person, die am Datum dieses Managers geboren ist
+	 * anhand des Datums im übergebenen Manager.
+	 *
+	 * @param other   der andere Manager
+	 *
+	 * @return das Alter einer Person, die am Datum dieses Managers geboren an dem
+	 *     gegebenen Datum
+	 *
+	 * @throws InvalidDateException falls das übergebene Datum früher liegt als
+	 *     das Geburtsdatum des Managers
+	 */
+	public getAlter(other : DateManager) : number {
+		const cmp : number = this.compareTo(other);
+		if (cmp < 0)
+			throw new InvalidDateException("Das angegebene Datum ist vor dem Geburtsdatum. Eine Altersbestimmung ist so nicht möglich.")
+		const tmp : number = other.jahr - this.jahr;
+		if ((other.monat < this.monat) || ((other.monat === this.monat) && (other.tag < this.tag)))
+			return tmp - 1;
+		return tmp;
+	}
+
+	/**
+	 * Prüft, ob das Datum in dem Interval [von; bis] liegt.
+	 *
+	 * @param von   das erste Jahr, welches akzeptiert wird
+	 * @param bis   das letzte Jahr, welches akzeptiert wird
+	 *
+	 * @return true, falls das Datum in dem Bereich liegt, und ansonsten false
+	 */
+	public istInJahren(von : number, bis : number) : boolean {
+		return (von <= this.jahr) && (this.jahr <= bis);
+	}
+
 	transpilerCanonicalName(): string {
 		return 'de.svws_nrw.asd.validate.DateManager';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.validate.DateManager'].includes(name);
+		return ['de.svws_nrw.asd.validate.DateManager', 'java.lang.Comparable'].includes(name);
 	}
 
 	public static class = new Class<DateManager>('de.svws_nrw.asd.validate.DateManager');
