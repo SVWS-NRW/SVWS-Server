@@ -22,11 +22,11 @@
 			"schluessel": 0,
 			"notenpunkte": 0,
 			"id": 0,
-			"text": "ungenuegend",
+			"text": "ungenügend",
 			"gueltigBis": null,
 			"kuerzel": "6",
 			"gueltigVon": null,
-			"textZeugnis": "ungenuegend"
+			"textZeugnis": "ungenügend"
 		} ]
 	}, {
 		"bezeichner": "MANGELHAFT_MINUS",

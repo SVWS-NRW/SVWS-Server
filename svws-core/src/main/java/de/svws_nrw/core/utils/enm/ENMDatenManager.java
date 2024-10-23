@@ -154,7 +154,7 @@ public class ENMDatenManager {
 		final @NotNull List<Note> noten = Note.data().getWerteBySchuljahr(schuljahr);
 		for (final @NotNull Note note : noten) {
 			final NoteKatalogEintrag nke = note.daten(schuljahr);
-			if (nke == null)
+			if ((nke == null) || (nke.id < 0))
 				continue;
 			final @NotNull ENMNote enmNote = new ENMNote();
 			enmNote.id = (int) nke.id;
