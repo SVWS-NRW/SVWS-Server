@@ -413,6 +413,10 @@
 		emit('update:modelValue', [...selectedItemsNotListed.value]);
 	}
 
+	function unselectAllNotListedRows() {
+		emit('update:modelValue', [...selectedItemsRaw.value.filter(i => sortedRows.value.some(r => toRaw(r.source) === i))]);
+	}
+
 	function selectRow(row: DataTableRow) {
 		emit('update:modelValue', selectedItemsRaw.value.concat(row.source))
 	}
