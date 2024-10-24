@@ -29,7 +29,8 @@
 			@keydown.backspace="onBackspace"
 			@keydown.esc.prevent="toggleListBox"
 			@keydown.space.prevent="onSpace"
-			@keydown.tab="onTab" />
+			@keydown.tab="onTab"
+			:focus="autofocus" />
 		<button v-if="removable && hasSelected && !readonly" role="button" @click.stop="removeItem" class="svws-remove">
 			<span class="icon i-ri-close-line my-1.5" />
 		</button>
@@ -76,6 +77,7 @@
 		required?: boolean;
 		indeterminate?: boolean;
 		highlightItem?: Item;
+		autofocus?: boolean;
 	}>(), {
 		label: '',
 		title: '',
@@ -92,6 +94,7 @@
 		removable: false,
 		indeterminate: false,
 		highlightItem: undefined,
+		autofocus: false,
 	})
 
 	const emit = defineEmits<{

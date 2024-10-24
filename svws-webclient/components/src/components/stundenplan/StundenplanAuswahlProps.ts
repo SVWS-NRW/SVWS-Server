@@ -13,4 +13,5 @@ export interface StundenplanAuswahlProps {
 	kalenderwoche: () => StundenplanKalenderwochenzuordnung | undefined;
 	ganzerStundenplan: () => boolean;
 	setGanzerStundenplan: (value: boolean) => Promise<void>;
+	autofocus?: boolean;
 }

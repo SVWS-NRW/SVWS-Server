@@ -16,7 +16,7 @@
 			</template>
 		</svws-ui-table>
 		<div class="button-container">
-			<svws-ui-button v-if="currentMode === Mode.DEFAULT" title="AddButton" @click="setMode(Mode.ADD)">
+			<svws-ui-button v-if="currentMode === Mode.DEFAULT" title="AddButton" @click="setMode(Mode.ADD)" autofocus>
 				<span class="icon i-ri-add-line" />
 			</svws-ui-button>
 			<svws-ui-button v-if="currentMode === Mode.DEFAULT && selectedEntry" title="PatchButton" @click="patchSelectedIDs">

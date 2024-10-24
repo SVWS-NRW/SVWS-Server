@@ -31,18 +31,20 @@
 		type?: ButtonType;
 		disabled?: boolean;
 		size?: 'small' | 'normal' | 'big';
-		hasFocus?: boolean;
+		autofocus?: boolean;
 	}>(),{
 		type: 'primary',
 		disabled: false,
 		size: 'normal',
-		hasFocus: false
+		autofocus: false
 	});
 
-	onMounted(() => {
-		if(props.hasFocus && (addButton.value !== null))
+	onMounted(() => setAutofocus());
+
+	function setAutofocus() {
+		if(props.autofocus && (addButton.value !== null))
 			addButton.value.focus();
-	})
+	}
 
 </script>
 
@@ -70,6 +72,7 @@
 
 	&:focus {
 		@apply outline-none;
+		@apply ring;
 	}
 
 	&:focus-visible {
