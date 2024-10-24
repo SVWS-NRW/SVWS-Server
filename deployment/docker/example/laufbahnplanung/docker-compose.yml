@@ -1,0 +1,6 @@
+version: "3"
+services:
+    svws-laufbahnplanung:
+        image: svwsnrw/svws-laufbahnplanung
+        ports:
+            -  "80:80"
