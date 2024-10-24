@@ -29,7 +29,7 @@
 		<br>
 		<div v-if="currentMode === Mode.ADD || currentMode === Mode.PATCH">
 			<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :item-text="schuljahresabschnittText" v-model="selectedSchuljahresabschnitt"/>
-			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="props.schuelerKaoaManager().getKAOAKategorienByJahrgangAuswahl(selectedJahrgang)" :item-text="itemText" v-model="selectedKategorie" />
+			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="KAOAKategorie.getListBySchuljahrAndJahrgang(schuljahr, selectedJahrgang.id)" :item-text="itemText" v-model="selectedKategorie" />
 			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(selectedKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
 			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(selectedMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
 			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />

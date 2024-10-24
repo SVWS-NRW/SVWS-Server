@@ -1,4 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { JahrgaengeKatalogEintrag } from '../../../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
 import { ArrayList } from '../../../java/util/ArrayList';
@@ -66,6 +67,8 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 
 	private static readonly _mapBySchuljahrAndKategorie : JavaMap<number, JavaMap<KAOAKategorie, List<Jahrgaenge>>> = new HashMap<number, JavaMap<KAOAKategorie, List<Jahrgaenge>>>();
 
+	private static readonly _mapEintraegeBySchuljahrAndJahrgang : JavaMap<number, JavaMap<number, List<KAOAKategorieKatalogEintrag>>> = new HashMap<number, JavaMap<number, List<KAOAKategorieKatalogEintrag>>>();
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		KAOAKategorie.all_values_by_ordinal.push(this);
@@ -122,6 +125,39 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 				for (const jgBezeichner of eintrag.jahrgaenge)
 					result.add(Jahrgaenge.data().getWertByBezeichner(jgBezeichner));
 			mapByKategorie.put(kategorie, result);
+		}
+		return result;
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Kategorie-Historien-Einträge für den angegebenen Jahrgang in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param idJahrgang    der Jahrgang
+	 *
+	 * @return alle zulässigen KAoA-Kategorie-Historien-Einträge für den angegebenen Jahrgang in dem angegebenen Schuljahr.
+	 */
+	public static getListBySchuljahrAndJahrgang(schuljahr : number, idJahrgang : number) : List<KAOAKategorieKatalogEintrag> {
+		const mapEintraegeByJahrgaenge : JavaMap<number, List<KAOAKategorieKatalogEintrag>> | null = KAOAKategorie._mapEintraegeBySchuljahrAndJahrgang.computeIfAbsent(schuljahr, { apply : (j: number | null) => new HashMap<number, List<KAOAKategorieKatalogEintrag>>() });
+		if (mapEintraegeByJahrgaenge === null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern")
+		let result : List<KAOAKategorieKatalogEintrag> | null = mapEintraegeByJahrgaenge.get(idJahrgang);
+		if (result === null) {
+			result = new ArrayList();
+			const werte : List<KAOAKategorie> | null = KAOAKategorie.data().getWerte();
+			for (const kategorie of werte) {
+				const eintrag : KAOAKategorieKatalogEintrag | null = kategorie.daten(schuljahr);
+				if (eintrag !== null) {
+					for (const bezeichner of eintrag.jahrgaenge) {
+						const eintragJahrgang : JahrgaengeKatalogEintrag | null = Jahrgaenge.data().getWertByBezeichner(bezeichner).daten(schuljahr);
+						if ((eintragJahrgang !== null) && (eintragJahrgang.id === idJahrgang)) {
+							result.add(eintrag);
+							break;
+						}
+					}
+				}
+			}
+			mapEintraegeByJahrgaenge.put(idJahrgang, result);
 		}
 		return result;
 	}

@@ -1,5 +1,4 @@
 import { JavaObject } from '../../../java/lang/JavaObject';
-import { JahrgaengeKatalogEintrag } from '../../../asd/data/jahrgang/JahrgaengeKatalogEintrag';
 import type { JavaSet } from '../../../java/util/JavaSet';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { HashMap } from '../../../java/util/HashMap';
@@ -25,7 +24,6 @@ import { SchuelerLernabschnittListeEintrag } from '../../../core/data/schueler/S
 import { MapUtils } from '../../../core/utils/MapUtils';
 import { AuswahlManager } from '../../../core/utils/AuswahlManager';
 import { KAOABerufsfeld } from '../../../asd/types/kaoa/KAOABerufsfeld';
-import { Jahrgaenge } from '../../../asd/types/jahrgang/Jahrgaenge';
 import { JavaLong } from '../../../java/lang/JavaLong';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
 import { Class } from '../../../java/lang/Class';
@@ -327,7 +325,7 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 	}
 
 	/**
-	 * Gibt des Kürzel vom Jahrgang abhängig vom Schuljahr und der LernabschnittsEinträge des ausgewählten Schülers zurück
+	 * Gibt das Kürzel vom Jahrgang abhängig vom Schuljahr und der LernabschnittsEinträge des ausgewählten Schülers zurück
 	 *
 	 * @param schuljahr   Schuljahr
 	 *
@@ -339,34 +337,6 @@ export class SchuelerKAoAManager extends AuswahlManager<number, SchuelerKAoADate
 				return eintrag.jahrgang;
 		}
 		throw new DeveloperNotificationException(JavaString.format("Kein Jahrgang für das Schuljahr %d gefunden.", schuljahr))
-	}
-
-	/**
-	 * Gibt alle KAoA Kategorien zurück.
-	 *
-	 * @return Die KAoA Kategorien
-	 */
-	public getKAOAKategorien() : List<KAOAKategorie> {
-		const kategorien : List<KAOAKategorie> | null = new ArrayList<KAOAKategorie>();
-		for (const k of this._kategorien.list())
-			kategorien.add(KAOAKategorie.data().getWertByBezeichner(k.name()));
-		return kategorien;
-	}
-
-	/**
-	 * Gibt alle KAoA Kategorien zurück, die den gegebenen Jahrgang beinhalten
-	 *
-	 * @param jahrgaengeEintrag jahrgang
-	 *
-	 * @return Die KAoA Kategorien
-	 */
-	public getKAOAKategorienByJahrgangAuswahl(jahrgaengeEintrag : JahrgaengeKatalogEintrag) : List<KAOAKategorieKatalogEintrag> {
-		const result : List<KAOAKategorieKatalogEintrag> = new ArrayList<KAOAKategorieKatalogEintrag>();
-		const kategorien : List<KAOAKategorie> | null = this.getKAOAKategorien();
-		for (const k of kategorien)
-			if (k.hatJahrgang(this.getSchuljahr(), Jahrgaenge.data().getWertByID(jahrgaengeEintrag.id)))
-				result.add(k.daten(this.getSchuljahr()));
-		return result;
 	}
 
 	/**

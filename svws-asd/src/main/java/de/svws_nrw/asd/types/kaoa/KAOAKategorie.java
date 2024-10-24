@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.svws_nrw.asd.data.jahrgang.JahrgaengeKatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
 import de.svws_nrw.asd.types.CoreType;
 import de.svws_nrw.asd.types.jahrgang.Jahrgaenge;
@@ -48,6 +49,7 @@ public enum KAOAKategorie implements CoreType<KAOAKategorieKatalogEintrag, KAOAK
 
 	private static final @NotNull Map<Integer, Map<KAOAKategorie, List<Jahrgaenge>>> _mapBySchuljahrAndKategorie = new HashMap<>();
 
+	private static final @NotNull Map<Integer, Map<Long, List<KAOAKategorieKatalogEintrag>>> _mapEintraegeBySchuljahrAndJahrgang = new HashMap<>();
 
 	/**
 	 * Initialisiert den Core-Type mit dem angegebenen Manager.
@@ -107,4 +109,37 @@ public enum KAOAKategorie implements CoreType<KAOAKategorieKatalogEintrag, KAOAK
 		return result;
 	}
 
+	/**
+	 * Liefert alle zulässigen KAoA-Kategorie-Historien-Einträge für den angegebenen Jahrgang in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param idJahrgang    der Jahrgang
+	 *
+	 * @return alle zulässigen KAoA-Kategorie-Historien-Einträge für den angegebenen Jahrgang in dem angegebenen Schuljahr.
+	 */
+	public static @NotNull List<KAOAKategorieKatalogEintrag> getListBySchuljahrAndJahrgang(final int schuljahr, final long idJahrgang) {
+		final Map<Long, List<KAOAKategorieKatalogEintrag>> mapEintraegeByJahrgaenge =
+				_mapEintraegeBySchuljahrAndJahrgang.computeIfAbsent(schuljahr, j -> new HashMap<Long, List<KAOAKategorieKatalogEintrag>>());
+		if (mapEintraegeByJahrgaenge == null)
+			throw new NullPointerException("computeIfAbsent darf nicht null liefern");
+		List<KAOAKategorieKatalogEintrag> result = mapEintraegeByJahrgaenge.get(idJahrgang);
+		if (result == null) {
+			result = new ArrayList<>();
+			final List<KAOAKategorie> werte = KAOAKategorie.data().getWerte();
+			for (final KAOAKategorie kategorie : werte) {
+				final KAOAKategorieKatalogEintrag eintrag = kategorie.daten(schuljahr);
+				if (eintrag != null) {
+					for (final String bezeichner : eintrag.jahrgaenge) {
+						final JahrgaengeKatalogEintrag eintragJahrgang = Jahrgaenge.data().getWertByBezeichner(bezeichner).daten(schuljahr);
+						if ((eintragJahrgang != null) && (eintragJahrgang.id == idJahrgang)) {
+							result.add(eintrag);
+							break;
+						}
+					}
+				}
+			}
+			mapEintraegeByJahrgaenge.put(idJahrgang, result);
+		}
+		return result;
+	}
 }
