@@ -25,8 +25,8 @@ public abstract class Validator<@TsObject T> {
 	/** Eine Liste mit Fehlern bei der Validierung */
 	private final @NotNull List<ValidatorFehler<?>> _fehler = new ArrayList<>();
 
-    /** Die DTO-Klasse, welche von dem Validator geprüft wurde */
-    private final @NotNull Class<T> _dtoClass;
+	/** Die DTO-Klasse, welche von dem Validator geprüft wurde */
+	private final @NotNull Class<T> _dtoClass;
 
 
 	/**
@@ -114,6 +114,19 @@ public abstract class Validator<@TsObject T> {
 	 */
 	public @NotNull List<ValidatorFehler<?>> getFehler() {
 		return new ArrayList<>(_fehler);
+	}
+
+
+	/**
+	 * Die Fehlerart, welcher der Validator in seinem Kontext zugeordnet ist.
+	 *
+	 * @return die Fehlerart
+	 */
+	public @NotNull ValidatorFehlerart getFehlerart() {
+		final ValidatorFehlerart result = _kontext.getValidatorManager().getFehlerartBySchuljahrAndValidatorClass(_kontext.getSchuljahr(), this.getClass());
+		if (result == null)
+			return ValidatorFehlerart.UNGENUTZT;
+		return result;
 	}
 
 
