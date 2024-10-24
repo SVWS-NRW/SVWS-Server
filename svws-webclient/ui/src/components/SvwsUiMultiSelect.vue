@@ -1,9 +1,9 @@
 <template>
-	<div class="flex gap-1 svws-ui-select svws-ui-multi-select" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless,
+	<div class="flex gap-1 svws-ui-select svws-ui-multi-select pt-2" :class="{ 'svws-open': showList, 'svws-has-value': hasSelected(), 'svws-headless': headless,
 		'svws-statistik': statistics, 'svws-danger': danger, 'svws-readonly': readonly, 'svws-disabled': disabled, 'svws-autocomplete': autocomplete}" v-bind="$attrs" ref="inputElTags">
 		<div v-if="!headless && (data.size > 0)" class="svws-tags">
 			<span v-for="(item, index) in data" :key="index" class="svws-tag">
-				<span class="line-clamp-1 leading-tight -my-0.5 break-all max-w-[14rem]">{{ itemText(item) }}</span>
+				<span class="line-clamp-1 leading-tight break-all max-w-[14rem]">{{ itemText(item) }}</span>
 				<button v-if="!readonly" role="button" class="svws-remove" @click.stop="removeTag(item)" title="Entfernen">
 					<span class="icon i-ri-close-line" />
 				</button>

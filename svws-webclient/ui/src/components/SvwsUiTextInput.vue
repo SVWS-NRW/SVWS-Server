@@ -54,7 +54,7 @@
 			</span>
 		</span>
 		<span v-if="removable && (type === 'date') && (!readonly)" @keydown.enter="updateData('')" @click.stop="updateData('')" class="svws-icon--remove icon i-ri-close-line" tabindex="0" />
-		<span v-if="type === 'date'" class="svws-icon icon i-ri-calendar-2-line" />
+		<span v-if="(type === 'date') && !firefox()" class="svws-icon icon i-ri-calendar-2-line" />
 		<span v-if="type === 'email'" class="svws-icon icon i-ri-at-line" />
 		<span v-if="type === 'tel'" class="svws-icon icon i-ri-phone-line" />
 	</label>
@@ -70,6 +70,9 @@
 		inheritAttrs: false,
 	});
 
+	function firefox() {
+		return window.navigator.userAgent.includes('Firefox/')
+	}
 	const input = ref<null | HTMLInputElement>(null);
 
 	const props = withDefaults(defineProps<{
