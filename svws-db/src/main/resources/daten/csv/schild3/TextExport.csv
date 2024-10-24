@@ -64,15 +64,17 @@ Lehrer;Titel;Titel;S;;;;;ALLE
 Lehrer;Vorname;Vorname;S;;;;;ALLE
 Lehrer;Vschluessel;Vergütungsschlüssel;S;;;;;ALLE
 Lehrer;MasernImpfnachweis;Masern-Impfnachweis;B;;;;;ALLE
-Lehrer;ID;Pflichtstunden-Soll;S;;x;PflichtstdSoll;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Rechtsverhältnis;S;;x;Rechtsverhaeltnis;select LA.Rechtsverhaeltnis from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Beschäftigungsart;S;;x;Beschaeftigungsart;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Einsatzstatus;S;;x;Einsatzstatus;select LA.Einsatzstatus from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Unterrichtsstunden;S;;x;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Mehrleistungsstunden;S;;x;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Minderleistungsstunden;S;;x;EntlastungStd;select LA.EntlastungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;x;AnrechnungStd;select A.AnrechnungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% and LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
-Lehrer;ID;Reststunden;S;;x;RestStd;select LA.RestStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Pflichtstunden-Soll;S;;;PflichtstdSoll;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Rechtsverhältnis;S;;;Rechtsverhaeltnis;select LA.Rechtsverhaeltnis from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Beschäftigungsart;S;;;Beschaeftigungsart;select LA.PflichtstdSoll from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Einsatzstatus;S;;;Einsatzstatus;select LA.Einsatzstatus from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Unterrichtsstunden;S;;;UnterrichtsStd;select LA.UnterrichtsStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Mehrleistungsstunden;S;;;MehrleistungStd;select LA.MehrleistungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Minderleistungsstunden;S;;;EntlastungStd;select LA.EntlastungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;nicht-unterrichtliche Tätigkeit;S;;;AnrechnungStd;select LA.AnrechnungStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;Reststunden;S;;;RestStd;select LA.RestStd from LehrerAbschnittsdaten LA, EigeneSchule ES where LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID;ALLE
+Lehrer;ID;schulinterne Funktion;S;;;Bezeichnung;SELECT F.Bezeichnung FROM K_Schulfunktionen F, LehrerFunktionen LF, LehrerAbschnittsdaten LA, EigeneSchule ES WHERE LA.ID=LF.Abschnitt_ID AND LA.Lehrer_ID=% AND LA.Schuljahresabschnitts_ID=ES.Schuljahresabschnitts_ID AND F.ID=LF.Funktion_ID;ALLE
+Lehrer;ID;Initialkennwort für Notenmodul;S;;;Initialkennwort;SELECT Initialkennwort FROM LehrerNotenmodulCredentials WHERE Lehrer_ID=%;ALLE
 Schueler;***;Schul-Nummer;S;;;SchulNr;SELECT SchulNr FROM EigeneSchule;ALLE
 Schueler;***;Schulform;S;;;SchulformKrz;SELECT SchulformKrz FROM EigeneSchule;ALLE
 Schueler;Schueler_ID;Schulgliederung;S;;;ASDSchulgliederung;SELECT A.ASDSchulgliederung from SchuelerLernabschnittsdaten A, Schueler S WHERE S.ID=% and A.Schueler_ID=S.ID AND A.Schuljahresabschnitts_ID=S.Schuljahresabschnitts_ID AND A.WechselNr=0;ALLE
@@ -202,7 +204,7 @@ Schueler;SchulwechselNr;Aufnehmende Schule: Schulnr.;S;;;;;ALLE
 Schueler;SchulwechselNr;Aufnehmende Schule: Straße;S;;;Strasse;SELECT CONCAT(Strassenname,' ',HausNr) as Strasse from K_Schule where SchulNr=%;ALLE
 Schueler;Schwerbehinderung;Schwerstbehinderung;B;;;;;ALLE
 Schueler;Sportbefreiung_ID;Sportbefreiung;S;;;Bezeichnung;SELECT Bezeichnung FROM K_Sportbefreiung WHERE ID=%;ALLE
-Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnungSuche;codeDEStatis=%;ALLE
+Schueler;StaatKrz;Staatsangehörigkeit (Klartext);S;;;mtblStaat.bezeichnung;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Klartext, Adjektiv);S;;;mtblStaat.staatsangehoerigkeit;codeDEStatis=%;ALLE
 Schueler;StaatKrz;Staatsangehörigkeit (Schlüssel);S;;;;;ALLE
 Schueler;Status;Status;I;;;;;ALLE
