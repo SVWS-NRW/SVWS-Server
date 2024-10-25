@@ -12,7 +12,7 @@
 				</div>
 
 				<div class="flex flex-col items-start gap-2 mt-10">
-					<svws-ui-checkbox v-model="modelValue1" :bw="state.bw" :statistics="state.statistics" :disabled="state.disabled" :headless="state.headless" :type="state.toggle ? 'toggle' : 'checkbox'">{{ state.label }}</svws-ui-checkbox>
+					<svws-ui-checkbox v-model="modelValue1" :color="state.color" :bw="state.bw" :statistics="state.statistics" :disabled="state.disabled" :headless="state.headless" :type="state.toggle ? 'toggle' : 'checkbox'">{{ state.label }}</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="modelValue1" color="error">Error</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="modelValue1" color="success">Success</svws-ui-checkbox>
 					<svws-ui-checkbox v-model="modelValue1" color="warning">Warning</svws-ui-checkbox>
@@ -48,6 +48,7 @@
 				<HstText v-model="state.label" title="Checkbox Label" />
 				<HstCheckbox v-model="state.toggle" title="Type: Toggle" />
 				<HstText v-model="state.title" title="title" />
+				<HstText v-model="state.color" title="color" />
 				<HstCheckbox v-model="state.bw" title="bw" />
 				<HstCheckbox v-model="state.statistics" title="statistics" />
 				<HstCheckbox v-model="state.disabled" title="disabled" />
@@ -68,7 +69,8 @@
 		statistics: false,
 		disabled: false,
 		toggle: false,
-		headless: false
+		headless: false,
+		color: undefined,
 	})
 
 	const modelValue = ref(true);

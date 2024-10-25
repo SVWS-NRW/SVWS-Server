@@ -345,7 +345,7 @@
 	}
 
 	.text-input--statistics.text-input-component:focus-within .text-input--control,
-	.text-input--statistics.text-input--filled .text-input--control {
+	.text-input--statistics .text-input--control {
 		@apply border-ui-statistic;
 	}
 

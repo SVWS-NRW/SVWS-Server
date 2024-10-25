@@ -4,12 +4,10 @@
 			<input type="checkbox" v-model="checked" :class="{'svws-headless': headless && type !== 'toggle'}" :disabled :readonly :indeterminate :color ref="input">
 			<span v-if="type === 'toggle'" class="svws-ui-toggle--icon" />
 			<span v-if="$slots.default" class="svws-ui-checkbox--label">
-				<span v-if="statistics" class="mr-1 -mb-1 inline-block align-top">
+				<span v-if="statistics" class="-mb-1 inline-block align-top">
 					<svws-ui-tooltip position="right">
-						<span class="icon i-ri-bar-chart-2-line pointer-events-auto" />
-						<template #content>
-							Relevant für die Statistik
-						</template>
+						<span class="icon icon-statistics i-ri-bar-chart-2-line pointer-events-auto" />
+						<template #content>Relevant für die Statistik</template>
 					</svws-ui-tooltip>
 				</span>
 				<slot />
@@ -168,23 +166,23 @@
 		}
 
 		&.svws-headless {
-			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold p-0;
+			@apply flex appearance-none items-center justify-center rounded border border-transparent font-bold p-0 bg-transparent;
 
 			&:before {
 				content: '';
 			}
 
 			&:not(:checked) {
-				@apply bg-transparent border-ui-neutral;
+				@apply border-ui-dark-gray;
 			}
 
 			&:hover:not([disabled]),
 			&:focus-visible:not([disabled]) {
-				@apply bg-ui-neutral border-ui;
+				@apply border-ui-dark-gray;
 			}
 
 			&:not(:checked)[disabled] {
-				@apply border-transparent bg-transparent opacity-25;
+				@apply border-transparent opacity-25;
 
 				&:before {
 					content: '\2715';
