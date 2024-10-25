@@ -248,7 +248,7 @@
 												draggable="true" @dragstart.stop="setDrag(kurs, schiene)" @dragend="resetDrag"
 												:class="{ 'svws-disabled': istKursVerbotenInSchiene(kurs, schiene).value }">
 												<div v-if="highlightKursVerschieben(kurs).value" class="absolute bg-white/50 inset-0 border-2 border-dashed rounded border-black/25" />
-												<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-100" />
+												<span v-if="istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-50 group-hover:!opacity-100" />
 												<span v-if="hatUpdateKompetenz && !istKursGesperrtInSchiene(kurs, schiene).value" class="icon i-ri-lock-2-line inline-block !opacity-0 group-hover:!opacity-25" />
 											</div>
 											<template v-if="showTooltip.kursID === kurs.id && showTooltip.schieneID === schiene.id">
