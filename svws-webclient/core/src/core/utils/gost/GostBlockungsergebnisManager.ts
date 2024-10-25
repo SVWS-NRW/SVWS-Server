@@ -629,22 +629,33 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		}
 	}
 
+	/**
+	 * Wichtig: Die Methode muss auf gelöschte und hinzugefügt Schienen reagieren
+	 * und die eigene Datenstruktur anpassen.
+	 */
 	private update_0_schienenID_to_schiene_schienenNR_to_schiene() : void {
 		this._schienenID_to_schiene = new HashMap();
 		this._schienenNR_to_schiene = new HashMap();
+		const listZuLoeschen : List<GostBlockungsergebnisSchiene> | null = new ArrayList<GostBlockungsergebnisSchiene>();
+		for (const eSchiene of this._ergebnis.schienen)
+			if (!this._parent.schieneGetExistiert(eSchiene.id)) {
+				listZuLoeschen.add(eSchiene);
+				if (!eSchiene.kurse.isEmpty())
+					this._fehlermeldungen.add("Schiene ID=" + eSchiene.id + " wird gelöscht, obwohl " + eSchiene.kurse.size() + " Kurse in der Schiene enthalten sind!");
+			}
+		this._ergebnis.schienen.removeAll(listZuLoeschen);
 		for (const eSchiene of this._ergebnis.schienen) {
 			this._schienenID_to_schiene.put(eSchiene.id, eSchiene);
 			const nr : number = this._parent.schieneGet(eSchiene.id).nummer;
 			this._schienenNR_to_schiene.put(nr, eSchiene);
 		}
-		for (const gSchiene of this._parent.daten().schienen) {
+		for (const gSchiene of this._parent.daten().schienen)
 			if (!this._schienenID_to_schiene.containsKey(gSchiene.id)) {
 				const eSchiene : GostBlockungsergebnisSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
 				this._schienenID_to_schiene.put(gSchiene.id, eSchiene);
 				this._schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
 				this._ergebnis.schienen.add(eSchiene);
 			}
-		}
 	}
 
 	private update_0_kursID_to_kurs() : void {

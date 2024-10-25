@@ -627,22 +627,40 @@ public class GostBlockungsergebnisManager {
 	}
 
 
+	/**
+	 * Wichtig: Die Methode muss auf gelöschte und hinzugefügt Schienen reagieren
+	 * und die eigene Datenstruktur anpassen.
+	 */
 	private void update_0_schienenID_to_schiene_schienenNR_to_schiene() {
 		_schienenID_to_schiene = new HashMap<>();
 		_schienenNR_to_schiene = new HashMap<>();
+
+		// Lösche alle E-Schienen, die es im Elternteil nicht mehr gibt.
+		final List<GostBlockungsergebnisSchiene> listZuLoeschen = new ArrayList<>();
+		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
+			if (!_parent.schieneGetExistiert(eSchiene.id)) {
+				listZuLoeschen.add(eSchiene);
+				if (!eSchiene.kurse.isEmpty())
+					_fehlermeldungen.add("Schiene ID=" + eSchiene.id + " wird gelöscht, obwohl "
+							+ eSchiene.kurse.size() + " Kurse in der Schiene enthalten sind!");
+			}
+		_ergebnis.schienen.removeAll(listZuLoeschen);
+
+		// Erzeuge für jede E-Schiene ein Mapping
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen) {
 			_schienenID_to_schiene.put(eSchiene.id, eSchiene);
 			final int nr = _parent.schieneGet(eSchiene.id).nummer;
 			_schienenNR_to_schiene.put(nr, eSchiene);
 		}
-		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen) {
+
+		// Erzeuge fehlende E-Schienen, die nur das Elternteil derzeit hat.
+		for (final @NotNull GostBlockungSchiene gSchiene : _parent.daten().schienen)
 			if (!_schienenID_to_schiene.containsKey(gSchiene.id)) {
 				final @NotNull GostBlockungsergebnisSchiene eSchiene = DTOUtils.newGostBlockungsergebnisSchiene(gSchiene.id);
 				_schienenID_to_schiene.put(gSchiene.id, eSchiene);
 				_schienenNR_to_schiene.put(gSchiene.nummer, eSchiene);
 				_ergebnis.schienen.add(eSchiene);
 			}
-		}
 	}
 
 	private void update_0_kursID_to_kurs() {
