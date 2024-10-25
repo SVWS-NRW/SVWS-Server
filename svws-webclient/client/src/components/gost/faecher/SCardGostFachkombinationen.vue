@@ -8,7 +8,7 @@
 				</template>
 			</svws-ui-tooltip>
 		</template>
-		<svws-ui-table :items :no-data="items.size() === 0" :columns>
+		<svws-ui-table :items :no-data="items.size() === 0" :columns has-background>
 			<template #row="{ row: kombination }">
 				<s-row-gost-fachkombination :typ :kombination :faecher-manager :patch-fachkombination :remove-fachkombination :hat-update-kompetenz />
 			</template>

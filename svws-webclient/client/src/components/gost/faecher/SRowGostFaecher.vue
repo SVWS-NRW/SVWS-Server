@@ -1,5 +1,5 @@
 <template>
-	<div class="svws-ui-tr svws-custom-color" role="row" :style="{ '--background-color': bgColor }">
+	<div class="svws-ui-tr" role="row" :style="{ '--background-color': bgColor }">
 		<div role="cell" class="svws-ui-td">
 			<span :title="fach.kuerzelAnzeige || undefined">
 				{{ fach.kuerzelAnzeige }}
