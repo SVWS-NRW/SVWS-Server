@@ -773,14 +773,14 @@ public class GostBlockungsergebnisManager {
 	}
 
 	private void update_1_fachartID_to_kurseList() {
-		// Leeren und hinzufügen (ermittelt über alle Kurse).
+		// Erzeuge pro Fachart eine Liste und fülle sie mit den E-Kursen.
 		_fachartID_to_kurseList = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values()) {
 			final long fachartID = GostKursart.getFachartID(eKurs.fachID, eKurs.kursart);
 			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, fachartID).add(eKurs);
 		}
 
-		// Ergänze mit Fachwahlen zu denen es keinen Kurs gibt.
+		// Ergänze Facharten zu deinen es keinen Kurs gibt, aber Fachwahlen.
 		for (final @NotNull GostFachwahl gFachwahl : _parent.daten().fachwahlen)
 			MapUtils.getOrCreateArrayList(_fachartID_to_kurseList, GostKursart.getFachartIDByFachwahl(gFachwahl));
 

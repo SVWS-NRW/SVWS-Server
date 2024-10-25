@@ -258,8 +258,8 @@ public class DummyGostBlockungsdatenManager {
 	 */
 	public @NotNull GostBlockungsergebnis ergebnisGet(final long idErgebnis) throws DeveloperNotificationException {
 		for (final @NotNull GostBlockungsergebnis ergebnis : _daten.ergebnisse)
-		if (ergebnis.id == idErgebnis)
-			return ergebnis;
+			if (ergebnis.id == idErgebnis)
+				return ergebnis;
 		throw new DeveloperNotificationException("Es wurde kein Ergebnis mit ID=" + idErgebnis + " gefunden!");
 	}
 
@@ -736,7 +736,7 @@ public class DummyGostBlockungsdatenManager {
 			_daten.kurse.remove(kurs);
 		}
 
-		// (3) Sammle alle Regeln und lösche sie.
+		// (3) Sammle alle Regeln, welche die Kurse enthalten und lösche sie.
 		final @NotNull HashSet<Long> regelIDs = new HashSet<>();
 		for (final @NotNull GostBlockungRegel regel : _daten.regeln)
 			for (final long idKurs : idKurse)
@@ -744,7 +744,8 @@ public class DummyGostBlockungsdatenManager {
 					regelIDs.add(regel.id);
 					break;
 				}
-		regelRemoveListeByIDs(regelIDs);
+
+		regelRemoveListeByIDsOhneRevalidierung(regelIDs);
 	}
 
 	/**
@@ -788,12 +789,12 @@ public class DummyGostBlockungsdatenManager {
 	}
 
 	/**
-	 * Liefert die Menge aller Kurs-IDs, die mit der Regel verknüpft sind.
+	 * Liefert TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
 	 *
 	 * @param regel   Das {@link GostBlockungRegel}-Objekt.
 	 * @param idKurs  Die Datenbank-ID des Kurses.
 	 *
-	 * @return die Menge aller Kurs-IDs, die mit der Regel verknüpft sind.
+	 * @return TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
 	 */
 	private static boolean regelGetHatKursIDs(final @NotNull GostBlockungRegel regel, final long idKurs) {
 		final @NotNull GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
@@ -801,6 +802,10 @@ public class DummyGostBlockungsdatenManager {
 			if ((regelTyp.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID) && (regel.parameter.get(i) == idKurs))
 				return true;
 		return false;
+	}
+
+	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
+		_daten.regeln.removeIf(regel -> regelmenge.contains(regel.id));
 	}
 
 	/**
@@ -811,7 +816,8 @@ public class DummyGostBlockungsdatenManager {
 	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
 	 */
 	public void regelRemoveListeByIDs(final @NotNull Set<Long> regelmenge) {
-		_daten.regeln.removeIf(regel -> regelmenge.contains(regel.id));
+		regelRemoveListeByIDsOhneRevalidierung(regelmenge);
+		// revalidierung
 	}
 
 	/**

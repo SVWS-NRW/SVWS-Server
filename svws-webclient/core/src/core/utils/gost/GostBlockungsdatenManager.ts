@@ -25,6 +25,7 @@ import { GostBlockungKursLehrer } from '../../../core/data/gost/GostBlockungKurs
 import { GostFachwahl } from '../../../core/data/gost/GostFachwahl';
 import { ArrayMap } from '../../../core/adt/map/ArrayMap';
 import { MapUtils } from '../../../core/utils/MapUtils';
+import { GostKursblockungRegelParameterTyp } from '../../../core/types/kursblockung/GostKursblockungRegelParameterTyp';
 import { Map2DUtils } from '../../../core/utils/Map2DUtils';
 import { JavaInteger } from '../../../java/lang/JavaInteger';
 import { GostBlockungsergebnis } from '../../../core/data/gost/GostBlockungsergebnis';
@@ -1317,7 +1318,8 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 * Entfernt alle Kurse mit den übergebenen IDs aus der Blockung.
 	 * <br>(1) Überprüft, ob es eine Blockungsvorlage ist und ob alle IDs existieren, sonst Exception.
 	 * <br>(2) Entfernt dann alle Kurse aus den Datenstrukturen.
-	 * <br>(3) Entfernt dann alle Regeln, die einen der Kurse tangieren, was zur Revalidierung der Ergebnisse führt.
+	 * <br>(3) Entfernt dann alle Regeln, die einen der Kurse tangieren.
+	 * <br>(4) Dann muss der Client den ErgebnisManager über die Löschung des Kurses informieren.
 	 *
 	 * @param idKurse  Die Datenbank-IDs der zu entfernenden Kurse.
 	 *
@@ -1326,7 +1328,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public kurseRemoveByID(idKurse : JavaSet<number>) : void {
 		DeveloperNotificationException.ifTrue("Ein Löschen von Kursen ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		for (const idKurs of idKurse)
-			this.kursGet(idKurs);
+			DeveloperNotificationException.ifTrue("Löschen von Kurs.id=" + idKurs + " nicht möglich, da nicht vorhanden!", !this.kursGetExistiert(idKurs));
 		for (const idKurs of idKurse) {
 			const kurs : GostBlockungKurs = this.kursGet(idKurs);
 			this._list_kurse_sortiert_fach_kursart_kursnummer.remove(kurs);
@@ -1335,41 +1337,14 @@ export class GostBlockungsdatenManager extends JavaObject {
 			DeveloperNotificationException.ifMapRemoveFailes(this._map_idKurs_kurs, idKurs);
 			this._daten.kurse.remove(kurs);
 		}
-		this.regelRemoveAlleDieEinenDerKurseTangieren(idKurse);
-	}
-
-	private regelRemoveAlleDieEinenDerKurseTangieren(idKurse : JavaSet<number>) : void {
 		const regelIDs : HashSet<number> = new HashSet<number>();
-		for (const idKurs of idKurse) {
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS))
-				if (r.parameter.get(1) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS))
-				if (r.parameter.get(1) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS))
-				if ((r.parameter.get(0) === idKurs) || (r.parameter.get(1) === idKurs))
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS))
-				if ((r.parameter.get(0) === idKurs) || (r.parameter.get(1) === idKurs))
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
-			for (const r of this.regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN))
-				if (r.parameter.get(0) === idKurs)
-					regelIDs.add(r.id);
-		}
-		this.regelRemoveListeByIDs(regelIDs);
+		for (const regel of this._daten.regeln)
+			for (const idKurs of idKurse)
+				if (GostBlockungsdatenManager.regelGetHatKursIDs(regel, idKurs)) {
+					regelIDs.add(regel.id);
+					break;
+				}
+		this.regelRemoveListeByIDsOhneRevalidierung(regelIDs);
 	}
 
 	/**
@@ -1836,6 +1811,22 @@ export class GostBlockungsdatenManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
+	 *
+	 * @param regel   Das {@link GostBlockungRegel}-Objekt.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
+	 */
+	private static regelGetHatKursIDs(regel : GostBlockungRegel, idKurs : number) : boolean {
+		const regelTyp : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		for (let i : number = 0; i < regelTyp.getParamCount(); i++)
+			if ((regelTyp.getParamType(i) as unknown === GostKursblockungRegelParameterTyp.KURS_ID as unknown) && (regel.parameter.get(i) === idKurs))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
@@ -1860,14 +1851,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 		this.regelRemoveListeByIDs(setRegelIDs);
 	}
 
-	/**
-	 * Löscht eines Regelmenge anhand ihrer IDs.
-	 *
-	 * @param regelmenge  Die Menge der IDs der Regeln.
-	 *
-	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
-	 */
-	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
+	private regelRemoveListeByIDsOhneRevalidierung(regelmenge : JavaSet<number>) : void {
 		for (const idRegel of regelmenge) {
 			const regel : GostBlockungRegel = this.regelGet(idRegel);
 			const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
@@ -1882,6 +1866,17 @@ export class GostBlockungsdatenManager extends JavaObject {
 			this._map_multikey_regeln.remove(multikey);
 			this._daten.regeln.remove(regel);
 		}
+	}
+
+	/**
+	 * Löscht eines Regelmenge anhand ihrer IDs.
+	 *
+	 * @param regelmenge  Die Menge der IDs der Regeln.
+	 *
+	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
+	 */
+	public regelRemoveListeByIDs(regelmenge : JavaSet<number>) : void {
+		this.regelRemoveListeByIDsOhneRevalidierung(regelmenge);
 		this.ergebnisAlleRevalidieren();
 	}
 

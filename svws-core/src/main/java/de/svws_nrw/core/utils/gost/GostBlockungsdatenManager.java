@@ -25,6 +25,7 @@ import de.svws_nrw.core.exceptions.DeveloperNotificationException;
 import de.svws_nrw.core.exceptions.UserNotificationException;
 import de.svws_nrw.core.types.gost.GostHalbjahr;
 import de.svws_nrw.core.types.gost.GostKursart;
+import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelParameterTyp;
 import de.svws_nrw.core.types.kursblockung.GostKursblockungRegelTyp;
 import de.svws_nrw.core.utils.DTOUtils;
 import de.svws_nrw.core.utils.ListUtils;
@@ -321,7 +322,7 @@ public class GostBlockungsdatenManager {
 		final GostBlockungKurs kurs = _map_idKurs_kurs.get(idKurs);
 		if (kurs == null)
 			return "[Lehrkraft (ID=" + idLehrkraft + ")]";
-		for (final @NotNull GostBlockungKursLehrer lehrer: kurs.lehrer)
+		for (final @NotNull GostBlockungKursLehrer lehrer : kurs.lehrer)
 			if (lehrer.id == idLehrkraft)
 				return "[Lehrkraft (ID=" + idLehrkraft + ") " + lehrer.kuerzel + "]";
 		return "[Lehrkraft (ID=" + idLehrkraft + ")]";
@@ -765,7 +766,7 @@ public class GostBlockungsdatenManager {
 	 * Revalidiert alle Ergebnis. Dies führt zur Aktualisierung aller Ergebnisse.
 	 */
 	public void ergebnisAlleRevalidieren() {
-		for (final GostBlockungsergebnisManager ergebnisManager: _map_idErgebnis_ErgebnisManager.values())
+		for (final GostBlockungsergebnisManager ergebnisManager : _map_idErgebnis_ErgebnisManager.values())
 			ergebnisManager.stateRevalidateEverything();
 	}
 
@@ -1117,7 +1118,8 @@ public class GostBlockungsdatenManager {
 		final @NotNull GostBlockungKurs kurs = kursGet(idKurs);
 		final @NotNull List<GostBlockungKursLehrer> listOfLehrer = kurs.lehrer;
 		for (final @NotNull GostBlockungKursLehrer lehrkraft : listOfLehrer) {
-			DeveloperNotificationException.ifTrue(toStringKurs(idKurs) + " hat bereits " + toStringKursLehrkraft(idKurs, lehrkraft.id), lehrkraft.id == neueLehrkraft.id);
+			DeveloperNotificationException.ifTrue(toStringKurs(idKurs) + " hat bereits " + toStringKursLehrkraft(idKurs, lehrkraft.id),
+					lehrkraft.id == neueLehrkraft.id);
 			DeveloperNotificationException.ifTrue(
 					toStringKurs(idKurs) + " hat bereits " + toStringKursLehrkraft(idKurs, lehrkraft.id) + " mit Reihenfolge " + lehrkraft.reihenfolge,
 					lehrkraft.reihenfolge == neueLehrkraft.reihenfolge);
@@ -1344,7 +1346,8 @@ public class GostBlockungsdatenManager {
 	 * Entfernt alle Kurse mit den übergebenen IDs aus der Blockung.
 	 * <br>(1) Überprüft, ob es eine Blockungsvorlage ist und ob alle IDs existieren, sonst Exception.
 	 * <br>(2) Entfernt dann alle Kurse aus den Datenstrukturen.
-	 * <br>(3) Entfernt dann alle Regeln, die einen der Kurse tangieren, was zur Revalidierung der Ergebnisse führt.
+	 * <br>(3) Entfernt dann alle Regeln, die einen der Kurse tangieren.
+	 * <br>(4) Dann muss der Client den ErgebnisManager über die Löschung des Kurses informieren.
 	 *
 	 * @param idKurse  Die Datenbank-IDs der zu entfernenden Kurse.
 	 *
@@ -1354,7 +1357,7 @@ public class GostBlockungsdatenManager {
 		// (1) Datenkonsistenz überprüfen.
 		DeveloperNotificationException.ifTrue("Ein Löschen von Kursen ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
 		for (final long idKurs : idKurse)
-			kursGet(idKurs);
+			DeveloperNotificationException.ifTrue("Löschen von Kurs.id=" + idKurs + " nicht möglich, da nicht vorhanden!", !kursGetExistiert(idKurs));
 
 		// (2) Entfernen des Kurses.
 		for (final long idKurs : idKurse) {
@@ -1366,49 +1369,17 @@ public class GostBlockungsdatenManager {
 			_daten.kurse.remove(kurs);
 		}
 
-		// (3) Löschen der gesammelten Regeln --> Führt zur Revalidierung der Ergebnisse.
-		regelRemoveAlleDieEinenDerKurseTangieren(idKurse);
-	}
-
-	private void regelRemoveAlleDieEinenDerKurseTangieren(final @NotNull Set<Long> idKurse) {
+		// (3) Sammle alle Regeln, welche die Kurse enthalten und lösche sie.
 		final @NotNull HashSet<Long> regelIDs = new HashSet<>();
-		for (final long idKurs : idKurse) {
-			// Typ 1 nicht relevant.
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE)) // Typ 2
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE)) // Typ 3
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS)) // Typ 4
-				if (r.parameter.get(1) == idKurs)
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.SCHUELER_VERBIETEN_IN_KURS)) // Typ 5
-				if (r.parameter.get(1) == idKurs)
-					regelIDs.add(r.id);
-			// Typ 6 nicht relevant.
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_VERBIETEN_MIT_KURS)) // Typ 7
-				if ((r.parameter.get(0) == idKurs) || (r.parameter.get(1) == idKurs))
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_ZUSAMMEN_MIT_KURS)) // Typ 8
-				if ((r.parameter.get(0) == idKurs) || (r.parameter.get(1) == idKurs))
-					regelIDs.add(r.id);
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MIT_DUMMY_SUS_AUFFUELLEN)) // Typ 9
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			// Typ 10 bis 14 nicht relevant.
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_MAXIMALE_SCHUELERANZAHL)) // Typ 15
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			// Typ 16 nicht relevant.
-			for (final @NotNull GostBlockungRegel r : regelGetListeOfTyp(GostKursblockungRegelTyp.KURS_KURSDIFFERENZ_BEI_DER_VISUALISIERUNG_IGNORIEREN)) // Typ 17
-				if (r.parameter.get(0) == idKurs)
-					regelIDs.add(r.id);
-			// Typ 18 nicht relevant.
-		}
+		for (final @NotNull GostBlockungRegel regel : _daten.regeln)
+			for (final long idKurs : idKurse)
+				if (regelGetHatKursIDs(regel, idKurs)) {
+					regelIDs.add(regel.id);
+					break;
+				}
+		regelRemoveListeByIDsOhneRevalidierung(regelIDs);
 
-
-		regelRemoveListeByIDs(regelIDs);
+		// (4) Der Client informiert danach den EINEN ErgebnisManager, welcher dann alles revalidiert.
 	}
 
 	/**
@@ -1439,7 +1410,7 @@ public class GostBlockungsdatenManager {
 	 *
 	 * @param idKursID1keep    Die Kurs-ID des Ziel-Kurses (wird nicht gelöscht).
 	 * @param idKursID2delete  Die Kurs-ID des Quell-Kurses (wird gelöscht).
-     * @throws DeveloperNotificationException falls es keine Blockungsvorlage ist, oder die Kurse nicht existieren, oder die Kurse identisch sind.
+	 * @throws DeveloperNotificationException falls es keine Blockungsvorlage ist, oder die Kurse nicht existieren, oder die Kurse identisch sind.
 	 */
 	public void kursMerge(final long idKursID1keep, final long idKursID2delete) throws DeveloperNotificationException {
 		// (1) Datenkonsistenz überprüfen.
@@ -1936,6 +1907,22 @@ public class GostBlockungsdatenManager {
 	}
 
 	/**
+	 * Liefert TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
+	 *
+	 * @param regel   Das {@link GostBlockungRegel}-Objekt.
+	 * @param idKurs  Die Datenbank-ID des Kurses.
+	 *
+	 * @return TRUE, falls der übergebene Kurs in der übergebenen Regeln enthalten ist.
+	 */
+	private static boolean regelGetHatKursIDs(final @NotNull GostBlockungRegel regel, final long idKurs) {
+		final @NotNull GostKursblockungRegelTyp regelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
+		for (int i = 0; i < regelTyp.getParamCount(); i++)
+			if ((regelTyp.getParamType(i) == GostKursblockungRegelParameterTyp.KURS_ID) && (regel.parameter.get(i) == idKurs))
+				return true;
+		return false;
+	}
+
+	/**
 	 * Entfernt die Regel mit der übergebenen ID aus der Blockung.
 	 *
 	 * @param idRegel Die Datenbank-ID der zu entfernenden Regel.
@@ -1963,14 +1950,7 @@ public class GostBlockungsdatenManager {
 		regelRemoveListeByIDs(setRegelIDs);
 	}
 
-	/**
-	 * Löscht eines Regelmenge anhand ihrer IDs.
-	 *
-	 * @param regelmenge  Die Menge der IDs der Regeln.
-	 *
-	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
-	 */
-	public void regelRemoveListeByIDs(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
+	private void regelRemoveListeByIDsOhneRevalidierung(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
 		// Überprüfen
 		for (final long idRegel : regelmenge) {
 			final @NotNull GostBlockungRegel regel = this.regelGet(idRegel);
@@ -1990,6 +1970,18 @@ public class GostBlockungsdatenManager {
 			_map_multikey_regeln.remove(multikey);
 			_daten.regeln.remove(regel);
 		}
+	}
+
+	/**
+	 * Löscht eines Regelmenge anhand ihrer IDs.
+	 *
+	 * @param regelmenge  Die Menge der IDs der Regeln.
+	 *
+	 * @throws DeveloperNotificationException falls die Regel nicht gefunden wird.
+	 */
+	public void regelRemoveListeByIDs(final @NotNull Set<Long> regelmenge) throws DeveloperNotificationException {
+		// Delegieren.
+		regelRemoveListeByIDsOhneRevalidierung(regelmenge);
 
 		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
 		ergebnisAlleRevalidieren();
