@@ -748,7 +748,7 @@
 
 		.svws-ui-tr {
 			.svws-ui-table.svws-has-background & {
-			background-color: var(--background-color);
+				background-color: var(--background-color);
 			}
 		}
 
@@ -870,7 +870,7 @@
 		}
 
 		.svws-ui-table.svws-has-background & {
-			@apply border-ui;
+			@apply border-ui-dark-gray;
 		}
 
 		&.svws-align-right {
@@ -893,7 +893,7 @@
 			}
 
 			&:before {
-				@apply bg-ui-inverted border border-ui opacity-10;
+				@apply bg-ui-inverted;
 				@apply pointer-events-none absolute inset-0;
 				content: '';
 

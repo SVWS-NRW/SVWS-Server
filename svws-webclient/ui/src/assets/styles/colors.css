@@ -20,6 +20,9 @@
     --color-bg-ui-disabled: theme('colors.palette.neutral.300');
     --color-bg-ui-inverted: theme('colors.palette.neutral.900');
     --color-bg-ui-white: theme('colors.palette.neutral.100');
+    --color-bg-ui-light-gray: theme('colors.palette.neutral.300');
+    --color-bg-ui-gray: theme('colors.palette.neutral.500');
+    --color-bg-ui-dark-gray: theme('colors.palette.neutral.700');
     --color-bg-ui-black: theme('colors.palette.neutral.900');
     --color-bg-ui-brand-weak: theme('colors.palette.brand.50');
     --color-bg-ui-statistic-weak: theme('colors.palette.statistic.50');
@@ -211,6 +214,9 @@ html {
     --color-bg-ui-disabled: theme('colors.palette.neutral.850');
     --color-bg-ui-inverted: theme('colors.palette.neutral.100');
     --color-bg-ui-white: theme('colors.palette.neutral.100');
+    --color-bg-ui-light-gray: theme('colors.palette.neutral.300');
+    --color-bg-ui-gray: theme('colors.palette.neutral.500');
+    --color-bg-ui-dark-gray: theme('colors.palette.neutral.700');
     --color-bg-ui-black: theme('colors.palette.neutral.900');
     --color-bg-ui-brand-weak: theme('colors.palette.brand.50');
     --color-bg-ui-statistic-weak: theme('colors.palette.statistic.50');

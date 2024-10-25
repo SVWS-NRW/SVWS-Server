@@ -343,6 +343,9 @@ export default {
 					'ondisabled': 'var(--color-border-ui-ondisabled)',
 					'ondisabled-secondary': 'var(--color-border-ui-ondisabled-secondary)',
 					'white': 'var(--color-bg-ui-white)',
+					'light-gray': 'var(--color-bg-ui-light-gray)',
+					'gray': 'var(--color-bg-ui-gray)',
+					'dark-gray': 'var(--color-bg-ui-dark-gray)',
 					'black': 'var(--color-bg-ui-black)',
 				}
 			},
