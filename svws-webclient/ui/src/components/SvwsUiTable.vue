@@ -1077,7 +1077,7 @@
 	}
 
 	.svws-fachwahlen--has-selection .svws-ui-tbody .svws-ui-td:not(.svws-selected) {
-		@apply bg-ui text-ui font-normal;
+		@apply bg-ui opacity-50 text-ui font-normal;
 	}
 
 	.svws-fachwahlen--has-selection .svws-ui-td.svws-selected {
