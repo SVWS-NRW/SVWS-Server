@@ -60,7 +60,7 @@
 					</span>
 					<div class="ml-auto inline-flex">
 						<template v-if="hatUpdateKompetenz">
-							<template v-if="auswahlErgebnis === ergebnis">
+							<template v-if="(auswahlErgebnis === ergebnis) && (getErgebnisse().size() > 1)">
 								<svws-ui-button type="icon" @click.stop="remove_ergebnis" title="Ergebnis löschen" :disabled="apiStatus.pending || (getErgebnisse().size() <= 1)" class="text-black dark:text-white">
 									<span class="icon-sm i-ri-delete-bin-line -mx-0.5" />
 								</svws-ui-button>
