@@ -29,10 +29,17 @@ import java.util.List;
 })
 @XmlRootElement(name = "addressbook-home-set", namespace = "urn:ietf:params:xml:ns:carddav")
 public class AddressbookHomeSet {
-
-    @XmlElement(required = true, namespace = "DAV:")
+	@XmlElement(required = true, namespace = "DAV:")
     protected List<String> href;
+
     /**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AddressbookHomeSet() {
+		// leer
+	}
+
+	/**
      * Gets the value of the href property.
      *
      * <p>

@@ -35,6 +35,13 @@ import jakarta.ws.rs.core.Response;
 public class APIEmail {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIEmail() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der SMTP-Server-Konfiguration der Schule.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

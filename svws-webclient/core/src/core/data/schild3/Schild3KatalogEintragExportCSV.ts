@@ -49,6 +49,9 @@ export class Schild3KatalogEintragExportCSV extends JavaObject {
 	public DBFormat : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

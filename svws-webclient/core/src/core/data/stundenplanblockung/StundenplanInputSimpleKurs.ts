@@ -41,6 +41,9 @@ export class StundenplanInputSimpleKurs extends JavaObject {
 	public wochenstunden : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

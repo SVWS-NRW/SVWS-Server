@@ -45,4 +45,11 @@ public class StundenplanUnterrichtsverteilung {
 	@Schema(description = "die Liste der Klassenunterrichte, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<StundenplanKlassenunterricht> klassenunterricht = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanUnterrichtsverteilung() {
+		// leer
+	}
+
 }

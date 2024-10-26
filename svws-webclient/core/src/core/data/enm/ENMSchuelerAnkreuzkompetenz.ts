@@ -24,6 +24,9 @@ export class ENMSchuelerAnkreuzkompetenz extends JavaObject {
 	public tsStufe : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

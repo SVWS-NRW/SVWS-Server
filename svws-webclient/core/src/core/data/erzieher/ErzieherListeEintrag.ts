@@ -39,6 +39,9 @@ export class ErzieherListeEintrag extends JavaObject {
 	public email : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

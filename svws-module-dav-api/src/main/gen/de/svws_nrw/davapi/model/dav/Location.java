@@ -52,6 +52,13 @@ public class Location {
         return href;
     }
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Location() {
+		// leer
+	}
+
     /**
      * Sets the value of the href property.
      *
@@ -60,7 +67,7 @@ public class Location {
      *     {@link String }
      *
      */
-    public void setHref(String value) {
+    public void setHref(final String value) {
         this.href = value;
     }
 

@@ -133,6 +133,9 @@ export class SchuelerSchulbesuchsdaten extends JavaObject {
 	public alleSchulen : List<SchuelerSchulbesuchSchule> = new ArrayList<SchuelerSchulbesuchSchule>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

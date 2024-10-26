@@ -25,6 +25,9 @@ export class GostLaufbahnplanungDatenFachbelegung extends JavaObject {
 	public readonly schriftlich : Array<boolean> = Array(GostHalbjahr.maxHalbjahre).fill(false);
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

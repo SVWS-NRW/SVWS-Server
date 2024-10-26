@@ -20,6 +20,13 @@ public final class RestAppDebug extends Application {
 			OpenAPICorsFilter.class,
 			APIDebug.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppDebug() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return classes;

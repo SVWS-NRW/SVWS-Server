@@ -51,6 +51,13 @@ import jakarta.persistence.AttributeConverter;
 public abstract class DBAttributeConverter<X, Y> implements AttributeConverter<X, Y> {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	protected DBAttributeConverter() {
+		// leer
+	}
+
+	/**
 	 * Eine Map, welche einer Attribut-Konverter-Klasse eine Instanz der Klasse
 	 * zuordnet. Dies wird von dem Java-DTO-Creator benötigt.
 	 */

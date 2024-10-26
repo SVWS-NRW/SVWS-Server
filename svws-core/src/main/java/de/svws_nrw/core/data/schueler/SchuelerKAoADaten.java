@@ -52,4 +52,11 @@ public class SchuelerKAoADaten {
 	@Schema(description = "Die Bemerkung zu diesen KAOA Daten.", example = "text")
 	public String bemerkung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerKAoADaten() {
+		// leer
+	}
+
 }

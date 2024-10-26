@@ -198,6 +198,12 @@ public final class ABPSchueler {
 	private static final String fieldBLL_Punkte = "BLL_Punkte";
 	private static final String fieldFS2_SekI_manuell = "FS2_SekI_manuell";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchueler() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schueler" aus der LuPO-Datei ein.

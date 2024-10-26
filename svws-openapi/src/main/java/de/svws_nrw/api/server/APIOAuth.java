@@ -39,6 +39,13 @@ import jakarta.ws.rs.core.Response;
 public class APIOAuth {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIOAuth() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für das Hinzufügen eines Eintrags zu den OAuth Client Secrets der Schule.
 	 *
 	 * @param schema    das Datenbankschema

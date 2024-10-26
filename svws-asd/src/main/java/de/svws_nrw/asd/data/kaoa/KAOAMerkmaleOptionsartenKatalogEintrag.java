@@ -16,4 +16,11 @@ public class KAOAMerkmaleOptionsartenKatalogEintrag extends CoreTypeData {
 
 	// Keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAMerkmaleOptionsartenKatalogEintrag() {
+		// leer
+	}
+
 }

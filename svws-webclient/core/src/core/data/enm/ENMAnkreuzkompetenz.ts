@@ -34,6 +34,9 @@ export class ENMAnkreuzkompetenz extends JavaObject {
 	public sortierung : number = 1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

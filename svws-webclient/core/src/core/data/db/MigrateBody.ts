@@ -34,6 +34,9 @@ export class MigrateBody extends JavaObject {
 	public schemaUserPassword : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -69,4 +69,11 @@ public class Kurs42DataSchueler {
 	/** ??? Diese Spalte wird ignoriert, da sie zum Import nicht nötig ist. */
 	public String Gruppe;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataSchueler() {
+		// leer
+	}
+
 }

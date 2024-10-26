@@ -37,4 +37,11 @@ public class ENMFloskel {
 			+ "zugeordnet wurde, ansonsten null, falls sie für alle Jahrgänge gilt.", example = "4")
 	public Long jahrgangID;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMFloskel() {
+		// leer
+	}
+
 }

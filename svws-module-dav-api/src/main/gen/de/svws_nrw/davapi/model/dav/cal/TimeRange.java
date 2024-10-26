@@ -17,11 +17,18 @@ public class TimeRange {
 	@XmlAttribute(name = "end")
 	private String end;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public TimeRange() {
+		// leer
+	}
+
 	public String getStart() {
 		return start;
 	}
 
-	public void setStart(String start) {
+	public void setStart(final String start) {
 		this.start = start;
 	}
 
@@ -29,7 +36,7 @@ public class TimeRange {
 		return end;
 	}
 
-	public void setEnd(String end) {
+	public void setEnd(final String end) {
 		this.end = end;
 	}
 }

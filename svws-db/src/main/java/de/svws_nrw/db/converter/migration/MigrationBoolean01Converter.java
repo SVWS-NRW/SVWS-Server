@@ -18,6 +18,13 @@ public final class MigrationBoolean01Converter extends DBAttributeConverter<Bool
 	/** Die Instanz des Konverters */
 	public static final MigrationBoolean01Converter instance = new MigrationBoolean01Converter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrationBoolean01Converter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final Boolean value) {
 		return ((value != null) && value) ? 1 : 0;

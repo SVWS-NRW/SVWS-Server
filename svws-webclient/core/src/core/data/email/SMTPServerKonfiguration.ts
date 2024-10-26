@@ -34,6 +34,9 @@ export class SMTPServerKonfiguration extends JavaObject {
 	public trustTLSHost : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

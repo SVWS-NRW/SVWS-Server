@@ -69,4 +69,11 @@ public class SchuelerLernabschnittListeEintrag {
 	@Schema(description = "die Statistik-Bezeichnung des Jahrgangs des Schülers", example = "07")
 	public @NotNull String jahrgang = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLernabschnittListeEintrag() {
+		// leer
+	}
+
 }

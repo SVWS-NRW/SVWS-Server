@@ -25,6 +25,9 @@ export class FachgruppeKatalogEintrag extends CoreTypeDataNurSchulformen {
 	public fuerZeugnis : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

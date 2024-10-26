@@ -16,6 +16,9 @@ export class GostJahrgangFachwahlen extends JavaObject {
 	public abitur : GostJahrgangFachwahlenHalbjahr = new GostJahrgangFachwahlenHalbjahr();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

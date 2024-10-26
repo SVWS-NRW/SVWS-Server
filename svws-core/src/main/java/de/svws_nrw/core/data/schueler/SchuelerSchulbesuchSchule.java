@@ -50,4 +50,11 @@ public class SchuelerSchulbesuchSchule {
 	@Schema(description = "der Jahrgang, bis zu dem die Schule besucht wurde", example = "07")
 	public String jahrgangBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerSchulbesuchSchule() {
+		// leer
+	}
+
 }

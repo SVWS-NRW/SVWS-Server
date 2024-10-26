@@ -37,6 +37,14 @@ public class CalendarHomeSet {
 
     @XmlElement(required = true, namespace = "DAV:")
     protected List<String> href;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarHomeSet() {
+		// leer
+	}
+
     /**
      * Gets the value of the href property.
      *

@@ -42,4 +42,11 @@ public class StundenplanListeEintrag {
 	@Schema(description = "das Datum, bis wann der Stundenplan gültig ist", example = "31.7.3218")
 	public @NotNull String gueltigBis = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanListeEintrag() {
+		// leer
+	}
+
 }

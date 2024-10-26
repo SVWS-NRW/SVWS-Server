@@ -39,4 +39,11 @@ public class StundenplanFach {
 	@Schema(description = "die Farbe, die zur Darstellung des Faches genutzt werden soll - sofern vom Standard abgewichen werden soll")
 	public RGBFarbe farbe = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanFach() {
+		// leer
+	}
+
 }

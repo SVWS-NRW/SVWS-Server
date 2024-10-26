@@ -86,6 +86,9 @@ export class AbiturFachbelegung extends JavaObject {
 	public readonly belegungen : Array<AbiturFachbelegungHalbjahr | null> = Array(GostHalbjahr.maxHalbjahre).fill(null);
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

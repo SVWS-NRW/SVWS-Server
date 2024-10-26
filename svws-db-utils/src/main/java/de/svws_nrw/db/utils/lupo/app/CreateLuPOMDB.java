@@ -22,6 +22,12 @@ public class CreateLuPOMDB {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CreateLuPOMDB() {
+		// leer
+	}
 
 	/**
 	 * Stellt eine einfache Frage auf der Kommandozeile, welche mit Ja oder Nein

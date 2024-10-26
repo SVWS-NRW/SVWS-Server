@@ -19,6 +19,9 @@ export class Aufsichtsbereich extends JavaObject {
 	public beschreibung : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

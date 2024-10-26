@@ -34,6 +34,9 @@ export class ReligionEintrag extends JavaObject {
 	public istSichtbar : boolean = true;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

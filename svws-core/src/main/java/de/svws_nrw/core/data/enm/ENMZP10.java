@@ -42,4 +42,11 @@ public class ENMZP10 {
 	@Schema(description = "Das Kürzel der Abschlussnote nach der ZP10-Prüfung.", example = "2")
 	public String abschlussnote;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMZP10() {
+		// leer
+	}
+
 }

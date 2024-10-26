@@ -40,6 +40,12 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "Server")
 public class APIConfig {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIConfig() {
+		// leer
+	}
 
 	/**
 	 * Diese Methode kann genutzt werden, um die Verfügbarkeit des SVWS-Server zu testen.

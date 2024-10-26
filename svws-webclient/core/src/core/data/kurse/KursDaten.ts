@@ -92,6 +92,9 @@ export class KursDaten extends JavaObject {
 	public bezeichnungZeugnis : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

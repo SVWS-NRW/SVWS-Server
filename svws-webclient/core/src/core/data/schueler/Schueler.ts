@@ -39,6 +39,9 @@ export class Schueler extends JavaObject {
 	public externeSchulNr : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

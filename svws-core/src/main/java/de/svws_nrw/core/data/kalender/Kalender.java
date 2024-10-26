@@ -57,4 +57,12 @@ public class Kalender {
 	/** BenutzerId des Besitzers dieses Kalenders */
 	@Schema(description = "BenutzerId des Besitzers dieses Kalenders", example = "1")
 	public long besitzer;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kalender() {
+		// leer
+	}
+
 }

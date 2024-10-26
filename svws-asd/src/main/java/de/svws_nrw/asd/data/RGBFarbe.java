@@ -24,4 +24,11 @@ public class RGBFarbe {
 	@Schema(description = "der Blau-Anteil der Farbe (0-255)", example = "220")
 	public int blue = 220;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RGBFarbe() {
+		// leer
+	}
+
 }

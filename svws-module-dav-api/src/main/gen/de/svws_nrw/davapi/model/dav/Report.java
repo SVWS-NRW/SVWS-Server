@@ -39,6 +39,13 @@ import jakarta.xml.bind.annotation.*;
 @XmlRootElement(name = "report")
 public class Report {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Report() {
+		// leer
+	}
+
     @XmlAnyElement
     protected Element any;
 
@@ -62,7 +69,7 @@ public class Report {
      *     {@link Element }
      *
      */
-    public void setAny(Element value) {
+    public void setAny(final Element value) {
         this.any = value;
     }
 
@@ -73,7 +80,7 @@ public class Report {
 		return syncCollection;
 	}
 
-	public void setSyncCollection(SyncCollection syncCollection) {
+	public void setSyncCollection(final SyncCollection syncCollection) {
 		this.syncCollection = syncCollection;
 	}
 
@@ -84,7 +91,7 @@ public class Report {
 		return calendarMultiget;
 	}
 
-	public void setCalendarMultiget(CalendarMultiget calendarMultiget) {
+	public void setCalendarMultiget(final CalendarMultiget calendarMultiget) {
 		this.calendarMultiget = calendarMultiget;
 	}
 
@@ -95,7 +102,7 @@ public class Report {
 		return calendarQuery;
 	}
 
-	public void setCalendarQuery(CalendarQuery calendarQuery) {
+	public void setCalendarQuery(final CalendarQuery calendarQuery) {
 		this.calendarQuery = calendarQuery;
 	}
 

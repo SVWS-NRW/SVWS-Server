@@ -59,6 +59,9 @@ export class KalenderEintrag extends JavaObject {
 	public kalenderTyp : string = "VEVENT";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

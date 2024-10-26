@@ -14,6 +14,13 @@ public final class PersonTypConverter extends DBAttributeConverter<PersonTyp, St
 	/** Die Instanz des Konverters */
 	public static final PersonTypConverter instance = new PersonTypConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public PersonTypConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final PersonTyp typ) {
 		return typ.kuerzel;

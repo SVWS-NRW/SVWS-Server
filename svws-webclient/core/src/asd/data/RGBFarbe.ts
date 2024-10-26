@@ -19,6 +19,9 @@ export class RGBFarbe extends JavaObject {
 	public blue : number = 220;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -24,6 +24,9 @@ export class LehrerPersonalabschnittsdatenAnrechnungsstunden extends JavaObject 
 	public anzahl : number = 0.0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

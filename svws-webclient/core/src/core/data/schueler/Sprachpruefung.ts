@@ -69,6 +69,9 @@ export class Sprachpruefung extends JavaObject {
 	public note : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

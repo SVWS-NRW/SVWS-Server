@@ -12,6 +12,9 @@ export class KlassenartKatalogEintrag extends CoreTypeData {
 	public zulaessig : List<SchulformSchulgliederung> = new ArrayList<SchulformSchulgliederung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

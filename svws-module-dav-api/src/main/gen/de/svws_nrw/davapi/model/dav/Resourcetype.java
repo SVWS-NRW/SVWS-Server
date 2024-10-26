@@ -44,6 +44,13 @@ public class Resourcetype {
     private Collection collection;
     private Principal principal;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Resourcetype() {
+		// leer
+	}
+
     /**
      * Gets the value of the collection property.
      *
@@ -64,7 +71,7 @@ public class Resourcetype {
      *     {@link Collection }
      *
      */
-    public void setCollection(Collection value) {
+    public void setCollection(final Collection value) {
         this.collection = value;
     }
 
@@ -72,7 +79,7 @@ public class Resourcetype {
 		return principal;
 	}
 
-	public void setPrincipal(Principal principal) {
+	public void setPrincipal(final Principal principal) {
 		this.principal = principal;
 	}
 
@@ -84,7 +91,7 @@ public class Resourcetype {
 		return addressbook;
 	}
 
-	public void setAddressbook(CardAddressbook addressbook) {
+	public void setAddressbook(final CardAddressbook addressbook) {
 		this.addressbook = addressbook;
 	}
 
@@ -96,7 +103,7 @@ public class Resourcetype {
 		return calendar;
 	}
 
-	public void setCalendar(CalCalendar calendar) {
+	public void setCalendar(final CalCalendar calendar) {
 		this.calendar = calendar;
 	}
 }

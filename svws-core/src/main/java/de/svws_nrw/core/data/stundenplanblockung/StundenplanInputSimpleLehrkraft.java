@@ -19,4 +19,11 @@ public class StundenplanInputSimpleLehrkraft {
 	/** Das Kürzel der Lehrkraft. Beispielsweise 'BAR'. */
 	public @NotNull String kuerzel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleLehrkraft() {
+		// leer
+	}
+
 }

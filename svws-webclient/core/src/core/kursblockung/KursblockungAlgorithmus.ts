@@ -24,6 +24,9 @@ export class KursblockungAlgorithmus extends Service<GostBlockungsdatenManager, 
 	private readonly _random : Random = new Random();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

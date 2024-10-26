@@ -36,6 +36,9 @@ export class StundenplanPausenzeit extends JavaObject {
 	public klassen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

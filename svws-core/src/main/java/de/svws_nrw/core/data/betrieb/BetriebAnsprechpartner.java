@@ -13,6 +13,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @TranspilerDTO
 public class BetriebAnsprechpartner {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BetriebAnsprechpartner() {
+		// leer
+	}
+
 	/** ID des Ansprechpartners */
 	@Schema(description = "die ID des Ansprechpartners", example = "4711")
 	public long id;

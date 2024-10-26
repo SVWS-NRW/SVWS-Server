@@ -24,6 +24,9 @@ export class GostLaufbahnplanungBeratungsdaten extends JavaObject {
 	public ruecklaufdatum : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

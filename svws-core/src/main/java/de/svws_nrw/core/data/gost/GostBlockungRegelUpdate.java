@@ -23,4 +23,11 @@ public class GostBlockungRegelUpdate {
 	/** Die hinzuzufügenden Regeln */
 	public @NotNull List<GostBlockungRegel> listHinzuzufuegen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungRegelUpdate() {
+		// leer
+	}
+
 }

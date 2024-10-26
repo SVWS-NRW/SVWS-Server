@@ -49,6 +49,9 @@ export class ENMTeilleistung extends JavaObject {
 	public tsNote : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

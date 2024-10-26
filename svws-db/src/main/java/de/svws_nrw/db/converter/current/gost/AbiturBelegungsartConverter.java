@@ -14,6 +14,13 @@ public final class AbiturBelegungsartConverter extends DBAttributeConverter<Abit
 	/** Die Instanz des Konverters */
 	public static final AbiturBelegungsartConverter instance = new AbiturBelegungsartConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbiturBelegungsartConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final AbiturBelegungsart value) {
 		if (value == null)

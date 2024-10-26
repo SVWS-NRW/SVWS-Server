@@ -118,4 +118,11 @@ public class SchultraegerKatalogEintrag {
 	@Schema(description = "Gibt die Gültigkeit bis zu welchem Schuljahr an")
 	public Integer gueltigBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchultraegerKatalogEintrag() {
+		// leer
+	}
+
 }

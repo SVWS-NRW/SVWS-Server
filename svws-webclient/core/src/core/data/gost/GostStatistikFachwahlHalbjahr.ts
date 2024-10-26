@@ -29,6 +29,9 @@ export class GostStatistikFachwahlHalbjahr extends JavaObject {
 	public wahlenLK : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

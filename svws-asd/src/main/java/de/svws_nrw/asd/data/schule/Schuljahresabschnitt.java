@@ -33,4 +33,11 @@ public class Schuljahresabschnitt {
 	@Schema(description = "die ID des folgenden Schuljahresabschnittes", example = "4712")
 	public Long idFolgeAbschnitt = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schuljahresabschnitt() {
+		// leer
+	}
+
 }

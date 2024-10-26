@@ -36,4 +36,11 @@ public class GostFachwahl {
 	@Schema(description = "gibt an, ob die Fachwahl als ein Abiturfach geplant ist oder nicht", example = "true")
 	public Integer abiturfach = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostFachwahl() {
+		// leer
+	}
+
 }

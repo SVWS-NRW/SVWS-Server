@@ -82,6 +82,9 @@ export class SchuelerListeEintrag extends JavaObject {
 	public readonly kurse : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

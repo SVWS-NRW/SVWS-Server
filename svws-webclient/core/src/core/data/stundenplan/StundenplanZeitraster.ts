@@ -29,6 +29,9 @@ export class StundenplanZeitraster extends JavaObject {
 	public stundenende : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

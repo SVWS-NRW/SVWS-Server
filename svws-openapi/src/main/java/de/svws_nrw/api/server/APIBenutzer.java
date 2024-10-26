@@ -58,6 +58,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APIBenutzer {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIBenutzer() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller im System vorhandenen
 	 * Benutzer.
 	 *

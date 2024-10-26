@@ -40,4 +40,11 @@ public class Schild3KatalogEintragFilterFehlendeEintraege {
 	@Schema(description = "Feldtyp des zu prüfenden Feldes")
 	public String Feldtyp;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragFilterFehlendeEintraege() {
+		// leer
+	}
+
 }

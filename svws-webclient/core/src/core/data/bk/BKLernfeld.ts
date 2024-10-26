@@ -31,6 +31,9 @@ export class BKLernfeld extends JavaObject {
 	public zeitrichtwert : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -19,6 +19,13 @@ import de.svws_nrw.transpiler.typescript.TranspilerTypeScriptPlugin;
 public class TranspileTs {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public TranspileTs() {
+		// leer
+	}
+
+	/**
 	 * Starts the transpiler with the above configured input files and output directories
 	 *
 	 * @param args   the command line arguments

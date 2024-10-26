@@ -24,6 +24,9 @@ export class SchuelerLernabschnittNachpruefung extends JavaObject {
 	public datum : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

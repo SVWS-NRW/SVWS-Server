@@ -22,6 +22,9 @@ export class ENMAnkreuzkompetenzenKatalog extends JavaObject {
 	public kompetenzen : List<ENMAnkreuzkompetenz> = new ArrayList<ENMAnkreuzkompetenz>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

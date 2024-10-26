@@ -13,6 +13,13 @@ public final class GOStBesondereLernleistungConverter extends DBAttributeConvert
 	/** Die Instanz des Konverters */
 	public static final GOStBesondereLernleistungConverter instance = new GOStBesondereLernleistungConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GOStBesondereLernleistungConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final GostBesondereLernleistung value) {
 		if (value == null)

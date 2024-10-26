@@ -19,6 +19,9 @@ export class StundenplanblockungStundenelement extends JavaObject {
 	public typ : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

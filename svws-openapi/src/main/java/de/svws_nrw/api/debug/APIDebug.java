@@ -31,7 +31,6 @@ import jakarta.ws.rs.core.UriBuilder;
 @Path("")
 @Tag(name = "Debug OpenAPI")
 public class APIDebug {
-
 	/** Der Pfad der Swagger-UI-Ressourcen in dem Swagger-UI-Jar */
 	private static final String pathSwaggerUIDist = "META-INF/resources/webjars/swagger-ui-dist";
 
@@ -61,6 +60,14 @@ public class APIDebug {
 	private static final Map<String, Boolean> mapApiIsPrivileged = Map.ofEntries(
 			Map.entry("server", false),
 			Map.entry("privileged", true));
+
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIDebug() {
+		// leer
+	}
 
 
 	/**

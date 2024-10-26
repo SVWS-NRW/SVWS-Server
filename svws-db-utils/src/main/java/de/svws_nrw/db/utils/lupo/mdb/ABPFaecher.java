@@ -330,4 +330,10 @@ public final class ABPFaecher {
 				+ ", Leitfach=" + Leitfach + ", Leitfach2=" + Leitfach2 + "]";
 	}
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPFaecher() {
+		// leer
+	}
 }

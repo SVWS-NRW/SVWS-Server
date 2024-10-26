@@ -44,6 +44,9 @@ export class Schild3KatalogEintragFilterFeldListe extends JavaObject {
 	public Zusatzbedingung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

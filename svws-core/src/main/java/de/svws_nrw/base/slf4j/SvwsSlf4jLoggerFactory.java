@@ -14,6 +14,13 @@ public final class SvwsSlf4jLoggerFactory implements ILoggerFactory {
 	// Eine Map mit den einzelnen SLF4J-Loggern und ihren Namen.
 	private final ConcurrentMap<String, Logger> _mapLogger = new ConcurrentHashMap<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SvwsSlf4jLoggerFactory() {
+		// leer
+	}
+
 	@Override
 	public Logger getLogger(final String name) {
 		return _mapLogger.computeIfAbsent(name, k -> new SvwsSlf4jLoggerAdapter(name));

@@ -49,6 +49,9 @@ export class GostJahrgangFachkombination extends JavaObject {
 	public hinweistext : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

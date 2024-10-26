@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "gibt die Informationen zu dem Ergebnis der Abschlussberechnung an.")
 @TranspilerDTO
 public class AbschlussErgebnis {
-
 	/** Gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss erworben wurde. */
 	@Schema(description = "gibt an, ob der Abschluss erfolgreich erworben wurde, bzw. bei einer Prognose, ob ein ein Abschluss vermutlich erworben wird.",
 			example = "true")
@@ -33,5 +32,12 @@ public class AbschlussErgebnis {
 	@ArraySchema(schema = @Schema(description = "der Log der Abschlussberechnung.",
 			example = "Ein Log, der die Entscheidungen bei der Prüfung des Abschlusses verdeutlicht"))
 	public List<String> log = null;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbschlussErgebnis() {
+		// leer
+	}
 
 }

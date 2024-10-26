@@ -38,4 +38,11 @@ public class ENMFloskelgruppe {
 			+ "der Floskeln, die dieser Floskelgruppe zugeordnet sind."))
 	public final @NotNull List<ENMFloskel> floskeln = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMFloskelgruppe() {
+		// leer
+	}
+
 }

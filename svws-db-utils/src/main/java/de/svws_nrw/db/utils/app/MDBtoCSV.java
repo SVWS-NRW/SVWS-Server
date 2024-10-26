@@ -45,6 +45,12 @@ public class MDBtoCSV {
 	/// Der Typ der MDB-Datei
 	private static MDBType type = MDBType.UNKNOWN;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MDBtoCSV() {
+		// leer
+	}
 
 	private static int cmpDate(final LocalDateTime a, final LocalDateTime b) {
 		if ((a == null) && (b == null))
@@ -56,7 +62,6 @@ public class MDBtoCSV {
 		return a.compareTo(b);
 	}
 
-
 	private static int cmpString(final String a, final String b) {
 		if ((a == null) && (b == null))
 			return 0;
@@ -67,7 +72,6 @@ public class MDBtoCSV {
 		return a.compareTo(b);
 	}
 
-
 	private static int cmpInt(final Integer a, final Integer b) {
 		if ((a == null) && (b == null))
 			return 0;
@@ -77,7 +81,6 @@ public class MDBtoCSV {
 			return 1;
 		return Integer.compare(a, b);
 	}
-
 
 	private static int cmpShort(final Short a, final Short b) {
 		if ((a == null) && (b == null))
@@ -100,14 +103,12 @@ public class MDBtoCSV {
 		return Byte.compare(a, b);
 	}
 
-
 	private static final Comparator<Row> compSortKurztext = (a, b) -> {
 		final int cmp = cmpInt(a.getInt("Sort"), b.getInt("Sort"));
 		if (cmp != 0)
 			return cmp;
 		return cmpString(a.getString("Kurztext"), b.getString("Kurztext"));
 	};
-
 
 	/**
 	 * Ermittelt den Typ der MDB-Datei anhand des übergebenen Strings
@@ -126,8 +127,6 @@ public class MDBtoCSV {
 			default -> MDBType.UNKNOWN;
 		};
 	}
-
-
 
 	/**
 	 * Bestimmt für die übergebene Tabelle eine Liste der Zeilen in

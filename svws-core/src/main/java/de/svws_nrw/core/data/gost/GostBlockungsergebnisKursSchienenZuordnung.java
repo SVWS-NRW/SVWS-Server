@@ -18,4 +18,11 @@ public class GostBlockungsergebnisKursSchienenZuordnung {
 	/** Die ID der Schiene */
 	public long idSchiene = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisKursSchienenZuordnung() {
+		// leer
+	}
+
 }

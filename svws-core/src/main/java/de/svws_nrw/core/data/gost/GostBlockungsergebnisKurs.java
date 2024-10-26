@@ -36,4 +36,12 @@ public class GostBlockungsergebnisKurs {
 
 	/** Die Schienen-IDs, denen der Kurs zugeordnet ist. */
 	public final @NotNull List<Long> schienen = new ArrayList<>();
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisKurs() {
+		// leer
+	}
+
 }

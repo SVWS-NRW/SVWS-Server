@@ -26,6 +26,9 @@ export class AbschlussErgebnis extends JavaObject {
 	public log : List<string> | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

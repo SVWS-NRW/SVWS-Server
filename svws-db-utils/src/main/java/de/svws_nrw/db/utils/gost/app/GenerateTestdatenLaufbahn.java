@@ -67,6 +67,12 @@ public class GenerateTestdatenLaufbahn {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GenerateTestdatenLaufbahn() {
+		// leer
+	}
 
 	/**
 	 * Diese Methode schreibt die übergebenen Daten in die angebene Datei.

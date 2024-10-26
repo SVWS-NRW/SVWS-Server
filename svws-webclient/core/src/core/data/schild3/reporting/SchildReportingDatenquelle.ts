@@ -47,6 +47,9 @@ export class SchildReportingDatenquelle extends JavaObject {
 	public attribute : List<SchildReportingDatenquelleAttribut> = new ArrayList<SchildReportingDatenquelleAttribut>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

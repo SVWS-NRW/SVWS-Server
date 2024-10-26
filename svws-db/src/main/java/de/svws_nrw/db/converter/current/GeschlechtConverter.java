@@ -19,6 +19,13 @@ public final class GeschlechtConverter extends DBAttributeConverter<Geschlecht, 
 	/** Die Instanz des Konverters */
 	public static final GeschlechtConverter instance = new GeschlechtConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GeschlechtConverter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final Geschlecht geschlecht) {
 		return geschlecht.id;

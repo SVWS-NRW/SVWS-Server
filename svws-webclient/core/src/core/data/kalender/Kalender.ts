@@ -52,6 +52,9 @@ export class Kalender extends JavaObject {
 	public besitzer : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

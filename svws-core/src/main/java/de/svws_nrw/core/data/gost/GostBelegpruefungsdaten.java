@@ -34,4 +34,11 @@ public class GostBelegpruefungsdaten {
 	@Schema(description = "die Informationen zu den nicht zulässigen und geforderten Fächerkombinationen", implementation = GostJahrgangFachkombination.class)
 	public @NotNull List<GostJahrgangFachkombination> gostFaecherKombinationen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBelegpruefungsdaten() {
+		// leer
+	}
+
 }

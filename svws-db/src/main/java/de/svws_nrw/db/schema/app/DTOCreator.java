@@ -38,6 +38,12 @@ public class DTOCreator {
 	/** Ein ArrayList mit allen generierten DTO-Klassen (voll qualifizierte Klassennamen) */
 	private static final ArrayList<String> allClasses = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DTOCreator() {
+		// leer
+	}
 
 	/**
 	 * Erstellt das Verzeichnis für die DTO-Packages

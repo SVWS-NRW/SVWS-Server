@@ -39,6 +39,9 @@ export class Schild3KatalogEintragFilterFehlendeEintraege extends JavaObject {
 	public Feldtyp : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

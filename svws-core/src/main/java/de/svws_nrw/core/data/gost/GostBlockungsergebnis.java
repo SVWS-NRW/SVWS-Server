@@ -40,4 +40,11 @@ public class GostBlockungsergebnis {
 	/** Die Informationen zur aktuellen Bewertung des Blockungsergebnisses */
 	public @NotNull GostBlockungsergebnisBewertung bewertung = new GostBlockungsergebnisBewertung();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnis() {
+		// leer
+	}
+
 }

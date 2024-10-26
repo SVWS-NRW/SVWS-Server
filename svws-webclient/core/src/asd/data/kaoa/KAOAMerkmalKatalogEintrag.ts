@@ -21,6 +21,9 @@ export class KAOAMerkmalKatalogEintrag extends CoreTypeData {
 	public bkAnlagen : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

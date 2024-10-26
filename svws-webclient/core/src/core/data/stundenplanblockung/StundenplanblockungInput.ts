@@ -42,6 +42,9 @@ export class StundenplanblockungInput extends JavaObject {
 	public lerngruppen : List<StundenplanblockungLerngruppe> = new ArrayList<StundenplanblockungLerngruppe>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

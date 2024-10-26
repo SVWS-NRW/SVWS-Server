@@ -59,6 +59,9 @@ export class ENMBKFach extends JavaObject {
 	public abschlussnote : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

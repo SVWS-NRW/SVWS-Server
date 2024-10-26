@@ -54,6 +54,9 @@ export class Schild3KatalogEintragSchuelerImportExport extends JavaObject {
 	public Reihenfolge : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

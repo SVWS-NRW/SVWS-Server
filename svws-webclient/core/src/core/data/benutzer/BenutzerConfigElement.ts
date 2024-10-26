@@ -14,6 +14,9 @@ export class BenutzerConfigElement extends JavaObject {
 	public value : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

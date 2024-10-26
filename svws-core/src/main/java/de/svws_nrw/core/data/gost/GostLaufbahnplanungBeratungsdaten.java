@@ -29,4 +29,11 @@ public class GostLaufbahnplanungBeratungsdaten {
 	@Schema(description = "das Rücklaufdatum des Wahlbogens der letzten Beratung im Rahmen der Laufbahnplanung", example = "22.2.2022")
 	public String ruecklaufdatum = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungBeratungsdaten() {
+		// leer
+	}
+
 }

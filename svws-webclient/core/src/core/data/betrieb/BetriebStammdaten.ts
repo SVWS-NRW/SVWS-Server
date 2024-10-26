@@ -142,6 +142,9 @@ export class BetriebStammdaten extends JavaObject {
 	public ansprechpartner : List<BetriebAnsprechpartner> = new ArrayList<BetriebAnsprechpartner>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

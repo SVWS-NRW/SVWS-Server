@@ -25,4 +25,11 @@ public class ENMFoerderschwerpunkt {
 	@Schema(description = "Die textuelle Bezeichnung des Förderschwerpunktes", example = "Sehen (Sehbehinderte)")
 	public String beschreibung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMFoerderschwerpunkt() {
+		// leer
+	}
+
 }

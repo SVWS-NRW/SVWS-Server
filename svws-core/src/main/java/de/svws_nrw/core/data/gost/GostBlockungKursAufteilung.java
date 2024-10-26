@@ -34,4 +34,11 @@ public class GostBlockungKursAufteilung {
 	@ArraySchema(schema = @Schema(implementation = Long.class, description = "Die IDs der Schüler, die dem zweiten Kurs zugeordnet werden."))
 	public @NotNull List<Long> schueler2 = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungKursAufteilung() {
+		// leer
+	}
+
 }

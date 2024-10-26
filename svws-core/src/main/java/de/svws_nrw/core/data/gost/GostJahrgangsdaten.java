@@ -85,4 +85,11 @@ public class GostJahrgangsdaten {
 	@ArraySchema(schema = @Schema(implementation = GostBeratungslehrer.class))
 	public final @NotNull List<GostBeratungslehrer> beratungslehrer = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostJahrgangsdaten() {
+		// leer
+	}
+
 }

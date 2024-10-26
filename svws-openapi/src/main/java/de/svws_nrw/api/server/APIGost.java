@@ -77,6 +77,13 @@ import java.util.List;
 public class APIGost {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIGost() {
+		// leer
+	}
+
+	/**
 	 * Liefert eine Liste aller Abiturjahrgänge, welche in der Datenbank für die Laufbahnplanung angelegt sind.
 	 * Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Auslesen von Kataloginformationen
 	 * besitzt.

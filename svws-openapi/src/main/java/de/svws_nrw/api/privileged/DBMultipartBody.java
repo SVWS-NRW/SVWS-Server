@@ -33,4 +33,11 @@ public class DBMultipartBody {
 	@FormParam("schemaUserPassword")
 	public String schemaUserPassword;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DBMultipartBody() {
+		// leer
+	}
+
 }

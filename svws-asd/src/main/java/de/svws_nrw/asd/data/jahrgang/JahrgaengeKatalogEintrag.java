@@ -16,4 +16,11 @@ public class JahrgaengeKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 	// keine weiteren Attribute vorhanden
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public JahrgaengeKatalogEintrag() {
+		// leer
+	}
+
 }

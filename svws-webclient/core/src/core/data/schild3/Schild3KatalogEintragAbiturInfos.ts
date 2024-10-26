@@ -44,6 +44,9 @@ export class Schild3KatalogEintragAbiturInfos extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

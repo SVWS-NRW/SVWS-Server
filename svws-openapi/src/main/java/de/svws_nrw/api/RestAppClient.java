@@ -17,6 +17,13 @@ public final class RestAppClient extends Application {
 			APIClient.class,
 			OpenAPICorsFilter.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppClient() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return this.classes;

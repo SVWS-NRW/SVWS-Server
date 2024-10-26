@@ -79,4 +79,11 @@ public class SchildReportingSchuelerLernabschnitt {
 
 	// TODO weitere Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchildReportingSchuelerLernabschnitt() {
+		// leer
+	}
+
 }

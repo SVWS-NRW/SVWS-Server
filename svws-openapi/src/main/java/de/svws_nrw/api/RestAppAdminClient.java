@@ -20,6 +20,13 @@ public final class RestAppAdminClient extends Application {
 			APIAdminClient.class,
 			OpenAPICorsFilter.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppAdminClient() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return this.classes;

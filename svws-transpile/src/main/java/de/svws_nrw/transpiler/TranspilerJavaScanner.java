@@ -76,6 +76,13 @@ import com.sun.source.util.TreePathScanner;
  */
 public final class TranspilerJavaScanner extends TreePathScanner<Object, Transpiler> {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public TranspilerJavaScanner() {
+		// leer
+	}
+
 	@Override
 	public Object visitCompilationUnit(final CompilationUnitTree node, final Transpiler transpiler) {
 		transpiler.visitTree(getCurrentPath(), node);

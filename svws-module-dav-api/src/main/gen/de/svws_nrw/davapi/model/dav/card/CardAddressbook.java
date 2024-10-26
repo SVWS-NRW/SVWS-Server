@@ -33,6 +33,13 @@ public class CardAddressbook {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CardAddressbook() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

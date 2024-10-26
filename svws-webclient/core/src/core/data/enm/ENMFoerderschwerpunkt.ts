@@ -19,6 +19,9 @@ export class ENMFoerderschwerpunkt extends JavaObject {
 	public beschreibung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -19,6 +19,13 @@ public final class SvwsSlf4jServiceProvider implements SLF4JServiceProvider {
 	private IMarkerFactory _markerFactory;
 	private MDCAdapter _mdcAdapter;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SvwsSlf4jServiceProvider() {
+		// leer
+	}
+
 	@Override
 	public ILoggerFactory getLoggerFactory() {
 		return _loggerFactory;

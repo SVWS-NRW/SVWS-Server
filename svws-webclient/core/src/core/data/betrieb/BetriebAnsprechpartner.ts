@@ -54,6 +54,9 @@ export class BetriebAnsprechpartner extends JavaObject {
 	public GU_ID : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

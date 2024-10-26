@@ -21,4 +21,11 @@ public class SchuelerblockungOutput {
 	/** Alle Fachwahlen-Zuordnungen. */
 	public @NotNull List<SchuelerblockungOutputFachwahlZuKurs> fachwahlenZuKurs = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungOutput() {
+		// leer
+	}
+
 }

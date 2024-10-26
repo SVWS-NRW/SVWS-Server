@@ -53,6 +53,9 @@ export class GostLaufbahnplanungDatenSchueler extends JavaObject {
 	public sprachendaten : Sprachendaten = new Sprachendaten();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

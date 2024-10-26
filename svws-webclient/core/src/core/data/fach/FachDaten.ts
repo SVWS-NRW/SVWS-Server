@@ -99,6 +99,9 @@ export class FachDaten extends JavaObject {
 	public holeAusAltenLernabschnitten : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -22,6 +22,9 @@ export class GostBelegpruefungErgebnis extends JavaObject {
 	public log : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

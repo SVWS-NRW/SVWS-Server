@@ -27,6 +27,9 @@ export class GEAbschlussFaecher extends JavaObject {
 	public faecher : List<GEAbschlussFach> = new ArrayList<GEAbschlussFach>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

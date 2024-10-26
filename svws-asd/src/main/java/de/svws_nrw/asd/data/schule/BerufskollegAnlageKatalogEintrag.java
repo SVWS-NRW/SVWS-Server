@@ -16,4 +16,11 @@ public class BerufskollegAnlageKatalogEintrag extends CoreTypeData {
 
 	//keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BerufskollegAnlageKatalogEintrag() {
+		// leer
+	}
+
 }

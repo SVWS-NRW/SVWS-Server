@@ -48,4 +48,11 @@ public class GostJahrgang {
 			description = "gibt an, ob für die jeweiligen Halbjahre der Oberstufe bereits (Quartals-)Noten in den Leistungsdaten vorhanden sind (0=EF.1, 1=EF.2, ...)"))
 	public @NotNull boolean[] existierenNotenInLeistungsdaten = new boolean[6];
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostJahrgang() {
+		// leer
+	}
+
 }

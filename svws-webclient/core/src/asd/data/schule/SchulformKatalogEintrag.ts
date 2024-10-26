@@ -9,6 +9,9 @@ export class SchulformKatalogEintrag extends CoreTypeData {
 	public hatGymOb : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

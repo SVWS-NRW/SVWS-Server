@@ -31,6 +31,9 @@ export class AbschlussErgebnisBerufsbildend extends JavaObject {
 	public log : List<string> | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

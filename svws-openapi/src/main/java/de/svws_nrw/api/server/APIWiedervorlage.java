@@ -39,6 +39,13 @@ import jakarta.ws.rs.core.Response;
 public class APIWiedervorlage {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIWiedervorlage() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste Einträge in der Wiedervorlage des Benutzers,
 	 * welche diese Anfrage gestellt hat.
 	 *

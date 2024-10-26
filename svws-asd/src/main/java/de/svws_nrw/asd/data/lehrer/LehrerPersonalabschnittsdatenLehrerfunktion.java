@@ -25,4 +25,11 @@ public class LehrerPersonalabschnittsdatenLehrerfunktion {
 	@Schema(description = "Die ID in dem Katalog der schulspezifischen Lehrerfunktionen.", example = "4713")
 	public long idFunktion = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerPersonalabschnittsdatenLehrerfunktion() {
+		// leer
+	}
+
 }

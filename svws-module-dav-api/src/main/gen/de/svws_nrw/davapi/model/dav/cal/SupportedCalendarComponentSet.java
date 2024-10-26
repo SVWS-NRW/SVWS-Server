@@ -15,6 +15,13 @@ public class SupportedCalendarComponentSet {
     @XmlElement(required = true)
     protected List<CalendarComponent> calendarComponents;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SupportedCalendarComponentSet() {
+		// leer
+	}
+
     public List<CalendarComponent> getCalendarComponents() {
         if (calendarComponents == null) {
             calendarComponents = new ArrayList<>();

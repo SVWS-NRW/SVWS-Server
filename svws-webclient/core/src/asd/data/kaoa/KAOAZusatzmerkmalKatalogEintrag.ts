@@ -14,6 +14,9 @@ export class KAOAZusatzmerkmalKatalogEintrag extends CoreTypeData {
 	public optionsart : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

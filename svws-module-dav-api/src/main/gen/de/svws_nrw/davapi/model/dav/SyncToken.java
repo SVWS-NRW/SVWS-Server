@@ -33,6 +33,13 @@ public class SyncToken {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SyncToken() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

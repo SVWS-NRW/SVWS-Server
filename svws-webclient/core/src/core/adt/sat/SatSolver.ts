@@ -12,6 +12,9 @@ export abstract class SatSolver extends JavaObject implements JavaFunction<SatIn
 	protected maxTimeMillis : number = 1000;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

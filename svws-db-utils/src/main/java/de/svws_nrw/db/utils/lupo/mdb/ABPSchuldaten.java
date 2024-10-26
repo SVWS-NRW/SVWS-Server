@@ -150,7 +150,12 @@ public final class ABPSchuldaten {
 	private static final String fieldSMTP_SSL = "SMTP_SSL";
 	private static final String fieldSMTP_StartTLS = "SMTP_StartTLS";
 
-
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuldaten() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schuldaten" aus der LuPO-Datei ein.

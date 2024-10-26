@@ -40,6 +40,9 @@ export class Einwilligungsart extends JavaObject {
 	public personTyp : number = PersonTyp.SCHUELER.id;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

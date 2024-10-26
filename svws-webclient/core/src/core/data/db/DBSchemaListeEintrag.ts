@@ -14,6 +14,9 @@ export class DBSchemaListeEintrag extends JavaObject {
 	public isDefault : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

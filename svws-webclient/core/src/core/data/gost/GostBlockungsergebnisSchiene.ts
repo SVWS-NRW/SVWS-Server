@@ -17,6 +17,9 @@ export class GostBlockungsergebnisSchiene extends JavaObject {
 	public readonly kurse : List<GostBlockungsergebnisKurs> = new ArrayList<GostBlockungsergebnisKurs>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

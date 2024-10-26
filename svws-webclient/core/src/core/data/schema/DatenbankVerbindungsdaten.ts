@@ -24,6 +24,9 @@ export class DatenbankVerbindungsdaten extends JavaObject {
 	public schema : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -46,11 +46,21 @@ public class SyncCollection {
     @XmlElement(name = "sync-token", required = true)
     @XmlSchemaType(name = "anyURI")
     protected String syncToken;
+
     @XmlElement(name = "sync-level", required = true)
     protected String syncLevel;
+
     protected Limit limit;
+
     @XmlElement(required = true)
     protected Prop prop;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SyncCollection() {
+		// leer
+	}
 
     /**
      * Gets the value of the syncToken property.
@@ -72,7 +82,7 @@ public class SyncCollection {
      *     {@link String }
      *
      */
-    public void setSyncToken(String value) {
+    public void setSyncToken(final String value) {
         this.syncToken = value;
     }
 
@@ -96,7 +106,7 @@ public class SyncCollection {
      *     {@link String }
      *
      */
-    public void setSyncLevel(String value) {
+    public void setSyncLevel(final String value) {
         this.syncLevel = value;
     }
 
@@ -120,7 +130,7 @@ public class SyncCollection {
      *     {@link Limit }
      *
      */
-    public void setLimit(Limit value) {
+    public void setLimit(final Limit value) {
         this.limit = value;
     }
 
@@ -144,7 +154,7 @@ public class SyncCollection {
      *     {@link Prop }
      *
      */
-    public void setProp(Prop value) {
+    public void setProp(final Prop value) {
         this.prop = value;
     }
 

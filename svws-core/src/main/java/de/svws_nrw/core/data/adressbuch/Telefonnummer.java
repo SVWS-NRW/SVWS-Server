@@ -23,4 +23,11 @@ public class Telefonnummer {
 	 */
 	@Schema(description = "die Telefon-, Fax- oder Pagernummer")
 	public @NotNull String number = "";
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Telefonnummer() {
+		// leer
+	}
 }

@@ -41,6 +41,13 @@ import jakarta.ws.rs.core.Response;
 public class APIErzieher {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIErzieher() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Erzieher.
 	 *
 	 * @param schema    das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

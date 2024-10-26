@@ -16,4 +16,11 @@ public class UebergangsempfehlungKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UebergangsempfehlungKatalogEintrag() {
+		// leer
+	}
+
 }

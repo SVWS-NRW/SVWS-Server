@@ -25,4 +25,11 @@ public class SchuelerSchulbesuchMerkmal {
 	@Schema(description = "das Datum, bis wann das Merkmal vorliegt", example = "2008-07-31")
 	public String datumBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerSchulbesuchMerkmal() {
+		// leer
+	}
+
 }

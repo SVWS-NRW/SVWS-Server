@@ -14,6 +14,13 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class BerufskollegFachklassenKatalogDaten {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BerufskollegFachklassenKatalogDaten() {
+		// leer
+	}
+
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(description = "die ID des Katalog-Eintrags", example = "4711")
 	public long id;

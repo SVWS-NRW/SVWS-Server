@@ -16,6 +16,13 @@ public abstract class SatSolver implements Function<SatInput, SatOutput> {
 	protected long maxTimeMillis = 1000L; // Default 1 Sekunde.
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SatSolver() {
+		// leer
+	}
+
+	/**
 	 * Setzt die maximale Zeit, die der Solver zum Lösen verwenden darf.
 	 *
 	 * @param pMaxTimeMillis die maximale Zeit, die der Solver zum Lösen verwenden darf.

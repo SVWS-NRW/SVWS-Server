@@ -127,6 +127,9 @@ export class LehrerStammdaten extends JavaObject {
 	public readonly leitungsfunktionen : List<Schulleitung> = new ArrayList<Schulleitung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

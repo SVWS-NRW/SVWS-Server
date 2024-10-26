@@ -37,6 +37,9 @@ export class BKFBFach extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

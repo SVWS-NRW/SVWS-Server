@@ -15,4 +15,11 @@ public class SprachreferenzniveauKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SprachreferenzniveauKatalogEintrag() {
+		// leer
+	}
+
 }

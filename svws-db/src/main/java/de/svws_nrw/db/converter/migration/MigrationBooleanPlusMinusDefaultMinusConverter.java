@@ -18,6 +18,14 @@ public final class MigrationBooleanPlusMinusDefaultMinusConverter extends DBAttr
 	/** Die Instanz des Konverters */
 	public static final MigrationBooleanPlusMinusDefaultMinusConverter instance = new MigrationBooleanPlusMinusDefaultMinusConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrationBooleanPlusMinusDefaultMinusConverter() {
+		// leer
+	}
+
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		return ((value != null) && value) ? "+" : "-";

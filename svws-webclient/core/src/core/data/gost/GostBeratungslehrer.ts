@@ -24,6 +24,9 @@ export class GostBeratungslehrer extends JavaObject {
 	public vorname : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

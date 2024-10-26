@@ -35,4 +35,11 @@ public class AdressbuchEintrag {
 	@Schema(description = "Versionskennzeichen des Kontakts", example = "78")
 	public @NotNull String version = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AdressbuchEintrag() {
+		// leer
+	}
+
 }

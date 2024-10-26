@@ -35,4 +35,11 @@ public class SchuelerblockungInput {
 	@ArraySchema(schema = @Schema(implementation = String.class))
 	public @NotNull List<String> fachwahlenText = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerblockungInput() {
+		// leer
+	}
+
 }

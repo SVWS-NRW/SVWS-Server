@@ -17,6 +17,9 @@ export class BenutzerConfig extends JavaObject {
 	public global : List<BenutzerConfigElement> = new ArrayList<BenutzerConfigElement>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

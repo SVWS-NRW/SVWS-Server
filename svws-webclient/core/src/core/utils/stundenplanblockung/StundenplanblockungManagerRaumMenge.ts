@@ -15,6 +15,9 @@ export class StundenplanblockungManagerRaumMenge extends JavaObject {
 	private readonly _map : JavaMap<number, StundenplanblockungManagerRaum> = new HashMap<number, StundenplanblockungManagerRaum>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

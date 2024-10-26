@@ -26,4 +26,11 @@ public class StundenplanAufsichtsbereich {
 	@Schema(description = "die Beschreibung des Aufsichtsbereichs", example = "Der Sportplatz für Pausensport")
 	public @NotNull String beschreibung = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanAufsichtsbereich() {
+		// leer
+	}
+
 }

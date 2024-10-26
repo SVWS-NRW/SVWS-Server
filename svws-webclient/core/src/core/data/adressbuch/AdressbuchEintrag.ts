@@ -24,6 +24,9 @@ export class AdressbuchEintrag extends JavaObject {
 	public version : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

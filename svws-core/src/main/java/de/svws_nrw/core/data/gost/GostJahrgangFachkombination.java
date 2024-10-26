@@ -55,4 +55,11 @@ public class GostJahrgangFachkombination {
 			example = "Der Sport-Leistungskurs ist an dieser Schule nur in Verbindung mit einem Mathematik-Leistungskurs wählbar.")
 	public @NotNull String hinweistext = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostJahrgangFachkombination() {
+		// leer
+	}
+
 }

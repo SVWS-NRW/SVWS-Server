@@ -59,6 +59,9 @@ export class AbiturFachbelegungHalbjahr extends JavaObject {
 	public block1kursAufZeugnis : boolean | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

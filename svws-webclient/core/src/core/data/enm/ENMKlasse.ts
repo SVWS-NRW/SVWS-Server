@@ -36,6 +36,9 @@ export class ENMKlasse extends JavaObject {
 	public klassenlehrer : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

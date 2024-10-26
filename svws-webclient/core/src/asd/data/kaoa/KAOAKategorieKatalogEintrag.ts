@@ -11,6 +11,9 @@ export class KAOAKategorieKatalogEintrag extends CoreTypeData {
 	public jahrgaenge : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

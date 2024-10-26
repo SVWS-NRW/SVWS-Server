@@ -14,6 +14,13 @@ import jakarta.validation.constraints.NotNull;
 @TranspilerDTO
 public class BenutzerAllgemeinCredentials {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerAllgemeinCredentials() {
+		// leer
+	}
+
 	/** Benutzername des Account-Credentials*/
 	@Schema(description = "Benutzername des Account-Credentials", example = "Max Musterman")
 	public @NotNull String anzeigename = "";

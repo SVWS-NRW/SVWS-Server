@@ -38,6 +38,13 @@ public class CalCalendar {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalCalendar() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

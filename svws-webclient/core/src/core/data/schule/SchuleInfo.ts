@@ -44,6 +44,9 @@ export class SchuleInfo extends JavaObject {
 	public ort : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

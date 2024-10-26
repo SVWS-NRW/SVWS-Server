@@ -20,4 +20,11 @@ public class SchuleStatistikdatenGesamt {
 
 	// TODO die weiteren Attribute nach und nach ergänzen...
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuleStatistikdatenGesamt() {
+		// leer
+	}
+
 }

@@ -21,6 +21,13 @@ public final class UhrzeitConverter extends DBAttributeConverter<Integer, Timest
 	/** Die Instanz des Konverters */
 	public static final UhrzeitConverter instance = new UhrzeitConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UhrzeitConverter() {
+		// leer
+	}
+
 	@Override
 	public Timestamp convertToDatabaseColumn(final Integer attribute) {
 		if ((attribute == null) || (attribute < 0) || (attribute >= 1440)) // 24*60 = 1440

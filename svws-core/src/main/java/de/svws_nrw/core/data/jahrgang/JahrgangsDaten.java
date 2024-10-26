@@ -61,4 +61,12 @@ public class JahrgangsDaten {
 	public Long gueltigBis;
 
 	// TODO Weitere Daten
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public JahrgangsDaten() {
+		// leer
+	}
+
 }

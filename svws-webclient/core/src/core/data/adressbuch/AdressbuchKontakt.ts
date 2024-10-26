@@ -82,6 +82,9 @@ export class AdressbuchKontakt extends AdressbuchEintrag {
 	public idEltern : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

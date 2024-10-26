@@ -41,6 +41,12 @@ import jakarta.ws.rs.core.Response;
 @Tag(name = "Server")
 public class APIKataloge {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIKataloge() {
+		// leer
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Abfrage des Strassen-Kataloges.

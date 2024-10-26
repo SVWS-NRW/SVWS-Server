@@ -24,6 +24,9 @@ export class KatalogEintragStrassen extends JavaObject {
 	public Stand : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

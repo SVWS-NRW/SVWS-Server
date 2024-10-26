@@ -20,6 +20,13 @@ public final class DatumUhrzeitConverter extends DBAttributeConverter<String, Ti
 	/** Die Instanz des Konverters */
 	public static final DatumUhrzeitConverter instance = new DatumUhrzeitConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DatumUhrzeitConverter() {
+		// leer
+	}
+
 	@Override
 	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute))) ? null

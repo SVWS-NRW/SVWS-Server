@@ -134,12 +134,17 @@ public final class ABPFachgruppen {
 				}).collect(Collectors.toMap(f -> f.FachKuerzel, f -> f));
 	}
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPFachgruppen() {
+		// leer
+	}
 
 	@Override
 	public String toString() {
 		return "ABPFachgruppen [FachKuerzel=" + FachKuerzel + ", Bezeichnung=" + Bezeichnung + ", FachgruppeKrz=" + FachgruppeKrz
 				+ ", Aufgabenfeld=" + Aufgabenfeld + ", Sortierung=" + Sortierung + "]";
 	}
-
 
 }

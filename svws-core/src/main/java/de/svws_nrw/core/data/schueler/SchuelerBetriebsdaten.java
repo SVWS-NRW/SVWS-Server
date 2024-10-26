@@ -62,4 +62,11 @@ public class SchuelerBetriebsdaten {
 	@Schema(description = "BetreuungslehrerID des Betriebeeintrags beim Schüler", example = "1")
 	public Long betreuungslehrer_id;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerBetriebsdaten() {
+		// leer
+	}
+
 }

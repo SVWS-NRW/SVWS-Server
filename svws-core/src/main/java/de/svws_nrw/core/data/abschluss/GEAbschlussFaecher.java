@@ -35,4 +35,11 @@ public class GEAbschlussFaecher {
 	@Schema(description = "Die Fachinformationen")
 	public @NotNull List<GEAbschlussFach> faecher = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GEAbschlussFaecher() {
+		// leer
+	}
+
 }

@@ -14,6 +14,13 @@ import jakarta.ws.rs.core.MultivaluedMap;
  */
 public final class OpenAPICorsFilter implements ContainerResponseFilter, ContainerRequestFilter {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OpenAPICorsFilter() {
+		// leer
+	}
+
 	@Override
 	public void filter(final ContainerRequestContext requestContext) throws IOException {
 //		MultivaluedMap<String, String> headers = requestContext.getHeaders();

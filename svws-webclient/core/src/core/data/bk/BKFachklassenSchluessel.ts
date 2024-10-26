@@ -14,6 +14,9 @@ export class BKFachklassenSchluessel extends JavaObject {
 	public schluessel : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

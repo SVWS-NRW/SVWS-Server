@@ -29,6 +29,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "ServerAlgorithmen")
 public class APIAlgoGostAbschluss {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIAlgoGostAbschluss() {
+		// leer
+	}
 
 	/**
 	 * Die OpenAPI-Methode für die Prüfung der Belegprüfung der Abiturdaten.

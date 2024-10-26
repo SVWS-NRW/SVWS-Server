@@ -16,6 +16,9 @@ export class KAOAAnschlussoptionenKatalogEintrag extends CoreTypeData {
 	public anzeigeZusatzmerkmal : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

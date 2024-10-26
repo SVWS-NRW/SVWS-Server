@@ -77,4 +77,11 @@ public class ErzieherStammdaten {
 	@Schema(description = "Anmerkungen zum Erzieher", example = "was auch immer")
 	public String bemerkungen;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ErzieherStammdaten() {
+		// leer
+	}
+
 }

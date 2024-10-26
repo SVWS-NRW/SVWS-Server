@@ -52,6 +52,9 @@ export class StundenplanUnterricht extends JavaObject {
 	public schienen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

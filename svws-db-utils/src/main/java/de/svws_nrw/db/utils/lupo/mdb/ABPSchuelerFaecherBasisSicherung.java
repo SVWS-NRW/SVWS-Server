@@ -108,6 +108,12 @@ public final class ABPSchuelerFaecherBasisSicherung {
 	private static final String fieldFachgruppe = "Fachgruppe";
 	private static final String fieldAufgabenfeld = "Aufgabenfeld";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuelerFaecherBasisSicherung() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecherBasisSicherung" aus der

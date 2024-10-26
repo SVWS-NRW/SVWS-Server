@@ -10,6 +10,9 @@ import { LogLevel } from '../../../../core/logger/LogLevel';
 export class BKAnlageA01Abschluss extends Service<BKAnlageAFaecher, AbschlussErgebnisBerufsbildend> {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -14,6 +14,9 @@ export class GostBlockungsergebnisKursSchuelerZuordnung extends JavaObject {
 	public idSchueler : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -239,6 +239,9 @@ export class SchuelerLernabschnittsdaten extends JavaObject {
 	public leistungsdaten : List<SchuelerLeistungsdaten> = new ArrayList<SchuelerLeistungsdaten>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

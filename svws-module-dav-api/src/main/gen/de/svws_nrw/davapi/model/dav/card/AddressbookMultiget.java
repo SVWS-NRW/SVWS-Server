@@ -36,6 +36,13 @@ import de.svws_nrw.davapi.model.dav.Prop;
 @XmlRootElement(name = "addressbook-multiget", namespace = "urn:ietf:params:xml:ns:carddav")
 public class AddressbookMultiget {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AddressbookMultiget() {
+		// leer
+	}
+
     @XmlElement(required = true, namespace = "DAV:")
     protected Prop prop;
 
@@ -59,7 +66,7 @@ public class AddressbookMultiget {
      *     {@link Prop }
      *
      */
-    public void setProp(Prop value) {
+    public void setProp(final Prop value) {
         this.prop = value;
     }
 

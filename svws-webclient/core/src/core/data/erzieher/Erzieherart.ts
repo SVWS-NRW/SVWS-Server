@@ -14,6 +14,9 @@ export class Erzieherart extends JavaObject {
 	public bezeichnung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

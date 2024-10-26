@@ -82,11 +82,17 @@ public final class RestAppServer extends Application {
 			OpenAPICorsFilter.class,
 			OpenApiServer.class);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public RestAppServer() {
+		// leer
+	}
+
 	@Override
 	public Set<Class<?>> getClasses() {
 		return this.classes;
 	}
-
 
 	/**
 	 * Gibt die Pfad-Spezifikation für die App zurück
@@ -107,7 +113,6 @@ public final class RestAppServer extends Application {
 		return pathSpec;
 	}
 
-
 	/**
 	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist oder nicht
 	 *
@@ -126,7 +131,6 @@ public final class RestAppServer extends Application {
 		return false;
 	}
 
-
 	/**
 	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist oder nicht
 	 *
@@ -137,7 +141,6 @@ public final class RestAppServer extends Application {
 	public static boolean checkIsInPathSpecification(final String path) {
 		return checkIsInPathSpecification(pathSpec, path);
 	}
-
 
 	/**
 	 * Prüft, ob der übergebene Pfad in der Pfad-Spezifikation enthalten ist,

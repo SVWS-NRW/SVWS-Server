@@ -16,4 +16,11 @@ public class PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag extends Cor
 
 	// Keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public PrimarstufeSchuleingangsphaseBesuchsjahreKatalogEintrag() {
+		// leer
+	}
+
 }

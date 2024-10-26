@@ -86,6 +86,13 @@ public class Prop {
     @XmlElement(name="principal-URL")
     private PrincipalURL principalURL;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Prop() {
+		// leer
+	}
+
     /**
      * Gets the value of the creationdate property.
      *
@@ -106,7 +113,7 @@ public class Prop {
      *     {@link Creationdate }
      *
      */
-    public void setCreationdate(Creationdate value) {
+    public void setCreationdate(final Creationdate value) {
         this.creationdate = value;
     }
 
@@ -130,7 +137,7 @@ public class Prop {
      *     {@link Displayname }
      *
      */
-    public void setDisplayname(Displayname value) {
+    public void setDisplayname(final Displayname value) {
         this.displayname = value;
     }
 
@@ -154,7 +161,7 @@ public class Prop {
      *     {@link Getcontentlanguage }
      *
      */
-    public void setGetcontentlanguage(Getcontentlanguage value) {
+    public void setGetcontentlanguage(final Getcontentlanguage value) {
         this.getcontentlanguage = value;
     }
 
@@ -178,7 +185,7 @@ public class Prop {
      *     {@link Getcontentlength }
      *
      */
-    public void setGetcontentlength(Getcontentlength value) {
+    public void setGetcontentlength(final Getcontentlength value) {
         this.getcontentlength = value;
     }
 
@@ -202,7 +209,7 @@ public class Prop {
      *     {@link Getcontenttype }
      *
      */
-    public void setGetcontenttype(Getcontenttype value) {
+    public void setGetcontenttype(final Getcontenttype value) {
         this.getcontenttype = value;
     }
 
@@ -226,7 +233,7 @@ public class Prop {
      *     {@link Getetag }
      *
      */
-    public void setGetetag(Getetag value) {
+    public void setGetetag(final Getetag value) {
         this.getetag = value;
     }
 
@@ -250,7 +257,7 @@ public class Prop {
      *     {@link Getlastmodified }
      *
      */
-    public void setGetlastmodified(Getlastmodified value) {
+    public void setGetlastmodified(final Getlastmodified value) {
         this.getlastmodified = value;
     }
 
@@ -274,7 +281,7 @@ public class Prop {
      *     {@link Lockdiscovery }
      *
      */
-    public void setLockdiscovery(Lockdiscovery value) {
+    public void setLockdiscovery(final Lockdiscovery value) {
         this.lockdiscovery = value;
     }
 
@@ -298,7 +305,7 @@ public class Prop {
      *     {@link Resourcetype }
      *
      */
-    public void setResourcetype(Resourcetype value) {
+    public void setResourcetype(final Resourcetype value) {
         this.resourcetype = value;
     }
 
@@ -322,7 +329,7 @@ public class Prop {
      *     {@link Supportedlock }
      *
      */
-    public void setSupportedlock(Supportedlock value) {
+    public void setSupportedlock(final Supportedlock value) {
         this.supportedlock = value;
     }
 
@@ -346,7 +353,7 @@ public class Prop {
      *     {@link SupportedReportSet }
      *
      */
-    public void setSupportedReportSet(SupportedReportSet value) {
+    public void setSupportedReportSet(final SupportedReportSet value) {
         this.supportedReportSet = value;
     }
 
@@ -370,7 +377,7 @@ public class Prop {
      *     {@link QuotaAvailableBytes }
      *
      */
-    public void setQuotaAvailableBytes(QuotaAvailableBytes value) {
+    public void setQuotaAvailableBytes(final QuotaAvailableBytes value) {
         this.quotaAvailableBytes = value;
     }
 
@@ -394,7 +401,7 @@ public class Prop {
      *     {@link QuotaUsedBytes }
      *
      */
-    public void setQuotaUsedBytes(QuotaUsedBytes value) {
+    public void setQuotaUsedBytes(final QuotaUsedBytes value) {
         this.quotaUsedBytes = value;
     }
 
@@ -402,7 +409,7 @@ public class Prop {
 		return owner;
 	}
 
-	public void setOwner(Owner owner) {
+	public void setOwner(final Owner owner) {
 		this.owner = owner;
 	}
 
@@ -410,7 +417,7 @@ public class Prop {
 		return group;
 	}
 
-	public void setGroup(Group group) {
+	public void setGroup(final Group group) {
 		this.group = group;
 	}
 
@@ -418,7 +425,7 @@ public class Prop {
 		return acl;
 	}
 
-	public void setAcl(Acl acl) {
+	public void setAcl(final Acl acl) {
 		this.acl = acl;
 	}
 
@@ -426,7 +433,7 @@ public class Prop {
 		return principalCollectionSet;
 	}
 
-	public void setPrincipalCollectionSet(PrincipalCollectionSet principalCollectionSet) {
+	public void setPrincipalCollectionSet(final PrincipalCollectionSet principalCollectionSet) {
 		this.principalCollectionSet = principalCollectionSet;
 	}
 
@@ -434,7 +441,7 @@ public class Prop {
 		return principalURL;
 	}
 
-	public void setPrincipalURL(PrincipalURL principalURL) {
+	public void setPrincipalURL(final PrincipalURL principalURL) {
 		this.principalURL = principalURL;
 	}
 
@@ -457,7 +464,7 @@ public class Prop {
         return getctag;
     }
 
-    public void setGetctag(Getctag getctag) {
+    public void setGetctag(final Getctag getctag) {
         this.getctag = getctag;
     }
 
@@ -465,7 +472,7 @@ public class Prop {
         return currentUserPrincipal;
     }
 
-    public void setCurrentUserPrincipal(CurrentUserPrincipal currentUserPrincipal) {
+    public void setCurrentUserPrincipal(final CurrentUserPrincipal currentUserPrincipal) {
         this.currentUserPrincipal = currentUserPrincipal;
     }
 
@@ -473,7 +480,7 @@ public class Prop {
         return currentUserPrivilegeSet;
     }
 
-    public void setCurrentUserPrivilegeSet(CurrentUserPrivilegeSet currentUserPrivilegeSet) {
+    public void setCurrentUserPrivilegeSet(final CurrentUserPrivilegeSet currentUserPrivilegeSet) {
         this.currentUserPrivilegeSet = currentUserPrivilegeSet;
     }
 
@@ -481,7 +488,7 @@ public class Prop {
         return syncToken;
     }
 
-    public void setSyncToken(SyncToken syncToken) {
+    public void setSyncToken(final SyncToken syncToken) {
         this.syncToken = syncToken;
     }
 
@@ -490,7 +497,7 @@ public class Prop {
         return addressbookHomeSet;
     }
 
-    public void setAddressbookHomeSet(AddressbookHomeSet addressbookHomeSet) {
+    public void setAddressbookHomeSet(final AddressbookHomeSet addressbookHomeSet) {
         this.addressbookHomeSet = addressbookHomeSet;
     }
 
@@ -498,7 +505,7 @@ public class Prop {
         return addressData;
     }
 
-    public void setAddressData(CardAddressData addressData) {
+    public void setAddressData(final CardAddressData addressData) {
         this.addressData = addressData;
     }
 
@@ -506,7 +513,7 @@ public class Prop {
         return supportedAddressData;
     }
 
-    public void setSupportedAddressData(SupportedAddressData supportedAddressData) {
+    public void setSupportedAddressData(final SupportedAddressData supportedAddressData) {
         this.supportedAddressData = supportedAddressData;
     }
 
@@ -518,7 +525,7 @@ public class Prop {
 		return calendarHomeSet;
 	}
 
-	public void setCalendarHomeSet(CalendarHomeSet calendarHomeSet) {
+	public void setCalendarHomeSet(final CalendarHomeSet calendarHomeSet) {
 		this.calendarHomeSet = calendarHomeSet;
 	}
 
@@ -529,7 +536,7 @@ public class Prop {
 		return supportedCalendarComponentSet;
 	}
 
-	public void setSupportedCalendarComponentSet(SupportedCalendarComponentSet supportedCalendarComponentSet) {
+	public void setSupportedCalendarComponentSet(final SupportedCalendarComponentSet supportedCalendarComponentSet) {
 		this.supportedCalendarComponentSet = supportedCalendarComponentSet;
 	}
 
@@ -540,7 +547,7 @@ public class Prop {
 		return calendarColor;
 	}
 
-	public void setCalendarColor(CalendarColor calendarColor) {
+	public void setCalendarColor(final CalendarColor calendarColor) {
 		this.calendarColor = calendarColor;
 	}
 
@@ -551,7 +558,7 @@ public class Prop {
 		return calendarUserAddressSet;
 	}
 
-	public void setCalendarUserAddressSet(CalendarUserAddressSet calendarUserAddressSet) {
+	public void setCalendarUserAddressSet(final CalendarUserAddressSet calendarUserAddressSet) {
 		this.calendarUserAddressSet = calendarUserAddressSet;
 	}
 
@@ -562,7 +569,7 @@ public class Prop {
 		return scheduleInboxUrl;
 	}
 
-	public void setScheduleInboxUrl(ScheduleInboxUrl scheduleInboxUrl) {
+	public void setScheduleInboxUrl(final ScheduleInboxUrl scheduleInboxUrl) {
 		this.scheduleInboxUrl = scheduleInboxUrl;
 	}
 
@@ -573,7 +580,7 @@ public class Prop {
 		return scheduleoutboxUrl;
 	}
 
-	public void setScheduleoutboxUrl(ScheduleInboxUrl scheduleoutboxUrl) {
+	public void setScheduleoutboxUrl(final ScheduleInboxUrl scheduleoutboxUrl) {
 		this.scheduleoutboxUrl = scheduleoutboxUrl;
 	}
 
@@ -584,7 +591,7 @@ public class Prop {
 		return calendarData;
 	}
 
-	public void setCalendarData(CalendarData calendarData) {
+	public void setCalendarData(final CalendarData calendarData) {
 		this.calendarData = calendarData;
 	}
 
@@ -595,7 +602,7 @@ public class Prop {
 		return organizer;
 	}
 
-	public void setOrganizer(Organizer organizer) {
+	public void setOrganizer(final Organizer organizer) {
 		this.organizer = organizer;
 	}
 

@@ -19,6 +19,13 @@ public final class NationalitaetenConverter extends DBAttributeConverter<Nationa
 	/** Die Instanz des Konverters */
 	public static final NationalitaetenConverter instance = new NationalitaetenConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public NationalitaetenConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Nationalitaeten attribute) {
 		return (attribute == null) ? null : attribute.daten.codeDEStatis;

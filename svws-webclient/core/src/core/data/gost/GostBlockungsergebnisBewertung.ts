@@ -46,6 +46,9 @@ export class GostBlockungsergebnisBewertung extends JavaObject {
 	public anzahlKurseMitGleicherFachartProSchiene : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

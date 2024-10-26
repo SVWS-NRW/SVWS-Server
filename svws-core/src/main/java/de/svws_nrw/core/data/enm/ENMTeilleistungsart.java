@@ -29,4 +29,11 @@ public class ENMTeilleistungsart {
 	@Schema(description = "Die Gewichtung der Teilleistungsart in Bezug auf die Leistungsdaten", example = "0,25")
 	public Double gewichtung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMTeilleistungsart() {
+		// leer
+	}
+
 }

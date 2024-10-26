@@ -46,4 +46,11 @@ public class GEAbschlussFach {
 	@JsonIgnore
 	public Boolean ausgeglichen = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GEAbschlussFach() {
+		// leer
+	}
+
 }

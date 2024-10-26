@@ -4,6 +4,9 @@ import { CoreTypeData } from '../../../asd/data/CoreTypeData';
 export class LehrerFachrichtungKatalogEintrag extends CoreTypeData {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

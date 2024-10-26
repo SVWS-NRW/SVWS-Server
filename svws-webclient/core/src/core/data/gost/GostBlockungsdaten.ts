@@ -68,6 +68,9 @@ export class GostBlockungsdaten extends JavaObject {
 	public readonly ergebnisse : List<GostBlockungsergebnis> = new ArrayList<GostBlockungsergebnis>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

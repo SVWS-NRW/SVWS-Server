@@ -207,6 +207,12 @@ public final class ABPSchuelerFaecher {
 	private static final String fieldMdlPflichtPruefung = "MdlPflichtPruefung";
 	private static final String fieldMdlPruefErgebnis = "MdlPruefErgebnis";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuelerFaecher() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerFaecher" aus der LuPO-Datei ein.

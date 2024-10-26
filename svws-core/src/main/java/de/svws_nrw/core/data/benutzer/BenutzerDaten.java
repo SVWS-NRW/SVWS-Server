@@ -65,4 +65,11 @@ public class BenutzerDaten {
 	@Schema(description = "die IDs der aktuellen Lehrer-Leitungsfunktionen, welche diesem Benutzer zugeordnet sind. Dies kann auch für funktionsbezogene Kompetenzen genutzt werden.")
 	public @NotNull List<Long> leitungsfunktionen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerDaten() {
+		// leer
+	}
+
 }

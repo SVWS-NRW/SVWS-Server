@@ -19,6 +19,9 @@ export class BenutzergruppeListeEintrag extends JavaObject {
 	public istAdmin : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -34,6 +34,9 @@ export class ENMJahrgang extends JavaObject {
 	public sortierung : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

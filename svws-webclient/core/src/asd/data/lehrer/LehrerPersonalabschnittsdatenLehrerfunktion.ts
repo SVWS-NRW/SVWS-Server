@@ -19,6 +19,9 @@ export class LehrerPersonalabschnittsdatenLehrerfunktion extends JavaObject {
 	public idFunktion : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

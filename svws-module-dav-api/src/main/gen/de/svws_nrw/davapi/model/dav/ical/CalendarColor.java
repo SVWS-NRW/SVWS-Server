@@ -38,6 +38,13 @@ public class CalendarColor {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarColor() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

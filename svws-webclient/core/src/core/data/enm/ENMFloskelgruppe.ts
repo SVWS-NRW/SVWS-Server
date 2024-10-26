@@ -27,6 +27,9 @@ export class ENMFloskelgruppe extends JavaObject {
 	public readonly floskeln : List<ENMFloskel> = new ArrayList<ENMFloskel>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

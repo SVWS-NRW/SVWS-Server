@@ -23,4 +23,11 @@ public class KAOAZusatzmerkmalKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Optionsart des Zusatzmerkmals", example = "Anschlussoption")
 	public String optionsart = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAZusatzmerkmalKatalogEintrag() {
+		// leer
+	}
+
 }

@@ -44,6 +44,9 @@ export class OrtKatalogEintrag extends JavaObject {
 	public istAenderbar : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -18,4 +18,11 @@ public class GostBlockungsergebnisKursSchuelerZuordnung {
 	/** Die ID des Schülers */
 	public long idSchueler = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisKursSchuelerZuordnung() {
+		// leer
+	}
+
 }

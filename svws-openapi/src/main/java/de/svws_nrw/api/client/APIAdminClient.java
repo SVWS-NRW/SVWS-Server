@@ -19,6 +19,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "SVWSAdminClient")
 public class APIAdminClient {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIAdminClient() {
+		// leer
+	}
 
 	/**
 	 * Greift auf die einzelne Dateien aus dem Resource-Verzeichnis des SVWS-Admin-Clients zurück.

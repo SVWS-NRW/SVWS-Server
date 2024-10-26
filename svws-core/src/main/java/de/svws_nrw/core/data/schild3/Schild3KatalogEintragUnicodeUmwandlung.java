@@ -40,4 +40,11 @@ public class Schild3KatalogEintragUnicodeUmwandlung {
 	@Schema(description = "Hexdarstellung des Ersatzzeichens das gewandelt werden muss (bei zwei Zeichen mit + getrennt)")
 	public String HexErsatzzeichen;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragUnicodeUmwandlung() {
+		// leer
+	}
+
 }

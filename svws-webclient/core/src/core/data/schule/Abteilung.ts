@@ -52,6 +52,9 @@ export class Abteilung extends JavaObject {
 	public readonly klassen : List<AbteilungKlassenzuordnung> = new ArrayList<AbteilungKlassenzuordnung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

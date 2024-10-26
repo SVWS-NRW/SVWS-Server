@@ -14,6 +14,9 @@ export class SchulformSchulgliederung extends JavaObject {
 	public gliederung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

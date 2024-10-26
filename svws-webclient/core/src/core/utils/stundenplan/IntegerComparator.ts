@@ -5,6 +5,9 @@ import type { Comparator } from '../../../java/util/Comparator';
 export class IntegerComparator extends JavaObject implements Comparator<number> {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

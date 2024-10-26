@@ -21,6 +21,13 @@ public class CalendarQuery {
 	@XmlElement(required = true)
 	protected Filter filter;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarQuery() {
+		// leer
+	}
+
     /**
      * Gets the value of the prop property.
      *
@@ -41,7 +48,7 @@ public class CalendarQuery {
      *     {@link Prop }
      *
      */
-    public void setProp(Prop value) {
+    public void setProp(final Prop value) {
         this.prop = value;
     }
 
@@ -49,7 +56,7 @@ public class CalendarQuery {
 		return filter;
 	}
 
-	public void setFilter(Filter filter) {
+	public void setFilter(final Filter filter) {
 		this.filter = filter;
 	}
 

@@ -22,4 +22,11 @@ public class Kurs42DataSchienen {
 	/** Stundenplan - beim Import nicht verwendet */
 	public String Stundenplan;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataSchienen() {
+		// leer
+	}
+
 }

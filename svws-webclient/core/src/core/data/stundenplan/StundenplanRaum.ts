@@ -24,6 +24,9 @@ export class StundenplanRaum extends JavaObject {
 	public groesse : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

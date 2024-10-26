@@ -32,7 +32,9 @@ public final class ResourceUtils {
 
 	private static final String FILE_EXTENSION_JSON = ".json";
 
-
+	/**
+	 * Instantiation not allowed.
+	 */
 	private ResourceUtils() {
 		throw new IllegalStateException("Instantiation not allowed");
 	}

@@ -39,6 +39,9 @@ export class GEAbschlussFach extends JavaObject {
 	public ausgeglichen : boolean | null = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

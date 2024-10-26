@@ -44,6 +44,9 @@ export class ENMLehrer extends JavaObject {
 	public tsPasswordHash : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

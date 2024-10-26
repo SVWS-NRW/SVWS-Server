@@ -40,7 +40,12 @@ public final class ABPSchuelerFehlermeldungen {
 	/** Die Sortierung der Fehlermeldung */
 	public Integer Sortierung = 32000;
 
-
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuelerFehlermeldungen() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_Schueler" aus der LuPO-Datei ein.

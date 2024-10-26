@@ -35,6 +35,9 @@ export class StundenplanFach extends JavaObject {
 	public farbe : RGBFarbe | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

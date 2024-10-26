@@ -84,6 +84,9 @@ export class Schild3KatalogEintragPruefungsordnungOption extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

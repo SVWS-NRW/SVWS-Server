@@ -37,4 +37,11 @@ public class MigrateBody {
 	@Schema(description = "Das Kennwort für den administrativen Zugang auf das neu zu erstellende Datenbank-Schema.", example = "StrengGeheim")
 	public String schemaUserPassword;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrateBody() {
+		// leer
+	}
+
 }

@@ -49,6 +49,9 @@ export class LehrerListeEintrag extends JavaObject {
 	public istRelevantFuerStatistik : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

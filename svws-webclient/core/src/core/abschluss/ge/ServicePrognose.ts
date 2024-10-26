@@ -16,6 +16,9 @@ import { ServiceAbschlussHA9 } from '../../../core/abschluss/ge/ServiceAbschluss
 export class ServicePrognose extends Service<GEAbschlussFaecher, AbschlussErgebnis> {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -23,4 +23,11 @@ public class BKFachklassenSchluessel {
 	@Schema(description = "Schlüssel der Fachklasse", example = "10004")
 	public @NotNull String schluessel = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKFachklassenSchluessel() {
+		// leer
+	}
+
 }

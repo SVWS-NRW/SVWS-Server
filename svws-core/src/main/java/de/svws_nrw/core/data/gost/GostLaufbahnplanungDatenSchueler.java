@@ -60,4 +60,11 @@ public class GostLaufbahnplanungDatenSchueler {
 			description = "Die Sprachenfolge und die Sprachprüfungen des Schülers unter Einbeziehung der Daten aus der Sekundarstufe I.")
 	public @NotNull Sprachendaten sprachendaten = new Sprachendaten();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostLaufbahnplanungDatenSchueler() {
+		// leer
+	}
+
 }

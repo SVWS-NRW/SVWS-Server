@@ -54,6 +54,9 @@ export class SchuelerKAoADaten extends JavaObject {
 	public bemerkung : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -15,6 +15,13 @@ import de.svws_nrw.db.utils.ApiOperationException;
 public final class DBEmailUtils {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	protected DBEmailUtils() {
+		// leer
+	}
+
+	/**
 	 * Ermittelt die EMail-Konfiguration des aktuellen Benutzer anhand der Datenbank
 	 *
 	 * @param conn   die Datenbank-Verbindung

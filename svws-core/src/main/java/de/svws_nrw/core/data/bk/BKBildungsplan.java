@@ -17,6 +17,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class BKBildungsplan {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BKBildungsplan() {
+		// leer
+	}
+
 	/** Die ID des Katalog-Eintrags. */
 	@Schema(description = "die ID des Katalog-Eintrags", example = "1010004001")
 	public long id = -1;

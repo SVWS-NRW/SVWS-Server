@@ -68,6 +68,9 @@ export class LehrerPersonalabschnittsdaten extends JavaObject {
 	public readonly funktionen : List<LehrerPersonalabschnittsdatenLehrerfunktion> = new ArrayList<LehrerPersonalabschnittsdatenLehrerfunktion>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

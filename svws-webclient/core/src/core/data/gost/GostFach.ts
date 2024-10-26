@@ -114,6 +114,9 @@ export class GostFach extends JavaObject {
 	public projektKursLeitfach2Kuerzel : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

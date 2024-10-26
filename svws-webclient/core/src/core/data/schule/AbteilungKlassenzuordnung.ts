@@ -19,6 +19,9 @@ export class AbteilungKlassenzuordnung extends JavaObject {
 	public idKlasse : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

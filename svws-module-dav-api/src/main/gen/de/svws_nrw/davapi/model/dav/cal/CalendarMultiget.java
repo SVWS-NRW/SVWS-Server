@@ -51,6 +51,13 @@ public class CalendarMultiget {
     @XmlElement(required = true, namespace = "DAV:")
     protected Prop prop;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarMultiget() {
+		// leer
+	}
+
     /**
      * Gets the value of the prop property.
      *
@@ -71,7 +78,7 @@ public class CalendarMultiget {
      *     {@link Prop }
      *
      */
-    public void setProp(Prop value) {
+    public void setProp(final Prop value) {
         this.prop = value;
     }
 

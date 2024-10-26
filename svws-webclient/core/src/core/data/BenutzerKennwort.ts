@@ -14,6 +14,9 @@ export class BenutzerKennwort extends JavaObject {
 	public password : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

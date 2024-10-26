@@ -59,6 +59,9 @@ export class Sprachbelegung extends JavaObject {
 	public hatHebraicum : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

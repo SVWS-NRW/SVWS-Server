@@ -38,6 +38,13 @@ public class Organizer {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Organizer() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

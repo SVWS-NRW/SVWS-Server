@@ -26,6 +26,9 @@ export class BenutzergruppeDaten extends JavaObject {
 	public kompetenzen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

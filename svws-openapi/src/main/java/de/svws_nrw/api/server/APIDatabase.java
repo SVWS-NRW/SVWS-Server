@@ -41,6 +41,13 @@ import jakarta.ws.rs.core.Response;
 public class APIDatabase {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIDatabase() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für den Export einer SQLite-Datenbank aus dem aktuellen Schema. Der Aufruf erfordert
 	 * administrative Rechte.
 	 *

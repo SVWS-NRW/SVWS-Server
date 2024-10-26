@@ -33,6 +33,13 @@ import jakarta.ws.rs.core.Response;
 public class APIReporting {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIReporting() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Erstellung eines Reports im geforderten Format. Je nach übergebenen Parametern wird eine
 	 * einzige Report-Datei oder eine ZIP-Datei mit einzelnen Dateien zurückgegeben.
 	 *

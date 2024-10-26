@@ -19,6 +19,13 @@ public class StundenplanblockungManagerRaumMenge {
 	private final @NotNull Map<Long, StundenplanblockungManagerRaum> _map = new HashMap<>();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungManagerRaumMenge() {
+		// leer
+	}
+
+	/**
 	 * Fügt den Raum hinzu. <br>
 	 * Wirft eine NullPointerException, falls die Raum-ID bereits existiert.
 	 *

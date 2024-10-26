@@ -23,6 +23,9 @@ export class GostBlockungsergebnisKursSchienenZuordnungUpdate extends JavaObject
 	public regelUpdates : GostBlockungRegelUpdate = new GostBlockungRegelUpdate();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

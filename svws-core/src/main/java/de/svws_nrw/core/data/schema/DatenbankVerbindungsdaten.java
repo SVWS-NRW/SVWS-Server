@@ -29,4 +29,11 @@ public class DatenbankVerbindungsdaten {
 	@Schema(description = "Gibt den Schema-Namen der Datenbank an.", example = "schild_nrw")
 	public String schema;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DatenbankVerbindungsdaten() {
+		// leer
+	}
+
 }

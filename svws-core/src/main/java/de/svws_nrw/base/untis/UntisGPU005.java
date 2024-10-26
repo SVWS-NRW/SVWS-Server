@@ -100,6 +100,13 @@ public final class UntisGPU005 {
 			.withoutHeader());
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UntisGPU005() {
+		// leer
+	}
+
+	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU005-Datensätze
 	 *
 	 * @param csvData   die Daten des CSV-Datei als String

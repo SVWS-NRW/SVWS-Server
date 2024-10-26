@@ -19,6 +19,13 @@ import de.svws_nrw.db.DBDriver;
 public class SVWSConfigFileWriter {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SVWSConfigFileWriter() {
+		// leer
+	}
+
+	/**
 	 * Die Main-Methode zum Starten des Kommandozeilenprogramms zum Erzeugen einer SVWS-Konfiguration mit
 	 * Default-Einstellungen.
 	 *

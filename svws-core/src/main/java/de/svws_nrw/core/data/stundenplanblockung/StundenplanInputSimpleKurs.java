@@ -40,4 +40,11 @@ public class StundenplanInputSimpleKurs {
 	/** Die Wochenstunden des Kurses. Das Stundenplanprogramm bestimmt, wie diese verteilt werden. */
 	public int wochenstunden = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleKurs() {
+		// leer
+	}
+
 }

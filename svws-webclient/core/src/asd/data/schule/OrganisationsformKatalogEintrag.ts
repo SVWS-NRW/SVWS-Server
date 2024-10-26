@@ -4,6 +4,9 @@ import { Class } from '../../../java/lang/Class';
 export class OrganisationsformKatalogEintrag extends CoreTypeDataNurSchulformen {
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

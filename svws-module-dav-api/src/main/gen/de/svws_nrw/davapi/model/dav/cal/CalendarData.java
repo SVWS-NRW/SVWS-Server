@@ -45,11 +45,18 @@ public class CalendarData {
 	@XmlAttribute(name = "version")
 	private String version;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarData() {
+		// leer
+	}
+
 	public String getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
@@ -57,7 +64,7 @@ public class CalendarData {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 

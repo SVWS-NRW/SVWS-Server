@@ -61,6 +61,13 @@ public class Response {
     protected String responsedescription;
     protected Location location;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Response() {
+		// leer
+	}
+
     /**
      * Gets the value of the href property.
      *
@@ -110,7 +117,7 @@ public class Response {
      *     {@link String }
      *
      */
-    public void setStatus(String value) {
+    public void setStatus(final String value) {
         this.status = value;
     }
 
@@ -163,7 +170,7 @@ public class Response {
      *     {@link Error }
      *
      */
-    public void setError(Error value) {
+    public void setError(final Error value) {
         this.error = value;
     }
 
@@ -187,7 +194,7 @@ public class Response {
      *     {@link String }
      *
      */
-    public void setResponsedescription(String value) {
+    public void setResponsedescription(final String value) {
         this.responsedescription = value;
     }
 
@@ -211,7 +218,7 @@ public class Response {
      *     {@link Location }
      *
      */
-    public void setLocation(Location value) {
+    public void setLocation(final Location value) {
         this.location = value;
     }
 

@@ -21,6 +21,9 @@ export class BKAnlageAFaecher extends JavaObject {
 	public englischGeR : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

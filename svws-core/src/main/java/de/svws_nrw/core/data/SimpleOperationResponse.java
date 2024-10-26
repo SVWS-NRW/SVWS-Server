@@ -32,4 +32,11 @@ public class SimpleOperationResponse {
 	@ArraySchema(schema = @Schema(implementation = String.class))
 	public @NotNull List<String> log = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SimpleOperationResponse() {
+		// leer
+	}
+
 }

@@ -33,4 +33,11 @@ public class GostBlockungKursLehrer {
 	/** Gibt an, ob es sich um eine externe Lehrkraft handelt (z.B. bei einem Kooperationskurs an einer anderen Schule) */
 	public boolean istExtern = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungKursLehrer() {
+		// leer
+	}
+
 }

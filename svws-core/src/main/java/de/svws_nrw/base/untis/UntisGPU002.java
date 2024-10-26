@@ -219,6 +219,12 @@ public class UntisGPU002 {
 	/** Die Instanz des Object-Writers für die CSV-Daten */
 	private static final ObjectWriter writer = new CsvMapper().writerFor(UntisGPU002.class).with(schema).with(CsvGenerator.Feature.ALWAYS_QUOTE_STRINGS);
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UntisGPU002() {
+		// leer
+	}
 
 	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU002-Datensätze

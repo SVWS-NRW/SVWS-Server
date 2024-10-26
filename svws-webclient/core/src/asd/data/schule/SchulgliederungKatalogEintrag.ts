@@ -47,6 +47,9 @@ export class SchulgliederungKatalogEintrag extends CoreTypeDataNurSchulformen {
 	public abschluesse : List<SchulgliederungGueltigerAbschluss> = new ArrayList<SchulgliederungGueltigerAbschluss>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

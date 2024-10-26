@@ -29,6 +29,9 @@ export class GostFachwahl extends JavaObject {
 	public abiturfach : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

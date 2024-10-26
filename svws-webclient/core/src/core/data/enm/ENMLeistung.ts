@@ -103,6 +103,9 @@ export class ENMLeistung extends JavaObject {
 	public teilleistungen : List<ENMTeilleistung> = new ArrayList<ENMTeilleistung>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

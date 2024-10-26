@@ -129,6 +129,9 @@ export class SchuelerLeistungsdaten extends JavaObject {
 	public fehlstundenUnentschuldigt : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

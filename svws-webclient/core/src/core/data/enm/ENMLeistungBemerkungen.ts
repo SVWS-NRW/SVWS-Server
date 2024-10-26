@@ -74,6 +74,9 @@ export class ENMLeistungBemerkungen extends JavaObject {
 	public tsFoerderbemerkungen : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -39,6 +39,9 @@ export class BenutzerListeEintrag extends JavaObject {
 	public idCredentials : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

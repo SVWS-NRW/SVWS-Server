@@ -38,6 +38,13 @@ public class ScheduleInboxUrl {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ScheduleInboxUrl() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

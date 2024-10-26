@@ -50,7 +50,12 @@ public class ServiceBerechtigungMSAQ extends Service<GEAbschlussFaecher, Abschlu
 	/** Die Zeichenkette, welche zum Trennen von Teilen des Logs verwendet wird. */
 	private static final @NotNull String LOG_SEPERATOR = "______________________________";
 
-
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ServiceBerechtigungMSAQ() {
+		// leer
+	}
 
 	/**
 	 * Führt die Abschlussberechnung (bzw. Berechtigungsberechnung) anhand der übergebenen

@@ -10,5 +10,11 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "protected")
 public class Protected {
 
-	
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Protected() {
+		// leer
+	}
+
 }

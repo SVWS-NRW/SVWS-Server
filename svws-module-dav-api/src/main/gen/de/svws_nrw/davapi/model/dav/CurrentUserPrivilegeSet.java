@@ -30,6 +30,13 @@ public class CurrentUserPrivilegeSet {
 
     private List<Privilege> privilege;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CurrentUserPrivilegeSet() {
+		// leer
+	}
+
     public List<Privilege> getPrivilege() {
         if(privilege == null){
             privilege = new ArrayList<>();
@@ -37,7 +44,7 @@ public class CurrentUserPrivilegeSet {
         return privilege;
     }
 
-    public void setPrivilege(List<Privilege> privileges) {
+    public void setPrivilege(final List<Privilege> privileges) {
         this.privilege = privileges;
     }
 

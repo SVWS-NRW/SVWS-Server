@@ -30,4 +30,11 @@ public class Raum {
 	@Schema(description = "die Grösse des Raumes an Arbeitsplätzen für Schüler", example = "30")
 	public int groesse = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Raum() {
+		// leer
+	}
+
 }

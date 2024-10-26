@@ -14,12 +14,19 @@ public class Inherited {
 
 	private String href;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Inherited() {
+		// leer
+	}
+
 	public String getHref() {
 		return href;
 	}
 
-	public void setHref(String href) {
+	public void setHref(final String href) {
 		this.href = href;
 	}
-	
+
 }

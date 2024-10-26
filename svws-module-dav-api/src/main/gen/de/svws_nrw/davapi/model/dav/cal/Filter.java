@@ -14,11 +14,18 @@ public class Filter {
 	@XmlElement(name = "comp-filter")
 	protected CompFilter compFilter;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Filter() {
+		// leer
+	}
+
 	public CompFilter getCompFilter() {
 		return compFilter;
 	}
 
-	public void setCompFilter(CompFilter compFilter) {
+	public void setCompFilter(final CompFilter compFilter) {
 		this.compFilter = compFilter;
 	}
 

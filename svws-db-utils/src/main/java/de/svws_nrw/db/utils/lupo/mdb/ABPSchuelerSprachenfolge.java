@@ -54,6 +54,12 @@ public final class ABPSchuelerSprachenfolge {
 	private static final String fieldAbschnittBis = "AbschnittBis";
 	private static final String fieldStatistikKrz = "StatistikKrz";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ABPSchuelerSprachenfolge() {
+		// leer
+	}
 
 	/**
 	 * Liest alle Einträge der Tabelle "ABP_SchuelerSprachenfolge" aus der LuPO-Datei ein.

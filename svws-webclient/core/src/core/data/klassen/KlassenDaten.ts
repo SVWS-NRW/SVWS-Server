@@ -132,6 +132,9 @@ export class KlassenDaten extends JavaObject {
 	public beginnSommersemester : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

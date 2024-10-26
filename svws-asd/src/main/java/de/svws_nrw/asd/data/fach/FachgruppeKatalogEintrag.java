@@ -34,4 +34,11 @@ public class FachgruppeKatalogEintrag extends CoreTypeDataNurSchulformen {
 	@Schema(description = "gibt an, ob die Fachgruppe für die Unterteilung auf Zeugnissen genutzt wird oder nicht", example = "true")
 	public boolean fuerZeugnis = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public FachgruppeKatalogEintrag() {
+		// leer
+	}
+
 }

@@ -23,6 +23,12 @@ public class ImportLupoMDB {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ImportLupoMDB() {
+		// leer
+	}
 
 	/**
 	 *

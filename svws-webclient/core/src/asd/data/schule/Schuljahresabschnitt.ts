@@ -29,6 +29,9 @@ export class Schuljahresabschnitt extends JavaObject {
 	public idFolgeAbschnitt : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

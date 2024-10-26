@@ -20,6 +20,9 @@ export class Logger extends JavaObject {
 	private indent : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

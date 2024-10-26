@@ -14,6 +14,13 @@ public final class PersonTypNullableConverter extends DBAttributeConverter<Perso
 	/** Die Instanz des Konverters */
 	public static final PersonTypNullableConverter instance = new PersonTypNullableConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public PersonTypNullableConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final PersonTyp typ) {
 		return (typ == null) ? null : typ.kuerzel;

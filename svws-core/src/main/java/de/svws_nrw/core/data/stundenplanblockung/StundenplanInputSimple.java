@@ -42,4 +42,11 @@ public class StundenplanInputSimple {
 	@ArraySchema(schema = @Schema(implementation = StundenplanInputSimpleKurs.class))
 	public @NotNull List<StundenplanInputSimpleKurs> kurse = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimple() {
+		// leer
+	}
+
 }

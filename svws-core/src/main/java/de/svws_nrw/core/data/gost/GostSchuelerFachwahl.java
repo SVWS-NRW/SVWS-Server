@@ -23,4 +23,11 @@ public class GostSchuelerFachwahl {
 	@Schema(description = "die Nummer des Abiturfaches (1-4), falls dieses Fach als Abiturfach gewählt wurde und ansonsten null", example = "3")
 	public Integer abiturFach;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostSchuelerFachwahl() {
+		// leer
+	}
+
 }

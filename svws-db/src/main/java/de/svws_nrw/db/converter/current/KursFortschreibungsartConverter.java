@@ -18,6 +18,13 @@ public final class KursFortschreibungsartConverter extends DBAttributeConverter<
 	/** Die Instanz des Konverters */
 	public static final KursFortschreibungsartConverter instance = new KursFortschreibungsartConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KursFortschreibungsartConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final KursFortschreibungsart attribute) {
 		return attribute.kuerzel;

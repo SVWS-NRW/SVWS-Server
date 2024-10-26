@@ -42,6 +42,9 @@ export class StundenplanInputSimple extends JavaObject {
 	public kurse : List<StundenplanInputSimpleKurs> = new ArrayList<StundenplanInputSimpleKurs>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -208,4 +208,11 @@ public class SchuelerLernabschnittsdaten {
 			description = "Ein Array mit den Leistungsdaten des Schülers in diesem Lernabschnitt."))
 	public @NotNull List<SchuelerLeistungsdaten> leistungsdaten = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLernabschnittsdaten() {
+		// leer
+	}
+
 }

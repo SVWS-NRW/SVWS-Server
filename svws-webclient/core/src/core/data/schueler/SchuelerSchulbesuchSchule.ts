@@ -49,6 +49,9 @@ export class SchuelerSchulbesuchSchule extends JavaObject {
 	public jahrgangBis : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

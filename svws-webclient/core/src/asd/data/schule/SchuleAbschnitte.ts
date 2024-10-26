@@ -21,6 +21,9 @@ export class SchuleAbschnitte extends JavaObject {
 	public bezAbschnitte : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

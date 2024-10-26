@@ -18,6 +18,13 @@ public final class Boolean01Converter extends DBAttributeConverter<Boolean, Inte
 	/** Die Instanz des Konverters */
 	public static final Boolean01Converter instance = new Boolean01Converter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Boolean01Converter() {
+		// leer
+	}
+
 	@Override
 	public Integer convertToDatabaseColumn(final Boolean value) {
 		return ((value != null) && value) ? 1 : 0;

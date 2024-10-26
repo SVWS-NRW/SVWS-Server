@@ -57,5 +57,12 @@ public class ENMLerngruppe {
 	@Schema(description = "Die Anzahl der Wochenstunden, falls es sich um einen Kurs handelt.", example = "3")
 	public int wochenstunden;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMLerngruppe() {
+		// leer
+	}
+
 }
 

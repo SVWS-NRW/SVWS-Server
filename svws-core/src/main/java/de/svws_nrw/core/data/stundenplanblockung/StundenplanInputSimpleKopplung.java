@@ -23,4 +23,11 @@ public class StundenplanInputSimpleKopplung {
 	 * dieser Kopplung. */
 	public int stunden = -1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanInputSimpleKopplung() {
+		// leer
+	}
+
 }

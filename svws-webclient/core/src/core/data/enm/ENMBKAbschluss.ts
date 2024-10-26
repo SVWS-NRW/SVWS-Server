@@ -72,6 +72,9 @@ export class ENMBKAbschluss extends JavaObject {
 	public faecher : List<ENMBKFach> = new ArrayList<ENMBKFach>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

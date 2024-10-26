@@ -37,6 +37,13 @@ public class Getctag {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Getctag() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

@@ -59,6 +59,9 @@ export class WiedervorlageEintrag extends JavaObject {
 	public automatischErledigt : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -143,4 +143,11 @@ public class SchuelerSchulbesuchsdaten {
 			description = "Ein Array mit den Informationen zu allen bisher besuchten Schulen."))
 	public @NotNull List<SchuelerSchulbesuchSchule> alleSchulen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerSchulbesuchsdaten() {
+		// leer
+	}
+
 }

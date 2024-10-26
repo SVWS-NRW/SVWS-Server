@@ -22,11 +22,18 @@ public class CompFilter {
 	@XmlElement(name = "comp-filter")
 	private CompFilter compFilter;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CompFilter() {
+		// leer
+	}
+
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
@@ -34,7 +41,7 @@ public class CompFilter {
 		return timeRange;
 	}
 
-	public void setTimeRange(TimeRange timeRange) {
+	public void setTimeRange(final TimeRange timeRange) {
 		this.timeRange = timeRange;
 	}
 
@@ -42,7 +49,7 @@ public class CompFilter {
 		return compFilter;
 	}
 
-	public void setCompFilter(CompFilter compFilter) {
+	public void setCompFilter(final CompFilter compFilter) {
 		this.compFilter = compFilter;
 	}
 

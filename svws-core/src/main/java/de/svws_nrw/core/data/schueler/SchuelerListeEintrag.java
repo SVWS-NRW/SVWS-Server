@@ -80,6 +80,13 @@ public class SchuelerListeEintrag {
 	public final @NotNull List<Long> kurse = new ArrayList<>();
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerListeEintrag() {
+		// leer
+	}
+
+	/**
 	 * Vergleicht, ob das akutelle dasselbe Objekt, wie ein anderes übergebenes Objekt ist.
 	 *
 	 * @param another     das zu vergleichende Objekt

@@ -29,6 +29,9 @@ export class Schild3KatalogEintragDQRNiveaus extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

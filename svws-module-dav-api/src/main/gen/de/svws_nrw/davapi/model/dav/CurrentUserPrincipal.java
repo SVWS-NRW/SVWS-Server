@@ -32,6 +32,14 @@ public class CurrentUserPrincipal {
 
     @XmlElement(required = true)
     protected List<String> href;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CurrentUserPrincipal() {
+		// leer
+	}
+
     /**
      * Gets the value of the href property.
      *

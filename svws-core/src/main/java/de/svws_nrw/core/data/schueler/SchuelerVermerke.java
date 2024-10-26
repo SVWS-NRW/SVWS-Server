@@ -42,4 +42,11 @@ public class SchuelerVermerke {
 	@Schema(description = "Name des Benutzers welcher den Vermerk als letzten bearbeitet hat.", example = "Dr. Manuela Musterfrau")
 	public String geaendertVon;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerVermerke() {
+		// leer
+	}
+
 }

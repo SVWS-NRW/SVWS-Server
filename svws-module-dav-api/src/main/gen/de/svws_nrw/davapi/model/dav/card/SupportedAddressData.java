@@ -14,6 +14,13 @@ public class SupportedAddressData {
     @XmlElement(required = true)
     protected List<CardAddressDataType> addressDataTypes;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SupportedAddressData() {
+		// leer
+	}
+
     public List<CardAddressDataType> getAddressDataTypes() {
         if (addressDataTypes == null) {
             addressDataTypes = new ArrayList<>();

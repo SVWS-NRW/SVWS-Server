@@ -24,6 +24,9 @@ export class StundenplanPausenaufsichtBereich extends JavaObject {
 	public wochentyp : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

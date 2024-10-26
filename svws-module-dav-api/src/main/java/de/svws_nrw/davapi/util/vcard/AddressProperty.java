@@ -14,7 +14,6 @@ public final class AddressProperty implements VCardProperty {
 	 * Trennzeichen zwischen Straße und Hausnummer
 	 */
 	private static final String STREET_NUMBER_SPACER = " ";
-
 	/**
 	 * Konstante für den Property Type
 	 */
@@ -76,6 +75,13 @@ public final class AddressProperty implements VCardProperty {
 	 * Adressart, bspw "home"
 	 */
 	private String addressType;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AddressProperty() {
+		// leer
+	}
 
 	@Override
 	public String getType() {

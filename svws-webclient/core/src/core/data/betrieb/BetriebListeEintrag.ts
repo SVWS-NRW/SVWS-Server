@@ -49,6 +49,9 @@ export class BetriebListeEintrag extends JavaObject {
 	public branche : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

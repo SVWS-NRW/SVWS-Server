@@ -21,6 +21,9 @@ export class SchulformGliederungJahrgaenge extends JavaObject {
 	public jahrgaenge : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

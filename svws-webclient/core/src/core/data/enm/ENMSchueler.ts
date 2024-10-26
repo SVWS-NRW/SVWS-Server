@@ -93,6 +93,9 @@ export class ENMSchueler extends JavaObject {
 	public bkabschluss : ENMBKAbschluss | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

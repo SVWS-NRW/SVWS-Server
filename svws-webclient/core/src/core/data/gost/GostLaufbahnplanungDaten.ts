@@ -96,6 +96,9 @@ export class GostLaufbahnplanungDaten extends JavaObject {
 	public readonly schueler : List<GostLaufbahnplanungDatenSchueler> = new ArrayList<GostLaufbahnplanungDatenSchueler>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

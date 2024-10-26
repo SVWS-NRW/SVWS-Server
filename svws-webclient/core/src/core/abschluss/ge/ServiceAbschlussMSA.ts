@@ -50,6 +50,9 @@ export class ServiceAbschlussMSA extends Service<GEAbschlussFaecher, AbschlussEr
 	private static readonly LOG_SEPERATOR : string = "______________________________";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

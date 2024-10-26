@@ -18,6 +18,13 @@ public final class MigrationBooleanPlusMinusConverter extends DBAttributeConvert
 	/** Die Instanz des Konverters */
 	public static final MigrationBooleanPlusMinusConverter instance = new MigrationBooleanPlusMinusConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrationBooleanPlusMinusConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		if (value == null)

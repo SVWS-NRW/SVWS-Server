@@ -55,6 +55,9 @@ export class ENMLernabschnitt extends JavaObject {
 	public foerderschwerpunkt2 : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

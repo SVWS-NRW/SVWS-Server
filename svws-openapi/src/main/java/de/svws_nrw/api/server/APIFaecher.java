@@ -49,6 +49,13 @@ import jakarta.ws.rs.core.Response;
 public class APIFaecher {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIFaecher() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Fächer im angegebenen Schema.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

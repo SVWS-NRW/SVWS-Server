@@ -37,11 +37,18 @@ public class CalendarComponent {
 	@XmlAttribute(name = "name")
 	private String name;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarComponent() {
+		// leer
+	}
+
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 

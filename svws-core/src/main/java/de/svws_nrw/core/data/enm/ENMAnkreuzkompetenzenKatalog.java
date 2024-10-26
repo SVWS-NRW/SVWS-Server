@@ -32,4 +32,11 @@ public class ENMAnkreuzkompetenzenKatalog {
 			description = "Ein Array mit den Katalog-Einträge für die Ankreuzkompetenzen, die in der Notendatei enthalten sind."))
 	public @NotNull List<ENMAnkreuzkompetenz> kompetenzen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMAnkreuzkompetenzenKatalog() {
+		// leer
+	}
+
 }

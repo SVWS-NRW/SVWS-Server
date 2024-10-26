@@ -78,4 +78,11 @@ public class Stundenplan {
 	@Schema(description = "die Liste der Jahrgänge, die für den Stundenplan zur Verfügung stehen")
 	public @NotNull List<StundenplanJahrgang> jahrgaenge = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Stundenplan() {
+		// leer
+	}
+
 }

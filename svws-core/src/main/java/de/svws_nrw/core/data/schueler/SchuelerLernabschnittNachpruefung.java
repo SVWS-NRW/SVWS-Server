@@ -30,4 +30,11 @@ public class SchuelerLernabschnittNachpruefung {
 	@Schema(description = "das Datum der Nachprüfung", example = "4")
 	public String datum = null;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerLernabschnittNachpruefung() {
+		// leer
+	}
+
 }

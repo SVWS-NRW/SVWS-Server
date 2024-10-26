@@ -34,4 +34,11 @@ public class SchuelerVermerkartZusammenfassung {
 	@Schema(description = "Die Anzahl der Vermerke der entsprechenden Vermerkart", example = "8")
 	public long anzahlVermerke;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchuelerVermerkartZusammenfassung() {
+		// leer
+	}
+
 }

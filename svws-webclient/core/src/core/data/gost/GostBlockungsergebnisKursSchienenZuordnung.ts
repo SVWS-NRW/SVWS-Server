@@ -14,6 +14,9 @@ export class GostBlockungsergebnisKursSchienenZuordnung extends JavaObject {
 	public idSchiene : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

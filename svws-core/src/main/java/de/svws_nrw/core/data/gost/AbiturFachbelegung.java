@@ -74,5 +74,10 @@ public class AbiturFachbelegung {
 	/** Die Einzelbelegungen des Faches in den einzelnen Halbjahren im Block I des Abiturs */
 	public final @NotNull AbiturFachbelegungHalbjahr[] belegungen = new AbiturFachbelegungHalbjahr[GostHalbjahr.maxHalbjahre];
 
-
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbiturFachbelegung() {
+		// leer
+	}
 }

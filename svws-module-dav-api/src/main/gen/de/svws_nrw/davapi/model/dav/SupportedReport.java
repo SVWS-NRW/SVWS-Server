@@ -40,6 +40,13 @@ public class SupportedReport {
     @XmlElement(required = true)
     protected Report report;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SupportedReport() {
+		// leer
+	}
+
     /**
      * Gets the value of the report property.
      *
@@ -60,7 +67,7 @@ public class SupportedReport {
      *     {@link Report }
      *
      */
-    public void setReport(Report value) {
+    public void setReport(final Report value) {
         this.report = value;
     }
 

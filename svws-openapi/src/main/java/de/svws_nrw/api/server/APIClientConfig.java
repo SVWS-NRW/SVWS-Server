@@ -42,6 +42,12 @@ import jakarta.ws.rs.core.Response.Status;
 @Tag(name = "Server")
 public class APIClientConfig {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIClientConfig() {
+		// leer
+	}
 
 	/**
 	 * Gibt die Konfigurationseinträge der angegebenen Anwendung zurück.

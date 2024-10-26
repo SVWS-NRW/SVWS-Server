@@ -19,6 +19,9 @@ export class NoteKatalogEintrag extends CoreTypeData {
 	public textZeugnis : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

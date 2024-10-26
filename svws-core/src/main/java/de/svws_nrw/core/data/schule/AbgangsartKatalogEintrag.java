@@ -25,4 +25,10 @@ public class AbgangsartKatalogEintrag {
 	@Schema(description = "die Historie des Katalog-Eintrags")
 	public @NotNull List<AbgangsartKatalogDaten> historie = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public AbgangsartKatalogEintrag() {
+		// leer
+	}
 }

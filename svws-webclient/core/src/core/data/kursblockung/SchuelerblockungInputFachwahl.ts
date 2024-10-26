@@ -25,6 +25,9 @@ export class SchuelerblockungInputFachwahl extends JavaObject {
 	public representation : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -64,6 +64,9 @@ export class SchuelerBetriebsdaten extends JavaObject {
 	public betreuungslehrer_id : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -31,4 +31,11 @@ public class StundenplanKalenderwochenzuordnung {
 			example = "2")
 	public int wochentyp = 0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanKalenderwochenzuordnung() {
+		// leer
+	}
+
 }

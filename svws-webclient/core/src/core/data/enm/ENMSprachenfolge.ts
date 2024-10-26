@@ -54,6 +54,9 @@ export class ENMSprachenfolge extends JavaObject {
 	public belegungSekI : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -38,4 +38,11 @@ public class ENMJahrgang {
 	@Schema(description = "Die Reihenfolge des Jahrgangs bei der Sortierung der Jahrgänge.", example = "20")
 	public int sortierung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMJahrgang() {
+		// leer
+	}
+
 }

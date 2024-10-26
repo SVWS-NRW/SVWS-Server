@@ -70,4 +70,11 @@ public class SchildReportingSchuelerSprachpruefungen {
 	@Schema(description = "Die Note, die in der Sprachprüfung erreicht wurde", example = "3")
 	public @NotNull String note = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SchildReportingSchuelerSprachpruefungen() {
+		// leer
+	}
+
 }

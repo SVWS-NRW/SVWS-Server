@@ -45,6 +45,12 @@ public class GenerateTestdatenLaufbahnFromLupoMDB {
 	/// Der Logger
 	private static final Logger logger = new Logger();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GenerateTestdatenLaufbahnFromLupoMDB() {
+		// leer
+	}
 
 	/**
 	 * Diese Methode schreibt die übergebenen Daten in die angebene Datei.

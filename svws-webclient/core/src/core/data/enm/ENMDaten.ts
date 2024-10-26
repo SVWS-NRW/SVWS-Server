@@ -132,6 +132,9 @@ export class ENMDaten extends JavaObject {
 	public schueler : List<ENMSchueler> = new ArrayList<ENMSchueler>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -42,6 +42,13 @@ public class SupportedReportSet {
     @XmlElement(name = "supported-report", required = true)
     protected List<SupportedReport> supportedReport;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SupportedReportSet() {
+		// leer
+	}
+
     /**
      * Gets the value of the supportedReport property.
      *

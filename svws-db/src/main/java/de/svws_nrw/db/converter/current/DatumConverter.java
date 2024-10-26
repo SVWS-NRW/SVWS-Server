@@ -20,6 +20,13 @@ public final class DatumConverter extends DBAttributeConverter<String, Timestamp
 	/** Die Instanz des Konverters */
 	public static final DatumConverter instance = new DatumConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DatumConverter() {
+		// leer
+	}
+
 	@Override
 	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))

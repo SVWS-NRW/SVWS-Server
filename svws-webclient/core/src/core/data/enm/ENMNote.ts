@@ -24,6 +24,9 @@ export class ENMNote extends JavaObject {
 	public text : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

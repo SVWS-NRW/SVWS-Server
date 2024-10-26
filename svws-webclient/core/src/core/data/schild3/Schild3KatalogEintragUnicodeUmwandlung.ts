@@ -39,6 +39,9 @@ export class Schild3KatalogEintragUnicodeUmwandlung extends JavaObject {
 	public HexErsatzzeichen : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

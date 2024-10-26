@@ -79,6 +79,9 @@ export class SchildReportingSchuelerLernabschnitt extends JavaObject {
 	public logPruefungsalgorithmus : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

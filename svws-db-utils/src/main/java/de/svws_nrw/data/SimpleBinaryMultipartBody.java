@@ -19,4 +19,11 @@ public class SimpleBinaryMultipartBody {
 	@FormParam("data")
 	public byte[] data;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public SimpleBinaryMultipartBody() {
+		// leer
+	}
+
 }

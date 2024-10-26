@@ -224,6 +224,9 @@ export class SchuelerStammdaten extends JavaObject {
 	public erhaeltMeisterBAFOEG : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

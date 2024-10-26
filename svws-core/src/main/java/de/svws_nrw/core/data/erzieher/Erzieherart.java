@@ -21,4 +21,11 @@ public class Erzieherart {
 	@Schema(description = "die Bezeichnung der Erzieherart, welchem der Erzieher zugeordnet ist", example = "Mutter")
 	public String bezeichnung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Erzieherart() {
+		// leer
+	}
+
 }

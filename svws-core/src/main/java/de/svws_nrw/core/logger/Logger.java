@@ -25,6 +25,12 @@ public class Logger {
 	/// Die Einrückung für die Ausgabe, die bei neuen Log-Informationen genutzt wird.
 	private int indent = 0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Logger() {
+		// leer
+	}
 
 	/**
 	 * Gibt die Instanz des Loggers zurück.

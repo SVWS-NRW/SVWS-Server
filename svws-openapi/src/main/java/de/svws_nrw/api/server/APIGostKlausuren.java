@@ -66,6 +66,13 @@ import jakarta.ws.rs.core.Response.Status;
 public class APIGostKlausuren {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIGostKlausuren() {
+		// leer
+	}
+
+	/**
 	 * Liefert die {@link GostKlausurvorgabe}n eines Abiturjahrgangs der gymnasialen Oberstufe.
 	 *
 	 * @param schema     das Datenbankschema, auf welchem die Abfrage ausgeführt werden soll

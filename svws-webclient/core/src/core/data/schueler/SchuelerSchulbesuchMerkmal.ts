@@ -19,6 +19,9 @@ export class SchuelerSchulbesuchMerkmal extends JavaObject {
 	public datumBis : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -25,4 +25,11 @@ public class GostBlockungsergebnisSchiene {
 	/** Eine Liste der Kurse, welche dieser Schiene zugeordnet sind. */
 	public final @NotNull List<GostBlockungsergebnisKurs> kurse = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungsergebnisSchiene() {
+		// leer
+	}
+
 }

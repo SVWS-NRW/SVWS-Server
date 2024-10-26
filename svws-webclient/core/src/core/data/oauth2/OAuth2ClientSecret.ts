@@ -24,6 +24,9 @@ export class OAuth2ClientSecret extends JavaObject {
 	public clientSecret : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

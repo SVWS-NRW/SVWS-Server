@@ -37,6 +37,9 @@ export class Adressbuch extends JavaObject {
 	public adressbuchEintraege : List<AdressbuchEintrag> = new ArrayList<AdressbuchEintrag>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

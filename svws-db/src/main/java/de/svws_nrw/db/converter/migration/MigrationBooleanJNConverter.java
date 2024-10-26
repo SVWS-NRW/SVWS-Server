@@ -18,6 +18,13 @@ public final class MigrationBooleanJNConverter extends DBAttributeConverter<Bool
 	/** Die Instanz des Konverters */
 	public static final MigrationBooleanJNConverter instance = new MigrationBooleanJNConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public MigrationBooleanJNConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final Boolean value) {
 		if (value == null)

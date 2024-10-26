@@ -14,4 +14,11 @@ public class Kurs42DataRaum {
 	/** Das Raum-Kürzel */
 	public String RaumKuerzel;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataRaum() {
+		// leer
+	}
+
 }

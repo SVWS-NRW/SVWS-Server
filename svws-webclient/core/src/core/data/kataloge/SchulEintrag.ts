@@ -89,6 +89,9 @@ export class SchulEintrag extends JavaObject {
 	public istSichtbar : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

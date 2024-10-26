@@ -20,6 +20,9 @@ export class StundenplanInputSimpleKopplung extends JavaObject {
 	public stunden : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

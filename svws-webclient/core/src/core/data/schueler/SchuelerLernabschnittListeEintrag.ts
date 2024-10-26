@@ -74,6 +74,9 @@ export class SchuelerLernabschnittListeEintrag extends JavaObject {
 	public jahrgang : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

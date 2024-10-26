@@ -41,6 +41,9 @@ export class SchuelerListe extends JavaObject {
 	public readonly jahrgaengeGost : List<GostJahrgang> = new ArrayList<GostJahrgang>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

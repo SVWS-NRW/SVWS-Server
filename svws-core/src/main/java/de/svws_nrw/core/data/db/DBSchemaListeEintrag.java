@@ -21,4 +21,11 @@ public class DBSchemaListeEintrag {
 	@Schema(description = "gibt an, ob es sich um das Default-Schema in der Konfiguration handelt", example = "false")
 	public boolean isDefault;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public DBSchemaListeEintrag() {
+		// leer
+	}
+
 }

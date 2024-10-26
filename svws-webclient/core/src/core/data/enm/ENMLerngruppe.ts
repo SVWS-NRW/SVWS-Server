@@ -51,6 +51,9 @@ export class ENMLerngruppe extends JavaObject {
 	public wochenstunden : number = 0;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

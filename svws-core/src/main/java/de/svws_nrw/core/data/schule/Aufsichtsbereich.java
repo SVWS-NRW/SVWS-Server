@@ -14,6 +14,13 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @TranspilerDTO
 public class Aufsichtsbereich {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Aufsichtsbereich() {
+		// leer
+	}
+
 	/** Die ID des Aufsichtsbereichs. */
 	@Schema(description = "die ID des Aufsichtsbereichs", example = "4711")
 	public long id = -1;

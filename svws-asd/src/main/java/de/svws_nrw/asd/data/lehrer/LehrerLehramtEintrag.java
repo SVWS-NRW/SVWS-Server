@@ -25,4 +25,11 @@ public class LehrerLehramtEintrag {
 	@Schema(description = "Die ID des Anerkennungsgrund für das Lehramt.", example = "4713")
 	public Long idAnerkennungsgrund;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerLehramtEintrag() {
+		// leer
+	}
+
 }

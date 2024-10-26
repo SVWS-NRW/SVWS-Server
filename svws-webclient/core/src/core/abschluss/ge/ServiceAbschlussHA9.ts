@@ -47,6 +47,9 @@ export class ServiceAbschlussHA9 extends Service<GEAbschlussFaecher, AbschlussEr
 	private static readonly LOG_SEPERATOR : string = "______________________________";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

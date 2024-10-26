@@ -45,4 +45,11 @@ public class OrtKatalogEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung änderbar sein soll oder nicht", example = "true")
 	public boolean istAenderbar;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OrtKatalogEintrag() {
+		// leer
+	}
+
 }

@@ -39,6 +39,9 @@ export class GostJahrgang extends JavaObject {
 	public existierenNotenInLeistungsdaten : Array<boolean> = Array(6).fill(false);
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

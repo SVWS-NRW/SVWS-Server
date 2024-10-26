@@ -72,6 +72,13 @@ public class OpenApiSchemaRoot extends BaseOpenApiResource {
 			.prettyPrint(true)
 			.resourcePackages(Stream.of("de.svws_nrw.api.schema").collect(Collectors.toSet()));
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public OpenApiSchemaRoot() {
+		// leer
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private OpenApiContext getOpenApiContext() throws OpenApiConfigurationException {
 		return new JaxrsOpenApiContextBuilder()

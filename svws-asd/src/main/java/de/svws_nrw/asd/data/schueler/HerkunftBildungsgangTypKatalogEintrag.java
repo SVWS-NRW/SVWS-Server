@@ -25,4 +25,11 @@ public class HerkunftBildungsgangTypKatalogEintrag extends CoreTypeData {
 	@Schema(description = "die Kürzel der Schulformen, bei welchen der Bildungsgang als Herkunft vorkommen kann (WB oder BK und SB)")
 	public @NotNull List<@NotNull SchulformSchulgliederung> zulaessig = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public HerkunftBildungsgangTypKatalogEintrag() {
+		// leer
+	}
+
 }

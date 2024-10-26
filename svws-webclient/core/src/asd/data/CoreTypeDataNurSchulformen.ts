@@ -11,6 +11,9 @@ export class CoreTypeDataNurSchulformen extends CoreTypeData {
 	public schulformen : List<string> = new ArrayList<string>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

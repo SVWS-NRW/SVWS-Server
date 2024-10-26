@@ -20,4 +20,11 @@ public class GostJahrgangFachwahlenHalbjahr {
 	/** Die Fachwahlen für den Abiturbereich */
 	public @NotNull List<GostFachwahl> fachwahlen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostJahrgangFachwahlenHalbjahr() {
+		// leer
+	}
+
 }

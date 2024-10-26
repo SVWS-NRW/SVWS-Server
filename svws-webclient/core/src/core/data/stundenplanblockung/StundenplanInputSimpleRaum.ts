@@ -14,6 +14,9 @@ export class StundenplanInputSimpleRaum extends JavaObject {
 	public kuerzel : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

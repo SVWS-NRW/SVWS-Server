@@ -40,4 +40,11 @@ public class ENMAnkreuzkompetenz {
 	@Schema(description = "die Sortier-Reihenfolge der Ankreuzkompetenzen. Bei gleichen Werten sollte nach dem Text-Atrtribut sortiert werden.", example = "1")
 	public int sortierung = 1;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMAnkreuzkompetenz() {
+		// leer
+	}
+
 }

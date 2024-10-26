@@ -16,4 +16,11 @@ public class LehrerBeschaeftigungsartKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public LehrerBeschaeftigungsartKatalogEintrag() {
+		// leer
+	}
+
 }

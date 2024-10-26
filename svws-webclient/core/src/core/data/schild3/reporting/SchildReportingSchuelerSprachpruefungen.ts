@@ -74,6 +74,9 @@ export class SchildReportingSchuelerSprachpruefungen extends JavaObject {
 	public note : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -45,4 +45,11 @@ public class StundenplanKlassenunterricht {
 	@Schema(description = "die Liste der IDs der Lehrer, die dem Klassenunterricht zugeordnet sind")
 	public @NotNull List<Long> lehrer = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanKlassenunterricht() {
+		// leer
+	}
+
 }

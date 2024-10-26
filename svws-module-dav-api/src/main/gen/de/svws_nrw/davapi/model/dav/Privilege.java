@@ -10,9 +10,17 @@ import java.util.List;
 })
 @XmlRootElement(name = "privilege")
 public class Privilege {
+
     @XmlMixed
     @XmlAnyElement(lax = true)
 	private List<Object> content;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Privilege() {
+		// leer
+	}
 
 	public List<Object> getContent() {
 		if (content==null)
@@ -20,7 +28,7 @@ public class Privilege {
 		return content;
 	}
 
-	public void setContent(List<Object> content) {
+	public void setContent(final List<Object> content) {
 		this.content = content;
 	}
 

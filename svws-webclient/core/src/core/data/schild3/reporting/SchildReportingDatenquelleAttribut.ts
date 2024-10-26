@@ -19,6 +19,9 @@ export class SchildReportingDatenquelleAttribut extends JavaObject {
 	public beschreibung : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

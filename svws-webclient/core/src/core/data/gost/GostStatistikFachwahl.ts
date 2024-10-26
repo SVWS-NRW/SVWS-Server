@@ -45,6 +45,9 @@ export class GostStatistikFachwahl extends JavaObject {
 	public fachwahlen : Array<GostStatistikFachwahlHalbjahr> = Array(6).fill(null);
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

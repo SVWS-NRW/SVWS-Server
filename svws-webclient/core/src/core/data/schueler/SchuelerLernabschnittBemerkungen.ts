@@ -39,6 +39,9 @@ export class SchuelerLernabschnittBemerkungen extends JavaObject {
 	public versetzungsentscheidung : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

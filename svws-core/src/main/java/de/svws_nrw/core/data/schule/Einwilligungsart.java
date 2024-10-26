@@ -42,4 +42,11 @@ public class Einwilligungsart {
 	@Schema(description = "gibt an, für welche Personengruppe die Einwilligungsart relevant ist", example = "2")
 	public int personTyp = PersonTyp.SCHUELER.id;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Einwilligungsart() {
+		// leer
+	}
+
 }

@@ -22,4 +22,11 @@ public class BenutzerConfigElement {
 	@Schema(description = "der Wert des Konfigurationselements.")
 	public @NotNull String value = "";
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerConfigElement() {
+		// leer
+	}
+
 }

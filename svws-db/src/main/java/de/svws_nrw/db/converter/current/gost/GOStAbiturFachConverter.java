@@ -13,6 +13,13 @@ public final class GOStAbiturFachConverter extends DBAttributeConverter<GostAbit
 	/** Die Instanz des Konverters */
 	public static final GOStAbiturFachConverter instance = new GOStAbiturFachConverter();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GOStAbiturFachConverter() {
+		// leer
+	}
+
 	@Override
 	public String convertToDatabaseColumn(final GostAbiturFach value) {
 		if (value == null)

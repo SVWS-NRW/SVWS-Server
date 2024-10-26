@@ -36,6 +36,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class APIAlgoGesamtschuleAbschluss {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIAlgoGesamtschuleAbschluss() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Prüfung auf den HA9.
 	 *
 	 * @param faecher       zu übergebende Fächerdaten für die Prüfung auf HA9

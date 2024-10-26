@@ -24,6 +24,9 @@ export class ENMTeilleistungsart extends JavaObject {
 	public gewichtung : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

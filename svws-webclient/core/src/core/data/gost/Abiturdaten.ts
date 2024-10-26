@@ -189,6 +189,9 @@ export class Abiturdaten extends JavaObject {
 	public note : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

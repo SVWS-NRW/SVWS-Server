@@ -76,4 +76,11 @@ public class Schild3KatalogEintragPruefungsordnungOption {
 	@Schema(description = "Gültig bis Schuljahr")
 	public Integer gueltigBis;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragPruefungsordnungOption() {
+		// leer
+	}
+
 }

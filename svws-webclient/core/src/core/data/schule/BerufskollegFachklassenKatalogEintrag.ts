@@ -22,6 +22,9 @@ export class BerufskollegFachklassenKatalogEintrag extends JavaObject {
 	public historie : List<BerufskollegFachklassenKatalogDaten> = new ArrayList<BerufskollegFachklassenKatalogDaten>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

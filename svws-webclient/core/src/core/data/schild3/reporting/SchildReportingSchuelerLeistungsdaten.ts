@@ -84,6 +84,9 @@ export class SchildReportingSchuelerLeistungsdaten extends JavaObject {
 	public sortierungSekII : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

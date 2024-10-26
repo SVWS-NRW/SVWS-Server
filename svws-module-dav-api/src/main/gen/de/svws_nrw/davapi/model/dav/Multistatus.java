@@ -45,10 +45,19 @@ public class Multistatus {
 
     @XmlElement(required = true)
     protected List<Response> response;
+
     protected String responsedescription;
+
     @XmlElement(name = "sync-token")
     @XmlSchemaType(name = "anyURI")
     protected String syncToken;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Multistatus() {
+		// leer
+	}
 
     /**
      * Gets the value of the response property.
@@ -99,7 +108,7 @@ public class Multistatus {
      *     {@link String }
      *
      */
-    public void setResponsedescription(String value) {
+    public void setResponsedescription(final String value) {
         this.responsedescription = value;
     }
 
@@ -123,7 +132,7 @@ public class Multistatus {
      *     {@link String }
      *
      */
-    public void setSyncToken(String value) {
+    public void setSyncToken(final String value) {
         this.syncToken = value;
     }
 

@@ -30,4 +30,12 @@ public class Kurs42DataFaecher {
 
 	/** Gibt an, ob es sich bei dem Fach um eine Sprache handelt (1) oder nicht (0) */
 	public int IstSprache;
+
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Kurs42DataFaecher() {
+		// leer
+	}
+
 }

@@ -23,4 +23,11 @@ public class BenutzerKennwort {
 	@Schema(description = "Das Kennwort des Benutzers.", example = "geheim")
 	public String password;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public BenutzerKennwort() {
+		// leer
+	}
+
 }

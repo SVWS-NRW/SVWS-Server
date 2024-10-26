@@ -44,4 +44,11 @@ public class Schild3KatalogEintragFilterFeldListe {
 	@Schema(description = "Zusatzbedingung im Attributsfilter")
 	public String Zusatzbedingung;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Schild3KatalogEintragFilterFeldListe() {
+		// leer
+	}
+
 }

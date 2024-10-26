@@ -33,4 +33,11 @@ public class GostStatistikFachwahlHalbjahr {
 	@Schema(description = "die Gesamtzahl der Wahlen als Leistungskurs", example = "42")
 	public int wahlenLK = 0;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostStatistikFachwahlHalbjahr() {
+		// leer
+	}
+
 }

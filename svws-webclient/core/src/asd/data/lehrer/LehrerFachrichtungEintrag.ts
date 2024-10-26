@@ -19,6 +19,9 @@ export class LehrerFachrichtungEintrag extends JavaObject {
 	public idAnerkennungsgrund : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

@@ -42,6 +42,13 @@ import jakarta.ws.rs.core.Response;
 public class APIKlassen {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIKlassen() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste der Klassen im angegebenen Schema.
 	 *
 	 * @param schema        das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

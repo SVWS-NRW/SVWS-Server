@@ -9,6 +9,9 @@ export class KAOAEbene4KatalogEintrag extends CoreTypeData {
 	public zusatzmerkmal : string = "";
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

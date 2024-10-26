@@ -36,6 +36,9 @@ export class GostBlockungsergebnisKurs extends JavaObject {
 	public readonly schienen : List<number> = new ArrayList<number>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

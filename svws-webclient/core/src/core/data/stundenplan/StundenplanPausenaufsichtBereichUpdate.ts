@@ -17,6 +17,9 @@ export class StundenplanPausenaufsichtBereichUpdate extends JavaObject {
 	public listHinzuzufuegen : List<StundenplanPausenaufsichtBereich> = new ArrayList<StundenplanPausenaufsichtBereich>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

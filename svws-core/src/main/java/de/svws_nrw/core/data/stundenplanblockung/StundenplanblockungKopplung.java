@@ -32,4 +32,11 @@ public class StundenplanblockungKopplung {
 	@ArraySchema(schema = @Schema(implementation = StundenplanblockungStundenelement.class))
 	public @NotNull List<StundenplanblockungStundenelement> stundenelemente = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungKopplung() {
+		// leer
+	}
+
 }

@@ -18,4 +18,11 @@ public class ReligionKatalogEintrag extends CoreTypeData {
 
 	// keine weiteren Attribute
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ReligionKatalogEintrag() {
+		// leer
+	}
+
 }

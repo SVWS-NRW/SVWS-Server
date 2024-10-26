@@ -34,6 +34,9 @@ export class Schulleitung extends JavaObject {
 	public ende : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

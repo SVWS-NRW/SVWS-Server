@@ -41,6 +41,13 @@ public class Limit {
     @XmlElement(required = true)
     protected BigInteger nresults;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Limit() {
+		// leer
+	}
+
     /**
      * Gets the value of the nresults property.
      *
@@ -61,7 +68,7 @@ public class Limit {
      *     {@link BigInteger }
      *
      */
-    public void setNresults(BigInteger value) {
+    public void setNresults(final BigInteger value) {
         this.nresults = value;
     }
 

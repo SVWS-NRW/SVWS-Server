@@ -13,6 +13,13 @@ import jakarta.validation.constraints.NotNull;
  */
 public final class StundenplanblockungAlgorithmus extends Service<StundenplanblockungManager, StundenplanblockungManager> {
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanblockungAlgorithmus() {
+		// leer
+	}
+
 	@Override
 	public @NotNull StundenplanblockungManager handle(final @NotNull StundenplanblockungManager pInput) {
 		return pInput;

@@ -124,6 +124,13 @@ public class ENMDaten {
 			description = "Ein Array mit den Informationen zu den Schülern, deren Noten in dieser Notendatei verwaltet werden."))
 	public @NotNull List<ENMSchueler> schueler = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMDaten() {
+		// leer
+	}
+
 }
 
 

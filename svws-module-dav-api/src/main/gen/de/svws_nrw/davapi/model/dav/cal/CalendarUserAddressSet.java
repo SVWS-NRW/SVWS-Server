@@ -38,6 +38,13 @@ public class CalendarUserAddressSet {
     @XmlMixed
     private List<String> content;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CalendarUserAddressSet() {
+		// leer
+	}
+
     /**
      * Gets the value of the content property.
      *

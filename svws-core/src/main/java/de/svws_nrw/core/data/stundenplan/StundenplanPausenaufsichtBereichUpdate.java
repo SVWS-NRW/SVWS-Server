@@ -23,4 +23,11 @@ public class StundenplanPausenaufsichtBereichUpdate {
 	/** Die hinzuzufügenden Zuordnungen */
 	public @NotNull List<StundenplanPausenaufsichtBereich> listHinzuzufuegen = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public StundenplanPausenaufsichtBereichUpdate() {
+		// leer
+	}
+
 }

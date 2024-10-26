@@ -69,6 +69,13 @@ import jakarta.ws.rs.core.Response;
 public class APIStundenplan {
 
 	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public APIStundenplan() {
+		// leer
+	}
+
+	/**
 	 * Die OpenAPI-Methode für die Abfrage der Liste aller Stundenpläne.
 	 *
 	 * @param schema      das Datenbankschema, auf welches die Abfrage ausgeführt werden soll

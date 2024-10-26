@@ -14,6 +14,9 @@ export class BKAnlageAFach extends JavaObject {
 	public note : number = -1;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

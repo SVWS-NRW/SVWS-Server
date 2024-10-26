@@ -42,5 +42,11 @@ public class ErzieherListeEintrag {
 	@Schema(description = "Die Email-Adresse des Erziehers", example = "max@test.de")
 	public String email;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ErzieherListeEintrag() {
+		// leer
+	}
 
 }

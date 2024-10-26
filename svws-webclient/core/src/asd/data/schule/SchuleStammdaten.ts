@@ -103,6 +103,9 @@ export class SchuleStammdaten extends JavaObject {
 	public readonly abschnitte : List<Schuljahresabschnitt> = new ArrayList<Schuljahresabschnitt>();
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

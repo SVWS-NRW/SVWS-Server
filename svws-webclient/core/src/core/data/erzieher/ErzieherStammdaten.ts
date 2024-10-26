@@ -84,6 +84,9 @@ export class ErzieherStammdaten extends JavaObject {
 	public bemerkungen : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

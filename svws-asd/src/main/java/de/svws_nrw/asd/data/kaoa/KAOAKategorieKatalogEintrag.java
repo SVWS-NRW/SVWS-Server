@@ -22,4 +22,11 @@ public class KAOAKategorieKatalogEintrag extends CoreTypeData {
 	@Schema(description = "Jahrgangsstufen in denen der Eintrag gemacht werden darf")
 	public @NotNull List<String> jahrgaenge = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public KAOAKategorieKatalogEintrag() {
+		// leer
+	}
+
 }

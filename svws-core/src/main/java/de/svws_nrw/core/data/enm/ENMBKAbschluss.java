@@ -71,4 +71,11 @@ public class ENMBKAbschluss {
 			description = "Ein Array mit den Informationen zu den einzelnen Fächern, die dem Abschluss zugeordnet sind."))
 	public @NotNull List<ENMBKFach> faecher = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public ENMBKAbschluss() {
+		// leer
+	}
+
 }

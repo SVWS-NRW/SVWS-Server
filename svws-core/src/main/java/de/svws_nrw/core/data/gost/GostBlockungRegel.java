@@ -29,4 +29,11 @@ public class GostBlockungRegel {
 	/** Eine Liste der Regel-Parameter */
 	public @NotNull List<Long> parameter = new ArrayList<>();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public GostBlockungRegel() {
+		// leer
+	}
+
 }

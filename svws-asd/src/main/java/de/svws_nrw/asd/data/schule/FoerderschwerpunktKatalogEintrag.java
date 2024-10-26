@@ -16,4 +16,11 @@ public class FoerderschwerpunktKatalogEintrag extends CoreTypeDataNurSchulformen
 
 	// keine weiteren Attribute vorhanden
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public FoerderschwerpunktKatalogEintrag() {
+		// leer
+	}
+
 }

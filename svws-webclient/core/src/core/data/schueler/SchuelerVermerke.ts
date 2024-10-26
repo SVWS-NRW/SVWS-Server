@@ -39,6 +39,9 @@ export class SchuelerVermerke extends JavaObject {
 	public geaendertVon : string | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

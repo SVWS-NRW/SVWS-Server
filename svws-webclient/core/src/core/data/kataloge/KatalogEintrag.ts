@@ -29,6 +29,9 @@ export class KatalogEintrag extends JavaObject {
 	public istAenderbar : boolean = false;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

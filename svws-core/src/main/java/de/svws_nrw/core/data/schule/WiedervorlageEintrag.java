@@ -62,4 +62,11 @@ public class WiedervorlageEintrag {
 			example = "null")
 	public boolean automatischErledigt = false;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public WiedervorlageEintrag() {
+		// leer
+	}
+
 }

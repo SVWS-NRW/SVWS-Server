@@ -21,6 +21,13 @@ public final class UhrzeitConverterString extends DBAttributeConverter<String, T
 	/** Die Instanz des Konverters */
 	public static final UhrzeitConverterString instance = new UhrzeitConverterString();
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public UhrzeitConverterString() {
+		// leer
+	}
+
 	@Override
 	public Timestamp convertToDatabaseColumn(final String attribute) {
 		return ((attribute == null) || ("".equals(attribute)))

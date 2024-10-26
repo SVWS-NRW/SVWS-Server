@@ -48,4 +48,11 @@ public class Sprachpruefung {
 	/** Die Note, die in der Sprachprüfung erreicht wurde (1,2,3,4,5,6 oder null, wenn keine Note angegeben ist) */
 	public Integer note;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public Sprachpruefung() {
+		// leer
+	}
+
 }

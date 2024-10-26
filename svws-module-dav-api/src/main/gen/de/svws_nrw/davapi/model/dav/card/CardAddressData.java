@@ -50,11 +50,18 @@ public class CardAddressData {
 	@XmlAttribute(name = "version")
 	private String version;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public CardAddressData() {
+		// leer
+	}
+
 	public String getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
@@ -62,7 +69,7 @@ public class CardAddressData {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(final String version) {
 		this.version = version;
 	}
 

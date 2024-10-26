@@ -31,6 +31,9 @@ export class ENMFloskel extends JavaObject {
 	public jahrgangID : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}

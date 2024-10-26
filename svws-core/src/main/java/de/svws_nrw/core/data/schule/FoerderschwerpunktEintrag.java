@@ -34,4 +34,11 @@ public class FoerderschwerpunktEintrag {
 	@Schema(description = "gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht", example = "true")
 	public boolean istSichtbar;
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
+	public FoerderschwerpunktEintrag() {
+		// leer
+	}
+
 }

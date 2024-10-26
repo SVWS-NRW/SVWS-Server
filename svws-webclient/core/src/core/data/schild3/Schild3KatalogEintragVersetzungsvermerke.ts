@@ -44,6 +44,9 @@ export class Schild3KatalogEintragVersetzungsvermerke extends JavaObject {
 	public gueltigBis : number | null = null;
 
 
+	/**
+	 * Leerer Standardkonstruktor.
+	 */
 	public constructor() {
 		super();
 	}
