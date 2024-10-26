@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -670,6 +669,15 @@ public class GostBlockungsdatenManager {
 	 */
 	public boolean ergebnisManagerExists(final long idErgebnis) {
 		return _map_idErgebnis_ErgebnisManager.containsKey(idErgebnis);
+	}
+
+	/**
+	 * Liefert die sortierte Menge aller {@link GostBlockungsergebnisManager}.
+	 *
+	 * @return die sortierte Menge aller {@link GostBlockungsergebnisManager}.
+	 */
+	public @NotNull List<GostBlockungsergebnisManager> ergebnisManagerGetListeUnsortiert() {
+		return new ArrayList<>(_map_idErgebnis_ErgebnisManager.values());
 	}
 
 	/**
@@ -1475,6 +1483,7 @@ public class GostBlockungsdatenManager {
 
 	/**
 	 * Fügt die übergebene Schiene zu der Blockung hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schiene  Die hinzuzufügende Schiene.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -1485,6 +1494,7 @@ public class GostBlockungsdatenManager {
 
 	/**
 	 * Fügt die Menge an Schienen hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schienenmenge  Die Menge an Schienen.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -1600,9 +1610,8 @@ public class GostBlockungsdatenManager {
 		// (1)
 		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
 		final @NotNull GostBlockungSchiene schieneR = this.schieneGet(idSchiene);
-
-		// TODO löschen nur dann erlaubt, wenn kein Kurs in der Schiene
-		// TODO Die Schiene muss auf bei dem potentiell EINEM Blockungsergebnis gelöscht werden.
+		for (final @NotNull GostBlockungsergebnisManager eManager : _map_idErgebnis_ErgebnisManager.values())
+			DeveloperNotificationException.ifTrue("Schiene kann nicht gelöscht werden, da sie Kurse enthält!", !eManager.getOfSchieneIstLeer(idSchiene));
 
 		// (2)
 		_map_idSchiene_schiene.remove(idSchiene);
@@ -1612,19 +1621,16 @@ public class GostBlockungsdatenManager {
 				schiene.nummer--;
 
 		// (3)
-		final Iterator<GostBlockungRegel> iRegel = _daten.regeln.iterator();
-		if (iRegel == null)
-			return;
-		while (iRegel.hasNext()) {
-			final @NotNull GostBlockungRegel r = iRegel.next();
+		final @NotNull Set<Long> setRegelnZuLoeschen = new HashSet<>();
+		for (final @NotNull GostBlockungRegel r : _daten.regeln) {
 			final long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
 			if (a == null)
-				iRegel.remove();
+				setRegelnZuLoeschen.add(r.id);
 			else
 				for (int i = 0; i < a.length; i++)
 					r.parameter.set(i, a[i]);
 		}
-
+		regelRemoveListeByIDsOhneRevalidierung(setRegelnZuLoeschen);
 	}
 
 	/**
@@ -2579,6 +2585,7 @@ public class GostBlockungsdatenManager {
 
 		return sb.toString();
 	}
+
 
 
 }

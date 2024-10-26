@@ -1211,6 +1211,15 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
+	 * Liefert die Anzahl an E-Schienen.
+	 *
+	 * @return die Anzahl an E-Schienen.
+	 */
+	public getAnzahlSchienen() : number {
+		return this._ergebnis.schienen.size();
+	}
+
+	/**
 	 * Liefert die Anzahl an Dummy-SuS.
 	 *
 	 * @return die Anzahl an Dummy-SuS.
@@ -5094,16 +5103,27 @@ export class GostBlockungsergebnisManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.<br>
-	 * Wirft eine Exception, wenn der ID keine Schiene zugeordnet ist.
+	 * Liefert das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
 	 *
 	 * @param idSchiene  Die Datenbank-ID der Schiene.
 	 *
 	 * @return das zur ID zugehörige {@link GostBlockungsergebnisSchiene}-Objekt.
-	 * @throws DeveloperNotificationException falls die ID unbekannt ist.
+	 * @throws DeveloperNotificationException falls die Schiene nicht existiert.
 	 */
 	private getSchieneE(idSchiene : number) : GostBlockungsergebnisSchiene {
 		return DeveloperNotificationException.ifMapGetIsNull(this._schienenID_to_schiene, idSchiene);
+	}
+
+	/**
+	 * Liefert TRUE, falls die Schiene keine Kurse enthält.
+	 *
+	 * @param idSchiene  Die Datenbank-ID der Schiene.
+	 *
+	 * @return TRUE, falls die Schiene keine Kurse enthält.
+	 * @throws DeveloperNotificationException falls die Schiene nicht existiert.
+	 */
+	public getOfSchieneIstLeer(idSchiene : number) : boolean {
+		return this.getSchieneE(idSchiene).kurse.isEmpty();
 	}
 
 	/**

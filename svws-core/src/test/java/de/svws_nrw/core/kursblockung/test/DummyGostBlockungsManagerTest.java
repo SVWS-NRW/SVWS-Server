@@ -38,7 +38,7 @@ import jakarta.validation.constraints.NotNull;
 @TestMethodOrder(MethodOrderer.MethodName.class)
 class DummyGostBlockungsManagerTest {
 
-	private static final int RUNDEN = 1000;
+	private static final int RUNDEN = 10000;
 	private static final int SCHULJAHR = 2024;
 
 	private final Random RND = new Random(1);
@@ -154,18 +154,30 @@ class DummyGostBlockungsManagerTest {
 				case 61 -> _ergebnisRemoveByID();
 				case 64 -> _ergebnisGetAnzahl();
 
+				// GostBlockungsdatenManager - Regeln
+				case 90 -> _regelGetAnzahl();
+
 				default -> {
 					// ...
 				}
 			}
-			// Schneller Konsistenzcheck nach jeder Veränderung
-			_schieneGetAnzahl();
-			_kursGetAnzahl();
-			_ergebnisGetAnzahl();
+			// Konsistenzcheck aller Objekte
+			_schieneGetListe();
 		}
 
 	}
 
+	private static void assertEqualExceptions(final DeveloperNotificationException ex1, final DeveloperNotificationException ex2) {
+		if ((ex1 == null) != (ex2 == null)) {
+			System.out.println("EX1 = " + ex1);
+			System.out.println("EX2 = " + ex2);
+			if (ex1 != null)
+				ex1.printStackTrace();
+			if (ex2 != null)
+				ex2.printStackTrace();
+		}
+		assertEquals(ex1 == null, ex2 == null);
+	}
 
 	private void _ergebnisAdd() {
 		if (m1.ergebnisGetAnzahl() >= MAX_ERGEBNISSE)
@@ -186,7 +198,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_ergebnisGetAnzahl();
 	}
 
@@ -206,7 +218,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_ergebnisGetAnzahl();
 	}
 
@@ -220,23 +232,28 @@ class DummyGostBlockungsManagerTest {
 	private void _schieneAdd() {
 		if (m1.schieneGetAnzahl() >= MAX_SCHIENEN)
 			return;
-
 		final @NotNull GostBlockungSchiene[] s = createSchieneDuplikateAuchUngueltig();
 		DeveloperNotificationException ex1 = null;
 		DeveloperNotificationException ex2 = null;
 
 		try {
 			m1.schieneAdd(s[0]);
+			// Informiere alle E-Manager.
+			for (final @NotNull GostBlockungsergebnisManager e : m1.ergebnisManagerGetListeUnsortiert())
+				e.setAddSchieneByID(s[0].id);
 		} catch (final DeveloperNotificationException ex) {
 			ex1 = ex;
 		}
 		try {
 			m2.schieneAdd(s[1]);
+			// Informiere alle E-Manager.
+			for (final @NotNull DummyGostBlockungsergebnisManager e : m2.ergebnisManagerGetListeUnsortiert())
+				e.setAddSchieneByID(s[0].id);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_schieneGetAnzahl();
 	}
 
@@ -247,28 +264,34 @@ class DummyGostBlockungsManagerTest {
 
 		final @NotNull List<GostBlockungSchiene> list1 = new ArrayList<>();
 		final @NotNull List<GostBlockungSchiene> list2 = new ArrayList<>();
-
 		do {
 			final @NotNull GostBlockungSchiene[] s = createSchieneDuplikateAuchUngueltig();
 			list1.add(s[0]);
 			list2.add(s[1]);
 		} while (RND.nextBoolean());
-
 		DeveloperNotificationException ex1 = null;
 		DeveloperNotificationException ex2 = null;
 
 		try {
 			m1.schieneAddListe(list1);
+			// Informiere alle E-Manager.
+			for (final @NotNull GostBlockungsergebnisManager e1 : m1.ergebnisManagerGetListeUnsortiert())
+				for (final GostBlockungSchiene schiene1 : list1)
+					e1.setAddSchieneByID(schiene1.id);
 		} catch (final DeveloperNotificationException ex) {
 			ex1 = ex;
 		}
 		try {
 			m2.schieneAddListe(list2);
+			// Informiere alle E-Manager.
+			for (final @NotNull DummyGostBlockungsergebnisManager e2 : m2.ergebnisManagerGetListeUnsortiert())
+				for (final GostBlockungSchiene schiene2 : list2)
+					e2.setAddSchieneByID(schiene2.id);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_schieneGetAnzahl();
 	}
 
@@ -288,15 +311,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		if ((ex1 == null) != (ex2 == null)) {
-			System.out.println(ex1 + ", " + ex2);
-			if (ex1 != null)
-				ex1.printStackTrace();
-			if (ex2 != null)
-				ex2.printStackTrace();
-		}
-
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.schieneGet(idSchiene).id, m2.schieneGet(idSchiene).id);
 	}
@@ -334,11 +349,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.schieneGetIsRemoveAllowed(idSchiene), m2.schieneGetIsRemoveAllowed(idSchiene));
 	}
-
 
 	private void _schienePatchBezeichnung() {
 		final String sNeueBezeichnung = "Schiene " + RND.nextInt();
@@ -357,11 +371,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.schieneGet(idSchiene).bezeichnung, m2.schieneGet(idSchiene).bezeichnung);
 	}
-
 
 	private void _schienePatchWochenstunden() {
 		final int sNeueWochenstunden = RND.nextInt(0, 5);
@@ -380,11 +393,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.schieneGet(idSchiene).wochenstunden, m2.schieneGet(idSchiene).wochenstunden);
 	}
-
 
 	private void _schieneRemoveByID() {
 		final long idSchiene = getSchieneIdAuchUngueltig();
@@ -393,17 +405,24 @@ class DummyGostBlockungsManagerTest {
 
 		try {
 			m1.schieneRemoveByID(idSchiene);
+			// Informiere alle E-Manager.
+			for (final @NotNull GostBlockungsergebnisManager e : m1.ergebnisManagerGetListeUnsortiert())
+				e.setRemoveSchieneByID(idSchiene);
 		} catch (final DeveloperNotificationException ex) {
 			ex1 = ex;
 		}
 		try {
 			m2.schieneRemoveByID(idSchiene);
+			// Informiere alle E-Manager.
+			for (final @NotNull DummyGostBlockungsergebnisManager e : m2.ergebnisManagerGetListeUnsortiert())
+				e.setRemoveSchieneByID(idSchiene);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_schieneGetAnzahl();
+		_regelGetAnzahl();
 	}
 
 
@@ -414,16 +433,22 @@ class DummyGostBlockungsManagerTest {
 
 		try {
 			m1.schieneRemove(s[0]);
+			// Informiere alle E-Manager.
+			for (final @NotNull GostBlockungsergebnisManager e : m1.ergebnisManagerGetListeUnsortiert())
+				e.setRemoveSchieneByID(s[0].id);
 		} catch (final DeveloperNotificationException ex) {
 			ex1 = ex;
 		}
 		try {
 			m2.schieneRemove(s[1]);
+			// Informiere alle E-Manager.
+			for (final @NotNull DummyGostBlockungsergebnisManager e : m2.ergebnisManagerGetListeUnsortiert())
+				e.setRemoveSchieneByID(s[1].id);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_schieneGetAnzahl();
 	}
 
@@ -431,6 +456,12 @@ class DummyGostBlockungsManagerTest {
 		final int v1 = m1.schieneGetAnzahl();
 		final int v2 = m1.schieneGetAnzahl();
 		assertEquals(v1, v2);
+
+		// Auch E-Schienen testen.
+		for (final @NotNull GostBlockungsergebnisManager e : m1.ergebnisManagerGetListeUnsortiert())
+			assertEquals(v1, e.getAnzahlSchienen());
+		for (final @NotNull DummyGostBlockungsergebnisManager e : m2.ergebnisManagerGetListeUnsortiert())
+			assertEquals(v1, e.getAnzahlSchienen());
 	}
 
 	private void _schieneGetDefaultAnzahl() {
@@ -460,7 +491,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
 	}
 
@@ -490,15 +521,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		if ((ex1 == null) != (ex2 == null)) {
-			System.out.println(ex1 + ", " + ex2);
-			if (ex1 != null)
-				ex1.printStackTrace();
-			if (ex2 != null)
-				ex2.printStackTrace();
-		}
-
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
 	}
 
@@ -514,7 +537,6 @@ class DummyGostBlockungsManagerTest {
 		final int v2 = m2.kursGetAnzahl();
 		assertEquals(v1, v2);
 	}
-
 
 	private void _kursGetName() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -532,11 +554,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetName(idKurs), m2.kursGetName(idKurs));
 	}
-
 
 	private void _kursGetNameOhneSuffix() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -554,11 +575,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetNameOhneSuffix(idKurs), m2.kursGetNameOhneSuffix(idKurs));
 	}
-
 
 	private void _kursGet() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -576,11 +596,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGet(idKurs).id, m2.kursGet(idKurs).id);
 	}
-
 
 	private void _kursGetLehrkraftMitNummer() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -599,11 +618,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetLehrkraftMitNummer(idKurs, reihenfolgeNr).id, m2.kursGetLehrkraftMitNummer(idKurs, reihenfolgeNr).id);
 	}
-
 
 	private void _kursGetLehrkraftMitID() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -622,11 +640,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetLehrkraftMitID(idKurs, idKursLehrkraft).id, m2.kursGetLehrkraftMitID(idKurs, idKursLehrkraft).id);
 	}
-
 
 	private void _kursGetLehrkraftMitNummerExists() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -645,12 +662,11 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetLehrkraftMitNummerExists(idKurs, reihenfolge),
 					m2.kursGetLehrkraftMitNummerExists(idKurs, reihenfolge));
 	}
-
 
 	private void _kursGetLehrkraftMitIDExists() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -669,12 +685,11 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetLehrkraftMitIDExists(idKurs, idLehrkraft),
 					m2.kursGetLehrkraftMitIDExists(idKurs, idLehrkraft));
 	}
-
 
 	private void _kursGetLehrkraefteSortiert() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -692,7 +707,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null) {
 			final @NotNull List<GostBlockungKursLehrer> list1 = m1.kursGetLehrkraefteSortiert(idKurs);
 			final @NotNull List<GostBlockungKursLehrer> list2 = m2.kursGetLehrkraefteSortiert(idKurs);
@@ -702,9 +717,7 @@ class DummyGostBlockungsManagerTest {
 		}
 	}
 
-
 	private void _kursAddLehrkraft() {
-
 		final long idKurs = getKursIdAuchUngueltig();
 		final @NotNull GostBlockungKursLehrer[] l = createKurslehrerDuplikateAuchUngueltig();
 		DeveloperNotificationException ex1 = null;
@@ -721,16 +734,12 @@ class DummyGostBlockungsManagerTest {
 			m2.kursAddLehrkraft(idKurs, l[1]);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
-			if (ex1 == null)
-				ex.printStackTrace();
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGet(idKurs).lehrer.size(), m2.kursGet(idKurs).lehrer.size());
 	}
-
-
 
 	private void _kursRemoveLehrkraft() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -747,11 +756,9 @@ class DummyGostBlockungsManagerTest {
 			m2.kursRemoveLehrkraft(idKurs, idLehrkraft);
 		} catch (final DeveloperNotificationException ex) {
 			ex2 = ex;
-			if (ex1 == null)
-				ex.printStackTrace();
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGet(idKurs).lehrer.size(), m2.kursGet(idKurs).lehrer.size());
 	}
@@ -792,7 +799,6 @@ class DummyGostBlockungsManagerTest {
 		assertEquals(b1, b2);
 	}
 
-
 	private void _kursGetIstVerbotenInSchiene() {
 		final long idKurs = getKursIdAuchUngueltig();
 		final long idSchiene = getSchieneIdAuchUngueltig();
@@ -810,7 +816,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 	}
 
 
@@ -831,7 +837,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 	}
 
 
@@ -852,12 +858,11 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetRegelGesperrtInSchiene(idKurs, idSchiene).id,
 					m2.kursGetRegelGesperrtInSchiene(idKurs, idSchiene).id);
 	}
-
 
 	private void _kursGetHatFixierungInSchiene() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -876,9 +881,8 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 	}
-
 
 	private void _kursGetRegelFixierungInSchiene() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -897,12 +901,11 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGetRegelGesperrtInSchiene(idKurs, idSchiene).id,
 					m2.kursGetRegelGesperrtInSchiene(idKurs, idSchiene).id);
 	}
-
 
 	private void _kursIstWeitereFixierungErlaubt() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -920,9 +923,8 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 	}
-
 
 	private void _kursGetRegelDummySchuelerOrNull() {
 		final long idKurs = getKursIdAuchUngueltig();
@@ -940,7 +942,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null) {
 			assertEquals(m1.kursGetRegelDummySchuelerOrNull(idKurs) == null,
 					m2.kursGetRegelDummySchuelerOrNull(idKurs) == null);
@@ -959,7 +961,6 @@ class DummyGostBlockungsManagerTest {
 		for (final long id1 : set1)
 			assertEquals(true, set2.contains(id1));
 	}
-
 
 	private void _kurseRemoveByID() {
 		final @NotNull Set<Long> set1 = new HashSet<>();
@@ -984,9 +985,9 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
-		// TODO regelGetAnzahl
+		_regelGetAnzahl();
 	}
 
 	private void _kursRemoveByID() {
@@ -1005,11 +1006,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
-		// TODO regelGetAnzahl
+		_regelGetAnzahl();
 	}
-
 
 	private void _kursRemove() {
 		final @NotNull GostBlockungKurs[] k = createKursDuplikateAuchUngueltig();
@@ -1027,11 +1027,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
-		// TODO regelGetAnzahl
+		_regelGetAnzahl();
 	}
-
 
 	private void _kurseRemove() {
 		final @NotNull List<GostBlockungKurs> list1 = new ArrayList<>();
@@ -1056,11 +1055,10 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
-		// TODO regelGetAnzahl
+		_regelGetAnzahl();
 	}
-
 
 	private void _kursSetSuffix() {
 		final String sNeuerSuffix = "Suffix " + RND.nextInt();
@@ -1079,7 +1077,7 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		if (ex1 == null)
 			assertEquals(m1.kursGet(idKurs).suffix, m2.kursGet(idKurs).suffix);
 	}
@@ -1101,9 +1099,15 @@ class DummyGostBlockungsManagerTest {
 			ex2 = ex;
 		}
 
-		assertEquals(ex1 == null, ex2 == null);
+		assertEqualExceptions(ex1, ex2);
 		_kursGetAnzahl();
-		// TODO regelGetAnzahl
+		_regelGetAnzahl();
+	}
+
+	private void _regelGetAnzahl() {
+		final int v1 = m1.regelGetAnzahl();
+		final int v2 = m2.regelGetAnzahl();
+		assertEquals(v1, v2);
 	}
 
 	private @NotNull GostBlockungKurs[] createKursDuplikateAuchUngueltig() {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -239,7 +238,7 @@ public class DummyGostBlockungsdatenManager {
 
 		// Hinzufügen
 		for (final @NotNull GostBlockungsergebnis ergebnis : ergebnismenge) {
-			final DummyGostBlockungsergebnisManager em = new DummyGostBlockungsergebnisManager();
+			final DummyGostBlockungsergebnisManager em = new DummyGostBlockungsergebnisManager(this, ergebnis.id);
 			DeveloperNotificationException.ifMapPutOverwrites(_mapEM, ergebnis.id, em);
 			_daten.ergebnisse.add(ergebnis);
 		}
@@ -407,6 +406,7 @@ public class DummyGostBlockungsdatenManager {
 
 	/**
 	 * Fügt die übergebene Schiene zu der Blockung hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schiene  Die hinzuzufügende Schiene.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -417,6 +417,7 @@ public class DummyGostBlockungsdatenManager {
 
 	/**
 	 * Fügt die Menge an Schienen hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schienenmenge  Die Menge an Schienen.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -566,6 +567,8 @@ public class DummyGostBlockungsdatenManager {
 		// (1)
 		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !getIstBlockungsVorlage());
 		final @NotNull GostBlockungSchiene schieneR = this.schieneGet(idSchiene);
+		for (final @NotNull DummyGostBlockungsergebnisManager eManager : _mapEM.values())
+			DeveloperNotificationException.ifTrue("Schiene kann nicht gelöscht werden, da sie Kurse enthält!", !eManager.getOfSchieneIstLeer(idSchiene));
 
 		// (2)
 		_daten.schienen.remove(schieneR);
@@ -574,18 +577,16 @@ public class DummyGostBlockungsdatenManager {
 				schiene.nummer--;
 
 		// (3)
-		final Iterator<GostBlockungRegel> iRegel = _daten.regeln.iterator();
-		if (iRegel == null)
-			return;
-		while (iRegel.hasNext()) {
-			final @NotNull GostBlockungRegel r = iRegel.next();
+		final @NotNull Set<Long> setRegelnZuLoeschen = new HashSet<>();
+		for (final @NotNull GostBlockungRegel r : _daten.regeln) {
 			final long[] a = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
 			if (a == null)
-				iRegel.remove();
+				setRegelnZuLoeschen.add(r.id);
 			else
 				for (int i = 0; i < a.length; i++)
 					r.parameter.set(i, a[i]);
 		}
+		regelRemoveListeByIDsOhneRevalidierung(setRegelnZuLoeschen);
 	}
 
 	/**
@@ -1217,6 +1218,42 @@ public class DummyGostBlockungsdatenManager {
 
 		// Alle Ergebnisse revalidieren, damit die Bewertung aktuell ist.
 		ergebnisAlleRevalidieren();
+	}
+
+	/**
+	 * Liefert die Anzahl an Regeln.
+	 *
+	 * @return Die Anzahl an Regeln.
+	 */
+	public int regelGetAnzahl() {
+		return _daten.regeln.size();
+	}
+
+	/**
+	 * Gibt die ID der Blockung zurück.
+	 *
+	 * @return die ID der Blockung
+	 */
+	public long getID() {
+		return _daten.id;
+	}
+
+	/**
+	 * Gibt die Blockungsdaten zurück.
+	 *
+	 * @return die Blockungsdaten (siehe {@link GostBlockungsdaten})
+	 */
+	public @NotNull GostBlockungsdaten daten() {
+		return this._daten;
+	}
+
+	/**
+	 * Liefert die sortierte Menge aller {@link DummyGostBlockungsergebnisManager}.
+	 *
+	 * @return die sortierte Menge aller {@link DummyGostBlockungsergebnisManager}.
+	 */
+	public @NotNull List<DummyGostBlockungsergebnisManager> ergebnisManagerGetListeUnsortiert() {
+		return new ArrayList<>(_mapEM.values());
 	}
 
 }

@@ -15,7 +15,6 @@ import { GostKursart } from '../../../core/types/gost/GostKursart';
 import type { Comparator } from '../../../java/util/Comparator';
 import { GostKursblockungRegelTyp } from '../../../core/types/kursblockung/GostKursblockungRegelTyp';
 import { GostHalbjahr } from '../../../core/types/gost/GostHalbjahr';
-import type { JavaIterator } from '../../../java/util/JavaIterator';
 import type { List } from '../../../java/util/List';
 import { GostBlockungKurs } from '../../../core/data/gost/GostBlockungKurs';
 import { HashSet } from '../../../java/util/HashSet';
@@ -676,6 +675,15 @@ export class GostBlockungsdatenManager extends JavaObject {
 	 */
 	public ergebnisManagerExists(idErgebnis : number) : boolean {
 		return this._map_idErgebnis_ErgebnisManager.containsKey(idErgebnis);
+	}
+
+	/**
+	 * Liefert die sortierte Menge aller {@link GostBlockungsergebnisManager}.
+	 *
+	 * @return die sortierte Menge aller {@link GostBlockungsergebnisManager}.
+	 */
+	public ergebnisManagerGetListeUnsortiert() : List<GostBlockungsergebnisManager> {
+		return new ArrayList<GostBlockungsergebnisManager>(this._map_idErgebnis_ErgebnisManager.values());
 	}
 
 	/**
@@ -1425,6 +1433,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Fügt die übergebene Schiene zu der Blockung hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schiene  Die hinzuzufügende Schiene.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -1435,6 +1444,7 @@ export class GostBlockungsdatenManager extends JavaObject {
 
 	/**
 	 * Fügt die Menge an Schienen hinzu.
+	 * <br>: Wichtig: Beim Ergebnismanager müssen danach die Schienen auch hinzugefügt werden!
 	 *
 	 * @param schienenmenge  Die Menge an Schienen.
 	 * @throws DeveloperNotificationException Falls die Schienen-Daten inkonsistent sind.
@@ -1544,23 +1554,23 @@ export class GostBlockungsdatenManager extends JavaObject {
 	public schieneRemoveByID(idSchiene : number) : void {
 		DeveloperNotificationException.ifTrue("Ein Löschen einer Schiene ist nur bei einer Blockungsvorlage erlaubt!", !this.getIstBlockungsVorlage());
 		const schieneR : GostBlockungSchiene = this.schieneGet(idSchiene);
+		for (const eManager of this._map_idErgebnis_ErgebnisManager.values())
+			DeveloperNotificationException.ifTrue("Schiene kann nicht gelöscht werden, da sie Kurse enthält!", !eManager.getOfSchieneIstLeer(idSchiene));
 		this._map_idSchiene_schiene.remove(idSchiene);
 		this._daten.schienen.remove(schieneR);
 		for (const schiene of this._daten.schienen)
 			if (schiene.nummer > schieneR.nummer)
 				schiene.nummer--;
-		const iRegel : JavaIterator<GostBlockungRegel> | null = this._daten.regeln.iterator();
-		if (iRegel === null)
-			return;
-		while (iRegel.hasNext()) {
-			const r : GostBlockungRegel = iRegel.next();
+		const setRegelnZuLoeschen : JavaSet<number> = new HashSet<number>();
+		for (const r of this._daten.regeln) {
 			const a : Array<number> | null = GostKursblockungRegelTyp.getNeueParameterBeiSchienenLoeschung(r, schieneR.nummer);
 			if (a === null)
-				iRegel.remove();
+				setRegelnZuLoeschen.add(r.id);
 			else
 				for (let i : number = 0; i < a.length; i++)
 					r.parameter.set(i, a[i]);
 		}
+		this.regelRemoveListeByIDsOhneRevalidierung(setRegelnZuLoeschen);
 	}
 
 	/**
