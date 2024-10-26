@@ -1194,11 +1194,7 @@ export class GostBlockungsergebnisManager extends JavaObject {
 		const kurs : GostBlockungsergebnisKurs = this.getKursE(idKurs);
 		const schiene : GostBlockungsergebnisSchiene = this.getSchieneE(idSchiene);
 		schiene.kurse.remove(kurs);
-		for (let i : number = kurs.schienen.size() - 1; i >= 0; i--)
-			if (kurs.schienen.get(i) === schiene.id) {
-				kurs.schienen.remove(i);
-				return;
-			}
+		kurs.schienen.remove(idSchiene);
 	}
 
 	/**

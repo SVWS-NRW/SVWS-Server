@@ -1030,7 +1030,7 @@ public class GostBlockungsergebnisManager {
 	private void stateRegelvalidierung6_kursart_allein_in_schiene_von_bis(final @NotNull GostBlockungRegel r) {
 		for (final GostBlockungsergebnisKurs eKurs : _kursID_to_kurs.values())
 			for (final @NotNull Long eSchieneID : eKurs.schienen) {
-				final int nr = getSchieneG(eSchieneID).nummer;
+				final int nr = getSchieneG(eSchieneID).nummer; // Hier stürzt es ab?
 				final int kursart = r.parameter.get(0).intValue();
 				final int schienenNrVon = r.parameter.get(1).intValue();
 				final int schienenNrBis = r.parameter.get(2).intValue();
@@ -1305,13 +1305,7 @@ public class GostBlockungsergebnisManager {
 		final @NotNull GostBlockungsergebnisKurs kurs = getKursE(idKurs);
 		final @NotNull GostBlockungsergebnisSchiene schiene = getSchieneE(idSchiene);
 		schiene.kurse.remove(kurs);
-
-		// Muss so entfernt werden, da der transpilierte Code nicht unterscheiden kann, ob Long-Objekt oder Index.
-		for (int i = kurs.schienen.size() - 1; i >= 0; i--)
-			if (kurs.schienen.get(i) == schiene.id) {
-				kurs.schienen.remove(i);
-				return;
-			}
+		kurs.schienen.remove(idSchiene);
 	}
 
 	// #########################################################################
@@ -5906,7 +5900,7 @@ public class GostBlockungsergebnisManager {
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listEntfernen)
 			stateKursSchieneEntfernenOhneRegelvalidierung(z.idKurs, z.idSchiene);
 
-		// An dieser Stelle darf kein "stateRevalidateEverything", da sonst SuS aus den Kurses entfernt werden.
+		// An dieser Stelle darf kein "stateRevalidateEverything", da sonst SuS aus den Kursen entfernt werden.
 
 		// Kurse in Schienen setzen.
 		for (final @NotNull GostBlockungsergebnisKursSchienenZuordnung z : update.listHinzuzufuegen)

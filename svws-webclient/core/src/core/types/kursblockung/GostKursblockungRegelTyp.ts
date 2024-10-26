@@ -293,20 +293,20 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 	 * Simuliert ein Löschen der Schienen-Nummer und liefert die ggf. veränderten Parameterwerte zurück,
 	 * oder NULL wenn die Regel gelöscht werden muss.
 	 *
-	 * @param pRegel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
-	 * @param pSchienenNr Die Schiene deren Nummer gelöscht werden soll.
+	 * @param regel      Die Regel, die von einer Schienen-Löschung ggf. betroffen ist.
+	 * @param nr Die Schiene deren Nummer gelöscht werden soll.
 	 *
 	 * @return die ggf. veränderten Parameter, oder NULL wenn die Regel gelöscht werden muss.
 	 */
-	public static getNeueParameterBeiSchienenLoeschung(pRegel : GostBlockungRegel, pSchienenNr : number) : Array<number> | null {
-		const param : List<number> = pRegel.parameter;
-		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(pRegel.typ);
+	public static getNeueParameterBeiSchienenLoeschung(regel : GostBlockungRegel, nr : number) : Array<number> | null {
+		const param : List<number> = regel.parameter;
+		const typ : GostKursblockungRegelTyp = GostKursblockungRegelTyp.fromTyp(regel.typ);
 		switch (typ) {
 			case GostKursblockungRegelTyp.KURS_FIXIERE_IN_SCHIENE:
 			case GostKursblockungRegelTyp.KURS_SPERRE_IN_SCHIENE: {
-				if (pSchienenNr > param.get(1))
+				if (nr > param.get(1))
 					return [param.get(0), param.get(1)];
-				if (pSchienenNr < param.get(1))
+				if (nr < param.get(1))
 					return [param.get(0), param.get(1) - 1];
 				return null;
 			}
@@ -314,8 +314,8 @@ export class GostKursblockungRegelTyp extends JavaEnum<GostKursblockungRegelTyp>
 			case GostKursblockungRegelTyp.KURSART_ALLEIN_IN_SCHIENEN_VON_BIS: {
 				let von : number = param.get(1).valueOf()
 				let bis : number = param.get(2).valueOf()
-				von = (pSchienenNr < von) ? (von - 1) : von;
-				bis = (pSchienenNr <= bis) ? (bis - 1) : bis;
+				von = (nr < von) ? (von - 1) : von;
+				bis = (nr <= bis) ? (bis - 1) : bis;
 				if (von <= bis)
 					return [param.get(0), von, bis];
 				return null;
