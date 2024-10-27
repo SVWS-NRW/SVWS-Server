@@ -91,10 +91,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren zum Kurstermin.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenKurstermin() {
-		if (this.schuelerklausuren.isEmpty()) {
+		if (this.schuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
+		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge == 0).toList();
 	}
 
 	/**
@@ -102,10 +101,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Schülerklausuren als Nachschreibklausuren.
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausurenNachschreibtermin() {
-		if (this.schuelerklausuren.isEmpty()) {
+		if (this.schuelerklausuren.isEmpty())
 			return new ArrayList<>();
-		} else
-			return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
+		return this.schuelerklausuren.stream().filter(k -> k.nummerTerminfolge > 0).toList();
 	}
 
 	/**
@@ -113,10 +111,9 @@ public class ReportingGostKlausurplanungKlausurtermin {
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
-		if (this.startzeit == null) {
+		if (this.startzeit == null)
 			return "";
-		} else
-			return DateUtils.gibZeitStringOfMinuten(this.startzeit);
+		return DateUtils.gibZeitStringOfMinuten(this.startzeit);
 	}
 
 	/**
@@ -141,8 +138,7 @@ public class ReportingGostKlausurplanungKlausurtermin {
 		}
 		if (tempList.isEmpty())
 			return "";
-		else
-			return String.join(",", tempList);
+		return String.join(",", tempList);
 	}
 
 

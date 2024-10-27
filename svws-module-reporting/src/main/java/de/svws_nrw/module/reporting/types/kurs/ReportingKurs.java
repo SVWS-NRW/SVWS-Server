@@ -140,8 +140,7 @@ public class ReportingKurs {
 	public double wochenstundenLehrerZurID(final Long id) {
 		if ((id == null) || !wochenstundenLehrer.containsKey(id))
 			return 0;
-		else
-			return wochenstundenLehrer.get(id);
+		return wochenstundenLehrer.get(id);
 	}
 
 

@@ -105,8 +105,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) {
 		if (id < 0)
 			return null;
-		else
-			return this.klausurtermine.stream().filter(t -> id == t.id).findFirst().orElse(null);
+		return this.klausurtermine.stream().filter(t -> id == t.id).findFirst().orElse(null);
 	}
 
 	/**
@@ -117,8 +116,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public ReportingKurs kurs(final long id) {
 		if (id < 0)
 			return null;
-		else
-			return this.kurse.stream().filter(k -> id == k.id()).findFirst().orElse(null);
+		return this.kurse.stream().filter(k -> id == k.id()).findFirst().orElse(null);
 	}
 
 	/**
@@ -129,8 +127,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) {
 		if (id < 0)
 			return null;
-		else
-			return this.kursklausuren.stream().filter(k -> id == k.id()).findFirst().orElse(null);
+		return this.kursklausuren.stream().filter(k -> id == k.id()).findFirst().orElse(null);
 	}
 
 	/**
@@ -141,8 +138,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public ReportingSchueler schueler(final long id) {
 		if (id < 0)
 			return null;
-		else
-			return this.schueler.stream().filter(s -> id == s.id()).findFirst().orElse(null);
+		return this.schueler.stream().filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 
 	/**
@@ -152,8 +148,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public List<ReportingSchueler> schuelerGefiltert() {
 		if (idsFilterSchueler.isEmpty())
 			return this.schueler;
-		else
-			return schueler.stream().filter(s -> idsFilterSchueler.contains(s.id())).toList();
+		return schueler.stream().filter(s -> idsFilterSchueler.contains(s.id())).toList();
 	}
 
 	/**
@@ -164,8 +159,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long id) {
 		if (id < 0)
 			return null;
-		else
-			return this.schuelerklausuren.stream().filter(s -> id == s.id()).findFirst().orElse(null);
+		return this.schuelerklausuren.stream().filter(s -> id == s.id()).findFirst().orElse(null);
 	}
 
 

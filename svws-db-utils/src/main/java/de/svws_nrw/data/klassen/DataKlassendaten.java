@@ -218,32 +218,32 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		final Map<Long, DTOJahrgang> mapJahrgaenge = jahrgaenge.stream().collect(Collectors.toMap(j -> j.ID, j -> j));
 		final List<DTOKlassen> klassen = getDTOsBySchuljahresabschnittId(schuljahresabschnittId);
 		conn.transactionFlush();
-		if (!klassen.isEmpty()) {
-			// Klassen Liste Default sortieren
-			klassen.sort((final DTOKlassen a, final DTOKlassen b) -> {
-				final DTOJahrgang jgA = mapJahrgaenge.get(a.Jahrgang_ID);
-				final DTOJahrgang jgB = mapJahrgaenge.get(b.Jahrgang_ID);
-				if (((jgA == null) || (jgA.Sortierung == null)) && ((jgB == null) || (jgB.Sortierung == null)))
-					return 0;
-				if ((jgA == null) || (jgA.Sortierung == null))
-					return 1;
-				if ((jgB == null) || (jgB.Sortierung == null))
-					return -1;
-				if (!Objects.equals(jgA.Sortierung, jgB.Sortierung))
-					return jgA.Sortierung - jgB.Sortierung;
-				final String parA = ((a.ASDKlasse == null) || (a.ASDKlasse.length() < 3)) ? "" : a.ASDKlasse.substring(2);
-				final String parB = ((b.ASDKlasse == null) || (b.ASDKlasse.length() < 3)) ? "" : b.ASDKlasse.substring(2);
-				if (parA.length() != parB.length())
-					return parA.length() - parB.length();
-				return parA.compareToIgnoreCase(parB);
-			});
+		if (klassen.isEmpty())
+			return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 
-			// Default Sortierung für jede Klasse setzen
-			for (int sortIndex = 0; sortIndex < klassen.size(); sortIndex++) {
-				klassen.get(sortIndex).Sortierung = sortIndex + 1;
-			}
-			conn.transactionPersistAll(klassen);
-		}
+		// Klassen Liste Default sortieren
+		klassen.sort((final DTOKlassen a, final DTOKlassen b) -> {
+			final DTOJahrgang jgA = mapJahrgaenge.get(a.Jahrgang_ID);
+			final DTOJahrgang jgB = mapJahrgaenge.get(b.Jahrgang_ID);
+			if (((jgA == null) || (jgA.Sortierung == null)) && ((jgB == null) || (jgB.Sortierung == null)))
+				return 0;
+			if ((jgA == null) || (jgA.Sortierung == null))
+				return 1;
+			if ((jgB == null) || (jgB.Sortierung == null))
+				return -1;
+			if (!Objects.equals(jgA.Sortierung, jgB.Sortierung))
+				return jgA.Sortierung - jgB.Sortierung;
+			final String parA = ((a.ASDKlasse == null) || (a.ASDKlasse.length() < 3)) ? "" : a.ASDKlasse.substring(2);
+			final String parB = ((b.ASDKlasse == null) || (b.ASDKlasse.length() < 3)) ? "" : b.ASDKlasse.substring(2);
+			if (parA.length() != parB.length())
+				return parA.length() - parB.length();
+			return parA.compareToIgnoreCase(parB);
+		});
+
+		// Default Sortierung für jede Klasse setzen
+		for (int sortIndex = 0; sortIndex < klassen.size(); sortIndex++)
+			klassen.get(sortIndex).Sortierung = sortIndex + 1;
+		conn.transactionPersistAll(klassen);
 		return Response.status(Status.NO_CONTENT).type(MediaType.APPLICATION_JSON).build();
 	}
 
@@ -761,8 +761,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 	 *
 	 * @throws ApiOperationException im Fehlerfall
 	 */
-	private List<KlassenDaten> mapList(final List<DTOKlassen> dtos, final Long schuljahresabschnittId, final boolean attachSchueler)
-			throws ApiOperationException {
+	private List<KlassenDaten> mapList(final List<DTOKlassen> dtos, final Long schuljahresabschnittId, final boolean attachSchueler) {
 		// Bestimme die Information zum Schuljahresabschnitt
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(schuljahresabschnittId);
 		final Map<String, DTOKlassen> klassenVorher = getKlassenBySchuljahresabschnittId(schuljahresabschnitt.idVorigerAbschnitt);
@@ -775,7 +774,7 @@ public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen,
 		return klassenDatenList;
 	}
 
-	private KlassenDaten map(final DTOKlassen dto, final boolean attachSchueler) throws ApiOperationException {
+	private KlassenDaten map(final DTOKlassen dto, final boolean attachSchueler) {
 		// Bestimme die Informationen zur Schule und zu den Schuljahresabschnitten
 		final Schuljahresabschnitt schuljahresabschnitt = conn.getUser().schuleGetAbschnittById(dto.Schuljahresabschnitts_ID);
 

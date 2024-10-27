@@ -120,7 +120,7 @@ public class PutCalendarDispatcher extends DavDispatcher {
 			final KalenderEintrag saveKalenderEintrag = this.kalenderEintragRepository
 					.saveKalenderEintrag(updatedKalendereintrag);
 			return new EntityTag(saveKalenderEintrag.version);
-		} catch (final IOException e) {
+		} catch (@SuppressWarnings("unused") final IOException e) {
 			return ErrorCode.INTERNAL_SERVER_ERROR.getDavResponse(DavUriBuilder.getCalendarEntryUri(uriParameter))
 					.getError();
 		} catch (final DavException e) {

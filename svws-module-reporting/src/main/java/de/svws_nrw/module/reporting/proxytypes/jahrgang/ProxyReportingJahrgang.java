@@ -69,10 +69,9 @@ public class ProxyReportingJahrgang extends ReportingJahrgang {
 				//  Jahrgänge übernommen und der Folgejahrgang innerhalb des gleichen Lernabschnitts ermittelt, da keine Regelung zum Folgejahrgang und einem
 				//  Folgeabschnitt im System implementiert ist. Daher wird eine direkt Rückgabe erzeugt, die aber nie auftreten dürfte.
 				return super.folgejahrgang();
-			} else {
-				// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
-				super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
 			}
+			// ID des FolgeJahrgangs ist bekannt und der Jahrgang wurde in einem Lernabschnitt bereits erzeugt, hole ihn aus Lernabschnitt.
+			super.folgejahrgang = super.schuljahresabschnitt().jahrgang(super.idFolgejahrgang());
 		}
 		return super.folgejahrgang();
 	}

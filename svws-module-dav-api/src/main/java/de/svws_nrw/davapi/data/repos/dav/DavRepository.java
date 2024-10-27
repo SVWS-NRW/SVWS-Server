@@ -172,7 +172,7 @@ public final class DavRepository implements IDavRepository {
 	 *
 	 * @return das aktuelle Synctoken
 	 */
-	public String getNewSyncTokenTimestampAsString() {
+	public static String getNewSyncTokenTimestampAsString() {
 		final long now = Instant.now().toEpochMilli();
 		return DatumUhrzeitConverter.instance.convertToEntityAttribute(new Timestamp(now));
 	}

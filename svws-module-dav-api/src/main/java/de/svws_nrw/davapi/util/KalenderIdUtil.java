@@ -27,7 +27,7 @@ public final class KalenderIdUtil {
 		try {
 			Long.parseLong(kalenderId);
 			return false;
-		} catch (final NumberFormatException nfe) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			return false;
 		}
 	}
@@ -42,7 +42,7 @@ public final class KalenderIdUtil {
 	public static Long parseId(final String kalenderId) {
 		try {
 			return Long.parseLong(kalenderId);
-		} catch (final NumberFormatException nfe) {
+		} catch (@SuppressWarnings("unused") final NumberFormatException nfe) {
 			// für generierte Kalender hier parsen
 		}
 		throw new IllegalArgumentException("Kalender Id <" + kalenderId + "> konnte nicht geparst werden.");

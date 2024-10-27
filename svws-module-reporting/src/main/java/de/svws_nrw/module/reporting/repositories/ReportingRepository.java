@@ -405,10 +405,9 @@ public class ReportingRepository {
 	public ReportingSchuljahresabschnitt schuljahresabschnitt(final int schuljahr, final int abschnitt) {
 		final List<ReportingSchuljahresabschnitt> reportingSchuljahresabschnitte =
 				mapReportingSchuljahresabschnitte.values().stream().filter(a -> (a.schuljahr() == schuljahr) && (a.abschnitt() == abschnitt)).toList();
-		if (!reportingSchuljahresabschnitte.isEmpty()) {
-			return reportingSchuljahresabschnitte.getFirst();
-		} else
+		if (reportingSchuljahresabschnitte.isEmpty())
 			return null;
+		return reportingSchuljahresabschnitte.getFirst();
 	}
 
 
@@ -582,16 +581,14 @@ public class ReportingRepository {
 		if (stundenplandefinitionZuDatum != null) {
 			if (mapStundenplaene.containsKey(stundenplandefinitionZuDatum.id))
 				return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
-			else {
-				try {
-					final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinitionZuDatum.id);
-					if (stundenplan != null) {
-						this.mapStundenplaene.put(stundenplandefinitionZuDatum.id, stundenplan);
-						return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
-					}
-				} catch (final Exception ignore) {
-					// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
+			try {
+				final Stundenplan stundenplan = DataStundenplan.getStundenplan(this.conn, stundenplandefinitionZuDatum.id);
+				if (stundenplan != null) {
+					this.mapStundenplaene.put(stundenplandefinitionZuDatum.id, stundenplan);
+					return mapStundenplaene.get(stundenplandefinitionZuDatum.id);
 				}
+			} catch (@SuppressWarnings("unused") final Exception ignore) {
+				// Stundenplan konnte nicht aus der Datenbank ermittelt werden. Sollte nicht eintreten, wenn Definition vorhanden ist.
 			}
 		}
 		// Kein Plan gefunden oder Fehler.

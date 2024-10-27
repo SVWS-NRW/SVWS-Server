@@ -79,7 +79,7 @@ public final class DateTimeUtil {
 	public static Instant parseCalDav(final @NotNull String input) {
 		try {
 			return ZonedDateTime.parse(input, DAV_ISO_FORMATTER_WITHZONE).toInstant();
-		} catch (final DateTimeParseException dtpe) {
+		} catch (@SuppressWarnings("unused") final DateTimeParseException dtpe) {
 			// Ausdruck konnte nicht geparst werden, daher mit default zeitzone parsen
 			return parseCalDav(input, TIMEZONE_DEFAULT);
 		}
@@ -188,7 +188,7 @@ public final class DateTimeUtil {
 			rangeStart = rangeEnd;
 			rangeEnd = buf;
 		}
-		return (instant.compareTo(pRangeStart) >= 0) && (instant.compareTo(pRangeEnd) <= 0);
+		return (instant.compareTo(rangeStart) >= 0) && (instant.compareTo(rangeEnd) <= 0);
 	}
 
 	/**

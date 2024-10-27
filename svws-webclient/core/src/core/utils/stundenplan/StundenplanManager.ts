@@ -4202,8 +4202,8 @@ export class StundenplanManager extends JavaObject {
 		const listDummies : List<StundenplanPausenzeit> = new ArrayList<StundenplanPausenzeit>();
 		for (let wochentag : number = tagVon; wochentag <= tagBis; wochentag++) {
 			if (this._stundenplanKonfig.defaultVormittagspause1Dauer > 0) {
-				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause1Nach);
-				let ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause1Dauer;
+				const beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause1Nach);
+				const ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause1Dauer;
 				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
 				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
@@ -4216,8 +4216,8 @@ export class StundenplanManager extends JavaObject {
 				}
 			}
 			if (this._stundenplanKonfig.defaultVormittagspause2Dauer > 0) {
-				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause2Nach);
-				let ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause2Dauer;
+				const beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultVormittagspause2Nach);
+				const ende : number = beginn + this._stundenplanKonfig.defaultVormittagspause2Dauer;
 				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
 				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
@@ -4230,8 +4230,8 @@ export class StundenplanManager extends JavaObject {
 				}
 			}
 			if (this._stundenplanKonfig.defaultMittagspauseDauer > 0) {
-				let beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultMittagspauseNach);
-				let ende : number = beginn + this._stundenplanKonfig.defaultMittagspauseDauer;
+				const beginn : number = this.zeitrasterGetDefaultStundenendeByStunde(this._stundenplanKonfig.defaultMittagspauseNach);
+				const ende : number = beginn + this._stundenplanKonfig.defaultMittagspauseDauer;
 				const key : LongArrayKey = new LongArrayKey([wochentag, beginn, ende]);
 				if (!this._pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					const p : StundenplanPausenzeit = new StundenplanPausenzeit();
@@ -6232,6 +6232,8 @@ export class StundenplanManager extends JavaObject {
 	 * @param stunde  Die Unterrichtsstunde, nach welcher gefragt wird.
 	 *
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 *
+	 * @throws DeveloperNotificationException   wenn für die Stunde ein Wert kleiner 0 angegeben wird
 	 */
 	public zeitrasterGetDefaultStundenbeginnByStunde(stunde : number) : number {
 		DeveloperNotificationException.ifTrue("zeitrasterGetDefaultStundenbeginnByStunde: stunde < 0", stunde < 0);

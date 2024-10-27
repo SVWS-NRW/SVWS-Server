@@ -1,6 +1,5 @@
 package de.svws_nrw.test.apitests.util;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -65,13 +64,11 @@ public class BaseApiUtil {
 	/**
 	 * Initialisiert die Server Properties
 	 *
-	 * @throws FileNotFoundException vgl.
-	 *                               {@link ServerProps#createFromSystemProperties()}
-	 * @throws IOException           vgl.
-	 *                               {@link ServerProps#createFromSystemProperties()}
+	 * @throws IOException           vgl. {@link ServerProps#createFromSystemProperties()}, z.B. FileNotFoundException
 	 */
 	@BeforeAll
-	static void initializeProperties() throws FileNotFoundException, IOException {
+	static void initializeProperties() throws IOException {
 		serverProps = ServerProps.createFromSystemProperties();
 	}
+
 }

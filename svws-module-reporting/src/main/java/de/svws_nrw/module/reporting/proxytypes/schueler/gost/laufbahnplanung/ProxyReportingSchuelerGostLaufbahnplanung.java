@@ -65,6 +65,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostLaufbahnplanung}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param reportingSchueler	Schüler, dessen GOSt-Laufbahnplanung gelesen werden soll.
 	 */
@@ -196,6 +197,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -247,6 +249,7 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Setzt die Daten der Lehrkraft der letzten Beratung und der Beratungslehrkräfte der Jahrgangsstufe
+	 *
 	 * @param gostBeratungsdaten	Oberstufenschüler, dessen Beratungslehrkräfte ermitteln werden sollen.
 	 * @param gostJahrgangsdaten	Die Daten des GOSt-Jahrgangs.
 	 */
@@ -290,9 +293,11 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 
 	/**
 	 * Erstellt eine Liste von Fachwahlen aus der Laufbahnplanung eines Schülers für die GOSt.
+	 *
 	 * @param abiturdaten			Abiturdaten des Schülers.
 	 * @param gostFaecherManager	Die Fächer des Abiturjahrgangs und im Fächermanager.
-	 * @return						Eine Liste der Fachwahlen.
+	 *
+	 * @return Eine Liste der Fachwahlen.
 	 */
 	private ArrayList<ReportingGostLaufbahnplanungFachwahl> getListFachwahlen(final Abiturdaten abiturdaten, final GostFaecherManager gostFaecherManager) {
 
@@ -384,43 +389,47 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	}
 
 
-	/** Prüft, ob ein Fach in der Oberstufe in mindestens einem Halbjahr belegt werden konnte.
+	/**
+	 * Prüft, ob ein Fach in der Oberstufe in mindestens einem Halbjahr belegt werden konnte.
+	 *
 	 * @param fach	Das zu prüfende Fach
-	 * @return		true, wenn eine Belegung in mindestens einem Halbjahr möglich war, sonst false
+	 *
+	 * @return true, wenn eine Belegung in mindestens einem Halbjahr möglich war, sonst false
 	 */
-	private boolean checkBelegungInGostMoeglich(final GostFach fach) {
+	private static boolean checkBelegungInGostMoeglich(final GostFach fach) {
 		return (fach.istMoeglichEF1 || fach.istMoeglichEF2 || fach.istMoeglichQ11 || fach.istMoeglichQ12 || fach.istMoeglichQ21 || fach.istMoeglichQ22);
 	}
 
 
 	/**
 	 * Prüft, ob das Fach eine Fremdsprache ist und kein Pseudofach der Statistik
+	 *
 	 * @param fach	Das zu prüfende Fach
 	 * @param zfach	Das zu prüfende zugehörige Fach
-	 * @return		true, wenn es eine reguläre Fremdsprache ist, sonst false.
+	 *
+	 * @return true, wenn es eine reguläre Fremdsprache ist, sonst false.
 	 */
 	private static boolean checkIstFremdsprachenfach(final GostFach fach, final Fach zfach) {
 		return fach.istFremdsprache && (zfach != null) && !((Fach.PX == zfach) || (Fach.VX == zfach));
 	}
 
 
-	/** Prüft, ob eine Sprachbelegung vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+	/**
+	 * Prüft, ob eine Sprachbelegung vor oder mit der eigenen Belegung hätten starten können. So wird bspw. die neue Fremdsprache ab EF nicht durch die Belegung der gleichen Sprache in der Sek-I als belegt markiert.
+	 *
 	 * @param fach				Das zu prüfende Fach
 	 * @param sprachbelegung 	Die Sprachbelegung aus der Sprachenfolge
 	 * @param zfach 			Das zulässige Fach, gegen das der Sprachbeginn geprüft wird.
-	 * @return					true, wenn eine Belegung möglich war, sonst false
+	 *
+	 * @return true, wenn eine Belegung möglich war, sonst false
 	 */
 	private boolean checkSprachbelegungsbeginn(final GostFach fach, final Sprachbelegung sprachbelegung, final Fach zfach) {
 		String abJahrgang = zfach.daten(auswahlSchuljahr).abJahrgang;
 		if (abJahrgang == null)
 			return true;
-		else {
-			if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) != null)
-				abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
-			else
-				return false;
-		}
-
+		if (Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr) == null)
+			return false;
+		abJahrgang = Jahrgaenge.data().getWertByBezeichner(abJahrgang).daten(auswahlSchuljahr).schluessel;
 		return ((sprachbelegung.belegungVonJahrgang != null) && !sprachbelegung.belegungVonJahrgang.isEmpty()) && ((abJahrgang == null) || abJahrgang.isEmpty()
 				|| ((abJahrgang.compareToIgnoreCase("EF") >= 0) && fach.istFremdSpracheNeuEinsetzend
 						&& (sprachbelegung.belegungVonJahrgang.compareToIgnoreCase("EF") >= 0))
@@ -429,11 +438,14 @@ public class ProxyReportingSchuelerGostLaufbahnplanung extends ReportingSchueler
 	}
 
 
-	/** Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück.
+	/**
+	 * Gibt den Belegungseintrag eines Faches für die Halbjahres-Belegung zurück.
+	 *
 	 * @param belegungHj 	Halbjahresbelegung des Faches
+	 *
 	 * @return 				String mit dem Belegungskürzel des Faches gemäß dessen Halbjahresbelegung
 	 */
-	private String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
+	private static String eintragFachbelegung(final AbiturFachbelegungHalbjahr belegungHj) {
 		if (belegungHj == null)
 			return "";
 

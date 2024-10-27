@@ -180,26 +180,25 @@ public final class ReportingValidierung {
 				// Anzahl der Angaben muss gerade sein, da Paare. Sonst liegt ein Fehler vor.
 				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR,
 						"FEHLER: Die Anzahl der Parameter für Abiturjahrgang und Gost-Halbjahr ist falsch.");
-			} else {
-				final List<Pair<Integer, Integer>> selection = new ArrayList<>();
+			}
+			final List<Pair<Integer, Integer>> selection = new ArrayList<>();
 
-				try {
-					// Lese die Parameter im Wechsel aus.
-					for (int i = 0; i < parameterDaten.size(); i = i + 2) {
-						selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
-					}
-
-					// Prüfe die Parameter in den Listen auf plausible bzw. zugelassene Werte.
-					for (final Pair<Integer, Integer> wert : selection) {
-						if ((wert.a < 1900) || (wert.a > 10000))
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
-						if ((wert.b < 0) || (wert.b > 5))
-							throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
-					}
-				} catch (final Exception e) {
-					throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
-							"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
+			try {
+				// Lese die Parameter im Wechsel aus.
+				for (int i = 0; i < parameterDaten.size(); i = i + 2) {
+					selection.add(new Pair<>(Math.toIntExact(parameterDaten.get(i)), Math.toIntExact(parameterDaten.get(i + 1))));
 				}
+
+				// Prüfe die Parameter in den Listen auf plausible bzw. zugelassene Werte.
+				for (final Pair<Integer, Integer> wert : selection) {
+					if ((wert.a < 1900) || (wert.a > 10000))
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein Abiturjahr liegt außerhalb des Wertebereichs.");
+					if ((wert.b < 0) || (wert.b > 5))
+						throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Ein GOSt-Halbjahr liegt außerhalb des Wertebereichs.");
+				}
+			} catch (final Exception e) {
+				throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, e,
+						"FEHLER: Die Parameter für Abiturjahrgang und GOSt-Halbjahr konnten nicht gelesen werden oder sind außerhalb des Wertebereichs.");
 			}
 		}
 	}

@@ -303,7 +303,7 @@ public class HtmlFactory {
 		try {
 			//noinspection ResultOfMethodCallIgnored
 			(new File(dateiname + ".html")).getCanonicalFile();
-		} catch (final Exception e) {
+		} catch (@SuppressWarnings("unused") final Exception e) {
 			// Rückgabewert von getCanonicalFile wird ignoriert. Diese Funktion prüft aber den Dateinamen und wirft eine Exception, wenn unzulässiger Name.
 			reportingRepository.logger().logLn(LogLevel.ERROR, 4, "FEHLER: Der generierte html-Dateiname enthält ungültige Zeichen.");
 			throw new ApiOperationException(Status.INTERNAL_SERVER_ERROR, "FEHLER: Der generierte html-Dateiname enthält ungültige Zeichen.");

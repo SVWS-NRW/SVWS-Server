@@ -4597,8 +4597,8 @@ public class StundenplanManager {
 		for (int wochentag = tagVon; wochentag <= tagBis; wochentag++) {
 			// 1. Vormittagspause
 			if (_stundenplanKonfig.defaultVormittagspause1Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause1Nach);
-				int ende = beginn + _stundenplanKonfig.defaultVormittagspause1Dauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause1Nach);
+				final int ende = beginn + _stundenplanKonfig.defaultVormittagspause1Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4612,8 +4612,8 @@ public class StundenplanManager {
 			}
 			// 2. Vormittagspause
 			if (_stundenplanKonfig.defaultVormittagspause2Dauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause2Nach);
-				int ende = beginn + _stundenplanKonfig.defaultVormittagspause2Dauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultVormittagspause2Nach);
+				final int ende = beginn + _stundenplanKonfig.defaultVormittagspause2Dauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -4627,8 +4627,8 @@ public class StundenplanManager {
 			}
 			// Mittagspause
 			if (_stundenplanKonfig.defaultMittagspauseDauer > 0) {
-				int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultMittagspauseNach);
-				int ende = beginn + _stundenplanKonfig.defaultMittagspauseDauer;
+				final int beginn = zeitrasterGetDefaultStundenendeByStunde(_stundenplanKonfig.defaultMittagspauseNach);
+				final int ende = beginn + _stundenplanKonfig.defaultMittagspauseDauer;
 				final @NotNull LongArrayKey key = new LongArrayKey(new long[] { wochentag, beginn, ende });
 				if (!_pausenzeit_by_tag_and_beginn_and_ende.containsKey(key)) {
 					final @NotNull StundenplanPausenzeit p = new StundenplanPausenzeit();
@@ -6896,6 +6896,8 @@ public class StundenplanManager {
 	 * @param stunde  Die Unterrichtsstunde, nach welcher gefragt wird.
 	 *
 	 * @return den Default-Stundenbeginn (in Minuten nach 0 Uhr) einer Unterrichtsstunde.
+	 *
+	 * @throws DeveloperNotificationException   wenn für die Stunde ein Wert kleiner 0 angegeben wird
 	 */
 	public int zeitrasterGetDefaultStundenbeginnByStunde(final int stunde) throws DeveloperNotificationException {
 		DeveloperNotificationException.ifTrue("zeitrasterGetDefaultStundenbeginnByStunde: stunde < 0", stunde < 0);

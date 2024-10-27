@@ -41,7 +41,7 @@ public class ConvertExpressionHelper {
 			return "";
 		try {
 			return DateUtils.gibDatumGermanFormat(dateISO8601);
-		} catch (final Exception ignore) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return "";
 		}
 	}
@@ -56,7 +56,7 @@ public class ConvertExpressionHelper {
 			return "";
 		try {
 			return DateUtils.gibDatumGermanFormatAusgeschrieben(dateISO8601);
-		} catch (final Exception ignore) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return "";
 		}
 	}
@@ -72,7 +72,7 @@ public class ConvertExpressionHelper {
 		try {
 			final String[] wochentage = new String[] { "", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" };
 			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
-		} catch (final Exception ignore) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return "";
 		}
 	}
@@ -88,7 +88,7 @@ public class ConvertExpressionHelper {
 		try {
 			final String[] wochentage = new String[] { "", "Mo.", "Di.", "Mi.", "Do.", "Fr.", "Sa.", "So." };
 			return wochentage[DateUtils.gibWochentagDesDatumsISO8601(dateISO8601)];
-		} catch (final Exception ignore) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return "";
 		}
 	}
@@ -103,7 +103,7 @@ public class ConvertExpressionHelper {
 			return "";
 		try {
 			return String.valueOf(DateUtils.extractFromDateISO8601(dateISO8601)[5]);
-		} catch (final Exception ignore) {
+		} catch (@SuppressWarnings("unused") final Exception ignore) {
 			return "";
 		}
 	}
