@@ -32,18 +32,17 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+		"content"
 })
 @XmlRootElement(name = "keepalive")
 public class Keepalive {
 
-    @XmlElementRef(name = "href", namespace = "DAV:", type = JAXBElement.class)
-    @XmlMixed
-    private List<Serializable> content;
+	@XmlElementRef(name = "href", namespace = "DAV:", type = JAXBElement.class)
+	@XmlMixed
+	private List<Serializable> content;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -52,34 +51,32 @@ public class Keepalive {
 		// leer
 	}
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link JAXBElement }{@code <}{@link String }{@code >}
-     * {@link String }
-     *
-     *
-     */
-    public List<Serializable> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gibt die Liste der {@link Serializable}-Objekte zurück zurück.
+	 *
+	 * Diese Zugriffsmethode gibt eine Referenz auf die live-Liste zurück,
+	 * nicht auf eine Kopie. Daher werden alle Änderungen, die Sie
+	 * an der zurückgegebenen Liste vornehmen, im JAXB-Objekt sichtbar sein.
+	 * Aus diesem Grund gibt es keine <code>set</code>-Methode.
+	 *
+	 * Um beispielsweise ein neues Element hinzuzufügen, gehen Sie wie folgt vor:
+	 * <pre>
+	 *    getContent().add(newItem);
+	 * </pre>
+	 *
+	 * Objekte der folgenden Typen sind in der Liste erlaubt:
+	 * {@link JAXBElement } oder
+	 * {@code <}{@link String }{@code >} oder
+	 * {@link String }
+	 *
+	 * @return Eine modifizierbare Liste von {@link Serializable}-Objekten,
+	 *         die den Inhalt repräsentiert. Die Liste ist niemals null.
+	 */
+	public List<Serializable> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
 }

@@ -29,17 +29,16 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+		"content"
 })
 @XmlRootElement(name = "displayname")
 public class Displayname {
 
-    @XmlMixed
-    private List<String> content;
+	@XmlMixed
+	private List<String> content;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -48,33 +47,33 @@ public class Displayname {
 		// leer
 	}
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
-    public List<String> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gibt die Liste der Inhalte zurück.
+	 *
+	 * <p>
+	 * Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	 * also keine Kopie. Daher werden alle Änderungen,
+	 * die an der zurückgegebenen Liste vorgenommen werden, im JAXB-Objekt
+	 * sichtbar sein. Aus diesem Grund gibt es keine <code>set</code>-Methode
+	 * für die Inhalts-Eigenschaft.
+	 *
+	 * <p>
+	 * Um beispielsweise ein neues Element hinzuzufügen, verwenden Sie:
+	 * <pre>
+	 *    getContent().add(newItem);
+	 * </pre>
+	 *
+	 * <p>
+	 * Folgende Objekttypen sind in der Liste erlaubt:
+	 * {@link String}
+	 *
+	 * @return Eine Referenz auf die Liste des Inhalts.
+	 */
+	public List<String> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
 }

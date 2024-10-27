@@ -188,6 +188,8 @@ public abstract class DataManagerRevised<ID, DatabaseDTO, CoreDTO> {
 	 * @param dto   das Datenbank-DTO
 	 *
 	 * @return das neu erstellte Core-DTO
+	 *
+	 * @throws ApiOperationException im Fehlerfall
 	 */
 	protected abstract CoreDTO map(DatabaseDTO dto) throws ApiOperationException;
 

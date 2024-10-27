@@ -17,9 +17,6 @@ import java.util.List;
  *        &lt;D:href&gt;http://www.example.com/acl/users/gstein&lt;/D:href&gt;
  *      &lt;/D:owner&gt;
  * </pre>
- *
- *
- *
  */
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(name = "")
@@ -34,10 +31,20 @@ public class Acl {
 		// leer
 	}
 
+	/**
+	 * Gibt das Ace-Objekt zurück.
+	 *
+	 * @return Das Ace-Objekt.
+	 */
 	public List<Ace> getAce() {
 		return ace;
 	}
 
+	/**
+	 * Setzt das Ace-Objekt.
+	 *
+	 * @param ace Das zu setzende Ace-Objekt.
+	 */
 	public void setAce(final List<Ace> ace) {
 		this.ace = ace;
 	}

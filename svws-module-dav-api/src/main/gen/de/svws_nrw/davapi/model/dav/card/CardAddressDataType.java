@@ -47,18 +47,38 @@ public class CardAddressDataType {
 		// leer
 	}
 
+	/**
+	 * Gibt den Inhaltstyp zurück.
+	 *
+	 * @return der Inhaltstyp als String.
+	 */
 	public String getContentType() {
 		return contentType;
 	}
 
+	/**
+	 * Setzt den Inhaltstyp.
+	 *
+	 * @param contentType   der zu setzende Inhaltstyp.
+	 */
 	public void setContentType(final String contentType) {
 		this.contentType = contentType;
 	}
 
+	/**
+	* Gibt die Version zurück.
+	*
+	* @return die Version als String.
+	*/
 	public String getVersion() {
 		return version;
 	}
 
+	/**
+	* Setzt die Version.
+	*
+	* @param version   die zu setzende Version.
+	*/
 	public void setVersion(final String version) {
 		this.version = version;
 	}

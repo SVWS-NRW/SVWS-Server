@@ -48,6 +48,8 @@ import jakarta.ws.rs.core.Response.Status;
 public final class DataKlassendaten extends DataManagerRevised<Long, DTOKlassen, KlassenDaten> {
 
 	/**
+	 * Erstellt ein neues Objekt dieser Klasse.
+	 *
 	 * @param conn DBEntityManager
 	 */
 	public DataKlassendaten(final DBEntityManager conn) {

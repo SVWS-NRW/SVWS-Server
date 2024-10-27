@@ -27,6 +27,9 @@ export class VermerkartenManager extends AuswahlManager<number, VermerkartEintra
 
 	private static readonly _schuelerToId : JavaFunction<SchuelerVermerkartZusammenfassung, number> = { apply : (s: SchuelerVermerkartZusammenfassung) => s.id };
 
+	/**
+	 * Ein Dummy-Event.
+	 */
 	protected static readonly _dummyEvent : Runnable = { run : () => {
 		// empty block
 	} };

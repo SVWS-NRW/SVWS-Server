@@ -22,6 +22,8 @@ public class StundenplanblockungManagerRaum {
 	private @NotNull List<StundenplanblockungManagerLerngruppe> _lerngruppen = new ArrayList<>();
 
 	/**
+	 * Konstruktor zur Erstellung eines {@link StundenplanblockungManagerRaum}-Objektes.
+	 *
 	 * @param pRaumID   Die Datenbank-ID des Raumes.
 	 * @param pKuerzel  Das Kürzel des Raumes.
 	 */

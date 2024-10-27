@@ -120,6 +120,9 @@ export class KursListeManager extends AuswahlManager<number, KursDaten, KursDate
 	 */
 	private _filterNurSichtbar : boolean = true;
 
+	/**
+	 *  Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einem Kurs verwendet wird.
+	 */
 	protected readonly _eventSchuelerAuswahlChanged : Runnable = { run : () => {
 		// empty block
 	} };

@@ -92,7 +92,7 @@ public final class DataStundenplanRaeume extends DataManager<Long> {
 	 * @param unterrichtIds   die Unterrichte, für die die Räume gesucht und gemappt werden sollen
 	 *
 	 * @return eine Map, in der die Räume der jeweiligen UnterrichtId zugeordnet ist
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException    im Fehlerfall
 	 */
 	public static Map<Long, List<StundenplanRaum>> getRaeumeByUnterrichtId(final @NotNull DBEntityManager conn,
 			final long idStundenplan, final List<Long> unterrichtIds) throws ApiOperationException {

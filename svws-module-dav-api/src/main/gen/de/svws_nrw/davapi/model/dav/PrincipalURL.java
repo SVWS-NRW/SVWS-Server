@@ -31,11 +31,10 @@ import jakarta.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "href"
+		"href"
 })
 @XmlRootElement(name = "principal-URL")
 public class PrincipalURL {
@@ -49,13 +48,22 @@ public class PrincipalURL {
 		// leer
 	}
 
+	/**
+	 * Liefert den Wert der href-Eigenschaft.
+	 *
+	 * @return den Wert der href-Eigenschaft als String.
+	 */
 	public String getHref() {
 		return href;
 	}
 
+	/**
+	 * Setzt den Wert der href-Eigenschaft.
+	 *
+	 * @param href   der neue Wert der href-Eigenschaft als String.
+	 */
 	public void setHref(final String href) {
 		this.href = href;
 	}
-
 
 }

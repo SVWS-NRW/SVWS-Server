@@ -30,17 +30,17 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "supportedReport"
+		"supportedReport"
 })
 @XmlRootElement(name = "supported-report-set")
 public class SupportedReportSet {
 
-    @XmlElement(name = "supported-report", required = true)
-    protected List<SupportedReport> supportedReport;
+	/** Eine Liste von {@link SupportedReport}-Objekten. */
+	@XmlElement(name = "supported-report", required = true)
+	protected List<SupportedReport> supportedReport;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -49,33 +49,34 @@ public class SupportedReportSet {
 		// leer
 	}
 
-    /**
-     * Gets the value of the supportedReport property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the supportedReport property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSupportedReport().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SupportedReport }
-     *
-     *
-     */
-    public List<SupportedReport> getSupportedReport() {
-        if (supportedReport == null) {
-            supportedReport = new ArrayList<>();
-        }
-        return this.supportedReport;
-    }
+	/**
+	* Gibt die Liste der SupportedReport-Inhalte zurück.
+	*
+	* <p>
+	* Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	* nicht auf eine Kopie. Änderungen an dieser Liste wirken sich direkt
+	* auf das JAXB-Objekt aus. Daher gibt es keine <CODE>set</CODE>-Methode.
+	* </p>
+	*
+	* <p>
+	* Um ein neues Element hinzuzufügen, verwenden Sie bitte folgenden Code:
+	* </p>
+	* <pre>
+	*    getSupportedReport().add(neuesElement);
+	* </pre>
+	*
+	* <p>
+	* In dieser Liste sind Objekte des folgenden Typs erlaubt:
+	* {@link SupportedReport}
+	* </p>
+	*
+	* @return eine modifizierbare Liste von SupportedReport-Inhalten. Die Liste ist niemals null.
+	*/
+	public List<SupportedReport> getSupportedReport() {
+		if (supportedReport == null) {
+			supportedReport = new ArrayList<>();
+		}
+		return this.supportedReport;
+	}
 
 }

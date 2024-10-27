@@ -65,7 +65,7 @@ public final class DataGEAbschlussFaecher extends DataManager<Long> {
 	 * @param abschnittID   der Schuljahresabschnitt, für den die Leistungsdaten ausgelesen werden sollen
 	 *
 	 * @return die Liste der Fächer
-	 * @throws ApiOperationException
+	 * @throws ApiOperationException   falls eine der beiden IDs null ist.
 	 */
 	public Response getByAbschnitt(final Long id, final Long abschnittID) throws ApiOperationException {
 		if ((id == null) || (abschnittID == null))

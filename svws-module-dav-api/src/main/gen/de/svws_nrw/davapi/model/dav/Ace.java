@@ -17,7 +17,7 @@ import jakarta.xml.bind.annotation.*;
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "",propOrder={"principal","grant","deny","inherited","protected1"})
+@XmlType(name = "", propOrder = { "principal", "grant", "deny", "inherited", "protected1" })
 @XmlRootElement(name = "ace")
 public class Ace {
 	private Principal principal;
@@ -25,7 +25,7 @@ public class Ace {
 	private Deny deny;
 	private Inherited inherited;
 
-    @XmlElement(name="protected")
+	@XmlElement(name = "protected")
 	private Protected protected1;
 
 	/**
@@ -35,42 +35,82 @@ public class Ace {
 		// leer
 	}
 
+	/**
+	* Gibt das Principal-Objekt zurück.
+	* @return Das Principal-Objekt
+	*/
 	public Principal getPrincipal() {
 		return principal;
 	}
 
+	/**
+	 * Setzt das Principal-Objekt.
+	 * @param principal Das zu setzende Principal-Objekt
+	 */
 	public void setPrincipal(final Principal principal) {
 		this.principal = principal;
 	}
 
+	/**
+	* Gibt das Grant-Objekt zurück.
+	* @return Das Grant-Objekt
+	*/
 	public Grant getGrant() {
 		return grant;
 	}
 
+	/**
+	 * Setzt das Grant-Objekt.
+	 * @param grant Das zu setzende Grant-Objekt
+	 */
 	public void setGrant(final Grant grant) {
 		this.grant = grant;
 	}
 
+	/**
+	* Gibt das Deny-Objekt zurück.
+	* @return Das Deny-Objekt
+	*/
 	public Deny getDeny() {
 		return deny;
 	}
 
+	/**
+	* Setzt das Deny-Objekt.
+	* @param deny Das zu setzende Deny-Objekt
+	*/
 	public void setDeny(final Deny deny) {
 		this.deny = deny;
 	}
 
+	/**
+	 * Gibt das Inherited-Objekt zurück.
+	 * @return Das Inherited-Objekt
+	 */
 	public Inherited getInherited() {
 		return inherited;
 	}
 
+	/**
+	 * Setzt das Inherited-Objekt.
+	 * @param inherited Das zu setzende Inherited-Objekt
+	 */
 	public void setInherited(final Inherited inherited) {
 		this.inherited = inherited;
 	}
 
+	/**
+	* Gibt das Protected-Objekt zurück.
+	* @return Das Protected-Objekt
+	*/
 	public Protected getProtected() {
 		return protected1;
 	}
 
+	/**
+	* Setzt das Protected-Objekt.
+	* @param protected1 Das zu setzende Protected-Objekt
+	*/
 	public void setProtected(final Protected protected1) {
 		this.protected1 = protected1;
 	}

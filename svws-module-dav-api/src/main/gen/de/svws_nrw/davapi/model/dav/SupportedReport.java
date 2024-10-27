@@ -8,6 +8,8 @@
 
 package de.svws_nrw.davapi.model.dav;
 
+import org.w3c.dom.Element;
+
 import jakarta.xml.bind.annotation.*;
 
 
@@ -28,17 +30,17 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "report"
+		"report"
 })
 @XmlRootElement(name = "supported-report")
 public class SupportedReport {
 
-    @XmlElement(required = true)
-    protected Report report;
+	/** Das {@link Report}-Objekt. */
+	@XmlElement(required = true)
+	protected Report report;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -47,28 +49,22 @@ public class SupportedReport {
 		// leer
 	}
 
-    /**
-     * Gets the value of the report property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Report }
-     *
-     */
-    public Report getReport() {
-        return report;
-    }
+	/**
+	 * Liefert das {@link Report}-Objekt.
+	 *
+	 * @return das {@link Report}-Objekt.
+	 */
+	public Report getReport() {
+		return report;
+	}
 
-    /**
-     * Sets the value of the report property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Report }
-     *
-     */
-    public void setReport(final Report value) {
-        this.report = value;
-    }
+	/**
+	 * Setzt das {@link Report}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Report}-Objekt.
+	 */
+	public void setReport(final Report value) {
+		this.report = value;
+	}
 
 }

@@ -4,15 +4,11 @@
 // Any modifications to this file will be lost upon recompilation of the source schema.
 // Generated on: 2009.12.23 at 06:27:19 PM PST
 //
-
-
 package de.svws_nrw.davapi.model.dav;
 
 import org.w3c.dom.Element;
 
 import jakarta.xml.bind.annotation.*;
-
-
 
 /**
  * <p>Java class for anonymous complex type.</p>
@@ -42,7 +38,6 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -52,7 +47,7 @@ import jakarta.xml.bind.annotation.*;
 public class Property {
 
 	@XmlAnyElement
-	private Element property;
+	private Element propertyRef;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -61,12 +56,22 @@ public class Property {
 		// leer
 	}
 
+	/**
+	 * Liefert das {@link Element}-Objekt.
+	 *
+	 * @return das {@link Element}-Objekt.
+	 */
 	public Element getProperty() {
-		return property;
+		return propertyRef;
 	}
 
+	/**
+	 * Setzt das {@link Element}-Objekt.
+	 *
+	 * @param property   das zu setzende {@link Element}-Objekt.
+	 */
 	public void setProperty(final Element property) {
-		this.property = property;
+		this.propertyRef = property;
 	}
 
 }

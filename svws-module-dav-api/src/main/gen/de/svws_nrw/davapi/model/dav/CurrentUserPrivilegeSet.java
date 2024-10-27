@@ -21,14 +21,13 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "current-user-privilege-set", namespace = "DAV:")
 public class CurrentUserPrivilegeSet {
 
-    private List<Privilege> privilege;
+	private List<Privilege> privilege;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -37,15 +36,26 @@ public class CurrentUserPrivilegeSet {
 		// leer
 	}
 
-    public List<Privilege> getPrivilege() {
-        if(privilege == null){
-            privilege = new ArrayList<>();
-        }
-        return privilege;
-    }
+	/**
+	 * Liefert eine Liste der {@link Privilege}-Objekte.
+	 * Falls noch keine Liste existiert, wird eine neue leere Liste erstellt.
+	 *
+	 * @return eine Liste der {@link Privilege}-Objekte, nie null.
+	 */
+	public List<Privilege> getPrivilege() {
+		if (privilege == null) {
+			privilege = new ArrayList<>();
+		}
+		return privilege;
+	}
 
-    public void setPrivilege(final List<Privilege> privileges) {
-        this.privilege = privileges;
-    }
+	/**
+	 * Setzt die Liste der {@link Privilege}-Objekte.
+	 *
+	 * @param privileges   die neue Liste von {@link Privilege}-Objekten, die gesetzt werden soll.
+	 */
+	public void setPrivilege(final List<Privilege> privileges) {
+		this.privilege = privileges;
+	}
 
 }

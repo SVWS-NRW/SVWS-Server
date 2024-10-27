@@ -32,11 +32,10 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "href"
+		"href"
 })
 @XmlRootElement(name = "principal-collection-set")
 public class PrincipalCollectionSet {
@@ -50,13 +49,22 @@ public class PrincipalCollectionSet {
 		// leer
 	}
 
+	/**
+	 * Liefert eine Liste der href-Strings.
+	 *
+	 * @return eine Liste der href-Strings.
+	 */
 	public List<String> getHref() {
 		return href;
 	}
 
+	/**
+	 * Setzt die Liste der href-Strings.
+	 *
+	 * @param href   die zu setzende Liste der href-Strings.
+	 */
 	public void setHref(final List<String> href) {
 		this.href = href;
 	}
-
 
 }

@@ -1,3 +1,6 @@
+/**
+ * Generated classes from the WebDAV XML schema.
+ */
 @jakarta.xml.bind.annotation.XmlSchema(namespace = "http://apple.com/ns/ical",
     elementFormDefault = jakarta.xml.bind.annotation.XmlNsForm.QUALIFIED,
     xmlns = {@XmlNs(namespaceURI = "http://apple.com/ns/ical", prefix = "ical")})

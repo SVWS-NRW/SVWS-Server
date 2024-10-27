@@ -30,21 +30,20 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
 		"privilege",
-    "content"
+		"content"
 })
 @XmlRootElement(name = "deny")
 public class Deny {
 
 	private List<Privilege> privilege;
 
-    @XmlMixed
-    @XmlAnyElement(lax = true)
-    private List<Object> content;
+	@XmlMixed
+	@XmlAnyElement(lax = true)
+	private List<Object> content;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -53,43 +52,51 @@ public class Deny {
 		// leer
 	}
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * {@link String }
-     *
-     *
-     */
-    public List<Object> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gibt die Liste der Inhalte zurück.
+	 *
+	 * <p>
+	 * Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	 * also keine Kopie. Daher werden alle Änderungen,
+	 * die an der zurückgegebenen Liste vorgenommen werden, im JAXB-Objekt
+	 * sichtbar sein. Aus diesem Grund gibt es keine <code>set</code>-Methode
+	 * für die Inhalts-Eigenschaft.
+	 *
+	 * <p>
+	 * Um beispielsweise ein neues Element hinzuzufügen, verwenden Sie:
+	 * <pre>
+	 *    getContent().add(newItem);
+	 * </pre>
+	 *
+	 * <p>
+	 * Folgende Objekttypen sind in der Liste erlaubt:
+	 * {@link Object}, {@link String}
+	 *
+	 * @return eine Referenz auf die Liste des Inhalts.
+	 */
+	public List<Object> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
+	/**
+	 * Gibt die Liste der Privilegien zurück.
+	 *
+	 * @return eine Liste von {@link Privilege}, die die Privilegien repräsentiert.
+	 */
 	public List<Privilege> getPrivilege() {
 		return privilege;
 	}
 
+	/**
+	 * Setzt die Liste der Privilegien.
+	 *
+	 * @param privilege   eine Liste von {@link Privilege}, die gesetzt werden soll.
+	 */
 	public void setPrivilege(final List<Privilege> privilege) {
 		this.privilege = privilege;
 	}
-
 
 }

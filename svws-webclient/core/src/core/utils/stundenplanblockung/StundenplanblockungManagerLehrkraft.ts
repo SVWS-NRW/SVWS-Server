@@ -28,6 +28,8 @@ export class StundenplanblockungManagerLehrkraft extends JavaObject {
 
 
 	/**
+	 * Konstrukur zur Erstellung eines {@link StundenplanblockungManagerLehrkraft}-Objektes.
+	 *
 	 * @param pLehrkraftID  Die Datenbank-ID der Lehrkraft.
 	 * @param pKuerzel      Das Kürzel der Lehrkraft.
 	 */

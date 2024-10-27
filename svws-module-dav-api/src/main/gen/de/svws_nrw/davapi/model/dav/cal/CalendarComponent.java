@@ -44,10 +44,20 @@ public class CalendarComponent {
 		// leer
 	}
 
+	/**
+	 * Gibt den Namen der Kalenderkomponente zurück.
+	 *
+	 * @return   der Name der Kalenderkomponente als String.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Setzt den Namen der Kalenderkomponente.
+	 *
+	 * @param name   der neue Name für die Kalenderkomponente.
+	 */
 	public void setName(final String name) {
 		this.name = name;
 	}

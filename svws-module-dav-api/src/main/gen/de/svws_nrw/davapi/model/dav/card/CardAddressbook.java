@@ -25,13 +25,17 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "content"
+		"content"
 })
 @XmlRootElement(name = "addressbook", namespace = "urn:ietf:params:xml:ns:carddav")
 public class CardAddressbook {
 
-    @XmlMixed
-    private List<String> content;
+	/**
+	 * Liste der Inhalte des Adressbuchs.
+	 * Diese Liste enthält gemischte XML-Inhalte, die als Strings repräsentiert werden.
+	 */
+	@XmlMixed
+	private List<String> content;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -40,33 +44,27 @@ public class CardAddressbook {
 		// leer
 	}
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     *
-     *
-     */
-    public List<String> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gibt die Liste der Inhalte des Adressbuchs zurück.
+	 *
+	 * @return Eine Live-Referenz auf die Liste der Inhalte. Wenn die Liste noch nicht existiert,
+	 *         wird sie initialisiert und zurückgegeben.
+	 *
+	 * Hinweis: Diese Methode liefert eine direkte Referenz auf die interne Liste.
+	 * Änderungen an der zurückgegebenen Liste wirken sich direkt auf das JAXB-Objekt aus.
+	 *
+	 * Beispiel zur Hinzufügung eines neuen Elements:
+	 * <pre>
+	 *    getContent().add(neuesElement);
+	 * </pre>
+	 *
+	 * Die Liste kann nur Objekte vom Typ {@link String} enthalten.
+	 */
+	public List<String> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
 }

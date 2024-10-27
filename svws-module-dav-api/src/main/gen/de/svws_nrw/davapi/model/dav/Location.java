@@ -28,7 +28,6 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -37,22 +36,13 @@ import jakarta.xml.bind.annotation.*;
 @XmlRootElement(name = "location")
 public class Location {
 
+	/**
+	 * Die href-Eigenschaft.
+	 */
     @XmlElement(required = true)
     protected String href;
 
     /**
-     * Gets the value of the href property.
-     *
-     * @return
-     *     possible object is
-     *     {@link String }
-     *
-     */
-    public String getHref() {
-        return href;
-    }
-
-	/**
 	 * Leerer Standardkonstruktor.
 	 */
 	public Location() {
@@ -60,12 +50,18 @@ public class Location {
 	}
 
     /**
-     * Sets the value of the href property.
+	 * Liefert den Wert der href-Eigenschaft.
+	 *
+	 * @return den Wert der href-Eigenschaft als String.
+	 */
+	public String getHref() {
+	    return href;
+	}
+
+	/**
+     * Setzt den Wert der href-Eigenschaft.
      *
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *
+     * @param value   der neue Wert der href-Eigenschaft als String.
      */
     public void setHref(final String value) {
         this.href = value;

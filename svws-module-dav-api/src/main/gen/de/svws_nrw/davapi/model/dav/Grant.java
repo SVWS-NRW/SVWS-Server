@@ -30,21 +30,20 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
 		"privilege",
-    "content"
+		"content"
 })
 @XmlRootElement(name = "grant")
 public class Grant {
 
 	private List<Privilege> privilege;
 
-    @XmlMixed
-    @XmlAnyElement(lax = true)
-    private List<Object> content;
+	@XmlMixed
+	@XmlAnyElement(lax = true)
+	private List<Object> content;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -53,43 +52,51 @@ public class Grant {
 		// leer
 	}
 
-    /**
-     * Gets the value of the content property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the content property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getContent().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Object }
-     * {@link String }
-     *
-     *
-     */
-    public List<Object> getContent() {
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        return this.content;
-    }
+	/**
+	 * Gibt die Liste der Inhalte zurück.
+	 *
+	 * <p>
+	 * Diese Zugriffsmethode gibt eine Referenz auf die live-Liste zurück,
+	 * nicht auf eine Kopie. Daher werden alle Änderungen, die Sie an der
+	 * zurückgegebenen Liste vornehmen, im JAXB-Objekt sichtbar sein.
+	 * Aus diesem Grund gibt es keine <CODE>set</CODE>-Methode für die content-Eigenschaft.
+	 *
+	 * <p>
+	 * Um beispielsweise ein neues Element hinzuzufügen, gehen Sie wie folgt vor:
+	 * <pre>
+	 *    getContent().add(neuesElement);
+	 * </pre>
+	 *
+	 * <p>
+	 * Erlaubte Objekttypen in der Liste sind:
+	 * {@link Object }
+	 * {@link String }
+	 *
+	 * @return eine modifizierbare Liste von Inhalten.
+	 */
+	public List<Object> getContent() {
+		if (content == null) {
+			content = new ArrayList<>();
+		}
+		return this.content;
+	}
 
+	/**
+	 * Gibt die Liste der Privilegien zurück.
+	 *
+	 * @return eine Liste von Privilegien, die diesem Grant zugeordnet sind.
+	 */
 	public List<Privilege> getPrivilege() {
 		return privilege;
 	}
 
+	/**
+	 * Setzt die Liste der Privilegien für diesen Grant.
+	 *
+	 * @param privilege   eine Liste von Privilegien, die gesetzt werden soll.
+	 */
 	public void setPrivilege(final List<Privilege> privilege) {
 		this.privilege = privilege;
 	}
-
 
 }

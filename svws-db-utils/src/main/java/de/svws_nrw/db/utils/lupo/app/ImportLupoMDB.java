@@ -31,7 +31,7 @@ public class ImportLupoMDB {
 	}
 
 	/**
-	 *
+	 * Hauptmethode zum Import einer LuPO-MDB-Datenbank in ein SVWS-Schema.
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 */

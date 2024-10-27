@@ -50,7 +50,6 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -59,32 +58,120 @@ import jakarta.xml.bind.annotation.*;
 @XmlRootElement(name = "prop")
 public class Prop {
 
-    protected Creationdate creationdate;
-    protected Displayname displayname;
-    protected Getcontentlanguage getcontentlanguage;
-    protected Getcontentlength getcontentlength;
-    protected Getcontenttype getcontenttype;
-    protected Getetag getetag;
-    protected Getlastmodified getlastmodified;
-    protected Lockdiscovery lockdiscovery;
-    protected Resourcetype resourcetype;
-    protected Supportedlock supportedlock;
+	//ACL elements
+	private Owner owner;
+	private Group group;
+	private Acl acl;
+	@XmlElement(name = "principal-collection-set")
+	private PrincipalCollectionSet principalCollectionSet;
+	@XmlElement(name = "principal-URL")
+	private PrincipalURL principalURL;
 
-    @XmlElement(name = "supported-report-set")
-    protected SupportedReportSet supportedReportSet;
-    @XmlElement(name = "quota-available-bytes")
-    protected QuotaAvailableBytes quotaAvailableBytes;
-    @XmlElement(name = "quota-used-bytes")
-    protected QuotaUsedBytes quotaUsedBytes;
+	/** Das Erstellungsdatum. */
+	protected Creationdate creationdate;
 
-    //ACL elements
-    private Owner owner;
-    private Group group;
-    private Acl acl;
-    @XmlElement(name="principal-collection-set")
-    private PrincipalCollectionSet principalCollectionSet;
-    @XmlElement(name="principal-URL")
-    private PrincipalURL principalURL;
+	/** Der Anzeigename. */
+	protected Displayname displayname;
+
+	/** Die Sprache, in der der Inhalt verfasst ist.*/
+	protected Getcontentlanguage getcontentlanguage;
+
+	/** Die Länge des Inhalts. */
+	protected Getcontentlength getcontentlength;
+
+	/** Der Typ des Inhalts der Ressource (z.B. text/html). */
+	protected Getcontenttype getcontenttype;
+
+	/** Der ETag-Wert der Ressource. */
+	protected Getetag getetag;
+
+	/** Das Datum und die Uhrzeit der letzten Änderung. */
+	protected Getlastmodified getlastmodified;
+
+	/** Informationen über die Sperr-Discovery. */
+	protected Lockdiscovery lockdiscovery;
+
+	/** Der Typ der Ressource (z.B. Datei, Verzeichnis). */
+	protected Resourcetype resourcetype;
+
+	/** Informationen über die unterstützten Sperren für die Ressource. */
+	protected Supportedlock supportedlock;
+
+	/** Eine Menge von unterstützten Berichten, die verfügbar sind. */
+	@XmlElement(name = "supported-report-set")
+	protected SupportedReportSet supportedReportSet;
+
+	/** Die verfügbare Quota in Bytes. */
+	@XmlElement(name = "quota-available-bytes")
+	protected QuotaAvailableBytes quotaAvailableBytes;
+
+	/** Die bereits verwendete Quota in Bytes. */
+	@XmlElement(name = "quota-used-bytes")
+	protected QuotaUsedBytes quotaUsedBytes;
+
+	// CardDAV elements
+
+	/** Das AddressbookHomeSet-Element. */
+	@XmlElement(name = "addressbook-home-set", namespace = "urn:ietf:params:xml:ns:carddav")
+	protected AddressbookHomeSet addressbookHomeSet;
+
+	/** Das CurrentUserPrincipal-Element. */
+	@XmlElement(name = "current-user-principal")
+	protected CurrentUserPrincipal currentUserPrincipal;
+
+	/** Das CurrentUserPrivilegeSet-Element. */
+	@XmlElement(name = "current-user-privilege-set")
+	protected CurrentUserPrivilegeSet currentUserPrivilegeSet;
+
+	/** Das Getctag-Element. */
+	@XmlElement(name = "getctag", namespace = "http://calendarserver.org/ns/")
+	protected Getctag getctag;
+
+	/** Das SyncToken-Element. */
+	@XmlElement(name = "sync-token")
+	protected SyncToken syncToken;
+
+	/** Das CardAddressData-Element. */
+	@XmlElement(name = "address-data", namespace = "urn:ietf:params:xml:ns:carddav")
+	protected CardAddressData addressData;
+
+	/** Das SupportedAddressData-Element. */
+	@XmlElement(name = "supported-address-data", namespace = "urn:ietf:params:xml:ns:carddav")
+	protected SupportedAddressData supportedAddressData;
+
+	// CalDAV-Elements
+
+	/** Repräsentiert eine Menge von Kalender-Homes. */
+	@XmlElement(name = "calendar-home-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarHomeSet calendarHomeSet;
+
+	/** Die unterstützten Kalenderkomponenten. */
+	@XmlElement(name = "supported-calendar-component-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected SupportedCalendarComponentSet supportedCalendarComponentSet;
+
+	/** Spezifiziert die Farbe, die mit dem Kalender verbunden ist. */
+	@XmlElement(name = "calendar-color", namespace = "http://apple.com/ns/ical")
+	protected CalendarColor calendarColor;
+
+	/** Enthält die Menge der mit dem Kalender verbundenen Kalenderbenutzeradressen. */
+	@XmlElement(name = "calendar-user-address-set", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarUserAddressSet calendarUserAddressSet;
+
+	/** URL für die Schedule-Inbox. */
+	@XmlElement(name = "schedule-inbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected ScheduleInboxUrl scheduleInboxUrl;
+
+	/** URL für die Schedule-Outbox. */
+	@XmlElement(name = "schedule-outbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected ScheduleInboxUrl scheduleoutboxUrl;
+
+	/** Enthält die Daten des Kalenders. */
+	@XmlElement(name = "calendar-data", namespace = "urn:ietf:params:xml:ns:caldav")
+	protected CalendarData calendarData;
+
+	/** Repräsentiert den Organisator der Kalendereinträge. */
+	@XmlElement(name = "organizer", namespace = "http://calendarserver.org/ns/")
+	protected Organizer organizer;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -93,515 +180,596 @@ public class Prop {
 		// leer
 	}
 
-    /**
-     * Gets the value of the creationdate property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Creationdate }
-     *
-     */
-    public Creationdate getCreationdate() {
-        return creationdate;
-    }
+	/**
+	 * Liefert das {@link Creationdate}-Objekt.
+	 *
+	 * @return das {@link Creationdate}-Objekt.
+	 */
+	public Creationdate getCreationdate() {
+		return creationdate;
+	}
 
-    /**
-     * Sets the value of the creationdate property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Creationdate }
-     *
-     */
-    public void setCreationdate(final Creationdate value) {
-        this.creationdate = value;
-    }
+	/**
+	 * Setzt das {@link Creationdate}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Creationdate}-Objekt.
+	 */
+	public void setCreationdate(final Creationdate value) {
+		this.creationdate = value;
+	}
 
-    /**
-     * Gets the value of the displayname property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Displayname }
-     *
-     */
-    public Displayname getDisplayname() {
-        return displayname;
-    }
+	/**
+	 * Liefert das {@link Displayname}-Objekt.
+	 *
+	 * @return das {@link Displayname}-Objekt.
+	 */
+	public Displayname getDisplayname() {
+		return displayname;
+	}
 
-    /**
-     * Sets the value of the displayname property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Displayname }
-     *
-     */
-    public void setDisplayname(final Displayname value) {
-        this.displayname = value;
-    }
+	/**
+	 * Setzt das {@link Displayname}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Displayname}-Objekt.
+	 */
+	public void setDisplayname(final Displayname value) {
+		this.displayname = value;
+	}
 
-    /**
-     * Gets the value of the getcontentlanguage property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Getcontentlanguage }
-     *
-     */
-    public Getcontentlanguage getGetcontentlanguage() {
-        return getcontentlanguage;
-    }
+	/**
+	 * Liefert das {@link Getcontentlanguage}-Objekt.
+	 *
+	 * @return das {@link Getcontentlanguage}-Objekt.
+	 */
+	public Getcontentlanguage getGetcontentlanguage() {
+		return getcontentlanguage;
+	}
 
-    /**
-     * Sets the value of the getcontentlanguage property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Getcontentlanguage }
-     *
-     */
-    public void setGetcontentlanguage(final Getcontentlanguage value) {
-        this.getcontentlanguage = value;
-    }
+	/**
+	 * Setzt das {@link Getcontentlanguage}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Getcontentlanguage}-Objekt.
+	 */
+	public void setGetcontentlanguage(final Getcontentlanguage value) {
+		this.getcontentlanguage = value;
+	}
 
-    /**
-     * Gets the value of the getcontentlength property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Getcontentlength }
-     *
-     */
-    public Getcontentlength getGetcontentlength() {
-        return getcontentlength;
-    }
+	/**
+	 * Liefert das {@link Getcontentlength}-Objekt.
+	 *
+	 * @return das {@link Getcontentlength}-Objekt.
+	 */
+	public Getcontentlength getGetcontentlength() {
+		return getcontentlength;
+	}
 
-    /**
-     * Sets the value of the getcontentlength property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Getcontentlength }
-     *
-     */
-    public void setGetcontentlength(final Getcontentlength value) {
-        this.getcontentlength = value;
-    }
+	/**
+	 * Setzt das {@link Getcontentlength}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Getcontentlength}-Objekt.
+	 */
+	public void setGetcontentlength(final Getcontentlength value) {
+		this.getcontentlength = value;
+	}
 
-    /**
-     * Gets the value of the getcontenttype property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Getcontenttype }
-     *
-     */
-    public Getcontenttype getGetcontenttype() {
-        return getcontenttype;
-    }
+	/**
+	 * Liefert das {@link Getcontenttype}-Objekt.
+	 *
+	 * @return das {@link Getcontenttype}-Objekt.
+	 */
+	public Getcontenttype getGetcontenttype() {
+		return getcontenttype;
+	}
 
-    /**
-     * Sets the value of the getcontenttype property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Getcontenttype }
-     *
-     */
-    public void setGetcontenttype(final Getcontenttype value) {
-        this.getcontenttype = value;
-    }
+	/**
+	 * Setzt das {@link Getcontenttype}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Getcontenttype}-Objekt.
+	 */
+	public void setGetcontenttype(final Getcontenttype value) {
+		this.getcontenttype = value;
+	}
 
-    /**
-     * Gets the value of the getetag property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Getetag }
-     *
-     */
-    public Getetag getGetetag() {
-        return getetag;
-    }
+	/**
+	 * Liefert das {@link Getetag}-Objekt.
+	 *
+	 * @return das {@link Getetag}-Objekt.
+	 */
+	public Getetag getGetetag() {
+		return getetag;
+	}
 
-    /**
-     * Sets the value of the getetag property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Getetag }
-     *
-     */
-    public void setGetetag(final Getetag value) {
-        this.getetag = value;
-    }
+	/**
+	 * Setzt das {@link Getetag}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Getetag}-Objekt.
+	 */
+	public void setGetetag(final Getetag value) {
+		this.getetag = value;
+	}
 
-    /**
-     * Gets the value of the getlastmodified property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Getlastmodified }
-     *
-     */
-    public Getlastmodified getGetlastmodified() {
-        return getlastmodified;
-    }
+	/**
+	 * Liefert das {@link Getlastmodified}-Objekt.
+	 *
+	 * @return das {@link Getlastmodified}-Objekt.
+	 */
+	public Getlastmodified getGetlastmodified() {
+		return getlastmodified;
+	}
 
-    /**
-     * Sets the value of the getlastmodified property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Getlastmodified }
-     *
-     */
-    public void setGetlastmodified(final Getlastmodified value) {
-        this.getlastmodified = value;
-    }
+	/**
+	 * Setzt das {@link Getlastmodified}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Getlastmodified}-Objekt.
+	 */
+	public void setGetlastmodified(final Getlastmodified value) {
+		this.getlastmodified = value;
+	}
 
-    /**
-     * Gets the value of the lockdiscovery property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Lockdiscovery }
-     *
-     */
-    public Lockdiscovery getLockdiscovery() {
-        return lockdiscovery;
-    }
+	/**
+	 * Liefert das {@link Lockdiscovery}-Objekt.
+	 *
+	 * @return das {@link Lockdiscovery}-Objekt.
+	 */
+	public Lockdiscovery getLockdiscovery() {
+		return lockdiscovery;
+	}
 
-    /**
-     * Sets the value of the lockdiscovery property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Lockdiscovery }
-     *
-     */
-    public void setLockdiscovery(final Lockdiscovery value) {
-        this.lockdiscovery = value;
-    }
+	/**
+	 * Setzt das {@link Lockdiscovery}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Lockdiscovery}-Objekt.
+	 */
+	public void setLockdiscovery(final Lockdiscovery value) {
+		this.lockdiscovery = value;
+	}
 
-    /**
-     * Gets the value of the resourcetype property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Resourcetype }
-     *
-     */
-    public Resourcetype getResourcetype() {
-        return resourcetype;
-    }
+	/**
+	 * Liefert das {@link Resourcetype}-Objekt.
+	 *
+	 * @return das {@link Resourcetype}-Objekt.
+	 */
+	public Resourcetype getResourcetype() {
+		return resourcetype;
+	}
 
-    /**
-     * Sets the value of the resourcetype property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Resourcetype }
-     *
-     */
-    public void setResourcetype(final Resourcetype value) {
-        this.resourcetype = value;
-    }
+	/**
+	 * Setzt das {@link Resourcetype}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Resourcetype}-Objekt.
+	 */
+	public void setResourcetype(final Resourcetype value) {
+		this.resourcetype = value;
+	}
 
-    /**
-     * Gets the value of the supportedlock property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Supportedlock }
-     *
-     */
-    public Supportedlock getSupportedlock() {
-        return supportedlock;
-    }
+	/**
+	 * Liefert das {@link Supportedlock}-Objekt.
+	 *
+	 * @return das {@link Supportedlock}-Objekt.
+	 */
+	public Supportedlock getSupportedlock() {
+		return supportedlock;
+	}
 
-    /**
-     * Sets the value of the supportedlock property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Supportedlock }
-     *
-     */
-    public void setSupportedlock(final Supportedlock value) {
-        this.supportedlock = value;
-    }
+	/**
+	 * Setzt das {@link Supportedlock}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Supportedlock}-Objekt.
+	 */
+	public void setSupportedlock(final Supportedlock value) {
+		this.supportedlock = value;
+	}
 
-    /**
-     * Gets the value of the supportedReportSet property.
-     *
-     * @return
-     *     possible object is
-     *     {@link SupportedReportSet }
-     *
-     */
-    public SupportedReportSet getSupportedReportSet() {
-        return supportedReportSet;
-    }
+	/**
+	 * Liefert das {@link SupportedReportSet}-Objekt.
+	 *
+	 * @return das {@link SupportedReportSet}-Objekt.
+	 */
+	public SupportedReportSet getSupportedReportSet() {
+		return supportedReportSet;
+	}
 
-    /**
-     * Sets the value of the supportedReportSet property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link SupportedReportSet }
-     *
-     */
-    public void setSupportedReportSet(final SupportedReportSet value) {
-        this.supportedReportSet = value;
-    }
+	/**
+	 * Setzt das {@link SupportedReportSet}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link SupportedReportSet}-Objekt.
+	 */
+	public void setSupportedReportSet(final SupportedReportSet value) {
+		this.supportedReportSet = value;
+	}
 
-    /**
-     * Gets the value of the quotaAvailableBytes property.
-     *
-     * @return
-     *     possible object is
-     *     {@link QuotaAvailableBytes }
-     *
-     */
-    public QuotaAvailableBytes getQuotaAvailableBytes() {
-        return quotaAvailableBytes;
-    }
+	/**
+	 * Liefert das {@link QuotaAvailableBytes}-Objekt.
+	 *
+	 * @return das {@link QuotaAvailableBytes}-Objekt.
+	 */
+	public QuotaAvailableBytes getQuotaAvailableBytes() {
+		return quotaAvailableBytes;
+	}
 
-    /**
-     * Sets the value of the quotaAvailableBytes property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link QuotaAvailableBytes }
-     *
-     */
-    public void setQuotaAvailableBytes(final QuotaAvailableBytes value) {
-        this.quotaAvailableBytes = value;
-    }
+	/**
+	 * Setzt das {@link QuotaAvailableBytes}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link QuotaAvailableBytes}-Objekt.
+	 */
+	public void setQuotaAvailableBytes(final QuotaAvailableBytes value) {
+		this.quotaAvailableBytes = value;
+	}
 
-    /**
-     * Gets the value of the quotaUsedBytes property.
-     *
-     * @return
-     *     possible object is
-     *     {@link QuotaUsedBytes }
-     *
-     */
-    public QuotaUsedBytes getQuotaUsedBytes() {
-        return quotaUsedBytes;
-    }
+	/**
+	 * Liefert das {@link QuotaUsedBytes}-Objekt.
+	 *
+	 * @return das {@link QuotaUsedBytes}-Objekt.
+	 */
+	public QuotaUsedBytes getQuotaUsedBytes() {
+		return quotaUsedBytes;
+	}
 
-    /**
-     * Sets the value of the quotaUsedBytes property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link QuotaUsedBytes }
-     *
-     */
-    public void setQuotaUsedBytes(final QuotaUsedBytes value) {
-        this.quotaUsedBytes = value;
-    }
+	/**
+	 * Setzt das {@link QuotaUsedBytes}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link QuotaUsedBytes}-Objekt.
+	 */
+	public void setQuotaUsedBytes(final QuotaUsedBytes value) {
+		this.quotaUsedBytes = value;
+	}
 
+	/**
+	 * Liefert das {@link Owner}-Objekt.
+	 *
+	 * @return das {@link Owner}-Objekt.
+	 */
 	public Owner getOwner() {
 		return owner;
 	}
 
+	/**
+	 * Setzt das {@link Owner}-Objekt.
+	 *
+	 * @param owner   das zu setzende {@link Owner}-Objekt.
+	 */
 	public void setOwner(final Owner owner) {
 		this.owner = owner;
 	}
 
+	/**
+	 * Liefert das {@link Group}-Objekt.
+	 *
+	 * @return das {@link Group}-Objekt.
+	 */
 	public Group getGroup() {
 		return group;
 	}
 
+	/**
+	 * Setzt das {@link Group}-Objekt.
+	 *
+	 * @param group   das zu setzende {@link Group}-Objekt.
+	 */
 	public void setGroup(final Group group) {
 		this.group = group;
 	}
 
+	/**
+	 * Liefert das {@link Acl}-Objekt.
+	 *
+	 * @return das {@link Acl}-Objekt.
+	 */
 	public Acl getAcl() {
 		return acl;
 	}
 
+	/**
+	 * Setzt das {@link Acl}-Objekt.
+	 *
+	 * @param acl   das zu setzende {@link Acl}-Objekt.
+	 */
 	public void setAcl(final Acl acl) {
 		this.acl = acl;
 	}
 
+	/**
+	 * Liefert das {@link PrincipalCollectionSet}-Objekt.
+	 *
+	 * @return das {@link PrincipalCollectionSet}-Objekt.
+	 */
 	public PrincipalCollectionSet getPrincipalCollectionSet() {
 		return principalCollectionSet;
 	}
 
+	/**
+	 * Setzt das {@link PrincipalCollectionSet}-Objekt.
+	 *
+	 * @param principalCollectionSet   das zu setzende {@link PrincipalCollectionSet}-Objekt.
+	 */
 	public void setPrincipalCollectionSet(final PrincipalCollectionSet principalCollectionSet) {
 		this.principalCollectionSet = principalCollectionSet;
 	}
 
+	/**
+	 * Liefert das {@link PrincipalURL}-Objekt.
+	 *
+	 * @return das {@link PrincipalURL}-Objekt.
+	 */
 	public PrincipalURL getPrincipalURL() {
 		return principalURL;
 	}
 
+	/**
+	 * Setzt das {@link PrincipalURL}-Objekt.
+	 *
+	 * @param principalURL   das zu setzende {@link PrincipalURL}-Objekt.
+	 */
 	public void setPrincipalURL(final PrincipalURL principalURL) {
 		this.principalURL = principalURL;
 	}
 
-    // CardDAV elements
-    @XmlElement(name="addressbook-home-set", namespace = "urn:ietf:params:xml:ns:carddav")
-    protected AddressbookHomeSet addressbookHomeSet;
-    @XmlElement(name = "current-user-principal")
-    protected CurrentUserPrincipal currentUserPrincipal;
-    @XmlElement(name = "current-user-privilege-set")
-    protected CurrentUserPrivilegeSet currentUserPrivilegeSet;
-    @XmlElement(name = "getctag", namespace = "http://calendarserver.org/ns/")
-    protected Getctag getctag;
-    @XmlElement(name = "sync-token")
-    protected SyncToken syncToken;
-    @XmlElement(name = "address-data", namespace = "urn:ietf:params:xml:ns:carddav")
-    protected CardAddressData addressData;
-    @XmlElement(name = "supported-address-data", namespace = "urn:ietf:params:xml:ns:carddav")
-    protected SupportedAddressData supportedAddressData;
-    public Getctag getGetctag() {
-        return getctag;
-    }
+	/**
+	 * Liefert das {@link Getctag}-Objekt.
+	 *
+	 * @return das {@link Getctag}-Objekt.
+	 */
+	public Getctag getGetctag() {
+		return getctag;
+	}
 
-    public void setGetctag(final Getctag getctag) {
-        this.getctag = getctag;
-    }
+	/**
+	 * Setzt das {@link Getctag}-Objekt.
+	 *
+	 * @param getctag   das zu setzende {@link Getctag}-Objekt.
+	 */
+	public void setGetctag(final Getctag getctag) {
+		this.getctag = getctag;
+	}
 
-    public CurrentUserPrincipal getCurrentUserPrincipal() {
-        return currentUserPrincipal;
-    }
+	/**
+	 * Liefert das {@link CurrentUserPrincipal}-Objekt.
+	 *
+	 * @return das {@link CurrentUserPrincipal}-Objekt.
+	 */
+	public CurrentUserPrincipal getCurrentUserPrincipal() {
+		return currentUserPrincipal;
+	}
 
-    public void setCurrentUserPrincipal(final CurrentUserPrincipal currentUserPrincipal) {
-        this.currentUserPrincipal = currentUserPrincipal;
-    }
+	/**
+	 * Setzt das {@link CurrentUserPrincipal}-Objekt.
+	 *
+	 * @param currentUserPrincipal   das zu setzende {@link CurrentUserPrincipal}-Objekt.
+	 */
+	public void setCurrentUserPrincipal(final CurrentUserPrincipal currentUserPrincipal) {
+		this.currentUserPrincipal = currentUserPrincipal;
+	}
 
-    public CurrentUserPrivilegeSet getCurrentUserPrivilegeSet() {
-        return currentUserPrivilegeSet;
-    }
+	/**
+	 * Liefert das {@link CurrentUserPrivilegeSet}-Objekt.
+	 *
+	 * @return das {@link CurrentUserPrivilegeSet}-Objekt.
+	 */
+	public CurrentUserPrivilegeSet getCurrentUserPrivilegeSet() {
+		return currentUserPrivilegeSet;
+	}
 
-    public void setCurrentUserPrivilegeSet(final CurrentUserPrivilegeSet currentUserPrivilegeSet) {
-        this.currentUserPrivilegeSet = currentUserPrivilegeSet;
-    }
+	/**
+	 * Setzt das {@link CurrentUserPrivilegeSet}-Objekt.
+	 *
+	 * @param currentUserPrivilegeSet   das zu setzende {@link CurrentUserPrivilegeSet}-Objekt.
+	 */
+	public void setCurrentUserPrivilegeSet(final CurrentUserPrivilegeSet currentUserPrivilegeSet) {
+		this.currentUserPrivilegeSet = currentUserPrivilegeSet;
+	}
 
-    public SyncToken getSyncToken() {
-        return syncToken;
-    }
+	/**
+	 * Liefert das {@link SyncToken}-Objekt.
+	 *
+	 * @return das {@link SyncToken}-Objekt.
+	 */
+	public SyncToken getSyncToken() {
+		return syncToken;
+	}
 
-    public void setSyncToken(final SyncToken syncToken) {
-        this.syncToken = syncToken;
-    }
+	/**
+	 * Setzt das {@link SyncToken}-Objekt.
+	 *
+	 * @param syncToken   das zu setzende {@link SyncToken}-Objekt.
+	 */
+	public void setSyncToken(final SyncToken syncToken) {
+		this.syncToken = syncToken;
+	}
 
+	/**
+	 * Liefert das {@link AddressbookHomeSet}-Objekt.
+	 *
+	 * @return das {@link AddressbookHomeSet}-Objekt.
+	 */
+	public AddressbookHomeSet getAddressbookHomeSet() {
+		return addressbookHomeSet;
+	}
 
-    public AddressbookHomeSet getAddressbookHomeSet() {
-        return addressbookHomeSet;
-    }
+	/**
+	 * Setzt das {@link AddressbookHomeSet}-Objekt.
+	 *
+	 * @param addressbookHomeSet   das zu setzende {@link AddressbookHomeSet}-Objekt.
+	 */
+	public void setAddressbookHomeSet(final AddressbookHomeSet addressbookHomeSet) {
+		this.addressbookHomeSet = addressbookHomeSet;
+	}
 
-    public void setAddressbookHomeSet(final AddressbookHomeSet addressbookHomeSet) {
-        this.addressbookHomeSet = addressbookHomeSet;
-    }
+	/**
+	 * Liefert das {@link CardAddressData}-Objekt.
+	 *
+	 * @return das {@link CardAddressData}-Objekt.
+	 */
+	public CardAddressData getAddressData() {
+		return addressData;
+	}
 
-    public CardAddressData getAddressData() {
-        return addressData;
-    }
+	/**
+	 * Setzt das {@link CardAddressData}-Objekt.
+	 *
+	 * @param addressData   das zu setzende {@link CardAddressData}-Objekt.
+	 */
+	public void setAddressData(final CardAddressData addressData) {
+		this.addressData = addressData;
+	}
 
-    public void setAddressData(final CardAddressData addressData) {
-        this.addressData = addressData;
-    }
+	/**
+	 * Liefert das {@link SupportedAddressData}-Objekt.
+	 *
+	 * @return das {@link SupportedAddressData}-Objekt.
+	 */
+	public SupportedAddressData getSupportedAddressData() {
+		return supportedAddressData;
+	}
 
-    public SupportedAddressData getSupportedAddressData() {
-        return supportedAddressData;
-    }
+	/**
+	 * Setzt das {@link SupportedAddressData}-Objekt.
+	 *
+	 * @param supportedAddressData   das zu setzende {@link SupportedAddressData}-Objekt.
+	 */
+	public void setSupportedAddressData(final SupportedAddressData supportedAddressData) {
+		this.supportedAddressData = supportedAddressData;
+	}
 
-    public void setSupportedAddressData(final SupportedAddressData supportedAddressData) {
-        this.supportedAddressData = supportedAddressData;
-    }
-
-	// CalDAV-Elements
-	@XmlElement(name="calendar-home-set", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected CalendarHomeSet calendarHomeSet;
-
+	/**
+	 * Liefert das {@link CalendarHomeSet}-Objekt.
+	 *
+	 * @return das {@link CalendarHomeSet}-Objekt.
+	 */
 	public CalendarHomeSet getCalendarHomeSet() {
 		return calendarHomeSet;
 	}
 
+	/**
+	 * Setzt das {@link CalendarHomeSet}-Objekt.
+	 *
+	 * @param calendarHomeSet   das zu setzende {@link CalendarHomeSet}-Objekt.
+	 */
 	public void setCalendarHomeSet(final CalendarHomeSet calendarHomeSet) {
 		this.calendarHomeSet = calendarHomeSet;
 	}
 
-	@XmlElement(name = "supported-calendar-component-set", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected SupportedCalendarComponentSet supportedCalendarComponentSet;
-
+	/**
+	 * Liefert das {@link SupportedCalendarComponentSet}-Objekt.
+	 *
+	 * @return das {@link SupportedCalendarComponentSet}-Objekt.
+	 */
 	public SupportedCalendarComponentSet getSupportedCalendarComponentSet() {
 		return supportedCalendarComponentSet;
 	}
 
+	/**
+	 * Setzt das {@link SupportedCalendarComponentSet}-Objekt.
+	 *
+	 * @param supportedCalendarComponentSet   das zu setzende {@link SupportedCalendarComponentSet}-Objekt.
+	 */
 	public void setSupportedCalendarComponentSet(final SupportedCalendarComponentSet supportedCalendarComponentSet) {
 		this.supportedCalendarComponentSet = supportedCalendarComponentSet;
 	}
 
-	@XmlElement(name="calendar-color", namespace = "http://apple.com/ns/ical")
-	protected CalendarColor calendarColor;
-
+	/**
+	 * Liefert das {@link CalendarColor}-Objekt.
+	 *
+	 * @return das {@link CalendarColor}-Objekt.
+	 */
 	public CalendarColor getCalendarColor() {
 		return calendarColor;
 	}
 
+	/**
+	 * Setzt das {@link CalendarColor}-Objekt.
+	 *
+	 * @param calendarColor   das zu setzende {@link CalendarColor}-Objekt.
+	 */
 	public void setCalendarColor(final CalendarColor calendarColor) {
 		this.calendarColor = calendarColor;
 	}
 
-	@XmlElement(name = "calendar-user-address-set", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected CalendarUserAddressSet calendarUserAddressSet;
-
+	/**
+	 * Liefert das {@link CalendarUserAddressSet}-Objekt.
+	 *
+	 * @return das {@link CalendarUserAddressSet}-Objekt.
+	 */
 	public CalendarUserAddressSet getCalendarUserAddressSet() {
 		return calendarUserAddressSet;
 	}
 
+	/**
+	 * Setzt das {@link CalendarUserAddressSet}-Objekt.
+	 *
+	 * @param calendarUserAddressSet   das zu setzende {@link CalendarUserAddressSet}-Objekt.
+	 */
 	public void setCalendarUserAddressSet(final CalendarUserAddressSet calendarUserAddressSet) {
 		this.calendarUserAddressSet = calendarUserAddressSet;
 	}
 
-	@XmlElement(name = "schedule-inbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected ScheduleInboxUrl scheduleInboxUrl;
-
+	/**
+	 * Liefert das {@link ScheduleInboxUrl}-Objekt.
+	 *
+	 * @return das {@link ScheduleInboxUrl}-Objekt.
+	 */
 	public ScheduleInboxUrl getScheduleInboxUrl() {
 		return scheduleInboxUrl;
 	}
 
+	/**
+	 * Setzt das {@link ScheduleInboxUrl}-Objekt.
+	 *
+	 * @param scheduleInboxUrl   das zu setzende {@link ScheduleInboxUrl}-Objekt.
+	 */
 	public void setScheduleInboxUrl(final ScheduleInboxUrl scheduleInboxUrl) {
 		this.scheduleInboxUrl = scheduleInboxUrl;
 	}
 
-	@XmlElement(name = "schedule-outbox-URL", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected ScheduleInboxUrl scheduleoutboxUrl;
-
+	/**
+	 * Liefert das {@link ScheduleInboxUrl}-Objekt.
+	 *
+	 * @return das {@link ScheduleInboxUrl}-Objekt.
+	 */
 	public ScheduleInboxUrl getScheduleoutboxUrl() {
 		return scheduleoutboxUrl;
 	}
 
+	/**
+	 * Setzt das {@link ScheduleInboxUrl}-Objekt.
+	 *
+	 * @param scheduleoutboxUrl   das zu setzende {@link ScheduleInboxUrl}-Objekt.
+	 */
 	public void setScheduleoutboxUrl(final ScheduleInboxUrl scheduleoutboxUrl) {
 		this.scheduleoutboxUrl = scheduleoutboxUrl;
 	}
 
-	@XmlElement(name = "calendar-data", namespace = "urn:ietf:params:xml:ns:caldav")
-	protected CalendarData calendarData;
-
+	/**
+	 * Liefert das {@link CalendarData}-Objekt.
+	 *
+	 * @return das {@link CalendarData}-Objekt.
+	 */
 	public CalendarData getCalendarData() {
 		return calendarData;
 	}
 
+	/**
+	 * Setzt das {@link CalendarData}-Objekt.
+	 *
+	 * @param calendarData   das zu setzende {@link CalendarData}-Objekt.
+	 */
 	public void setCalendarData(final CalendarData calendarData) {
 		this.calendarData = calendarData;
 	}
 
-	@XmlElement(name = "organizer", namespace = "http://calendarserver.org/ns/")
-	protected Organizer organizer;
-
+	/**
+	 * Liefert das {@link Organizer}-Objekt.
+	 *
+	 * @return das {@link Organizer}-Objekt.
+	 */
 	public Organizer getOrganizer() {
 		return organizer;
 	}
 
+	/**
+	 * Setzt das {@link Organizer}-Objekt.
+	 *
+	 * @param organizer   das zu setzende {@link Organizer}-Objekt.
+	 */
 	public void setOrganizer(final Organizer organizer) {
 		this.organizer = organizer;
 	}

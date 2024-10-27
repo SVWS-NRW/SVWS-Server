@@ -69,7 +69,7 @@ public class ExportLuPOMDB {
 
 
 	/**
-	 *
+	 * Hauptmethode zum Erstellen einer neuen leeren LuPO-MDB-Datenbank aus einem SVWS-Schema.
 	 *
 	 * @param args  die Optionen für die Codegenerierung, @see options
 	 *
@@ -101,11 +101,11 @@ public class ExportLuPOMDB {
 			if (Files.exists(Paths.get(lupofilename))) {
 				try (Scanner scan = new Scanner(System.in)) {
 					// Frage ggf. nach, ob die bestehende LuPO-Datei gelöscht und überschrieben werden soll
-					boolean antwort_ja = cmdLine.isSet("j");
-					if (!antwort_ja) {
-						antwort_ja = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren."
+					boolean antwortJa = cmdLine.isSet("j");
+					if (!antwortJa) {
+						antwortJa = konsoleFrageJaNein("Die LuPO-Datei \"" + lupofilename + "\" wird überschrieben. Dabei gehen alle Daten darin verloren."
 								+ " Fortfahren? (J/N) ", scan);
-						if (!antwort_ja) {
+						if (!antwortJa) {
 							cmdLine.printOptionsAndExit(2, "Die LuPO-Datei darf nicht überschrieben werden und kann daher nicht neu erzeugt werden."
 									+ " Breche ab.");
 							System.exit(1);

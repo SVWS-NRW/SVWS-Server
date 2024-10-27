@@ -115,6 +115,9 @@ export class KlassenListeManager extends AuswahlManager<number, KlassenDaten, Kl
 	 */
 	private _filterNurSichtbar : boolean = true;
 
+	/**
+	 *  Trigger, wenn eine Checkbox zum Hinzufügen von Schülern zu einer Klasse verwendet wird.
+	 */
 	protected readonly _eventSchuelerAuswahlChanged : Runnable = { run : () => {
 		// empty block
 	} };

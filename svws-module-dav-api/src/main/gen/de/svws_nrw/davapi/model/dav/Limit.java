@@ -38,6 +38,9 @@ import java.math.BigInteger;
 @XmlRootElement(name = "limit")
 public class Limit {
 
+	/**
+	 * Das Resultat als {@link BigInteger}-Objekt.
+	 */
     @XmlElement(required = true)
     protected BigInteger nresults;
 

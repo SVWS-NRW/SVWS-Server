@@ -33,16 +33,15 @@ import java.util.List;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "activelock"
+		"activelock"
 })
 @XmlRootElement(name = "lockdiscovery")
 public class Lockdiscovery {
 
-    private List<Activelock> activelock;
+	private List<Activelock> activelock;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -51,33 +50,34 @@ public class Lockdiscovery {
 		// leer
 	}
 
-    /**
-     * Gets the value of the activelock property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the activelock property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getActivelock().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Activelock }
-     *
-     *
-     */
-    public List<Activelock> getActivelock() {
-        if (activelock == null) {
-            activelock = new ArrayList<>();
-        }
-        return this.activelock;
-    }
+	/**
+	* Gibt die Liste der Activelock-Inhalte zurück.
+	*
+	* <p>
+	* Diese Methode gibt eine Referenz auf die live-Liste zurück,
+	* nicht auf eine Kopie. Änderungen an dieser Liste wirken sich direkt
+	* auf das JAXB-Objekt aus. Daher gibt es keine <CODE>set</CODE>-Methode.
+	* </p>
+	*
+	* <p>
+	* Um ein neues Element hinzuzufügen, verwenden Sie bitte folgenden Code:
+	* </p>
+	* <pre>
+	*    getActivelock().add(neuesElement);
+	* </pre>
+	*
+	* <p>
+	* In dieser Liste sind Objekte des folgenden Typs erlaubt:
+	* {@link Activelock }
+	* </p>
+	*
+	* @return eine modifizierbare Liste von Activelock-Inhalten. Die Liste ist nie null.
+	*/
+	public List<Activelock> getActivelock() {
+		if (activelock == null) {
+			activelock = new ArrayList<>();
+		}
+		return this.activelock;
+	}
 
 }

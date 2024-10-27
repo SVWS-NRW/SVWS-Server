@@ -31,11 +31,10 @@ import jakarta.xml.bind.annotation.XmlType;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "href","property","all","authenticated","unauthenticated","self"
+		"href", "property", "all", "authenticated", "unauthenticated", "self"
 })
 @XmlRootElement(name = "principal")
 public class Principal {
@@ -54,53 +53,112 @@ public class Principal {
 		// leer
 	}
 
+	/**
+	 * Liefert den Wert der href-Eigenschaft.
+	 *
+	 * @return den Wert der href-Eigenschaft als String.
+	 */
 	public String getHref() {
 		return href;
 	}
 
+	/**
+	 * Setzt den Wert der href-Eigenschaft.
+	 *
+	 * @param href   der neue Wert der href-Eigenschaft als String.
+	 */
 	public void setHref(final String href) {
 		this.href = href;
 	}
 
+	/**
+	 * Liefert das {@link Property}-Objekt.
+	 *
+	 * @return das {@link Property}-Objekt.
+	 */
 	public Property getProperty() {
 		return property;
 	}
 
+	/**
+	 * Setzt das {@link Property}-Objekt.
+	 *
+	 * @param property   das zu setzende  {@link Property}-Objekt.
+	 */
 	public void setProperty(final Property property) {
 		this.property = property;
 	}
 
+	/**
+	 * Liefert das {@link All}-Objekt.
+	 *
+	 * @return das {@link All}-Objekt.
+	 */
 	public All getAll() {
 		return all;
 	}
 
+	/**
+	 * Setzt das {@link All}-Objekt.
+	 *
+	 * @param all   das zu setzende  {@link All}-Objekt.
+	 */
 	public void setAll(final All all) {
 		this.all = all;
 	}
 
+	/**
+	 * Liefert das {@link Authenticated}-Objekt.
+	 *
+	 * @return das {@link Authenticated}-Objekt.
+	 */
 	public Authenticated getAuthenticated() {
 		return authenticated;
 	}
 
+	/**
+	 * Setzt das {@link Authenticated}-Objekt.
+	 *
+	 * @param authenticated   das zu setzende  {@link Authenticated}-Objekt.
+	 */
 	public void setAuthenticated(final Authenticated authenticated) {
 		this.authenticated = authenticated;
 	}
 
+	/**
+	 * Liefert das {@link Unauthenticated}-Objekt.
+	 *
+	 * @return das {@link Unauthenticated}-Objekt.
+	 */
 	public Unauthenticated getUnauthenticated() {
 		return unauthenticated;
 	}
 
+	/**
+	 * Setzt das {@link Unauthenticated}-Objekt.
+	 *
+	 * @param unauthenticated   das zu setzende  {@link Unauthenticated}-Objekt.
+	 */
 	public void setUnauthenticated(final Unauthenticated unauthenticated) {
 		this.unauthenticated = unauthenticated;
 	}
 
+	/**
+	 * Liefert das {@link Self}-Objekt.
+	 *
+	 * @return das {@link Self}-Objekt.
+	 */
 	public Self getSelf() {
 		return self;
 	}
 
+	/**
+	 * Setzt das {@link Self}-Objekt.
+	 *
+	 * @param self   das zu setzende  {@link Self}-Objekt.
+	 */
 	public void setSelf(final Self self) {
 		this.self = self;
 	}
-
 
 }

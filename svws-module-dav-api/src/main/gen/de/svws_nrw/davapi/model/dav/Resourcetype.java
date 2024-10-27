@@ -8,6 +8,8 @@
 
 package de.svws_nrw.davapi.model.dav;
 
+import org.w3c.dom.Element;
+
 import de.svws_nrw.davapi.model.dav.cal.CalCalendar;
 import de.svws_nrw.davapi.model.dav.card.CardAddressbook;
 import jakarta.xml.bind.annotation.*;
@@ -31,18 +33,24 @@ import jakarta.xml.bind.annotation.*;
  * &lt;/complexType&gt;
  * </pre>
  *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "collection","principal",
-    "addressbook", "calendar"
+		"collection", "principal",
+		"addressbook", "calendar"
 })
 @XmlRootElement(name = "resourcetype")
 public class Resourcetype {
 
-    private Collection collection;
-    private Principal principal;
+	private Collection collection;
+	private Principal principal;
+
+	// CardDAV elements
+	@XmlElement(name = "addressbook", namespace = "urn:ietf:params:xml:ns:carddav")
+	private CardAddressbook addressbook;
+	// CalDAV elements
+	@XmlElement(name = "calendar", namespace = "urn:ietf:params:xml:ns:caldav")
+	private CalCalendar calendar;
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -51,58 +59,74 @@ public class Resourcetype {
 		// leer
 	}
 
-    /**
-     * Gets the value of the collection property.
-     *
-     * @return
-     *     possible object is
-     *     {@link Collection }
-     *
-     */
-    public Collection getCollection() {
-        return collection;
-    }
+	/**
+	 * Liefert das {@link Collection}-Objekt.
+	 *
+	 * @return das {@link Collection}-Objekt.
+	 */
+	public Collection getCollection() {
+		return collection;
+	}
 
-    /**
-     * Sets the value of the collection property.
-     *
-     * @param value
-     *     allowed object is
-     *     {@link Collection }
-     *
-     */
-    public void setCollection(final Collection value) {
-        this.collection = value;
-    }
+	/**
+	 * Setzt das {@link Collection}-Objekt.
+	 *
+	 * @param value   das zu setzende {@link Collection}-Objekt.
+	 */
+	public void setCollection(final Collection value) {
+		this.collection = value;
+	}
 
-    public Principal getPrincipal() {
+	/**
+	 * Liefert das {@link Principal}-Objekt.
+	 *
+	 * @return das {@link Principal}-Objekt.
+	 */
+	public Principal getPrincipal() {
 		return principal;
 	}
 
+	/**
+	 * Setzt das {@link Principal}-Objekt.
+	 *
+	 * @param principal   das zu setzende {@link Principal}-Objekt.
+	 */
 	public void setPrincipal(final Principal principal) {
 		this.principal = principal;
 	}
 
-    // CardDAV elements
-    @XmlElement(name = "addressbook", namespace = "urn:ietf:params:xml:ns:carddav")
-    private CardAddressbook addressbook;
-
+	/**
+	 * Liefert das {@link CardAddressbook}-Objekt.
+	 *
+	 * @return das {@link CardAddressbook}-Objekt.
+	 */
 	public CardAddressbook getAddressbook() {
 		return addressbook;
 	}
 
+	/**
+	 * Setzt das {@link CardAddressbook}-Objekt.
+	 *
+	 * @param addressbook   das zu setzende {@link CardAddressbook}-Objekt.
+	 */
 	public void setAddressbook(final CardAddressbook addressbook) {
 		this.addressbook = addressbook;
 	}
 
-	// CalDAV elements
-	@XmlElement(name = "calendar", namespace = "urn:ietf:params:xml:ns:caldav")
-	private CalCalendar calendar;
-
+	/**
+	 * Liefert das {@link CalCalendar}-Objekt.
+	 *
+	 * @return das {@link CalCalendar}-Objekt.
+	 */
 	public CalCalendar getCalendar() {
 		return calendar;
 	}
 
+	/**
+	 * Setzt das {@link CalCalendar}-Objekt.
+	 *
+	 * @param calendar   das zu setzende {@link CalCalendar}-Objekt.
+	 */
 	public void setCalendar(final CalCalendar calendar) {
 		this.calendar = calendar;
 	}

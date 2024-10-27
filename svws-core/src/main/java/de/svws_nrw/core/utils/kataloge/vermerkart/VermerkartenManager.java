@@ -26,6 +26,7 @@ public final class VermerkartenManager extends AuswahlManager<Long, VermerkartEi
 	private static final @NotNull Function<SchuelerVermerkartZusammenfassung, @NotNull Long> _schuelerToId =
 			(final @NotNull SchuelerVermerkartZusammenfassung s) -> s.id;
 
+	/** Ein Dummy-Event. */
 	protected static final @NotNull Runnable _dummyEvent = () -> { /* do nothing */	};
 
 	/**
