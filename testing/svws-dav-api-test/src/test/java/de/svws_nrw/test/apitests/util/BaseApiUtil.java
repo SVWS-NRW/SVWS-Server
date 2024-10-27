@@ -8,6 +8,9 @@ import org.junit.jupiter.api.BeforeAll;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
+/**
+ * Tests für die grundlegenden API-Funktionen.
+ */
 public class BaseApiUtil {
 
 	/** HTTP-Methode PROPFIND */
