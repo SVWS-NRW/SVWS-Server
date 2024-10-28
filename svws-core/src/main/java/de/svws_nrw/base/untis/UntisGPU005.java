@@ -3,11 +3,9 @@ package de.svws_nrw.base.untis;
 import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
+import de.svws_nrw.base.CsvReader;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -74,7 +72,7 @@ public final class UntisGPU005 {
 
 
 	/** Die Instanz des Object-Readers für die CSV-Daten */
-	private static final ObjectReader reader = new CsvMapper().readerFor(UntisGPU005.class).with(CsvSchema.builder()
+	private static final CsvSchema csvSchema = CsvSchema.builder()
 			.addColumn("kuerzel")
 			.addColumn("bezeichnung")
 			.addColumn("kuerzelAusweichraum")
@@ -97,7 +95,7 @@ public final class UntisGPU005 {
 			.withColumnSeparator(';')
 			.withQuoteChar('\"')
 			.withNullValue("")
-			.withoutHeader());
+			.withoutHeader();
 
 	/**
 	 * Leerer Standardkonstruktor.
@@ -109,16 +107,14 @@ public final class UntisGPU005 {
 	/**
 	 * Erstellt aus den übergebenen CSV-Daten eine Liste der GPU005-Datensätze
 	 *
-	 * @param csvData   die Daten des CSV-Datei als String
+	 * @param csvData   die Daten des CSV-Datei als Byte-Array
 	 *
 	 * @return eine Liste mit den GPU005-Datensätzen
 	 *
 	 * @throws IOException falls die CSV-Datei nicht korrekt gelesen werden kann
 	 */
-	public static @NotNull List<UntisGPU005> readCSV(final String csvData) throws IOException {
-		try (MappingIterator<UntisGPU005> it = reader.readValues(csvData)) {
-			return it.readAll();
-		}
+	public static @NotNull List<UntisGPU005> readCSV(final byte[] csvData) throws IOException {
+		return CsvReader.fromUntis(UntisGPU005.class, csvSchema, csvData);
 	}
 
 	@Override

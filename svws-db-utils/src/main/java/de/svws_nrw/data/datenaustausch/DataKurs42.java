@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -382,9 +381,8 @@ public final class DataKurs42 {
 		boolean success = true;
 		Status statusCode = Status.OK;
 		try {
-			final String csv = new String(multipart.data, StandardCharsets.UTF_8);
 			logger.logLn("Importiere die Räume aus der CSV-Datei:");
-			importRaeumeCSV(conn, logger, csv);
+			importRaeumeCSV(conn, logger, multipart.data);
 			logger.logLn("  Import beendet");
 		} catch (final Exception e) {
 			success = false;
@@ -415,7 +413,7 @@ public final class DataKurs42 {
 	 *
 	 * @throws ApiOperationException   im Fehlerfall
 	 */
-	public static boolean importRaeumeCSV(final DBEntityManager conn, final Logger logger, final String csv) throws ApiOperationException {
+	public static boolean importRaeumeCSV(final DBEntityManager conn, final Logger logger, final byte[] csv) throws ApiOperationException {
 		// Lese zunächst die Informationen zur Schule aus der SVWS-Datenbank und überprüfe die Schulform
 		logger.logLn("-> Lese Informationen zu der Schule ein...");
 		logger.modifyIndent(2);
@@ -429,7 +427,7 @@ public final class DataKurs42 {
 		try {
 			logger.logLn("-> Lese die Räume aus der CSV-Datei ein...");
 			logger.modifyIndent(2);
-			final List<Kurs42DataRaum> raeume = CsvReader.from(csv, Kurs42DataRaum.class);
+			final List<Kurs42DataRaum> raeume = CsvReader.fromKurs42(csv, Kurs42DataRaum.class);
 			logger.logLn("[OK]");
 			logger.modifyIndent(-2);
 

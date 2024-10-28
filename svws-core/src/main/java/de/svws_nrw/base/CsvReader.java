@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
@@ -27,6 +29,16 @@ import jakarta.validation.constraints.NotNull;
  * Diese Klasse stellt Hilfsmethoden zum Zugriff auf CSV-Dateien zur Verfügung.
  */
 public final class CsvReader {
+
+	/** Das Default CSV-Schema für diese Klasse */
+	private static final CsvSchema csvSchemaDefault = CsvSchema.emptySchema().withColumnSeparator(';').withQuoteChar('\"').withNullValue("").withHeader();
+
+	/** Das Default CSV-Schema für diese Klasse zur Verwendung von Default-Werten statt null bei leeren CSV-Einträgen */
+	private static final CsvSchema csvSchemaDefaultEmptyValues = CsvSchema.emptySchema().withColumnSeparator(';').withQuoteChar('\"').withHeader();
+
+	/** Das CSV-Schema für Kurs 42 */
+	private static final CsvSchema csvSchemaKurs42 = CsvSchema.emptySchema().withColumnSeparator(';').withQuoteChar('\"').withNullValue("").withHeader();
+
 
 	private CsvReader() {
 		throw new IllegalStateException("Instantiation not allowed");
@@ -101,18 +113,35 @@ public final class CsvReader {
 	public static <T> List<T> from(final Path path, final Class<T> clazz) {
 		try {
 			final InputStream inputStream = Files.newInputStream(path);
-			final CsvMapper mapper = new CsvMapper()
-					.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-			final CsvSchema schema = CsvSchema
-					.emptySchema()
-					.withColumnSeparator(';')
-					.withQuoteChar('\"')
-					.withNullValue("")
-					.withHeader();
-			try (MappingIterator<T> it = mapper
-					.readerFor(clazz)
-					.with(schema)
-					.readValues(inputStream)) {
+			final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
+			try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaDefault).readValues(inputStream)) {
+				return it.readAll();
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+	}
+
+
+	/**
+	 * Erzeugt eine Liste von Objekten vom Typ T, indem die CSV-Datei von dem Pfad
+	 * path eingelesen wird und die einzelnen Einträge in Objekt vom Typ T
+	 * konvertiert werden. Ist bei der UTF8-Datei ein BOM vorhanden, so wird dieses beim Einlesen entfernt.
+	 *
+	 * @param <T>     der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
+	 * @param path    der Pfad, unter dem sich die CSV-Resource befindet
+	 * @param clazz   das Klassenobjekt zur generischen Klasse T
+	 *
+	 * @return die Liste der Objekte vom Typ T
+	 */
+	public static <T> List<T> fromKurs42(final Path path, final Class<T> clazz) {
+		try {
+			final byte[] data = Files.readAllBytes(path);
+			final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
+			final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+			final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
+			try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaKurs42).readValues(csvData)) {
 				return it.readAll();
 			}
 		} catch (final IOException e) {
@@ -128,26 +157,18 @@ public final class CsvReader {
 	 * konvertiert werden.
 	 *
 	 * @param <T>     der generische Parameter für die Klasse T, von welcher die Objekt-Instanzen erzeugt werden
-	 * @param csv     der Inhalt der CSV-Datei
+	 * @param data    der Inhalt der CSV-Datei
 	 * @param clazz   das Klassenobjekt zur generischen Klasse T
 	 *
 	 * @return die Liste der Objekte vom Typ T
 	 *
 	 * @throws IOException   im Falle eines Fehlers
 	 */
-	public static <T> List<T> from(final String csv, final Class<T> clazz) throws IOException {
-		final CsvMapper mapper = new CsvMapper()
-				.enable(CsvParser.Feature.WRAP_AS_ARRAY);
-		final CsvSchema schema = CsvSchema
-				.emptySchema()
-				.withColumnSeparator(';')
-				.withQuoteChar('\"')
-				.withNullValue("")
-				.withHeader();
-		try (MappingIterator<T> it = mapper
-				.readerFor(clazz)
-				.with(schema)
-				.readValues(csv)) {
+	public static <T> List<T> fromKurs42(final byte[] data, final Class<T> clazz) throws IOException {
+		final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
+		final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+		final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
+		try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaKurs42).readValues(csvData)) {
 			return it.readAll();
 		}
 	}
@@ -196,13 +217,35 @@ public final class CsvReader {
 		}
 		try (InputStream inputStream = Files.newInputStream(path)) {
 			final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
-			final CsvSchema schema = CsvSchema.emptySchema().withColumnSeparator(';').withQuoteChar('\"').withHeader();
-			try (MappingIterator<T> it = mapper.readerFor(clazz).with(schema).readValues(inputStream)) {
+			try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaDefaultEmptyValues).readValues(inputStream)) {
 				return it.readAll();
 			}
 		} catch (final IOException e) {
 			e.printStackTrace();
 			return new ArrayList<>();
+		}
+	}
+
+
+	/**
+	 * Liest Daten für das übergebene CSV-Schema aus dem übergebenen byte-Array. Dabei wird ggf. ein BOM entfernt.
+	 * Das Ergebnis wird in einer Liste der von Objekten der übergebenen Klasse gespeichert.
+	 *
+	 * @param <T>         der Typ der Klasse der Daten
+	 * @param clazz       die Klasse der Daten
+	 * @param csvSchema   das Schema der CSV-Daten
+	 * @param data        das Byte-Array mit den CSV-Daten
+	 *
+	 * @return die Liste mit den Daten-Objekten
+	 *
+	 * @throws IOException falls ein Fehler beim Einlesen der Daten auftritt, z.B. dass das Schema nicht zu den Daten passt
+	 */
+	public static <T> List<T> fromUntis(final @NotNull Class<T> clazz, final @NotNull CsvSchema csvSchema, final byte[] data) throws IOException {
+		final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
+		final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+		final ObjectReader reader = new CsvMapper().readerFor(clazz).with(csvSchema);
+		try (MappingIterator<T> it = reader.readValues(csvData)) {
+			return it.readAll();
 		}
 	}
 
