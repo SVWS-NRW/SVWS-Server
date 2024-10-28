@@ -1,4 +1,4 @@
-import type { RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { TabData } from "@ui";
 import type { AppProps } from "~/components/SAppProps";
 import { Schulform, BenutzerKompetenz, ServerMode, DeveloperNotificationException } from "@core";
@@ -90,7 +90,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		return this.getRoute();
+		return this.getRouteDefaultChild({ idSchuljahresabschnitt : undefined });
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -100,7 +100,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			const { idSchuljahresabschnitt } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt"]);
 			// Prüfe, ob der Schuljahresabschnitt gültig gesetzt ist
 			if (idSchuljahresabschnitt === undefined)
-				return this.getRoute(this.data.aktAbschnitt.value.id);
+				return this.getRouteDefaultChild({ idSchuljahresabschnitt: this.data.aktAbschnitt.value.id });
 			// Prüfe, ob der Schuljahresabschnitt gesetzt werden soll
 			await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 			// Prüfe, ob die View aktualisiert werden muss
@@ -110,7 +110,7 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 			if (cur !== this.data.view)
 				this.data.setView(cur, this.children);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -118,8 +118,8 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 		await this.data.leave();
 	}
 
-	public getRoute(idSchuljahresabschnitt?: number): RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt } };
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { idSchuljahresabschnitt : this.data.idSchuljahresabschnitt };
 	}
 
 	public getProps(): AppProps {

@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogEinwilligungsarten, type RouteKatalogEinwilligungsarten } from "~/router/apps/schule/einwilligungsarten/RouteKatalogEinwilligungsarten";
 
 import type { EinwilligungsartDatenProps } from "~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDatenProps";
-import { routeApp } from "~/router/apps/RouteApp";
 
 const SEinwilligungsartDaten = () => import("~/components/schule/kataloge/einwilligungsarten/daten/SEinwilligungsartDaten.vue");
 
@@ -22,10 +21,6 @@ export class RouteKatalogEinwilligungsartenDaten extends RouteNode<any, RouteKat
 	public async update(to: RouteNode<any, any>, to_params: RouteParams): Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogEinwilligungsarten.data.auswahl === undefined)
 			return routeKatalogEinwilligungsarten.getRoute(undefined);
-	}
-
-	public getRoute(id: number): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
 	}
 
 	public getProps(to: RouteLocationNormalized): EinwilligungsartDatenProps {

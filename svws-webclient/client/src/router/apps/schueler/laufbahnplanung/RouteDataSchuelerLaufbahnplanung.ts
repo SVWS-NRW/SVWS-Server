@@ -4,6 +4,7 @@ import { AbiturdatenManager, BenutzerTyp, GostBelegpruefungErgebnis, GostBelegpr
 import { api } from "~/router/Api";
 import { RouteData, type RouteStateInterface } from "~/router/RouteData";
 import { RouteManager } from "~/router/RouteManager";
+import { RouteNode } from "~/router/RouteNode";
 import { routeApp } from "~/router/apps/RouteApp";
 
 
@@ -285,7 +286,8 @@ export class RouteDataSchuelerLaufbahnplanung extends RouteData<RouteStateSchuel
 		}
 		if (ergebnis === undefined)
 			ergebnis = blockungsdaten.ergebnisse.get(0);
-		await RouteManager.doRoute({ name: "gost.kursplanung.schueler", params: { abiturjahr: this.gostJahrgangsdaten.abiturjahr, halbjahr: halbjahr.id, idblockung: blockungsdaten.id, idergebnis: ergebnis.id, idschueler : this.auswahl.id }});
+		const route = RouteNode.getNodeByName("gost.kursplanung.schueler")!.getRoute({ abiturjahr: this.gostJahrgangsdaten.abiturjahr, halbjahr: halbjahr.id, idblockung: blockungsdaten.id, idergebnis: ergebnis.id, idschueler : this.auswahl.id });
+		await RouteManager.doRoute(route);
 	});
 
 }

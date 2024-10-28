@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -7,7 +7,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKurse, type RouteKurse } from "~/router/apps/kurse/RouteKurse";
 
 import type { KursDatenProps } from "~/components/kurse/daten/SKursDatenProps";
-import { routeApp } from "../RouteApp";
 
 const SKursDaten = () => import("~/components/kurse/daten/SKursDaten.vue");
 
@@ -18,10 +17,6 @@ export class RouteKursDaten extends RouteNode<any, RouteKurse> {
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs";
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): KursDatenProps {

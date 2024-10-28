@@ -25,10 +25,6 @@ export class RouteKatalogSchuleDaten extends RouteNode<any, RouteKatalogSchulen>
 			return routeKatalogSchulen.getRoute(undefined);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuleDatenProps {
 		return {
 			schuljahr: api.abschnitt.schuljahr,

@@ -55,7 +55,7 @@ export class RouteDataKatalogFoerderschwerpunkte extends RouteData<RouteStateKat
 	}
 
 	gotoEintrag = async (eintrag: FoerderschwerpunktEintrag) => {
-		await RouteManager.doRoute(routeKatalogFoerderschwerpunkte.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKatalogFoerderschwerpunkte.getRoute({ id: eintrag.id }));
 	}
 
 	patch = async (data : Partial<FoerderschwerpunktEintrag>) => {

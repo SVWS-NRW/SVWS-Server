@@ -25,10 +25,6 @@ export class RouteSchuleJahrgaengeDaten extends RouteNode<any, RouteSchuleJahrga
 			return routeSchuleJahrgaenge.getRoute(undefined);
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): JahrgangDatenProps {
 		return {
 			schuljahr: routeApp.data.aktAbschnitt.value.schuljahr,

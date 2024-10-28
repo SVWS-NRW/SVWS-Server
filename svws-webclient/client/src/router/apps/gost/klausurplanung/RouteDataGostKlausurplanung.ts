@@ -252,30 +252,30 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	});
 
 	gotoVorgaben = async () => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungVorgaben.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id } });
+		await RouteManager.doRoute(routeGostKlausurplanungVorgaben.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id }));
 	}
 
 	gotoSchienen = async (termin: GostKlausurtermin | undefined) => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungSchienen.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined } });
+		await RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined }));
 	}
 
 	gotoKalenderdatum = async (goto: string | GostKlausurtermin) => {
 		if (goto instanceof GostKlausurtermin)
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(goto.abijahr, goto.halbjahr, undefined, goto.id ))
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: undefined, idtermin: goto.id }));
 		else
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute(this.abiturjahr, this.halbjahr.id, goto, this.terminSelected.value !== undefined ? this.terminSelected.value.id : undefined ));
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto, idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {
-		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute(abiturjahr, halbjahr.id, idtermin ));
+		await RouteManager.doRoute(routeGostKlausurplanungRaumzeit.getRoute({ abiturjahr, halbjahr: halbjahr.id, idtermin }));
 	}
 
 	gotoHalbjahr = async (value: GostHalbjahr) => {
-		await RouteManager.doRoute(this.view.getRoute(this.abiturjahr, value.id));
+		await RouteManager.doRoute(this.view.getRoute({ abiturjahr: this.abiturjahr, halbjahr: value.id }));
 	}
 
 	gotoNachschreiber = async (abiturjahr: number, halbjahr: GostHalbjahr) => {
-		await RouteManager.doRoute({ name: routeGostKlausurplanungNachschreiber.name, params: { abiturjahr, halbjahr: halbjahr.id } });
+		await RouteManager.doRoute(routeGostKlausurplanungNachschreiber.getRoute({ abiturjahr, halbjahr: halbjahr.id }));
 	}
 
 	get zeigeAlleJahrgaenge(): boolean {

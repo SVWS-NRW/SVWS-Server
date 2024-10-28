@@ -1,6 +1,6 @@
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordRaw } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -42,7 +42,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 		const id = !to_params.id ? undefined : parseInt(to_params.id);
 		if (id !== undefined)
-			return routeEinstellungenBenutzergruppeDaten.getRoute(id);
+			return routeEinstellungenBenutzergruppeDaten.getRoute({ id });
 		return true;
 	}
 
@@ -56,17 +56,18 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		if (to.name === this.name) {
 			if (this.data.mapBenutzergruppe.size === 0)
 				return;
-			return this.getRoute(this.data.mapBenutzergruppe.values().next().value?.id);
+			return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
 		}
 		// Weiterleitung an das erste Objekt in der Liste, wenn id nicht vorhanden ist.
 		if(id !== undefined && !this.data.mapBenutzergruppe.has(id))
-			return this.getRoute(this.data.mapBenutzergruppe.values().next().value?.id);
+			return this.getRouteDefaultChild({ id: this.data.mapBenutzergruppe.values().next().value?.id });
 		const eintrag = (id !== undefined) ? this.data.mapBenutzergruppe.get(id) : undefined;
 		await this.data.setBenutzergruppe(eintrag);
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const id = (this.data.auswahl !== undefined) ? this.data.auswahl.id : undefined;
+		return { id };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): BenutzergruppeAuswahlProps {
@@ -92,7 +93,9 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 			get: () => this.selectedChildRecord || this.defaultChild!.record,
 			set: (value) => {
 				this.selectedChildRecord = value;
-				void RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id } });
+				const node = RouteNode.getNodeByName(value.name?.toString());
+				if (node !== undefined)
+					void RouteManager.doRoute(node.getRoute());
 			}
 		});
 	}
@@ -101,10 +104,7 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined) throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({
-			name: value.name,
-			params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.auswahl?.id },
-		});
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, routeEinstellungen.children);
 	};
 

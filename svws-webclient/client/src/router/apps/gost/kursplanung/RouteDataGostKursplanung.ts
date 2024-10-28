@@ -815,8 +815,14 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 
 	gotoSchueler = async (schueler: Schueler) => {
 		// TODO alle möglichen Fälle von fehlenden Informationen (Abiturjahr, Blockung und Ergebnis) berücksichtigen
-		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id))
-			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute(this.abiturjahr, this.halbjahr.id, this.auswahlBlockung.id, this.auswahlErgebnis.id, schueler.id));
+		if ((!this.hatSchueler) || (schueler.id !== this.auswahlSchueler.id)) {
+			const abiturjahr = this.abiturjahr;
+			const halbjahr = this.halbjahr.id;
+			const idblockung = this.auswahlBlockung.id;
+			const idergebnis = this.auswahlErgebnis.id;
+			const idschueler = schueler.id;
+			await RouteManager.doRoute(routeGostKursplanungSchueler.getRoute({ abiturjahr, halbjahr, idblockung, idergebnis, idschueler }));
+		}
 	}
 
 	public kurssortierung = computed<'fach' | 'kursart'>({

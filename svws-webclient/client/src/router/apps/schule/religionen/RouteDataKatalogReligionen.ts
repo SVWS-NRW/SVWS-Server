@@ -63,7 +63,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 	}
 
 	gotoEintrag = async (eintrag: ReligionEintrag) => {
-		await RouteManager.doRoute(routeKatalogReligionen.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKatalogReligionen.getRoute({ id: eintrag.id }));
 	}
 
 	addEintrag = async (eintrag: Partial<ReligionEintrag>) => {
@@ -72,7 +72,7 @@ export class RouteDataKatalogReligionen extends RouteData<RouteStateKatalogeReli
 		const religionListeManager = this.religionListeManager;
 		religionListeManager.liste.add(res);
 		this.setPatchedState({ religionListeManager });
-		await RouteManager.doRoute({ name: routeKatalogReligionDaten.name, params: { id: res.id } });
+		await RouteManager.doRoute(routeKatalogReligionDaten.getRoute({ id: res.id }));
 	}
 
 	patch = async (data : Partial<ReligionEintrag>) => {

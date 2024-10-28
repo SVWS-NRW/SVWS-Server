@@ -46,17 +46,13 @@ export class RouteSchuelerLernabschnittGostKlausuren extends RouteNode<any, Rout
 						return false;
 				}
 			}
-			return routeSchuelerLernabschnittAllgemein.getRoute(id, abschnitt, wechselNr);
+			return routeSchuelerLernabschnittAllgemein.getRoute({ id, abschnitt, wechselNr });
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	public getRoute(id: number, abschnitt: number, wechselNr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittGostKlausurenProps {

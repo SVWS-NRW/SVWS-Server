@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschWenomProps } from "~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenomProps";
 import type { RouteApp } from "../../RouteApp";
-import { routeApp } from "../../RouteApp";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
@@ -29,10 +28,6 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 			return routeSchule.data.ladeCredentials();
 	}
 
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
-	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschWenomProps {
 		return {

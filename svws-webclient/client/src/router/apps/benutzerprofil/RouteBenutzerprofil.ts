@@ -23,10 +23,6 @@ export class RouteBenutzerprofil extends RouteNode<RouteDataBenutzerprofil, Rout
 			await this.data.ladeDaten();
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } };
-	}
-
 	public getProps(to: RouteLocationNormalized): BenutzerprofilAppProps {
 		return {
 			benutzer: () => this.data.benutzer,

@@ -1,8 +1,7 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../RouteApp";
 import { api } from "~/router/Api";
 import { ViewType } from "@ui";
 import { RouteManager } from "~/router/RouteManager";
@@ -22,8 +21,8 @@ export class RouteKurseNeu extends RouteNode<any, RouteKurse> {
 		super.setCheckpoint = true;
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: "" } };
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : "" };
 	}
 
 	public getProps(to: RouteLocationNormalized): KurseNeuProps {

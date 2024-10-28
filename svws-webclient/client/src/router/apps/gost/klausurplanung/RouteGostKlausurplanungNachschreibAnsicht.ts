@@ -29,12 +29,8 @@ export class RouteGostKlausurplanungNachschreibAnsicht extends RouteNode<any, Ro
 			const { abiturjahr } = params ? RouteNode.getIntParams(params, ["abiturjahr"]) : { abiturjahr: undefined };
 			return ((abiturjahr === undefined) || (abiturjahr === -1))
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public getRoute(abiturjahr: number, halbjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: abiturjahr, halbjahr: halbjahr }};
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {

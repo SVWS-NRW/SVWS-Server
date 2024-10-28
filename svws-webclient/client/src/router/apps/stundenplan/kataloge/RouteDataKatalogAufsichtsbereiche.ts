@@ -46,7 +46,7 @@ export class RouteDataKatalogAufsichtsbereiche extends RouteData<RouteStateKatal
 
 	setEintrag = async (auswahl: StundenplanAufsichtsbereich) => this.setPatchedState({ auswahl });
 
-	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(eintrag.id));
+	gotoEintrag = async (eintrag: StundenplanAufsichtsbereich) => await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute({ id: eintrag.id }));
 
 	addEintrag = async (eintrag: Partial<StundenplanAufsichtsbereich>) => {
 		if ((eintrag.kuerzel === undefined) || this.stundenplanManager.aufsichtsbereichExistsByKuerzel(eintrag.kuerzel))

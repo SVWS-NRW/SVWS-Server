@@ -127,7 +127,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
 	get schuelerListeManager(): SchuelerListeManager {
 		if (this._state.value.schuelerListeManager === undefined)
-			return new SchuelerListeManager(null, new SchuelerListe(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt); // Gib Dummy zurück
+			return new SchuelerListeManager(api.schulform, new SchuelerListe(), api.schuleStammdaten.abschnitte, api.schuleStammdaten.idSchuljahresabschnitt); // Gib Dummy zurück
 		return this._state.value.schuelerListeManager;
 	}
 
@@ -210,7 +210,8 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 
 	gotoDefaultView = async (idSchueler?: number | null) => {
 		if ((idSchueler !== null) && (idSchueler !== undefined) && this.schuelerListeManager.liste.has(idSchueler)) {
-			const route = (this.view !== routeSchuelerNeu && this.view !== routeSchuelerGruppenprozesse) ? this.view.getRoute(idSchueler) : routeSchuelerIndividualdaten.getRoute(idSchueler);
+			const route = ((this.view !== routeSchuelerNeu) && (this.view !== routeSchuelerGruppenprozesse))
+				? this.view.getRoute({ id: idSchueler }) : routeSchuelerIndividualdaten.getRoute({ id: idSchueler });
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE){
 				const schuelerEintrag = this.getEintragOrDefault(idSchueler);
@@ -228,7 +229,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		const filtered = this.schuelerListeManager.filtered();
 		if (!filtered.isEmpty()) {
 			const schueler = filtered.getFirst();
-			const route = routeSchuelerIndividualdaten.getRoute(schueler.id);
+			const route = routeSchuelerIndividualdaten.getRoute({ id: schueler.id });
 			const result = await RouteManager.doRoute(route);
 			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
 				this.setDefaults();

@@ -118,11 +118,11 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 	}
 
 	gotoEintrag = async (eintrag: KursDaten) => {
-		await RouteManager.doRoute(routeKurse.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeKurse.getRoute({ id: eintrag.id }));
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {
-		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchueler.getRoute({ id: eintrag.id }));
 	}
 
 	setFilter = async () => {
@@ -148,7 +148,8 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 
 	gotoDefaultView = async (eintragId?: number | null) => {
 		if ((eintragId !== null) && (eintragId !== undefined) && this.kursListeManager.liste.has(eintragId)) {
-			const route = (this.view === routeKursDaten) ? this.view.getRoute(eintragId) : routeKursDaten.getRoute(eintragId)
+			const route = (this.view === routeKursDaten)
+				? this.view.getRoute({ id: eintragId }) : routeKursDaten.getRoute({ id: eintragId });
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
 				await this.setEintrag(this.kursListeManager.liste.get(eintragId));
@@ -164,7 +165,7 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		const filtered = this.kursListeManager.filtered();
 		if (!filtered.isEmpty()) {
 			const kurs = this.kursListeManager.filtered().getFirst();
-			const route = routeKursDaten.getRoute(kurs.id);
+			const route = routeKursDaten.getRoute({ id: kurs.id });
 			const result = await RouteManager.doRoute(route);
 			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
 				this.setDefaults();

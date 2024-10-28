@@ -1,12 +1,11 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschLaufbahnplanungProps } from "~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanungProps";
-import type { RouteApp} from "../../RouteApp";
-import { routeApp } from "../../RouteApp";
+import type { RouteApp } from "../../RouteApp";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
@@ -23,10 +22,6 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, Rou
 		super.text = "LuPO Laufbahnplanung";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschLaufbahnplanungProps {

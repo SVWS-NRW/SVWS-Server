@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import type { StundenplanPausenzeit , DeveloperNotificationException} from "@core";
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
@@ -36,21 +36,21 @@ export class RouteKatalogPausenzeiten extends RouteNode<RouteDataKatalogPausenze
 				return;
 			let eintrag: StundenplanPausenzeit | null = null;
 			if ((id === undefined) && this.data.auswahl)
-				return this.getRoute(this.data.auswahl.id);
+				return this.getRoute();
 			if (id === undefined) {
 				eintrag = this.data.stundenplanManager.pausenzeitGetMengeAsList().getFirst();
-				return this.getRoute(eintrag.id);
+				return this.getRoute({ id: eintrag.id });
 			} else {
 				eintrag = this.data.stundenplanManager.pausenzeitGetByIdOrException(id);
 			}
 			await this.data.setEintrag(eintrag);
 		} catch (error) {
-			return routeError.getRoute(error as DeveloperNotificationException);
+			return routeError.getErrorRoute(error as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id: number | undefined) : RouteLocationRaw {
-		return { name : this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.auswahl?.id ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): PausenzeitenAuswahlProps {

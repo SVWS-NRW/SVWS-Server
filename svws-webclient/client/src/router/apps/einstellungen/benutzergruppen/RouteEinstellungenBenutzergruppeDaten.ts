@@ -7,7 +7,6 @@ import { routeEinstellungen } from "~/router/apps/einstellungen/RouteEinstellung
 import { routeEinstellungenBenutzergruppe, type RouteEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
 
 import type { BenutzergruppeProps } from "~/components/einstellungen/benutzergruppen/daten/SBenutzergruppeProps";
-import { routeApp } from "../../RouteApp";
 
 const SBenutzergruppe = () => import("~/components/einstellungen/benutzergruppen/daten/SBenutzergruppe.vue");
 
@@ -23,10 +22,6 @@ export class RouteEinstellungenBenutzergruppeDaten extends RouteNode<any, RouteE
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeEinstellungenBenutzergruppe.data.auswahl === undefined )
 			return routeEinstellungenBenutzergruppe.getRoute(undefined);
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): BenutzergruppeProps {

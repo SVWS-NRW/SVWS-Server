@@ -29,12 +29,8 @@ export class RouteSchuelerErziehungsberechtigte extends RouteNode<RouteDataSchue
 			const { id } = RouteNode.getIntParams(to_params, ["id"]);
 			await this.data.setEintrag(id);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerErziehungsberechtigteProps {

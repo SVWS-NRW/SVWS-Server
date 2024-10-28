@@ -42,10 +42,6 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 			return this.data.view.getRoute();
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
-	}
-
 	public getProps(to: RouteLocationNormalized): EinstellungenProps {
 		return <EinstellungenProps>{
 			schule: () => api.schuleStammdaten,
@@ -63,7 +59,7 @@ export class RouteEinstellungen extends RouteNode<RouteDataEinstellungen, RouteA
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.menu);
 	}
 

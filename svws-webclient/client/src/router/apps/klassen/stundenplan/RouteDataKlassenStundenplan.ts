@@ -126,18 +126,17 @@ export class RouteDataKlassenStundenplan extends RouteData<RouteStateKlassenData
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag | undefined) => {
-		await RouteManager.doRoute({ name: routeKlassenStundenplanDaten.name, params: { id: routeKlassen.data.klassenListeManager.daten().id, idStundenplan: value?.id } });
+		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ idStundenplan: value?.id, wochentyp: 0, kw: "" }));
 	}
 
-	public gotoWochentyp = async (value: number) => {
-		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.klassenListeManager.daten().id, this.auswahl.id, value));
+	public gotoWochentyp = async (wochentyp: number) => {
+		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
-		if (value === undefined)
-			await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.klassenListeManager.daten().id, this.auswahl.id, this.wochentyp));
-		else
-			await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute(routeKlassen.data.klassenListeManager.daten().id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
+		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
+		const wochentyp = (value === undefined) ? "" : value.wochentyp;
+		await RouteManager.doRoute(routeKlassenStundenplanDaten.getRoute({ wochentyp, kw }));
 	}
 
 }

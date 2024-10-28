@@ -92,8 +92,7 @@ export class RouteDataSchuleFaecher extends RouteData<RouteStateSchuleFaecher> {
 	}
 
 	gotoEintrag = async (eintrag: FachDaten) => {
-		const redirect_name: string = (routeSchuleFaecher.selectedChild === undefined) ? routeSchuleFachDaten.name : routeSchuleFaecher.selectedChild.name;
-		await RouteManager.doRoute({ name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: eintrag.id } });
+		await RouteManager.doRoute(routeSchuleFaecher.getRouteSelectedChild({ id: eintrag.id }));
 	}
 
 	patch = async (data : Partial<FachDaten>) => {

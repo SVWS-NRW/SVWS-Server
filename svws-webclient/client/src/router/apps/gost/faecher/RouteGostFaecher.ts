@@ -8,7 +8,6 @@ import { routeGost, type RouteGost } from "~/router/apps/gost/RouteGost";
 import { RouteDataGostFaecher } from "~/router/apps/gost/faecher/RouteDataGostFaecher";
 
 import type { GostFaecherProps } from "~/components/gost/faecher/SGostFaecherProps";
-import { routeApp } from "../../RouteApp";
 import { api } from "~/router/Api";
 import { schulformenGymOb } from "~/router/RouteHelper";
 import { routeError } from "~/router/error/RouteError";
@@ -35,7 +34,7 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 				return routeGost.getRoute();
 			return true;
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -46,12 +45,8 @@ export class RouteGostFaecher extends RouteNode<RouteDataGostFaecher, RouteGost>
 				throw new DeveloperNotificationException("Fehler: Die Route ist ungültig - Parent ist nicht definiert");
 			await this.data.setEintrag(abiturjahr);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
-	}
-
-	public getRoute(abiturjahr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFaecherProps {

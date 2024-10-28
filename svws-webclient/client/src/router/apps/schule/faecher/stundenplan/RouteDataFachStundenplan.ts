@@ -43,6 +43,10 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 		return this._state.value.kalenderwoche;
 	}
 
+	get hatAuswahl(): boolean {
+		return this._state.value.auswahl !== undefined;
+	}
+
 	get auswahl(): StundenplanListeEintrag {
 		if (this._state.value.auswahl === undefined)
 			throw new DeveloperNotificationException("Unerwarteter Fehler: Stundenplaneintrag nicht festgelegt, es können keine Informationen zum Stundenplan abgerufen oder eingegeben werden.");
@@ -127,18 +131,17 @@ export class RouteDataFachStundenplan extends RouteData<RouteStateFachDataStunde
 	}
 
 	public gotoStundenplan = async (value: StundenplanListeEintrag) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, value.id, 0));
+		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ idStundenplan: value.id, wochentyp: 0, kw: "" }));
 	}
 
-	public gotoWochentyp = async (value: number) => {
-		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, value));
+	public gotoWochentyp = async (wochentyp: number) => {
+		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ wochentyp }));
 	}
 
 	public gotoKalenderwoche = async (value: StundenplanKalenderwochenzuordnung | undefined) => {
-		if (value === undefined)
-			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, this.wochentyp));
-		else
-			await RouteManager.doRoute(routeFachStundenplanDaten.getRoute(routeSchuleFaecher.data.fachListeManager.daten().id, this.auswahl.id, value.wochentyp, value.jahr, value.kw));
+		const kw = (value === undefined) ? "" : value.jahr + "." + value.kw;
+		const wochentyp = (value === undefined) ? "" : value.wochentyp;
+		await RouteManager.doRoute(routeFachStundenplanDaten.getRoute({ wochentyp, kw }));
 	}
 
 }

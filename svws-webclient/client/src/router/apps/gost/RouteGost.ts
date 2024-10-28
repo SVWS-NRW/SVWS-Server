@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@core";
 
@@ -64,7 +64,9 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 	}
 
 	public async beforeEach(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams) : Promise<boolean | void | Error | RouteLocationRaw> {
-		return this.getRoute();
+		if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
+			return this.getRouteDefaultChild();
+		return this.getRouteSelectedChild();
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -77,8 +79,11 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			if (cur !== this.data.view)
 				this.data.setView(cur, this.children);
 			const { abiturjahr } = RouteNode.getIntParams(to_params, ["abiturjahr"]);
-			if (abiturjahr === undefined)
-				return this.getRoute();
+			if (abiturjahr === undefined) {
+				if ((this.selectedChild === undefined) || (this.selectedChild.hidden({ abiturjahr: "-1" }) !== false))
+					return this.getRouteDefaultChild();
+				return this.getRouteSelectedChild();
+			}
 			const eintrag = this.data.mapAbiturjahrgaenge.get(abiturjahr);
 			await this.data.setAbiturjahrgang(eintrag, isEntering);
 			if (this.name !== to.name)
@@ -87,7 +92,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 			if (redirect.hidden({ abiturjahr: abiturjahr.toString() }) !== false)
 				return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -96,11 +101,8 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		this.data.reset();
 	}
 
-	public getRoute(abiturjahr? : number | null) : RouteLocationRaw {
-		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ abiturjahr: (abiturjahr ?? -1).toString() }) !== false)
-			redirect = this.defaultChild!;
-		return { name: redirect.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: (abiturjahr ?? -1) }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { abiturjahr : this.data.auswahl?.abiturjahr ?? -1 };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): GostAuswahlProps {
@@ -151,7 +153,7 @@ export class RouteGost extends RouteNode<RouteDataGost, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr: this.data.auswahl?.abiturjahr ?? -1 } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 

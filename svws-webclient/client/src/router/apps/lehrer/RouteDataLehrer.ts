@@ -279,8 +279,8 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 
 	gotoDefaultView = async (eintragId?: number | null) => {
 		if ((eintragId !== null) && (eintragId !== undefined) && this.lehrerListeManager.liste.has(eintragId)) {
-			const route = [routeLehrerPersonaldaten.name, routeLehrerStundenplan.name, routeLehrerUnterrichtsdaten.name, routeLehrerIndividualdaten.name, routeLehrerStundenplanDaten.name].includes(this.view.name)
-				? this.view.getRoute(eintragId) : routeLehrerIndividualdaten.getRoute(eintragId)
+			const route = [ routeLehrerPersonaldaten.name, routeLehrerStundenplan.name, routeLehrerUnterrichtsdaten.name, routeLehrerIndividualdaten.name, routeLehrerStundenplanDaten.name ].includes(this.view.name)
+				? this.view.getRoute({ id: eintragId }) : routeLehrerIndividualdaten.getRoute({ id: eintragId })
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
 				await this.setEintrag(this.lehrerListeManager.liste.get(eintragId));
@@ -295,13 +295,13 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		// Default Eintrag selektieren, wenn keine ID übergeben wurde
 		const filtered = this.lehrerListeManager.filtered();
 		if (!filtered.isEmpty()) {
-			const klasse = this.lehrerListeManager.filtered().getFirst();
-			const route = routeLehrerIndividualdaten.getRoute(klasse.id);
+			const auswahl = this.lehrerListeManager.filtered().getFirst();
+			const route = routeLehrerIndividualdaten.getRoute({ id: auswahl.id });
 			const result = await RouteManager.doRoute(route);
 			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
 				this.setDefaults();
 
-			await this.setEintrag(klasse);
+			await this.setEintrag(auswahl);
 			this.commit();
 		}
 	}

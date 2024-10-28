@@ -8,7 +8,6 @@ import { routeLehrerStundenplan, type RouteLehrerStundenplan } from "~/router/ap
 
 import { StundenplanLehrer } from "@comp";
 import type { StundenplanLehrerProps } from "@comp";
-import { routeApp } from "../../RouteApp";
 import { routeError } from "~/router/error/RouteError";
 
 export class RouteLehrerStundenplanDaten extends RouteNode<any, RouteLehrerStundenplan> {
@@ -37,29 +36,22 @@ export class RouteLehrerStundenplanDaten extends RouteNode<any, RouteLehrerStund
 			}
 			// Prüfe, ob ein Lehrer ausgewählt ist. Wenn nicht dann wechsele in die Lehrer-Route zurück.
 			if (idLehrer === undefined)
-				return routeLehrer.getRoute(undefined);
+				return routeLehrer.getRoute();
 			// Prüfe, ob die Stundenplan-ID definiert ist, wenn nicht, dann versuche einen zu laden
 			if (idStundenplan === undefined) {
 				if (routeLehrerStundenplan.data.mapStundenplaene.size === 0)
 					throw new DeveloperNotificationException("Fehler: Kein Stundenplan für die angegebene ID gefunden.");
-				return this.getRoute(idLehrer, routeLehrerStundenplan.data.auswahl.id,
-					routeLehrerStundenplan.data.wochentyp, routeLehrerStundenplan.data.kalenderwoche?.jahr,
-					routeLehrerStundenplan.data.kalenderwoche?.kw);
+				return this.getRoute();
 			}
 			// Lade den Stundenplan ...
 			await routeLehrerStundenplan.data.setEintrag(idLehrer, idStundenplan, wochentyp ?? 0, kwjahr, kw);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await routeLehrerStundenplan.data.setEintrag(-1, undefined, 0, undefined, undefined);
-	}
-
-	public getRoute(id: number, idStundenplan: number, wochentyp: number, kwjahr?: number, kw?: number) : RouteLocationRaw {
-		const tmpKW = ((kwjahr === undefined) || (kw === undefined)) ? undefined : kwjahr + "." + kw;
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, idStundenplan, wochentyp, kw: tmpKW }};
 	}
 
 	public getProps(to: RouteLocationNormalized): StundenplanLehrerProps {

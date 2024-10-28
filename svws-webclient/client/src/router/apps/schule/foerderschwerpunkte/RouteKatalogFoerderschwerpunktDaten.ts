@@ -19,11 +19,7 @@ export class RouteKatalogFoerderschwerpunktDaten extends RouteNode<any, RouteKat
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (routeKatalogFoerderschwerpunkte.data.auswahl === undefined)
-			return routeKatalogFoerderschwerpunkte.getRoute(undefined);
-	}
-
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+			return routeKatalogFoerderschwerpunkte.getRoute();
 	}
 
 	public getProps(to: RouteLocationNormalized): Record<string, any> {

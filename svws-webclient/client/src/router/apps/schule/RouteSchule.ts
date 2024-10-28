@@ -71,7 +71,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		if (isEntering)
 			await this.data.ladeDaten();
 		if (to.name === this.name)
-			return this.getRoute();
+			return this.getRouteDefaultChild();
 		if (!to.name.startsWith(this.data.view.name))
 			for (const child of this.children)
 				if (to.name.startsWith(child.name))
@@ -80,10 +80,6 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
 		await this.data.entferneDaten();
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleAppProps {
@@ -109,7 +105,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, routeSchule.menu);
 	}
 

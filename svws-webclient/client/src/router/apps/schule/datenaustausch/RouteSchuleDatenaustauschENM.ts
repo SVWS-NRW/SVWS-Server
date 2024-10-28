@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { SchuleDatenaustauschENMProps } from "~/components/schule/datenaustausch/enm/SSchuleDatenaustauschENMProps";
 import type { RouteApp } from "../../RouteApp";
-import { routeApp } from "../../RouteApp";
 import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
@@ -22,10 +21,6 @@ export class RouteSchuleDatenaustauschENM extends RouteNode<any, RouteApp> {
 		super.text = "ENM Notenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
 		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschENMProps {

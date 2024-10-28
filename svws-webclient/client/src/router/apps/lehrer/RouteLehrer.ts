@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -55,11 +55,11 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
 
 			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
-				return this.data.view.getRoute(id);
+				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 			if ((idNeu !== null) && (idNeu !== id))
-				return routeLehrerIndividualdaten.getRoute(idNeu);
+				return routeLehrerIndividualdaten.getRoute({ id: idNeu });
 
 			// Wenn die Route für Gruppenprozesse/Hinzufuegen aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
 			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
@@ -75,8 +75,11 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 				await this.data.gotoDefaultView(id);
 
 			if (to.name === this.name) {
-				if (this.data.lehrerListeManager.hasDaten())
-					return this.getChildRoute(this.data.lehrerListeManager.daten().id, from);
+				if (this.data.lehrerListeManager.hasDaten()) {
+					if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name))
+						return this.getRouteView(routeLehrerStundenplan);
+					return this.getRouteSelectedChild();
+				}
 				return;
 			}
 			if (!to.name.startsWith(this.data.view.name))
@@ -84,7 +87,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
@@ -92,15 +95,8 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		this.data.reset();
 	}
 
-	public getRoute(id?: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id ?? '' }};
-	}
-
-	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
-		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
-			return { name: routeLehrerStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
-		const redirect_name: string = (routeLehrer.selectedChild === undefined) ? routeLehrerIndividualdaten.name : routeLehrer.selectedChild.name;
-		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.lehrerListeManager.auswahlID() ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): LehrerAuswahlProps {
@@ -130,7 +126,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.lehrerListeManager.auswahlID() } });
+		await RouteManager.doRoute(this.getRouteView(node));
 		this.data.setView(node, this.children);
 	}
 

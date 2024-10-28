@@ -7,7 +7,6 @@ import { routeSchuelerLernabschnitte, type RouteSchuelerLernabschnitte } from "~
 
 import type { SchuelerLernabschnittAllgemeinProps } from "~/components/schueler/lernabschnitte/allgemein/SSchuelerLernabschnittAllgemeinProps";
 import { api } from "~/router/Api";
-import { routeApp } from "../../RouteApp";
 import { routeSchueler } from "../RouteSchueler";
 
 const SSchuelerLernabschnittAllgmein = () => import("~/components/schueler/lernabschnitte/allgemein/SSchuelerLernabschnittAllgemein.vue");
@@ -24,10 +23,6 @@ export class RouteSchuelerLernabschnittAllgemein extends RouteNode<any, RouteSch
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-	}
-
-	public getRoute(id: number, abschnitt: number, wechselNr: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id, abschnitt: abschnitt, wechselNr: wechselNr }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerLernabschnittAllgemeinProps {

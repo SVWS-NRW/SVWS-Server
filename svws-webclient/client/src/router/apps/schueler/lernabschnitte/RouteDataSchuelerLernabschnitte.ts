@@ -8,6 +8,7 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchuelerLernabschnittLeistungen } from "~/router/apps/schueler/lernabschnitte/RouteSchuelerLernabschnittLeistungen";
 import { routeSchueler } from "../RouteSchueler";
 import { routeSchuelerLernabschnittGostKlausuren } from "./RouteSchuelerLernabschnittGostKlausuren";
+import { RouteNode } from "~/router/RouteNode";
 
 
 interface RouteStateDataSchuelerLernabschnitte extends RouteStateInterface {
@@ -211,7 +212,7 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 	}
 
 	gotoLernabschnitt = async (value: SchuelerLernabschnittListeEintrag) => {
-		await RouteManager.doRoute({ name: this.view.name, params: { id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr } });
+		await RouteManager.doRoute(this.view.getRoute({ id: value.schuelerID, abschnitt: value.schuljahresabschnitt, wechselNr: value.wechselNr }));
 	}
 
 	patchLernabschnitt = async (data : Partial<SchuelerLernabschnittsdaten>) => {
@@ -272,7 +273,8 @@ export class RouteDataSchuelerLernabschnitte extends RouteData<RouteStateDataSch
 		const halbjahr = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, schuljahr, abschnitt);
 		if (halbjahr === null)
 			return;
-		await RouteManager.doRoute({ name: "gost.klausurplanung.nachschreiber", params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, halbjahr: halbjahr.id }});
+		const dest = RouteNode.getNodeByName("gost.klausurplanung.nachschreiber")!.getRoute({ abiturjahr, halbjahr: halbjahr.id });
+		await RouteManager.doRoute(dest);
 	}
 
 }

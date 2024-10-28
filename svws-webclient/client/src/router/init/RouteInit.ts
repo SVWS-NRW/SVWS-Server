@@ -96,11 +96,11 @@ export class RouteInit extends RouteNode<any, any> {
 
 	setSource = async (source: 'init'|'restore'|'migrate') => {
 		const db = (source === 'migrate') ? 'mdb' : undefined;
-		await RouteManager.doRoute({name: this.name, params: { source, db } });
+		await RouteManager.doRoute(this.getRoute({ source, db }));
 	}
 
 	setDB = async (db: 'mysql'|'mariadb'|'mssql'|'mdb') => {
-		await RouteManager.doRoute({name: this.name, params: { source: this.source.value, db }});
+		await RouteManager.doRoute(this.getRoute({ source: this.source.value, db }));
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
@@ -118,10 +118,6 @@ export class RouteInit extends RouteNode<any, any> {
 			return { name: this.name, params: { source: to_params.source }};
 		this.source.value = source;
 		this.db.value = db;
-	}
-
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name };
 	}
 
 	public getProps(): InitProps {

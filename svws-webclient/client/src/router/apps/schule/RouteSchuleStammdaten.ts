@@ -5,7 +5,6 @@ import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 import { api } from "~/router/Api";
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp } from "~/router/apps/RouteApp";
 import type { SchuleAppProps } from "~/components/schule/SSchuleAppProps";
 
 import type { RouteSchule} from "./RouteSchule";
@@ -30,10 +29,6 @@ export class RouteSchuleStammdaten extends RouteNode<any, RouteSchule> {
 	}
 
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleAppProps {

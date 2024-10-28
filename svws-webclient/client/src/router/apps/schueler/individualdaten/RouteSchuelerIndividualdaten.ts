@@ -27,10 +27,6 @@ export class RouteSchuelerIndividualdaten extends RouteNode<RouteDataSchuelerInd
 			await this.data.ladeListe();
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuelerIndividualdatenProps {
 		return {
 			patch: routeSchueler.data.patch,

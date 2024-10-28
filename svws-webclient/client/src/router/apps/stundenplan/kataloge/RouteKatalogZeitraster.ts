@@ -28,10 +28,6 @@ export class RouteKatalogZeitraster extends RouteNode<RouteDataKatalogZeitraster
 			await this.data.ladeListe();
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
-	}
-
 	public getAuswahlProps(to: RouteLocationNormalized): ZeitrasterAuswahlProps {
 		return {
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),

@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -48,7 +48,7 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 				if (id !== undefined) {
 					if (neueID === null)
-						return this.getRoute(id);
+						return this.getRouteDefaultChild({ id });
 					const params = { ... to_params};
 					params.id = String(neueID);
 					const locationRaw : RouteLocationRaw = {};
@@ -64,32 +64,26 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 					const listFiltered = this.data.fachListeManager.filtered();
 					if (listFiltered.isEmpty())
 						return;
-					return this.getRoute(this.data.fachListeManager.filtered().get(0).id);
+					return this.getRouteDefaultChild({ id: this.data.fachListeManager.filtered().get(0).id });
 				}
 				return this.getRoute();
 			}
-			if (to.name === this.name)
-				return this.getChildRoute(this.data.fachListeManager.daten().id, from);
+			if (to.name === this.name) {
+				if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name))
+					return this.getRouteView(routeFachStundenplan);
+				return this.getRouteSelectedChild();
+			}
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))
 						this.data.setView(child, this.children);
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(id?: number) : RouteLocationRaw {
-		if (id === undefined)
-			return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
-	public getChildRoute(id: number | undefined, from?: RouteNode<any, any>) : RouteLocationRaw {
-		if (from !== undefined && (/(\.|^)stundenplan/).test(from.name))
-			return { name: routeFachStundenplan.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id } };
-		const redirect_name: string = (this.selectedChild === undefined) ? routeSchuleFachDaten.name : this.selectedChild.name;
-		return { name: redirect_name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.fachListeManager.auswahlID() ?? undefined };
 	}
 
 
@@ -116,7 +110,7 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: this.data.fachListeManager.auswahlID() } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

@@ -1,9 +1,8 @@
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
-import { routeApp } from "../../../RouteApp";
 import { routeSchuleDatenaustauschKurs42, type RouteSchuleDatenaustauschKurs42 } from "~/router/apps/schule/datenaustausch/kurs42/RouteSchuleDatenaustauschKurs42";
 
 import type { SchuleDatenaustauschKurs42RaeumeProps } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42RaeumeProps";
@@ -18,10 +17,6 @@ export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<any, RouteS
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42RaeumeProps {

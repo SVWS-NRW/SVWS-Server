@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 import type { GostFachwahlenFachProps } from "~/components/gost/fachwahlen/SGostFachwahlenFachProps";
 
 import type { DeveloperNotificationException} from "@core";
@@ -29,7 +29,7 @@ export class RouteGostFachwahlenFach extends RouteNode<any, RouteGost> {
 			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN,
 			BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN
-		], "gost.fachwahlen.fach", "fach/:idfach(\\d+)?", SGostFachwahlenFach);
+		], "gost.fachwahlen.fach", "fach/:idFach(\\d+)?", SGostFachwahlenFach);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Fachwahlen - Fachspezifisch";
@@ -45,22 +45,23 @@ export class RouteGostFachwahlenFach extends RouteNode<any, RouteGost> {
 				return { name: routeGost.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr }};
 			return false;
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
 	public async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { idfach: idFach } = RouteNode.getIntParams(to_params, ["idfach"]);
+			const { idFach } = RouteNode.getIntParams(to_params, ["idFach"]);
 			this._idFach.value = idFach ?? -1;
 			routeGostFachwahlen.data.auswahl = { idFach: this._idFach.value, bereich: 'Fach' };
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 	}
 
-	public getRoute(abiturjahr: number, idfach: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, abiturjahr, idfach }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		const idFach = this._idFach.value;
+		return { idFach };
 	}
 
 	public getProps(to: RouteLocationNormalized): GostFachwahlenFachProps {

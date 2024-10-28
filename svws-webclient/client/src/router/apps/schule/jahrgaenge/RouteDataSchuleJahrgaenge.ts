@@ -56,7 +56,7 @@ export class RouteDataSchuleJahrgaenge extends RouteData<RouteStateSchuleJahrgae
 	}
 
 	gotoEintrag = async (eintrag: JahrgangsDaten) => {
-		await RouteManager.doRoute(routeSchuleJahrgaenge.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchuleJahrgaenge.getRoute({ id: eintrag.id }));
 	}
 
 	patch = async (data : Partial<JahrgangsDaten>) => {

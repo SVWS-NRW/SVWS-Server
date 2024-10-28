@@ -28,10 +28,6 @@ export class RouteStundenplanRaum extends RouteNode<any, RouteStundenplan> {
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id, wochentyp: 0 }};
-	}
-
 	public getProps(to: RouteLocationNormalized): StundenplanRaumProps {
 		return {
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,

@@ -4,7 +4,6 @@ import { BenutzerKompetenz, DeveloperNotificationException, ServerMode } from "@
 
 import { RouteNode } from "~/router/RouteNode";
 import type { RouteApp} from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 
 import type { SchuleDatenaustauschKurs42Props } from "~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42Props";
 import type { TabData } from "@ui";
@@ -48,10 +47,6 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		}
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
-	}
-
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschKurs42Props {
 		return {
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
@@ -64,7 +59,7 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 

@@ -37,7 +37,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		if (to.name === this.name)
-			return this.defaultChild!.getRoute();
+			return this.getRouteDefaultChild();
 		if (!to.name.startsWith(this.data.view.name)) {
 			for (const child of this.children) {
 				if (to.name.startsWith(child.name)) {
@@ -46,10 +46,6 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 				}
 			}
 		}
-	}
-
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt }};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschUntisProps {
@@ -64,7 +60,7 @@ export class RouteSchuleDatenaustauschUntis extends RouteNode<RouteDataSchuleDat
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

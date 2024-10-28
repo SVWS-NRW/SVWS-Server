@@ -273,7 +273,8 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	gotoDefaultView = async (eintragId?: number | null) => {
 		this._state.value.oldView = this._state.value.view;
 		if ((eintragId !== null) && (eintragId !== undefined) && this.klassenListeManager.liste.has(eintragId)) {
-			const route = ((this.view === routeKlassenDaten) || (this.view === routeKlassenStundenplan)) ? this.view.getRoute(eintragId) : routeKlassenDaten.getRoute(eintragId)
+			const route = ((this.view === routeKlassenDaten) || (this.view === routeKlassenStundenplan))
+				? this.view.getRoute({ id: eintragId }) : routeKlassenDaten.getRoute({ id: eintragId })
 			const result = await RouteManager.doRoute(route);
 			if (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE)
 				await this.setEintrag(this.klassenListeManager.liste.get(eintragId));
@@ -289,7 +290,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		const filtered = this.klassenListeManager.filtered();
 		if (!filtered.isEmpty()) {
 			const klasse = this.klassenListeManager.filtered().getFirst();
-			const route = routeKlassenDaten.getRoute(klasse.id);
+			const route = routeKlassenDaten.getRoute({ id: klasse.id });
 			const result = await RouteManager.doRoute(route);
 			if ((result === RoutingStatus.SUCCESS) || (result === RoutingStatus.STOPPED_ROUTING_IS_ACTIVE))
 				this.setDefaults();
@@ -300,11 +301,11 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoSchueler = async (eintrag: Schueler) => {
-		await RouteManager.doRoute(routeSchueler.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeSchueler.getRoute({ id: eintrag.id }));
 	}
 
 	gotoLehrer = async (eintrag: LehrerListeEintrag) => {
-		await RouteManager.doRoute(routeLehrer.getRoute(eintrag.id));
+		await RouteManager.doRoute(routeLehrer.getRoute({ id: eintrag.id }));
 	}
 
 	gotoHinzufuegenView = async (navigate: boolean) => {

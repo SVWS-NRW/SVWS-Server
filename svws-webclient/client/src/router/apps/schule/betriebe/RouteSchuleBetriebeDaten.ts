@@ -25,10 +25,6 @@ export class RouteSchuleBetriebeDaten extends RouteNode<any, RouteSchuleBetriebe
 			return routeSchuleBetriebe.getRoute(undefined)
 	}
 
-	public getRoute(id: number) : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
-	}
-
 	public getProps(to: RouteLocationNormalized): BetriebeDatenProps {
 		return {
 			patch: routeSchuleBetriebe.data.patch,

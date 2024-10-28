@@ -31,10 +31,6 @@ export class RouteStatistik extends RouteNode<any, RouteApp> {
 		return computed({ get(): undefined { return undefined; }, set(value: undefined) { }});
 	}
 
-	public getRoute() : RouteLocationRaw {
-		return { name: this.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt } };
-	}
-
 	public getProps(to: RouteLocationNormalized): StatistikAppProps {
 		return {
 			schule: api.schuleStammdaten,

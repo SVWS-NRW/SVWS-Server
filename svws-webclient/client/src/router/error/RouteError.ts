@@ -25,7 +25,7 @@ export class RouteError extends RouteNode<any, any> {
 			throw new DeveloperNotificationException("Fehler: Die Parameter der Route dürfen keine Arrays sein");
 	}
 
-	public getRoute(error?: Error, errorcode? : number): RouteLocationRaw {
+	public getErrorRoute(error?: Error, errorcode? : number): RouteLocationRaw {
 		routerManager.resetErrorState();
 		routerManager.errorcode = errorcode;
 		routerManager.error = error;

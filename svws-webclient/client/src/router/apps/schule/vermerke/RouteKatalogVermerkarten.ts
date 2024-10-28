@@ -1,4 +1,4 @@
-import type { RouteLocationNormalized, RouteLocationRaw, RouteParams } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
 
@@ -6,7 +6,6 @@ import { RouteManager } from "~/router/RouteManager";
 import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
-import { routeApp } from "~/router/apps/RouteApp";
 import { routeKatalogVermerkartenDaten } from "~/router/apps/schule/vermerke/RouteKatalogVermerkartenDaten";
 
 import type { TabData } from "@ui";
@@ -52,17 +51,17 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 				}
 			}
 		} catch (e) {
-			return routeError.getRoute(e as DeveloperNotificationException);
+			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}
 
 		if ((to.name === this.name)) {
-			const route = this.getRoute(this.data.vermerkartenManager.auswahl().id);
+			const route = this.getRouteDefaultChild();
 			return route;
 		}
 	}
 
-	public getRoute(id: number|undefined) : RouteLocationRaw {
-		return { name: this.defaultChild!.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id }};
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return { id : this.data.vermerkartenManager.auswahlID() ?? undefined };
 	}
 
 	public getAuswahlProps(to: RouteLocationNormalized): VermerkeAuswahlProps {
@@ -88,9 +87,7 @@ export class RouteKatalogVermerkarten extends RouteNode<RouteDataKatalogVermerke
 		const node = RouteNode.getNodeByName(value.name);
 		if (node === undefined)
 			throw new DeveloperNotificationException("Unbekannte Route");
-		const manager = this.data.vermerkartenManager;
-		const id = (manager.auswahlID() === null) ? undefined : manager.auswahlID.toString();
-		await RouteManager.doRoute({ name: value.name, params: { idSchuljahresabschnitt: routeApp.data.idSchuljahresabschnitt, id: id } });
+		await RouteManager.doRoute(node.getRoute());
 		this.data.setView(node, this.children);
 	}
 }

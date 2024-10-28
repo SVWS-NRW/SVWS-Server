@@ -1,6 +1,6 @@
 import type { ComputedRef, Ref } from "vue";
 import { computed, ref } from "vue";
-import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteRecordName, RouteRecordRaw } from "vue-router";
+import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 
 import type { Schulform} from "@core";
 import { ServerMode, BenutzerKompetenz, DeveloperNotificationException } from "@core";
@@ -129,11 +129,86 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-	 * Gibt die Route zurück, die die notwendigen Parameter mitbringt.
+	 * Ergänzt beim Bestimmen der Route-Parameter die Route-Parameter für diesen Knoten, sofern
+	 * welche gesetzt werden sollen. Für diesen Fall muss diese Methode übeschrieben werden.
 	 *
-	 * @param {any[]} args die Parameter
+	 * @returns die zu ergänzenden Routen-Parameter
 	 */
-	public abstract getRoute(...args: any[]) : RouteLocationRaw;
+	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		return {};
+	}
+
+	/**
+	 * Bestimmt die Routen-Parameter für diese Route und kombiniert diese mit den Routen-Parametern
+	 * der Parent-Nodes.
+	 *
+	 * @param params Routen-Parameter, die zum Abschluss gesetzt werden können, um die aus dem State
+	 *               gewonnenen Parameter ersetzen zu können.
+	 *
+	 * @returns die Routen-Parameter für diese Route
+	 */
+	public getRouteParams(params? : RouteParamsRawGeneric) : RouteParamsRawGeneric {
+		let result = {};
+		let cur : RouteNode<any, any> | undefined = this;
+		while (cur !== undefined) {
+			result = Object.assign(result, cur.addRouteParamsFromState());
+			cur = cur.parent;
+		}
+		if (params !== undefined)
+			result = Object.assign(result, params);
+		return result;
+	}
+
+	/**
+	 * Gibt die Route für diesen Knoten zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRoute(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: this.name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die View zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param view     die View für die die Route bestimmt wird
+	 * @param params   Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteView(view: RouteNode<any, any>, params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: view.name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die Selected-Child-Route zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt. Liegt keine Auswahl vor, so wird die
+	 * Default-Child-Route gewählt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteSelectedChild(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		const name: string = (this.selectedChild === undefined) ? this.defaultChild!.name : this.selectedChild.name;
+		return { name: name, params: this.getRouteParams(params) };
+	}
+
+	/**
+	 * Gibt die Route für den Einstieg in die Default-Child-Route zurück. Dabei werden die Routen-Parameter
+	 * mithilfe der Methode getRouteParams von diesem Knoten gesetzt.
+	 *
+	 * @param params  Routen-Parameter, die ggf. ermittelte Routen-Parameter ersetzen können.
+	 *
+	 * @returns die Route
+	 */
+	public getRouteDefaultChild(params? : RouteParamsRawGeneric): RouteLocationRaw {
+		return { name: this.defaultChild!.name, params: this.getRouteParams(params) };
+	}
 
 	/**
 	 * Gibt den Text der Route zurück, welcher für die Visualisierung genutzt wird (z.B. bei Tabs).
@@ -691,22 +766,22 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
-     * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-     * bevor eine Route verlassen wird.
-     *
-     * @param from   die Route, die verlassen wird
-     * @param from_params   die Routen-Parameter
-     */
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * bevor eine Route verlassen wird.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	protected async leaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
-   * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
-   * bevor eine Route verlassen wird.
-   *
-   * @param from   die Route, die verlassen wird
-   * @param from_params   die Routen-Parameter
-   */
+	 * Ein Ereignis, welches im globalen beforeEach-Guard aufgerufen wird,
+	 * bevor eine Route verlassen wird.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	public async doLeaveBefore(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			return await this.leaveBefore(from, from_params);
@@ -719,22 +794,22 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 
 
 	/**
-     * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
-     * zu dem Zeitpunkt nachdem die Route verlassen wurde.
-     *
-     * @param from   die Route, die verlassen wird
-     * @param from_params   die Routen-Parameter
-     */
+	 * Ein Ereignis, welches im globalen afterEach des Routings aufgerufen wird,
+	 * zu dem Zeitpunkt nachdem die Route verlassen wurde.
+	 *
+	 * @param from   die Route, die verlassen wird
+	 * @param from_params   die Routen-Parameter
+	 */
 	public async leave(from: RouteNode<any, any>, from_params: RouteParams) : Promise<void> {
 	}
 
 	/**
-     * Gibt den Knoten für den übergebenen Namen zurück.
-     *
-     * @param name   der Name des Knotens bzw. der Route
-     *
-     * @returns der Knoten oder undefined
-     */
+	 * Gibt den Knoten für den übergebenen Namen zurück.
+	 *
+	 * @param name   der Name des Knotens bzw. der Route
+	 *
+	 * @returns der Knoten oder undefined
+	 */
 	public static getNodeByName(name : string | undefined | null) : RouteNode<any, any> | undefined {
 		if ((name === undefined) || (name === null))
 			return undefined;

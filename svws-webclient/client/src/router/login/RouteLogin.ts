@@ -28,10 +28,6 @@ export class RouteLogin extends RouteNode<any, any> {
 		super.text = "Login";
 	}
 
-	public getRoute(): RouteLocationRaw {
-		return { name: this.name };
-	}
-
 	public login = async (schema: string, username: string, password: string): Promise<void> => {
 		await api.login(schema, username, password);
 		if (api.authenticated) {
@@ -47,7 +43,7 @@ export class RouteLogin extends RouteNode<any, any> {
 	public logout = async () => {
 		this.routepath = "/";
 		this.schema.value = api.schema;
-		await RouteManager.doRoute({ name: this.name });
+		await RouteManager.doRoute(this.getRoute());
 		await api.logout();
 		RouteManager.resetRouteState();
 	}

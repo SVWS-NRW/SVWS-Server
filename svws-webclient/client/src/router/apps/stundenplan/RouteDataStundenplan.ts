@@ -625,11 +625,11 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 	gotoKatalog = async (katalog: 'raeume'|'aufsichtsbereiche'|'pausenzeiten') => {
 		switch (katalog) {
 			case 'aufsichtsbereiche':
-				return await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogAufsichtsbereiche.getRoute());
 			case 'pausenzeiten':
-				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogPausenzeiten.getRoute());
 			case 'raeume':
-				return await RouteManager.doRoute(routeKatalogRaeume.getRoute(undefined));
+				return await RouteManager.doRoute(routeKatalogRaeume.getRoute());
 		}
 	}
 
@@ -691,6 +691,6 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		await api.config.setValue("stundenplan.raeume.ganzerStundenplan", value ? "true" : "false");
 	}
 
-	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute(eintrag?.id));
+	gotoEintrag = async (eintrag?: StundenplanListeEintrag) => await RouteManager.doRoute(routeStundenplan.getRoute({ id: eintrag?.id }));
 
 }
