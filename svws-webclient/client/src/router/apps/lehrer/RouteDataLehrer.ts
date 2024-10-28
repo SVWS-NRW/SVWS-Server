@@ -19,7 +19,6 @@ interface RouteStateLehrer extends RouteStateInterface {
 	// Daten, allgemein
 	idSchuljahresabschnitt: number,
 	lehrerListeManager: LehrerListeManager,
-	activeViewType: ViewType,
 	// TODO Unterrichtsdaten
 }
 
@@ -38,10 +37,6 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 
 	get lehrerListeManager(): LehrerListeManager {
 		return this._state.value.lehrerListeManager;
-	}
-
-	get activeViewType() {
-		return this._state.value.activeViewType;
 	}
 
 	/**
@@ -250,7 +245,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 	private setDefaults() {
-		this._state.value.activeViewType = ViewType.DEFAULT;
+		this.activeViewType = ViewType.DEFAULT;
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeLehrerIndividualdaten;
 	}
 
@@ -310,12 +305,12 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 	gotoGruppenprozessView = async (navigate: boolean) => {
-		if (this._state.value.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeLehrerGruppenprozesse)) {
+		if (this.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeLehrerGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeViewType = ViewType.GRUPPENPROZESSE;
+		this.activeViewType = ViewType.GRUPPENPROZESSE;
 
 		if (navigate)
 			await RouteManager.doRoute(routeLehrerGruppenprozesse.getRoute());
@@ -326,12 +321,12 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 	gotoHinzufuegenView = async (navigate: boolean) => {
-		if (this._state.value.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeLehrerNeu)) {
+		if (this.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeLehrerNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeViewType = ViewType.HINZUFUEGEN;
+		this.activeViewType = ViewType.HINZUFUEGEN;
 
 		if (navigate) {
 			const result = await RouteManager.doRoute(routeLehrerNeu.getRoute());

@@ -15,7 +15,6 @@ import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuel
 interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	schuelerListeManager: SchuelerListeManager | undefined;
-	activeViewType: ViewType;
 }
 
 const defaultState = <RouteStateSchueler> {
@@ -132,10 +131,6 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		return this._state.value.schuelerListeManager;
 	}
 
-	get activeViewType(): ViewType {
-		return this._state.value.activeViewType;
-	}
-
 	patch = async (data : Partial<SchuelerStammdaten>) => {
 		if (!this.schuelerListeManager.hasDaten())
 			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
@@ -243,18 +238,18 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	private setDefaults() {
-		this._state.value.activeViewType = ViewType.DEFAULT
+		this.activeViewType = ViewType.DEFAULT
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeSchuelerIndividualdaten;
 		this.commit();
 	}
 
 	gotoGruppenprozessView = async (navigate: boolean) => {
-		if ((this._state.value.activeViewType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
+		if ((this.activeViewType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeViewType = ViewType.GRUPPENPROZESSE;
+		this.activeViewType = ViewType.GRUPPENPROZESSE;
 
 		if (navigate)
 			await RouteManager.doRoute(routeSchuelerGruppenprozesse.getRoute());
@@ -265,12 +260,12 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	gotoHinzufuegenView = async (navigate: boolean) => {
-		if ((this._state.value.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
+		if ((this.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeViewType = ViewType.HINZUFUEGEN;
+		this.activeViewType = ViewType.HINZUFUEGEN;
 
 		if (navigate) {
 			const result = await RouteManager.doRoute(routeSchuelerNeu.getRoute());

@@ -22,7 +22,6 @@ interface RouteStateKlassen extends RouteStateInterface {
 	mapKlassenVorigerAbschnitt: Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: Map<number, KlassenDaten>;
 	oldView?: RouteNode<any, any>;
-	activeRouteType: ViewType;
 }
 
 const defaultState = <RouteStateKlassen> {
@@ -32,7 +31,7 @@ const defaultState = <RouteStateKlassen> {
 	mapKlassenFolgenderAbschnitt: new Map<number, KlassenDaten>(),
 	view: routeKlassenDaten,
 	oldView: undefined,
-	activeRouteType: ViewType.DEFAULT
+	activeViewType: ViewType.DEFAULT,
 };
 
 export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
@@ -53,10 +52,6 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	get mapKlassenFolgenderAbschnitt(): Map<number, KlassenDaten> {
 		return this._state.value.mapKlassenFolgenderAbschnitt;
-	}
-
-	get activeViewType(): ViewType {
-		return this._state.value.activeRouteType;
 	}
 
 	private async ladeSchuljahresabschnitt(idSchuljahresabschnitt : number) : Promise<number | null> {
@@ -96,7 +91,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		klassenListeManager.filtered();
 
 		// Aktualisiere den State
-		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeRouteType: this.activeViewType });
+		this.setPatchedDefaultState({ idSchuljahresabschnitt, klassenListeManager, mapKlassenVorigerAbschnitt, mapKlassenFolgenderAbschnitt, activeViewType: this.activeViewType });
 		return this.klassenListeManager.auswahlID();
 	}
 
@@ -271,7 +266,7 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 
 	private setDefaults() {
 		this.klassenListeManager.setAuswahlKlassenLeitung(null);
-		this._state.value.activeRouteType = ViewType.DEFAULT;
+		this.activeViewType = ViewType.DEFAULT;
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeKlassenDaten;
 	}
 
@@ -313,12 +308,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoHinzufuegenView = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
+		if (this.activeViewType === ViewType.HINZUFUEGEN || (this._state.value.view === routeKlassenNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.HINZUFUEGEN;
+		this.activeViewType = ViewType.HINZUFUEGEN;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate) {
@@ -334,12 +329,12 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 	}
 
 	gotoGruppenprozessView = async (navigate: boolean) => {
-		if (this._state.value.activeRouteType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
+		if (this.activeViewType === ViewType.GRUPPENPROZESSE || (this._state.value.view === routeKlasseGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.GRUPPENPROZESSE;
+		this.activeViewType = ViewType.GRUPPENPROZESSE;
 		this._state.value.oldView = this._state.value.view;
 
 		if (navigate)
