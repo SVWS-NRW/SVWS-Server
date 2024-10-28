@@ -42,7 +42,7 @@ import { routeSchuleDatenaustauschWenom } from "./schule/datenaustausch/RouteSch
 export class RouteApp extends RouteNode<RouteDataApp, any> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/:idSchuljahresabschnitt(\\d+)?", SApp, new RouteDataApp());
+		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "app", "/:schema?/:idSchuljahresabschnitt(\\d+)?", SApp, new RouteDataApp());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps();
 		super.text = "SVWS-Client";
@@ -119,7 +119,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
-		return { idSchuljahresabschnitt : this.data.idSchuljahresabschnitt };
+		const schema = encodeURIComponent(api.schema);
+		const idSchuljahresabschnitt = this.data.idSchuljahresabschnitt;
+		return { schema, idSchuljahresabschnitt };
 	}
 
 	public getProps(): AppProps {
