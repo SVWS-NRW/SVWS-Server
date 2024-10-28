@@ -2,10 +2,14 @@
 	<Story title="Icons" id="icons" group="top" icon="ri:landscape-line" :responsive-disabled="true" :layout="{type: 'grid', width: '45%'}">
 		<Variant title="Info zu den Icons" source=" " id="info">
 			<div class="htw-prose dark:htw-prose-invert">
-				<p> Bevor ein neues Icon aus dem Icon-Set gesucht wird, sollte immer geprüft werden, ob es bereits ein passendes Icon gibt.
-					Für den Client und Components werden ausschließlich Icons von <a href="https://remixicon.com/" target="_blank">Remix Icon</a> verwendet. </p>
-				<p> In jedem Button Type kann einfach ein Icon neben dem Text optional ergänzt werden. Falls kein Text benötigt wird, ist type="icon" zu
-					verwenden (z.B. im Tabellen-Footer). </p>
+				<p>
+					Bevor ein neues Icon aus dem Icon-Set gesucht wird, sollte immer geprüft werden, ob es bereits ein passendes Icon gibt.
+					Für den Client und Components werden ausschließlich Icons von <a href="https://remixicon.com/" target="_blank">Remix Icon</a> verwendet.
+				</p>
+				<p>
+					In jedem Button Type kann einfach ein Icon neben dem Text optional ergänzt werden. Falls kein Text benötigt wird, ist type="icon" zu
+					verwenden (z.B. im Tabellen-Footer).
+				</p>
 			</div>
 		</Variant>
 		<Variant title="Favicon" :source="sourceFavicon">

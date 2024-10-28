@@ -13,18 +13,12 @@ export default defineConfig({
 	test: {
 		environment: "happy-dom",
 		reporters: ["default", "junit", "verbose"],
-		outputFile: {
-			junit: "build/testresults/junit.xml"
-		},
-		include: [
-			"src/components/*.test.ts",
-		],
+		outputFile: { junit: "build/testresults/junit.xml" },
+		include: [ "src/components/*.test.ts", ],
 	},
 	histoire: {
 		setupFile: './src/histoire.setup.ts',
-		plugins: [
-			HstVue(),
-		],
+		plugins: [ HstVue(), ],
 		theme: {
 			title: 'SVWS UI',
 			colors: {
@@ -52,60 +46,25 @@ export default defineConfig({
 			},
 		},
 		backgroundPresets: [
-			{
-				label: 'Transparent',
-				color: 'transparent'
-			},
-			{
-				label: 'White',
-				color: '#fff'
-			},
-			{
-				label: 'Light',
-				color: '#f2f4f5'
-			},
-			{
-				label: 'Black',
-				color: '#2c2c2c'
-			},
+			{ label: 'Transparent', color: 'transparent' },
+			{ label: 'White', color: '#fff' },
+			{ label: 'Light', color: '#f2f4f5' },
+			{ label: 'Black', color: '#2c2c2c' },
 		],
 		tree: {
 			groups: [
-				{
-					id: 'top-top',
-					title: '',
-				},
-				{
-					id: 'top',
-					title: '',
-				},
-				{
-					title: 'Components',
-					include: file => !file.title.includes('Serialize'),
-				},
-				{
-					id: 'app',
-					title: 'App',
-				},
-				{
-					id: 'design-system',
-					title: 'Info',
-				},
+				{ id: 'top-top', title: '', },
+				{ id: 'top', title: '', },
+				{ title: 'Components', include: file => !file.title.includes('Serialize'), },
+				{ id: 'app', title: 'App', },
+				{ id: 'design-system', title: 'Info', },
 			],
 		},
 	},
 	plugins: [
 		Vue(),
-		Components({
-			globs: ["src/components/**/!(*story.vue)*.vue"],
-		}),
+		Components({ globs: ["src/components/**/!(*story.vue)*.vue"], }),
 	],
-	// resolve: {
-	// 	// die UI-bibliothek und der client haben vue als Dependency. Einmal reicht,
-	// 	// sonst gibt es Probleme, die evtl durch andere Build-Methoden korrigiert
-	// 	// werden könn. Diese Methode funktioniert aber.
-	// 	dedupe: ["vue"],
-	// },
 	build: {
 		lib: {
 			entry: resolve(__dirname, "src/index.ts"),
@@ -113,11 +72,7 @@ export default defineConfig({
 		},
 		rollupOptions: {
 			external: ["vue"],
-			output: {
-				globals: {
-					vue: "Vue"
-				}
-			}
+			output: { globals: { vue: "Vue" } }
 		}
 	}
 });
