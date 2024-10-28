@@ -6,6 +6,9 @@
 					<span :class="[modus ? 'icon-sm i-ri-play-line' : 'icon-sm i-ri-speed-line']" />
 					Modus: <span>{{ modus ? 'Einzeln bearbeiten':'Fortlaufend bearbeiten' }}</span>
 				</svws-ui-button>
+				<svws-ui-button v-if="!stundenplanManager().kalenderwochenzuordnungGetMengeUngueltige().isEmpty()" @click="deleteKalenderwochenzuordnungen" title="Ungültige Zuordnungen löschen" type="danger">
+					<span class="icon-sm i-ri-delete-bin-line" /> Ungültige Zuordnungen entfernen
+				</svws-ui-button>
 			</svws-ui-sub-nav>
 		</Teleport>
 		<div class="w-full h-full flex flex-col">

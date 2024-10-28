@@ -35,6 +35,7 @@ export class RouteStundenplanKalenderwochen extends RouteNode<any, RouteStundenp
 			benutzerKompetenzen: api.benutzerKompetenzen,
 			stundenplanManager: () => routeStundenplan.data.stundenplanManager,
 			patchKalenderwochenzuordnungen: routeStundenplan.data.patchKalenderwochenzuordnungen,
+			deleteKalenderwochenzuordnungen: routeStundenplan.data.deleteKalenderwochenzuordnungen,
 		};
 	}
 

@@ -184,6 +184,17 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		api.status.stop();
 	}
 
+	deleteKalenderwochenzuordnungen = async () => {
+		if (this.auswahl === undefined)
+			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
+		if (!this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige().isEmpty()) {
+			const ids = new ArrayList<number>();
+			for (const z of this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige())
+				ids.add(z.id);
+			const res = await api.server.deleteStundenplanKalenderwochenzuordnungen(ids, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungRemoveAll(res);
+		}
+	}
 	patchKalenderwochenzuordnungen = async (data: List<StundenplanKalenderwochenzuordnung>) => {
 		if (this.auswahl === undefined)
 			throw new DeveloperNotificationException('Kein gültiger Stundenplan ausgewählt');
