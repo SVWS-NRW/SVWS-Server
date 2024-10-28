@@ -173,6 +173,13 @@ export class RouteDataStundenplan extends RouteData<RouteStateStundenplan> {
 		if (data.gueltigBis !== undefined)
 			this.auswahl.gueltigBis = data.gueltigBis;
 		this.mapKatalogeintraege.set(this.auswahl.id, this.auswahl);
+		if (!this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige().isEmpty()) {
+			const ids = new ArrayList<number>();
+			for (const z of this.stundenplanManager.kalenderwochenzuordnungGetMengeUngueltige())
+				ids.add(z.id);
+			const res = await api.server.deleteStundenplanKalenderwochenzuordnungen(ids, api.schema, this.auswahl.id);
+			this.stundenplanManager.kalenderwochenzuordnungRemoveAll(res);
+		}
 		this.setPatchedState({daten, auswahl: this.auswahl, mapKatalogeintraege: this.mapKatalogeintraege, stundenplanManager: this.stundenplanManager});
 		api.status.stop();
 	}
