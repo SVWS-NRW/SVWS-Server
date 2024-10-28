@@ -50,15 +50,17 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 		const lehrerListeManager = new LehrerListeManager(idSchuljahresabschnitt, api.schuleStammdaten.idSchuljahresabschnitt, api.schuleStammdaten.abschnitte,
 			api.schulform, listLehrer);
 
-		if (this._state.value.lehrerListeManager === undefined) {
+		if (this._state.value.idSchuljahresabschnitt === -1) {
+			// Initiales Setzen der Filter
 			lehrerListeManager.setFilterAuswahlPermitted(true);
 			lehrerListeManager.setFilterNurSichtbar(false);
 		} else {
+			// Filter aus vorherigem Manager übernehmen
 			// lehrerListeManager.useFilter(this._state.value.klassenListeManager);
 		}
 
 		// Versuche die ausgewählte Klasse von vorher zu laden
-		const vorherigeAuswahlID = ((this._state.value.lehrerListeManager !== undefined) && this.lehrerListeManager.hasDaten()) ? this.lehrerListeManager.auswahlID() : null;
+		const vorherigeAuswahlID = this.lehrerListeManager.hasDaten() ? this.lehrerListeManager.auswahlID() : null;
 		if (vorherigeAuswahlID !== null) {
 			lehrerListeManager.setDaten(await api.server.getLehrerStammdaten(api.schema, vorherigeAuswahlID));
 
