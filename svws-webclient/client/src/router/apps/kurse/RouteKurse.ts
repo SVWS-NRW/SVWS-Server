@@ -9,10 +9,12 @@ import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
 import { routeKursDaten } from "~/router/apps/kurse/RouteKursDaten";
 import { RouteDataKurse } from "~/router/apps/kurse/RouteDataKurse";
 
-import type { TabData } from "@ui";
+import { ViewType, type TabData } from "@ui";
 import type { KurseAppProps } from "~/components/kurse/SKurseAppProps";
 import type { KurseAuswahlProps } from "~/components/kurse/SKurseAuswahlProps";
 import { routeError } from "~/router/error/RouteError";
+import { routeKurseGruppenprozesse } from "./RouteKurseGruppenprozesse";
+import { routeKurseNeu } from "./RouteKurseNeu";
 
 
 const SKurseAuswahl = () => import("~/components/kurse/SKurseAuswahl.vue")
@@ -28,41 +30,44 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		super.setView("liste", SKurseAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKursDaten,
+			routeKurseGruppenprozesse,
+			routeKurseNeu
 		];
 		super.defaultChild = routeKursDaten;
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from?: RouteNode<any, any>) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any>, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
-				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-				if (id !== undefined) {
-					if (neueID === null)
-						return this.getRoute();
-					const params = { ... to_params};
-					params.id = String(neueID);
-					const locationRaw : RouteLocationRaw = {};
-					locationRaw.name = to.name;
-					locationRaw.params = params;
-					return locationRaw;
-				}
+
+			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
+				return this.data.view.getRoute(id);
+
+			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Kurs ID um
+			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			if ((idNeu !== null) && (idNeu !== id))
+				return routeKursDaten.getRoute(idNeu);
+
+			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Kurs ID nicht gesetzt ist
+			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
+				return routeKurseGruppenprozesse.getRoute();
+			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
+				return routeKurseNeu.getRoute();
+
+			if (to.types.has(ViewType.GRUPPENPROZESSE))
+				await this.data.gotoGruppenprozessView(false);
+			else if (to.types.has(ViewType.HINZUFUEGEN))
+				await this.data.gotoHinzufuegenView(false);
+			else
+				await this.data.gotoDefaultView(id);
+
+			if (to.name === this.name) {
+				if (this.data.kursListeManager.hasDaten())
+					return this.getChildRoute(this.data.kursListeManager.daten().id, from);
+				return;
 			}
-			const eintrag = (id !== undefined) ? this.data.kursListeManager.liste.get(id) : null;
-			await this.data.setEintrag(eintrag);
-			if (!this.data.kursListeManager.hasDaten()) {
-				if (id === undefined) {
-					const listFiltered = this.data.kursListeManager.filtered();
-					if (listFiltered.isEmpty())
-						return;
-					return this.getChildRoute(listFiltered.get(0).id, from);
-				}
-				return this.getRoute();
-			}
-			if (to.name === this.name)
-				return this.getChildRoute(this.data.kursListeManager.daten().id, from);
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))
@@ -92,8 +97,11 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 			serverMode: api.mode,
 			kursListeManager: () => this.data.kursListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
-			gotoEintrag: this.data.gotoEintrag,
+			gotoDefaultView: this.data.gotoDefaultView,
+			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
+			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
 			setFilter: this.data.setFilter,
+			activeViewType: this.data.activeViewType,
 		};
 	}
 
@@ -101,6 +109,7 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 		return {
 			kursListeManager: () => this.data.kursListeManager,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
+			activeViewType: this.data.activeViewType,
 		};
 	}
 

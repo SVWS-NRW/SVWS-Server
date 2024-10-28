@@ -1,19 +1,32 @@
 <template>
-	<template v-if="kursListeManager().hasDaten()">
+	<template v-if="(kursListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<div class="svws-headline-wrapper">
-					<h2 class="svws-headline">
-						<span>{{ kursListeManager().daten().kuerzel }}</span>
-						<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
-							ID:
-							{{ kursListeManager().daten().id }}
-						</svws-ui-badge>
-					</h2>
-					<span class="svws-subline">
-						{{ lehrerkuerzel }}
-					</span>
-				</div>
+				<template v-if="activeViewType === ViewType.DEFAULT">
+					<div class="svws-headline-wrapper">
+						<h2 class="svws-headline">
+							<span>{{ kursListeManager().daten().kuerzel }}</span>
+							<svws-ui-badge type="light" title="ID" class="font-mono" size="small">
+								ID:
+								{{ kursListeManager().daten().id }}
+							</svws-ui-badge>
+						</h2>
+						<span class="svws-subline">
+							{{ lehrerkuerzel }}
+						</span>
+					</div>
+				</template>
+				<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
+					<div class="svws-headline-wrapper">
+						<h2 class="svws-headline">Anlegen eines neuen Kurses...</h2>
+					</div>
+				</template>
+				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
+					<div class="svws-headline-wrapper">
+						<h2 class="svws-headline">Gruppenprozesse</h2>
+						<span class="svws-subline">{{ kurseSubline }}</span>
+					</div>
+				</template>
 			</div>
 			<div class="svws-ui-header--actions" />
 		</header>
@@ -30,6 +43,7 @@
 
 	import { computed } from "vue";
 	import type { KurseAppProps } from "./SKurseAppProps";
+	import { ViewType } from "@ui";
 
 	const props = defineProps<KurseAppProps>();
 
@@ -51,5 +65,12 @@
 		}
 		return s;
 	});
+
+	const kurseSubline = computed(() => {
+		const auswahlKurseList = props.kursListeManager().liste.auswahlSorted();
+		if (auswahlKurseList.size() > 5)
+			return `${auswahlKurseList.size()} Kurse ausgewählt`;
+		return [...auswahlKurseList].map(k => k.kuerzel).join(', ');
+	})
 
 </script>

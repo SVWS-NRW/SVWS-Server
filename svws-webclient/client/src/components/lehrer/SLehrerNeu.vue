@@ -1,6 +1,8 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-20" />
+		<svws-ui-todo title="Lehrer anlegen">
+			Dieser Bereich ist noch in Entwicklung. Hier werden später alle initialen Informationen zur Anlage eines neuen Lehrer eingepflegt.
+		</svws-ui-todo>
 		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
