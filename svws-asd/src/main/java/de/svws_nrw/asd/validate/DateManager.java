@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Dieser Manager stellt Methoden zum Umgang mit Datumswerten zur Verfügung.
- * Die Daten werden im Input und Output jeweils im ISO 8601-Format erwartet.
+ * Die Daten werden im Input und Output jeweils im ISO 8601-Format (yyyy-mm-dd) erwartet.
  * Für die Lesbarkeit in Textausgaben steht auch die Möglichkeit des deutschen
  * Datumsformates zur Verfügung.
  */

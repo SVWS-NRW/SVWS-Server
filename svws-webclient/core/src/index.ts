@@ -232,9 +232,9 @@ export { ValidatorFehlerartKontext } from './asd/validate/ValidatorFehlerartKont
 export { ValidatorGesamt } from './asd/validate/ValidatorGesamt';
 export { ValidatorKontext } from './asd/validate/ValidatorKontext';
 export { ValidatorManager } from './asd/validate/ValidatorManager';
-export { ValidatorLehrerPersonalabschnittdaten } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittdaten';
-export { ValidatorLehrerPersonalabschnittdatenPflichtstundensoll } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittdatenPflichtstundensoll';
-export { ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum';
+export { ValidatorLehrerPersonalabschnittsdaten } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdaten';
+export { ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll';
+export { ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum';
 export { ValidatorLehrerStammdaten } from './asd/validate/lehrer/ValidatorLehrerStammdaten';
 export { ValidatorLehrerStammdatenGeburtsdatum } from './asd/validate/lehrer/ValidatorLehrerStammdatenGeburtsdatum';
 export { ValidatorLehrerStammdatenNachname } from './asd/validate/lehrer/ValidatorLehrerStammdatenNachname';

@@ -4,7 +4,7 @@ import { LehrerEinsatzstatus } from '../../../asd/types/lehrer/LehrerEinsatzstat
 import { ValidatorKontext } from '../../../asd/validate/ValidatorKontext';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerPersonalabschnittdatenPflichtstundensoll extends Validator<LehrerPersonalabschnittsdaten> {
+export class ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll extends Validator<LehrerPersonalabschnittsdaten> {
 
 
 	/**
@@ -37,17 +37,17 @@ export class ValidatorLehrerPersonalabschnittdatenPflichtstundensoll extends Val
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenPflichtstundensoll';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenPflichtstundensoll', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLehrerPersonalabschnittdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenPflichtstundensoll');
+	public static class = new Class<ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll>('de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLehrerPersonalabschnittdatenPflichtstundensoll(obj : unknown) : ValidatorLehrerPersonalabschnittdatenPflichtstundensoll {
-	return obj as ValidatorLehrerPersonalabschnittdatenPflichtstundensoll;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(obj : unknown) : ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll {
+	return obj as ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll;
 }

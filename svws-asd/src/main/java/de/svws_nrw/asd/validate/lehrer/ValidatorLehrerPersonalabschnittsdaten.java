@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf die Personalabschnittsdaten
  * eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerPersonalabschnittdaten extends Validator<LehrerPersonalabschnittsdaten> {
+public final class ValidatorLehrerPersonalabschnittsdaten extends Validator<LehrerPersonalabschnittsdaten> {
 
 	/**
 	 * Erstellt einen neuen Validator mit den übergebenen Daten und dem übergebenen Kontext
@@ -21,14 +21,14 @@ public final class ValidatorLehrerPersonalabschnittdaten extends Validator<Lehre
 	 * @param stammdaten   die Stammdaten des Lehrers
 	 * @param kontext      der Kontext des Validators
 	 */
-	public ValidatorLehrerPersonalabschnittdaten(final @NotNull LehrerPersonalabschnittsdaten daten, final @NotNull LehrerStammdaten stammdaten,
+	public ValidatorLehrerPersonalabschnittsdaten(final @NotNull LehrerPersonalabschnittsdaten daten, final @NotNull LehrerStammdaten stammdaten,
 			final @NotNull ValidatorKontext kontext) {
 		super(daten, kontext);
-		_validatoren.add(new ValidatorLehrerPersonalabschnittdatenPflichtstundensoll(daten, kontext));
+		_validatoren.add(new ValidatorLehrerPersonalabschnittsdatenPflichtstundensoll(daten, kontext));
 		// Die nachfolgenden Prüfungen sind nur durchführbar, wenn bei den Stammdaten ein Geburtsdatum gesetzt ist...
 		try {
 			final @NotNull DateManager geburtsdatum = DateManager.from(stammdaten.geburtsdatum);
-			_validatoren.add(new ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum(daten, geburtsdatum, kontext));
+			_validatoren.add(new ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(daten, geburtsdatum, kontext));
 		} catch (@SuppressWarnings("unused") final InvalidDateException e) {
 			// Ist kein gültiges Geburtsdatum gesetzt, so werden die Prüfungen übersprungen.
 			// Die eigentliche Validierung des Geburtsdatums erfolgt bei den Lehrer-Stammdaten

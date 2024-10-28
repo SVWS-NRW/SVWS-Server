@@ -5,7 +5,7 @@
 		"idHistorie": 1,
 		"historie": [ {
 			"id": 1,
-			"schluessel": "1",
+			"schluessel": "A",
 			"kuerzel": "A",
 			"text": "Stammschule, ganz oder teilweise auch an anderen Schulen tätig",
 			"gueltigVon": null,
@@ -16,7 +16,7 @@
 		"idHistorie": 2,
 		"historie": [ {
 			"id": 2,
-			"schluessel": "2",
+			"schluessel": "B",
 			"kuerzel": "B",
 			"text": "nicht Stammschule, aber auch hier tätig",
 			"gueltigVon": null,

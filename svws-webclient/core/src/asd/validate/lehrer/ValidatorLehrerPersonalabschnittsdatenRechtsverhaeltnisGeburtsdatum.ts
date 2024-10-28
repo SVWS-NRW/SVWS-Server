@@ -6,7 +6,7 @@ import { LehrerRechtsverhaeltnis } from '../../../asd/types/lehrer/LehrerRechtsv
 import { Schuljahresabschnitt } from '../../../asd/data/schule/Schuljahresabschnitt';
 import { Validator } from '../../../asd/validate/Validator';
 
-export class ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
+export class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
 
 	/**
 	 * Das Geburtsdatum des Lehrers
@@ -79,17 +79,17 @@ export class ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum 
 	}
 
 	transpilerCanonicalName(): string {
-		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum';
+		return 'de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum';
 	}
 
 	isTranspiledInstanceOf(name : string): boolean {
-		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum', 'de.svws_nrw.asd.validate.Validator'].includes(name);
+		return ['de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum', 'de.svws_nrw.asd.validate.Validator'].includes(name);
 	}
 
-	public static class = new Class<ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum>('de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum');
+	public static class = new Class<ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum>('de.svws_nrw.asd.validate.lehrer.ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum');
 
 }
 
-export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum(obj : unknown) : ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum {
-	return obj as ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum;
+export function cast_de_svws_nrw_asd_validate_lehrer_ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(obj : unknown) : ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum {
+	return obj as ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum;
 }

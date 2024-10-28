@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotNull;
  * Dieser Validator führt eine Statistikprüfung auf das Geburtsdatum im Kontext des Rechtsverhältnisses
  * der Abschnittsdaten eines Lehrers einer Schule aus.
  */
-public final class ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
+public final class ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum extends Validator<LehrerPersonalabschnittsdaten> {
 
 	/** Das Geburtsdatum des Lehrers */
 	private final @NotNull DateManager geburtsdatum;
@@ -24,7 +24,7 @@ public final class ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburts
 	 * @param geburtsdatum   das Geburtsdatum des Lehrers
 	 * @param kontext        der Kontext des Validators
 	 */
-	public ValidatorLehrerPersonalabschnittdatenRechtsverhaeltnisGeburtsdatum(final @NotNull LehrerPersonalabschnittsdaten daten,
+	public ValidatorLehrerPersonalabschnittsdatenRechtsverhaeltnisGeburtsdatum(final @NotNull LehrerPersonalabschnittsdaten daten,
 			final @NotNull DateManager geburtsdatum, final @NotNull ValidatorKontext kontext) {
 		super(daten, kontext);
 		this.geburtsdatum = geburtsdatum;
