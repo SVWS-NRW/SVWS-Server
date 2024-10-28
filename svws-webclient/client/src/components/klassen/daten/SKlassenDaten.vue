@@ -7,7 +7,7 @@
 				</template>
 				<svws-ui-input-wrapper :grid="2">
 					<svws-ui-text-input placeholder="Kürzel" :disabled="!hatKompetenzUpdate" :required="true" :max-len="15" :valid="validateKuerzel" :model-value="data.kuerzel"
-						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" />
+						@change="kuerzel => patchPartial({ kuerzel }, validateKuerzel(kuerzel))" type="text" focus />
 					<svws-ui-text-input placeholder="Beschreibung" :disabled="!hatKompetenzUpdate" :max-len="150" :valid="validateBeschreibung" :model-value="data.beschreibung"
 						@change="beschreibung => patchPartial({ beschreibung: beschreibung ?? undefined }, validateBeschreibung(beschreibung))" type="text" />
 					<svws-ui-spacing />

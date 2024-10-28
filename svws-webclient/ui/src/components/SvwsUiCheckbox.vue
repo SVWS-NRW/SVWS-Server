@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 
 	import type { ComputedRef, Ref } from 'vue';
+	import { onMounted } from 'vue';
 	import { computed, ref } from 'vue';
 
 	const props = withDefaults(defineProps<{
@@ -32,6 +33,7 @@
 		indeterminate?: boolean;
 		readonly?: boolean;
 		color?: 'success' | 'error' | 'warning';
+		autofocus?: boolean;
 	}>(), {
 		statistics: false,
 		disabled: false,
@@ -42,7 +44,15 @@
 		indeterminate: false,
 		readonly: false,
 		color: undefined,
+		autofocus: false,
 	});
+
+	onMounted(() => doFocus())
+
+	function doFocus() {
+		if (props.autofocus)
+			input.value?.focus();
+	}
 
 	const emit = defineEmits<{
 		(e: 'update:modelValue', event: boolean): void;
@@ -126,6 +136,7 @@
 
 		&:focus,
 		&:focus-visible {
+			@apply ring;
 			@apply outline-none;
 		}
 

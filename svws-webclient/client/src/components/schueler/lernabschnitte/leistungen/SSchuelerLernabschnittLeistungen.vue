@@ -8,7 +8,7 @@
 				</div>
 				<div role="row" class="svws-ui-tr">
 					<div v-if="hatUpdateKompetenz" role="columnheader" class="svws-ui-td svws-align-center" aria-label="Alle auswählen">
-						<svws-ui-checkbox :model-value="leistungen.size() === auswahl.size" :indeterminate="someSelected()" @update:model-value="updateAuswahl" headless />
+						<svws-ui-checkbox :model-value="leistungen.size() === auswahl.size" :indeterminate="someSelected()" @update:model-value="updateAuswahl" headless :autofocus="!leistungen.isEmpty()" />
 					</div>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Fach"> Fach </div>
 					<div role="columnheader" class="svws-ui-td svws-align-left" aria-label="Kurs"> Kurs </div>
@@ -80,7 +80,7 @@
 					</div>
 					<div class="svws-ui-td flex-grow justify-end" role="cell">
 						<svws-ui-button @click="deleteAuswahl()" type="trash" :disabled="auswahl.size === 0" />
-						<svws-ui-button v-if="props.manager().fachGetMenge().size() > 0" @click="addLeistung(props.manager().fachGetMenge().get(0).id)" type="icon" title="Neue Leistungsdaten hinzufügen"> <span class="icon i-ri-add-line" /> </svws-ui-button>
+						<svws-ui-button v-if="props.manager().fachGetMenge().size() > 0" @click="addLeistung(props.manager().fachGetMenge().get(0).id)" type="icon" title="Neue Leistungsdaten hinzufügen" :autofocus="leistungen.isEmpty()"> <span class="icon i-ri-add-line" /> </svws-ui-button>
 					</div>
 				</div>
 			</template>

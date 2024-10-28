@@ -3,7 +3,7 @@
 		<svws-ui-content-card title="Allgemein">
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-text-input placeholder="Identnummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten.identNrTeil1"
-					@change="identNrTeil1 => patch({identNrTeil1})" type="text" span="full" />
+					@change="identNrTeil1 => patch({identNrTeil1})" type="text" span="full" focus />
 				<svws-ui-text-input placeholder="Seriennummer" :disabled="!hatUpdateKompetenz" :model-value="personaldaten.identNrTeil2SerNr"
 					@change="identNrTeil2SerNr => patch({identNrTeil2SerNr})" type="text" />
 				<svws-ui-text-input placeholder="Vergütungsschlüssel" :disabled="!hatUpdateKompetenz" :model-value="personaldaten.lbvVerguetungsschluessel"

@@ -3,7 +3,7 @@
 		<svws-ui-content-card>
 			<svws-ui-input-wrapper :grid="2">
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Klasse" :items="manager().klasseGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
-					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" />
+					:model-value="klasse" @update:model-value="value => patch({ klassenID: ((value === undefined) || (value === null)) ? null : value.id })" autofocus />
 				<svws-ui-select :disabled="!hatUpdateKompetenz" title="Jahrgang" :items="manager().jahrgangGetMenge()" :item-text="i => `${i.kuerzel}`" autocomplete statistics
 					:model-value="jahrgang" @update:model-value="value => patch({ jahrgangID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				<svws-ui-text-input :disabled="!hatUpdateKompetenz" placeholder="Datum von" type="date" statistics
@@ -25,7 +25,7 @@
 				<div class="flex flex-col gap-3">
 					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Tutor" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
 						:model-value="tutor" @update:model-value="value => patch({ tutorID: ((value === undefined) || (value === null)) ? null : value.id })" />
-					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Sonderpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
+					<svws-ui-select :disabled="!hatUpdateKompetenz" title="Sondezrpädagoge" :items="manager().lehrerGetMenge()" :item-text="getLehrerText" autocomplete
 						:model-value="sonderpaedagoge" @update:model-value="value => patch({ sonderpaedagogeID: ((value === undefined) || (value === null)) ? null : value.id })" />
 				</div>
 				<svws-ui-spacing :size="2" />
