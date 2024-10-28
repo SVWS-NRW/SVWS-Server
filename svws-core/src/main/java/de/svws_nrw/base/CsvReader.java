@@ -139,7 +139,7 @@ public final class CsvReader {
 		try {
 			final byte[] data = Files.readAllBytes(path);
 			final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
-			final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+			final String csvData = new String(data, offset, data.length - offset, StandardCharsets.UTF_8);
 			final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
 			try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaKurs42).readValues(csvData)) {
 				return it.readAll();
@@ -166,7 +166,7 @@ public final class CsvReader {
 	 */
 	public static <T> List<T> fromKurs42(final byte[] data, final Class<T> clazz) throws IOException {
 		final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
-		final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+		final String csvData = new String(data, offset, data.length - offset, StandardCharsets.UTF_8);
 		final CsvMapper mapper = new CsvMapper().enable(CsvParser.Feature.WRAP_AS_ARRAY);
 		try (MappingIterator<T> it = mapper.readerFor(clazz).with(csvSchemaKurs42).readValues(csvData)) {
 			return it.readAll();
@@ -242,7 +242,7 @@ public final class CsvReader {
 	 */
 	public static <T> List<T> fromUntis(final @NotNull Class<T> clazz, final @NotNull CsvSchema csvSchema, final byte[] data) throws IOException {
 		final int offset = ((data.length > 2) && ((data[0] & 0xFF) == 0xEF) && ((data[1] & 0xFF) == 0xBB) && ((data[2] & 0xFF) == 0xBF)) ? 3 : 0;
-		final String csvData = new String(data, offset, data.length, StandardCharsets.UTF_8);
+		final String csvData = new String(data, offset, data.length - offset, StandardCharsets.UTF_8);
 		final ObjectReader reader = new CsvMapper().readerFor(clazz).with(csvSchema);
 		try (MappingIterator<T> it = reader.readValues(csvData)) {
 			return it.readAll();
