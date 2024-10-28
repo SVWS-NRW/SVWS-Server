@@ -77,11 +77,11 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 				return routeSchuelerNeu.getRoute();
 
 			if (to.types.has(ViewType.GRUPPENPROZESSE))
-				await this.data.gotoGruppenprozessRoute(false);
+				await this.data.gotoGruppenprozessView(false);
 			else if (to.types.has(ViewType.HINZUFUEGEN))
-				await this.data.gotoHinzufuegenRoute(false);
+				await this.data.gotoHinzufuegenView(false);
 			else
-				await this.data.gotoDefaultRoute(id);
+				await this.data.gotoDefaultView(id);
 
 
 			if (to.name === this.name) {
@@ -117,19 +117,19 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			serverMode: api.mode,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
-			gotoDefaultRoute: this.data.gotoDefaultRoute,
-			gotoHinzufuegenRoute: this.data.gotoHinzufuegenRoute,
-			gotoGruppenprozessRoute: this.data.gotoGruppenprozessRoute,
+			gotoDefaultView: this.data.gotoDefaultView,
+			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
+			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
 			setFilter: this.data.setFilter,
-			activeRouteType: this.data.activeRouteType,
+			activeViewType: this.data.activeViewType,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
 			schuelerListeManager: () => this.data.schuelerListeManager,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeRouteType),
-			activeRouteType: this.data.activeRouteType,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
+			activeViewType: this.data.activeViewType,
 		};
 	}
 

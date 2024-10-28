@@ -34,7 +34,7 @@ export class RouteKlassenNeu extends RouteNode<any, RouteKlassen> {
 			mapKlassenVorigerAbschnitt: () => routeKlassen.data.mapKlassenVorigerAbschnitt,
 			mapKlassenFolgenderAbschnitt: () => routeKlassen.data.mapKlassenFolgenderAbschnitt,
 			add: routeKlassen.data.add,
-			gotoEintrag: routeKlassen.data.gotoEintrag,
+			gotoDefaultView: routeKlassen.data.gotoDefaultView,
 			checkpoint: this.checkpoint,
 			continueRoutingAfterCheckpoint: () => RouteManager.continueRoutingAfterCheckpoint(),
 		};

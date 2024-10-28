@@ -5,7 +5,7 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoEintrag(klassendaten.id)"
+			<svws-ui-table :clickable="!klassenListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="klassendaten => gotoDefaultView(klassendaten.id)"
 				:items="rowsFiltered" :model-value="[...props.klassenListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns selectable count :filter-open="true" :filtered="filterChanged()" :filterReset scroll-into-view scroll allow-arrow-key-selection>
 				<template #search>
@@ -33,7 +33,7 @@
 							</svws-ui-tooltip>
 						</s-klassen-auswahl-sortierung-modal>
 						<svws-ui-tooltip position="bottom">
-							<svws-ui-button type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
+							<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 								<span class="icon i-ri-add-line" />
 							</svws-ui-button>
 							<template #content>
@@ -135,7 +135,7 @@
 			|| props.klassenListeManager().jahrgaenge.auswahlExists());
 	}
 
-	const clickedEintrag = computed(() => ((props.activeRouteType === ViewType.GRUPPENPROZESSE) || (props.activeRouteType === ViewType.HINZUFUEGEN)) ? null
+	const clickedEintrag = computed(() => ((props.activeViewType === ViewType.GRUPPENPROZESSE) || (props.activeViewType === ViewType.HINZUFUEGEN)) ? null
 		: (props.klassenListeManager().hasDaten() ? props.klassenListeManager().auswahl() : null));
 
 	async function setAuswahl(items : KlassenDaten[]) {
@@ -144,13 +144,9 @@
 			if (props.klassenListeManager().liste.hasValue(item))
 				props.klassenListeManager().liste.auswahlAdd(item);
 		if (props.klassenListeManager().liste.auswahlExists())
-			await props.gotoGruppenprozess(true);
+			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoEintrag(props.klassenListeManager().getVorherigeAuswahl()?.id);
-	}
-
-	async function startCreationMode(): Promise<void> {
-		await props.gotoCreationMode(true)
+			await props.gotoDefaultView(props.klassenListeManager().getVorherigeAuswahl()?.id);
 	}
 
 	function lehrerkuerzel(list: number[]) {

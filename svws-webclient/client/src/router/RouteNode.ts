@@ -201,7 +201,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	/**
 	 * Gibt den hinterlegten Checkpoint zurück.
 	 */
-	public get checkpoint() : Checkpoint | undefined {
+	public get checkpoint() : Checkpoint {
+		if (this._checkpoint === undefined)
+			throw new DeveloperNotificationException("Es wurde kein Checkpoint gesetzt.");
 		return this._checkpoint;
 	}
 

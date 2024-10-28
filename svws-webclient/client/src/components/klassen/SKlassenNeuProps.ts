@@ -8,7 +8,7 @@ export interface KlassenNeuProps {
 	mapKlassenVorigerAbschnitt: () => Map<number, KlassenDaten>;
 	mapKlassenFolgenderAbschnitt: () => Map<number, KlassenDaten>;
 	add: (patchObject: Partial<KlassenDaten>) => Promise<void>;
-	gotoEintrag: (eintragId?: number | null) => Promise<void>;
-	checkpoint?: Checkpoint;
+	gotoDefaultView: (eintragId?: number | null) => Promise<void>;
+	checkpoint: Checkpoint;
 	continueRoutingAfterCheckpoint: () => Promise<RoutingStatus>;
 }

@@ -1,8 +1,8 @@
 <template>
-	<div v-if="(schuelerListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
+	<div v-if="(schuelerListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
-				<template v-if="activeRouteType === ViewType.DEFAULT">
+				<template v-if="activeViewType === ViewType.DEFAULT">
 					<svws-ui-avatar :src="foto ? `data:image/png;base64, ${foto}` : undefined" :alt="foto !== null ? `Foto von ${vorname} ${nachname}` : ''" upload capture />
 					<div v-if="schuelerListeManager().hasDaten()" class="svws-headline-wrapper">
 						<h2 class="svws-headline">
@@ -19,7 +19,7 @@
 					</div>
 				</template>
 
-				<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
+				<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">
 							<span>Neuen Schüler anlegen...</span>
@@ -27,7 +27,7 @@
 					</div>
 				</template>
 
-				<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
+				<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 					<div class="svws-headline-wrapper">
 						<h2 class="svws-headline">Gruppenprozesse</h2>
 						<span class="svws-subline">{{ schuelerSubline }}</span>

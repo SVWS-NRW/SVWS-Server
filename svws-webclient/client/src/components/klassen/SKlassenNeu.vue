@@ -35,7 +35,7 @@
 				</div>
 			</svws-ui-content-card>
 		</div>
-		<svws-ui-checkpoint-modal :checkpoint="props.checkpoint" :continue-routing="props.continueRoutingAfterCheckpoint" />
+		<svws-ui-checkpoint-modal :checkpoint :continue-routing="props.continueRoutingAfterCheckpoint" />
 	</div>
 </template>
 
@@ -146,7 +146,7 @@
 
 	async function cancel() {
 		props.checkpoint.active = false;
-		await props.gotoEintrag(null);
+		await props.gotoDefaultView(null);
 	}
 
 	async function addKlasse() {

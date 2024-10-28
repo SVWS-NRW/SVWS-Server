@@ -7,7 +7,7 @@
 			<abschnitt-auswahl :daten="schuljahresabschnittsauswahl" />
 		</template>
 		<template #content>
-			<svws-ui-table :clickable="!schuelerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultRoute(schueler.id)"
+			<svws-ui-table :clickable="!schuelerListeManager().liste.auswahlExists()" :clicked="clickedEintrag" @update:clicked="schueler => gotoDefaultView(schueler.id)"
 				:items="rowsFiltered" :model-value="[...props.schuelerListeManager().liste.auswahl()]" @update:model-value="items => setAuswahl(items)"
 				:columns="cols" selectable count :filter-open="true" :filtered="filterChanged()" :filterReset="filterReset" scroll-into-view scroll
 				v-model:sort-by-and-order="sortByAndOrder" :sort-by-multi="sortByMulti" allow-arrow-key-selection>
@@ -42,7 +42,7 @@
 
 				<template #actions>
 					<svws-ui-tooltip position="bottom" v-if="props.serverMode.checkServerMode(ServerMode.DEV)">
-						<svws-ui-button type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
+						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="startCreationMode" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
 						<template #content>
@@ -93,7 +93,7 @@
 	const search = ref<string>("");
 
 	async function startCreationMode(): Promise<void> {
-		await props.gotoHinzufuegenRoute(true)
+		await props.gotoHinzufuegenView(true)
 	}
 
 	const sortByMulti = computed<Map<string, boolean>>(() => {
@@ -131,7 +131,7 @@
 
 	watch(() => props.schuelerListeManager().filtered(), async (neu) => {
 		if (props.schuelerListeManager().hasDaten() && !neu.contains(props.schuelerListeManager().auswahl()))
-			await props.gotoDefaultRoute(neu.isEmpty() ? null : neu.get(0).id);
+			await props.gotoDefaultView(neu.isEmpty() ? null : neu.get(0).id);
 	})
 
 	const rowsFiltered = computed<SchuelerListeEintrag[]>(() => {
@@ -269,13 +269,13 @@
 				props.schuelerListeManager().liste.auswahlAdd(schueler);
 
 		if (props.schuelerListeManager().liste.auswahlExists())
-			await props.gotoGruppenprozessRoute(true);
+			await props.gotoGruppenprozessView(true);
 		else
-			await props.gotoDefaultRoute(props.schuelerListeManager().getVorherigeAuswahl()?.id);
+			await props.gotoDefaultView(props.schuelerListeManager().getVorherigeAuswahl()?.id);
 	}
 
 	const clickedEintrag = computed(() => {
-		if ((props.activeRouteType !== ViewType.GRUPPENPROZESSE) && (props.activeRouteType !== ViewType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
+		if ((props.activeViewType !== ViewType.GRUPPENPROZESSE) && (props.activeViewType !== ViewType.HINZUFUEGEN) && props.schuelerListeManager().hasDaten())
 			return props.schuelerListeManager().auswahl();
 		else
 			return null;

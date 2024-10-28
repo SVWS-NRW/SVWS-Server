@@ -10,6 +10,7 @@ import { routeLehrerStundenplanDaten } from "~/router/apps/lehrer/stundenplan/Ro
 
 
 interface RouteStateLehrerDataStundenplan extends RouteStateInterface {
+	idSchuljahresabschnitt: number;
 	idLehrer: number | undefined;
 	auswahl: StundenplanListeEintrag | undefined;
 	mapStundenplaene: Map<number, StundenplanListeEintrag>;
@@ -19,6 +20,7 @@ interface RouteStateLehrerDataStundenplan extends RouteStateInterface {
 }
 
 const defaultState = <RouteStateLehrerDataStundenplan> {
+	idSchuljahresabschnitt: -1,
 	idLehrer: undefined,
 	auswahl: undefined,
 	mapStundenplaene: new Map(),
@@ -34,12 +36,20 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 		super(defaultState);
 	}
 
+	get idSchuljahresabschnitt(): number {
+		return this._state.value.idSchuljahresabschnitt;
+	}
+
 	get wochentyp(): number {
 		return this._state.value.wochentyp;
 	}
 
 	get kalenderwoche(): StundenplanKalenderwochenzuordnung | undefined {
 		return this._state.value.kalenderwoche;
+	}
+
+	get hasAuswahl(): boolean {
+		return this._state.value.auswahl !== undefined;
 	}
 
 	get auswahl(): StundenplanListeEintrag {
@@ -69,10 +79,9 @@ export class RouteDataLehrerStundenplan extends RouteData<RouteStateLehrerDataSt
 	public async ladeListe() {
 		const listStundenplaene = await api.server.getStundenplanlisteFuerAbschnitt(api.schema, routeApp.data.aktAbschnitt.value.id);
 		const mapStundenplaene = new Map<number, StundenplanListeEintrag>();
-		const auswahl = listStundenplaene.size() > 0 ? listStundenplaene.get(0) : undefined;
 		for (const l of listStundenplaene)
 			mapStundenplaene.set(l.id, l);
-		this.setPatchedDefaultState({ idLehrer: this._state.value.idLehrer, auswahl, mapStundenplaene });
+		this.setPatchedDefaultState({ idLehrer: this._state.value.idLehrer, mapStundenplaene, idSchuljahresabschnitt: routeApp.data.aktAbschnitt.value.id })
 	}
 
 	private getKalenderWoche(manager: StundenplanManager, wochentyp: number, kwjahr: number | undefined, kw: number | undefined) : { wochentyp?: number, kalenderwoche?: StundenplanKalenderwochenzuordnung } {

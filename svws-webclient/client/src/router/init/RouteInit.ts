@@ -50,29 +50,29 @@ export class RouteInit extends RouteNode<any, any> {
 		if (this.source.value === 'restore')
 			return this.importSQLite(formData);
 		const db = this.db.value;
-		if (!db) return false;
+		if (db === undefined) return false;
 		const schulnummer = parseInt(formData.get('schulnummer')?.toString() ?? '');
 		const data = new DatenbankVerbindungsdaten();
-		data.location = formData.get('location')?.toString() || null;
-		data.schema = formData.get('schema')?.toString() || null;
-		data.username = formData.get('username')?.toString() || null;
-		data.password = formData.get('password')?.toString() || null;
+		data.location = formData.get('location')?.toString() ?? null;
+		data.schema = formData.get('schema')?.toString() ?? null;
+		data.username = formData.get('username')?.toString() ?? null;
+		data.password = formData.get('password')?.toString() ?? null;
 		try {
 			switch (db) {
 				case 'mariadb':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMariaDBSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMariaDB(data, api.schema);
 					break;
 				case 'mysql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMySqlSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMySql(data, api.schema);
 					break;
 				case 'mssql':
-					if (schulnummer)
+					if (schulnummer > 0)
 						await api.server.migrateMsSqlServerSchulnummer(data, api.schema, schulnummer);
 					else
 						await api.server.migrateMsSqlServer(data, api.schema);

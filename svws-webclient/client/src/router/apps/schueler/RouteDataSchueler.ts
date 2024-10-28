@@ -15,14 +15,14 @@ import { routeSchuelerGruppenprozesse } from "~/router/apps/schueler/RouteSchuel
 interface RouteStateSchueler extends RouteStateInterface {
 	idSchuljahresabschnitt: number;
 	schuelerListeManager: SchuelerListeManager | undefined;
-	activeRouteType: ViewType;
+	activeViewType: ViewType;
 }
 
 const defaultState = <RouteStateSchueler> {
 	idSchuljahresabschnitt: -1,
 	schuelerListeManager: undefined,
 	view: routeSchuelerIndividualdaten,
-	activeRouteType: ViewType.DEFAULT,
+	activeViewType: ViewType.DEFAULT,
 };
 
 export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
@@ -77,7 +77,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		this.setPatchedDefaultState({
 			idSchuljahresabschnitt: idSchuljahresabschnitt,
 			schuelerListeManager: manager,
-			activeRouteType: this.activeRouteType,
+			activeViewType: this.activeViewType,
 			view: view,
 		});
 
@@ -132,8 +132,8 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		return this._state.value.schuelerListeManager;
 	}
 
-	get activeRouteType(): ViewType {
-		return this._state.value.activeRouteType;
+	get activeViewType(): ViewType {
+		return this._state.value.activeViewType;
 	}
 
 	patch = async (data : Partial<SchuelerStammdaten>) => {
@@ -213,7 +213,7 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 			return this.schuelerListeManager.filtered().isEmpty() ? null : this.schuelerListeManager.filtered().get(0);
 	}
 
-	gotoDefaultRoute = async (idSchueler?: number | null) => {
+	gotoDefaultView = async (idSchueler?: number | null) => {
 		if ((idSchueler !== null) && (idSchueler !== undefined) && this.schuelerListeManager.liste.has(idSchueler)) {
 			const route = (this.view !== routeSchuelerNeu && this.view !== routeSchuelerGruppenprozesse) ? this.view.getRoute(idSchueler) : routeSchuelerIndividualdaten.getRoute(idSchueler);
 			const result = await RouteManager.doRoute(route);
@@ -243,18 +243,18 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	private setDefaults() {
-		this._state.value.activeRouteType = ViewType.DEFAULT
+		this._state.value.activeViewType = ViewType.DEFAULT
 		this._state.value.view = (this._state.value.view?.name === this.view.name) ? this.view : routeSchuelerIndividualdaten;
 		this.commit();
 	}
 
-	gotoGruppenprozessRoute = async (navigate: boolean) => {
-		if ((this._state.value.activeRouteType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
+	gotoGruppenprozessView = async (navigate: boolean) => {
+		if ((this._state.value.activeViewType === ViewType.GRUPPENPROZESSE) || (this._state.value.view === routeSchuelerGruppenprozesse)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.GRUPPENPROZESSE;
+		this._state.value.activeViewType = ViewType.GRUPPENPROZESSE;
 
 		if (navigate)
 			await RouteManager.doRoute(routeSchuelerGruppenprozesse.getRoute());
@@ -264,13 +264,13 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 		this.commit();
 	}
 
-	gotoHinzufuegenRoute = async (navigate: boolean) => {
-		if ((this._state.value.activeRouteType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
+	gotoHinzufuegenView = async (navigate: boolean) => {
+		if ((this._state.value.activeViewType === ViewType.HINZUFUEGEN) || (this._state.value.view === routeSchuelerNeu)) {
 			this.commit();
 			return;
 		}
 
-		this._state.value.activeRouteType = ViewType.HINZUFUEGEN;
+		this._state.value.activeViewType = ViewType.HINZUFUEGEN;
 
 		if (navigate) {
 			const result = await RouteManager.doRoute(routeSchuelerNeu.getRoute());
@@ -284,10 +284,10 @@ export class RouteDataSchueler extends RouteData<RouteStateSchueler> {
 	}
 
 	setFilter = async () => {
-		if (!this.schuelerListeManager.hasDaten() && (this.activeRouteType === ViewType.DEFAULT)) {
+		if (!this.schuelerListeManager.hasDaten() && (this.activeViewType === ViewType.DEFAULT)) {
 			const listFiltered = this.schuelerListeManager.filtered();
 			if (!listFiltered.isEmpty()) {
-				return await this.gotoDefaultRoute(listFiltered.get(0).id);
+				return await this.gotoDefaultView(listFiltered.get(0).id);
 			}
 		}
 		this.commit();

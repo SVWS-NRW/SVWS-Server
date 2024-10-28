@@ -6,10 +6,10 @@ export interface SchuelerAuswahlProps {
 	serverMode: ServerMode;
 	schuelerListeManager: () => SchuelerListeManager;
 	schuljahresabschnittsauswahl: () => AbschnittAuswahlDaten;
-	gotoDefaultRoute: (idSchueler?: number | null) => Promise<void>;
-	gotoHinzufuegenRoute: (navigate: boolean) => Promise<void>;
-	gotoGruppenprozessRoute: (navigate: boolean) => Promise<void>;
+	gotoDefaultView: (idSchueler?: number | null) => Promise<void>;
+	gotoHinzufuegenView: (navigate: boolean) => Promise<void>;
+	gotoGruppenprozessView: (navigate: boolean) => Promise<void>;
 	setFilter: () => Promise<void>;
-	activeRouteType: ViewType;
+	activeViewType: ViewType;
 }
 

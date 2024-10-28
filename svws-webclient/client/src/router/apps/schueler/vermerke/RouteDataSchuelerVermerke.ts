@@ -38,8 +38,6 @@ export class RouteDataSchuelerVermerke extends RouteData<RouteStateSchuelerVerme
 	}
 
 	patch = async (data : Partial<SchuelerVermerke>, idVermerk: number) => {
-		if (this.auswahl === undefined)
-			throw new DeveloperNotificationException("Beim Aufruf der Patch-Methode sind keine gültigen Daten geladen.");
 		api.status.start();
 		await api.server.patchSchuelerVermerke(data, api.schema, idVermerk);
 		for (const vermerk of this.schuelerVermerke)

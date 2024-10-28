@@ -57,7 +57,7 @@ export class RouteKlassenStundenplan extends RouteNode<RouteDataKlassenStundenpl
 
 	public getRoute(id: number) : RouteLocationRaw {
 		let redirect: RouteNode<any, any> = (this.selectedChild === undefined) ? this.defaultChild! : this.selectedChild;
-		if (redirect.hidden({ idSchuljahresabschnitt: String(routeApp.data.idSchuljahresabschnitt), id: String(id) }))
+		if (redirect.hidden({ idSchuljahresabschnitt: String(routeApp.data.idSchuljahresabschnitt), id: String(id) }) !== false)
 			redirect = this.defaultChild!;
 		return redirect.getRoute(id);
 	}

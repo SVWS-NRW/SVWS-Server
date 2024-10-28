@@ -60,11 +60,11 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 				return routeKlassenNeu.getRoute();
 
 			if (to.types.has(ViewType.GRUPPENPROZESSE))
-				await this.data.gotoGruppenprozess(false);
+				await this.data.gotoGruppenprozessView(false);
 			else if (to.types.has(ViewType.HINZUFUEGEN))
-				await this.data.gotoCreationMode(false);
+				await this.data.gotoHinzufuegenView(false);
 			else
-				await this.data.gotoEintrag(id);
+				await this.data.gotoDefaultView(id);
 
 			if (to.name === this.name) {
 				if (this.data.klassenListeManager.hasDaten())
@@ -101,20 +101,20 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 			serverMode: api.mode,
 			klassenListeManager: () => this.data.klassenListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(true),
-			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
-			gotoGruppenprozess: this.data.gotoGruppenprozess,
-			gotoCreationMode: this.data.gotoCreationMode,
+			gotoDefaultView: this.data.gotoDefaultView,
+			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
+			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
 			setzeDefaultSortierung: this.data.setzeDefaultSortierung,
-			activeRouteType: this.data.activeRouteType,
+			activeViewType: this.data.activeViewType,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): KlassenAppProps {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeRouteType),
-			activeRouteType: this.data.activeRouteType,
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
+			activeRouteType: this.data.activeViewType,
 		};
 	}
 
