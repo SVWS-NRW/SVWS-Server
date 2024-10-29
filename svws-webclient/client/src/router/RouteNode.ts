@@ -297,6 +297,28 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
+	 * Die Methode prüft ob diese RouteNode mindestens eine der übergebenen ViewTypes als Typ hinterlegt hat.
+	 *
+	 * @param viewTypes Array der zu prüfenden ViewTypes
+	 *
+	 * @return <code>true</code> wenn mindestens ein übergebener ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
+	 */
+	public hasOneOfTypes(viewTypes: ViewType[]): boolean {
+		return (this._types !== undefined) ? !this._types.isDisjointFrom(new Set(viewTypes)) : false;
+	}
+
+	/**
+	 * Die Methode prüft ob diese RouteNode den übergebenen ViewType als Typ hinterlegt hat.
+	 *
+	 * @param viewType der zu prüfende ViewType
+	 *
+	 * @return <code>true</code> wenn der übergebene ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
+	 */
+	public hasType(viewType: ViewType): boolean {
+		return (this._types !== undefined) ? this._types.has(viewType) : false;
+	}
+
+	/**
 	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
 	 */
 	protected set types(types : Set<ViewType>) {

@@ -64,25 +64,24 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
+
 			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Daten zum ausgewählten Schuljahresabschnitt und Schüler laden
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
 			if ((idNeu !== null) && (idNeu !== id))
 				return routeSchuelerIndividualdaten.getRoute({ id: idNeu });
-			// Wenn die Route für Gruppenprozesse/Hinzufügen aufgerufen wird, wird hier sichergestellt, dass die Schüler ID nicht gesetzt ist
-			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
-				return routeSchuelerGruppenprozesse.getRoute();
-			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
-				return routeSchuelerNeu.getRoute();
 
-			if (to.types.has(ViewType.GRUPPENPROZESSE))
+			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
+			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined))
+				return this.getRouteView(to, { id: '' })
+
+			if (to.hasType(ViewType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozessView(false);
-			else if (to.types.has(ViewType.HINZUFUEGEN))
+			else if (to.hasType(ViewType.HINZUFUEGEN))
 				await this.data.gotoHinzufuegenView(false);
 			else
 				await this.data.gotoDefaultView(id);
-
 
 			if (to.name === this.name) {
 				if (this.data.schuelerListeManager.hasDaten()) {

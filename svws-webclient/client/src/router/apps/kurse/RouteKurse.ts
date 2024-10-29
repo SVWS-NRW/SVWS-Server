@@ -44,17 +44,14 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 
 			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.data.view.getRoute({ id });
-
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Kurs ID um
 			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
 			if ((idNeu !== null) && (idNeu !== id))
 				return routeKursDaten.getRoute({ id: idNeu });
 
-			// Wenn die Route für Gruppenprozesse aufgerufen wird, wird hier sichergestellt, dass die Kurs ID nicht gesetzt ist
-			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
-				return routeKurseGruppenprozesse.getRoute();
-			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
-				return routeKurseNeu.getRoute();
+			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
+			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined))
+				return this.getRouteView(to, { id: '' })
 
 			if (to.types.has(ViewType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozessView(false);

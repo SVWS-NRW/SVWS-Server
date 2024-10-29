@@ -61,11 +61,9 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 			if ((idNeu !== null) && (idNeu !== id))
 				return routeLehrerIndividualdaten.getRoute({ id: idNeu });
 
-			// Wenn die Route für Gruppenprozesse/Hinzufuegen aufgerufen wird, wird hier sichergestellt, dass die Klassen ID nicht gesetzt ist
-			if (to.types.has(ViewType.GRUPPENPROZESSE) && (id !== undefined))
-				return routeLehrerGruppenprozesse.getRoute();
-			else if (to.types.has(ViewType.HINZUFUEGEN) && (id !== undefined))
-				return routeLehrerNeu.getRoute();
+			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
+			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined))
+				return this.getRouteView(to, { id: '' })
 
 			if (to.types.has(ViewType.GRUPPENPROZESSE))
 				await this.data.gotoGruppenprozessView(false);
