@@ -459,17 +459,9 @@
 		return true;
 	}
 
-	// function resetClickedRow() {
-	// 	if (props.allowUnclick)
-	// 		emit('update:clicked', null);
-	// }
-
 	function toggleRowClick(row: DataTableRow) {
 		if (!props.clickable)
 			return;
-		// if (isRowClicked(row))
-		// 	resetClickedRow();
-		// else
 		setClickedRow(row);
 	}
 
@@ -478,6 +470,15 @@
 			return;
 		emit('update:clicked', row.source);
 	}
+
+	watch(() => props.clicked, (neu, alt) => {
+		if ((neu === undefined) || (neu === null))
+			return;
+		const index = clickedItemIndex.value = sortedRows.value.map(r => r.source).indexOf(neu);
+		const clickedElementHtml: any = itemRefs.value.get(index);
+		if ((clickedElementHtml !== undefined) && (alt !== neu))
+			clickedElementHtml.focus();
+	});
 
 	watch(() => props.items, () => nextTick(scrollToClickedElement));
 
