@@ -3,6 +3,9 @@
 		:class="{
 			'text-input--filled': (`${data}`.length > 0 && data !== null) || type === 'date',
 			'text-input--invalid': (isValid === false),
+			'text-input--statistic-hart': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HART)),
+			'text-input--statistic-muss': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.MUSS)),
+			'text-input--statistic-hinweis': ((validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)),
 			'text-input--disabled': disabled,
 			'text-input--readonly': readonly,
 			'text-input--select': isSelectInput,
@@ -43,12 +46,33 @@
 			</span>
 			<span v-if="statistics" class="cursor-pointer inline-block -my-1">
 				<svws-ui-tooltip position="right">
-					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5">
-						<span class="icon i-ri-bar-chart-2-line icon-statistics pointer-events-auto" />
-						<span class="icon i-ri-alert-fill icon-error" v-if="data === '' || data === null || data === undefined" />
+					<span class="inline-flex items-center ml-1 -mb-2 mt-0.5 pointer-events-auto">
+						<span class="icon i-ri-bar-chart-2-line icon-statistics" />
+						<template v-if="(validator === undefined) || (validator().getFehler().isEmpty()) || (validator().getFehlerart() === ValidatorFehlerart.UNGENUTZT)">
+							<span class="icon i-ri-alert-fill icon-error" v-if="(data === '') || (data === null) || (data === undefined)" />
+						</template>
+						<template v-else>
+							<span class="icon i-ri-alert-fill icon-danger" v-if="validator().getFehlerart() === ValidatorFehlerart.HART" />
+							<span class="icon i-ri-error-warning-fill icon-caution" v-if="validator().getFehlerart() === ValidatorFehlerart.MUSS" />
+							<span class="icon i-ri-question-fill icon-warning" v-if="validator().getFehlerart() === ValidatorFehlerart.HINWEIS" />
+						</template>
 					</span>
 					<template #content>
-						{{ statisticsText }}
+						<template v-if="(validator !== undefined) && (!validator().getFehler().isEmpty()) && (validator().getFehlerart() !== ValidatorFehlerart.UNGENUTZT)">
+							<div class="text-ui-statistic text-headline-sm text-center pt-1"> Relevant für die Statistik </div>
+							<div v-for="fehler in validator().getFehler()" :key="fehler.hashCode" class="pt-2 pb-2">
+								<div class="rounded pl-2" :class="{
+									'bg-ui-danger': (validator().getFehlerart() === ValidatorFehlerart.HART),
+									'bg-ui-caution': (validator().getFehlerart() === ValidatorFehlerart.MUSS),
+									'bg-ui-warning': (validator().getFehlerart() === ValidatorFehlerart.HINWEIS)}">
+									{{ fehler.getFehlerart() }}
+								</div>
+								<div class="pl-2"> {{ fehler.getFehlermeldung() }} </div>
+							</div>
+						</template>
+						<template v-else>
+							<div class="text-ui-statistic text-headline-sm text-center"> Relevant für die Statistik </div>
+						</template>
 					</template>
 				</svws-ui-tooltip>
 			</span>
@@ -61,10 +85,12 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends JavaObject, V extends Validator<T>">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount } from "vue";
+	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
 	import { genId } from "../utils";
+	import type { Validator } from "../../../core/src/asd/validate/Validator";
+	import { ValidatorFehlerart, type JavaObject } from "../../../core/src";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -80,8 +106,9 @@
 		modelValue?: string | null;
 		placeholder?: string;
 		statistics?: boolean;
-		statisticsText?: string;
 		valid?: (value: string | null) => boolean;
+		validator?: () => V;
+		doValidate?: (validator: V, value: string | null) => boolean;
 		disabled?: boolean;
 		required?: boolean;
 		readonly?: boolean;
@@ -99,8 +126,9 @@
 		modelValue: null,
 		placeholder: "",
 		statistics: false,
-		statisticsText: "Relevant für die Statistik",
-		valid: () => true,
+		valid: (value: string | null) => true,
+		validator: undefined,
+		doValidate: (validator: V, value: string | null) : boolean => validator.run(),
 		disabled: false,
 		required: false,
 		readonly: false,
@@ -119,6 +147,7 @@
 		"update:modelValue": [value: string | null];
 		"change": [value: string | null];
 		"blur": [value: string | null];
+		"methods": [ methods: { focus: () => void } | undefined ];
 	}>();
 
 	const vFocus = {
@@ -131,6 +160,10 @@
 	const data = ref<string | null>(null);
 	onBeforeMount(() => data.value = props.modelValue);
 
+	const methods = { focus: () => doFocus() };
+	onMounted(() => emit("methods", methods));
+	onBeforeUnmount(() => emit("methods", undefined));
+
 	watch(() => props.modelValue, (value: string | null) => updateData(value), { immediate: false });
 
 	const validatorEmail = (value: string | null) : boolean => ((value === null) || (value === '')) ? true : (
@@ -142,6 +175,8 @@
 		let tmpIsValid = true;
 		if (props.required && ((data.value === null) || (data.value === '')))
 			tmpIsValid = false;
+		if (props.validator !== undefined)
+			return props.doValidate(props.validator(), data.value);
 		if (tmpIsValid && (!minLenValid.value || !maxLenValid.value))
 			tmpIsValid = false;
 		if (tmpIsValid && props.type === "email")
@@ -308,6 +343,16 @@
 		/* TODO: COLORS icon */
 	}
 
+	.text-input--statistic-muss .svws-icon {
+		@apply text-ui-caution;
+		/* TODO: COLORS icon */
+	}
+
+	.text-input--statistic-hinweis .svws-icon {
+		@apply text-ui-warning;
+		/* TODO: COLORS icon */
+	}
+
 	.text-input--control {
 		@apply bg-ui border border-ui-secondary;
 		@apply rounded-md;
@@ -355,6 +400,14 @@
 
 	.text-input--invalid.text-input--filled:not(:focus-within) .text-input--control {
 		@apply border-ui-danger;
+	}
+
+	.text-input--statistic-muss.text-input--filled:not(:focus-within) .text-input--control {
+		@apply border-ui-caution;
+	}
+
+	.text-input--statistic-hinweis.text-input--filled:not(:focus-within) .text-input--control {
+		@apply border-ui-warning;
 	}
 
 	.text-input--control--multiselect-tags {
@@ -468,6 +521,16 @@
 		@apply text-ui-danger;
 	}
 
+	.text-input--statistic-muss .text-input--placeholder,
+	.text-input--statistic-muss:not(:focus-within) .text-input--control {
+		@apply text-ui-caution;
+	}
+
+	.text-input--statistic-hinweis .text-input--placeholder,
+	.text-input--statistic-hinweis:not(:focus-within) .text-input--control {
+		@apply text-ui-warning;
+	}
+
 	.text-input--control:disabled,
 	.text-input--disabled {
 		.text-input--control {
@@ -497,6 +560,14 @@
 
 	.text-input--invalid .text-input--placeholder--required:after {
 		@apply text-ui-danger opacity-100;
+	}
+
+	.text-input--statistic-muss .text-input--placeholder--required:after {
+		@apply text-ui-caution opacity-100;
+	}
+
+	.text-input--statistic-hinweis .text-input--placeholder--required:after {
+		@apply text-ui-warning opacity-100;
 	}
 
 	.text-input-component--headless .text-input--control {

@@ -9,9 +9,9 @@
 				<svws-ui-text-input placeholder="Kürzel" :disabled="!hatUpdateKompetenz" :model-value="data.kuerzel" @change="kuerzel => patch({kuerzel: kuerzel ?? undefined})" required />
 				<svws-ui-select title="Personal-Typ" :disabled="!hatUpdateKompetenz" v-model="inputPersonalTyp" :items="PersonalTyp.values()" :item-text="i => i.bezeichnung" required />
 				<svws-ui-text-input placeholder="Nachname" :disabled="!hatUpdateKompetenz" :model-value="data.nachname" @change="nachname => patch({nachname: nachname ?? undefined})"
-					required statistics :valid="validateNachname" :statistics-text="fehlerNachname" />
+					required statistics :validator="() => validatorNachname" :do-validate="validateNachname" />
 				<svws-ui-text-input placeholder="Rufname" :disabled="!hatUpdateKompetenz" :model-value="data.vorname" @change="vorname => patch({vorname: vorname ?? undefined})"
-					required statistics :valid="validateVorname" :statistics-text="fehlerVorname" />
+					required statistics :validator="() => validatorVorname" :do-validate="validateVorname" />
 				<svws-ui-spacing />
 				<svws-ui-select title="Geschlecht" :disabled="!hatUpdateKompetenz" v-model="inputGeschlecht" :items="Geschlecht.values()" :item-text="i=>i.text" required />
 				<svws-ui-text-input placeholder="Geburtsdatum" :disabled="!hatUpdateKompetenz" :model-value="data.geburtsdatum" @change="geburtsdatum => geburtsdatum && patch({geburtsdatum})" type="date" required statistics />
@@ -53,7 +53,7 @@
 
 <script setup lang="ts">
 
-	import { computed, ref } from "vue";
+	import { computed } from "vue";
 	import type { LehrerIndividualdatenProps } from "./SLehrerIndividualdatenProps";
 	import type { LehrerStammdaten, OrtKatalogEintrag, OrtsteilKatalogEintrag } from "@core";
 	import { Geschlecht, Nationalitaeten, PersonalTyp, AdressenUtils, DateUtils, JavaString, LehrerLeitungsfunktion, BenutzerKompetenz,
@@ -62,36 +62,30 @@
 
 	const props = defineProps<LehrerIndividualdatenProps>();
 
-	const fehlerNachname = ref<string>("");
 	const validatorNachname = computed(() => new ValidatorLehrerStammdatenNachname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateNachname(value: string | null): boolean {
+	function validateNachname(validator: ValidatorLehrerStammdatenNachname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().nachname;
 		props.lehrerListeManager().daten().nachname = value ?? "";
-		const res = validatorNachname.value.run();
+		const res = validator.run();
 		props.lehrerListeManager().daten().nachname = name;
-		fehlerNachname.value = validatorNachname.value.getClientFehlertext();
 		return res;
 	};
 
-	const fehlerVorname = ref<string>("");
 	const validatorVorname = computed(() => new ValidatorLehrerStammdatenVorname(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateVorname(value: string | null): boolean {
+	function validateVorname(validator: ValidatorLehrerStammdatenVorname, value: string | null): boolean {
 		const name = props.lehrerListeManager().daten().vorname;
 		props.lehrerListeManager().daten().vorname = value ?? "";
-		const res = validatorVorname.value.run();
+		const res = validator.run();
 		props.lehrerListeManager().daten().vorname = name;
-		fehlerVorname.value = validatorVorname.value.getClientFehlertext();
 		return res;
 	};
 
-	const fehlerGeburtsdatum = ref<string>("");
 	const validatorGeburtsdatum = computed(() => new ValidatorLehrerStammdatenGeburtsdatum(props.lehrerListeManager().daten(), props.validatorKontext()));
-	function validateGeburtsdatum(value: string | null): boolean {
+	function validateGeburtsdatum(validator: ValidatorLehrerStammdatenGeburtsdatum, value: string | null): boolean {
 		const datum = props.lehrerListeManager().daten().geburtsdatum;
 		props.lehrerListeManager().daten().geburtsdatum = value ?? "";
-		const res = validatorGeburtsdatum.value.run();
+		const res = validator.run();
 		props.lehrerListeManager().daten().geburtsdatum = datum;
-		fehlerGeburtsdatum.value = validatorGeburtsdatum.value.getClientFehlertext();
 		return res;
 	};
 

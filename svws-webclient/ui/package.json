@@ -39,8 +39,5 @@
 	"devDependencies": {
 		"@vue/test-utils": "^2.4.6",
 		"happy-dom": "^15.0.0"
-	},
-	"dependencies": {
-		"@svws-nrw/svws-core": "1.0.0"
 	}
 }

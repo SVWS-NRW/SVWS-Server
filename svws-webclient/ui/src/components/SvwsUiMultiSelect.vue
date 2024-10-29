@@ -30,6 +30,7 @@
 				@update:model-value="value => searchText = value ?? ''"
 				@click="toggleListBox"
 				@focus="onInputFocus"
+				@methods="methods => methodsTextField = methods"
 				@blur="onInputBlur"
 				@keyup.down.prevent
 				@keyup.up.prevent
@@ -97,6 +98,8 @@
 		(e: "update:modelValue", items: Item[]): void;
 		(e: "blur"): void;
 	}>();
+
+	const methodsTextField = shallowRef<{ focus: () => void } | undefined>(undefined);
 
 	const refList = ref<ComponentExposed<typeof SvwsUiDropdownList>>();
 
@@ -219,8 +222,7 @@
 	});
 
 	function doFocus() {
-		const el: typeof TextInput = inputEl.value!;
-		void nextTick(() => el?.input.focus());
+		void nextTick(() => methodsTextField.value?.focus());
 	}
 
 	function toggleListBox() {
@@ -236,8 +238,7 @@
 			refList.value.activeItemIndex = filteredList.value.findIndex(item => item === selectedItem.value);
 			void nextTick(() => scrollToActiveItem());
 		}
-		const el: typeof TextInput = inputEl.value!;
-		void nextTick(() => el?.input.focus());
+		void nextTick(() => methodsTextField.value?.focus());
 	}
 
 	function closeListbox() {

@@ -1,17 +1,22 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"rootDir": "./src",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": { "~/*": ["src/*"] },
-		"types": [ "vite/client" ]
+		"paths": {
+			"~/*": ["src/*"],
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
+		"types": [ "vite/client" ],
+		"resolveJsonModule": true,
 	},
 	"include": [
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"components.d.ts",
-		"auto-imports.d.ts"
+		"auto-imports.d.ts",
+		"../core/src/*.ts",
+		"../core/src/**/*.ts",
 	],
 	"exclude": ["**/*.story.vue", "**/*.test.ts", "src/histoire.setup.ts"]
 }

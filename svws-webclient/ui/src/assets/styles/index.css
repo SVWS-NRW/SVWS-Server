@@ -88,6 +88,18 @@ hr {
 	-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 	filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
 }
+.icon-danger {
+	-webkit-filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+	filter: invert(22%) sepia(96%) saturate(2323%) hue-rotate(331deg) brightness(88%) contrast(103%);
+}
+.icon-warning {
+	-webkit-filter: brightness(0) saturate(100%) invert(75%) sepia(17%) saturate(7311%) hue-rotate(11deg) brightness(97%) contrast(94%);
+	filter: brightness(0) saturate(100%) invert(75%) sepia(17%) saturate(7311%) hue-rotate(11deg) brightness(97%) contrast(94%);
+}
+.icon-caution {
+	-webkit-filter: brightness(0) saturate(100%) invert(51%) sepia(100%) saturate(2298%) hue-rotate(355deg) brightness(101%) contrast(101%);
+	filter: brightness(0) saturate(100%) invert(51%) sepia(100%) saturate(2298%) hue-rotate(355deg) brightness(101%) contrast(101%);
+}
 .icon-success {
 	-webkit-filter: invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);
 	filter: invert(86%) sepia(40%) saturate(5221%) hue-rotate(37deg) brightness(101%) contrast(83%);

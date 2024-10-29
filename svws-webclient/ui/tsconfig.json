@@ -1,13 +1,9 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
-		"rootDir": ".",
 		"outDir": "./dist",
 		"baseUrl": ".",
-		"paths": {},
-		"types": [
-			"vite/client"
-		]
+		"types": [ "vite/client" ]
 	},
 	"include": [
 		"env.d.ts",
@@ -15,6 +11,8 @@
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"components.d.ts",
+		"../core/src/*.ts",
+		"../core/src/**/*.ts",
 	],
 	"exclude": [
 		"tailwind.config.js",
