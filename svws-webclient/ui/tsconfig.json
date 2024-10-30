@@ -1,6 +1,11 @@
 {
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
+		"resolveJsonModule": true,
+		"paths": {
+			"~/*": ["src/*"],
+			"@json/*": ["../../svws-asd/src/main/resources/de/svws_nrw/asd/types/*"],
+		},
 		"outDir": "./dist",
 		"baseUrl": ".",
 		"types": [ "vite/client" ]
