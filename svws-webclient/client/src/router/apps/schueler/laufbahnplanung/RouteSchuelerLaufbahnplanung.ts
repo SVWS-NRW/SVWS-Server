@@ -41,7 +41,7 @@ export class RouteSchuelerLaufbahnplanung extends RouteNode<RouteDataSchuelerLau
 				&& (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_ALLGEMEIN)
 					|| (api.benutzerHatKompetenz(BenutzerKompetenz.OBERSTUFE_LAUFBAHNPLANUNG_FUNKTIONSBEZOGEN) && api.benutzerKompetenzenAbiturjahrgaenge.has(abiturjahr))))
 				return false;
-			return routeSchueler.getRoute({ id });
+			return routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

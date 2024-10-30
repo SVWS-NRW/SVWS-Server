@@ -29,7 +29,7 @@ export class RouteSchuelerVermerke extends RouteNode<RouteDataSchuelerVermerke, 
 			const { id } = (to_params !== undefined) ? RouteNode.getIntParams(to_params, ["id"]) : {id: undefined};
 			if (id === undefined)
 				throw new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt.");
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute(id);
+			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id });
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
 		}

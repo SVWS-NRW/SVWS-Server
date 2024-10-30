@@ -22,7 +22,7 @@ export class RouteSchuelerKAoA extends RouteNode<RouteDataSchuelerKAoA, RouteSch
 		this.isHidden = (params?: RouteParams) => {
 			if ((params === undefined) || (params.id instanceof Array))
 				return routeError.getErrorRoute(new DeveloperNotificationException("Fehler: Die Parameter der Route sind nicht gültig gesetzt."));
-			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRoute({ id: parseInt(params.id) });
+			return routeSchueler.data.schuelerListeManager.hasDaten() ? false : routeSchueler.getRouteDefaultChild({ id: parseInt(params.id) });
 		};
 	}
 

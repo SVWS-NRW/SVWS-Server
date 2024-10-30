@@ -30,7 +30,7 @@ export class RouteSchuelerSprachen extends RouteNode<RouteDataSchuelerSprachen, 
 			try {
 				await this.data.auswahlSchueler(routeSchueler.data.schuelerListeManager.liste.get(id));
 			} catch(error) {
-				return routeSchueler.getRoute(id);
+				return routeSchueler.getRouteDefaultChild({ id });
 			}
 		} catch (e) {
 			return routeError.getErrorRoute(e as DeveloperNotificationException);
