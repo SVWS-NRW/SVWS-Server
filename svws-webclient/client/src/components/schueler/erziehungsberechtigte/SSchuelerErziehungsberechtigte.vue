@@ -1,7 +1,7 @@
 <template>
 	<div class="page--content">
 		<svws-ui-content-card title="Erziehungsberechtigte" class="col-span-full">
-			<svws-ui-table :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value">
+			<svws-ui-table :items="data()" :columns :no-data="data().size() === 0" clickable :clicked="erzieher" @update:clicked="value => erzieher = value" focus-first-element>
 				<template #header(anschreiben)>
 					<svws-ui-tooltip>
 						<span class="icon i-ri-mail-send-line" />

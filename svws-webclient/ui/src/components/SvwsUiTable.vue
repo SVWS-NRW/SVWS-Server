@@ -242,6 +242,7 @@
 			scroll?: boolean;
 			allowArrowKeySelection?: boolean;
 			unselectable?: Set<DataTableItem>;
+			focusFirstElement?: boolean;
 		}>(),
 		{
 			columns: () => [],
@@ -271,6 +272,7 @@
 			scroll: false,
 			allowArrowKeySelection: false,
 			unselectable: () => new Set<DataTableItem>(),
+			focusFirstElement: false,
 		}
 	);
 
@@ -534,7 +536,12 @@
 		return false;
 	});
 
-	onMounted(() => itemRefs.value.get(clickedItemIndex.value)?.focus());
+	onMounted(() => {
+		if (props.focusFirstElement)
+			itemRefs.value.get(0)?.focus();
+		else
+			itemRefs.value.get(clickedItemIndex.value)?.focus();
+	});
 
 </script>
 
@@ -846,6 +853,10 @@
 				@apply py-2;
 			}
 
+		}
+
+		&:focus {
+			@apply bg-ui-hover;
 		}
 	}
 
