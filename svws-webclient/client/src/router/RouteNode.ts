@@ -297,6 +297,13 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	}
 
 	/**
+	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
+	 */
+	protected set types(types : Set<ViewType>) {
+		this._types = types;
+	}
+
+	/**
 	 * Die Methode prüft ob diese RouteNode mindestens eine der übergebenen ViewTypes als Typ hinterlegt hat.
 	 *
 	 * @param viewTypes Array der zu prüfenden ViewTypes
@@ -304,7 +311,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @return <code>true</code> wenn mindestens ein übergebener ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
 	 */
 	public hasOneOfTypes(viewTypes: ViewType[]): boolean {
-		return (this._types !== undefined) ? !this._types.isDisjointFrom(new Set(viewTypes)) : false;
+		return !this._types.isDisjointFrom(new Set(viewTypes));
 	}
 
 	/**
@@ -315,14 +322,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @return <code>true</code> wenn der übergebene ViewType als Typ für diese RouteNode hinterlegt ist, ansonsten <code>false</code>.
 	 */
 	public hasType(viewType: ViewType): boolean {
-		return (this._types !== undefined) ? this._types.has(viewType) : false;
-	}
-
-	/**
-	 * Setzt die Routen-Typen, welche der Route zugeordnet sind.
-	 */
-	protected set types(types : Set<ViewType>) {
-		this._types = types;
+		return this._types.has(viewType);
 	}
 
 	/**
@@ -868,7 +868,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected static getIntParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], number | undefined> {
 		const res: Record<string, number | undefined> = {};
 		for (const name of names) {
-			const value = params[name];
+			const value = params[name] as string | string [] | undefined;
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
 			else if ((value === undefined) || (value.toString().trim().length === 0))
@@ -890,7 +890,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	protected static getStringParams<const K extends ReadonlyArray<string>>(params: RouteParams, names: K): Record<K[number], string | undefined> {
 		const res: Record<string, string | undefined> = {};
 		for (const name of names) {
-			const value = params[name];
+			const value = params[name] as string | string [] | undefined;
 			if (value instanceof Array)
 				throw new DeveloperNotificationException(`Fehler: Der Parameter ${name} der Route darf kein Array sein`);
 			else if ((value === undefined) || (value.toString().trim().length === 0))
