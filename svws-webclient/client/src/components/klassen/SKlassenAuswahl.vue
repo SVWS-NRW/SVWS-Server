@@ -65,11 +65,12 @@
 	];
 
 	const klassengroesse = (schueler: List<SchuelerListeEintrag>) => computed(() => {
-		let counter = 0;
-		for (const s of schueler)
-			if ((s.status === 2)|| (s.status === 4)) // aktiv oder extern
-				counter++;
-		return counter;
+		return schueler.size();
+		// let counter = 0;
+		// for (const s of schueler)
+		// 	if ((s.status === 2)|| (s.status === 4)) // aktiv oder extern
+		// 		counter++;
+		// return counter;
 	})
 
 	function text(klasse: LehrerListeEintrag | JahrgangsDaten): string {
