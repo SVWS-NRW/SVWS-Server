@@ -865,16 +865,22 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 		const uKursSchienen : GostBlockungsergebnisKursSchienenZuordnungUpdate = out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
+		const setKursSchueler : JavaSet<string> = new HashSet<string>();
 		const kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const dynSchueler of this._schuelerArr)
 			for (const kurs of dynSchueler.gibKurswahlen())
-				if (kurs !== null)
-					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.gibDatenbankID(), dynSchueler.gibDatenbankID()));
+				if (kurs !== null) {
+					const idKurs : number = kurs.gibDatenbankID();
+					const idSchueler : number = dynSchueler.gibDatenbankID();
+					if (setKursSchueler.add(idKurs + ";" + idSchueler))
+						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				}
 		for (const gRegel of pDataManager.regelGetListe())
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const idSchueler : number = gRegel.parameter.get(0).valueOf();
 				const idKurs : number = gRegel.parameter.get(1).valueOf();
-				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				if (setKursSchueler.add(idKurs + ";" + idSchueler))
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
 		const uKursSchueler : GostBlockungsergebnisKursSchuelerZuordnungUpdate = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);

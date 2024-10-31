@@ -1047,9 +1047,7 @@ public class KursblockungDynDaten {
 		final @NotNull GostBlockungsergebnisManager out = new GostBlockungsergebnisManager(pDataManager, pErgebnisID);
 
 		// Erzeuge die Kurs-Schienen-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen =
-				new HashSet<GostBlockungsergebnisKursSchienenZuordnung>();
-
+		final @NotNull Set<GostBlockungsergebnisKursSchienenZuordnung> kursSchienenZuordnungen = new HashSet<>();
 		for (final @NotNull KursblockungDynKurs dynKurs : _kursArr)
 			for (final int schienenNr : dynKurs.gibSchienenLage()) {
 				final long idKurs = dynKurs.gibDatenbankID();
@@ -1057,27 +1055,35 @@ public class KursblockungDynDaten {
 				kursSchienenZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchienenZuordnung(idKurs, idSchiene));
 			}
 
+		// UPDATE - Kurs - Schiene
 		final @NotNull GostBlockungsergebnisKursSchienenZuordnungUpdate uKursSchienen =
 				out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
 
 		// Erzeuge die Kurs-Schüler-Zuordnungen. Verwende Update-Objekte, da nur eine Regelvalidierung am Ende erfolgt.
-		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen =
-				new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
-
+		final @NotNull Set<String> setKursSchueler = new HashSet<>();
+		final @NotNull Set<GostBlockungsergebnisKursSchuelerZuordnung> kursSchuelerZuordnungen = new HashSet<>();
 		for (final @NotNull KursblockungDynSchueler dynSchueler : _schuelerArr)
 			for (final KursblockungDynKurs kurs : dynSchueler.gibKurswahlen())
-				if (kurs != null)
-					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(kurs.gibDatenbankID(), dynSchueler.gibDatenbankID()));
+				if (kurs != null) {
+					final long idKurs = kurs.gibDatenbankID();
+					final long idSchueler = dynSchueler.gibDatenbankID();
+					// Duplikat-Erkennung: Kann hier aber eigentlich nicht vorkommen!
+					if (setKursSchueler.add(idKurs + ";" + idSchueler))
+						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				}
 
 		// Erzeuge durch Regeln forcierte Schüler-Kurs-Zuordnungen.
 		for (final @NotNull GostBlockungRegel gRegel : pDataManager.regelGetListe())
 			if (gRegel.typ == GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				final long idSchueler = gRegel.parameter.get(0);
 				final long idKurs = gRegel.parameter.get(1);
-				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler)); // Kann später zu Kollisionen führen!
+				// Duplikat-Erkennung: Kann hier durchaus vorkommen!
+				if (setKursSchueler.add(idKurs + ";" + idSchueler))
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler)); // Kann später zu Kollisionen führen!
 			}
 
+		// UPDATE - Kurs - Schüler
 		final @NotNull GostBlockungsergebnisKursSchuelerZuordnungUpdate uKursSchueler =
 				out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);
