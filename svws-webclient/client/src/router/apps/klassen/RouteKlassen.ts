@@ -107,7 +107,7 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 		return {
 			klassenListeManager: () => this.data.klassenListeManager,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
-			activeRouteType: this.data.activeViewType,
+			activeViewType: this.data.activeViewType,
 		};
 	}
 

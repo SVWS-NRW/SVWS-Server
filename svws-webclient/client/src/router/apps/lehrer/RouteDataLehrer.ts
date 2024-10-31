@@ -77,8 +77,8 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 	}
 
 
-	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number): Promise<number | null> {
-		if (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt)
+	public async setSchuljahresabschnitt(idSchuljahresabschnitt: number, isEntering: boolean): Promise<number | null> {
+		if (!isEntering && (idSchuljahresabschnitt === this._state.value.idSchuljahresabschnitt))
 			return null;
 		return await this.ladeSchuljahresabschnitt(idSchuljahresabschnitt);
 	}

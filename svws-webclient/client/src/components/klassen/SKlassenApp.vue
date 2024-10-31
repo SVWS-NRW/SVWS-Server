@@ -1,9 +1,9 @@
 <template>
-	<div v-if="(klassenListeManager().hasDaten() && (activeRouteType === ViewType.DEFAULT)) || (activeRouteType !== ViewType.DEFAULT)" class="page--flex">
+	<div v-if="(klassenListeManager().hasDaten() && (activeViewType === ViewType.DEFAULT)) || (activeViewType !== ViewType.DEFAULT)" class="page--flex">
 		<header class="svws-ui-header">
 			<div class="svws-ui-header--title">
 				<div class="svws-headline-wrapper">
-					<template v-if="activeRouteType === ViewType.DEFAULT">
+					<template v-if="activeViewType === ViewType.DEFAULT">
 						<h2 class="svws-headline">
 							<span>
 								{{ klassenListeManager().daten().kuerzel ? 'Klasse ' + klassenListeManager().daten().kuerzel : '—' }}
@@ -16,10 +16,10 @@
 							{{ lehrerkuerzel }}
 						</span>
 					</template>
-					<template v-else-if="activeRouteType === ViewType.HINZUFUEGEN">
+					<template v-else-if="activeViewType === ViewType.HINZUFUEGEN">
 						<h2 class="svws-headline">Anlegen einer neuen Klasse...</h2>
 					</template>
-					<template v-else-if="activeRouteType === ViewType.GRUPPENPROZESSE">
+					<template v-else-if="activeViewType === ViewType.GRUPPENPROZESSE">
 						<h2 class="svws-headline"> Gruppenprozesse </h2>
 						<span class="svws-subline">{{ klassenSubline }}</span>
 					</template>
@@ -48,7 +48,7 @@
 	const klassenSubline = computed(() => {
 		const auswahlKlassenList = props.klassenListeManager().liste.auswahlSorted();
 		if (auswahlKlassenList.size() > 5)
-			return `${auswahlKlassenList.size()} Klasse${auswahlKlassenList.size() === 1 ? '':'n'} ausgewählt`;
+			return `${auswahlKlassenList.size()} Klassen ausgewählt`;
 		return [...auswahlKlassenList].map(k => k.kuerzel).join(', ');
 	})
 

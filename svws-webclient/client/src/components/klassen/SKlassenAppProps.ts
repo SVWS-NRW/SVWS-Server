@@ -4,5 +4,5 @@ import type { TabManager, ViewType } from "@ui";
 export interface KlassenAppProps {
 	klassenListeManager: () => KlassenListeManager;
 	tabManager: () => TabManager;
-	activeRouteType: ViewType;
+	activeViewType: ViewType;
 }

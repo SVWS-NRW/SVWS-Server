@@ -10,13 +10,16 @@ import { routeApp } from "~/router/apps/RouteApp";
 import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleFachDaten } from "~/router/apps/schule/faecher/RouteSchuleFachDaten";
 
-import type { TabData } from "@ui";
+import { ViewType, type TabData } from "@ui";
 import type { FaecherAppProps } from "~/components/schule/faecher/SFaecherAppProps";
 import type { FaecherAuswahlProps } from "~/components/schule/faecher/SFaecherAuswahlProps";
 import { RouteDataSchuleFaecher } from "./RouteDataSchuleFaecher";
 import { routeError } from "~/router/error/RouteError";
 import { routeFachStundenplan } from "./stundenplan/RouteFachStundenplan";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
+import { routeSchuleFachGruppenprozesse } from "./RouteSchuleFachGruppenprozesse";
+import { routeSchuleFachNeu } from "./RouteSchuleFachNeu";
+import { api } from "~/router/Api";
 
 const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SFaecherAuswahl = () => import("~/components/schule/faecher/SFaecherAuswahl.vue")
@@ -35,43 +38,40 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 		super.children = [
 			routeSchuleFachDaten,
 			routeFachStundenplan,
+			routeSchuleFachGruppenprozesse,
+			routeSchuleFachNeu,
 		];
 		super.defaultChild = routeSchuleFachDaten;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
 		try {
-			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["id", "idSchuljahresabschnitt"]);
+			const { idSchuljahresabschnitt, id } = RouteNode.getIntParams(to_params, ["idSchuljahresabschnitt", "id"]);
 			if (idSchuljahresabschnitt === undefined)
 				throw new DeveloperNotificationException("Beim Aufruf der Route ist kein gültiger Schuljahresabschnitt gesetzt.");
-			if (this.data.idSchuljahresabschnitt !== idSchuljahresabschnitt) {
-				const neueID = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
-				if (id !== undefined) {
-					if (neueID === null)
-						return this.getRouteDefaultChild({ id });
-					const params = { ... to_params};
-					params.id = String(neueID);
-					const locationRaw : RouteLocationRaw = {};
-					locationRaw.name = to.name;
-					locationRaw.params = params;
-					return locationRaw;
-				}
-			}
-			const eintrag = (id !== undefined) ? this.data.fachListeManager.liste.get(id) : null;
-			await this.data.setEintrag(eintrag);
-			if (!this.data.fachListeManager.hasDaten()) {
-				if (id === undefined) {
-					const listFiltered = this.data.fachListeManager.filtered();
-					if (listFiltered.isEmpty())
-						return;
-					return this.getRouteDefaultChild({ id: this.data.fachListeManager.filtered().get(0).id });
-				}
-				return this.getRoute();
-			}
+
+			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
+				return this.data.view.getRoute({ id: id ?? '' });
+			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
+			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
+			if ((idNeu !== null) && (idNeu !== id))
+				return routeSchuleFachDaten.getRoute({ id: idNeu });
+
+			// Wenn einer der folgenden Routen Types aufgerufen wird, wird hier ein Redirect initiiert, sobald eine ID in der URL enthalten ist.
+			if (to.hasOneOfTypes([ViewType.GRUPPENPROZESSE, ViewType.HINZUFUEGEN]) && (id !== undefined))
+				return this.getRouteView(to, { id: '' })
+
+			if (to.types.has(ViewType.GRUPPENPROZESSE))
+				await this.data.gotoGruppenprozessView(false);
+			else if (to.types.has(ViewType.HINZUFUEGEN))
+				await this.data.gotoHinzufuegenView(false);
+			else
+				await this.data.gotoDefaultView(id);
+
 			if (to.name === this.name) {
-				if ((from !== undefined) && (/(\.|^)stundenplan/).test(from.name))
-					return this.getRouteView(routeFachStundenplan);
-				return this.getRouteSelectedChild();
+				if (this.data.fachListeManager.hasDaten())
+					return this.getRouteDefaultChild({ id: this.data.fachListeManager.daten().id });
+				return;
 			}
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
@@ -89,18 +89,23 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 
 	public getAuswahlProps(to: RouteLocationNormalized): FaecherAuswahlProps {
 		return {
+			mode: api.mode,
 			fachListeManager: () => this.data.fachListeManager,
 			schuljahresabschnittsauswahl: () => routeApp.data.getSchuljahresabschnittsauswahl(false),
-			gotoEintrag: this.data.gotoEintrag,
 			setFilter: this.data.setFilter,
 			setzeDefaultSortierungSekII: this.data.setzeDefaultSortierungSekII,
+			gotoDefaultView: this.data.gotoDefaultView,
+			gotoGruppenprozessView: this.data.gotoGruppenprozessView,
+			gotoHinzufuegenView: this.data.gotoHinzufuegenView,
+			activeViewType: this.data.activeViewType,
 		};
 	}
 
 	public getProps(to: RouteLocationNormalized): FaecherAppProps {
 		return {
 			fachListeManager: () => this.data.fachListeManager,
-			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab),
+			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
+			activeViewType: this.data.activeViewType,
 		};
 	}
 

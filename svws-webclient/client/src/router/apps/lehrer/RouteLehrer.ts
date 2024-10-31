@@ -57,7 +57,7 @@ export class RouteLehrer extends RouteNode<RouteDataLehrer, RouteApp> {
 			if (isEntering && (to.types.has(ViewType.GRUPPENPROZESSE) || to.types.has(ViewType.HINZUFUEGEN)))
 				return this.getRouteView(this.data.view, { id: id ?? '' });
 			// Lade neuen Schuljahresabschnitt, falls er geändert wurde und schreibe ggf. die Route auf die neue Klassen ID um
-			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt);
+			const idNeu = await this.data.setSchuljahresabschnitt(idSchuljahresabschnitt, isEntering);
 			if ((idNeu !== null) && (idNeu !== id))
 				return routeLehrerIndividualdaten.getRoute({ id: idNeu });
 
