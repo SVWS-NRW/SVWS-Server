@@ -114,17 +114,17 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 					}
 				}
 			}
+			// Aktualisiere das Abiturjahr
+			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr);
 			// Aktualisiere das Halbjahr
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
-			if (halbjahr === null) {
+			if (abiturjahrwechsel || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
 				if (hj === null) // In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRoute({ halbjahr: hj.id });
 			}
-			const hjChanged = !this.data.hatAbiturjahr || (this.data.abiturjahr !== abiturjahr);
-			await this.data.setAbiturjahr(abiturjahr);
-			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, hjChanged);
+			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, abiturjahrwechsel);
 			if (!to.name.startsWith(this.data.view.name))
 				for (const child of this.children)
 					if (to.name.startsWith(child.name))

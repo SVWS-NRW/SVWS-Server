@@ -85,12 +85,13 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.abiturjahr;
 	}
 
-	public async setAbiturjahr(abiturjahr: number | undefined) {
-		if (abiturjahr === this._state.value.abiturjahr)
-			return;
+	public async setAbiturjahr(abiturjahr: number | undefined) : Promise<boolean> {
+		const abiturjahrwechsel = (abiturjahr !== this._state.value.abiturjahr);
+		if (!abiturjahrwechsel)
+			return false;
 		if (abiturjahr === undefined) {
 			this._state.value = this._defaultState;
-			return;
+			return true;
 		}
 		try {
 			api.status.start();
@@ -116,6 +117,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		} finally {
 			api.status.stop();
 		}
+		return abiturjahrwechsel;
 	}
 
 	public get hatJahrgangsdaten(): boolean {
@@ -135,7 +137,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 	public async setHalbjahr(halbjahr: GostHalbjahr, hjChanged: boolean): Promise<boolean> {
 		if (this._state.value.abiturjahr === undefined)
 			throw new DeveloperNotificationException("Es kann kein Halbjahr ausgewählt werden, wenn zuvor kein Abiturjahrgang ausgewählt wurde.");
-		if (!hjChanged && halbjahr === this._state.value.halbjahr)
+		if (!hjChanged && (halbjahr === this._state.value.halbjahr))
 			return false;
 		try {
 			api.status.start();
