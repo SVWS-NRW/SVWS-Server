@@ -66,12 +66,8 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if ((abiturjahr === undefined) || (abiturjahr === -1))
 				return this.getRoute({ abiturjahr: -1 });
-			if (halbjahr === null) {
-				let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
-				if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.
-					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
-				return this.getRouteHalbjahr(abiturjahr, hj.id);
-			}
+			if (halbjahr === null)
+				return this.getRouteHalbjahr(abiturjahr, 0);
 			if ((idBlockung === undefined) && (idErgebnis !== undefined))
 				return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 			return true;
@@ -87,11 +83,11 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 			// Prüfe den Abiturjahrgang und setze diesen ggf.
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
-			await this.data.setAbiturjahr(abiturjahr, isEntering);
+			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isEntering);
 			// Prüfe das Halbjahr und setzte dieses ggf.
-			if (halbjahr === null) {
-				let hj = GostHalbjahr.getPlanungshalbjahrFromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
-				if (hj === null) // In zwei Fällen existiert kein Planungshalbjahr, z.B. weil der Abiturjahrgang (fast) abgeschlossen ist oder noch in der Sek I ist.
+			if ((abiturjahrwechsel) || (halbjahr === null)) {
+				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
+				if (hj === null) // In zwei Fällen existiert kein Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
 				return this.getRouteHalbjahr(abiturjahr, hj.id);
 			}
@@ -100,7 +96,7 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 				return this.getRouteHalbjahr(abiturjahr, halbjahr.id);
 			// Prüfe die Blockung und setzte diese ggf.
 			if (idBlockung === undefined) {
-			// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. die aktive Blockung oder das erste Element aus
+				// ... wurde die ID der Blockung auf undefined gesetzt, so prüfe, ob die Blockungsliste leer ist und wähle ggf. die aktive Blockung oder das erste Element aus
 				if (this.data.mapBlockungen.size > 0) {
 					let blockungsEintrag : GostBlockungListeneintrag | undefined = undefined;
 					for (const e of this.data.mapBlockungen.values()) {

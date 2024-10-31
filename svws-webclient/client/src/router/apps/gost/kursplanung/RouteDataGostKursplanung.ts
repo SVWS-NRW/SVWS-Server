@@ -80,12 +80,13 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 		return this._state.value.abiturjahr;
 	}
 
-	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) => {
-		if ((abiturjahr === this._state.value.abiturjahr) && (!force))
-			return;
+	public setAbiturjahr = async (abiturjahr: number | undefined, force: boolean) : Promise<boolean> => {
+		const abiturjahrwechsel = (abiturjahr !== this._state.value.abiturjahr);
+		if (!abiturjahrwechsel && (!force))
+			return false;
 		if (abiturjahr === undefined) {
 			this.setDefaultState();
-			return;
+			return true;
 		}
 		api.status.start();
 		// Lade die Daten für die Kursplanung, die nur vom Abiturjahrgang abhängen
@@ -113,6 +114,7 @@ export class RouteDataGostKursplanung extends RouteData<RouteStateGostKursplanun
 			halbjahrInitialisiert: false,
 			mapFachwahlStatistik,
 		});
+		return abiturjahrwechsel;
 	}
 
 	public get jahrgangsdaten(): GostJahrgangsdaten {
