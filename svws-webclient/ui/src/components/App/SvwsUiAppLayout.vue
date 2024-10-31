@@ -40,6 +40,7 @@
 		</div>
 		<main class="app--content">
 			<div class="app--content-container relative" :class="{ 'fullwidth-content' : fullwidthContent }">
+				<svws-ui-header v-if="false" />
 				<slot name="main" />
 			</div>
 			<aside class="app-layout--aside" v-if="$slots.aside">
@@ -53,7 +54,6 @@
 
 <script setup lang='ts'>
 
-	import SvwsUiHeader from "./SvwsUiHeader.vue"; // Stelle sicher, dass das CSS geladen wird und im Rest der Applikation genutzt werden kann
 	import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 
 	const props = withDefaults(defineProps<{
