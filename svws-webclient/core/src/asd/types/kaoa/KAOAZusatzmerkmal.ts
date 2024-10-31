@@ -10,7 +10,6 @@ import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
 import type { JavaMap } from '../../../java/util/JavaMap';
 import { KAOAMerkmal } from '../../../asd/types/kaoa/KAOAMerkmal';
-import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 
 export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements CoreType<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> {
 
@@ -647,11 +646,14 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	 */
 	public static getEintraegeBySchuljahrAndIdMerkmal(schuljahr : number, idMerkmal : number) : List<KAOAZusatzmerkmalKatalogEintrag> {
 		let mapEintraegeByMerkmal : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> | null = KAOAZusatzmerkmal._mapEintraegeBySchuljahrAndMerkmal.get(schuljahr);
-		if (mapEintraegeByMerkmal !== null)
-			return KAOAZusatzmerkmal.getZusatzmerkmalHistorienEintraegeFromCache(mapEintraegeByMerkmal, idMerkmal);
+		if (mapEintraegeByMerkmal !== null) {
+			const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = mapEintraegeByMerkmal.get(idMerkmal);
+			return (result !== null) ? result : new ArrayList();
+		}
 		mapEintraegeByMerkmal = KAOAZusatzmerkmal.cacheEintraegeBySchuljahrAndIdMerkmal(schuljahr);
 		KAOAZusatzmerkmal._mapEintraegeBySchuljahrAndMerkmal.put(schuljahr, mapEintraegeByMerkmal);
-		return KAOAZusatzmerkmal.getZusatzmerkmalHistorienEintraegeFromCache(mapEintraegeByMerkmal, idMerkmal);
+		const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = mapEintraegeByMerkmal.get(idMerkmal);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**
@@ -662,26 +664,14 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	 */
 	private static cacheEintraegeBySchuljahrAndIdMerkmal(schuljahr : number) : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> {
 		const cache : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> | null = new HashMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>();
-		const merkmale : List<KAOAMerkmal> | null = KAOAMerkmal.data().getWerte();
-		const zusatzmerkmale : List<KAOAZusatzmerkmal> | null = KAOAZusatzmerkmal.data().getWerte();
-		for (const merkmal of merkmale) {
-			const merkmalHistorienEintrag : KAOAMerkmalKatalogEintrag | null = merkmal.daten(schuljahr);
-			if (merkmalHistorienEintrag === null)
-				continue;
+		for (const merkmalHistorienEintrag of KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
-			for (const zusatzmerkmal of zusatzmerkmale) {
-				const zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(schuljahr);
-				if ((zusatzmerkmalHistorienEintrag !== null) && (JavaObject.equalsTranspiler(zusatzmerkmalHistorienEintrag.merkmal, (merkmal.name()))))
+			for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr))
+				if (JavaObject.equalsTranspiler(zusatzmerkmalHistorienEintrag.merkmal, (KAOAMerkmal.data().getWertByID(merkmalHistorienEintrag.id).name())))
 					result.add(zusatzmerkmalHistorienEintrag);
-			}
 			cache.put(merkmalHistorienEintrag.id, result);
 		}
 		return cache;
-	}
-
-	private static getZusatzmerkmalHistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>, idMerkmal : number) : List<KAOAZusatzmerkmalKatalogEintrag> {
-		const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = cache.get(idMerkmal);
-		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**

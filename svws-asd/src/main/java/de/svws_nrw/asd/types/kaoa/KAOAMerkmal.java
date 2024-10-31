@@ -161,13 +161,16 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 		// Bestimme die Schuljahres-spezifische Map aus dem Cache. Ist diese nicht vorhanden, so muss der Cache später neu aufgebaut werden.
 		Map<Long, List<KAOAMerkmalKatalogEintrag>> mapEintraegeByKategorie = _mapEintraegeBySchuljahrAndKategorie.get(schuljahr);
 		// Die Map ist vorhanden, weshalb der Zugriff aus dem Cache möglich ist.
-		if (mapEintraegeByKategorie != null)
-			return getMerkmalHistorienEintraegeFromCache(mapEintraegeByKategorie, idKategorie);
+		if (mapEintraegeByKategorie != null) {
+			final List<KAOAMerkmalKatalogEintrag> result = mapEintraegeByKategorie.get(idKategorie);
+			return (result != null) ? result : new ArrayList<>();
+		}
 		// Falls der Cache nicht vorhanden ist, wird er erstellt.
 		mapEintraegeByKategorie = cacheEintraegeBySchuljahrAndIdKategorie(schuljahr);
 		_mapEintraegeBySchuljahrAndKategorie.put(schuljahr, mapEintraegeByKategorie);
 		// Rückgabe des Ergebnisses nach dem Aufbau des Caches.
-		return getMerkmalHistorienEintraegeFromCache(mapEintraegeByKategorie, idKategorie);
+		final List<KAOAMerkmalKatalogEintrag> result = mapEintraegeByKategorie.get(idKategorie);
+		return (result != null) ? result : new ArrayList<>();
 	}
 
 	/**
@@ -178,29 +181,17 @@ public enum KAOAMerkmal implements CoreType<KAOAMerkmalKatalogEintrag, KAOAMerkm
 	 */
 	private static @NotNull Map<Long, List<KAOAMerkmalKatalogEintrag>> cacheEintraegeBySchuljahrAndIdKategorie(final int schuljahr) {
 		final Map<Long, List<KAOAMerkmalKatalogEintrag>> cache = new HashMap<>();
-		final List<KAOAKategorie> kategorien = KAOAKategorie.data().getWerte();
-		final List<KAOAMerkmal> merkmale = KAOAMerkmal.data().getWerte();
 
 		// Füge die Einträge zur Cache-Map hinzu, sofern sie im gegebenen Schuljahr gültig sind.
-		for (final KAOAKategorie kategorie : kategorien) {
-			final KAOAKategorieKatalogEintrag kategorieHistorienEintrag = kategorie.daten(schuljahr);
-			if (kategorieHistorienEintrag == null)
-				continue;
+		for (final KAOAKategorieKatalogEintrag kategorieHistorienEintrag : KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
 			// Iteriere durch die Merkmale und füge die zulässigen zur Ergebnisliste hinzu.
 			final List<KAOAMerkmalKatalogEintrag> result = new ArrayList<>();
-			for (final KAOAMerkmal merkmal : merkmale) {
-				final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag = merkmal.daten(schuljahr);
-				if ((merkmalHistorienEintrag != null) && (merkmalHistorienEintrag.kategorie.equals(kategorie.name())))
+			for (final KAOAMerkmalKatalogEintrag merkmalHistorienEintrag : KAOAMerkmal.data().getEintraegeBySchuljahr(schuljahr))
+				if (merkmalHistorienEintrag.kategorie.equals(KAOAKategorie.data().getWertByID(kategorieHistorienEintrag.id).name()))
 					result.add(merkmalHistorienEintrag);
-			}
 			cache.put(kategorieHistorienEintrag.id, result);
 		}
 		return cache;
 	}
 
-	private static @NotNull List<KAOAMerkmalKatalogEintrag> getMerkmalHistorienEintraegeFromCache(final @NotNull Map<Long, List<KAOAMerkmalKatalogEintrag>> cache,
-			final long idKategorie) {
-		final List<KAOAMerkmalKatalogEintrag> result = cache.get(idKategorie);
-		return (result != null) ? result : new ArrayList<>();
-	}
 }

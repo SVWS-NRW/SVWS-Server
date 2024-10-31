@@ -1,7 +1,6 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
-import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
 import type { List } from '../../../java/util/List';
@@ -246,11 +245,14 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 	 */
 	public static getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number, idZusatzmerkmal : number) : List<KAOAAnschlussoptionenKatalogEintrag> {
 		let mapEintraegeByZusatzmerkmal : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> | null = KAOAAnschlussoptionen._mapEintraegeBySchuljahrAndZusatzmerkmal.get(schuljahr);
-		if (mapEintraegeByZusatzmerkmal !== null)
-			return KAOAAnschlussoptionen.getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		if (mapEintraegeByZusatzmerkmal !== null) {
+			const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+			return (result !== null) ? result : new ArrayList();
+		}
 		mapEintraegeByZusatzmerkmal = KAOAAnschlussoptionen.cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr);
 		KAOAAnschlussoptionen._mapEintraegeBySchuljahrAndZusatzmerkmal.put(schuljahr, mapEintraegeByZusatzmerkmal);
-		return KAOAAnschlussoptionen.getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**
@@ -261,26 +263,14 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 	 */
 	private static cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number) : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> {
 		const cache : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> | null = new HashMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>();
-		const zusatzmerkmale : List<KAOAZusatzmerkmal> | null = KAOAZusatzmerkmal.data().getWerte();
-		const anschlussoptionen : List<KAOAAnschlussoptionen> | null = KAOAAnschlussoptionen.data().getWerte();
-		for (const zusatzmerkmal of zusatzmerkmale) {
-			const zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(schuljahr);
-			if (zusatzmerkmalHistorienEintrag === null)
-				continue;
+		for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
-			for (const anschlussoption of anschlussoptionen) {
-				const anschlussoptionHistorienEintrag : KAOAAnschlussoptionenKatalogEintrag | null = anschlussoption.daten(schuljahr);
-				if ((anschlussoptionHistorienEintrag !== null) && anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(zusatzmerkmal.name()))
+			for (const anschlussoptionHistorienEintrag of KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr))
+				if (anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
 					result.add(anschlussoptionHistorienEintrag);
-			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}
 		return cache;
-	}
-
-	private static getAnschlussoptionHistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>, idZusatzmerkmal : number) : List<KAOAAnschlussoptionenKatalogEintrag> {
-		const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = cache.get(idZusatzmerkmal);
-		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**

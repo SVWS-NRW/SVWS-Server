@@ -46,12 +46,11 @@
 </template>
 
 <script setup lang="ts">
+
 	import type { SchuelerKAoAProps } from './SSchuelerKaoaProps';
-	import {
-		CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten, Schuljahresabschnitt,
-		KAOAEbene4KatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag, KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4
-	} from "@core";
-	import { Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
+	import type { CoreTypeData, KAOAKategorieKatalogEintrag, KAOAMerkmalKatalogEintrag, KAOAZusatzmerkmalKatalogEintrag, SchuelerKAoADaten, Schuljahresabschnitt,
+		KAOAEbene4KatalogEintrag, KAOAAnschlussoptionenKatalogEintrag, KAOABerufsfeldKatalogEintrag} from "@core";
+	import { KAOAAnschlussoptionen, KAOABerufsfeld, KAOAEbene4 , Jahrgaenge, KAOAKategorie, KAOAMerkmal, KAOAZusatzmerkmal } from "@core";
 	import type { DataTableColumn } from "@ui";
 	import { ref, computed, watch } from 'vue';
 
@@ -288,14 +287,17 @@
 		{ key: "idMerkmal", label: "Merkmal", sortable: true, align: "center" },
 		{ key: "idZusatzmerkmal", label: "Zusatzmerkmal", sortable: true, align: "center" },
 	];
+
 </script>
 
-<style scoped>
-.button-container {
-	@apply mt-5 flex justify-between gap-5;
-}
+<style lang="postcss" scoped>
 
-button {
-	@apply px-3 py-3 cursor-pointer;
-}
+	.button-container {
+		@apply mt-5 flex justify-between gap-5;
+	}
+
+	button {
+		@apply px-3 py-3 cursor-pointer;
+	}
+
 </style>

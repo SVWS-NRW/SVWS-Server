@@ -1,6 +1,5 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
-import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
@@ -127,14 +126,7 @@ export class KAOABerufsfeld extends JavaEnum<KAOABerufsfeld> implements CoreType
 	 * @return alle zulässigen KAoA-Berufsfeld-Historien-Einträge in dem angegebenen Schuljahr.
 	 */
 	public static getEintraegeBySchuljahr(schuljahr : number) : List<KAOABerufsfeldKatalogEintrag> {
-		const berufsfeldHistorienEintraege : List<KAOABerufsfeldKatalogEintrag> | null = new ArrayList<KAOABerufsfeldKatalogEintrag>();
-		const berufsfelder : List<KAOABerufsfeld> | null = KAOABerufsfeld.data().getWerteBySchuljahr(schuljahr);
-		for (const berufsfeld of berufsfelder) {
-			const berufsfeldHistorienEintrag : KAOABerufsfeldKatalogEintrag | null = KAOABerufsfeld.data().getEintragBySchuljahrUndWert(schuljahr, berufsfeld);
-			if (berufsfeldHistorienEintrag !== null)
-				berufsfeldHistorienEintraege.add(berufsfeldHistorienEintrag);
-		}
-		return berufsfeldHistorienEintraege;
+		return KAOABerufsfeld.data().getEintraegeBySchuljahr(schuljahr);
 	}
 
 	/**

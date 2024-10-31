@@ -109,7 +109,7 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 * @return true, falls der Jahrgang in dem Schuljahr zulässig ist - ansonsten false.
 	 */
 	public hatJahrgang(schuljahr : number, jahrgang : Jahrgaenge | null) : boolean {
-		return KAOAKategorie.getListBySchuljahrAndKategorie(schuljahr, this).contains(jahrgang);
+		return KAOAKategorie.getListJahrgaengeBySchuljahrAndKategorie(schuljahr, this).contains(jahrgang);
 	}
 
 	/**
@@ -120,13 +120,14 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 *
 	 * @return die bei der Kategorie in dem angegebenen Schuljahr zulässigen Jahrgänge
 	 */
-	public static getListBySchuljahrAndKategorie(schuljahr : number, kategorie : KAOAKategorie) : List<Jahrgaenge> {
+	public static getListJahrgaengeBySchuljahrAndKategorie(schuljahr : number, kategorie : KAOAKategorie) : List<Jahrgaenge> {
 		let mapByKategorie : JavaMap<KAOAKategorie, List<Jahrgaenge>> | null = KAOAKategorie._mapBySchuljahrAndKategorie.get(schuljahr);
 		if (mapByKategorie === null) {
-			mapByKategorie = KAOAKategorie.cacheEintraegeForAllKategorien(schuljahr);
+			mapByKategorie = KAOAKategorie.cacheListJahrgaengeBySchuljahrAndKategorie(schuljahr);
 			KAOAKategorie._mapBySchuljahrAndKategorie.put(schuljahr, mapByKategorie);
 		}
-		return KAOAKategorie.getJahrgaengeFromCache(kategorie, mapByKategorie);
+		const jahrgaenge : List<Jahrgaenge> | null = mapByKategorie.get(kategorie);
+		return (jahrgaenge !== null) ? jahrgaenge : new ArrayList();
 	}
 
 	/**
@@ -135,7 +136,7 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 * @param schuljahr   das Schuljahr
 	 * @return einen Cache der zulässigen Jahrgänge je Kategorie in dem angegebenen Schuljahr.
 	 */
-	private static cacheEintraegeForAllKategorien(schuljahr : number) : JavaMap<KAOAKategorie, List<Jahrgaenge>> {
+	private static cacheListJahrgaengeBySchuljahrAndKategorie(schuljahr : number) : JavaMap<KAOAKategorie, List<Jahrgaenge>> {
 		const cache : JavaMap<KAOAKategorie, List<Jahrgaenge>> | null = new HashMap<KAOAKategorie, List<Jahrgaenge>>();
 		for (const kategorie of KAOAKategorie.data().getWerte()) {
 			const kategorieHistorienEintrag : KAOAKategorieKatalogEintrag | null = kategorie.daten(schuljahr);
@@ -151,11 +152,6 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 		return cache;
 	}
 
-	private static getJahrgaengeFromCache(kategorie : KAOAKategorie, mapByKategorie : JavaMap<KAOAKategorie, List<Jahrgaenge>>) : List<Jahrgaenge> {
-		const jahrgaenge : List<Jahrgaenge> | null = mapByKategorie.get(kategorie);
-		return (jahrgaenge !== null) ? jahrgaenge : new ArrayList();
-	}
-
 	/**
 	 * Liefert alle zulässigen KAoA-Kategorie-Historien-Einträge für den angegebenen Jahrgang in dem angegebenen Schuljahr zurück.
 	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
@@ -168,11 +164,14 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 */
 	public static getEintraegeBySchuljahrAndIdJahrgang(schuljahr : number, idJahrgang : number) : List<KAOAKategorieKatalogEintrag> {
 		let mapEintraegeByJahrgaenge : JavaMap<number, List<KAOAKategorieKatalogEintrag>> | null = KAOAKategorie._mapEintraegeBySchuljahrAndJahrgang.get(schuljahr);
-		if (mapEintraegeByJahrgaenge !== null)
-			return KAOAKategorie.getKategorieHistorienEintraegeFromCache(mapEintraegeByJahrgaenge, idJahrgang);
+		if (mapEintraegeByJahrgaenge !== null) {
+			const result : List<KAOAKategorieKatalogEintrag> | null = mapEintraegeByJahrgaenge.get(idJahrgang);
+			return (result !== null) ? result : new ArrayList();
+		}
 		mapEintraegeByJahrgaenge = KAOAKategorie.cacheEintraegeBySchuljahrAndIdJahrgang(schuljahr);
 		KAOAKategorie._mapEintraegeBySchuljahrAndJahrgang.put(schuljahr, mapEintraegeByJahrgaenge);
-		return KAOAKategorie.getKategorieHistorienEintraegeFromCache(mapEintraegeByJahrgaenge, idJahrgang);
+		const result : List<KAOAKategorieKatalogEintrag> | null = mapEintraegeByJahrgaenge.get(idJahrgang);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**
@@ -183,37 +182,20 @@ export class KAOAKategorie extends JavaEnum<KAOAKategorie> implements CoreType<K
 	 */
 	private static cacheEintraegeBySchuljahrAndIdJahrgang(schuljahr : number) : JavaMap<number, List<KAOAKategorieKatalogEintrag>> {
 		const cache : JavaMap<number, List<KAOAKategorieKatalogEintrag>> | null = new HashMap<number, List<KAOAKategorieKatalogEintrag>>();
-		const jahrgaenge : List<Jahrgaenge> | null = Jahrgaenge.data().getWerte();
-		const kategorien : List<KAOAKategorie> | null = KAOAKategorie.data().getWerte();
-		for (const jahrgang of jahrgaenge) {
-			const jahrgangHistorienEintrag : JahrgaengeKatalogEintrag | null = jahrgang.daten(schuljahr);
-			if (jahrgangHistorienEintrag === null)
-				continue;
+		for (const jahrgangHistorienEintrag of Jahrgaenge.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result : List<KAOAKategorieKatalogEintrag> | null = new ArrayList<KAOAKategorieKatalogEintrag>();
-			for (const kategorie of kategorien) {
-				const kategorieHistorienEintrag : KAOAKategorieKatalogEintrag | null = kategorie.daten(schuljahr);
-				if (kategorieHistorienEintrag === null)
-					continue;
-				if (KAOAKategorie.kategorieIsValidForJahrgang(kategorieHistorienEintrag, jahrgangHistorienEintrag, schuljahr))
-					result.add(kategorieHistorienEintrag);
+			for (const kategorieHistorienEintrag of KAOAKategorie.data().getEintraegeBySchuljahr(schuljahr)) {
+				for (const bezeichner of kategorieHistorienEintrag.jahrgaenge) {
+					const jahrgangEintragDerKategorie : JahrgaengeKatalogEintrag | null = Jahrgaenge.data().getWertByBezeichner(bezeichner).daten(schuljahr);
+					if ((jahrgangEintragDerKategorie !== null) && (jahrgangEintragDerKategorie.id === jahrgangHistorienEintrag.id)) {
+						result.add(kategorieHistorienEintrag);
+						break;
+					}
+				}
 			}
 			cache.put(jahrgangHistorienEintrag.id, result);
 		}
 		return cache;
-	}
-
-	private static kategorieIsValidForJahrgang(kategorieHistorienEintrag : KAOAKategorieKatalogEintrag, jahrgangHistorienEintrag : JahrgaengeKatalogEintrag, schuljahr : number) : boolean {
-		for (const bezeichner of kategorieHistorienEintrag.jahrgaenge) {
-			const jahrgangEintragDerKategorie : JahrgaengeKatalogEintrag | null = Jahrgaenge.data().getWertByBezeichner(bezeichner).daten(schuljahr);
-			if ((jahrgangEintragDerKategorie !== null) && (jahrgangEintragDerKategorie.id === jahrgangHistorienEintrag.id))
-				return true;
-		}
-		return false;
-	}
-
-	private static getKategorieHistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAKategorieKatalogEintrag>>, idJahrgang : number) : List<KAOAKategorieKatalogEintrag> {
-		const result : List<KAOAKategorieKatalogEintrag> | null = cache.get(idJahrgang);
-		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**

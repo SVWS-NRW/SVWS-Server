@@ -127,13 +127,16 @@ public enum KAOAEbene4 implements CoreType<KAOAEbene4KatalogEintrag, KAOAEbene4>
 		// Bestimme die Schuljahres-spezifische Map aus dem Cache. Ist diese nicht vorhanden, so muss der Cache später neu aufgebaut werden.
 		Map<Long, List<KAOAEbene4KatalogEintrag>> mapEintraegeByZusatzmerkmal = _mapEintraegeBySchuljahrAndZusatzmerkmal.get(schuljahr);
 		// Die Map ist vorhanden, weshalb der Zugriff aus dem Cache möglich ist.
-		if (mapEintraegeByZusatzmerkmal != null)
-			return getEbene4HistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		if (mapEintraegeByZusatzmerkmal != null) {
+			final List<KAOAEbene4KatalogEintrag> result = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+			return (result != null) ? result : new ArrayList<>();
+		}
 		// Falls der Cache nicht vorhanden ist, wird er erstellt.
 		mapEintraegeByZusatzmerkmal = cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr);
 		_mapEintraegeBySchuljahrAndZusatzmerkmal.put(schuljahr, mapEintraegeByZusatzmerkmal);
 		// Rückgabe des Ergebnisses nach dem Aufbau des Caches.
-		return getEbene4HistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		final List<KAOAEbene4KatalogEintrag> result = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+		return (result != null) ? result : new ArrayList<>();
 	}
 
 	/**
@@ -144,19 +147,13 @@ public enum KAOAEbene4 implements CoreType<KAOAEbene4KatalogEintrag, KAOAEbene4>
 	 */
 	private static @NotNull Map<Long, List<KAOAEbene4KatalogEintrag>> cacheEintraegeBySchuljahrAndIdZusatzmerkmal(final int schuljahr) {
 		final Map<Long, List<KAOAEbene4KatalogEintrag>> cache = new HashMap<>();
-		final List<KAOAZusatzmerkmal> zusatzmerkmale = KAOAZusatzmerkmal.data().getWerte();
-		final List<KAOAEbene4> ebene4Werte = KAOAEbene4.data().getWerte();
 
 		// Füge die Einträge zur Cache-Map hinzu, sofern sie im gegebenen Schuljahr gültig sind.
-		for (final KAOAZusatzmerkmal zusatzmerkmal : zusatzmerkmale) {
-			final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag = zusatzmerkmal.daten(schuljahr);
-			if (zusatzmerkmalHistorienEintrag == null)
-				continue;
+		for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			final List<KAOAEbene4KatalogEintrag> result = new ArrayList<>();
 			// Iteriere durch die Ebene4-Werte und füge die zulässigen zur Ergebnisliste hinzu.
-			for (final KAOAEbene4 ebene4 : ebene4Werte) {
-				final KAOAEbene4KatalogEintrag ebene4HistorienEintrag = ebene4.daten(schuljahr);
-				if ((ebene4HistorienEintrag != null) && (ebene4HistorienEintrag.zusatzmerkmal.equals(zusatzmerkmal.name())))
+			for (final KAOAEbene4KatalogEintrag ebene4HistorienEintrag : KAOAEbene4.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (ebene4HistorienEintrag.zusatzmerkmal.equals(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
 					result.add(ebene4HistorienEintrag);
 			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
@@ -164,9 +161,4 @@ public enum KAOAEbene4 implements CoreType<KAOAEbene4KatalogEintrag, KAOAEbene4>
 		return cache;
 	}
 
-	private static @NotNull List<KAOAEbene4KatalogEintrag> getEbene4HistorienEintraegeFromCache(final @NotNull Map<Long, List<KAOAEbene4KatalogEintrag>> cache,
-			final long idZusatzmerkmal) {
-		final List<KAOAEbene4KatalogEintrag> result = cache.get(idZusatzmerkmal);
-		return (result != null) ? result : new ArrayList<>();
-	}
 }

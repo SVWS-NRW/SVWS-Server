@@ -115,6 +115,9 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	/** Eine geschachtelte Map mit der Zuordnung einer von Core-Type-Werten zu einem Schuljahr, einer Schulform und dem Schlüssel */
 	private final @NotNull Map<Integer, Map<Schulform, Map<String, U>>> _mapBySchuljahrAndSchulformAndSchluessel = new HashMap<>();
 
+	/** Eine Map mit der Zuordnung der Historien-Einträge zu den jeweilgen Schuljahren */
+	private final @NotNull HashMap<Integer, List<T>> _mapEintraegeBySchuljahr = new HashMap<>();
+
 
 	/**
 	 * Erstellt einen neuen Manager für die übergebenen Daten
@@ -380,7 +383,7 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 *
 	 * @return der Core-Type-Wert
 	 */
-	public U getWertByID(final long id) {
+	public @NotNull U getWertByID(final long id) {
 		final U tmp = _mapIDToEnum.get(id);
 		if (tmp == null)
 			throw new CoreTypeException(_name + ": Kein Core-Type-Wert für die ID " + id + " gefunden.");
@@ -459,24 +462,55 @@ public class CoreTypeDataManager<T extends CoreTypeData, U extends CoreType<T, U
 	 * @return die Daten aus der Historie
 	 */
 	public @AllowNull T getEintragBySchuljahrUndWert(final int schuljahr, final @NotNull U value) {
-		HashMap<U, T> mapEintraege = _mapWertAndSchuljahrToEintrag.get(schuljahr);
-		// Prüfe, ob die Einträge im Cache sind. Wenn nicht, dann erzeuge die Daten im Cache
-		if (mapEintraege == null) {
-			mapEintraege = new HashMap<>();
-			// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
-			for (final @NotNull U wert: _listWerte) {
-				// Bestimme zunächst die Historie des Core-Type-Wertes
-				final @NotNull List<T> historie = getHistorieByWert(wert);
-				for (final @NotNull T eintrag : historie) {
-					if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
-						mapEintraege.put(wert, eintrag);
-						break;
-					}
+		// Prüfe, ob die Anfrage aus dem Cache bedient werden kann
+		final HashMap<U, T> cache = _mapWertAndSchuljahrToEintrag.get(schuljahr);
+		if (cache != null)
+			return cache.get(value);
+		// Wenn nicht, dann muss der Cache aufgebaut werden...
+		final @NotNull HashMap<U, T> mapEintraege = new HashMap<>();
+		// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
+		for (final @NotNull U wert: _listWerte) {
+			// Bestimme zunächst die Historie des Core-Type-Wertes
+			final @NotNull List<T> historie = getHistorieByWert(wert);
+			for (final @NotNull T eintrag : historie) {
+				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
+					mapEintraege.put(wert, eintrag);
+					break;
 				}
 			}
-			_mapWertAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
 		}
+		_mapWertAndSchuljahrToEintrag.put(schuljahr, mapEintraege);
 		return mapEintraege.get(value);
+	}
+
+
+	/**
+	 * Gibt die Menge der Historieneinträge für das angegebene Schuljahr aus der Menge aller Werte zurück.
+	 *
+	 * @param schuljahr   das zu prüfende Schuljahr
+	 *
+	 * @return die Daten aus den Historieneinträgen für das angegebene Schuljahr aus der Menge aller Werte
+	 */
+	public @NotNull List<T> getEintraegeBySchuljahr(final int schuljahr) {
+		// Prüfe, ob die Anfrage aus dem Cache bedient werden kann
+		final List<T> cache = _mapEintraegeBySchuljahr.get(schuljahr);
+		if (cache != null)
+			return cache;
+		// Wenn nicht, dann muss der Cache aufgebaut werden...
+		final @NotNull List<T> result = new ArrayList<>();
+		// Durchwandere die einzelnen Core-Types und suche den zugehörigen Historien-Eintrag des Schuljahres für die Map
+		for (final @NotNull U wert: _listWerte) {
+			// Bestimme zunächst die Historie des Core-Type-Wertes
+			final @NotNull List<T> historie = getHistorieByWert(wert);
+			for (final @NotNull T eintrag : historie) {
+				if (((eintrag.gueltigVon == null) || (eintrag.gueltigVon <= schuljahr)) && ((eintrag.gueltigBis == null) || (schuljahr <= eintrag.gueltigBis))) {
+					result.add(eintrag);
+					break;
+				}
+			}
+		}
+		_mapEintraegeBySchuljahr.put(schuljahr, result);
+		return result;
 	}
 
 

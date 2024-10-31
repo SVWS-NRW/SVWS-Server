@@ -168,13 +168,16 @@ public enum KAOAAnschlussoptionen implements CoreType<KAOAAnschlussoptionenKatal
 		// Bestimme die Schuljahres-spezifische Map aus dem Cache. Ist diese nicht vorhanden, so muss der Cache später neu aufgebaut werden.
 		Map<Long, List<KAOAAnschlussoptionenKatalogEintrag>> mapEintraegeByZusatzmerkmal = _mapEintraegeBySchuljahrAndZusatzmerkmal.get(schuljahr);
 		// Die Map ist vorhanden, weshalb der Zugriff aus dem Cache möglich ist.
-		if (mapEintraegeByZusatzmerkmal != null)
-			return getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		if (mapEintraegeByZusatzmerkmal != null) {
+			final List<KAOAAnschlussoptionenKatalogEintrag> result = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+			return (result != null) ? result : new ArrayList<>();
+		}
 		// Falls der Cache nicht vorhanden ist, wird er erstellt.
 		mapEintraegeByZusatzmerkmal = cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr);
 		_mapEintraegeBySchuljahrAndZusatzmerkmal.put(schuljahr, mapEintraegeByZusatzmerkmal);
 		// Rückgabe des Ergebnisses nach dem Aufbau des Caches.
-		return getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		final List<KAOAAnschlussoptionenKatalogEintrag> result = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+		return (result != null) ? result : new ArrayList<>();
 	}
 
 	/**
@@ -185,29 +188,18 @@ public enum KAOAAnschlussoptionen implements CoreType<KAOAAnschlussoptionenKatal
 	 */
 	private static @NotNull Map<Long, List<KAOAAnschlussoptionenKatalogEintrag>> cacheEintraegeBySchuljahrAndIdZusatzmerkmal(final int schuljahr) {
 		final Map<Long, List<KAOAAnschlussoptionenKatalogEintrag>> cache = new HashMap<>();
-		final List<KAOAZusatzmerkmal> zusatzmerkmale = KAOAZusatzmerkmal.data().getWerte();
-		final List<KAOAAnschlussoptionen> anschlussoptionen = KAOAAnschlussoptionen.data().getWerte();
 
 		// Füge die Einträge zur Cache-Map hinzu, sofern sie im gegebenen Schuljahr gültig sind.
-		for (final KAOAZusatzmerkmal zusatzmerkmal : zusatzmerkmale) {
-			final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag = zusatzmerkmal.daten(schuljahr);
-			if (zusatzmerkmalHistorienEintrag == null)
-				continue;
+		for (final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			final List<KAOAAnschlussoptionenKatalogEintrag> result = new ArrayList<>();
 			// Iteriere durch die Anschlussoptionen und füge die zulässigen zur Ergebnisliste hinzu.
-			for (final KAOAAnschlussoptionen anschlussoption : anschlussoptionen) {
-				final KAOAAnschlussoptionenKatalogEintrag anschlussoptionHistorienEintrag = anschlussoption.daten(schuljahr);
-				if ((anschlussoptionHistorienEintrag != null) && anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(zusatzmerkmal.name()))
+			for (final KAOAAnschlussoptionenKatalogEintrag anschlussoptionHistorienEintrag : KAOAAnschlussoptionen.data().getEintraegeBySchuljahr(schuljahr))
+				if (anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal
+						.contains(KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name()))
 					result.add(anschlussoptionHistorienEintrag);
-			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}
 		return cache;
 	}
 
-	private static @NotNull List<KAOAAnschlussoptionenKatalogEintrag> getAnschlussoptionHistorienEintraegeFromCache(final @NotNull Map<Long, List<KAOAAnschlussoptionenKatalogEintrag>> cache,
-			final long idZusatzmerkmal) {
-		final List<KAOAAnschlussoptionenKatalogEintrag> result = cache.get(idZusatzmerkmal);
-		return (result != null) ? result : new ArrayList<>();
-	}
 }

@@ -2,7 +2,6 @@ import { JavaEnum } from '../../../java/lang/JavaEnum';
 import { JavaObject } from '../../../java/lang/JavaObject';
 import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
-import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
 import { ArrayList } from '../../../java/util/ArrayList';
 import { KAOAEbene4KatalogEintrag } from '../../../asd/data/kaoa/KAOAEbene4KatalogEintrag';
 import type { List } from '../../../java/util/List';
@@ -182,11 +181,14 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 	 */
 	public static getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number, idZusatzmerkmal : number) : List<KAOAEbene4KatalogEintrag> {
 		let mapEintraegeByZusatzmerkmal : JavaMap<number, List<KAOAEbene4KatalogEintrag>> | null = KAOAEbene4._mapEintraegeBySchuljahrAndZusatzmerkmal.get(schuljahr);
-		if (mapEintraegeByZusatzmerkmal !== null)
-			return KAOAEbene4.getEbene4HistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		if (mapEintraegeByZusatzmerkmal !== null) {
+			const result : List<KAOAEbene4KatalogEintrag> | null = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+			return (result !== null) ? result : new ArrayList();
+		}
 		mapEintraegeByZusatzmerkmal = KAOAEbene4.cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr);
 		KAOAEbene4._mapEintraegeBySchuljahrAndZusatzmerkmal.put(schuljahr, mapEintraegeByZusatzmerkmal);
-		return KAOAEbene4.getEbene4HistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		const result : List<KAOAEbene4KatalogEintrag> | null = mapEintraegeByZusatzmerkmal.get(idZusatzmerkmal);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**
@@ -197,26 +199,15 @@ export class KAOAEbene4 extends JavaEnum<KAOAEbene4> implements CoreType<KAOAEbe
 	 */
 	private static cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number) : JavaMap<number, List<KAOAEbene4KatalogEintrag>> {
 		const cache : JavaMap<number, List<KAOAEbene4KatalogEintrag>> | null = new HashMap<number, List<KAOAEbene4KatalogEintrag>>();
-		const zusatzmerkmale : List<KAOAZusatzmerkmal> | null = KAOAZusatzmerkmal.data().getWerte();
-		const ebene4Werte : List<KAOAEbene4> | null = KAOAEbene4.data().getWerte();
-		for (const zusatzmerkmal of zusatzmerkmale) {
-			const zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(schuljahr);
-			if (zusatzmerkmalHistorienEintrag === null)
-				continue;
+		for (const zusatzmerkmalHistorienEintrag of KAOAZusatzmerkmal.data().getEintraegeBySchuljahr(schuljahr)) {
 			const result : List<KAOAEbene4KatalogEintrag> | null = new ArrayList<KAOAEbene4KatalogEintrag>();
-			for (const ebene4 of ebene4Werte) {
-				const ebene4HistorienEintrag : KAOAEbene4KatalogEintrag | null = ebene4.daten(schuljahr);
-				if ((ebene4HistorienEintrag !== null) && (JavaObject.equalsTranspiler(ebene4HistorienEintrag.zusatzmerkmal, (zusatzmerkmal.name()))))
+			for (const ebene4HistorienEintrag of KAOAEbene4.data().getEintraegeBySchuljahr(schuljahr)) {
+				if (JavaObject.equalsTranspiler(ebene4HistorienEintrag.zusatzmerkmal, (KAOAZusatzmerkmal.data().getWertByID(zusatzmerkmalHistorienEintrag.id).name())))
 					result.add(ebene4HistorienEintrag);
 			}
 			cache.put(zusatzmerkmalHistorienEintrag.id, result);
 		}
 		return cache;
-	}
-
-	private static getEbene4HistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAEbene4KatalogEintrag>>, idZusatzmerkmal : number) : List<KAOAEbene4KatalogEintrag> {
-		const result : List<KAOAEbene4KatalogEintrag> | null = cache.get(idZusatzmerkmal);
-		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**
