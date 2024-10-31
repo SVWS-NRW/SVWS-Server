@@ -1,10 +1,15 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
+import { ArrayList } from '../../../java/util/ArrayList';
 import { KAOAAnschlussoptionenKatalogEintrag } from '../../../asd/data/kaoa/KAOAAnschlussoptionenKatalogEintrag';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { KAOAZusatzmerkmal } from '../../../asd/types/kaoa/KAOAZusatzmerkmal';
 
 export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> implements CoreType<KAOAAnschlussoptionenKatalogEintrag, KAOAAnschlussoptionen> {
 
@@ -199,6 +204,11 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 	 */
 	public static readonly STUD : KAOAAnschlussoptionen = new KAOAAnschlussoptionen("STUD", 36, );
 
+	/**
+	 * (Integer, Long) -> Schuljahr, idZusatzmerkmal
+	 */
+	private static readonly _mapEintraegeBySchuljahrAndZusatzmerkmal : JavaMap<number, JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>> = new HashMap<number, JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>>();
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		KAOAAnschlussoptionen.all_values_by_ordinal.push(this);
@@ -212,6 +222,7 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 	 */
 	public static init(manager : CoreTypeDataManager<KAOAAnschlussoptionenKatalogEintrag, KAOAAnschlussoptionen>) : void {
 		CoreTypeDataManager.putManager(KAOAAnschlussoptionen.class, manager);
+		KAOAAnschlussoptionen._mapEintraegeBySchuljahrAndZusatzmerkmal.clear();
 	}
 
 	/**
@@ -221,6 +232,55 @@ export class KAOAAnschlussoptionen extends JavaEnum<KAOAAnschlussoptionen> imple
 	 */
 	public static data() : CoreTypeDataManager<KAOAAnschlussoptionenKatalogEintrag, KAOAAnschlussoptionen> {
 		return CoreTypeDataManager.getManager(KAOAAnschlussoptionen.class);
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Anschlussoption-Historien-Einträge für das angegebene Zusatzmerkmal in dem angegebenen Schuljahr zurück.
+	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
+	 * dem Cache bedient werden können.
+	 *
+	 * @param schuljahr         das Schuljahr
+	 * @param idZusatzmerkmal   die id des KAoA-Zusatzmerkmal-Historien-Eintrags
+	 *
+	 * @return alle zulässigen KAoA-Anschlussoption-Historien-Einträge für das angegebene Zusatzmerkmal in dem angegebenen Schuljahr.
+	 */
+	public static getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number, idZusatzmerkmal : number) : List<KAOAAnschlussoptionenKatalogEintrag> {
+		let mapEintraegeByZusatzmerkmal : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> | null = KAOAAnschlussoptionen._mapEintraegeBySchuljahrAndZusatzmerkmal.get(schuljahr);
+		if (mapEintraegeByZusatzmerkmal !== null)
+			return KAOAAnschlussoptionen.getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+		mapEintraegeByZusatzmerkmal = KAOAAnschlussoptionen.cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr);
+		KAOAAnschlussoptionen._mapEintraegeBySchuljahrAndZusatzmerkmal.put(schuljahr, mapEintraegeByZusatzmerkmal);
+		return KAOAAnschlussoptionen.getAnschlussoptionHistorienEintraegeFromCache(mapEintraegeByZusatzmerkmal, idZusatzmerkmal);
+	}
+
+	/**
+	 * Liefert einen Cache der zulässigen KAoA-Anschlussoption-Historien-Einträge je Zusatzmerkmal in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @return einen Cache der zulässigen KAoA-Anschlussoption-Historien-Einträge je Zusatzmerkmal in dem angegebenen Schuljahr.
+	 */
+	private static cacheEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr : number) : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> {
+		const cache : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>> | null = new HashMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>();
+		const zusatzmerkmale : List<KAOAZusatzmerkmal> | null = KAOAZusatzmerkmal.data().getWerte();
+		const anschlussoptionen : List<KAOAAnschlussoptionen> | null = KAOAAnschlussoptionen.data().getWerte();
+		for (const zusatzmerkmal of zusatzmerkmale) {
+			const zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(schuljahr);
+			if (zusatzmerkmalHistorienEintrag === null)
+				continue;
+			const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = new ArrayList<KAOAAnschlussoptionenKatalogEintrag>();
+			for (const anschlussoption of anschlussoptionen) {
+				const anschlussoptionHistorienEintrag : KAOAAnschlussoptionenKatalogEintrag | null = anschlussoption.daten(schuljahr);
+				if ((anschlussoptionHistorienEintrag !== null) && anschlussoptionHistorienEintrag.anzeigeZusatzmerkmal.contains(zusatzmerkmal.name()))
+					result.add(anschlussoptionHistorienEintrag);
+			}
+			cache.put(zusatzmerkmalHistorienEintrag.id, result);
+		}
+		return cache;
+	}
+
+	private static getAnschlussoptionHistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAAnschlussoptionenKatalogEintrag>>, idZusatzmerkmal : number) : List<KAOAAnschlussoptionenKatalogEintrag> {
+		const result : List<KAOAAnschlussoptionenKatalogEintrag> | null = cache.get(idZusatzmerkmal);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**

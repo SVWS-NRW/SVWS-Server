@@ -1,10 +1,16 @@
 import { JavaEnum } from '../../../java/lang/JavaEnum';
+import { JavaObject } from '../../../java/lang/JavaObject';
 import { KAOAZusatzmerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAZusatzmerkmalKatalogEintrag';
+import { HashMap } from '../../../java/util/HashMap';
 import { CoreTypeDataManager } from '../../../asd/utils/CoreTypeDataManager';
+import { ArrayList } from '../../../java/util/ArrayList';
 import type { List } from '../../../java/util/List';
 import { Class } from '../../../java/lang/Class';
 import type { CoreType } from '../../../asd/types/CoreType';
 import { de_svws_nrw_asd_types_CoreType_getManager, de_svws_nrw_asd_types_CoreType_daten, de_svws_nrw_asd_types_CoreType_historienId, de_svws_nrw_asd_types_CoreType_historie } from '../../../asd/types/CoreType';
+import type { JavaMap } from '../../../java/util/JavaMap';
+import { KAOAMerkmal } from '../../../asd/types/kaoa/KAOAMerkmal';
+import { KAOAMerkmalKatalogEintrag } from '../../../asd/data/kaoa/KAOAMerkmalKatalogEintrag';
 
 export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements CoreType<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> {
 
@@ -599,6 +605,11 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	 */
 	public static readonly SBO_10_7_13 : KAOAZusatzmerkmal = new KAOAZusatzmerkmal("SBO_10_7_13", 116, );
 
+	/**
+	 * (Integer, Long) -> Schuljahr, idMerkmal
+	 */
+	private static readonly _mapEintraegeBySchuljahrAndMerkmal : JavaMap<number, JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>> = new HashMap<number, JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>>();
+
 	private constructor(name : string, ordinal : number) {
 		super(name, ordinal);
 		KAOAZusatzmerkmal.all_values_by_ordinal.push(this);
@@ -612,6 +623,7 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	 */
 	public static init(manager : CoreTypeDataManager<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal>) : void {
 		CoreTypeDataManager.putManager(KAOAZusatzmerkmal.class, manager);
+		KAOAZusatzmerkmal._mapEintraegeBySchuljahrAndMerkmal.clear();
 	}
 
 	/**
@@ -621,6 +633,55 @@ export class KAOAZusatzmerkmal extends JavaEnum<KAOAZusatzmerkmal> implements Co
 	 */
 	public static data() : CoreTypeDataManager<KAOAZusatzmerkmalKatalogEintrag, KAOAZusatzmerkmal> {
 		return CoreTypeDataManager.getManager(KAOAZusatzmerkmal.class);
+	}
+
+	/**
+	 * Liefert alle zulässigen KAoA-Zusatzmerkmal-Historien-Einträge für das angegebene Merkmal in dem angegebenen Schuljahr zurück.
+	 * Dabei wird intern für das Schuljahr ein Cache aufgebaut, dass nachfolgende Zugriffe auf das gleiche Schuljahr direkt aus
+	 * dem Cache bedient werden können.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @param idMerkmal   die id des KAoA-Merkmal-Historien-Eintrags
+	 *
+	 * @return alle zulässigen KAoA-Zusatzmerkmal-Historien-Einträge für das angegebene Merkmal in dem angegebenen Schuljahr.
+	 */
+	public static getEintraegeBySchuljahrAndIdMerkmal(schuljahr : number, idMerkmal : number) : List<KAOAZusatzmerkmalKatalogEintrag> {
+		let mapEintraegeByMerkmal : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> | null = KAOAZusatzmerkmal._mapEintraegeBySchuljahrAndMerkmal.get(schuljahr);
+		if (mapEintraegeByMerkmal !== null)
+			return KAOAZusatzmerkmal.getZusatzmerkmalHistorienEintraegeFromCache(mapEintraegeByMerkmal, idMerkmal);
+		mapEintraegeByMerkmal = KAOAZusatzmerkmal.cacheEintraegeBySchuljahrAndIdMerkmal(schuljahr);
+		KAOAZusatzmerkmal._mapEintraegeBySchuljahrAndMerkmal.put(schuljahr, mapEintraegeByMerkmal);
+		return KAOAZusatzmerkmal.getZusatzmerkmalHistorienEintraegeFromCache(mapEintraegeByMerkmal, idMerkmal);
+	}
+
+	/**
+	 * Liefert einen Cache der zulässigen KAoA-Zusatzmerkmal-Historien-Einträge je Merkmal in dem angegebenen Schuljahr zurück.
+	 *
+	 * @param schuljahr   das Schuljahr
+	 * @return einen Cache der zulässigen KAoA-Zusatzmerkmal-Historien-Einträge je Merkmal in dem angegebenen Schuljahr.
+	 */
+	private static cacheEintraegeBySchuljahrAndIdMerkmal(schuljahr : number) : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> {
+		const cache : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>> | null = new HashMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>();
+		const merkmale : List<KAOAMerkmal> | null = KAOAMerkmal.data().getWerte();
+		const zusatzmerkmale : List<KAOAZusatzmerkmal> | null = KAOAZusatzmerkmal.data().getWerte();
+		for (const merkmal of merkmale) {
+			const merkmalHistorienEintrag : KAOAMerkmalKatalogEintrag | null = merkmal.daten(schuljahr);
+			if (merkmalHistorienEintrag === null)
+				continue;
+			const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = new ArrayList<KAOAZusatzmerkmalKatalogEintrag>();
+			for (const zusatzmerkmal of zusatzmerkmale) {
+				const zusatzmerkmalHistorienEintrag : KAOAZusatzmerkmalKatalogEintrag | null = zusatzmerkmal.daten(schuljahr);
+				if ((zusatzmerkmalHistorienEintrag !== null) && (JavaObject.equalsTranspiler(zusatzmerkmalHistorienEintrag.merkmal, (merkmal.name()))))
+					result.add(zusatzmerkmalHistorienEintrag);
+			}
+			cache.put(merkmalHistorienEintrag.id, result);
+		}
+		return cache;
+	}
+
+	private static getZusatzmerkmalHistorienEintraegeFromCache(cache : JavaMap<number, List<KAOAZusatzmerkmalKatalogEintrag>>, idMerkmal : number) : List<KAOAZusatzmerkmalKatalogEintrag> {
+		const result : List<KAOAZusatzmerkmalKatalogEintrag> | null = cache.get(idMerkmal);
+		return (result !== null) ? result : new ArrayList();
 	}
 
 	/**

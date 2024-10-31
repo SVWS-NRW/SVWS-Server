@@ -3,16 +3,13 @@ package de.svws_nrw.core.utils.schueler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
 import de.svws_nrw.asd.adt.Pair;
 import de.svws_nrw.asd.data.kaoa.KAOAAnschlussoptionenKatalogEintrag;
-import de.svws_nrw.asd.data.kaoa.KAOABerufsfeldKatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAEbene4KatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAKategorieKatalogEintrag;
 import de.svws_nrw.asd.data.kaoa.KAOAMerkmalKatalogEintrag;
@@ -30,7 +27,6 @@ import de.svws_nrw.asd.types.kaoa.KAOAZusatzmerkmal;
 import de.svws_nrw.asd.types.schule.Schulform;
 import de.svws_nrw.core.utils.AttributMitAuswahl;
 import de.svws_nrw.core.utils.AuswahlManager;
-import de.svws_nrw.core.utils.MapUtils;
 import jakarta.validation.constraints.NotNull;
 
 /**
@@ -115,9 +111,6 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	/** Das Filter-Attribut für die Ebene4 */
 	public final @NotNull AttributMitAuswahl<Long, KAOAEbene4> _ebene4;
 
-	/** Die Berufsfelder */
-	private final @NotNull List<KAOABerufsfeld> _berufsfelder;
-
 	/** Die Lernabschnittsdaten */
 	public final @NotNull List<SchuelerLernabschnittListeEintrag> _lernabschnitteAuswahl;
 
@@ -127,15 +120,6 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 	 */
 	public final @NotNull Set<Schuljahresabschnitt> _schuljahresabschnitteFiltered = new HashSet<>();
 
-	/**
-	 * Zusätzliche Maps, welche zum schnellen Zugriff auf Teilmengen der Liste
-	 * verwendet werden können
-	 */
-	private final @NotNull Map<Long, List<KAOAMerkmalKatalogEintrag>> _mapMerkmalByKategorie = new HashMap<>();
-	private final @NotNull Map<Long, List<KAOAZusatzmerkmalKatalogEintrag>> _mapZusatzmerkmalByMerkmal = new HashMap<>();
-	private final @NotNull Map<Long, List<KAOAAnschlussoptionenKatalogEintrag>> _mapAnschlussoptionByZusatzmerkmal = new HashMap<>();
-	private final @NotNull Map<Long, List<KAOAEbene4KatalogEintrag>> _mapEbene4ByZusatzmerkmal = new HashMap<>();
-	private final @NotNull List<KAOABerufsfeldKatalogEintrag> _berufsfeldEintraege = new ArrayList<>();
 
 	/**
 	 * Erstellt einen neuen Manager mit den übergebenen KAoA Daten
@@ -161,72 +145,11 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 				_eventHandlerFilterChanged);
 		this._anschlussoptionen = new AttributMitAuswahl<>(Arrays.asList(KAOAAnschlussoptionen.values()), _anschlussoptionToId,
 				_comparatorAnschlussoptionen, _eventHandlerFilterChanged);
-		this._berufsfelder = Arrays.asList(KAOABerufsfeld.values());
-		this._berufsfelder.sort(_comparatorBerufsfelder);
 		this._lernabschnitteAuswahl = lernabschnitteAuswahl;
 		this._ebene4 = new AttributMitAuswahl<>(Arrays.asList(KAOAEbene4.values()), _ebene4ToId, _comparatorEbene4, _eventHandlerFilterChanged);
 		processSchuljahresabschnitte();
-		initKAoA();
 	}
 
-	private void initKAoA() {
-		for (final @NotNull KAOAKategorie kategorie : this._kategorien.list()) {
-			final KAOAKategorieKatalogEintrag kategorieEintrag = kategorie.daten(getSchuljahr());
-			if (kategorieEintrag == null)
-				continue;
-			final @NotNull List<KAOAMerkmalKatalogEintrag> merkmaleOfKategorie = new ArrayList<>();
-			for (final @NotNull KAOAMerkmal merkmal : this._merkmale.list()) {
-				final KAOAMerkmalKatalogEintrag merkmalEintrag = merkmal.daten(getSchuljahr());
-				if (merkmalEintrag == null)
-					continue;
-				if (merkmalEintrag.kategorie.equals(kategorie.name()))
-					merkmaleOfKategorie.add(merkmalEintrag);
-				final @NotNull List<KAOAZusatzmerkmalKatalogEintrag> zusatzmerkmaleOfMerkmal = new ArrayList<>();
-				for (final @NotNull KAOAZusatzmerkmal zusatzmerkmal : this._zusatzmerkmale.list()) {
-					final KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag = zusatzmerkmal.daten(getSchuljahr());
-					if (zusatzmerkmalEintrag == null)
-						continue;
-					if (zusatzmerkmalEintrag.merkmal.equals(merkmal.name()))
-						zusatzmerkmaleOfMerkmal.add(zusatzmerkmalEintrag);
-					processZusatzmerkmal(zusatzmerkmalEintrag, zusatzmerkmal.name());
-				}
-				this._mapZusatzmerkmalByMerkmal.put(merkmalEintrag.id, zusatzmerkmaleOfMerkmal);
-			}
-			this._mapMerkmalByKategorie.put(kategorieEintrag.id, merkmaleOfKategorie);
-		}
-		processBerufsfelder();
-	}
-
-	private void processZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag, final @NotNull String nameZusatzmerkmal) {
-		final @NotNull List<KAOAAnschlussoptionenKatalogEintrag> anschlussoptionOfZusatzmerkmal = new ArrayList<>();
-		for (final @NotNull KAOAAnschlussoptionen anschlussoption : this._anschlussoptionen.list()) {
-			final KAOAAnschlussoptionenKatalogEintrag anschlussoptionEintrag = anschlussoption.daten(getSchuljahr());
-			if (anschlussoptionEintrag == null)
-				continue;
-			for (final @NotNull String anzeigeMerkmal : anschlussoptionEintrag.anzeigeZusatzmerkmal)
-				if (anzeigeMerkmal.equals(nameZusatzmerkmal))
-					anschlussoptionOfZusatzmerkmal.add(anschlussoptionEintrag);
-		}
-		this._mapAnschlussoptionByZusatzmerkmal.put(zusatzmerkmalEintrag.id, anschlussoptionOfZusatzmerkmal);
-
-		final @NotNull List<KAOAEbene4KatalogEintrag> ebene4OfZusatzmerkmal = new ArrayList<>();
-		for (final @NotNull KAOAEbene4 ebene4 : this._ebene4.list()) {
-			final KAOAEbene4KatalogEintrag ebene4Eintrag = ebene4.daten(getSchuljahr());
-			if (ebene4Eintrag == null)
-				continue;
-			if (ebene4Eintrag.zusatzmerkmal.equals(nameZusatzmerkmal))
-				ebene4OfZusatzmerkmal.add(ebene4Eintrag);
-		}
-		this._mapEbene4ByZusatzmerkmal.put(zusatzmerkmalEintrag.id, ebene4OfZusatzmerkmal);
-	}
-
-	private void processBerufsfelder() {
-		for (final @NotNull KAOABerufsfeld berufsfeld : this._berufsfelder) {
-			final KAOABerufsfeldKatalogEintrag eintrag = berufsfeld.daten(this.getSchuljahr());
-			if (eintrag != null)
-				_berufsfeldEintraege.add(eintrag);
-		}
-	}
 
 	/**
 	 * Prüft, ob der angegebene KAoA-Eintrag durch den Filter durchgelassen wird oder nicht.
@@ -337,59 +260,5 @@ public class SchuelerKAoAManager extends AuswahlManager<Long, SchuelerKAoADaten,
 				return eintrag.jahrgang;
 		}
 		throw new DeveloperNotificationException("Kein Jahrgang für das Schuljahr %d gefunden.".formatted(schuljahr));
-	}
-
-	/**
-	 * Gibt alle KAoA Merkmale zurück, die der angegebenen Kategorie zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
-	 *
-	 * @param kategorieEintrag Die Kategorie
-	 *
-	 * @return Die KAoA Merkmale
-	 */
-	public @NotNull List<KAOAMerkmalKatalogEintrag> getKAOAMerkmaleByKategorie(final @NotNull KAOAKategorieKatalogEintrag kategorieEintrag) {
-		return MapUtils.getOrCreateArrayList(this._mapMerkmalByKategorie, kategorieEintrag.id);
-	}
-
-	/**
-	 * Gibt alle Zusatzmerkmale zurück, die dem angegebenen Merkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
-	 *
-	 * @param merkmalEintrag Das Merkmal
-	 *
-	 * @return Die Zusatzmerkmale
-	 */
-	public @NotNull List<KAOAZusatzmerkmalKatalogEintrag> getKAOAZusatzmerkmaleByMerkmal(final @NotNull KAOAMerkmalKatalogEintrag merkmalEintrag) {
-		return MapUtils.getOrCreateArrayList(this._mapZusatzmerkmalByMerkmal, merkmalEintrag.id);
-	}
-
-	/**
-	 * Gibt alle KAoA Anschlussoptionen zurück, die dem angegebenen Zusatzmerkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste
-	 * zurückgegeben.
-	 *
-	 * @param zusatzmerkmalEintrag Das Zusatzmerkmal
-	 *
-	 * @return Die Anschlussoptionen
-	 */
-	public @NotNull List<KAOAAnschlussoptionenKatalogEintrag> getKAOAAnschlussoptionenByZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
-		return MapUtils.getOrCreateArrayList(this._mapAnschlussoptionByZusatzmerkmal, zusatzmerkmalEintrag.id);
-	}
-
-	/**
-	 * Gibt alle Ebene4 Optionen zurück, die dem angegebenen Zusatzmerkmal zugeordnet sind. Falls keine gefunden wurden, wird eine leere Liste zurückgegeben.
-	 *
-	 * @param zusatzmerkmalEintrag Das Zusatzmerkmal
-	 *
-	 * @return Die Ebene4 Optionen
-	 */
-	public @NotNull List<KAOAEbene4KatalogEintrag> getKAOAEbene4ByZusatzmerkmal(final @NotNull KAOAZusatzmerkmalKatalogEintrag zusatzmerkmalEintrag) {
-		return MapUtils.getOrCreateArrayList(this._mapEbene4ByZusatzmerkmal, zusatzmerkmalEintrag.id);
-	}
-
-	/**
-	 * Gibt alle Berufsfelder zurück.
-	 *
-	 * @return Die Berufsfelder
-	 */
-	public @NotNull List<KAOABerufsfeldKatalogEintrag> getKAOABerufsfelder() {
-		return _berufsfeldEintraege;
 	}
 }

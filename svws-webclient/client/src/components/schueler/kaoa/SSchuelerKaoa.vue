@@ -1,4 +1,3 @@
-<!-- eslint-disable @typescript-eslint/consistent-type-imports -->
 <template>
 	<div class="page--content">
 		<svws-ui-table :columns="cols" :items="props.schuelerKaoaManager().liste.list()" class="col-span-full" clickable :clicked="selectedEntry" @update:clicked="item => selectEntry(item)">
@@ -27,14 +26,14 @@
 			</svws-ui-button>
 		</div>
 		<br>
-		<div v-if="currentMode === Mode.ADD || currentMode === Mode.PATCH">
-			<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :item-text="schuljahresabschnittText" v-model="selectedSchuljahresabschnitt"/>
-			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="KAOAKategorie.getListBySchuljahrAndJahrgang(schuljahr, selectedJahrgang.id)" :item-text="itemText" v-model="selectedKategorie" />
-			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="props.schuelerKaoaManager().getKAOAMerkmaleByKategorie(selectedKategorie)" :item-text="itemText" v-model="selectedMerkmal" />
-			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="props.schuelerKaoaManager().getKAOAZusatzmerkmaleByMerkmal(selectedMerkmal)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
-			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="props.schuelerKaoaManager().getKAOAEbene4ByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedEbene4" />
-			<svws-ui-select title="KAoAAnschlussoption" v-if="selectedZusatzmerkmal && showAnschlussoption" :items="props.schuelerKaoaManager().getKAOAAnschlussoptionenByZusatzmerkmal(selectedZusatzmerkmal)" :item-text="itemText" v-model="selectedAnschlussoption" />
-			<svws-ui-select title="KAoABerufsfeld" v-if="showBerufsfeld" :items="props.schuelerKaoaManager().getKAOABerufsfelder()" :item-text="itemText" v-model="selectedBerufsfeld" />
+		<div v-if="(currentMode === Mode.ADD) || (currentMode === Mode.PATCH)">
+			<svws-ui-select title="Schuljahresabschnitt" :items="props.schuelerKaoaManager()._schuljahresabschnitteFiltered" :item-text="schuljahresabschnittText" v-model="selectedSchuljahresabschnitt" />
+			<svws-ui-select title="KAoAKategorie" v-if="selectedSchuljahresabschnitt" :items="KAOAKategorie.getEintraegeBySchuljahrAndIdJahrgang(schuljahr, selectedJahrgang? selectedJahrgang.id : -1)" :item-text="itemText" v-model="selectedKategorie" />
+			<svws-ui-select title="KAoAMerkmal" v-if="selectedKategorie" :items="KAOAMerkmal.getEintraegeBySchuljahrAndIdKategorie(schuljahr, selectedKategorie.id)" :item-text="itemText" v-model="selectedMerkmal" />
+			<svws-ui-select title="KAoAZusatzmerkmal" v-if="selectedMerkmal" :items="KAOAZusatzmerkmal.getEintraegeBySchuljahrAndIdMerkmal(schuljahr, selectedMerkmal.id)" :item-text="itemText" v-model="selectedZusatzmerkmal" />
+			<svws-ui-select title="KAoAEbene4" v-if="showEbene4" :items="KAOAEbene4.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, selectedZusatzmerkmal? selectedZusatzmerkmal.id : -1)" :item-text="itemText" v-model="selectedEbene4" />
+			<svws-ui-select title="KAoAAnschlussoption" v-if="selectedZusatzmerkmal && showAnschlussoption" :items="KAOAAnschlussoptionen.getEintraegeBySchuljahrAndIdZusatzmerkmal(schuljahr, selectedZusatzmerkmal.id)" :item-text="itemText" v-model="selectedAnschlussoption" />
+			<svws-ui-select title="KAoABerufsfeld" v-if="showBerufsfeld" :items="KAOABerufsfeld.getEintraegeBySchuljahr(schuljahr)" :item-text="itemText" v-model="selectedBerufsfeld" />
 			<svws-ui-text-input title="Bemerkung" v-if="showFreitext" v-model="selectedBemerkung" placeholder="Freitext" type="text" />
 			<svws-ui-button title="Add" v-if="currentMode === Mode.ADD" :disabled="!validateRequiredFieldsFilled()" @click="addEntry">
 				<span class="icon i-ri-add-line" />
@@ -134,7 +133,7 @@
 	const showFreitext = computed(() => (selectedZusatzmerkmal.value !== null) && ((optionsart.value === 'FREITEXT') || (optionsart.value === 'FREITEXT_BERUF')));
 
 	const selectedJahrgang = computed (() => Jahrgaenge.data().getWertByKuerzel(props.schuelerKaoaManager().getKuerzelJahrgangBySchuljahr(schuljahr.value))?.daten(schuljahr.value));
-	const schuljahr = computed(() => selectedSchuljahresabschnitt.value?.schuljahr);
+	const schuljahr = computed(() => (selectedSchuljahresabschnitt.value?.schuljahr !== undefined) ? selectedSchuljahresabschnitt.value.schuljahr : -1);
 	const itemText = computed(() => (i: CoreTypeData) => i.kuerzel + '- ' + i.text);
 	const schuljahresabschnittText = (item: Schuljahresabschnitt) => item.schuljahr > 0 ? `${item.schuljahr}/${(item.schuljahr + 1) % 100}.${item.abschnitt}` : "Abschnitt";
 	type ModeType = 'add' | 'patch' | 'default';
