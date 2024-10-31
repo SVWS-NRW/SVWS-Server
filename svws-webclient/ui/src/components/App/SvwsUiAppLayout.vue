@@ -53,6 +53,7 @@
 
 <script setup lang='ts'>
 
+	import SvwsUiHeader from "./SvwsUiHeader.vue"; // Stelle sicher, dass das CSS geladen wird und im Rest der Applikation genutzt werden kann
 	import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 
 	const props = withDefaults(defineProps<{
