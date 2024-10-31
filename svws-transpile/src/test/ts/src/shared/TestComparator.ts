@@ -1,4 +1,4 @@
-import type { Comparator } from "@transpiled";
+import type { Comparator } from "../../../../main/resources/typescript/java/util/Comparator";
 import { TestPerson } from "./TestPerson";
 
 export class TestMinComparator implements Comparator<string | number | TestPerson> {

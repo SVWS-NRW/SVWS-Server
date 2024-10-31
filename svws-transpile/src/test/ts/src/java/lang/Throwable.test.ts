@@ -1,7 +1,7 @@
 import { describe, test, expect } from "vitest";
-import { NullPointerException } from "@transpiled";
+import { NullPointerException } from "../../../../../main/resources/typescript/java/lang/NullPointerException";
 
-describe("Different cases of Throwable Errors", ()=>{
+describe("Different cases of Throwable Errors", () => {
 	const e = new NullPointerException()
 	test("Throwable, plain", () => {
 		expect(() => {throw e}).toThrow(NullPointerException);

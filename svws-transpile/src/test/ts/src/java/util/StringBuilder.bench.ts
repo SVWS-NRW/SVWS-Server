@@ -13,18 +13,18 @@ describe(
 				a.unshift(s);
 			a.join()
 		})
-		bench("destructure", ()=>{
+		bench("destructure", () => {
 			[...value].reverse().join();
 		})
-		bench("concat und charAt", ()=>{
+		bench("concat und charAt", () => {
 			let a = "";
 			for (let i = value.length - 1; i >= 0; i--)
 				a=a.concat(value.charAt(i));
 		})
-		bench("concat und at", ()=>{
+		bench("concat und at", () => {
 			let a = "";
 			for (let i = value.length - 1; i >= 0; i--)
-				a=a.concat(value.at(i) || '');
+				a = a.concat(value.at(i) ?? '');
 		})
 	}
 );

@@ -1,4 +1,4 @@
-import type { Consumer } from "@transpiled";
+import type { Consumer } from "../../../../main/resources/typescript/java/util/function/Consumer";
 import type { TestPerson } from "./TestPerson";
 
 export class TestConsumer implements Consumer<string | number | TestPerson> {

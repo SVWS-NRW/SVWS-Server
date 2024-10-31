@@ -133,7 +133,7 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 			koll = new Array<JavaMapEntry<K, V>>();
 			this._map.set(hash, koll);
 		}
-		let oldValue : V | null = null;   // gehe zunächst davon aus, dass kein Wert für den Schlüsselwert vorhanden ist...
+		let oldValue : V | null = null; // gehe zunächst davon aus, dass kein Wert für den Schlüsselwert vorhanden ist...
 		// durchwandere die Kollisionsliste und ersetze ggf. einen bereits vorhandenen Eintrag zu dem Schlüsselwert
 		for (let i = 0; i < koll.length; i++) {
 			// entferne ggf. einen Eintrag, der bereits in der Kollisionsliste vorhanden ist
@@ -167,8 +167,8 @@ export class HashMap<K, V> extends JavaObject implements JavaMap<K, V>, Cloneabl
 		const hash = JavaObject.getTranspilerHashCode(key);
 		const koll : Array<JavaMapEntry<K, V>> | undefined = this._map.get(hash);
 		if (koll === undefined)
-			return null;   // Keine Kollisionsliste vorhanden, also auch kein Wert...
-		let oldValue : V | null = null;   // gehe zunächst davon aus, dass kein Wert für den Schlüsselwert vorhanden ist...
+			return null; // Keine Kollisionsliste vorhanden, also auch kein Wert...
+		let oldValue : V | null = null; // gehe zunächst davon aus, dass kein Wert für den Schlüsselwert vorhanden ist...
 		// Entferne den Eintrag ggf. aus der Kollisionsliste und merke den entfernten Wert
 		for (let i = 0; i < koll.length; i++) {
 			// entferne ggf. einen Eintrag, der bereits in der Kollisionsliste vorhanden ist

@@ -6,13 +6,13 @@
 		"baseUrl": ".",
 		"paths": {
 			"~/*": ["./src/*"],
-			"@transpiled": ["../../../build/tests/ts/index.ts"]
 		}
 	},
 	"include": [
 		"./vitest.config.ts",
 		"./src/**/*.ts",
-		"../../../build/tests/ts/**/*",
+		"../../../src/main/resources/typescript/*.ts",
+		"../../../src/main/resources/typescript/**/*.ts",
 		"./src/java/util/__snapshots__/*.snap"
 	],
 }

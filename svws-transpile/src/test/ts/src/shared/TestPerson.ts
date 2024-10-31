@@ -1,4 +1,4 @@
-import { JavaObject } from '@transpiled';
+import { JavaObject } from "../../../../main/resources/typescript/java/lang/JavaObject";
 
 export class TestPerson extends JavaObject {
 
@@ -32,7 +32,13 @@ export class TestPerson extends JavaObject {
 	}
 
 	public hashCode() : number {
-		return this.id;
+		const prime = 31;
+		let result = this.id;
+		result = (prime * result) + JavaObject._hashCode(this.kuerzel);
+		result = (prime * result) + ((this.titel === null) ? 0 : JavaObject._hashCode(this.titel));
+		result = (prime * result) + JavaObject._hashCode(this.nachname);
+		result = (prime * result) + JavaObject._hashCode(this.vorname);
+		return result;
 	}
 
 	public equals(obj : unknown) : boolean {
@@ -40,7 +46,7 @@ export class TestPerson extends JavaObject {
 			return false;
 		if (this as unknown === obj as unknown)
 			return true;
-		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.transpiler.test.TestPerson')))))
+		if (!(((obj instanceof JavaObject) && (obj.isTranspiledInstanceOf('de.svws_nrw.transpiler.test.TestPerson') === true))))
 			return false;
 		const other : TestPerson = (cast_de_svws_nrw_transpiler_test_TestPerson(obj));
 		if (this.id !== other.id)
