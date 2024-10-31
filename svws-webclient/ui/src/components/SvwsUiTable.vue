@@ -108,13 +108,13 @@
 				</div>
 				<template v-for="(row, index) in sortedRows">
 					<slot name="rowCustom" :row="row.source">
-						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row as DataTableRow)" :ref="el => itemRefs.set(index, el)"
-							:class="{ 'svws-selected': isRowSelected(row as DataTableRow), 'svws-clicked': isRowClicked(row as DataTableRow), }" tabindex="0" @keydown.enter="toggleRowClick(row as DataTableRow)"
+						<div class="svws-ui-tr" role="row" :key="`table-row_${row}_${index}`" @click.exact="toggleRowClick(row)" :ref="el => itemRefs.set(index, el)"
+							:class="{ 'svws-selected': isRowSelected(row), 'svws-clicked': isRowClicked(row), }" tabindex="0" @keydown.enter="toggleRowClick(row)"
 							@keydown.down.prevent="switchElement($event, itemRefs, index, false)" @keydown.up.prevent="switchElement($event, itemRefs, index, true)">
 							<slot name="row" :row="row.source">
 								<template v-if="selectable">
 									<div v-if="row.selectable" class="svws-ui-td svws-align-center" role="cell" :key="`selectable__${row}_${index}`">
-										<input type="checkbox" :checked="isRowSelected(row as DataTableRow)" @input="toggleRowSelection(row as DataTableRow)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
+										<input type="checkbox" :checked="isRowSelected(row)" @input="toggleRowSelection(row)" @click.stop :ref="el => selectionRefs.set(index, el)" @keydown.down.prevent.stop="switchElement($event, selectionRefs, index, false)" @keydown.up.prevent.stop="switchElement($event, selectionRefs, index, true)">
 									</div>
 									<div v-else class="svws-ui-td svws-align-center" role="cell" />
 								</template>
@@ -129,8 +129,8 @@
 											}]">
 										<slot v-if="`cell(${cell.column.key})` in $slots" :name="`cell(${cell.column.key})`" v-bind="cell" />
 										<slot v-else name="cell" v-bind="cell">
-											<svws-ui-text-input v-if="row.isEditing && cell.column.type !== 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row as DataTableRow) " />
-											<svws-ui-input-number v-if="row.isEditing && cell.column.type === 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row as DataTableRow) " />
+											<svws-ui-text-input v-if="row.isEditing && cell.column.type !== 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
+											<svws-ui-input-number v-if="row.isEditing && cell.column.type === 'number'" v-model="cell.value" :headless="true" :type="(cell.column.type)" @click.stop="setClickedRow(row) " />
 											<template v-else-if="cell.value">
 												{{ cell.column.type === 'date' ? (new Date(cell.value).toLocaleDateString('de', {day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Berlin'})) : cell.value }}
 											</template>
