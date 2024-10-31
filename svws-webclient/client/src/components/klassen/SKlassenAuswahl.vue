@@ -16,7 +16,7 @@
 					<svws-ui-multi-select v-model="filterLehrer" title="Klassenleitung" :items="klassenListeManager().lehrer.list()" :item-text="text" :item-filter="find" />
 					<svws-ui-multi-select v-model="filterSchulgliederung" title="Schulgliederung" :items="klassenListeManager().schulgliederungen.list()" :item-text="text_schulgliederung" />
 				</template>
-				<template #cell(schueler)="{value}"> {{ value.size() }} </template>
+				<template #cell(schueler)="{value}"> {{ klassengroesse(value) }} </template>
 				<template #cell(klassenLehrer)="{value}">
 					{{ lehrerkuerzel(value) }}
 				</template>
@@ -50,7 +50,7 @@
 <script setup lang="ts">
 
 	import { computed, ref } from "vue";
-	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, Schulgliederung } from "@core";
+	import type { JahrgangsDaten, KlassenDaten, LehrerListeEintrag, List, SchuelerListeEintrag, Schulgliederung } from "@core";
 	import type { KlassenAuswahlProps } from "./SKlassenAuswahlProps";
 	import { ViewType } from "@ui";
 
@@ -63,6 +63,14 @@
 		{ key: "klassenLehrer", label: "Klassenleitung" },
 		{ key: "schueler", label: "Schüler", span: 0.5, sortable: true }
 	];
+
+	const klassengroesse = (schueler: List<SchuelerListeEintrag>) => computed(() => {
+		let counter = 0;
+		for (const s of schueler)
+			if ((s.status === 2)|| (s.status === 4)) // aktiv oder extern
+				counter++;
+		return counter;
+	})
 
 	function text(klasse: LehrerListeEintrag | JahrgangsDaten): string {
 		return klasse.kuerzel ?? "";

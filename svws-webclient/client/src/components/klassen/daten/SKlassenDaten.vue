@@ -100,7 +100,7 @@
 		</div>
 		<svws-ui-content-card title="Klassenliste">
 			<svws-ui-multi-select v-model="filterSchuelerStatus" title="Status" :items="klassenListeManager().schuelerstatus.list()" :item-text="status => status.daten(schuljahr)?.text ?? '—'" class="col-span-full" />
-			<svws-ui-table :columns="colsSchueler" :items="klassenListeManager().getSchuelerListe()">
+			<svws-ui-table :columns="colsSchueler" :items="klassenListeManager().getSchuelerListe()" count>
 				<template #cell(status)="{ value } : { value: number}">
 					<span :class="{'opacity-25': value === 2}">{{ SchuelerStatus.data().getWertByID(value)?.daten(schuljahr)?.text ?? "—" }}</span>
 				</template>
