@@ -658,17 +658,28 @@ export class GostBlockungsergebnisManager extends JavaObject {
 			}
 	}
 
+	/**
+	 * Um Bugs zu verhindern, muss die DTO-Datenstruktor hier korrigiert werden,
+	 * denn Multi-Schienen-Kurse existieren in der jeweiligen Schiene als Kopie.
+	 * Alle Kopien müssen durch das selbe Kurs-Objekt ersetzt werden.
+	 */
 	private update_0_kursID_to_kurs() : void {
 		this._kursID_to_kurs = new HashMap();
 		for (const eSchiene of this._ergebnis.schienen)
-			for (const eKurs of eSchiene.kurse)
-				this._kursID_to_kurs.put(eKurs.id, eKurs);
-		for (const gKurs of this._parent.daten().kurse) {
+			for (let i : number = 0; i < eSchiene.kurse.size(); i++) {
+				const eKurs : GostBlockungsergebnisKurs = eSchiene.kurse.get(i);
+				const eKursAlt : GostBlockungsergebnisKurs | null = this._kursID_to_kurs.get(eKurs.id);
+				if (eKursAlt !== null) {
+					eSchiene.kurse.set(i, eKursAlt);
+				} else {
+					this._kursID_to_kurs.put(eKurs.id, eKurs);
+				}
+			}
+		for (const gKurs of this._parent.daten().kurse)
 			if (!this._kursID_to_kurs.containsKey(gKurs.id)) {
 				const eKurs : GostBlockungsergebnisKurs = DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
 				this._kursID_to_kurs.put(gKurs.id, eKurs);
 			}
-		}
 	}
 
 	private update_0_schuelerID_to_schueler() : void {

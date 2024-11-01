@@ -663,19 +663,31 @@ public class GostBlockungsergebnisManager {
 			}
 	}
 
+	/**
+	 * Um Bugs zu verhindern, muss die DTO-Datenstruktor hier korrigiert werden,
+	 * denn Multi-Schienen-Kurse existieren in der jeweiligen Schiene als Kopie.
+	 * Alle Kopien müssen durch das selbe Kurs-Objekt ersetzt werden.
+	 */
 	private void update_0_kursID_to_kurs() {
 		_kursID_to_kurs = new HashMap<>();
 		for (final @NotNull GostBlockungsergebnisSchiene eSchiene : _ergebnis.schienen)
-			for (final @NotNull GostBlockungsergebnisKurs eKurs : eSchiene.kurse)
-				_kursID_to_kurs.put(eKurs.id, eKurs);
+			for (int i = 0; i < eSchiene.kurse.size(); i++) {
+				final @NotNull GostBlockungsergebnisKurs eKurs = eSchiene.kurse.get(i);
+				final GostBlockungsergebnisKurs eKursAlt = _kursID_to_kurs.get(eKurs.id);
+				if (eKursAlt != null) {
+					eSchiene.kurse.set(i, eKursAlt); // Kopie durch Original ersetzen!
+				} else {
+					_kursID_to_kurs.put(eKurs.id, eKurs);
+				}
+			}
 
-		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse) {
+		// Kurse deren Anzahl noch 0 ist, müssen künstlich erzeugt werden.
+		for (final @NotNull GostBlockungKurs gKurs : _parent.daten().kurse)
 			if (!_kursID_to_kurs.containsKey(gKurs.id)) {
 				final @NotNull GostBlockungsergebnisKurs eKurs =
 						DTOUtils.newGostBlockungsergebnisKurs(gKurs.id, gKurs.fach_id, gKurs.kursart, gKurs.anzahlSchienen);
 				_kursID_to_kurs.put(gKurs.id, eKurs);
 			}
-		}
 	}
 
 	private void update_0_schuelerID_to_schueler() {
