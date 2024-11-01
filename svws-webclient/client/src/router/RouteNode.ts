@@ -755,8 +755,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
 	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
 	 */
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 	}
 
 	/**
@@ -770,8 +771,9 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param from          die alte Route
 	 * @param from_params   die Routen-Parameter der alten Route
 	 * @param isEntering    gibt an, ob die Route das erste mal betreten wird (true) oder aufgrund von Parameter-Änderungen nur aktualisiert wird (false)
+	 * @param redirected    gibt den Knoten an, von dem umgeleitet wurde, falls im Routing-Prozess bereits ein redirect stattgefunden hat
 	 */
-	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	public async doUpdate(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			// Prüfe mithilfe der hidden-Methode, ob die Route sichtbar ist
 			const tmpHidden = this.hidden(to_params);
@@ -779,7 +781,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 				return this.parent === undefined ? this.getRoute() : tmpHidden;
 			if (this._parent !== undefined)
 				this._parent._selectedChild.value = this;
-			return await this.update(to, to_params, from, from_params, isEntering);
+			return await this.update(to, to_params, from, from_params, isEntering, redirected);
 		} catch (e) {
 			routerManager.errorcode = undefined;
 			routerManager.error = e instanceof Error ? e : new DeveloperNotificationException("Fehler beim Routing in doUpdate(" + to.name + ")");

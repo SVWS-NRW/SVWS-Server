@@ -18,7 +18,6 @@ export class RouteLogin extends RouteNode<any, any> {
 
 	// Der Pfad, zu welchem weitergeleitet wird
 	public routepath = "/";
-	public redirect = '';
 	protected schema = ref<string | null>(null);
 
 	public constructor() {

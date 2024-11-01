@@ -184,7 +184,7 @@ export class RouteManager {
 			routeLogin.routepath = to.fullPath;
 			return { name: "login", query: { redirect: to.fullPath } };
 		}
-		// Aktualisiere ggf. den redirect-Parameter
+		// Aktualisiere ggf. den goto-Parameter
 		if (!api.authenticated && (to.name === "login")) {
 			let redirect = to.query.redirect;
 			if ((redirect === undefined) || (redirect === null) || ((!Array.isArray(redirect)) && (redirect.startsWith("/error"))))
@@ -197,12 +197,13 @@ export class RouteManager {
 		// Bestimme die Knoten, für die Quelle und das Ziel der Route
 		const to_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.name?.toString());
 		const from_node : RouteNode<any, any> | undefined = RouteNode.getNodeByName(from.name?.toString());
+		const nodeRedirected : RouteNode<any, any> | undefined = RouteNode.getNodeByName(to.redirectedFrom?.name?.toString());
 		if (to_node === undefined)
 			return false;
 		if ((from_node === undefined) && (from.fullPath !== "/"))
 			return false;
 		if (api.authenticated && api.benutzerIstAdmin && to.name?.toString().startsWith("init"))
-			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
+			return await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 		// Prüfe zunächst, ob die Ziel-Route für den angemeldeten Benutzer und die Schulform der Schule erlaubt ist oder nicht
 		if (api.authenticated && (!to_node.hatSchulform() || !to_node.hatEineKompetenz()))
 			return false;
@@ -219,11 +220,11 @@ export class RouteManager {
 			// Die Analyse der Quell-Route ist nicht erheblich - die Ereignisse für die Ziel-Route sind aber wichtig
 			const to_predecessors: RouteNode<any, any>[] = to_node.getPredecessors();
 			for (const node of to_predecessors) {
-				result = await node.doUpdate(to_node, to.params, from_node, from.params, true);
+				result = await node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 				if (result !== undefined)
 					return result;
 			}
-			result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
+			result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 			if (result !== undefined)
 				return result;
 		} else {
@@ -237,11 +238,11 @@ export class RouteManager {
 			const to_predecessors_all: RouteNode<any, any>[] = to_node.getPredecessors();
 			if (to_is_successor) {
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params, from_node, from.params, (to_is_successor.includes(node) && (node.name !== from_node.name)));
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, (to_is_successor.includes(node) && (node.name !== from_node.name)), nodeRedirected);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 				if (result !== undefined)
 					return result;
 			} else if (from_is_successor) {
@@ -251,20 +252,20 @@ export class RouteManager {
 						return result;
 				}
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params, from_node, from.params, false);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
 				if (result !== undefined)
 					return result;
 			} else if (equals) {
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params, from_node, from.params, false);
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, false, nodeRedirected);
 				if (result !== undefined)
 					return result;
 			} else {
@@ -284,11 +285,11 @@ export class RouteManager {
 						return result;
 				}
 				for (const node of to_predecessors_all) {
-					result = await node.doUpdate(to_node, to.params, from_node, from.params, to_predecessors.includes(node));
+					result = await node.doUpdate(to_node, to.params, from_node, from.params, to_predecessors.includes(node), nodeRedirected);
 					if (result !== undefined)
 						return result;
 				}
-				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true);
+				result = await to_node.doUpdate(to_node, to.params, from_node, from.params, true, nodeRedirected);
 				if (result !== undefined)
 					return result;
 			}

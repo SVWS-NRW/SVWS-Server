@@ -76,14 +76,15 @@ export class RouteGostKursplanung extends RouteNode<RouteDataGostKursplanung, Ro
 		}
 	}
 
-	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {
+	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean, redirected: RouteNode<any, any> | undefined) : Promise<void | Error | RouteLocationRaw> {
 		try {
 			const { abiturjahr, halbjahr: halbjahrId, idblockung: idBlockung, idergebnis: idErgebnis } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idblockung", "idergebnis"]);
 			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			// Prüfe den Abiturjahrgang und setze diesen ggf.
 			if (abiturjahr === undefined)
 				throw new DeveloperNotificationException("Fehler: Der Abiturjahrgang darf an dieser Stelle nicht undefined sein.");
-			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isEntering);
+			const isReallyEntering = isEntering && ((redirected === undefined) || (!redirected.name.startsWith(this.name)));
+			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr, isReallyEntering);
 			// Prüfe das Halbjahr und setzte dieses ggf.
 			if ((abiturjahrwechsel) || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
