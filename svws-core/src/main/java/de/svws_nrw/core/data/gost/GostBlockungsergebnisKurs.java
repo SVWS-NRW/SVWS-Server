@@ -17,7 +17,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @Schema(description = "Informationen zu einem Kurs eines Ergebnisses einer Blockung der gymnasialen Oberstufe.")
 @JsonPropertyOrder({ "id", "fachID", "kursart", "anzahlSchienen", "schueler", "schienen" })
 @TranspilerDTO
-public class GostBlockungsergebnisKurs {
+public final class GostBlockungsergebnisKurs {
 
 	/** Die ID des Kurses */
 	public long id = -1;
@@ -42,6 +42,23 @@ public class GostBlockungsergebnisKurs {
 	 */
 	public GostBlockungsergebnisKurs() {
 		// leer
+	}
+
+	@Override
+	public int hashCode() {
+		return 31 + (int) (id ^ (id >>> 32));
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof GostBlockungsergebnisKurs))
+			return false;
+		final @NotNull GostBlockungsergebnisKurs other = (GostBlockungsergebnisKurs) obj;
+		return (id == other.id);
 	}
 
 }
