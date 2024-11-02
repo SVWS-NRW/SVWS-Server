@@ -9,6 +9,7 @@ import { HashMap } from '../../java/util/HashMap';
 import { KursblockungDynSchiene } from '../../core/kursblockung/KursblockungDynSchiene';
 import { ArrayList } from '../../java/util/ArrayList';
 import { KursblockungDynKurs } from '../../core/kursblockung/KursblockungDynKurs';
+import { LongArrayKey } from '../../core/adt/LongArrayKey';
 import { DeveloperNotificationException } from '../../core/exceptions/DeveloperNotificationException';
 import { Logger } from '../../core/logger/Logger';
 import { GostBlockungRegel } from '../../core/data/gost/GostBlockungRegel';
@@ -761,13 +762,15 @@ export class KursblockungDynDaten extends JavaObject {
 	}
 
 	private fehlerBeiRegel_11_bis_14_SCHUELER_MIT_SCHUELER_VARIANTEN(input : GostBlockungsdatenManager) : void {
-		const setSSF : HashSet<string> = new HashSet<string>();
+		const setSSF : HashSet<LongArrayKey> = new HashSet<LongArrayKey>();
 		for (const regel11 of MapUtils.getOrCreateArrayList(this._regelMap, GostKursblockungRegelTyp.SCHUELER_ZUSAMMEN_MIT_SCHUELER_IN_FACH)) {
 			const idS1 : number = regel11.parameter.get(0).valueOf();
 			const idS2 : number = regel11.parameter.get(1).valueOf();
 			const idF : number = regel11.parameter.get(2).valueOf();
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
+			const key12F : LongArrayKey = new LongArrayKey(idS1, idS2, idF);
+			const key21F : LongArrayKey = new LongArrayKey(idS2, idS1, idF);
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
 			sch1.regel_11_zusammen_mit_schueler_in_fach(sch2, idF);
@@ -776,8 +779,10 @@ export class KursblockungDynDaten extends JavaObject {
 			const idS1 : number = regel12.parameter.get(0).valueOf();
 			const idS2 : number = regel12.parameter.get(1).valueOf();
 			const idF : number = regel12.parameter.get(2).valueOf();
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + idF));
-			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + idF));
+			const key12F : LongArrayKey = new LongArrayKey(idS1, idS2, idF);
+			const key21F : LongArrayKey = new LongArrayKey(idS2, idS1, idF);
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+			DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
 			sch1.regel_12_verbieten_mit_schueler_in_fach(sch2, idF);
@@ -786,8 +791,10 @@ export class KursblockungDynDaten extends JavaObject {
 			const idS1 : number = regel13.parameter.get(0).valueOf();
 			const idS2 : number = regel13.parameter.get(1).valueOf();
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				const key12F : LongArrayKey = new LongArrayKey(idS1, idS2, fach.id);
+				const key21F : LongArrayKey = new LongArrayKey(idS2, idS1, fach.id);
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 				const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 				const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
 				sch1.regel_13_zusammen_mit_schueler(sch2);
@@ -797,8 +804,10 @@ export class KursblockungDynDaten extends JavaObject {
 			const idS1 : number = r14.parameter.get(0).valueOf();
 			const idS2 : number = r14.parameter.get(1).valueOf();
 			for (const fach of input.schuelerGetFachListeGemeinsamerFacharten(idS1, idS2)) {
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS1 + ";" + idS2 + ";" + fach.id));
-				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(idS2 + ";" + idS1 + ";" + fach.id));
+				const key12F : LongArrayKey = new LongArrayKey(idS1, idS2, fach.id);
+				const key21F : LongArrayKey = new LongArrayKey(idS2, idS1, fach.id);
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key12F));
+				DeveloperNotificationException.ifTrue("Dopplung bei Schüler-Schüler-Fach Zusammen/Verbieten!", !setSSF.add(key21F));
 			}
 			const sch1 : KursblockungDynSchueler = this.gibSchueler(idS1);
 			const sch2 : KursblockungDynSchueler = this.gibSchueler(idS2);
@@ -865,22 +874,19 @@ export class KursblockungDynDaten extends JavaObject {
 			}
 		const uKursSchienen : GostBlockungsergebnisKursSchienenZuordnungUpdate = out.kursSchienenUpdate_01a_FUEGE_KURS_SCHIENEN_PAARE_HINZU(kursSchienenZuordnungen);
 		out.kursSchienenUpdateExecute(uKursSchienen);
-		const setKursSchueler : JavaSet<string> = new HashSet<string>();
 		const kursSchuelerZuordnungen : JavaSet<GostBlockungsergebnisKursSchuelerZuordnung> = new HashSet<GostBlockungsergebnisKursSchuelerZuordnung>();
 		for (const dynSchueler of this._schuelerArr)
 			for (const kurs of dynSchueler.gibKurswahlen())
 				if (kurs !== null) {
 					const idKurs : number = kurs.gibDatenbankID();
 					const idSchueler : number = dynSchueler.gibDatenbankID();
-					if (setKursSchueler.add(idKurs + ";" + idSchueler))
-						kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 				}
 		for (const gRegel of pDataManager.regelGetListe())
 			if (gRegel.typ === GostKursblockungRegelTyp.SCHUELER_FIXIEREN_IN_KURS.typ) {
 				const idSchueler : number = gRegel.parameter.get(0).valueOf();
 				const idKurs : number = gRegel.parameter.get(1).valueOf();
-				if (setKursSchueler.add(idKurs + ";" + idSchueler))
-					kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
+				kursSchuelerZuordnungen.add(DTOUtils.newGostBlockungsergebnisKursSchuelerZuordnung(idKurs, idSchueler));
 			}
 		const uKursSchueler : GostBlockungsergebnisKursSchuelerZuordnungUpdate = out.kursSchuelerUpdate_03a_FUEGE_KURS_SCHUELER_PAARE_HINZU(kursSchuelerZuordnungen);
 		out.kursSchuelerUpdateExecute(uKursSchueler);

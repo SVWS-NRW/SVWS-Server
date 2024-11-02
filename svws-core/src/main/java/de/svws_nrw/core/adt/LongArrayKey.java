@@ -25,15 +25,50 @@ public final class LongArrayKey implements Comparable<LongArrayKey> {
 	 */
 	public LongArrayKey(final @NotNull long[] arrayOfKeys) {
 		_keys = new long[arrayOfKeys.length];
+		System.arraycopy(arrayOfKeys, 0, _keys, 0, arrayOfKeys.length);
+		_hashcode = calculateHashcode();
+	}
 
+	/**
+	 * Konstruktor für einen Parameter.
+	 *
+	 * @param v1   Der 1. Parameter
+	 */
+	public LongArrayKey(final long v1) {
+		_keys = new long[] {v1};
+		_hashcode = calculateHashcode();
+	}
+
+	/**
+	 * Konstruktor für zwei Parameter.
+	 *
+	 * @param v1   Der 1. Parameter
+	 * @param v2   Der 2. Parameter
+	 */
+	public LongArrayKey(final long v1, final long v2) {
+		_keys = new long[] {v1, v2};
+		_hashcode = calculateHashcode();
+	}
+
+	/**
+	 * Konstruktor für drei Parameter.
+	 *
+	 * @param v1   Der 1. Parameter
+	 * @param v2   Der 2. Parameter
+	 * @param v3   Der 3. Parameter
+	 */
+	public LongArrayKey(final long v1, final long v2, final long v3) {
+		_keys = new long[] {v1, v2, v3};
+		_hashcode = calculateHashcode();
+	}
+
+	private int calculateHashcode() {
 		int hashCode = 1;
-		for (int i = 0; i < arrayOfKeys.length; i++) {
-			final long value = arrayOfKeys[i];
-			_keys[i] = value;
+		for (int i = 0; i < _keys.length; i++) {
+			final long value = _keys[i];
 			hashCode = (31 * hashCode) + (int) (value ^ (value >>> 32));
 		}
-
-		_hashcode = hashCode;
+		return hashCode;
 	}
 
 	@Override
