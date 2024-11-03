@@ -78,18 +78,6 @@ export class RouteEinstellungenBenutzer extends RouteNode<RouteDataEinstellungen
 		};
 	}
 
-	public get childRouteSelector(): WritableComputedRef<RouteRecordRaw> {
-		return computed({
-			get: () => this.selectedChildRecord || this.defaultChild!.record,
-			set: (value) => {
-				this.selectedChildRecord = value;
-				const node = RouteNode.getNodeByName(value.name?.toString());
-				if (node !== undefined)
-					void RouteManager.doRoute(node.getRoute());
-			},
-		});
-	}
-
 	private setTab = async (value: TabData) => {
 		if (value.name === this.data.view.name) return;
 		const node = RouteNode.getNodeByName(value.name);
