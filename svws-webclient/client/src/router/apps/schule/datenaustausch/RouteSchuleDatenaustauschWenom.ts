@@ -10,7 +10,6 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschWenom = () => import("~/components/schule/datenaustausch/wenom/SSchuleDatenaustauschWenom.vue");
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 
@@ -20,7 +19,6 @@ export class RouteSchuleDatenaustauschWenom extends RouteNode<any, RouteApp> {
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Webnotenmanager";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams, from: RouteNode<any, any> | undefined, from_params: RouteParams, isEntering: boolean) : Promise<void | Error | RouteLocationRaw> {

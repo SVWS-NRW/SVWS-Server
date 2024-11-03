@@ -1,12 +1,12 @@
 import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
-import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized } from "vue-router";
 
 import { BenutzerKompetenz, Schulform, ServerMode } from "@core";
 
 import { RouteNode } from "~/router/RouteNode";
 
-import { routeApp, type RouteApp } from "~/router/apps/RouteApp";
+import { type RouteApp } from "~/router/apps/RouteApp";
 
 import type { StatistikAppProps } from "~/components/statistik/SStatistikAppProps";
 import { api } from "~/router/Api";

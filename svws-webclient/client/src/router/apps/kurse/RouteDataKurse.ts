@@ -31,6 +31,10 @@ export class RouteDataKurse extends RouteData<RouteStateKurse> {
 		super(defaultState);
 	}
 
+	get hatKursListeManagerManager(): boolean {
+		return (this._state.value.kursListeManager !== undefined);
+	}
+
 	get kursListeManager(): KursListeManager {
 		if (this._state.value.kursListeManager === undefined)
 			throw new DeveloperNotificationException("Zugriff auf den Kurs-Liste-Manager, bevor dieser initialisiert wurde.");

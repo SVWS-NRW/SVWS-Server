@@ -40,6 +40,10 @@ export class RouteDataKlassen extends RouteData<RouteStateKlassen> {
 		super(defaultState);
 	}
 
+	get hatKlassenListeManagerManager(): boolean {
+		return (this._state.value.klassenListeManager !== undefined);
+	}
+
 	get klassenListeManager(): KlassenListeManager {
 		if (this._state.value.klassenListeManager === undefined)
 			throw new DeveloperNotificationException("Zugriff auf den Klassen-Liste-Manager, bevor dieser initialisiert wurde.");

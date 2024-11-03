@@ -11,7 +11,6 @@ import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschLaufbahnplanung = () => import("~/components/schule/datenaustausch/laufbahnplanung/SSchuleDatenaustauschLaufbahnplanung.vue");
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, RouteApp> {
 
@@ -21,7 +20,6 @@ export class RouteSchuleDatenaustauschLaufbahnplanung extends RouteNode<any, Rou
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "LuPO Laufbahnplanung";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 	}
 
 	public getProps(to: RouteLocationNormalized): SchuleDatenaustauschLaufbahnplanungProps {

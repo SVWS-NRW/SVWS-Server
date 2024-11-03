@@ -113,7 +113,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			auswahl = this.lehrerListeManager.filtered().isEmpty() ? null : this.lehrerListeManager.filtered().get(0);
 		const daten = auswahl === null ? null : await api.server.getLehrerStammdaten(api.schema, auswahl.id);
 		this.lehrerListeManager.setDaten(daten);
-		const personaldaten = this.lehrerListeManager.hasDaten() && hattePersonaldaten
+		const personaldaten = (this.lehrerListeManager.hasDaten() && hattePersonaldaten)
 			? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id)
 			: null;
 		this.lehrerListeManager.setPersonalDaten(personaldaten);
@@ -270,7 +270,7 @@ export class RouteDataLehrer extends RouteData<RouteStateLehrer> {
 			const lehrerStammdaten = await api.server.getLehrerStammdaten(api.schema, daten.id)
 			this.lehrerListeManager.setDaten(lehrerStammdaten);
 
-			const personaldaten = this.lehrerListeManager.hasDaten() ? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id) : null;
+			const personaldaten = this.lehrerListeManager.hasPersonalDaten() ? await api.server.getLehrerPersonaldaten(api.schema, this.lehrerListeManager.auswahl().id) : null;
 			this.lehrerListeManager.setPersonalDaten(personaldaten);
 		}
 

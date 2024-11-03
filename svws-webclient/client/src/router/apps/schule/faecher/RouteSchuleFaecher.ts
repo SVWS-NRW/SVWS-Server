@@ -7,7 +7,6 @@ import { RouteNode } from "~/router/RouteNode";
 
 import type { RouteApp } from "~/router/apps/RouteApp";
 import { routeApp } from "~/router/apps/RouteApp";
-import { routeSchule } from "~/router/apps/schule/RouteSchule";
 import { routeSchuleFachDaten } from "~/router/apps/schule/faecher/RouteSchuleFachDaten";
 
 import { ViewType, type TabData } from "@ui";
@@ -21,7 +20,6 @@ import { routeSchuleFachGruppenprozesse } from "./RouteSchuleFachGruppenprozesse
 import { routeSchuleFachNeu } from "./RouteSchuleFachNeu";
 import { api } from "~/router/Api";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SFaecherAuswahl = () => import("~/components/schule/faecher/SFaecherAuswahl.vue")
 const SFaecherApp = () => import("~/components/schule/faecher/SFaecherApp.vue")
 
@@ -34,7 +32,6 @@ export class RouteSchuleFaecher extends RouteNode<RouteDataSchuleFaecher, RouteA
 		super.text = "Fächer";
 		super.menugroup = RouteSchuleMenuGroup.SCHULBEZOGEN;
 		super.setView("liste", SFaecherAuswahl, (route) => this.getAuswahlProps(route));
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleFachDaten,
 			routeFachStundenplan,

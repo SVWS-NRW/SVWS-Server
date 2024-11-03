@@ -13,11 +13,9 @@ import type { TabData } from "@ui";
 import type { SchulenAppProps } from "~/components/schule/kataloge/schulen/SSchulenAppProps";
 import type { SchulenAuswahlProps } from "~/components/schule/kataloge/schulen/SSchulenAuswahlProps";
 import { RouteDataKatalogSchulen } from "./RouteDataKatalogSchulen";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SSchulenAuswahl = () => import("~/components/schule/kataloge/schulen/SSchulenAuswahl.vue");
 const SSchulenApp = () => import("~/components/schule/kataloge/schulen/SSchulenApp.vue");
 
@@ -29,7 +27,6 @@ export class RouteKatalogSchulen extends RouteNode<RouteDataKatalogSchulen, Rout
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Schulen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SSchulenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogSchuleDaten,

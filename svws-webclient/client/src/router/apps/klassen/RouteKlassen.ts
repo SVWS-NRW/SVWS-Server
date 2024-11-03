@@ -86,6 +86,8 @@ export class RouteKlassen extends RouteNode<RouteDataKlassen, RouteApp> {
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		if (!this.data.hatKlassenListeManagerManager)
+			return {};
 		return { id : this.data.klassenListeManager.auswahlID() ?? undefined };
 	}
 

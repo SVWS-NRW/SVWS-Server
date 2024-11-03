@@ -1,5 +1,3 @@
-import type { WritableComputedRef } from "vue";
-import { computed } from "vue";
 import type { RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordRaw } from "vue-router";
 
 import { BenutzerKompetenz, DeveloperNotificationException, Schulform, ServerMode } from "@core";
@@ -17,7 +15,6 @@ import type { BenutzergruppeAuswahlProps } from "~/components/einstellungen/benu
 import type { BenutzergruppeAppProps } from "~/components/einstellungen/benutzergruppen/SBenutzergruppeAppProps";
 import { RouteEinstellungenMenuGroup } from "../RouteEinstellungenMenuGroup";
 
-const SEinstellungenAuswahl = () => import("~/components/einstellungen/SEinstellungenAuswahl.vue")
 const SBenutzergruppeAuswahl = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeAuswahl.vue")
 const SBenutzergruppeApp = () => import("~/components/einstellungen/benutzergruppen/SBenutzergruppeApp.vue")
 
@@ -30,7 +27,6 @@ export class RouteEinstellungenBenutzergruppe extends RouteNode<RouteDataEinstel
 		super.text = "Benutzergruppen";
 		super.menugroup = RouteEinstellungenMenuGroup.BENUTZERVERWALTUNG;
 		super.setView("liste", SBenutzergruppeAuswahl, (route) => this.getAuswahlProps(route));
-		super.setView("submenu", SEinstellungenAuswahl, (route) => routeEinstellungen.getAuswahlProps(route));
 		super.children = [
 			routeEinstellungenBenutzergruppeDaten
 		];

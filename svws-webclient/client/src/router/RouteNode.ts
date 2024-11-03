@@ -1,5 +1,5 @@
 import type { ComputedRef, Ref } from "vue";
-import { computed, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import type { RouteComponent, RouteLocationNormalized, RouteLocationRaw, RouteParams, RouteParamsRawGeneric, RouteRecordName, RouteRecordRaw } from "vue-router";
 
 import type { Schulform} from "@core";
@@ -83,12 +83,12 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param component     die vue-Komponente für die Darstellung der Informationen der gewählten Route
 	 * @param data          die dem Knoten zugeordneten Daten
 	 */
-	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component: RouteComponent, data?: TRouteData) {
+	public constructor(schulformen: Iterable<Schulform>, kompetenzen: Iterable<BenutzerKompetenz>, name: string, path: string, component?: RouteComponent, data?: TRouteData) {
 		RouteNode.mapNodesByName.set(name, this);
 		this._record = {
 			name: name,
 			path: path,
-			components: { default: component },
+			components: { default: component === undefined ? defineComponent({}) : component },
 			props: { default: (to) => this.getNoProps(to) },
 			children: undefined,
 			meta: {
@@ -476,7 +476,7 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 * @param tabname       der Name des ausgewählten Tabs
 	 * @param setTab        die Callback-Methode
 	 */
-	private createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
+	public createTabManager(nodes: RouteNode<any, any>[], nodesHidden: boolean[], tabname : string, setTab: (value: TabData) => Promise<void>, type : ViewType = ViewType.DEFAULT) {
 		const tabs: TabData[] = [];
 		let tab = null;
 		for (const node of nodes) {

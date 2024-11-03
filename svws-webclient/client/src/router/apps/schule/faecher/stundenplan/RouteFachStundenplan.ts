@@ -12,7 +12,6 @@ import { RouteDataFachStundenplan } from "~/router/apps/schule/faecher/stundenpl
 import type { StundenplanAuswahlProps } from "@comp";
 import { ConfigElement } from "~/components/Config";
 import { api } from "~/router/Api";
-import { routeApp } from "~/router/apps/RouteApp";
 
 const SFachStundenplan = () => import("~/components/schule/faecher/stundenplan/SFachStundenplan.vue");
 

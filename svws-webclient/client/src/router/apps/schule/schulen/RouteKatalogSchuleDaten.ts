@@ -6,7 +6,6 @@ import { RouteNode } from "~/router/RouteNode";
 import { routeKatalogSchulen, type RouteKatalogSchulen } from "~/router/apps/schule/schulen/RouteKatalogSchulen";
 
 import type { SchuleDatenProps } from "~/components/schule/kataloge/schulen/daten/SSchuleDatenProps";
-import { routeApp } from "~/router/apps/RouteApp";
 import { api } from "~/router/Api";
 
 const SSchuleDaten = () => import("~/components/schule/kataloge/schulen/daten/SSchuleDaten.vue");

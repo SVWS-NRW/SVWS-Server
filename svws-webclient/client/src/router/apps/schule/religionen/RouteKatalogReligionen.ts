@@ -13,11 +13,9 @@ import type { TabData } from "@ui";
 import type { ReligionenAppProps } from "~/components/schule/kataloge/religionen/SReligionenAppProps";
 import type { ReligionenAuswahlProps } from "~/components/schule/kataloge/religionen/SReligionenAuswahlPops";
 import { RouteDataKatalogReligionen } from "./RouteDataKatalogReligionen";
-import { routeSchule } from "../RouteSchule";
 import { RouteSchuleMenuGroup } from "../RouteSchuleMenuGroup";
 import { routeError } from "~/router/error/RouteError";
 
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 const SReligionenAuswahl = () => import("~/components/schule/kataloge/religionen/SReligionenAuswahl.vue");
 const SReligionenApp = () => import("~/components/schule/kataloge/religionen/SReligionenApp.vue");
 
@@ -29,7 +27,6 @@ export class RouteKatalogReligionen extends RouteNode<RouteDataKatalogReligionen
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Religionen";
 		super.menugroup = RouteSchuleMenuGroup.ALLGEMEIN;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.setView("liste", SReligionenAuswahl, (route) => this.getAuswahlProps(route));
 		super.children = [
 			routeKatalogReligionDaten,

@@ -12,11 +12,9 @@ import { schulformenGymOb } from "~/router/RouteHelper";
 import { RouteDataSchuleDatenaustauschKurs42 } from "./RouteDataSchuleDatenaustauschKurs42";
 import { routeSchuleDatenaustauschKurs42Blockung } from "./RouteSchuleDatenaustauschKurs42Blockung";
 import { routeSchuleDatenaustauschKurs42Raeume } from "./RouteSchuleDatenaustauschKurs42Raeume";
-import { routeSchule } from "../../RouteSchule";
 import { RouteSchuleMenuGroup } from "../../RouteSchuleMenuGroup";
 
 const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenaustausch/kurs42/SSchuleDatenaustauschKurs42.vue");
-const SSchuleAuswahl = () => import("~/components/schule/SSchuleAuswahl.vue")
 
 export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteApp> {
 
@@ -26,7 +24,6 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";
 		super.menugroup = RouteSchuleMenuGroup.DATENAUSTAUSCH;
-		super.setView("submenu", SSchuleAuswahl, (route) => routeSchule.getAuswahlProps(route));
 		super.children = [
 			routeSchuleDatenaustauschKurs42Blockung,
 			routeSchuleDatenaustauschKurs42Raeume

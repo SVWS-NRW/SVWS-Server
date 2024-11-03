@@ -79,6 +79,8 @@ export class RouteKurse extends RouteNode<RouteDataKurse, RouteApp> {
 	}
 
 	public addRouteParamsFromState() : RouteParamsRawGeneric {
+		if (!this.data.hatKursListeManagerManager)
+			return {};
 		return { id : this.data.kursListeManager.auswahlID() ?? undefined };
 	}
 

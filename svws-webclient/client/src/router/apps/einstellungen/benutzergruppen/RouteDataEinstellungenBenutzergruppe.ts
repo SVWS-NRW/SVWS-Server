@@ -7,7 +7,6 @@ import { RouteManager } from "~/router/RouteManager";
 
 import { routeEinstellungenBenutzergruppeDaten } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppeDaten";
 import { routeEinstellungenBenutzergruppe } from "~/router/apps/einstellungen/benutzergruppen/RouteEinstellungenBenutzergruppe";
-import { routeApp } from "../../RouteApp";
 import { RouteNode } from "~/router/RouteNode";
 
 
