@@ -59,7 +59,7 @@
 			<svws-ui-table :items="schuelerklausuren()"
 				:columns="addStatusColumn(colsSchuelerklausuren)">
 				<template #cell(status)="{rowData}">
-					<svws-ui-button v-if="rowData.id == -1" type="transparent" @click="erzeugeSchuelerklausuren(ListUtils.create1(rowData))" title="hinzufügen"><span class="icon i-ri-add-line" /> hinzufügen</svws-ui-button>
+					<svws-ui-button v-if="rowData.id === -1" type="transparent" @click="erzeugeSchuelerklausuren(ListUtils.create1(rowData))" title="hinzufügen"><span class="icon i-ri-add-line" /> hinzufügen</svws-ui-button>
 					<svws-ui-button v-else type="transparent" @click="loescheSchuelerklausuren(ListUtils.create1(rowData))" title="löschen"><span class="icon i-ri-delete-bin-line" /> löschen</svws-ui-button>
 				</template>
 				<template #cell(name)="{rowData}">

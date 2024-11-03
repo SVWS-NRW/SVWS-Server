@@ -199,6 +199,15 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		return this._state.value.manager;
 	}
 
+	/**
+	 * Führt einen reset der Daten durch. Dabei wird der State auf den
+	 * Default-State zurückgesetzt.
+	 */
+	public reset(): void {
+		super.reset();
+		this._state.value.manager = new GostKlausurplanManager();
+	}
+
 	getConfigValue = (key: string) => api.config.getValue("gost.klausurplan." + key);
 
 	setConfigValue = async (key: string, value: string) => {
@@ -265,7 +274,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		if (goto instanceof GostKlausurtermin)
 			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: undefined, idtermin: goto.id }));
 		else
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto, idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto.replace(/-/g, ""), idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {
@@ -362,7 +371,7 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 
 	erzeugeDefaultKlausurvorgaben = async (quartal: number) => {
 		api.status.start();
-		const neueVorgaben = await api.server.createDefaultGostKlausurenVorgaben(api.schema, this.halbjahr.id, quartal);
+		const neueVorgaben = await api.server.createGostKlausurenDefaultVorgaben(api.schema, this.halbjahr.id, quartal);
 		this.manager.vorgabeAddAll(neueVorgaben);
 		this.commit();
 		api.status.stop();

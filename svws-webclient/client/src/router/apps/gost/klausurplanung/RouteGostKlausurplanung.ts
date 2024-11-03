@@ -117,12 +117,12 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 			// Aktualisiere das Abiturjahr
 			const abiturjahrwechsel = await this.data.setAbiturjahr(abiturjahr);
 			// Aktualisiere das Halbjahr
-			const halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
+			let halbjahr = GostHalbjahr.fromID(halbjahrId ?? null);
 			if (abiturjahrwechsel || (halbjahr === null)) {
 				let hj = GostHalbjahr.fromAbiturjahrSchuljahrUndHalbjahr(abiturjahr, routeApp.data.aktAbschnitt.value.schuljahr, routeApp.data.aktAbschnitt.value.abschnitt);
 				if (hj === null) // In zwei Fällen existiert Halbjahr, z.B. weil der Abiturjahrgang abgeschlossen ist oder noch in der Sek I ist.
 					hj = (abiturjahr < routeApp.data.aktAbschnitt.value.schuljahr + routeApp.data.aktAbschnitt.value.abschnitt) ? GostHalbjahr.Q22 : GostHalbjahr.EF1;
-				return this.getRoute({ halbjahr: hj.id });
+				halbjahr = hj;
 			}
 			const changedHalbjahr: boolean = await this.data.setHalbjahr(halbjahr, abiturjahrwechsel);
 			if (!to.name.startsWith(this.data.view.name))
@@ -131,10 +131,10 @@ export class RouteGostKlausurplanung extends RouteNode<RouteDataGostKlausurplanu
 						this.data.setView(child, this.children);
 			if (changedHalbjahr || (to.name === this.name)) {
 				if ((this.data.view.name === "gost.klausurplanung.raumzeit") && (idtermin !== undefined))
-					return this.data.view.getRoute({ idtermin });
+					return this.data.view.getRoute({ halbjahr: halbjahr.id, idtermin });
 				if (this.data.view.name === "gost.klausurplanung.kalender")
-					return this.data.view.getRoute({ datum, idtermin });
-				return this.data.view.getRoute();
+					return this.data.view.getRoute({ halbjahr: halbjahr.id, datum, idtermin });
+				return this.data.view.getRoute({ halbjahr: halbjahr.id});
 			}
 		} catch(e) {
 			return routeError.getErrorRoute(e instanceof Error ? e : new DeveloperNotificationException("Unbekannter Fehler beim Laden der Klausurplanungsdaten."));

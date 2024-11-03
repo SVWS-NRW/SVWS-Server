@@ -213,11 +213,13 @@ export class StundenplanManager extends JavaObject {
 
 	private _kwz_by_id : HashMap<number, StundenplanKalenderwochenzuordnung> = new HashMap<number, StundenplanKalenderwochenzuordnung>();
 
-	private _kwzmenge_ungueltige_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+	private _kwzmenge_sortiert_ungueltige : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
-	private _kwzmenge_sortiert : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+	private _kwzmenge_sortiert_gueltige : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
-	private _kwzmenge_sortiert_invers : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+	private _kwzmenge_sortiert_alle : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
+
+	private _kwzmenge_sortiert_alle_invers : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 
 	private _kwz_by_jahr_and_kw : HashMap2D<number, number, StundenplanKalenderwochenzuordnung> = new HashMap2D<number, number, StundenplanKalenderwochenzuordnung>();
 
@@ -1376,9 +1378,9 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	private update_kwzmenge_update_kwz_by_jahr_and_kw() : void {
-		this._kwzmenge_sortiert = new ArrayList(this._kwz_by_id.values());
+		this._kwzmenge_sortiert_alle = new ArrayList(this._kwz_by_id.values());
 		this._kwz_by_jahr_and_kw = new HashMap2D();
-		for (const kwz of this._kwzmenge_sortiert)
+		for (const kwz of this._kwzmenge_sortiert_alle)
 			DeveloperNotificationException.ifMap2DPutOverwrites(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
 		const infoVon : Array<number> = DateUtils.extractFromDateISO8601(this._stundenplanGueltigAb);
 		const infoBis : Array<number> = DateUtils.extractFromDateISO8601(this._stundenplanGueltigBis);
@@ -1398,21 +1400,28 @@ export class StundenplanManager extends JavaObject {
 					kwz.kw = kw;
 					kwz.wochentyp = this.kalenderwochenzuordnungGetWochentypOrDefault(jahr, kw);
 					DeveloperNotificationException.ifMap2DPutOverwrites(this._kwz_by_jahr_and_kw, kwz.jahr, kwz.kw, kwz);
-					this._kwzmenge_sortiert.add(kwz);
+					this._kwzmenge_sortiert_alle.add(kwz);
 				}
 		}
-		this._kwzmenge_sortiert.sort(StundenplanManager._compKWZ);
-		this._kwzmenge_sortiert_invers = new ArrayList();
-		for (const kwz of this._kwzmenge_sortiert)
-			this._kwzmenge_sortiert_invers.addFirst(kwz);
-		this._kwzmenge_ungueltige_sortiert = new ArrayList();
+		this._kwzmenge_sortiert_alle.sort(StundenplanManager._compKWZ);
+		this._kwzmenge_sortiert_alle_invers = new ArrayList();
+		for (const kwz of this._kwzmenge_sortiert_alle)
+			this._kwzmenge_sortiert_alle_invers.addFirst(kwz);
+		this._kwzmenge_sortiert_ungueltige = new ArrayList();
 		for (const kwz of this._kwz_by_id.values()) {
 			const istKleiner : boolean = (kwz.jahr < jahrVon) || ((kwz.jahr === jahrVon) && (kwz.kw < kwVon));
 			const istGroesser : boolean = (kwz.jahr > jahrBis) || ((kwz.jahr === jahrBis) && (kwz.kw > kwBis));
 			if (istKleiner || istGroesser)
-				this._kwzmenge_ungueltige_sortiert.add(kwz);
+				this._kwzmenge_sortiert_ungueltige.add(kwz);
 		}
-		this._kwzmenge_ungueltige_sortiert.sort(StundenplanManager._compKWZ);
+		this._kwzmenge_sortiert_ungueltige.sort(StundenplanManager._compKWZ);
+		this._kwzmenge_sortiert_gueltige = new ArrayList();
+		for (const kwz of this._kwzmenge_sortiert_alle) {
+			const istKleiner : boolean = (kwz.jahr < jahrVon) || ((kwz.jahr === jahrVon) && (kwz.kw < kwVon));
+			const istGroesser : boolean = (kwz.jahr > jahrBis) || ((kwz.jahr === jahrBis) && (kwz.kw > kwBis));
+			if (!istKleiner && !istGroesser)
+				this._kwzmenge_sortiert_gueltige.add(kwz);
+		}
 	}
 
 	private update_klassenmenge() : void {
@@ -1825,7 +1834,7 @@ export class StundenplanManager extends JavaObject {
 
 	private update_kwzmenge_by_wochentyp() : void {
 		this._kwzmenge_by_wochentyp = new HashMap();
-		for (const kwz of this._kwzmenge_sortiert)
+		for (const kwz of this._kwzmenge_sortiert_alle)
 			MapUtils.addToList(this._kwzmenge_by_wochentyp, kwz.wochentyp, kwz);
 	}
 
@@ -2319,10 +2328,10 @@ export class StundenplanManager extends JavaObject {
 		const kwz : StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
 		if (kwz !== null)
 			return kwz;
-		const kwzFirst : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
+		const kwzFirst : StundenplanKalenderwochenzuordnung = DeveloperNotificationException.ifListGetFirstFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert_alle);
 		if ((jahr < kwzFirst.jahr) || ((jahr === kwzFirst.jahr) && (kalenderwoche < kwzFirst.kw)))
 			return kwzFirst;
-		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert);
+		return DeveloperNotificationException.ifListGetLastFailes("_kwz_by_jahr_and_kw", this._kwzmenge_sortiert_alle);
 	}
 
 	/**
@@ -2342,14 +2351,50 @@ export class StundenplanManager extends JavaObject {
 	}
 
 	/**
-	 * Liefert sortierte eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * Liefert das zum Jahr und KW zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt, oder NULL.
+	 *
+	 * @param jahr           Das Jahr der Kalenderwoche. Es muss zwischen {@link DateUtils#MIN_GUELTIGES_JAHR} und {@link DateUtils#MAX_GUELTIGES_JAHR} liegen.
+	 * @param kalenderwoche  Die gewünschten Kalenderwoche. Es muss zwischen 1 und {@link DateUtils#gibKalenderwochenOfJahr(int)} liegen.
+	 *
+	 * @return das zum Jahr und KW zugehörige {@link StundenplanKalenderwochenzuordnung}-Objekt, oder NULL.
+	 */
+	public kalenderwochenzuordnungGueltigGetByDatumOrNull(jahr : number, kalenderwoche : number) : StundenplanKalenderwochenzuordnung | null {
+		const kwz : StundenplanKalenderwochenzuordnung | null = this._kwz_by_jahr_and_kw.getOrNull(jahr, kalenderwoche);
+		if (kwz === null)
+			return null;
+		const infoVon : Array<number> = DateUtils.extractFromDateISO8601(this._stundenplanGueltigAb);
+		const infoBis : Array<number> = DateUtils.extractFromDateISO8601(this._stundenplanGueltigBis);
+		const jahrVon : number = infoVon[6];
+		const jahrBis : number = infoBis[6];
+		const kwVon : number = infoVon[5];
+		const kwBis : number = infoBis[5];
+		const istKleiner : boolean = (kwz.jahr < jahrVon) || ((kwz.jahr === jahrVon) && (kwz.kw < kwVon));
+		const istGroesser : boolean = (kwz.jahr > jahrBis) || ((kwz.jahr === jahrBis) && (kwz.kw > kwBis));
+		return (istKleiner || istGroesser) ? null : kwz;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte,
+	 *         die innerhalb der Datumsgrenzen des Stundenplanes liegen.
 	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
 	 * <br>Laufzeit: O(1)
 	 *
-	 * @return eine Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte,
+	 *         die innerhalb der Datumsgrenzen des Stundenplanes liegen.
+	 */
+	public kalenderwochenzuordnungGetMengeGueltigeAsList() : List<StundenplanKalenderwochenzuordnung> {
+		return this._kwzmenge_sortiert_gueltige;
+	}
+
+	/**
+	 * Liefert eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
+	 * <br>Hinweis: Einige Objekte dieser Menge können die ID = -1 haben, falls sie erzeugt wurden und nicht aus der DB stammen.
+	 * <br>Laufzeit: O(1)
+	 *
+	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte.
 	 */
 	public kalenderwochenzuordnungGetMengeAsList() : List<StundenplanKalenderwochenzuordnung> {
-		return this._kwzmenge_sortiert;
+		return this._kwzmenge_sortiert_alle;
 	}
 
 	/**
@@ -2360,7 +2405,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte in inverser Reihenfolge.
 	 */
 	public kalenderwochenzuordnungGetMengeInversAsList() : List<StundenplanKalenderwochenzuordnung> {
-		return this._kwzmenge_sortiert_invers;
+		return this._kwzmenge_sortiert_alle_invers;
 	}
 
 	/**
@@ -2384,7 +2429,7 @@ export class StundenplanManager extends JavaObject {
 	 * @return eine sortierte Liste aller {@link StundenplanKalenderwochenzuordnung}-Objekte, welche außerhalb des gültigen Datumsbereiches liegen.
 	 */
 	public kalenderwochenzuordnungGetMengeUngueltige() : List<StundenplanKalenderwochenzuordnung> {
-		return this._kwzmenge_ungueltige_sortiert;
+		return this._kwzmenge_sortiert_ungueltige;
 	}
 
 	/**

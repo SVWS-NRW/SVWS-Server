@@ -29,7 +29,7 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 	}
 
 	public checkHidden(params?: RouteParams) {
-		if (!routeGostKlausurplanung.data.abschnitt || !routeGostKlausurplanung.data.manager.stundenplanManagerExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id))
+		if (!routeGostKlausurplanung.data.abschnitt || routeGostKlausurplanung.data.manager.stundenplanManagerGeladenAndExistsByAbschnitt(routeGostKlausurplanung.data.abschnitt.id) === false)
 			return { name: routeGostKlausurplanung.defaultChild!.name, params };
 		return false;
 	}

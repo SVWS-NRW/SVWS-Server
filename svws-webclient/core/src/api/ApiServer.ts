@@ -5772,7 +5772,7 @@ export class ApiServer extends BaseApi {
 
 
 	/**
-	 * Implementierung der GET-Methode createDefaultGostKlausurenVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
+	 * Implementierung der GET-Methode createGostKlausurenDefaultVorgaben für den Zugriff auf die URL https://{hostname}/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\d+}/quartal/{quartal : -?\d+}
 	 *
 	 * Legt die Default-Klausurvorgaben im Vorlagen-Jahrgang an und gibt sie zurück.Dabei wird geprüft, ob der SVWS-Benutzer die notwendige Berechtigung zum Erstellen einer Gost-Klausurvorgabe besitzt.
 	 *
@@ -5790,7 +5790,7 @@ export class ApiServer extends BaseApi {
 	 *
 	 * @returns Die Liste der neuen Klausurvorgaben.
 	 */
-	public async createDefaultGostKlausurenVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
+	public async createGostKlausurenDefaultVorgaben(schema : string, halbjahr : number, quartal : number) : Promise<List<GostKlausurvorgabe>> {
 		const path = "/db/{schema}/gost/klausuren/vorgaben/createDefault/halbjahr/{halbjahr : -?\\d+}/quartal/{quartal : -?\\d+}"
 			.replace(/{schema\s*(:[^{}]+({[^{}]+})*)?}/g, schema)
 			.replace(/{halbjahr\s*(:[^{}]+({[^{}]+})*)?}/g, halbjahr.toString())

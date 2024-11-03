@@ -308,17 +308,8 @@
 
 	const klausurCssClasses = (kl: GostKlausurplanungDragData, termin: GostKlausurtermin | undefined) => {
 		const klausur = kl as GostKursklausur;
-		// let konfliktfreiZuFremdtermin = false;
-		// for (const oTermin of termine.value) {
-		// 	if (oTermin.id !== klausur.idTermin && oTermin.quartal === props.kMan().vorgabeByKursklausur(klausur).quartal || oTermin.quartal === 0)
-		// 		konfliktfreiZuFremdtermin = props.kMan().konflikteAnzahlZuTerminGetByTerminAndKursklausur(oTermin, klausur) === 0;
-		// 	if (konfliktfreiZuFremdtermin)
-		// 		break;
-		// }
 		const konfliktZuEigenemTermin = termin === undefined ? false : props.kMan().konflikteAnzahlZuEigenemTerminGetByKursklausur(klausur) > 0;
 		return {
-			// "svws-ok": !konfliktZuEigenemTermin && konfliktfreiZuFremdtermin,
-			// "bg-yellow-300": !konfliktfreiZuFremdtermin,
 			"bg-red-200": konfliktZuEigenemTermin,
 		}
 	};
@@ -335,9 +326,9 @@
 
 	function calculateColumns() {
 		const cols: DataTableColumn[] = [
-			{ key: "kurs", label: "Kurs", span: 1.25 },
+			{ key: "kurs", label: "Kurs", minWidth: 6.25 },
 			{ key: "kuerzel", label: "Lehrkraft" },
-			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "right", minWidth: 3.25 },
+			{ key: "schriftlich", label: "Schriftlich", span: 0.5, align: "center", minWidth: 3.25 },
 			{ key: "dauer", label: "Dauer", tooltip: "Dauer in Minuten", span: 0.5, align: "right", minWidth: 3.25 },
 			{ key: "kursSchiene", label: "S", tooltip: "Schiene", span: 0.25, align: "right", minWidth: 2.75 },
 		];

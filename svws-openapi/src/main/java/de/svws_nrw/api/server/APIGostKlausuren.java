@@ -238,7 +238,7 @@ public class APIGostKlausuren {
 	@ApiResponse(responseCode = "403", description = "Der SVWS-Benutzer hat keine Rechte, um eine Gost-Klausurvorgabe anzulegen.")
 	@ApiResponse(responseCode = "400", description = "Falsche Parameter")
 	@ApiResponse(responseCode = "500", description = "Unspezifizierter Fehler (z.B. beim Datenbankzugriff)")
-	public Response createDefaultGostKlausurenVorgaben(@PathParam("schema") final String schema, @PathParam("halbjahr") final int halbjahr,
+	public Response createGostKlausurenDefaultVorgaben(@PathParam("schema") final String schema, @PathParam("halbjahr") final int halbjahr,
 			@PathParam("quartal") final int quartal, @Context final HttpServletRequest request) {
 		return DBBenutzerUtils.runWithTransaction(
 				conn -> Response.status(Status.OK).type(MediaType.APPLICATION_JSON)

@@ -619,47 +619,65 @@ export class GostKlausurplanManager extends JavaObject {
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu dem angegebenen Schuljahresabschnitt bereits die StundenplanManager aus der Datenbank geladen wurden.
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn die StundenplanManager bereits geladen wurde, sonst false
 	 */
 	public stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt : number) : boolean {
 		return this._stundenplanmanagermenge_by_schuljahresabschnitt.containsKey(idSchuljahresabschnitt);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnitt(idSchuljahresabschnitt : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const liste : List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
 		return liste !== null && !liste.isEmpty();
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert.
+	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
+	 */
+	public stundenplanManagerGeladenAndExistsByAbschnitt(idSchuljahresabschnitt : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			return false;
+		const liste : List<StundenplanManager> | null = this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt);
+		return liste !== null && !liste.isEmpty();
+	}
+
+	/**
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param jahr das Jahr
 	 * @param kalenderwoche die Kalenderwoche
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnittAndKW(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_kw.contains(idSchuljahresabschnitt, jahr, kalenderwoche);
 	}
 
 	/**
-	 * Prüft, ob zu den angegebenen Parametern bereits ein StundenplanManager geladen wurde.
+	 * Prüft, ob zu den angegebenen Parametern ein StundenplanManager existiert. Falls noch keine StundenplanManager für den angegebenen Schuljahresabschnitt geladen wurden, wird eine {@link DeveloperNotificationException} geworfen
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param datum das Datum
-	 * @return true, wenn ein StundenplanManager gelaen wurde, sonst false
+	 * @return true, wenn ein StundenplanManager existiert, sonst false
 	 */
 	public stundenplanManagerExistsByAbschnittAndDatum(idSchuljahresabschnitt : number, datum : string) : boolean {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.contains(idSchuljahresabschnitt, datum);
 	}
 
 	/**
-	 * Setzt den {@link StundenplanManager}
+	 * Setzt die {@link StundenplanManager} für den angegebenen Schuljahresabschnitt
 	 *
 	 * @param idSchuljahresabschnitt die ID des Schuljahresabschnitts
 	 * @param stundenplanManagerList die Liste der {@link StundenplanManager}
@@ -716,6 +734,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return den {@link StundenplanManager}, zu den übergebenen Parametern, sonst null.
 	 */
 	public stundenplanManagerGetByAbschnittAndDatumOrNull(idSchuljahresabschnitt : number, datum : string) : StundenplanManager | null {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		return this._stundenplanmanager_by_schuljahresabschnitt_and_datum.getOrNull(idSchuljahresabschnitt, datum);
 	}
 
@@ -778,9 +798,11 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return eine Liste mit allen {@link StundenplanKalenderwochenzuordnung}-Objekten, die zu dem übergebenen Schuljahresabschnitt gehören.
 	 */
 	public stundenplanManagerKalenderwochenzuordnungenGetMengeByAbschnitt(idSchuljahresabschnitt : number) : List<StundenplanKalenderwochenzuordnung> {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const kwzAll : List<StundenplanKalenderwochenzuordnung> = new ArrayList<StundenplanKalenderwochenzuordnung>();
 		for (const manager of DeveloperNotificationException.ifNull(JavaString.format("_stundenplanmanagermenge_by_schuljahresabschnitt null für Abschnitt %d", idSchuljahresabschnitt), this._stundenplanmanagermenge_by_schuljahresabschnitt.get(idSchuljahresabschnitt))) {
-			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeAsList());
+			kwzAll.addAll(manager.kalenderwochenzuordnungGetMengeGueltigeAsList());
 		}
 		return kwzAll;
 	}
@@ -821,6 +843,8 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return das dem Jahr und der Kalenderwoche zugeordnete {@link StundenplanKalenderwochenzuordnung}-Objekt der Auswahl-Menge oder das nächstmöglichste.
 	 */
 	public stundenplanManagerGetByAbschnittAndJahrAndKWOrClosest(idSchuljahresabschnitt : number, jahr : number, kalenderwoche : number) : StundenplanManager {
+		if (!this.stundenplanManagerGeladenByAbschnitt(idSchuljahresabschnitt))
+			throw new DeveloperNotificationException("StundenplanManager für Schuljahresabschnitt " + idSchuljahresabschnitt + " wurde nicht geladen.")
 		const manager : StundenplanManager | null = this._stundenplanmanager_by_schuljahresabschnitt_and_kw.getOrNull(idSchuljahresabschnitt, jahr, kalenderwoche);
 		if (manager !== null)
 			return manager;
@@ -2909,11 +2933,8 @@ export class GostKlausurplanManager extends JavaObject {
 	public minKlausurstartzeitByTermin(termin : GostKlausurtermin, includeNachschreiber : boolean) : number {
 		let minStart : number = 1440;
 		const skts : List<GostSchuelerklausurTermin> = this.schuelerklausurterminAktuellGetMengeByTermin(termin);
-		if (skts.isEmpty()) {
-			if (termin.startzeit === null)
-				throw new DeveloperNotificationException("Die Startzeit des Termins darf an dieser Stelle nicht null sein.")
-			return termin.startzeit;
-		}
+		if (skts.isEmpty())
+			return DeveloperNotificationException.ifNull("Die Startzeit des Termins darf an dieser Stelle nicht null sein.", termin.startzeit);
 		for (const skt of skts) {
 			if (!includeNachschreiber && skt.folgeNr > 0)
 				continue;
@@ -3972,9 +3993,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public kursdatenByKursklausur(k : GostKursklausur) : KursDaten {
 		const kurs : KursDaten | null = this.getKursManager().get(k.idKurs);
-		if (kurs === null)
-			throw new DeveloperNotificationException("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.")
-		return kurs;
+		return DeveloperNotificationException.ifNull("Kurs mit ID " + k.idKurs + " nicht in KursManager vorhanden.", kurs);
 	}
 
 	/**
@@ -3986,10 +4005,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 */
 	public fachByKursklausur(k : GostKursklausur) : GostFach {
 		const vorgabe : GostKlausurvorgabe | null = this.vorgabeByKursklausur(k);
-		const fach : GostFach | null = this.getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach);
-		if (fach === null)
-			throw new DeveloperNotificationException("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.")
-		return fach;
+		return DeveloperNotificationException.ifNull("Fach mit ID " + this.vorgabeByKursklausur(k).idFach + " nicht in GostFaecherManager vorhanden.", this.getFaecherManager(vorgabe.abiJahrgang).get(vorgabe.idFach));
 	}
 
 	/**
@@ -4129,9 +4145,7 @@ export class GostKlausurplanManager extends JavaObject {
 	 * @return das Datum des Vorgängertermins zum übergebenen {@link GostSchuelerklausurTermin}
 	 */
 	public datumSchuelerklausurVorgaenger(skt : GostSchuelerklausurTermin) : string | null {
-		const vorgaengerSkt : GostSchuelerklausurTermin | null = this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt);
-		if (vorgaengerSkt === null)
-			throw new DeveloperNotificationException("Kein Vorgängertermin zu Schülerklausurtermin gefunden.")
+		const vorgaengerSkt : GostSchuelerklausurTermin = DeveloperNotificationException.ifNull("Kein Vorgängertermin zu Schülerklausurtermin gefunden.", this.schuelerklausurterminVorgaengerBySchuelerklausurtermin(skt));
 		const termin : GostKlausurtermin | null = this.terminOrNullBySchuelerklausurTermin(vorgaengerSkt);
 		return (termin === null) ? null : termin.datum;
 	}
