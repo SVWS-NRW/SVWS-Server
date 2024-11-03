@@ -372,9 +372,11 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public get menu() : RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
-		for (const node of this._menu)
-			if (node.mode.checkServerMode(api.mode))
-				result.push(node);
+		for (const node of this._menu) {
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+				continue;
+			result.push(node);
+		}
 		return result;
 	}
 
@@ -573,8 +575,10 @@ export abstract class RouteNode<TRouteData extends RouteData<any>, TRouteParent 
 	 */
 	public hidden(params?: RouteParams): RouteLocationRaw | false {
 		// Prüfen, ob die aktuelle Schulform und die Kompetenzen des angemdelteten Benutzers die Route erlaubt oder nicht
-		if (api.authenticated && (this.name !== "init") && ((!this.hatSchulform()) || (!this.hatEineKompetenz())))
-			return false;
+		if (api.authenticated && (this.name !== "init")) {
+			if ((!this.hatSchulform()) || (!this.hatEineKompetenz()))
+				return this.parent?.getRoute() ?? false;
+		}
 		// Prüfen, ob die Komponente dargestellt werden darf oder nicht
 		return (this.isHidden === undefined) ? false : this.isHidden(params);
 	}

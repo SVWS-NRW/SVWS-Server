@@ -12,7 +12,10 @@ const SSchuleDatenaustauschUntisRaeume = () => import("~/components/schule/daten
 export class RouteSchuleDatenaustauschUntisRaeume extends RouteNode<any, RouteSchuleDatenaustauschUntis> {
 
 	public constructor() {
-		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.raeume", "raeume", SSchuleDatenaustauschUntisRaeume);
+		super(Schulform.values(), [
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.untis.raeume", "raeume", SSchuleDatenaustauschUntisRaeume);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";

@@ -13,7 +13,12 @@ const SSchuleDatenaustauschKurs42Raeume = () => import("~/components/schule/date
 export class RouteSchuleDatenaustauschKurs42Raeume extends RouteNode<any, RouteSchuleDatenaustauschKurs42> {
 
 	public constructor() {
-		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.kurs42.raeume", "raeume", SSchuleDatenaustauschKurs42Raeume);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Räume";

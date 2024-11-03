@@ -19,7 +19,12 @@ const SSchuleDatenaustauschKurs42 = () => import("~/components/schule/datenausta
 export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDatenaustauschKurs42, RouteApp> {
 
 	public constructor() {
-		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.kurs42", "kurs42", SSchuleDatenaustauschKurs42, new RouteDataSchuleDatenaustauschKurs42());
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Kurs42";
@@ -28,12 +33,16 @@ export class RouteSchuleDatenaustauschKurs42 extends RouteNode<RouteDataSchuleDa
 			routeSchuleDatenaustauschKurs42Blockung,
 			routeSchuleDatenaustauschKurs42Raeume
 		];
-		super.defaultChild = routeSchuleDatenaustauschKurs42Blockung;
+		this.defaultChild = routeSchuleDatenaustauschKurs42Blockung;
 	}
 
 	protected async update(to: RouteNode<any, any>, to_params: RouteParams) : Promise<void | Error | RouteLocationRaw> {
-		if (to.name === this.name)
-			return this.defaultChild!.getRoute();
+		if (to.name === this.name) {
+			if (routeSchuleDatenaustauschKurs42Blockung.hidden() === false)
+				return routeSchuleDatenaustauschKurs42Blockung.getRoute();
+			else
+				return routeSchuleDatenaustauschKurs42Raeume.getRoute();
+		}
 		if (!to.name.startsWith(this.data.view.name)) {
 			for (const child of this.children) {
 				if (to.name.startsWith(child.name)) {

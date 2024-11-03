@@ -50,9 +50,11 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	private _menuEinstellungen: RouteNode<any, any>[];
 	public get menuEinstellungen() : RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
-		for (const node of this._menuEinstellungen)
-			if (node.mode.checkServerMode(api.mode))
-				result.push(node);
+		for (const node of this._menuEinstellungen) {
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+				continue;
+			result.push(node);
+		}
 		return result;
 	}
 	public menuEinstellungenHidden() : boolean[] {
@@ -65,8 +67,9 @@ export class RouteApp extends RouteNode<RouteDataApp, any> {
 	public get menuSchule() : RouteNode<any, any>[] {
 		const result: RouteNode<any, any>[] = [];
 		for (const node of this._menuSchule) {
-			if (node.mode.checkServerMode(api.mode))
-				result.push(node);
+			if (api.authenticated && (!node.mode.checkServerMode(api.mode) || !node.hatSchulform() || !node.hatEineKompetenz()))
+				continue;
+			result.push(node);
 		}
 		return result;
 	}

@@ -13,7 +13,12 @@ const SSchuleDatenaustauschUntisBlockungen = () => import("~/components/schule/d
 export class RouteSchuleDatenaustauschUntisBlockungen extends RouteNode<any, RouteSchuleDatenaustauschUntis> {
 
 	public constructor() {
-		super(schulformenGymOb, [ BenutzerKompetenz.KEINE ], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
+		super(schulformenGymOb, [
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_ALLGEMEIN,
+			BenutzerKompetenz.OBERSTUFE_KURSPLANUNG_FUNKTIONSBEZOGEN,
+			BenutzerKompetenz.STUNDENPLAN_ALLGEMEIN_ANSEHEN,
+			BenutzerKompetenz.STUNDENPLAN_FUNKTIONSBEZOGEN_ANSEHEN,
+		], "schule.datenaustausch.untis.blockungen", "blockungen/:abiturjahr(\\d+)?/:halbjahr([0-5])?/:idblockung(\\d+)?/:idergebnis(\\d+)?", SSchuleDatenaustauschUntisBlockungen);
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getProps(route);
 		super.text = "Blockungen";
