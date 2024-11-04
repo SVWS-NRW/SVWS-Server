@@ -11,15 +11,15 @@
 		</template>
 		<template #modalActions>
 			<svws-ui-button type="secondary" @click="showModal().value = false"> Abbrechen </svws-ui-button>
-			<svws-ui-button type="secondary" @click="importer()" :disabled="!item.kuerzel || (item.groesse < 1)"> Raum hinzufügen </svws-ui-button>
+			<svws-ui-button type="secondary" @click="importer()" :disabled="item.kuerzel.trim().length === 0 || (item.groesse < 1)"> Raum hinzufügen </svws-ui-button>
 		</template>
 	</svws-ui-modal>
 </template>
 
 <script setup lang="ts">
 
-	import { Raum } from "@core";
 	import { ref } from "vue";
+	import { Raum } from "@core";
 
 	const props = defineProps<{
 		addRaum: (raum: Raum) => Promise<void>;
