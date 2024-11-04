@@ -60,7 +60,6 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import type TextInput from "./SvwsUiTextInput.vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	const props = withDefaults(defineProps<{

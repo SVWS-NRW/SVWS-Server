@@ -87,10 +87,10 @@
 
 <script setup lang="ts" generic="T extends JavaObject, V extends Validator<T>">
 
-	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount } from "vue";
-	import { genId } from "../utils";
+	import { ref, computed, watch, type ComputedRef, type Ref, onBeforeMount, onMounted, onBeforeUnmount, useId } from "vue";
 	import type { Validator } from "../../../core/src/asd/validate/Validator";
-	import { ValidatorFehlerart, type JavaObject } from "../../../core/src";
+	import type { JavaObject } from "../../../core/src/java/lang/JavaObject";
+	import { ValidatorFehlerart } from "../../../core/src/asd/validate/ValidatorFehlerart";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -230,7 +230,7 @@
 		input.value?.focus();
 	}
 
-	const labelId = genId();
+	const labelId = useId();
 
 	const content = computed<string | null>(() => data.value);
 

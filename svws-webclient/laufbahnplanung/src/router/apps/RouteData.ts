@@ -29,7 +29,7 @@ import { GostKursart } from "../../../../core/src/core/types/gost/GostKursart";
 import { GostFaecherManager } from "../../../../core/src/core/utils/gost/GostFaecherManager";
 import { ArrayList } from "../../../../core/src/java/util/ArrayList";
 import type { List } from "../../../../core/src/java/util/List";
-import { JsonCoreTypeReaderStatic } from "../../../../core/src/JsonCoreTypeReaderStatic";
+import { JsonCoreTypeReaderStatic } from "../../../../core/src/asd/utils/JsonCoreTypeReaderStatic";
 
 
 interface RouteState {

@@ -15,7 +15,6 @@
 		"src/**/*.vue",
 		"components.d.ts",
 		"auto-imports.d.ts",
-		"../core/src/*.ts",
 		"../core/src/**/*.ts",
 	],
 	"exclude": ["**/*.story.vue", "**/*.test.ts", "src/histoire.setup.ts"]
