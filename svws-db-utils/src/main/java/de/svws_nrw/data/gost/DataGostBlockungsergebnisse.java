@@ -1095,6 +1095,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				final GostFach fach = datenManager.faecherManager().get(kurs.fach_id);
 				final DTOKurs kursDTO = mapKursDTOs.get(kurs.id);
 				final DTOGostSchuelerFachbelegungen fachwahl = conn.queryByKey(DTOGostSchuelerFachbelegungen.class, schueler.id, fach.id);
+				if (fachwahl == null)
+					continue; // Der Schüler ist in einem Kurs, für den er keine Fachwahl hat, hier wird nicht angepasst
 				final List<DTOSchuelerLeistungsdaten> leistungsDaten =
 						conn.queryList("SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID = ?1 AND e.Fach_ID = ?2",
 								DTOSchuelerLeistungsdaten.class, idLernabschnitt, kurs.fach_id);
@@ -1104,18 +1106,21 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 				leistung.Fachlehrer_ID = kursDTO.Lehrer_ID;
 				leistung.Kursart = switch (halbjahr) {
 					case EF1 -> switch (fachwahl.EF1_Kursart) {
+						case null -> null;
 						case "M" -> "GKM";
 						case "S" -> "GKS";
 						case "AT" -> "GKM";
 						default -> null;
 					};
 					case EF2 -> switch (fachwahl.EF2_Kursart) {
+						case null -> null;
 						case "M" -> "GKM";
 						case "S" -> "GKS";
 						case "AT" -> "GKM";
 						default -> null;
 					};
 					case Q11 -> switch (fachwahl.Q11_Kursart) {
+						case null -> null;
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
@@ -1124,6 +1129,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 						default -> null;
 					};
 					case Q12 -> switch (fachwahl.Q12_Kursart) {
+						case null -> null;
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
@@ -1132,6 +1138,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 						default -> null;
 					};
 					case Q21 -> switch (fachwahl.Q21_Kursart) {
+						case null -> null;
 						case "M" -> "GKM";
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
@@ -1140,6 +1147,7 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 						default -> null;
 					};
 					case Q22 -> switch (fachwahl.Q22_Kursart) {
+						case null -> null;
 						case "M" -> (fachwahl.AbiturFach == null) ? "GKM" : ("AB" + fachwahl.AbiturFach);
 						case "S" -> (fachwahl.AbiturFach == null) ? "GKS" : ("AB" + fachwahl.AbiturFach);
 						case "LK" -> ((fachwahl.AbiturFach != null) && (fachwahl.AbiturFach == 1)) ? "LK1" : "LK2";
@@ -1148,6 +1156,8 @@ public final class DataGostBlockungsergebnisse extends DataManager<Long> {
 						default -> null;
 					};
 				};
+				if (leistung.Kursart == null)
+					continue;  // Leistungsdaten ohne Kursart sind nicht zulässig
 				leistung.KursartAllg = kursart.kuerzel;
 				leistung.Kurs_ID = mapKursIDs.get(kurs.id);
 				if ((leistung.NotenKrz == null) || (Objects.equals(leistung.NotenKrz, Note.KEINE.daten(abschnitt.schuljahr).kuerzel))) {
