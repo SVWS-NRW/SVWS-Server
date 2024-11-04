@@ -71,7 +71,7 @@
 								</template>
 							</svws-ui-tooltip>
 						</template>
-						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && (((noten[halbjahr.id] === null) || (noten[halbjahr.id] === Note.KEINE)) && !belegungHatImmerNoten) && hatUpdateKompetenz">
+						<template v-else-if="(wahlen[halbjahr.id] !== '') && istBewertet(halbjahr) && ((noten[halbjahr.id] === null) && !belegungHatImmerNoten) && hatUpdateKompetenz">
 							<svws-ui-tooltip :color="'danger'">
 								<svws-ui-button type="icon" size="small">
 									<span class="icon i-ri-close-line" @click="deleteFachwahl(halbjahr)" />
@@ -274,8 +274,9 @@
 		if (fachbelegung.value === null)
 			return [null, null, null, null, null, null];
 		return fachbelegung.value.belegungen.map((b: AbiturFachbelegungHalbjahr | null) => {
-			b = (b !== null) ? b : new AbiturFachbelegungHalbjahr();
-			return (b.notenkuerzel === null) ? null : Note.fromKuerzel(b.notenkuerzel); // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
+			if ((b === null) || (b.notenkuerzel === null))
+				return null; // gebe explizit null zurück, da dann keine Leistungsdaten für die Belegung vorliegen
+			return Note.fromKuerzel(b.notenkuerzel);
 		});
 	});
 

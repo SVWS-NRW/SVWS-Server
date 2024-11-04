@@ -202,7 +202,7 @@ public final class DBUtilsGostLaufbahn {
 				belegung.wochenstunden = leistungenBelegung.wochenstunden;
 				belegung.fehlstundenGesamt = leistungenBelegung.fehlstundenGesamt;
 				belegung.fehlstundenUnentschuldigt = leistungenBelegung.fehlstundenUnentschuldigt;
-				belegung.notenkuerzel = leistungenBelegung.notenKuerzel;
+				belegung.notenkuerzel = (leistungenBelegung.notenKuerzel == null) ? "" : leistungenBelegung.notenKuerzel;
 				fach.belegungen[GostHalbjahr.fromKuerzel(leistungenBelegung.halbjahrKuerzel).id] = belegung;
 			}
 			// Prüfe, ob das Fach in einem gewerteten Abschnitt belegt wurde. Wenn ja, dann füge es zu es den Fachbelegungen hinzu
@@ -387,6 +387,7 @@ public final class DBUtilsGostLaufbahn {
 				: ("LK".equals(belegungPlanungKursart) || "S".equals(belegungPlanungKursart));
 		belegung.wochenstunden = "LK".equals(belegungPlanungKursart) ? 5 : wochenstunden;
 		belegung.block1gewertet = istInAbiwertung;
+		belegung.notenkuerzel = null;
 		fach.belegungen[halbjahr.id] = belegung;
 		fach.letzteKursart = belegung.kursartKuerzel;
 	}
