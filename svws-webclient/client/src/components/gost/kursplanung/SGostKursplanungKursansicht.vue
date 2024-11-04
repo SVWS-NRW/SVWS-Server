@@ -164,11 +164,11 @@
 											<span v-else class="icon i-ri-arrow-right-s-line relative" />
 										</div>
 									</template>
-									<div role="cell" class="svws-ui-td py-0">
+									<div role="cell" class="svws-ui-td py-0 whitespace-nowrap overflow-hidden overflow-ellipsis w-full">
 										<div class="flex flex-grow items-center -my-auto h-full">
 											<template v-if="kurs.id === editKursID">
 												<span class="flex-shrink-0 -my-0.5">{{ getDatenmanager().kursGetNameOhneSuffix(kurs.id) }}<span class="opacity-50">–</span></span>
-												<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => suffix && editKursOnBlur(suffix, kurs.id)" @keyup.enter="$event.target.blur()" focus headless class="-my-1" />
+												<svws-ui-text-input :model-value="kurs.suffix" @change="suffix => (suffix !== null) && editKursOnBlur(suffix, kurs.id)" @keyup.enter="$event.target.blur()" @keyup.esc="editKursID = undefined" focus headless :max="20" />
 											</template>
 											<template v-else>
 												<span class="underline decoration-dotted decoration-black/50 hover:no-underline underline-offset-2 cursor-text" @click="hatUpdateKompetenz && (editKursID=kurs.id)">
@@ -180,7 +180,7 @@
 									<div role="cell" class="svws-ui-td">
 										<template v-if="istVorlage && hatUpdateKompetenz">
 											<svws-ui-select v-model="kurslehrer(kurs).value" autocomplete :item-filter="lehrer_filter" removable headless
-												:items="kurslehrer_liste(kurs).value" :item-text="l=> l.kuerzel" title="Lehrkraft" />
+												:items="kurslehrer_liste(kurs).value" :item-text="l => l.kuerzel" title="Lehrkraft" />
 										</template>
 										<template v-else>
 											<span :class="{'opacity-25': !kurslehrer(kurs).value?.kuerzel}">{{ kurslehrer(kurs).value?.kuerzel || '—' }}</span>
