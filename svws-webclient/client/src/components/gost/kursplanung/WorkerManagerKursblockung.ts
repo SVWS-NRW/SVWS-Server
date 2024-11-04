@@ -126,7 +126,7 @@ export class WorkerManagerKursblockung {
 				if (this.workerInitialized[i])
 					this.requestNext(i);
 				else
-					this.initWorker(i);
+					void this.initWorker(i);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ export class WorkerManagerKursblockung {
 		if (this.terminated.value === true)
 			throw new DeveloperNotificationException("Der Worker-Thread für den Kursblockungsalgorithmus wurde bereits terminiert. Dieser kann nicht erneut initialisiert werden.");
 		for (let i = 0; i < this.threads; i++)
-			this.initWorker(i);
+			void this.initWorker(i);
 	}
 
 	/**
@@ -271,6 +271,7 @@ export class WorkerManagerKursblockung {
 	 * @param blockung       die Daten der Blockung
 	 */
 	protected requestInit(index : number, faecherListe: List<GostFach>, blockung: GostBlockungsdaten, mapCoreTypeNameJsonData: Map<string, string>) {
+		console.log('init', index)
 		const faecher = new Array<string>();
 		for (const f of faecherListe)
 			faecher.push(GostFach.transpilerToJSON(f));
@@ -366,7 +367,7 @@ export class WorkerManagerKursblockung {
 	protected handleErrorMessage(index: number, data: WorkerKursblockungErrorMessage) {
 		if ((this.workerInitialized[index] === true) && (index < this.threads)) {
 			this.worker[index].terminate();
-			this.initWorker(index);
+			void this.initWorker(index);
 		}
 		throw data.error;
 	}
