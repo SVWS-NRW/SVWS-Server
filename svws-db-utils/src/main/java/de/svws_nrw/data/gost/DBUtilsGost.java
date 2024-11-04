@@ -189,7 +189,8 @@ public final class DBUtilsGost {
 			return false;
 		// Bestimme die Schueler-Leistungsdaten zu den Lernabschnitten, welche einen (Quartals-)Noteneintrag aufweisen
 		final List<DTOSchuelerLeistungsdaten> leistungsdaten = conn.queryList(
-				"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND NOT (e.NotenKrz IS NULL AND e.NotenKrzQuartal IS NULL)",
+				"SELECT e FROM DTOSchuelerLeistungsdaten e WHERE e.Abschnitt_ID IN ?1 AND"
+				+ " NOT (((e.NotenKrz IS NULL) OR (e.NotenKrz = '')) AND ((e.NotenKrzQuartal IS NULL) OR (e.NotenKrzQuartal = '')))",
 				DTOSchuelerLeistungsdaten.class,
 				idsSchuelerLernabschnittsdaten);
 		// ... und prüfe diese Lernabschnitte, ob sie Einträge für die gymnasiale Oberstufe beinhalten
