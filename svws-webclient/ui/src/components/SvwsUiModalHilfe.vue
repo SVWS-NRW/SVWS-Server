@@ -31,6 +31,8 @@
 	.markdown-body {
 		@apply prose leading-tight bg-ui text-ui;
 
+		max-width: 80ch;
+
 		* {
 			@apply first:mt-0;
 		}

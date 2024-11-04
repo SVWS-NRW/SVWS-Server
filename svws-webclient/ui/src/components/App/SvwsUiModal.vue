@@ -137,6 +137,7 @@
 			@apply border border-ui;
 			@apply m-0 h-full;
 			@apply shadow-xl;
+			@apply w-full max-w-modal-help;
 			@apply pointer-events-auto rounded-lg;
 
 			.modal--description,

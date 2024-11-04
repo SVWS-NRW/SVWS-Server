@@ -425,7 +425,8 @@ export default {
 				116: "29rem",
 				"modal-sm": "28rem",
 				"modal-md": "58rem",
-				"modal-lg": "90rem"
+				"modal-lg": "90rem",
+				"modal-help": "47rem",
 			},
 			minWidth: {
 				64: "16rem",
