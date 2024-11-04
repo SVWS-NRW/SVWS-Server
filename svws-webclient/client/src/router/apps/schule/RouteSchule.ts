@@ -12,6 +12,7 @@ export class RouteSchule extends RouteNode<RouteDataSchule, RouteApp> {
 
 	public constructor() {
 		super(Schulform.values(), [ BenutzerKompetenz.KEINE ], "schule", "schule", undefined, new RouteDataSchule());
+		super.text = "Schule";
 		super.mode = ServerMode.STABLE;
 		super.propHandler = (route) => this.getNoProps(route);
 	}
