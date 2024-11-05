@@ -50,7 +50,7 @@
 				</svws-ui-tooltip>
 			</span>
 		</span>
-		<span v-if="data != null && !hideStepper && !disabled" class="svws-input-stepper">
+		<span v-if="data !== null && !hideStepper && !disabled" class="svws-input-stepper">
 			<button ref="btnMinus" role="button" @click="onInputNumber('down')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.min) === String(data)}"><span class="icon i-ri-subtract-line inline-block" /></button>
 			<button ref="btnPlus" role="button" @click="onInputNumber('up')" @blur="onBlur" :class="{'svws-disabled': String($attrs?.max) === String(data)}"><span class="icon i-ri-add-line inline-block" /></button>
 		</span>
@@ -61,7 +61,6 @@
 <script setup lang="ts">
 
 	import { ref, computed, watch, type ComputedRef, type Ref, useId, useAttrs } from "vue";
-	import { genId } from "../utils";
 
 	defineOptions({
 		inheritAttrs: false,
@@ -173,7 +172,7 @@
 		data.value = props.modelValue;
 	}
 
-	const labelId = genId();
+	const labelId = useId();
 
 	const content = computed<number | null>(() => data.value);
 

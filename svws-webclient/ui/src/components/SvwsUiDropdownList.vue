@@ -42,8 +42,7 @@
 
 	import type { Strategy } from "@floating-ui/vue";
 	import type { Ref, ShallowRef } from "vue";
-	import { ref, shallowRef, computed } from "vue";
-	import { genId } from "../utils";
+	import { ref, shallowRef, computed, useId } from "vue";
 
 	const props = withDefaults(defineProps<{
 		statistics?: boolean;
@@ -67,7 +66,7 @@
 
 	const floating = ref(null);
 
-	const listIdPrefix = genId();
+	const listIdPrefix = useId();
 
 	const itemRefs = shallowRef<HTMLLIElement[]>([]);
 	const activeItemIndex = ref(-1);

@@ -51,8 +51,7 @@
 	import type { ComponentExposed } from "vue-component-type-helpers";
 	import type { MaybeElement } from "@floating-ui/vue";
 	import { useFloating, autoUpdate, flip, offset, shift, size } from "@floating-ui/vue";
-	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, watch } from "vue";
-	import { genId } from "../utils";
+	import { computed, nextTick, onMounted, ref, shallowRef, toRaw, watch, useId } from "vue";
 	import SvwsUiDropdownList from "./SvwsUiDropdownList.vue";
 
 	type SelectDataType = Item | null | undefined;
@@ -106,7 +105,7 @@
 	const inputEl = ref();
 	const hasFocus = ref(false);
 	const searchText = ref("");
-	const listIdPrefix = genId();
+	const listIdPrefix = useId();
 	const isMounted = ref(false);
 	onMounted(() => isMounted.value = true);
 
