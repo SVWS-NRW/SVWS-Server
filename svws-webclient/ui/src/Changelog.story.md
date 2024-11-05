@@ -9,7 +9,7 @@ icon: 'carbon:bookmark'
 # Changelog
 
 Chronologische Auflistung von Änderungen an den Komponenten Fix/Feature/Breaking Change:
-## ab 0.x.x
+## ab 1.0.1
 * [Design Tokens](/story/farben) werden eingeführt. Deprecated Farbdefinitionen sollen nicht mehr verwendet werden. In den Docs sind zu dem Thema alle wichtigen Details nachzulesen und es gibt eine Übersicht aller verfügbaren Variablen.  
 Beispiel: `bg-white dark:bg-black text-black dark:text-white hover:text-primary dark:hover:text-primary-dark` → `bg-ui text-ui hover:text-ui-hover`
 * Dark Mode wird ab jetzt automatisch über die semantischen Design Tokens umgesetzt, alle `dark:bg-color` classes entfallen.
