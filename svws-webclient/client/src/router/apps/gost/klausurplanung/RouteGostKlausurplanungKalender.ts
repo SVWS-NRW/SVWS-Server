@@ -40,6 +40,8 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 				return routeGostKlausurplanungVorgaben.getRoute();
 			const { abiturjahr, halbjahr: halbjahrId, idtermin } = RouteNode.getIntParams(to_params, ["abiturjahr", "halbjahr", "idtermin"]);
 			let { datum } = RouteNode.getStringParams(to_params, ["datum"]);
+			if (datum !== undefined && datum === "-1")
+				datum = undefined;
 			if (datum !== undefined)
 				datum = datum.slice(0, 4) + "-" + datum.slice(4, 6) + "-" + datum.slice(6, 8);
 			let { datum: datumFrom } = RouteNode.getStringParams(from_params, ["datum"]);
@@ -89,6 +91,11 @@ export class RouteGostKlausurplanungKalender extends RouteNode<any, RouteGostKla
 			gotoKalenderdatum: routeGostKlausurplanung.data.gotoKalenderdatum,
 			gotoRaumzeitTermin: routeGostKlausurplanung.data.gotoRaumzeitTermin,
 		}
+	}
+
+	public async leave(from: RouteNode<any, any>, from_params: RouteParams): Promise<void> {
+		routeGostKlausurplanung.data.terminSelected.value = undefined;
+		await super.leave(from, from_params);
 	}
 
 }

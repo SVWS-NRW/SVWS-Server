@@ -220,7 +220,7 @@
 				:columns="colsKwKonflikte">
 				<template #cell(kw)="{rowData}">
 					<!-- TODO: kw <=9 um führende 0 ergänzen -->
-					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!))"	title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
+					<svws-ui-button type="transparent" @click="gotoKalenderdatum(kMan().terminOrExceptionBySchuelerklausurTermin(rowData.b.getFirst()!).datum!)" title="Springe zu Kalenderwoche" size="small"><span class="icon i-ri-link" /> {{ rowData.a.a }}</svws-ui-button>
 				</template>
 				<template #cell(schueler)="{rowData}">
 					{{ kMan().schuelerGetByIdOrException(rowData.a.b)?.nachname }}, {{ kMan().schuelerGetByIdOrException(rowData.a.b)?.vorname }}

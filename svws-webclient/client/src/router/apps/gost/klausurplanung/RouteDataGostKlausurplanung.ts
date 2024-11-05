@@ -270,11 +270,21 @@ export class RouteDataGostKlausurplanung extends RouteData<RouteStateGostKlausur
 		await RouteManager.doRoute(routeGostKlausurplanungSchienen.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, idtermin: termin ? termin.id : undefined }));
 	}
 
-	gotoKalenderdatum = async (goto: string | GostKlausurtermin) => {
-		if (goto instanceof GostKlausurtermin)
-			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: undefined, idtermin: goto.id }));
-		else
+	gotoKalenderdatum = async (goto: string | GostKlausurtermin | undefined) => {
+		if (goto instanceof GostKlausurtermin) {
+			if (goto.datum === null) {
+				this.terminSelected.value = goto;
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: -1, idtermin: goto.id }));
+			} else {
+				this.terminSelected.value = undefined;
+				await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: goto.abijahr, halbjahr: goto.halbjahr, datum: goto.datum.replace(/-/g, ""), idtermin: goto.id }));
+			}
+		} else if (goto !== undefined) {
 			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: goto.replace(/-/g, ""), idtermin: (this.terminSelected.value !== undefined) ? this.terminSelected.value.id : undefined }));
+		} else {
+			await RouteManager.doRoute(routeGostKlausurplanungKalender.getRoute({ abiturjahr: this.abiturjahr, halbjahr: this.halbjahr.id, datum: undefined, idtermin: undefined }));
+			this.terminSelected.value = undefined;
+		}
 	}
 
 	gotoRaumzeitTermin = async (abiturjahr: number, halbjahr: GostHalbjahr, idtermin: number | undefined) => {

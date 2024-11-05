@@ -23,7 +23,7 @@ export interface GostKlausurplanungKalenderProps {
 	setZeigeAlleJahrgaenge: (value: boolean) => void;
 	kalenderdatum: WritableComputedRef<string | undefined>;
 	terminSelected: WritableComputedRef<GostKlausurtermin | undefined>;
-	gotoKalenderdatum: (goto: string | GostKlausurtermin) => Promise<void>;
+	gotoKalenderdatum: (goto: string | GostKlausurtermin | undefined) => Promise<void>;
 	gotoRaumzeitTermin: (abiturjahr: number, halbjahr: GostHalbjahr, value: number) => Promise<void>;
 
 }

@@ -27,9 +27,9 @@
 			<svws-ui-button type="primary" @click="blocken"> Blocken </svws-ui-button>
 		</template>
 	</svws-ui-modal>
-
 	<div class="page--content page--content--full relative">
 		<div class="flex flex-col p-1" @drop="onDrop(undefined)" @dragover="$event.preventDefault()" :class="[(dragData !== undefined && dragData instanceof GostKursklausur && dragData.idTermin !== null) ? 'ring-offset-8 ring-4 ring-error/20 rounded-xl' : '' ]">
+			<h3 class="content-card--headline my-5 mt-8" title="In Planung">In Planung</h3>
 			<svws-ui-table :items="props.kMan().kursklausurOhneTerminGetMengeByAbijahrAndHalbjahrAndQuartal(props.jahrgangsdaten.abiturjahr, props.halbjahr, props.quartalsauswahl.value)" :columns="cols">
 				<template #noData>
 					<div class="leading-tight flex flex-col gap-0.5">

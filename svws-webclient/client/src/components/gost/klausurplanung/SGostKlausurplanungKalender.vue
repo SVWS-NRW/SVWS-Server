@@ -240,7 +240,7 @@
 	}
 
 	async function navKalenderdatum(by: number) {
-		await props.gotoKalenderdatum(berechneKwzDatum(by)!);
+		await props.gotoKalenderdatum(berechneKwzDatum(by));
 	}
 
 	function checkDropZoneTerminAuswahl(event: DragEvent) : void {
@@ -276,11 +276,10 @@
 
 	const onDrag = (data: GostKlausurplanungDragData) => {
 		if (data instanceof GostKlausurtermin) {
-			props.terminSelected.value = data;
-			// if (data === undefined)
+			void props.gotoKalenderdatum(data);
 			zeitrasterSelected.value = undefined;
 		} else if (data === undefined) {
-			props.terminSelected.value = undefined;
+			void props.gotoKalenderdatum(data);
 		}
 	};
 
@@ -346,6 +345,10 @@
 </style>
 
 <style lang="postcss">
+.svws-ui-stundenplan--stunde.svws-ui-stundenplan--stunde--klausurplan-opacity {
+	@apply bg-opacity-20;
+}
+
 .svws-kw-auswahl {
 	@apply bg-primary text-white rounded-md h-7 -my-1;
 
