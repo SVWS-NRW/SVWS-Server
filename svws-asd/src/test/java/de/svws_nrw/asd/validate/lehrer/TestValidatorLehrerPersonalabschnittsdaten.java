@@ -16,6 +16,19 @@ import de.svws_nrw.asd.validate.InvalidDateException;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Testklasse für den Validator LehrerStammdaten
+ *
+ * Testdaten 1: de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
+ * Testdaten 2: de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json
+ * Testdaten 3: de/svws_nrw/asd/validate/lehrer/Testdaten_002_LehrerPersonalabschnittsdaten.json
+ *
+ * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
+ *
+ * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
+ *
+ * CoreType: LehrerStammdaten
+ */
 @DisplayName("Teste den Validator zu LehrerPersonalabschnittsdaten")
 class TestValidatorLehrerPersonalabschnittsdaten {
 

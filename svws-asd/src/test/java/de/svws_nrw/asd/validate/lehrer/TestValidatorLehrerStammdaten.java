@@ -12,7 +12,19 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 import de.svws_nrw.asd.validate.ValidatorKontext;
 
-@DisplayName("Teste den Validator zu LehrerStammdaten")
+/**
+ * Testklasse für den Validator {@link ValidatorNoteStammdaten}
+ *
+ * Testdaten 1: de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json
+ * Testdaten 2: de/svws_nrw/asd/validate/lehrer/Testdaten_001_LehrerStammdaten.json
+ *
+ * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
+ *
+ * Für jeden Testfall ist eine Methode vorgesehen, in der mittels setzeTestdaten(...) die zugehörigen Testfälle erzeugt werden.
+ *
+ * CoreType: LehrerStammdaten
+ */
+@DisplayName("Tests zum Validator der LehrerStammdaten folgen:")
 class TestValidatorLehrerStammdaten {
 
 	static final SchuleStammdaten schuleTestdaten_001 = JsonReader.fromResource("de/svws_nrw/asd/validate/schule/Testdaten_001_SchuleStammdaten.json", SchuleStammdaten.class);

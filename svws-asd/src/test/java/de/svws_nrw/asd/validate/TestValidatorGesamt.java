@@ -11,7 +11,14 @@ import de.svws_nrw.asd.utils.ASDCoreTypeUtils;
 import de.svws_nrw.asd.utils.json.JsonReader;
 
 /**
- * Testet die Validierung der Gesamt-Statistikdaten von Schulen
+ * Testklasse für den Validator Gesamt
+ *
+ * Testdaten 1: de/svws_nrw/asd/validate/Testdaten_001_SchuleStatistikdatenGesamt.json
+ *
+ * Die Testdaten sind fehlerfrei und werden mit Jackson in die entsprechende statische Datenstruktur eingelesen.
+ *
+ *
+ * CoreType: SchuleStatistikdatenGesamt
  */
 @DisplayName("Teste den Validator für die Gesamt-Statistikdaten von Schulen")
 class TestValidatorGesamt {
@@ -28,7 +35,15 @@ class TestValidatorGesamt {
 		ASDCoreTypeUtils.initAll();
 	}
 
+	/**
+	 * Test von ValidatorGesamt mit validen Daten
+	 *
+	 * CoreType: SchuleStatistikdatenGesamt
+	 * Testfall: Daten zulässig
+	 * Ergebnis: Validator soll TRUE liefern
+	 */
 	@Test
+	@DisplayName("Teste CoreType Note: Anzahl der vorhandenen Werte.")
 	void test001() {
 		// Erzeuge den Kontext für die Validierung
 		final ValidatorKontext kontext = new ValidatorKontext(testdaten_001.stammdaten, true);
