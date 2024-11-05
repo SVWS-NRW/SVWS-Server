@@ -129,7 +129,7 @@
 	const stream = ref<MediaStream>();
 
 	const constraints = {
-		video: { width: 640 },
+		video: { width: 320 },
 		facingMode: 'user',
 	};
 
