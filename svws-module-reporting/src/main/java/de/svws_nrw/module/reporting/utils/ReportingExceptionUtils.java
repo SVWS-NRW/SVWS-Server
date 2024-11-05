@@ -30,9 +30,11 @@ public final class ReportingExceptionUtils {
 
 	/**
 	 * Erzeugt eine Fehlerausgabe (als {@link SimpleOperationResponse}) mit den Daten der Exception und des übergebenen Logs.
+	 *
 	 * @param exception 	Die Exception, die geworfen wurde.
 	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat.
 	 * @param log 			Liste, die Einträge aus dem Logger gesammelt hat.
+	 *
 	 * @return 				Die SimpleOperationResponse mit der Fehlerdaten.
 	 */
 	public static SimpleOperationResponse getSimpleOperationResponse(final Exception exception, final Logger logger, final LogConsumerList log) {
@@ -92,9 +94,11 @@ public final class ReportingExceptionUtils {
 
 	/**
 	 * Erzeugt eine Fehlerausgabe (als Response einer {@link SimpleOperationResponse}) mit den Daten der Exception und des übergebenen Logs.
+	 *
 	 * @param exception 	Die Exception, die geworfen wurde.
 	 * @param logger 		Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat.
 	 * @param log 			Liste, die Einträge aus dem Logger gesammelt hat.
+	 *
 	 * @return Die Response der SimpleOperationResponse mit den Fehlerdaten.
 	 */
 	public static Response getResponse(final Exception exception, final Logger logger, final LogConsumerList log) {
@@ -107,6 +111,7 @@ public final class ReportingExceptionUtils {
 
 	/**
 	 * Erzeugt Log-Einträge für die Inhalte des StackTrace der übergebenen Exception
+	 *
 	 * @param beschreibung		Optionale Beschreibung, die dem Stacktrace im Log vorangestellt wird.
 	 * @param exception 		Die Exception, die geworfen wurde.
 	 * @param logger 			Logger, der den Ablauf protokolliert und Fehlerdaten gesammelt hat

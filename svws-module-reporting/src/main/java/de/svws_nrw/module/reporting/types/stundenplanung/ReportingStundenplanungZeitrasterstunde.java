@@ -28,6 +28,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param id				Die ID der Zeitrasterstunde.
 	 * @param idStundenplan		Optional: Die ID eines Stundenplans kann hier als ergänzende Information gespeichert werden.
 	 * @param stundenbeginn		Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert".
@@ -50,6 +51,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Die ID der Zeitrasterstunde.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -58,6 +60,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Optional: Die ID eines Stundenplans kann hier als ergänzende Information gespeichert werden.
+	 *
 	 * @return Inhalt des Feldes idStundenplan
 	 */
 	public Long idStundenplan() {
@@ -66,6 +69,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde beginnt. NULL bedeutet "noch nicht definiert".
+	 *
 	 * @return Inhalt des Feldes stundenbeginn
 	 */
 	public Integer stundenbeginn() {
@@ -74,6 +78,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Unterrichtsstunde endet. NULL bedeutet "noch nicht definiert".
+	 *
 	 * @return Inhalt des Feldes stundenende
 	 */
 	public Integer stundenende() {
@@ -82,6 +87,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Die Nummer der Unterrichtsstunde an dem Wochentag.
+	 *
 	 * @return Inhalt des Feldes unterrichtstunde
 	 */
 	public int unterrichtstunde() {
@@ -90,6 +96,7 @@ public class ReportingStundenplanungZeitrasterstunde {
 
 	/**
 	 * Der {@link Wochentag} an dem der Unterricht stattfindet.
+	 *
 	 * @return Inhalt des Feldes wochentag
 	 */
 	public Wochentag wochentag() {

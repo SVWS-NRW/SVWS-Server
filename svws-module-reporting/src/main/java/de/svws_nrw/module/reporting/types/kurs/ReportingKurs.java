@@ -73,6 +73,7 @@ public class ReportingKurs {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param bezeichnungZeugnis 	Ggf. die Zeugnisbezeichnung des Kurses.
 	 * @param fach 					Das Fach, das dem Kurs zugeordnet ist.
 	 * @param id 					Die ID des Kurses.
@@ -121,6 +122,7 @@ public class ReportingKurs {
 	// ##### Berechnete Methoden #####
 	/**
 	 * Gibt eine Liste aller Lehrkräfte des Kurses aus, wobei die erste die Kursleitung ist.
+	 *
 	 * @return		Die Kursleitung
 	 */
 	public List<ReportingLehrer> listeLehrer() {
@@ -134,7 +136,9 @@ public class ReportingKurs {
 
 	/**
 	 * Gibt die Wochenstunden zur ID einer Lehrkraft zurück.
+	 *
 	 * @param id	Die ID der Lehrkraft.
+	 *
 	 * @return		Die Wochenstunden der Lehrkraft in diesem Kurs.
 	 */
 	public double wochenstundenLehrerZurID(final Long id) {
@@ -148,6 +152,7 @@ public class ReportingKurs {
 
 	/**
 	 * Ggf. die Zeugnisbezeichnung des Kurses.
+	 *
 	 * @return Inhalt des Feldes bezeichnungZeugnis
 	 */
 	public String bezeichnungZeugnis() {
@@ -156,6 +161,7 @@ public class ReportingKurs {
 
 	/**
 	 * Das Fach, das dem Kurs zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -164,6 +170,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die ID des Kurses.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -172,6 +179,7 @@ public class ReportingKurs {
 
 	/**
 	 * Gibt an, ob der Kurs zu einem epochalen Unterricht gehört.
+	 *
 	 * @return Inhalt des Feldes istEpochalunterricht
 	 */
 	public boolean istEpochalunterricht() {
@@ -180,6 +188,7 @@ public class ReportingKurs {
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSichtbar
 	 */
 	public boolean istSichtbar() {
@@ -188,6 +197,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Jahrgänge, denen der Kurs zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes jahrgaenge
 	 */
 	public List<ReportingJahrgang> jahrgaenge() {
@@ -196,6 +206,7 @@ public class ReportingKurs {
 
 	/**
 	 * Das Kürzel des Kurses.
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -204,6 +215,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die allgemeine Kursart, welche zur Filterung der speziellen Kursarten verwendet wird.
+	 *
 	 * @return Inhalt des Feldes kursartAllg
 	 */
 	public String kursartAllg() {
@@ -212,6 +224,7 @@ public class ReportingKurs {
 
 	/**
 	 * Der Lehrer, der den Kurs unterrichtet und verantwortlich leite.
+	 *
 	 * @return Inhalt des Feldes lehrer
 	 */
 	public ReportingLehrer kursLehrer() {
@@ -220,6 +233,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Nummern der Kurs-Schienen, in welchen sich der Kurs befindet - sofern eine Schiene zugeordnet wurde.
+	 *
 	 * @return Inhalt des Feldes schienen
 	 */
 	public List<Integer> schienen() {
@@ -228,6 +242,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Schüler des Kurses.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public List<ReportingSchueler> schueler() {
@@ -236,6 +251,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Schüler des Kurses als Liste ihrer IDs.
+	 *
 	 * @return Inhalt des Feldes idsSchueler
 	 */
 	public List<Long> idsSchueler() {
@@ -245,6 +261,7 @@ public class ReportingKurs {
 
 	/**
 	 * Der Schuljahresabschnitt des Kurses.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
@@ -253,6 +270,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Schulnummer des Kurses, falls der Kurs an einer anderen Schule stattfindet.
+	 *
 	 * @return Inhalt des Feldes schulnummer
 	 */
 	public Integer schulnummer() {
@@ -261,6 +279,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Sortierreihenfolge des Listen-Eintrags.
+	 *
 	 * @return Inhalt des Feldes sortierung
 	 */
 	public int sortierung() {
@@ -269,6 +288,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Wochenstunden des Kurses für die Schüler.
+	 *
 	 * @return Inhalt des Feldes wochenstunden
 	 */
 	public int wochenstunden() {
@@ -277,6 +297,7 @@ public class ReportingKurs {
 
 	/**
 	 * Eine Map mit den Wochenstunden der Lehrkräfte zu deren ID.
+	 *
 	 * @return Inhalt des Feldes wochenstundenLehrer
 	 */
 	public Map<Long, Double> wochenstundenLehrer() {
@@ -285,6 +306,7 @@ public class ReportingKurs {
 
 	/**
 	 * Die Lehrer, die den Kurs neben dem Kurslehrer (Verantwortlichen) unterrichten.
+	 *
 	 * @return Inhalt des Feldes lehrer
 	 */
 	public List<ReportingLehrer> zusatzLehrer() {

@@ -37,6 +37,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerLernabschnitt}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param schuelerLernabschnittsdaten Stammdaten-Objekt aus der DB.
 	 */
@@ -111,6 +112,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -120,6 +122,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten der Folgeklasse des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
+	 *
 	 * @return Daten der Folgeklasse
 	 */
 	@Override
@@ -148,6 +151,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten des Jahrgangs des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
+	 *
 	 * @return Daten des Jahrgangs
 	 */
 	@Override
@@ -172,6 +176,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten der Klasse des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
+	 *
 	 * @return Daten der Klasse
 	 */
 	@Override
@@ -204,6 +209,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten des Schülers zur Verfügung, dem dieser Lernabschnitt gehört.
+	 *
 	 * @return Daten des Schülers
 	 */
 	@Override
@@ -228,6 +234,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten des Schuljahresabschnitts zur Verfügung, in dem dieser Lernabschnitt liegt.
+	 *
 	 * @return Daten des Schuljahresabschnitts
 	 */
 	@Override
@@ -241,6 +248,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten des Sonderpädagogen zur Verfügung, der in diesem Lernabschnitt dem Schüler zugeordnet ist.
+	 *
 	 * @return Daten des Sonderpädagogen
 	 */
 	@Override
@@ -265,6 +273,7 @@ public class ProxyReportingSchuelerLernabschnitt extends ReportingSchuelerLernab
 
 	/**
 	 * Stellt die Daten des Tutors zur Verfügung, der in diesem Lernabschnitt dem Schüler zugeordnet ist.
+	 *
 	 * @return Daten des Tutors
 	 */
 	@Override

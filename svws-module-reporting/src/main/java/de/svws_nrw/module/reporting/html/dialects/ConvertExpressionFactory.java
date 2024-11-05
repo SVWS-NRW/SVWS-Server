@@ -29,6 +29,7 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 
 	/**
 	 * Überschreibt die getAllExpressionObjectNames Methode des IExpressionObjectFactory Interfaces.
+	 *
 	 * @return Alle Expression-Namen dieser Klasse
 	 */
 	@Override
@@ -38,8 +39,10 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 
 	/**
 	 * Überschreibt die buildObject Methode des IExpressionObjectFactory Interfaces.
+	 *
 	 * @param context 				Der Context, mit dem das html-Template mit Daten gefüllt wird.
 	 * @param expressionObjectName 	Name des Expression-Objekts, das erzeugt werden soll.
+	 *
 	 * @return 						Das Expression-Objekt, d. h. die Klasse mit den Java-Methoden für die Expression.
 	 */
 	@Override
@@ -52,7 +55,9 @@ public class ConvertExpressionFactory implements IExpressionObjectFactory {
 
 	/**
 	 * Überschreibt das Attribute isCacheable des IExpressionObjectFactory Interfaces.
+	 *
 	 * @param expressionObjectName 	Name des Expression-Objekts.
+	 *
 	 * @return 						Gibt true zurück.
 	 */
 	@Override

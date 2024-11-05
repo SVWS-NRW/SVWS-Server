@@ -17,6 +17,7 @@ public class ProxyReportingGostKursplanungFachwahlstatistik extends ReportingGos
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungFachwahlstatistik}.
+	 *
 	 * @param reportingRepository Repository für die Reporting
 	 * @param gostHalbjahr Das GostHalbjahr, für die die fachwahlstatistik erstellt wird.
 	 * @param gostStatistikFachwahl Wahlstatistik für ein Fach der GOSt über alle Halbjahre.

@@ -24,6 +24,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKursplanungKurs}.
+	 *
 	 * @param reportingGostKursplanungBlockungsergebnis Das Blockungsergebnis zur Kursplanung der gymnasialen Oberstufe, zu dem dieses Objekt gehört.
 	 * @param anzahlAB12				Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist.
 	 * @param anzahlAB3					Anzahl der Schülerinnen und Schüler für das Fach des Kurses drittes Abiturfach ist.
@@ -57,6 +58,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 
 	/**
 	 * Die Fachwahl-Statistik zum Fach und zum GOSt-Halbjahr des Kurses
+	 *
 	 * @return Fachwahl-Statistik des Faches des Kurses
 	 */
 	@Override
@@ -69,6 +71,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 
 	/**
 	 * Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
+	 *
 	 * @return Liste mit Schienen des Kurses
 	 */
 	@Override
@@ -84,6 +87,7 @@ public class ProxyReportingGostKursplanungKurs extends ReportingGostKursplanungK
 
 	/**
 	 * Liste vom Typ Schüler, die die Schüler beinhaltet, die den Kurs gemäß Blockungsergebnis belegen.
+	 *
 	 * @return Liste mit Schülern des Kurses
 	 */
 	@Override

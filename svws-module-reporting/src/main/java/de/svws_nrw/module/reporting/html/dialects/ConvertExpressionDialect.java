@@ -18,6 +18,7 @@ public class ConvertExpressionDialect extends AbstractDialect implements IExpres
 
 	/**
 	 * Die verarbeitende ExpressionObjectFactory des Dialects wird festgelegt und zurückgegeben.
+	 *
 	 * @return Die ExpressionObjectFactory des Dialect
 	 */
 	@Override

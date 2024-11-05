@@ -34,6 +34,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schülern.
+	 *
 	 * @param reportingRepository 	Repository mit Parametern, Logger und Daten zum Reporting.
 	 * @param reportingSchueler		Liste der Schüler, die berücksichtigt werden sollen.
 	 */
@@ -44,6 +45,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Schüler-IDs.
+	 *
 	 * @param reportingRepository   Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextSchueler(final ReportingRepository reportingRepository) {
@@ -54,6 +56,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context aus einer Liste von Schülern.
+	 *
 	 * @param reportingSchueler   	Liste der Schüler, die berücksichtigt werden sollen.
 	 */
 	private void erzeugeContextFromSchueler(final List<ReportingSchueler> reportingSchueler) {
@@ -78,6 +81,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 
 	/**
 	 * Erzeugt den Context aus einer Liste von Schüler-IDs.
+	 *
 	 * @param idsSchueler	Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 */
 	private void erzeugeContextFromIds(final List<Long> idsSchueler) {
@@ -128,6 +132,7 @@ public final class HtmlContextSchueler extends HtmlContext {
 	/**
 	 * Teile diesen Context mit allen Schülern in eine Liste von Contexts auf, die jeweils einen Schüler enthalten, um eine schülerbezogene Ausgabe zu
 	 * ermöglichen.
+	 *
 	 * @return	Liste der Einzel-Contexts.
 	 */
 	public List<HtmlContextSchueler> getEinzelSchuelerContexts() {

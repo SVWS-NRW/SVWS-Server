@@ -22,6 +22,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostAbitur}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param abiturdaten Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
@@ -68,6 +69,7 @@ public class ProxyReportingSchuelerGostAbitur extends ReportingSchuelerGostAbitu
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {

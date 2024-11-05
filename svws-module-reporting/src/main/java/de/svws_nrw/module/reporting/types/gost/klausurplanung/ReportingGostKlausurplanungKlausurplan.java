@@ -35,6 +35,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param klausurtermine	Eine Liste, die alle Termine des Klausurplanes beinhaltet.
 	 * @param kurse 			Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
 	 * @param kursklausuren 	Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
@@ -60,6 +61,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste vom Typ String, die alle vorhandenen Datumsangaben der Termine des Klausurplanes beinhaltet (distinct).
+	 *
 	 * @return Liste der Datumsangaben der Klausurtermine
 	 */
 	public List<String> datumsangabenKlausurtermine() {
@@ -68,6 +70,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes beinhaltet, denen bereits ein Datum zugewiesen wurde.
+	 *
 	 * @return Liste der Klausurtermine mit Datumsangabe
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineMitDatum() {
@@ -76,6 +79,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes beinhaltet, denen noch kein Datum zugewiesen wurde.
+	 *
 	 * @return Liste der Klausurtermine ohne Datumsangabe
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineOhneDatum() {
@@ -84,7 +88,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste vom Typ GostKlausurplanungKlausurtermin, die alle Termine des Klausurplanes zum angegebenen Datum beinhaltet.
+	 *
 	 * @param  datum 	Datum, zu dem die Liste der Klausurtermine zurückgegeben werden soll.
+	 *
 	 * @return 			Liste der Klausurtermine mit dem gewünschten Datum
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermineZumDatum(final String datum) {
@@ -99,7 +105,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt den Klausurtermin zur übergebenen ID zurück
+	 *
 	 * @param  id 	Die ID des Klausurtermins
+	 *
 	 * @return 		Der Klausurtermin zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin(final long id) {
@@ -110,7 +118,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt den Kurs zur übergebenen ID zurück
+	 *
 	 * @param  id 	Die ID des Kurses
+	 *
 	 * @return 		Der Kurs zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingKurs kurs(final long id) {
@@ -121,7 +131,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt die Kursklausur zur übergebenen ID zurück
+	 *
 	 * @param  id 	Die ID der Kursklausur
+	 *
 	 * @return 		Die Kursklausur zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungKursklausur kursklausur(final long id) {
@@ -132,7 +144,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt den Schüler zur übergebenen ID zurück
+	 *
 	 * @param  id 	Die ID des Schülers
+	 *
 	 * @return 		Der Schüler zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingSchueler schueler(final long id) {
@@ -143,6 +157,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt eine Liste mit Schülern zurück, deren IDs in der Filterliste dieses Klausurplans enthalten sind. Ist die Liste leer, werden alle Schüler zurückgegeben.
+	 *
 	 * @return Die Liste der Schüler, die in der Filterliste enthalten waren. Oder alle Schüler bei leerer Filterliste.
 	 */
 	public List<ReportingSchueler> schuelerGefiltert() {
@@ -153,7 +168,9 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Gibt die Schülerklausur zur übergebenen ID zurück
+	 *
 	 * @param  id 	Die ID der Schülerklausur
+	 *
 	 * @return 		Die Schülerklausur zur ID oder null, wenn nicht vorhanden.
 	 */
 	public ReportingGostKlausurplanungSchuelerklausur schuelerklausur(final long id) {
@@ -167,6 +184,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die die schülerbezogene Ausgabe auf die Schüler mit den enthaltenen IDs beschränkt.
+	 *
 	 * @return Inhalt des Feldes idsFilterSchueler
 	 */
 	public List<Long> idsFilterSchueler() {
@@ -175,6 +193,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die alle Termine des Klausurplanes beinhaltet.
+	 *
 	 * @return Liste der Klausurtermine
 	 */
 	public List<ReportingGostKlausurplanungKlausurtermin> klausurtermine() {
@@ -183,6 +202,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die alle Kurse des Klausurplanes beinhaltet.
+	 *
 	 * @return Liste der Kurse
 	 */
 	public List<ReportingKurs> kurse() {
@@ -191,6 +211,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die alle Kursklausuren des Klausurplanes beinhaltet.
+	 *
 	 * @return Liste der Kursklausuren
 	 */
 	public List<ReportingGostKlausurplanungKursklausur> kursklausuren() {
@@ -199,6 +220,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die alle Schüler des Klausurplanes beinhaltet.
+	 *
 	 * @return Liste der Schüler
 	 */
 	public List<ReportingSchueler> schueler() {
@@ -207,6 +229,7 @@ public class ReportingGostKlausurplanungKlausurplan {
 
 	/**
 	 * Eine Liste, die alle Schülerklausuren des Klausurplanes beinhaltet.
+	 *
 	 * @return Liste der Schülerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> schuelerklausuren() {

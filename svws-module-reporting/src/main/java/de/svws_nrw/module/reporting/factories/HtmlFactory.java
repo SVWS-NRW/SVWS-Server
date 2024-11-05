@@ -54,7 +54,9 @@ public class HtmlFactory {
 
 	/**
 	 * Erzeugt eine neue html-Factory, um eine html-Datei aus einem html-Template zu erzeugen.
+	 *
 	 * @param reportingRepository		Repository für das Reporting, welches verschiedene Daten aus der Datenbank zwischenspeichert.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected HtmlFactory(final ReportingRepository reportingRepository)
@@ -93,6 +95,7 @@ public class HtmlFactory {
 
 	/**
 	 * Erzeugte die notwendigen Contexts für die html-Erstellung auf Basis des angegebenen html-Templates.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private void getContexts() throws ApiOperationException {
@@ -150,7 +153,9 @@ public class HtmlFactory {
 
 	/**
 	 * Erzeugt auf Basis des gegebenen html-Templates und der übergebenen Daten die html-Builder, aus denen die html-Inhalte erzeugt werden können.
+	 *
 	 * @return Eine Liste mit htmlBuilder.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected List<HtmlBuilder> createHtmlBuilders() throws ApiOperationException {
@@ -160,7 +165,9 @@ public class HtmlFactory {
 
 	/**
 	 * Erstellt eine Response in Form einer einzelnen html-Datei oder Z eine einzelne ZIP-Datei, die mehrere generierte html-Dateien enthält.
+	 *
 	 * @return Im Falle eines Success enthält die HTTP-Response das html-Dokument oder die ZIP-Datei.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	protected Response createHtmlResponse() throws ApiOperationException {
@@ -199,7 +206,9 @@ public class HtmlFactory {
 
 	/**
 	 * Erzeugt auf Basis der übergebenen html-Vorlage und Daten die html-Inhalte der Dateien und legt diese Inhalte in einer Map zum Dateinamen ab.
+	 *
 	 * @return Eine Map mit den Dateinamen und html-Dateiinhalten.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private List<HtmlBuilder> getHtmlBuilders() throws ApiOperationException {
@@ -271,8 +280,11 @@ public class HtmlFactory {
 
 	/**
 	 * Erstellt den Dateinamen gemäß der in der Template-Definition hinterlegten Vorlage für den Dateinamen. Dabei können die Daten den Contexts entnommen werden.
+	 *
 	 * @param mapHtmlContexts 			Map mit den bereits erzeugten html-Datenkontexten, um daraus Daten für den Dateinamen entnehmen zu können.
+	 *
 	 * @return Der fertige Dateiname.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private String getDateiname(final Map<String, HtmlContext> mapHtmlContexts) throws ApiOperationException {
@@ -315,8 +327,11 @@ public class HtmlFactory {
 
 	/**
 	 * Erstellt eine ZIP-Datei, die alle html-Dateien aus der übergebenen Map enthält.
+	 *
 	 * @param htmlBuilders 				Eine Liste mit den htmlBuilders, die die html-Inhalte erzeugen.
+	 *
 	 * @return Gibt das ZIP in Form eines ByteArrays zurück.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	private byte[] createZIP(final List<HtmlBuilder> htmlBuilders) throws ApiOperationException {

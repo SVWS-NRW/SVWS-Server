@@ -203,6 +203,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abschluss Der erreichte allgemeinbildende Abschluss
 	 * @param abschlussart Die Art des Abschlusses (siehe Katalog)
 	 * @param abschlussBerufsbildend Der erreichte berufsbezogene Abschluss am Berufskolleg
@@ -350,6 +351,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der erreichte allgemeinbildende Abschluss
+	 *
 	 * @return Inhalt des Feldes abschluss
 	 */
 	public String abschluss() {
@@ -358,6 +360,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Art des Abschlusses (siehe Katalog)
+	 *
 	 * @return Inhalt des Feldes abschlussart
 	 */
 	public Integer abschlussart() {
@@ -366,6 +369,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der erreichte berufsbezogene Abschluss am Berufskolleg
+	 *
 	 * @return Inhalt des Feldes abschlussBerufsbildend
 	 */
 	public String abschlussBerufsbildend() {
@@ -374,6 +378,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Anzahl der Schulbesuchsjahre
+	 *
 	 * @return Inhalt des Feldes anzahlSchulbesuchsjahre
 	 */
 	public Integer anzahlSchulbesuchsjahre() {
@@ -382,6 +387,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Sprache des bilingualen Zweigs, falls der Schüler im bilingualen Zweig unterrichtet wird
+	 *
 	 * @return Inhalt des Feldes bilingualerZweig
 	 */
 	public String bilingualerZweig() {
@@ -390,6 +396,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Datum, wann der Lernabschnitt beginnt
+	 *
 	 * @return Inhalt des Feldes datumAnfang
 	 */
 	public String datumAnfang() {
@@ -398,6 +405,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Datum, wann der Lernabschnitt endet
+	 *
 	 * @return Inhalt des Feldes datumEnde
 	 */
 	public String datumEnde() {
@@ -406,6 +414,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Datum der Konferenz
+	 *
 	 * @return Inhalt des Feldes datumKonferenz
 	 */
 	public String datumKonferenz() {
@@ -414,6 +423,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Datum des Zeugnisses bzw. der Laufbahnbescheinigung
+	 *
 	 * @return Inhalt des Feldes datumZeugnis
 	 */
 	public String datumZeugnis() {
@@ -422,6 +432,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Summe der Gesamtfehlstunden für den gesamten Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes fehlstundenGesamt
 	 */
 	public int fehlstundenGesamt() {
@@ -430,6 +441,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Grenzwert für die Fehlstunden, ab dem am Berufskolleg Warnbriefe zur Entlassung verschickt werden
+	 *
 	 * @return Inhalt des Feldes fehlstundenGrenzwert
 	 */
 	public Integer fehlstundenGrenzwert() {
@@ -438,6 +450,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Summe der unentschuldigten Fehlstunden für den gesamten Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes fehlstundenUnentschuldigt
 	 */
 	public int fehlstundenUnentschuldigt() {
@@ -446,6 +459,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der erste Förderschwerpunkt des Schülers zu diesem Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes foerderschwerpunkt1
 	 */
 	public FoerderschwerpunktEintrag foerderschwerpunkt1() {
@@ -454,6 +468,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der zweite Förderschwerpunkt des Schülers zu diesem Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes foerderschwerpunkt2
 	 */
 	public FoerderschwerpunktEintrag foerderschwerpunkt2() {
@@ -462,6 +477,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text mit Angaben zum Förderschwerpunkt.
+	 *
 	 * @return Inhalt des Feldes foerderschwerpunktText
 	 */
 	public String foerderschwerpunktText() {
@@ -470,6 +486,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Folgeklasse des Schülers aus diesem Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes folgeklasse
 	 */
 	public ReportingKlasse folgeklasse() {
@@ -478,6 +495,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob eine Förderung nach der Ausbildungsordnung Sonderpädagogischer Förderung (AOSF) vorliegt
+	 *
 	 * @return Inhalt des Feldes hatAOSF
 	 */
 	public boolean hatAOSF() {
@@ -486,6 +504,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob eine Diagnose zu Autismus vorliegt oder nicht
+	 *
 	 * @return Inhalt des Feldes hatAutismus
 	 */
 	public boolean hatAutismus() {
@@ -494,6 +513,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob eine Schwerbehinderung nachgewiesen ist oder nicht
+	 *
 	 * @return Inhalt des Feldes hatSchwerbehinderungsNachweis
 	 */
 	public boolean hatSchwerbehinderungsNachweis() {
@@ -502,6 +522,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob zieldifferent unterrichtet wird oder nicht
+	 *
 	 * @return Inhalt des Feldes hatZieldifferentenUnterricht
 	 */
 	public boolean hatZieldifferentenUnterricht() {
@@ -510,6 +531,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Jahrgang des Schülers in diesem Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes jahrgang
 	 */
 	public ReportingJahrgang jahrgang() {
@@ -518,6 +540,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Lernabschnitts in der Datenbank.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -526,6 +549,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID der Fachklasse des Schülers an einem Berufskolleg
+	 *
 	 * @return Inhalt des Feldes idFachklasse
 	 */
 	public Long idFachklasse() {
@@ -534,6 +558,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Hauptförderschwerpunktes des Schülers
+	 *
 	 * @return Inhalt des Feldes idFoerderschwerpunkt1
 	 */
 	public Long idFoerderschwerpunkt1() {
@@ -542,6 +567,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des weiteren Förderschwerpunktes des Schülers
+	 *
 	 * @return Inhalt des Feldes idFoerderschwerpunkt2
 	 */
 	public Long idFoerderschwerpunkt2() {
@@ -550,6 +576,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID der Folge-Klasse des Schülers, sofern dieser vom Standard der Klassentabelle abweicht.
+	 *
 	 * @return Inhalt des Feldes idFolgeklasse
 	 */
 	public Long idFolgeklasse() {
@@ -558,6 +585,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Jahrgangs des Schülers oder null, falls kein Jahrgang zugeordnet ist
+	 *
 	 * @return Inhalt des Feldes idJahrgang
 	 */
 	public Long idJahrgang() {
@@ -566,6 +594,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID der Klasse des Schülers oder null, falls keine Klasse zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes idKlasse
 	 */
 	public Long idKlasse() {
@@ -574,6 +603,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Schülers des Lernabschnitts in der Datenbank.
+	 *
 	 * @return Inhalt des Feldes idSchueler
 	 */
 	public long idSchueler() {
@@ -582,6 +612,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Schuljahresabschnitts des Lernabschnitts in der Datenbank.
+	 *
 	 * @return Inhalt des Feldes idSchuljahresabschnitt
 	 */
 	public long idSchuljahresabschnitt() {
@@ -590,6 +621,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Schwerpunktes des Schülers laut dem Schwerpunkt-Katalog
+	 *
 	 * @return Inhalt des Feldes idSchwerpunkt
 	 */
 	public Long idSchwerpunkt() {
@@ -598,6 +630,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID eines Sonderpädagogen, der den Schüler betreut und auch im Notenmodul hat
+	 *
 	 * @return Inhalt des Feldes idSonderpaedagoge
 	 */
 	public Long idSonderpaedagoge() {
@@ -606,6 +639,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die ID des Tutors des Schülers in der Datenbank.
+	 *
 	 * @return Inhalt des Feldes idTutor
 	 */
 	public Long idTutor() {
@@ -614,6 +648,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob der berechnete Abschluss eine Prognose ist oder nicht (siehe Katalog)
+	 *
 	 * @return Inhalt des Feldes istAbschlussPrognose
 	 */
 	public boolean istAbschlussPrognose() {
@@ -622,6 +657,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt für das Berufskolleg an, ob der fachpraktische Anteil in den Anlagen B08, B09 und B10 ausreichend sind für Versetzung
+	 *
 	 * @return Inhalt des Feldes istFachpraktischerAnteilAusreichend
 	 */
 	public boolean istFachpraktischerAnteilAusreichend() {
@@ -630,6 +666,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob es sich um einen gewerteten Abschnitt handelt oder nicht
+	 *
 	 * @return Inhalt des Feldes istGewertet
 	 */
 	public boolean istGewertet() {
@@ -638,6 +675,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Gibt an, ob es sich bei dem Abschnitt um einen wiederholten Abschnitt handelt oder nicht
+	 *
 	 * @return Inhalt des Feldes istWiederholung
 	 */
 	public boolean istWiederholung() {
@@ -646,6 +684,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Klasse des Schülers aus diesem Lernabschnitt
+	 *
 	 * @return Inhalt des Feldes klasse
 	 */
 	public ReportingKlasse klasse() {
@@ -654,6 +693,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Kürzel der Klassenart in Bezug auf den Schüler (z.B. Regelklasse - siehe Core-Type)
+	 *
 	 * @return Inhalt des Feldes klassenart
 	 */
 	public String klassenart() {
@@ -662,6 +702,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Leistungsdaten des Schülers in diesem Lernabschnitt.
+	 *
 	 * @return Inhalt des Feldes leistungsdaten
 	 */
 	public List<SchuelerLeistungsdaten> leistungsdaten() {
@@ -670,6 +711,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Informationen den Nachprüfungen in diesem Lernabschnitt oder null, falls keine vorhanden sind.
+	 *
 	 * @return Inhalt des Feldes nachpruefungen
 	 */
 	public SchuelerLernabschnittNachpruefungsdaten nachpruefungen() {
@@ -678,6 +720,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Durchschnittsnote in diesem Lernabschnitt - wird ggf. von einem Prüfungsalgorithmus gesetzt und kann dann ausgelesen werden
+	 *
 	 * @return Inhalt des Feldes noteDurchschnitt
 	 */
 	public String noteDurchschnitt() {
@@ -686,6 +729,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Lernbereichsnote Gesellschaftswissenschaft oder Arbeitslehre für den Hauptschulabschluss nach Klassen 10
+	 *
 	 * @return Inhalt des Feldes noteLernbereichGSbzwAL
 	 */
 	public Integer noteLernbereichGSbzwAL() {
@@ -694,6 +738,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Lernbereichsnote Naturwissenschaft für den Hauptschulabschluss nach Klassen 10
+	 *
 	 * @return Inhalt des Feldes noteLernbereichNW
 	 */
 	public Integer noteLernbereichNW() {
@@ -702,6 +747,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Kürzel der Organisationsform der Schule in Bezug auf den Schüler (z.B. Ganztag - siehe Core-Type)
+	 *
 	 * @return Inhalt des Feldes organisationsform
 	 */
 	public String organisationsform() {
@@ -710,6 +756,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Prüfungsordnung, die in dem Lernabschnitt bei dem Schüler anzuwenden ist.
+	 *
 	 * @return Inhalt des Feldes pruefungsOrdnung
 	 */
 	public String pruefungsOrdnung() {
@@ -718,6 +765,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Schüler, zu dem dieser Lernabschnittsdaten gehören.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public ReportingSchueler schueler() {
@@ -726,6 +774,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Kürzel der Schulgliederung bzw. des Bildungsgangs des Schülers.
+	 *
 	 * @return Inhalt des Feldes schulgliederung
 	 */
 	public String schulgliederung() {
@@ -734,6 +783,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Schuljahresabschnitt, zu welchem diese Lernabschnittsdaten gehören.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
@@ -742,6 +792,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Sonderpädagoge, der den Schüler betreut
+	 *
 	 * @return Inhalt des Feldes sonderpaedagoge
 	 */
 	public ReportingLehrer sonderpaedagoge() {
@@ -750,6 +801,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die textuelle Ausgabe des Prüfungsalgorithmus für die Versetzungs-/Abschlussberechnung
+	 *
 	 * @return Inhalt des Feldes textErgebnisPruefungsalgorithmus
 	 */
 	public String textErgebnisPruefungsalgorithmus() {
@@ -758,6 +810,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Tutor, der den Schüler betreut
+	 *
 	 * @return Inhalt des Feldes tutor
 	 */
 	public ReportingLehrer tutor() {
@@ -766,6 +819,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text für Empfehlung der Schulform beim Übergang von der Primarstufe in die Sekundarstufe I.
+	 *
 	 * @return Inhalt des Feldes uebergangsempfehlungText
 	 */
 	public String uebergangsempfehlungText() {
@@ -774,6 +828,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text zur Versetzungsentscheidung auf dem Zeugnis.
+	 *
 	 * @return Inhalt des Feldes versetzungsentscheidungText
 	 */
 	public String versetzungsentscheidungText() {
@@ -782,6 +837,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Das Kürzel des Versetzungsvermerks
+	 *
 	 * @return Inhalt des Feldes versetzungsvermerkKuerzel
 	 */
 	public String versetzungsvermerkKuerzel() {
@@ -790,6 +846,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Eine Nr, zur Unterscheidung von Lernabschnittsdaten, wenn beim Schüler mehrere Lernabschnitte in einem Schuljahresabschnitt vorliegen (z. B. Wechsel einer Klasse, NULL=aktueller Abschnitt, 1=vor dem ersten Wechsel, 2=vor dem zweiten Wechsel, usw.).
+	 *
 	 * @return Inhalt des Feldes wechselNr
 	 */
 	public int wechselNr() {
@@ -798,6 +855,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Die Art des Zeugnisses
+	 *
 	 * @return Inhalt des Feldes zeugnisart
 	 */
 	public String zeugnisart() {
@@ -806,6 +864,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zum Arbeits- und Sozialverhalten.
+	 *
 	 * @return Inhalt des Feldes zeugnisASVText
 	 */
 	public String zeugnisASVText() {
@@ -814,6 +873,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zum Außerunterrichtlichen Engagement.
+	 *
 	 * @return Inhalt des Feldes zeugnisAUEText
 	 */
 	public String zeugnisAUEText() {
@@ -822,6 +882,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text für allgemeine Zeugnisbemerkungen.
+	 *
 	 * @return Inhalt des Feldes zeugnisBemerkungText
 	 */
 	public String zeugnisBemerkungText() {
@@ -830,6 +891,7 @@ public class ReportingSchuelerLernabschnitt {
 
 	/**
 	 * Der Text für Zeugnisbemerkungen zur Lernentwicklung in Grundschulen.
+	 *
 	 * @return Inhalt des Feldes zeugnisLELSText
 	 */
 	public String zeugnisLELSText() {

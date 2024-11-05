@@ -41,6 +41,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingKurs}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param kursDaten Stammdaten-Objekt aus der DB.
 	 */
@@ -151,6 +152,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -160,6 +162,7 @@ public class ProxyReportingKurs extends ReportingKurs {
 
 	/**
 	 * Stellt eine Liste mit Schülern der Klasse zur Verfügung.
+	 *
 	 * @return	Liste mit Schülern
 	 */
 	@Override

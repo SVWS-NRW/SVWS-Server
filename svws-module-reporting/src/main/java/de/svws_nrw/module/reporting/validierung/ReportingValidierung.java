@@ -36,6 +36,7 @@ public final class ReportingValidierung {
 	/**
 	 * Validiert von der API übergebene Daten für Schüler. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
 	 * Über den Parameter cacheDaten kann gesteuert werden, ob bereits abgerufene Daten aus der DB im Repository zwischengespeichert werden soll.
+	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
 	 * @param idsSchueler   		Liste der IDs der Schüler, die berücksichtigt werden sollen.
 	 * @param mitGostDaten 			Legt fest, ob der Daten zur gymnasialen Oberstufe mit in den Kontext geladen werden sollen.
@@ -130,7 +131,9 @@ public final class ReportingValidierung {
 
 	/**
 	 * Validiert von der API übergebene Daten für GOSt-Blockungsergebnis. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public static void validiereDatenFuerGostKursplanungBlockungsergebnis(final ReportingRepository reportingRepository)
@@ -156,7 +159,9 @@ public final class ReportingValidierung {
 
 	/**
 	 * Validiert von der API übergebene Daten für GOSt-Klausurplanung. Bei fehlenden oder unstimmigen Daten wird eine ApiOperationException geworfen.
+	 *
 	 * @param reportingRepository		Repository mit Parametern, Logger und Daten-Cache zur Report-Generierung.
+	 *
 	 * @throws ApiOperationException	Im Fehlerfall wird eine ApiOperationException ausgelöst und Log-Daten zusammen mit dieser zurückgegeben.
 	 */
 	public static void validiereDatenFuerGostKlausurplanungKlausurplan(final ReportingRepository reportingRepository)

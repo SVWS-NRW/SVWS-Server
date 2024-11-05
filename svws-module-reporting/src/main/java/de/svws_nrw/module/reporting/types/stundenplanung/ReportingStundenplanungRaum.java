@@ -27,6 +27,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param beschreibung					Die Beschreibung des Raumes.
 	 * @param id							Die ID des Raumes, wenn dieser in einem Stundenplan zugeordnet wurde.
 	 * @param idRaumKatalog					Optional: Die ID des Raumes im Katalog der Räume der Schule.
@@ -49,6 +50,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Die Beschreibung des Raumes.
+	 *
 	 * @return Inhalt des Feldes beschreibung
 	 */
 	public String beschreibung() {
@@ -57,6 +59,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Die ID des Raumes, wenn dieser in einem Stundenplan zugeordnet wurde.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -65,6 +68,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Optional: Die ID des Raumes im Katalog der Räume der Schule.
+	 *
 	 * @return Inhalt des Feldes idRaumKatalog
 	 */
 	public long idRaumKatalog() {
@@ -73,6 +77,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Optional: Die ID eines Stundenplans kann hier als ergänzende Information gespeichert werden.
+	 *
 	 * @return Inhalt des Feldes idStundenplan
 	 */
 	public long idStundenplan() {
@@ -81,6 +86,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Die Kapazität des Raumes (in Bezug auf die Anzahl der Schülerplätze).
+	 *
 	 * @return Inhalt des Feldes kapazitaet
 	 */
 	public int kapazitaet() {
@@ -89,6 +95,7 @@ public class ReportingStundenplanungRaum {
 
 	/**
 	 * Das Kürzel des Raumes.
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {

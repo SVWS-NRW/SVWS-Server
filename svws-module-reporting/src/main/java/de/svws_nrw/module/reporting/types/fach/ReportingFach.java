@@ -77,6 +77,7 @@ public class ReportingFach {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param aufgabenfeld Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört
 	 * @param aufZeugnis Gibt an, ob das Fach auf einem Zeugnis erscheinen soll.
 	 * @param bezeichnung Die Bezeichnung des Faches
@@ -134,8 +135,10 @@ public class ReportingFach {
 
 	/**
 	 * Vergleicht zwei ReportingFächer hinsichtlich ihrer Fachsortierung in der GOSt.
+	 *
 	 * @param fach1	Erstes ReportingFach
 	 * @param fach2 Zweites ReportingFach
+	 *
 	 * @return int-Wert des Vergleiches gemäß {@link Comparable#compareTo(Object)}
 	 */
 	public static int compareToGost(final ReportingFach fach1, final ReportingFach fach2) {
@@ -148,6 +151,7 @@ public class ReportingFach {
 	// ##### Getter #####
 	/**
 	 * Das Aufgabenfeld am Berufskolleg, zu welchem das Fach gehört
+	 *
 	 * @return Inhalt des Feldes aufgabenfeld
 	 */
 	public String aufgabenfeld() {
@@ -156,6 +160,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach auf einem Zeugnis erscheinen soll.
+	 *
 	 * @return Inhalt des Feldes aufZeugnis
 	 */
 	public boolean aufZeugnis() {
@@ -164,6 +169,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Bezeichnung des Faches
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -172,6 +178,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Bezeichnung des Faches auf Überweisungszeugnissen
+	 *
 	 * @return Inhalt des Feldes bezeichnungUeberweisungszeugnis
 	 */
 	public String bezeichnungUeberweisungszeugnis() {
@@ -180,6 +187,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Bezeichnung des Faches auf allgemeinen Zeugnissen
+	 *
 	 * @return Inhalt des Feldes bezeichnungZeugnis
 	 */
 	public String bezeichnungZeugnis() {
@@ -188,6 +196,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Sprache (das einstellige Fremdsprachenkürzel) an, in der das Fach unterrichtet wird, sofern es sich um ein bilinguales Sachfach handelt.
+	 *
 	 * @return Inhalt des Feldes bilingualeSprache
 	 */
 	public String bilingualeSprache() {
@@ -196,6 +205,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Fachgruppe, der das Fach angehört.
+	 *
 	 * @return Fachgruppe des Faches
 	 */
 	public Fachgruppe fachgruppe() {
@@ -204,6 +214,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach ggf. bei der Aggregation von Leistungen aus früheren Lernabschnitten/Jahrgängen für eine Abschlussberechnung berücksichtigt wird, sofern es im aktuellen Abschnitt nicht belegt wurde.
+	 *
 	 * @return Inhalt des Feldes holeAusAltenLernabschnitten
 	 */
 	public boolean holeAusAltenLernabschnitten() {
@@ -212,6 +223,7 @@ public class ReportingFach {
 
 	/**
 	 * Die ID des Faches.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -220,6 +232,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach bei der Berechnung der FHR berücksichtigt wird oder nicht (Berufskolleg).
+	 *
 	 * @return Inhalt des Feldes istFHRFach
 	 */
 	public boolean istFHRFach() {
@@ -228,6 +241,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob es sich bei dem Fach um eine Fremdsprache handelt oder nicht
+	 *
 	 * @return Inhalt des Feldes istFremdsprache
 	 */
 	public boolean istFremdsprache() {
@@ -236,6 +250,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach eine neu einsetzende Fremdsprache ist.
+	 *
 	 * @return Inhalt des Feldes istFremdSpracheNeuEinsetzend
 	 */
 	public boolean istFremdSpracheNeuEinsetzend() {
@@ -244,6 +259,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob es sich um ein Fach der Oberstufe handelt oder nicht.
+	 *
 	 * @return Inhalt des Feldes istGostFach
 	 */
 	public boolean istGostFach() {
@@ -252,6 +268,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob eine Nachprüfung in diesem Fach möglich ist.
+	 *
 	 * @return Inhalt des Feldes istNachpruefungErlaubt
 	 */
 	public boolean istNachpruefungErlaubt() {
@@ -260,6 +277,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob es sich um ein Fach handelt, welches relevant für die Prüfungsordnung ist oder nicht (z.B. bei Belegprüfungen).
+	 *
 	 * @return Inhalt des Feldes istPruefungsordnungsRelevant
 	 */
 	public boolean istPruefungsordnungsRelevant() {
@@ -268,6 +286,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach als schriftliches Fach für den Berufsabschluss gewertet wird (Berufskolleg).
+	 *
 	 * @return Inhalt des Feldes istSchriftlichBA
 	 */
 	public boolean istSchriftlichBA() {
@@ -276,6 +295,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob das Fach ein schriftliches Fach für die zentralen Klausuren ist oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSchriftlichZK
 	 */
 	public boolean istSchriftlichZK() {
@@ -284,6 +304,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSichtbar
 	 */
 	public boolean istSichtbar() {
@@ -292,6 +313,7 @@ public class ReportingFach {
 
 	/**
 	 * Das eindeutige Kürzel des Faches
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -300,6 +322,7 @@ public class ReportingFach {
 
 	/**
 	 * Gibt die maximale Anzahl an Zeichen an, doe in Fachbemerkungen genutzt werden dürfen.
+	 *
 	 * @return Inhalt des Feldes maxZeichenInFachbemerkungen
 	 */
 	public int maxZeichenInFachbemerkungen() {
@@ -308,6 +331,7 @@ public class ReportingFach {
 
 	/**
 	 * Die Sortierreihenfolge des Fächerlisten-Eintrags.
+	 *
 	 * @return Inhalt des Feldes sortierung
 	 */
 	public int sortierung() {
@@ -316,6 +340,7 @@ public class ReportingFach {
 
 	/**
 	 * Das Statistik-Fach des Faches
+	 *
 	 * @return Inhalt des Feldes statistikfach
 	 */
 	public ReportingStatistikFach statistikfach() {

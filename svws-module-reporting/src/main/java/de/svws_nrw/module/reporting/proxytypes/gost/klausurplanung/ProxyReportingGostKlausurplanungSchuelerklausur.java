@@ -17,6 +17,7 @@ public class ProxyReportingGostKlausurplanungSchuelerklausur extends ReportingGo
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingGostKlausurplanungSchuelerklausur}.
+	 *
 	 * @param gostSchuelerklausur		Die GostKursklausur mit den Daten zur Klausur eines Kurses.
 	 * @param gostSchuelerklausurtermin	Der GostSchuelerklausurtermin mit den Daten zum Klausurtermin der Schülerklausur.
 	 * @param klausurraum 				Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.

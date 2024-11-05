@@ -23,6 +23,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingStundenplanungStundenplan}.
+	 *
 	 * @param reportingRepository 	Repository für die Reporting.
 	 * @param stundenplan 			Das Stundenplan-Objekt mit den gesammelten Daten des Stundenplanes.
 	 */
@@ -48,6 +49,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {
@@ -57,6 +59,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 
 	/**
 	 * Eine Liste aller Räume im Stundenplan.
+	 *
 	 * @return Inhalt des Feldes raeume
 	 */
 	@Override
@@ -70,6 +73,7 @@ public class ProxyReportingStundenplanungStundenplan extends ReportingStundenpla
 
 	/**
 	 * Eine Liste aller Räume im Stundenplan.
+	 *
 	 * @return Inhalt des Feldes raeume
 	 */
 	@Override

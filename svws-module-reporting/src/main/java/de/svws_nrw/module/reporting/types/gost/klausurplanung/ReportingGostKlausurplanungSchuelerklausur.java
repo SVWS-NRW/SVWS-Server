@@ -39,6 +39,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param bemerkung					Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
 	 * @param id						Die ID der Schülerklausur.
 	 * @param idSchuelerklausurtermin	Die ID des Schülerklausurtermins.
@@ -69,6 +70,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die Startuhrzeit der Schülerklausur, falls schon gesetzt.
+	 *
 	 * @return Die Uhrzeitangabe der Startzeit.
 	 */
 	public String startuhrzeit() {
@@ -85,6 +87,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die textuelle Bemerkung zur Schülerklausur, sofern vorhanden.
+	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
@@ -93,6 +96,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die ID der Schülerklausur.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -101,6 +105,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die ID des Schülerklausurtermins.
+	 *
 	 * @return Inhalt des Feldes idSchuelerklausurtermin
 	 */
 	public long idSchuelerklausurtermin() {
@@ -109,6 +114,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Der Klausurraum dieses Schülerklausurtermins, inklusive der Aufsichten für die Unterrichtsstunden der Klausur.
+	 *
 	 * @return Inhalt des Feldes klausurraum
 	 */
 	public ReportingGostKlausurplanungKlausurraum klausurraum() {
@@ -117,6 +123,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Der Termin der Schülerklausur aus den Klausurterminen.
+	 *
 	 * @return Inhalt des Feldes klausurtermin
 	 */
 	public ReportingGostKlausurplanungKlausurtermin klausurtermin() {
@@ -125,6 +132,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die Kursklausur, die zu dieser Schülerklausur geführt hat. Deren Vorgaben gelten auch für die Schülerklausur.
+	 *
 	 * @return Inhalt des Feldes kursklausur
 	 */
 	public ReportingGostKlausurplanungKursklausur kursklausur() {
@@ -133,6 +141,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Die Nummer des Termins in der Folge der angesetzten Termine für den Schüler bezüglich der Kursklausur (0 = Kursklausur, 1 = Erste Nachschreibtermin, usw.)
+	 *
 	 * @return Inhalt des Feldes nummerTerminfolge
 	 */
 	public int nummerTerminfolge() {
@@ -141,6 +150,7 @@ public class ReportingGostKlausurplanungSchuelerklausur {
 
 	/**
 	 * Der Schüler dieser Schülerklausur.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public ReportingSchueler schueler() {

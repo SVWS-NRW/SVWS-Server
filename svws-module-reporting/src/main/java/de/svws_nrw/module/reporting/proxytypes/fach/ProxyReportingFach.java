@@ -12,6 +12,7 @@ public class ProxyReportingFach extends ReportingFach {
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingFach}.
+	 *
 	 * @param fachDaten 	Die allgemeinen Daten des Faches
 	 * @param fachGostDaten Die GOSt-Daten des Faches
 	 * @param schuljahr		Das Schuljahr, aus dem die Statistikdaten des Faches gelesen werden.

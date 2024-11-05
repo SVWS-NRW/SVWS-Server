@@ -189,6 +189,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param aktuellerLernabschnitt Daten des aktuellen Lernabschnitts.
 	 * @param anmeldedatum Das Anmeldedatum des Schülers.
 	 * @param aufnahmedatum Das Aufnahmedatum des Schülers.
@@ -322,6 +323,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten des aktuellen Lernabschnitts.
+	 *
 	 * @return Inhalt des Feldes aktuellerLernabschnitt
 	 */
 	public ReportingSchuelerLernabschnitt aktuellerLernabschnitt() {
@@ -330,6 +332,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Anmeldedatum des Schülers.
+	 *
 	 * @return Inhalt des Feldes anmeldedatum
 	 */
 	public String anmeldedatum() {
@@ -338,6 +341,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Aufnahmedatum des Schülers.
+	 *
 	 * @return Inhalt des Feldes aufnahmedatum
 	 */
 	public String aufnahmedatum() {
@@ -346,6 +350,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten des ausgewählten Lernabschnitts.
+	 *
 	 * @return Inhalt des Feldes auswahlLernabschnitt
 	 */
 	public ReportingSchuelerLernabschnitt auswahlLernabschnitt() {
@@ -354,6 +359,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Textfeld mit Bemerkungen zum Schülerdatensatz.
+	 *
 	 * @return Inhalt des Feldes bemerkungen
 	 */
 	public String bemerkungen() {
@@ -362,6 +368,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob die Konfession bei dem Schülerdatensatz auf dem Zeugnis erscheinen soll.
+	 *
 	 * @return Inhalt des Feldes druckeKonfessionAufZeugnisse
 	 */
 	public boolean druckeKonfessionAufZeugnisse() {
@@ -370,6 +377,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die private E-Mail-Adresse des Schülers.
+	 *
 	 * @return Inhalt des Feldes emailPrivat
 	 */
 	public String emailPrivat() {
@@ -378,6 +386,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die schulische E-Mail-Adresse des Schülers.
+	 *
 	 * @return Inhalt des Feldes emailSchule
 	 */
 	public String emailSchule() {
@@ -386,6 +395,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler Meister-BAFÖG erhält oder nicht.
+	 *
 	 * @return Inhalt des Feldes erhaeltMeisterBAFOEG
 	 */
 	public boolean erhaeltMeisterBAFOEG() {
@@ -394,6 +404,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler BAFÖG erhält oder nicht.
+	 *
 	 * @return Inhalt des Feldes erhaeltSchuelerBAFOEG
 	 */
 	public boolean erhaeltSchuelerBAFOEG() {
@@ -402,6 +413,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Schulnummer bei einem externen Schüler oder null, wenn der Schüler kein externer Schüler ist.
+	 *
 	 * @return Inhalt des Feldes externeSchulNr
 	 */
 	public String externeSchulNr() {
@@ -410,6 +422,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die ID der Art des Fahr des Schülers.
+	 *
 	 * @return Inhalt des Feldes fahrschuelerArtID
 	 */
 	public Long fahrschuelerArtID() {
@@ -418,6 +431,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Foto (in Base64 kodiert) des Schülers.
+	 *
 	 * @return Inhalt des Feldes foto
 	 */
 	public String foto() {
@@ -426,6 +440,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Geburtsdatum des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtsdatum
 	 */
 	public String geburtsdatum() {
@@ -434,6 +449,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Geburtsland des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtsland
 	 */
 	public String geburtsland() {
@@ -442,6 +458,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Geburtsland der Mutter des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtslandMutter
 	 */
 	public String geburtslandMutter() {
@@ -450,6 +467,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Geburtsland des Vaters des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtslandVater
 	 */
 	public String geburtslandVater() {
@@ -458,6 +476,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Geburtsname des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtsname
 	 */
 	public String geburtsname() {
@@ -466,6 +485,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Geburtsort des Schülers.
+	 *
 	 * @return Inhalt des Feldes geburtsort
 	 */
 	public String geburtsort() {
@@ -474,6 +494,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Geschlecht des Schülers
+	 *
 	 * @return Inhalt des Feldes geschlecht
 	 */
 	public Geschlecht geschlecht() {
@@ -482,6 +503,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Abiturdaten der GOSt.
+	 *
 	 * @return Inhalt des Feldes gostAbitur
 	 */
 	public ReportingSchuelerGostAbitur gostAbitur() {
@@ -490,6 +512,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten der GOSt-Laufbahnplanung.
+	 *
 	 * @return Inhalt des Feldes gostLaufbahnplanung
 	 */
 	public ReportingSchuelerGostLaufbahnplanung gostLaufbahnplanung() {
@@ -498,6 +521,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Klausuren des Schülers in einer GOSt-Klausurplanung. Sie werden beim Initialisieren eines Klausurplans initialisiert.
+	 *
 	 * @return Inhalt des Feldes gostKlausurplanungSchuelerklausuren
 	 */
 	public List<ReportingGostKlausurplanungSchuelerklausur> gostKlausurplanungSchuelerklausuren() {
@@ -507,6 +531,7 @@ public class ReportingSchueler {
 	/**
 	 * Gibt die Kursbelegung des Schülers aus der Kursplanung der gymnasialen Oberstufe zurück, die zur angegebenen ID des Kurses gehört oder null.
 	 * @param idKurs	Die ID des Kurses, dessen Kursbelegung gesucht ist.
+	 *
 	 * @return			Die Kursbelegung des Kurses.
 	 */
 	@JsonIgnore
@@ -516,6 +541,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Kursbelegungen des Schülers in einer GOSt-Kursplanung. Sie werden beim Initialisieren eines Blockungsergebnisses initialisiert.
+	 *
 	 * @return Inhalt des Feldes gostKursplanungKursbelegungen
 	 */
 	public List<ReportingSchuelerGostKursplanungKursbelegung> gostKursplanungKursbelegungen() {
@@ -524,6 +550,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die ID der Haltestelle, ab der der Schüler das Transportmittel nimmt, des Schülers.
+	 *
 	 * @return Inhalt des Feldes haltestelleID
 	 */
 	public Long haltestelleID() {
@@ -532,6 +559,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler einen Nachweis über die Masernimpfpflicht erbracht hat.
+	 *
 	 * @return Inhalt des Feldes hatMasernimpfnachweis
 	 */
 	public boolean hatMasernimpfnachweis() {
@@ -540,6 +568,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob ein Migrationshintergrund bei dems Schülerdatensatz vorhanden ist.
+	 *
 	 * @return Inhalt des Feldes hatMigrationshintergrund
 	 */
 	public boolean hatMigrationshintergrund() {
@@ -548,6 +577,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Ggf. die Hausnummer zur Straße im Wohnort des Schülers.
+	 *
 	 * @return Inhalt des Feldes hausnummer
 	 */
 	public String hausnummer() {
@@ -556,6 +586,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Ggf. der Hausnummerzusatz zur Straße im Wohnort des Schülers.
+	 *
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
@@ -564,6 +595,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die ID des Schülers.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -572,6 +604,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler die Berufsschulpflicht erfüllt hat oder nicht.
+	 *
 	 * @return Inhalt des Feldes istBerufsschulpflichtErfuellt
 	 */
 	public Boolean istBerufsschulpflichtErfuellt() {
@@ -580,6 +613,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob es sich bei dem Schülerdatensatz um ein Duplikat handelt oder nicht.
+	 *
 	 * @return Inhalt des Feldes istDuplikat
 	 */
 	public boolean istDuplikat() {
@@ -588,6 +622,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler die Schulpflicht erfüllt hat oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSchulpflichtErfuellt
 	 */
 	public Boolean istSchulpflichtErfuellt() {
@@ -596,6 +631,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob der Schüler volljährig ist oder nicht.
+	 *
 	 * @return Inhalt des Feldes istVolljaehrig
 	 */
 	public Boolean istVolljaehrig() {
@@ -604,6 +640,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Gibt an, ob über den Schüler eine Auskunft an Dritte erteilt werden darf oder dies unter allen Umständen vermieden werden sollte.
+	 *
 	 * @return Inhalt des Feldes keineAuskunftAnDritte
 	 */
 	public boolean keineAuskunftAnDritte() {
@@ -612,6 +649,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten aller Lernabschnitte.
+	 *
 	 * @return Inhalt des Feldes lernabschnitte
 	 */
 	public List<ReportingSchuelerLernabschnitt> lernabschnitte() {
@@ -620,6 +658,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Nachname des Schülers.
+	 *
 	 * @return Inhalt des Feldes nachname
 	 */
 	public String nachname() {
@@ -628,6 +667,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Datum der Religionsabmeldung des Schülers.
+	 *
 	 * @return Inhalt des Feldes religionabmeldung
 	 */
 	public String religionabmeldung() {
@@ -636,6 +676,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Datum der Religionsanmeldung des Schülers.
+	 *
 	 * @return Inhalt des Feldes religionanmeldung
 	 */
 	public String religionanmeldung() {
@@ -644,6 +685,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Religion des Schülers.
+	 *
 	 * @return Inhalt des Feldes religion
 	 */
 	public ReligionEintrag religion() {
@@ -652,6 +694,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Daten aller Sprachbelegungen.
+	 *
 	 * @return Inhalt des Feldes sprachbelegungen
 	 */
 	public List<ReportingSchuelerSprachbelegung> sprachbelegungen() {
@@ -660,6 +703,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die erste Staatsangehörigkeit des Schülers.
+	 *
 	 * @return Inhalt des Feldes staatsangehoerigkeit1
 	 */
 	public Nationalitaeten staatsangehoerigkeit1() {
@@ -668,6 +712,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die zweite Staatsangehörigkeit des Schülers.
+	 *
 	 * @return Inhalt des Feldes staatsangehoerigkeit2
 	 */
 	public Nationalitaeten staatsangehoerigkeit2() {
@@ -676,6 +721,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Status des Schülers.
+	 *
 	 * @return Inhalt des Feldes status
 	 */
 	public SchuelerStatus status() {
@@ -684,6 +730,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Ggf. der Straßenname im Wohnort des Schülers.
+	 *
 	 * @return Inhalt des Feldes strassenname
 	 */
 	public String strassenname() {
@@ -692,6 +739,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Telefonnummer des Schülers.
+	 *
 	 * @return Inhalt des Feldes telefon
 	 */
 	public String telefon() {
@@ -700,6 +748,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Mobilnummer des Schülers.
+	 *
 	 * @return Inhalt des Feldes telefonMobil
 	 */
 	public String telefonMobil() {
@@ -708,6 +757,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Die Verkehrssprache der Familie des Schülers.
+	 *
 	 * @return Inhalt des Feldes verkehrspracheFamilie
 	 */
 	public String verkehrspracheFamilie() {
@@ -716,6 +766,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Vorname des Schülers.
+	 *
 	 * @return Inhalt des Feldes vorname
 	 */
 	public String vorname() {
@@ -724,6 +775,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Alle Vornamen, sofern es mehrere gibt, des Schülers.
+	 *
 	 * @return Inhalt des Feldes vornamen
 	 */
 	public String vornamen() {
@@ -732,6 +784,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Wohnort des Schülers.
+	 *
 	 * @return Inhalt des Feldes wohnort
 	 */
 	public OrtKatalogEintrag wohnort() {
@@ -740,6 +793,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Name des Wohnorts des Schülers.
+	 *
 	 * @return Inhalt des Feldes wohnortname
 	 */
 	public String wohnortname() {
@@ -748,6 +802,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Ortsteil des Wohnorts des Schülers.
+	 *
 	 * @return Inhalt des Feldes wohnortsteil
 	 */
 	public OrtsteilKatalogEintrag wohnortsteil() {
@@ -756,6 +811,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Der Name des Ortsteils des Wohnorts des Schülers.
+	 *
 	 * @return Inhalt des Feldes wohnortsteilname
 	 */
 	public String wohnortsteilname() {
@@ -764,6 +820,7 @@ public class ReportingSchueler {
 
 	/**
 	 * Das Zuzugsjahr des Schülers.
+	 *
 	 * @return Inhalt des Feldes zuzugsjahr
 	 */
 	public Integer zuzugsjahr() {

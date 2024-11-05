@@ -27,6 +27,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param aufsichtsbeginn	Die Uhrzeit in Minuten seit 0 Uhr, wann die Aufsicht beginnt. NULL bedeutet "noch nicht definiert".
 	 * @param aufsichtsende		Die Uhrzeit in Minuten seit 0 Uhr, wann die Aufsicht endet. NULL bedeutet "noch nicht definiert".
 	 * @param bemerkung			Die textuelle Bemerkung zur Klausuraufsicht.
@@ -47,6 +48,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Aufsicht beginnt. NULL bedeutet "noch nicht definiert".
+	 *
 	 * @return Inhalt des Feldes aufsichtsbeginn
 	 */
 	public Integer aufsichtsbeginn() {
@@ -55,6 +57,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Die Uhrzeit in Minuten seit 0 Uhr, wann die Aufsicht endet. NULL bedeutet "noch nicht definiert".
+	 *
 	 * @return Inhalt des Feldes aufsichtsende
 	 */
 	public Integer aufsichtsende() {
@@ -63,6 +66,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Die textuelle Bemerkung zur Klausuraufsicht.
+	 *
 	 * @return Inhalt des Feldes bemerkung
 	 */
 	public String bemerkung() {
@@ -71,6 +75,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Der aufsichtsführende Lehrer.
+	 *
 	 * @return Inhalt des Feldes lehrer
 	 */
 	public ReportingLehrer lehrer() {
@@ -79,6 +84,7 @@ public class ReportingGostKlausurplanungKlausuraufsicht {
 
 	/**
 	 * Die Unterrichtsstunde (Eintrag im Zeitraster des Stundenplans), die der Aufsicht zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes unterrichtsstunde
 	 */
 	public ReportingStundenplanungZeitrasterstunde unterrichtsstunde() {

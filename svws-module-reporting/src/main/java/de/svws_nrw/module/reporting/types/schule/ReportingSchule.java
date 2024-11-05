@@ -80,6 +80,7 @@ public class ReportingSchule {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param aktuellerSchuljahresabschnitt Der aktuelle Abschnitt des Schuljahres der Schule.
 	 * @param anzahlJahrgangsstufenProJahr Die Anzahl der Jahrgangsstufen pro Jahr.
 	 * @param anzahlSchuljahresabschnitteProJahr Die Anzahl der Abschnitte pro Jahr
@@ -142,6 +143,7 @@ public class ReportingSchule {
 
 	/**
 	 * Gibt das aktuelle Schuljahr der Schule in Textdarstellung der Form 2023/24 zurück
+	 *
 	 * @return Das aktuelle Schuljahr der Schule in Textdarstellung
 	 */
 	public String aktuellesSchuljahrText() {
@@ -150,6 +152,7 @@ public class ReportingSchule {
 
 	/**
 	 * Gibt das aktuelle Schuljahr der Schule mit aktuellem Abschnitt in Textdarstellung der Form 2023/24.1 zurück.
+	 *
 	 * @return Das aktuelle Schuljahr der Schule mit aktuellem Abschnitt
 	 */
 	public String aktuellesSchuljahrUndAbschnittText() {
@@ -158,6 +161,7 @@ public class ReportingSchule {
 
 	/**
 	 * Stellt die drei einzelnen Bezeichnungsfelder der Schule als ein mehrzeiliges Feld zur Verfügung.
+	 *
 	 * @return Mehrzeiliges Bezeichnungsfeld
 	 */
 	public String bezeichnungSchuleMehrzeilig() {
@@ -169,6 +173,7 @@ public class ReportingSchule {
 
 	/**
 	 * Stellt die drei einzelnen Bezeichnungsfelder der Schule als ein mehrzeiliges Feld im html-Format zur Verfügung.
+	 *
 	 * @return Mehrzeiliges Bezeichnungsfeld im html-Format
 	 */
 	public String bezeichnungSchuleMehrzeiligHtml() {
@@ -184,6 +189,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der aktuelle Abschnitt des Schuljahres der Schule.
+	 *
 	 * @return Inhalt des Feldes aktuellerSchuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt aktuellerSchuljahresabschnitt() {
@@ -192,6 +198,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Anzahl der Jahrgangsstufen pro Jahr.
+	 *
 	 * @return Inhalt des Feldes anzahlJahrgangsstufenProJahr
 	 */
 	public long anzahlJahrgangsstufenProJahr() {
@@ -200,6 +207,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Anzahl der Abschnitte pro Jahr
+	 *
 	 * @return Inhalt des Feldes anzahlSchuljahresabschnitteProJahr
 	 */
 	public long anzahlSchuljahresabschnitteProJahr() {
@@ -208,6 +216,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der über die API als ausgewählter Schuljahresabschnitt deklarierter Abschnitt der Schule.
+	 *
 	 * @return Inhalt des Feldes auswahlSchuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt auswahlSchuljahresabschnitt() {
@@ -216,6 +225,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der erste Teil der Bezeichnung der Schule
+	 *
 	 * @return Inhalt des Feldes bezeichnung1
 	 */
 	public String bezeichnung1() {
@@ -224,6 +234,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der zweite Teil der Bezeichnung der Schule
+	 *
 	 * @return Inhalt des Feldes bezeichnung2
 	 */
 	public String bezeichnung2() {
@@ -232,6 +243,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der dritte Teil der Bezeichnung der Schule
+	 *
 	 * @return Inhalt des Feldes bezeichnung3
 	 */
 	public String bezeichnung3() {
@@ -240,6 +252,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die allgemeine Bezeichnung der Abschnitte (z.B. Quartal oder Halbjahr)
+	 *
 	 * @return Inhalt des Feldes bezeichnungSchuljahresabschnitt
 	 */
 	public String bezeichnungSchuljahresabschnitt() {
@@ -248,6 +261,7 @@ public class ReportingSchule {
 
 	/**
 	 * Eine Liste der einzelnen speziellen Bezeichnungen für die Abschnitte (z.B. 1. Halbjahr, 2. Halbjahr)
+	 *
 	 * @return Inhalt des Feldes bezeichnungenSchuljahresabschnitte
 	 */
 	public List<String> bezeichnungenSchuljahresabschnitte() {
@@ -256,6 +270,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Dauer einer Unterrichtseinheit in Minuten.
+	 *
 	 * @return Inhalt des Feldes dauerUnterrichtseinheit
 	 */
 	public long dauerUnterrichtseinheit() {
@@ -264,6 +279,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Mailadresse der Schule.
+	 *
 	 * @return Inhalt des Feldes email
 	 */
 	public String email() {
@@ -272,6 +288,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Faxnummer der Schule.
+	 *
 	 * @return Inhalt des Feldes fax
 	 */
 	public String fax() {
@@ -280,6 +297,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Hausnummer zur Straße in der die Schule liegt.
+	 *
 	 * @return Inhalt des Feldes hausnummer
 	 */
 	public String hausnummer() {
@@ -288,6 +306,7 @@ public class ReportingSchule {
 
 	/**
 	 * Ggf. der Hausnummerzusatz zur Straße in der die Schule liegt.
+	 *
 	 * @return Inhalt des Feldes hausnummerZusatz
 	 */
 	public String hausnummerZusatz() {
@@ -296,6 +315,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der Ort in dem die Schule liegt.
+	 *
 	 * @return Inhalt des Feldes ort
 	 */
 	public String ort() {
@@ -304,6 +324,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Postleitzahl des Gebietes in dem die Schule liegt.
+	 *
 	 * @return Inhalt des Feldes plz
 	 */
 	public String plz() {
@@ -312,6 +333,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Liste der Schuljahresabschnitte, welche an der Schule definiert sind.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitte
 	 */
 	public List<ReportingSchuljahresabschnitt> schuljahresabschnitte() {
@@ -320,6 +342,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Schulform der Schule
+	 *
 	 * @return Inhalt des Feldes schulform
 	 */
 	public String schulform() {
@@ -328,6 +351,7 @@ public class ReportingSchule {
 
 	/**
 	 * Das Schullogo der Schule im Base64-Format
+	 *
 	 * @return Inhalt des Feldes schullogo
 	 */
 	public String schullogo() {
@@ -336,6 +360,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die eindeutige Schulnummer der Schule
+	 *
 	 * @return Inhalt des Feldes schulnummer
 	 */
 	public long schulnummer() {
@@ -344,6 +369,7 @@ public class ReportingSchule {
 
 	/**
 	 * Der Straßenname der Straße in der die Schule liegt.
+	 *
 	 * @return Inhalt des Feldes strassenname
 	 */
 	public String strassenname() {
@@ -352,6 +378,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Telefonnummer der Schule.
+	 *
 	 * @return Inhalt des Feldes telefon
 	 */
 	public String telefon() {
@@ -360,6 +387,7 @@ public class ReportingSchule {
 
 	/**
 	 * Die Adresse der Homepage der Schule (Domain-Name)
+	 *
 	 * @return Inhalt des Feldes webAdresse
 	 */
 	public String webAdresse() {

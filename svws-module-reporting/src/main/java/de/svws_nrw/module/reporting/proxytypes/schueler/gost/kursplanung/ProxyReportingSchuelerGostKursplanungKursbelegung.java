@@ -10,6 +10,7 @@ public class ProxyReportingSchuelerGostKursplanungKursbelegung extends Reporting
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerGostKursplanungKursbelegung}.
+	 *
 	 * @param abiturfach			Abiturfach, falls das Fach des Kurses Abiturfach ist.
 	 * @param hatGueltigeFachwahl 	Angabe, ob die Kursbelegung eine gültige Fachwahl im Abiturjahrgang hat.
 	 * @param istSchriftlich		Angabe, ob der Kurs schriftlich belegt ist.

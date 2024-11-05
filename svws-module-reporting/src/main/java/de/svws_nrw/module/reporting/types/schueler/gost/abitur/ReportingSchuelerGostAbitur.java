@@ -100,6 +100,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param abiturjahr Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
 	 * @param besondereLernleistung Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
 	 * @param besondereLernleistungNote Ggf. die Note einer externen besonderen Lernleistung.
@@ -174,6 +175,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt die Information zurück, ob in der Q-Phase ein Projektkurs belegt wurde.
+	 *
 	 * @return Projektkursbelegung vorhanden.
 	 */
 	@JsonIgnore
@@ -186,6 +188,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt die Information zurück, ob in der Q-Phase ein Religionskurs belegt wurde.
+	 *
 	 * @return Religionskursbelegung vorhanden.
 	 */
 	@JsonIgnore
@@ -198,6 +201,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt die Information zurück, ob in der Q-Phase ein Vertiefungskurs belegt wurde.
+	 *
 	 * @return Vertiefungskursbelegung in Q-Phase vorhanden.
 	 */
 	@JsonIgnore
@@ -223,6 +227,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das Kalenderjahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
+	 *
 	 * @return Inhalt des Feldes abiturjahr
 	 */
 	public int abiturjahr() {
@@ -231,6 +236,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Art der besonderen Lernleistung (K - keine, P - in einem Projektkurs, E - extern).
+	 *
 	 * @return Inhalt des Feldes besondereLernleistung
 	 */
 	public String besondereLernleistung() {
@@ -239,6 +245,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Ggf. Note einer externen besonderen Lernleistung.
+	 *
 	 * @return Inhalt des Feldes besondereLernleistungNote
 	 */
 	public Note besondereLernleistungNote() {
@@ -247,6 +254,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das Thema der besonderen Lernleistung.
+	 *
 	 * @return Inhalt des Feldes besondereLernleistungThema
 	 */
 	public String besondereLernleistungThema() {
@@ -255,6 +263,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Für die einzelnen GostHalbjahr wird angegeben, ob gewertete Leistungsdaten vorhanden sind oder es sich um Werte der Laufbahnplanung handelt.
+	 *
 	 * @return Inhalt des Feldes bewertetesHalbjahr
 	 */
 	public final boolean[] bewertetesHalbjahr() {
@@ -263,6 +272,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das einstellige Kürzel der Sprache des bilingualen Bildungsganges, falls der Schüler an einem solchen teilnimmt.
+	 *
 	 * @return Inhalt des Feldes bilingualeSprache
 	 */
 	public String bilingualeSprache() {
@@ -271,6 +281,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Kurse in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1AnzahlKurse
 	 */
 	public Integer block1AnzahlKurse() {
@@ -279,6 +290,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Gesamtdefizite in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1DefiziteGesamt
 	 */
 	public Integer block1DefiziteGesamt() {
@@ -287,6 +299,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Defizite im LK-Bereich in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1DefiziteLK
 	 */
 	public Integer block1DefiziteLK() {
@@ -295,6 +308,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Fehlstunden in der gesamten Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1FehlstundenGesamt
 	 */
 	public long block1FehlstundenGesamt() {
@@ -303,6 +317,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der unentschuldigten Fehlstunden in der gesamten Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1FehlstundenUnentschuldigt
 	 */
 	public long block1FehlstundenUnentschuldigt() {
@@ -311,6 +326,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Der Durchschnitt der Notenpunkte von allen Kursen der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1NotenpunkteDurchschnitt
 	 */
 	public Double block1NotenpunkteDurchschnitt() {
@@ -319,6 +335,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Punktsumme aller Grundkurse in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1PunktSummeGK
 	 */
 	public Integer block1PunktSummeGK() {
@@ -327,6 +344,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Punktsumme aller Leistungskurse in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1PunktSummeLK
 	 */
 	public Integer block1PunktSummeLK() {
@@ -335,6 +353,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die normierte Punktsumme aller Kurse in der Qualifikationsphase.
+	 *
 	 * @return Inhalt des Feldes block1PunktSummeNormiert
 	 */
 	public Integer block1PunktSummeNormiert() {
@@ -343,6 +362,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt an, ob die Zulassung erreicht wurde oder nicht - sofern diese schon geprüft wurde.
+	 *
 	 * @return Inhalt des Feldes block1Zulassung
 	 */
 	public Boolean block1Zulassung() {
@@ -351,6 +371,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Gesamtdefizite im Abiturbereich (Block II).
+	 *
 	 * @return Inhalt des Feldes block2DefiziteGesamt
 	 */
 	public Integer block2DefiziteGesamt() {
@@ -359,6 +380,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Anzahl der Leistungskurs-Defizite im Abiturbereich (Block II).
+	 *
 	 * @return Inhalt des Feldes block2DefiziteLK
 	 */
 	public Integer block2DefiziteLK() {
@@ -367,6 +389,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Punktsumme im Abiturbereich (Block II).
+	 *
 	 * @return Inhalt des Feldes block2PunktSumme
 	 */
 	public Integer block2PunktSumme() {
@@ -375,6 +398,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Liste mit den Fachbelegungen in der Oberstufe.
+	 *
 	 * @return Inhalt des Feldes fachbelegungen
 	 */
 	public final List<ReportingGostAbiturFachbelegung> fachbelegungen() {
@@ -383,6 +407,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt an, ob freiwillig von der Abiturprüfung zurückgetreten wurde.
+	 *
 	 * @return Inhalt des Feldes freiwilligerRuecktritt = false
 	 */
 	public boolean freiwilligerRuecktritt() {
@@ -391,6 +416,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die erreichte Gesamtpunktzahl in der Qualifikation und im Abiturbereich (Block I und II).
+	 *
 	 * @return Inhalt des Feldes gesamtPunkte
 	 */
 	public Integer gesamtPunkte() {
@@ -399,6 +425,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Gesamtpunktzahl, ab der sich die Abiturnote verbessern würde
+	 *
 	 * @return Inhalt des Feldes gesamtPunkteVerbesserung
 	 */
 	public Integer gesamtPunkteVerbesserung() {
@@ -407,6 +434,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Gesamtpunktzahl, ab der sich die Abiturnote verschlechtern würde.
+	 *
 	 * @return Inhalt des Feldes gesamtPunkteVerschlechterung
 	 */
 	public Integer gesamtPunkteVerschlechterung() {
@@ -415,6 +443,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Die Abiturnote einer bestandenen Abiturprüfung - sofern das Prüfungsverfahren schon abgeschlossen wurde.
+	 *
 	 * @return Inhalt des Feldes note
 	 */
 	public String note() {
@@ -423,6 +452,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das Projektkursthema, sofern ein Projektkurs belegt wurde.
+	 *
 	 * @return Inhalt des Feldes projektkursThema
 	 */
 	public String projektkursThema() {
@@ -431,6 +461,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Gibt an, ob die Abiturprüfung bestanden wurde oder nicht - sofern das Prüfungsverfahren schon abgeschlossen wurde.
+	 *
 	 * @return Inhalt des Feldes pruefungBestanden
 	 */
 	public Boolean pruefungBestanden() {
@@ -439,6 +470,7 @@ public class ReportingSchuelerGostAbitur {
 
 	/**
 	 * Das Schuljahr, in dem der Schüler sein Abitur ablegt bzw. ablegen wird.
+	 *
 	 * @return Inhalt des Feldes schuljahrAbitur
 	 */
 	public int schuljahrAbitur() {

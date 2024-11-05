@@ -19,6 +19,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 
 	/**
 	 * Erstellt ein neues Proxy-Reporting-Objekt für {@link ReportingSchuelerSprachbelegung}.
+	 *
 	 * @param reportingRepository Repository für die Reporting.
 	 * @param sprachbelegung Daten-Objekt der Fachbelegungen aus der Datenbank
 	 */
@@ -46,6 +47,7 @@ public class ProxyReportingSchuelerSprachbelegung extends ReportingSchuelerSprac
 
 	/**
 	 * Gibt das Repository mit den Daten der Schule und den zwischengespeicherten Daten zurück.
+	 *
 	 * @return Repository für die Reporting
 	 */
 	public ReportingRepository reportingRepository() {

@@ -40,6 +40,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param anzahlDummy				Anzahl der Dummy-Schüler in der Schiene
 	 * @param anzahlExterne				Anzahl der externen Schüler in der Schiene
 	 * @param anzahlSchueler			Anzahl der Schüler in der Schien
@@ -72,6 +73,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Anzahl der Dummy-Schüler in der Schiene
+	 *
 	 * @return Inhalt des Feldes anzahlDummy
 	 */
 	public int anzahlDummy() {
@@ -80,6 +82,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Anzahl der externen Schüler in der Schiene
+	 *
 	 * @return Inhalt des Feldes anzahlExterne
 	 */
 	public int anzahlExterne() {
@@ -88,6 +91,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Anzahl der Schüler in der Schiene
+	 *
 	 * @return Inhalt des Feldes anzahlSchueler
 	 */
 	public int anzahlSchueler() {
@@ -96,6 +100,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Bezeichnung der Schiene
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -104,6 +109,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Gibt an, ob in der Schiene Schüler mit Kurskollisionen vorhanden sind.
+	 *
 	 * @return Inhalt des Feldes hatKollisionen
 	 */
 	public boolean hatKollisionen() {
@@ -112,6 +118,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * ID der Schiene
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -120,6 +127,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Eine Liste mit IDs von Kursen in der Schiene, die eine Kollision enthalten.
+	 *
 	 * @return Inhalt des Feldes idsKurseMitKollisionen
 	 */
 	public List<Long> idsKurseMitKollisionen() {
@@ -128,6 +136,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Eine Liste mit IDs von Schülern in der Schiene, die eine Kollision enthalten.
+	 *
 	 * @return Inhalt des Feldes idsSchuelerMitKollisionen
 	 */
 	public List<Long> idsSchuelerMitKollisionen() {
@@ -136,6 +145,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Eine Liste vom Typ Kurse, die alle Kurse der Schiene und deren Daten enthält.
+	 *
 	 * @return Inhalt des Feldes kurse
 	 */
 	public List<ReportingGostKursplanungKurs> kurse() {
@@ -144,6 +154,7 @@ public class ReportingGostKursplanungSchiene {
 
 	/**
 	 * Die Nummer der Schiene.
+	 *
 	 * @return Inhalt des Feldes nummer
 	 */
 	public int nummer() {

@@ -65,6 +65,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param anzahlAB12				Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist.
 	 * @param anzahlAB3					Anzahl der Schülerinnen und Schüler für das Fach des Kurses drittes Abiturfach ist.
 	 * @param anzahlAB4					Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist.
@@ -111,6 +112,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Auflistung der Lehrkräfte des Kurses als kommaseparierte Liste der Kürzel.
+	 *
 	 * @return Kommaseparierte Liste der Lehrkräfte
 	 */
 	public String lehrkraefteAuflistung() {
@@ -119,6 +121,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Auflistung der Schienen des Kurses als kommaseparierte Liste der Schienennummern.
+	 *
 	 * @return Kommaseparierte Liste der Schienen
 	 */
 	public String schienenAuflistung() {
@@ -130,6 +133,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses erstes oder zweites Abiturfach ist.
+	 *
 	 * @return Inhalt des Feldes anzahlAB12
 	 */
 	public int anzahlAB12() {
@@ -138,6 +142,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses drittes Abiturfach ist.
+	 *
 	 * @return Inhalt des Feldes anzahlAB3
 	 */
 	public int anzahlAB3() {
@@ -146,6 +151,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler für das Fach des Kurses viertes Abiturfach ist.
+	 *
 	 * @return Inhalt des Feldes anzahlAB4
 	 */
 	public int anzahlAB4() {
@@ -154,6 +160,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Dummy-Schüler
+	 *
 	 * @return Inhalt des Feldes anzahlDummy
 	 */
 	public int anzahlDummy() {
@@ -162,6 +169,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler mit Status extern.
+	 *
 	 * @return Inhalt des Feldes anzahlExterne
 	 */
 	public int anzahlExterne() {
@@ -170,6 +178,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schülerinnen und Schüler im Kurs.
+	 *
 	 * @return Inhalt des Feldes anzahlSchueler
 	 */
 	public int anzahlSchueler() {
@@ -178,6 +187,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Anzahl der Schüler des Kurses, die das Fach schriftlich belegt haben.
+	 *
 	 * @return Inhalt des Feldes anzahlSchuelerSchriftlich
 	 */
 	public int anzahlSchuelerSchriftlich() {
@@ -186,6 +196,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Bezeichnung des Kurses.
+	 *
 	 * @return Inhalt des Feldes bezeichnung
 	 */
 	public String bezeichnung() {
@@ -194,6 +205,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Das Fach des Kurses
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -202,6 +214,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Die Fachwahl-Statistik zum Fach und zur Kursart des Kurses für das GOSt-Halbjahr des Kurses
+	 *
 	 * @return Inhalt des Feldes fachwahlstatistik
 	 */
 	public ReportingGostKursplanungFachwahlstatistik fachwahlstatistik() {
@@ -210,6 +223,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Halbjahr der Oberstufe für den Kurs gemäß Blockungsergebnis.
+	 *
 	 * @return Inhalt des Feldes gostHalbjahr
 	 */
 	public GostHalbjahr gostHalbjahr() {
@@ -218,6 +232,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Kursart des Kurses.
+	 *
 	 * @return Inhalt des Feldes gostKursart
 	 */
 	public GostKursart gostKursart() {
@@ -226,6 +241,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * ID des Kurses
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -234,6 +250,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Liste der Lehrkräfte des Kurses.
+	 *
 	 * @return Inhalt des Feldes lehrkraefte
 	 */
 	public List<ReportingLehrer> lehrkraefte() {
@@ -242,6 +259,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Eine Liste vom Typ Schiene, die die Schienen beinhaltet, in denen der Kurs gemäß Blockungsergebnis liegt.
+	 *
 	 * @return Inhalt des Feldes schienen
 	 */
 	public List<ReportingGostKursplanungSchiene> schienen() {
@@ -250,6 +268,7 @@ public class ReportingGostKursplanungKurs {
 
 	/**
 	 * Eine Liste vom Typ Kursschueler, die alle Schülerinnen und Schüler des Kurses enthält.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public List<ReportingSchueler> schueler() {

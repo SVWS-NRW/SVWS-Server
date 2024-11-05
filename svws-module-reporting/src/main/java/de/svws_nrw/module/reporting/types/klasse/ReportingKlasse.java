@@ -102,6 +102,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param beginnSommersemester Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
 	 * @param beschreibung Eine zusätzliche Beschreibung zu der Klasse
 	 * @param folgeklasse Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist.
@@ -177,6 +178,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Gibt am WBK an, ob die Klassen im Sommersemester angefangen hat.
+	 *
 	 * @return Inhalt des Feldes beginnSommersemester
 	 */
 	public boolean beginnSommersemester() {
@@ -185,6 +187,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Eine zusätzliche Beschreibung zu der Klasse
+	 *
 	 * @return Inhalt des Feldes beschreibung
 	 */
 	public String beschreibung() {
@@ -193,6 +196,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Folgeklasse dieser Klasse zur idFolgeklasse, sofern diese bereits vorhanden ist.
+	 *
 	 * @return Inhalt des Feldes folgeklasse
 	 */
 	public ReportingKlasse folgeklasse() {
@@ -201,6 +205,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID der Klasse.
+	 *
 	 * @return Inhalt des Feldes id
 	 */
 	public long id() {
@@ -209,6 +214,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID für die Organisationsform der Klasse im allgemeinbildenden Bereich
+	 *
 	 * @return Inhalt des Feldes idAllgemeinbildendOrganisationsform
 	 */
 	public Long idAllgemeinbildendOrganisationsform() {
@@ -217,6 +223,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID für die Organisationsform der Klasse im berufsbildenden Bereich
+	 *
 	 * @return Inhalt des Feldes idBerufsbildendOrganisationsform
 	 */
 	public Long idBerufsbildendOrganisationsform() {
@@ -225,6 +232,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID der Fachklasse, falls es sich um eine Klasse an einem Berufskolleg handelt oder null
+	 *
 	 * @return Inhalt des Feldes idFachklasse
 	 */
 	public Long idFachklasse() {
@@ -233,6 +241,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID der Folgeklasse, sofern im Folgeabschnitt definiert - ansonsten null
+	 *
 	 * @return Inhalt des Feldes idFolgeklasse
 	 */
 	public Long idFolgeklasse() {
@@ -241,6 +250,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID des zugeordneten Jahrgangs, dem die Klasse zugeordnet ist
+	 *
 	 * @return Inhalt des Feldes idJahrgang
 	 */
 	public Long idJahrgang() {
@@ -249,6 +259,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID für Klassenart
+	 *
 	 * @return Inhalt des Feldes idKlassenart
 	 */
 	public long idKlassenart() {
@@ -257,6 +268,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Liste der IDs der Klassenleitungen der Klasse.
+	 *
 	 * @return Inhalt des Feldes idsKlassenleitungen
 	 */
 	public List<Long> idsKlassenleitungen() {
@@ -265,6 +277,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Liste der IDs der Schüler der Klasse.
+	 *
 	 * @return Inhalt des Feldes idsSchueler
 	 */
 	public List<Long> idsSchueler() {
@@ -273,6 +286,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID für die Schulgliederung der Klasse
+	 *
 	 * @return Inhalt des Feldes idSchulgliederung
 	 */
 	public long idSchulgliederung() {
@@ -281,6 +295,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID der Vorgängerklasse, sofern im vorigen Schuljahresabschnitt definiert - ansonsten null
+	 *
 	 * @return Inhalt des Feldes idVorgaengerklasse
 	 */
 	public Long idVorgaengerklasse() {
@@ -289,6 +304,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die ID für die Organisationsform der Klasse im Weiterbildungsbereich
+	 *
 	 * @return Inhalt des Feldes idWeiterbildungOrganisationsform
 	 */
 	public Long idWeiterbildungOrganisationsform() {
@@ -297,6 +313,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Gibt an, ob der Eintrag in der Anwendung sichtbar sein soll oder nicht.
+	 *
 	 * @return Inhalt des Feldes istSichtbar
 	 */
 	public boolean istSichtbar() {
@@ -305,6 +322,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Der Jahrgang, dem die Klasse zugeordnet ist.
+	 *
 	 * @return Inhalt des Feldes jahrgang
 	 */
 	public ReportingJahrgang jahrgang() {
@@ -313,6 +331,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Liste der Klassenleitungen der Klasse.
+	 *
 	 * @return Inhalt des Feldes klassenleitungen
 	 */
 	public List<ReportingLehrer> klassenleitungen() {
@@ -321,6 +340,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Das Kürzel der Klasse.
+	 *
 	 * @return Inhalt des Feldes kuerzel
 	 */
 	public String kuerzel() {
@@ -329,6 +349,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Das Kürzel der Folgeklasse.
+	 *
 	 * @return Inhalt des Feldes kuerzelFolgeklasse
 	 */
 	public String kuerzelFolgeklasse() {
@@ -337,6 +358,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Das Kürzel der Vorgängerklasse.
+	 *
 	 * @return Inhalt des Feldes kuerzelVorgaengerklasse
 	 */
 	public String kuerzelVorgaengerklasse() {
@@ -345,6 +367,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Das Kürzel für die Parallelität der Klasse innerhalb des Jahrgangs (A-Z).
+	 *
 	 * @return Inhalt des Feldes parallelitaet
 	 */
 	public String parallelitaet() {
@@ -353,6 +376,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die zugewiesene Prüfungsordnung, welche in Schild 3 genutzt wird.
+	 *
 	 * @return Inhalt des Feldes pruefungsordnung
 	 */
 	public String pruefungsordnung() {
@@ -361,6 +385,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Liste der Schüler der Klasse.
+	 *
 	 * @return Inhalt des Feldes schueler
 	 */
 	public List<ReportingSchueler> schueler() {
@@ -369,6 +394,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Der Schuljahresabschnitt der Klasse.
+	 *
 	 * @return Inhalt des Feldes schuljahresabschnitt
 	 */
 	public ReportingSchuljahresabschnitt schuljahresabschnitt() {
@@ -377,6 +403,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Sortierreihenfolge des Jahrgangslisten-Eintrags.
+	 *
 	 * @return Inhalt des Feldes sortierung
 	 */
 	public int sortierung() {
@@ -385,6 +412,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Adressmerkmal des Teilstandorts für die Klasse
+	 *
 	 * @return Inhalt des Feldes teilstandort
 	 */
 	public String teilstandort() {
@@ -393,6 +421,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Gibt an, ob Ankreuzkompetenzen für die Klasse verwendet werden.
+	 *
 	 * @return Inhalt des Feldes verwendungAnkreuzkompetenzen
 	 */
 	public boolean verwendungAnkreuzkompetenzen() {
@@ -401,6 +430,7 @@ public class ReportingKlasse {
 
 	/**
 	 * Die Vorgängerklasse dieser Klasse zur idVorgaengerklasse.
+	 *
 	 * @return Inhalt des Feldes vorgaengerklasse
 	 */
 	public ReportingKlasse vorgaengerklasse() {

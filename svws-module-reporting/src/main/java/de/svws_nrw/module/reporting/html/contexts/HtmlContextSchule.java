@@ -17,6 +17,7 @@ public final class HtmlContextSchule extends HtmlContext {
 
 	/**
 	 * Initialisiert einen neuen HtmlContext mit den übergebenen Daten.
+	 *
 	 * @param reportingRepository	Repository mit Parametern, Logger und Daten zum Reporting.
 	 */
 	public HtmlContextSchule(final ReportingRepository reportingRepository) {

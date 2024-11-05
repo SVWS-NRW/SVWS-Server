@@ -10,13 +10,13 @@ import de.svws_nrw.core.types.reporting.ReportingReportvorlage;
  * <p>Eine ENUM der integrierten Report-Vorlagen des SVWS-Servers.
  * Sie definiert die im CoreType {@link ReportingReportvorlage} angelegten Report-Vorlagen
  * hinsichtlich der verwendeten Template-Dateien und Benutzerrechte genauer.</p>
- * <p>Hinweis:</p>
- * <p>Jede Templatedefinition hat eine Pfadangabe für den Root-Pfad und eine zur html-Templatedatei. Letztere Angabe hat relativ zum Root zu erfolgen.</p>
- * <p>Hinweis:</p>
+ * <p>Hinweise:</p>
  * <p>Die Bezeichnungen der ENUM-Werte dienen auch dazu, die Daten-Contexts korrekt zu füllen.
  * Die Benennung der Vorlagen erfolgt nach dem Schema Hauptdaten_v_Detaildaten. Bei der Report-Generierung erfolgt in
  * Teilen ein entsprechendes Füllen der Datenkontexte anhand der Benennung.</p>
- * <p>Anmerkung:</p>
+ * <p>Jede Templatedefinition hat eine Pfadangabe für den Root-Pfad und eine zur html-Templatedatei. Letztere Angabe hat relativ zum Root zu erfolgen.
+ * Unter dem Root müssen alle weiteren Dateien zum Template zu finden sein, bspw. die css-Dateien.
+ * Innerhalb der html-Vorlagendatei sind alle Pfade relativ zum Root anzugeben.</p>
  * <p>Es gibt zwei Einträge für die Erzeugung des Dateinamens. Einen "statischen" Dateinamen und eine Dateinamensvorlage.
  * Die Vorlage stellt den BODY eines html-Thymeleaf-Templates dar, welches eine einzige Zeile mit einem Absatz-Tag
  * ergeben muss. Diese Zeile wird dann für die Erzeugung des Dateinamens aus den Daten genutzt.</p>
@@ -164,7 +164,7 @@ public enum HtmlTemplateDefinition {
 	/** Der CoreType {@link ReportingReportvorlage} dieser Template-Definition. */
 	private final ReportingReportvorlage reportingReportvorlage;
 
-	/** Der Root-Pfad zum Verzeichnis, unter dem alle Dateien dieser HtmlTemplateDefinition (html, css, fonts) auffindbar sind.. */
+	/** Der Root-Pfad zum Verzeichnis, unter dem alle Dateien dieser HtmlTemplateDefinition (html, css, fonts) auffindbar sind. */
 	private final String rootPfad;
 
 	/** Pfad zur html-Template-Datei. Angabe erfolgt relativ zum Root-Pfad. */
@@ -183,10 +183,11 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Erstellt eine neue Template-Definition
+	 *
 	 * @param reportingReportvorlage 	Der CoreType {@link ReportingReportvorlage} des Templates
 	 * @param rootPfad 					Der Root-Pfad zum Verzeichnis, unter dem alle Dateien dieser HtmlTemplateDefinition (html, css, fonts) auffindbar sind.
 	 * @param pfadHtmlTemplate 			Pfad zur html-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
-	 * @param dateiname 				Der statische Dateiname ohne Dateiendung, der bei der Ausgabe als ZIP-Datei verwendet wird.
+	 * @param dateiname 				Der statische Dateiname ohne Dateiendung, der unter anderem bei der Ausgabe als ZIP-Datei verwendet wird.
 	 * @param dateinamensvorlage 		Die Vorlage für dynamische Generierung des Dateinamens ohne Dateiendung. Sie ist in der Form eines thymeleaf-html-Templates anzulegen.
 	 * @param benutzerKompetenzen 		Die List mit Benutzerkompetenzen gemäß {@link BenutzerKompetenz}, die zur Nutzung des Templates erforderlich sind.
 	 */
@@ -204,6 +205,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Gibt den CoreType {@link ReportingReportvorlage} dieser Template-Definition zurück
+	 *
 	 * @return Der CoreType dieser Template-Definition
 	 */
 	public ReportingReportvorlage getReportingReportvorlage() {
@@ -212,6 +214,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Der Root-Pfad zum Verzeichnis, unter dem alle Dateien dieser HtmlTemplateDefinition (html, css, fonts) auffindbar sind.
+	 *
 	 * @return Der Root-Pfad zur HtmlTemplateDefinition
 	 */
 	public String getRootPfad() {
@@ -220,6 +223,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Pfad zur html-Template-Datei. Angabe erfolgt relativ zum Root-Pfad.
+	 *
 	 * @return Der Dateipfad zur html-Template-Datei
 	 */
 	public String getPfadHtmlTemplate() {
@@ -228,6 +232,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Pfad zur html-Template-Datei, inklusive des Root-Pfads der HtmlTemplateDefinition.
+	 *
 	 * @return Der Root-Dateipfad zur html-Template-Datei
 	 */
 	public String getRootPfadHtmlTemplate() {
@@ -235,7 +240,8 @@ public enum HtmlTemplateDefinition {
 	}
 
 	/**
-	 * Gibt den statischen Dateinamen ohne Dateiendung zurück, der bei der Ausgabe als ZIP-Datei verwendet wird.
+	 * Gibt den statischen Dateinamen ohne Dateiendung zurück, der unter anderem bei der Ausgabe als ZIP-Datei verwendet wird.
+	 *
 	 * @return Der statische Dateiname
 	 */
 	public String getDateiname() {
@@ -244,6 +250,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Gibt die Vorlage für die dynamische Generierung des Dateinamens ohne Dateiendung zurück.
+	 *
 	 * @return Die Vorlage für den Dateinamen
 	 */
 	public String getDateinamensvorlage() {
@@ -263,6 +270,7 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Gibt die Benutzer-Kompetenzen für diese Template-Definition zurück
+	 *
 	 * @return Die Liste der Benutzerkompetenzen
 	 */
 	public List<BenutzerKompetenz> getBenutzerKompetenzen() {
@@ -273,7 +281,9 @@ public enum HtmlTemplateDefinition {
 
 	/**
 	 * Diese Methode ermittelt die Report-Vorlage anhand des übergebenen Namens.
+	 *
 	 * @param reportingReportvorlage  Der CoreType der Report-Vorlage
+	 *
 	 * @return Die Template-Definition
 	 */
 	public static HtmlTemplateDefinition getByType(final ReportingReportvorlage reportingReportvorlage) {

@@ -55,6 +55,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Erstellt ein neues Reporting-Objekt auf Basis dieser Klasse.
+	 *
 	 * @param differenzKursgroessenLK Die Kursgrößendifferenz des Faches für die Kursart LK.
 	 * @param differenzKursgroessenGK Die Kursgrößendifferenz des Faches für die Kursart GK.
 	 * @param differenzKursgroessenZK Die Kursgrößendifferenz des Faches für die Kursart ZK.
@@ -98,6 +99,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Kursgrößendifferenz des Faches für die Kursart LK.
+	 *
 	 * @return Inhalt des Feldes differenzKursgroessenLK
 	 */
 	public int differenzKursgroessenLK() {
@@ -106,6 +108,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Kursgrößendifferenz des Faches für die Kursart GK.
+	 *
 	 * @return Inhalt des Feldes differenzKursgroessenGK
 	 */
 	public int differenzKursgroessenGK() {
@@ -114,6 +117,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Kursgrößendifferenz des Faches für die Kursart ZK.
+	 *
 	 * @return Inhalt des Feldes differenzKursgroessenZK
 	 */
 	public int differenzKursgroessenZK() {
@@ -122,6 +126,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Kursgrößendifferenz des Faches für die Kursart PJK.
+	 *
 	 * @return Inhalt des Feldes differenzKursgroessenPJK
 	 */
 	public int differenzKursgroessenPJK() {
@@ -130,6 +135,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Kursgrößendifferenz des Faches für die Kursart VTF.
+	 *
 	 * @return Inhalt des Feldes differenzKursgroessenVTF
 	 */
 	public int differenzKursgroessenVTF() {
@@ -139,6 +145,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Das Fach, für welches die Statistikdaten der Fachwahlen ermittelt wurden.
+	 *
 	 * @return Inhalt des Feldes fach
 	 */
 	public ReportingFach fach() {
@@ -147,6 +154,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Gesamtzahl der Wahlen als Leistungskurs.
+	 *
 	 * @return Inhalt des Feldes wahlenLK
 	 */
 	public int wahlenLK() {
@@ -155,6 +163,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Gesamtzahl der Wahlen als Grundkurs, Projektkurs oder Vertiefungskurs.
+	 *
 	 * @return Inhalt des Feldes wahlenGK
 	 */
 	public int wahlenGK() {
@@ -163,6 +172,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als mündlicher Grundkurs, Projektkurs oder Vertiefungskurs.
+	 *
 	 * @return Inhalt des Feldes wahlenGKMuendlich
 	 */
 	public int wahlenGKMuendlich() {
@@ -171,6 +181,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als schriftlicher Grundkurs.
+	 *
 	 * @return Inhalt des Feldes wahlenGKSchriftlich
 	 */
 	public int wahlenGKSchriftlich() {
@@ -179,6 +190,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als drittes Abiturfach.
+	 *
 	 * @return Inhalt des Feldes wahlenAB3
 	 */
 	public int wahlenAB3() {
@@ -187,6 +199,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als viertes Abiturfach.
+	 *
 	 * @return Inhalt des Feldes wahlenAB4
 	 */
 	public int wahlenAB4() {
@@ -195,6 +208,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als Zusatzkurs.
+	 *
 	 * @return Inhalt des Feldes wahlenZK
 	 */
 	public int wahlenZK() {
@@ -203,6 +217,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als Zusatzkurs.
+	 *
 	 * @return Inhalt des Feldes wahlenPJK
 	 */
 	public int wahlenPJK() {
@@ -211,6 +226,7 @@ public class ReportingGostKursplanungFachwahlstatistik {
 
 	/**
 	 * Die Anzahl der Wahlen als Zusatzkurs.
+	 *
 	 * @return Inhalt des Feldes wahlenVTF
 	 */
 	public int wahlenVTF() {

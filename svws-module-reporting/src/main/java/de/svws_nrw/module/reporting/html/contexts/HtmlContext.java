@@ -17,6 +17,7 @@ public abstract class HtmlContext {
 
 	/**
 	 * Rückgabe des Thymeleaf-Daten-Context
+	 *
 	 * @return Gibt einen Thymeleaf-Daten-Context zurück.
 	 */
 	public Context getContext() {
@@ -25,6 +26,7 @@ public abstract class HtmlContext {
 
 	/**
 	 * Setzen des Thymeleaf-Daten-Context
+	 *
 	 * @param context Thymeleaf-Daten-Context mit den Daten.
 	 */
 	public void setContext(final Context context) {
