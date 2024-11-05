@@ -123,6 +123,7 @@ export class RouteSchueler extends RouteNode<RouteDataSchueler, RouteApp> {
 
 	public getProps(to: RouteLocationNormalized): SchuelerAppProps {
 		return {
+			patch: this.data.patch,
 			schuelerListeManager: () => this.data.schuelerListeManager,
 			tabManager: () => this.createTabManagerByChildren(this.data.view.name, this.setTab, this.data.activeViewType),
 			activeViewType: this.data.activeViewType,
