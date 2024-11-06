@@ -18,6 +18,7 @@ Auf diese Inhalte wird im Folgenden eingegangen werden.
       * [Contexts - Namen und Objekt-Charakter](#contexts---namen-und-objekt-charakter)
       * [Seiten - Layout, Einstellungen, Köpfe und Füße](#seiten---layout-einstellungen-köpfe-und-füße)
       * [Thymeleaf-Dialekt #convert](#thymeleaf-dialekt-convert)
+  * [Report-Ausgabe testen](#report-ausgabe-testen)
 <!-- TOC -->
 
 
@@ -108,3 +109,9 @@ Dieser heißt #convert und stellt aktuell Umwandlungen für Datumsangaben zur Ve
 Ein Beispiel wäre: *th:text="${#convert.toDateDE(schueler.geburtsdatum())}"*
 
 Leider unterstützen die Plugins die Dialekte nicht. Daher können die zur Verfügung stehenden Methoden nur in deren Definition eingesehen werden. Für #convert ist diese hier zu finden: [#convert](html/dialects/ConvertExpressionHelper.java).
+
+
+## Report-Ausgabe testen
+Die erstellten html-Templates können im Browser oder IDE angezeigt werden, wenn man die dortige Vorschau nutzt. Dabei wird aber nur der statische Teil des html angezeigt, es werden keine Daten in das Template geladen.
+
+Möchte man eine Vorschau mit Daten erstellen, kann man die Debug-Schnittstelle unter unter localhast/debug aufrufen und dort den API-Endpunkt *Reportausgabe* auf. Die anzugebenen Parameter werden als JSON übergeben. Entsprechend sind die Eingaben vorzunehmen.
