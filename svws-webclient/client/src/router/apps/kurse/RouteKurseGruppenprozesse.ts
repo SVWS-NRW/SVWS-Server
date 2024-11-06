@@ -26,6 +26,7 @@ export class RouteKurseGruppenprozesse extends RouteNode<any, RouteKurse> {
 
 	public getProps(to: RouteLocationNormalized): KurseGruppenprozesseProps {
 		return {
+			serverMode: api.mode,
 			schulform: api.schulform,
 			schulgliederungen: api.schulgliederungen,
 			kurseListeManager: () => routeKurse.data.kursListeManager,

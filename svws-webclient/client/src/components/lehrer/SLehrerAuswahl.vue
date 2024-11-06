@@ -22,7 +22,7 @@
 					</div>
 				</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -42,6 +42,7 @@
 	import type { SortByAndOrder} from "@ui";
 	import { ViewType } from "@ui";
 	import type { PersonalTyp, LehrerListeEintrag } from "@core";
+	import { ServerMode } from "@core";
 	import type { LehrerAuswahlProps } from "./SLehrerAuswahlProps";
 
 	const props = defineProps<LehrerAuswahlProps>();

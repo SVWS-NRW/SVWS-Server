@@ -24,7 +24,7 @@
 				<template #cell(idJahrgaenge)="{ value }"> {{ getJahrgangsKuerzel(value) }} </template>
 				<template #cell(schueler)="{ value }">{{ value.size() }}</template>
 				<template #actions>
-					<svws-ui-tooltip position="bottom">
+					<svws-ui-tooltip position="bottom" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 						<svws-ui-button :disabled="activeViewType === ViewType.HINZUFUEGEN" type="icon" @click="props.gotoHinzufuegenView(true)" :has-focus="rowsFiltered.length === 0">
 							<span class="icon i-ri-add-line" />
 						</svws-ui-button>
@@ -44,6 +44,7 @@
 	import type { KurseAuswahlProps } from "./SKurseAuswahlProps";
 	import { ViewType, type DataTableColumn, type SortByAndOrder } from "@ui";
 	import type { ArrayList, FachDaten, JahrgangsDaten, KursDaten, LehrerListeEintrag, SchuelerListeEintrag, Schulgliederung } from "@core";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<KurseAuswahlProps>();
 

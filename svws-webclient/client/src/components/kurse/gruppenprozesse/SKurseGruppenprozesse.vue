@@ -1,6 +1,6 @@
 <template>
 	<div class="page--content">
-		<div class="flex flex-col gap-y-16 lg:gap-y-16">
+		<div class="flex flex-col gap-y-16 lg:gap-y-16" v-if="ServerMode.DEV.checkServerMode(serverMode)">
 			<svws-ui-action-button title="Löschen" description="Ausgewählte Kurse werden gelöscht." icon="i-ri-delete-bin-line"
 				:action-function="entferneKurse" action-label="Löschen" :is-loading="loading" :is-active="currentAction === 'delete'"
 				:action-disabled="!preConditionCheck[0]" @click="toggleDeleteKurse">
@@ -15,6 +15,11 @@
 				</template>
 			</log-box>
 		</div>
+		<div v-else>
+			<svws-ui-todo title="Lehrer - Gruppenprozesse">
+				Dieser Bereich ist noch in Entwicklung. Hier werden später Gruppenprozesse zu den Lehrern vorhanden sein.
+			</svws-ui-todo>
+		</div>
 	</div>
 </template>
 
@@ -23,6 +28,7 @@
 	import { ref, computed } from "vue";
 	import type { KurseGruppenprozesseProps } from "./SKurseGruppenprozesseProps";
 	import type { List } from "@core";
+	import { ServerMode } from "@core";
 
 	const props = defineProps<KurseGruppenprozesseProps>();
 
